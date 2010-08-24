@@ -17,13 +17,13 @@
   <body onload="sh_highlightDocument();">
     <div id="toc">
       <ol>
-        <li><a href="index.html#download">ダウンロード</a></li>
-        <li><a href="changelog.html">変更履歴</a></li>
-        <li><a href="index.html#build">ビルド</a></li>
-        <li><a href="index.html#about">概要</a></li>
-        <li><a href="index.html#links">リンク</a></li>
-        <li><a href="index.html#contributing">貢献</a></li>
-        <li><a href="api.html">ドキュメント</a></li>
+        <li><a href="#download">�_�E�����[�h</a></li>
+        <li><a href="changelog.html">�ύX����</a></li>
+        <li><a href="#build">�r���h���@</a></li>
+        <li><a href="#about">�T�v</a></li>
+        <li><a href="#links">�����N</a></li>
+        <li><a href="#contributing">�v������ɂ�</a></li>
+        <li><a href="api.html">�h�L�������g</a></li>
       </ol>
     </div>
     <div id="content">
@@ -32,13 +32,12 @@
       <img id="logo" src="logo.png" alt="node.js"/>
 
       <p id="introduction">
-        イベント駆動I/Oのために
         <a href="http://code.google.com/p/v8/">V8 JavaScript</a>
-        を利用しています。
+        ��p�����C�x���g�쓮I/O�̎���
       </p>
 
       <p>
-        全てのリクエストに対して"Hello World"という応答をするNodeで書かれたウェブサーバーの例です。
+        �S�Ẵ��N�G�X�g�ɑ΂���"Hello World"�ƕԓ�����Node�ŏ����ꂽWEB�T�[�o�̗�ł��B
       </p>
 
       <pre>
@@ -51,57 +50,57 @@ console.log('Server running at http://127.0.0.1:8124/');
 </pre>
 
       <p>
-        サーバーを走らせるためには、コードを<code>example.js</code>というファイルに保存し、<code>node</code>と一緒に実行してください:
+        ���̃T�[�o�𑖂点��ɂ́A�R�[�h��
+        <code>example.js</code>�Ƃ����t�@�C�����ŕۑ����A���L�̂悤��
+        <code>node</code>�R�}���h�����s���Ă��������B
       </p>
       <pre class="sh_none">
 % node example.js
 Server running at http://127.0.0.1:8124/</pre>
 
       <p>
-        ここにあるのは8124番ポートでリッスンし、何でもエコーするシンプルなTCPサーバーの例です:
+        �܂��A�|�[�g�ԍ�8124�����b�X�����A���ł��G�R�[����V���v����TCP�T�[�o�͈ȉ��̂悤�ɂȂ�܂��B
       </p>
 
       <pre>
 var net = require('net');
 net.createServer(function (socket) {
   socket.setEncoding("utf8");
-  socket.addListener("connect", function () {
-    socket.write("Echo server\r\n");
-  });
-  socket.addListener("data", function (data) {
+  socket.write("Echo server\r\n");
+  socket.on("data", function (data) {
     socket.write(data);
   });
-  socket.addListener("end", function () {
+  socket.on("end", function () {
     socket.end();
   });
 }).listen(8124, "127.0.0.1");
 </pre>
 
       <p>
-        もっと多くの例は<a href="api.html">APIドキュメント</a>をご覧ください。
+        <a href="api.html">API�h�L�������g</a>�ɂ����Ƒ����̃T���v��������܂��B
       </p>
 
-      <h2 id="download">ダウンロード</h2>
+      <h2 id="download">�_�E�����[�h</h2>
 
       <p>
-        <a href="http://github.com/ry/node/tree/master">gitリポジトリ</a>
+        <a href="http://github.com/ry/node/tree/master">git���|�W�g��</a>
       </p>
       <p>
-        2010.07.03
-        <a href="http://nodejs.org/dist/node-v0.1.100.tar.gz">node-v0.1.100.tar.gz</a>
+        2010.08.20
+        <a href="http://nodejs.org/dist/node-v0.2.0.tar.gz">node-v0.2.0.tar.gz</a>
       </p>
 
-      <p>過去のバージョン: <a href="dist/index.html">各バージョン</a>, <a href="docs/index.html">ドキュメント</a></p>
+      <p>�ߋ��̃o�[�W����: <a href="http://nodejs.org/dist">�e�o�[�W����</a>, <a href="http://nodejs.org/docs">�h�L�������g</a></p>
 
-      <h2 id="build">ビルド</h2>
+      <h2 id="build">�r���h���@</h2>
 
       <p>
-        Nodeは<b>Linux</b>や<b>Macintosh</b>、<b>Solaris</b>上でテストされています。
-        <b>Windows/Cygwin</b>や<b>FreeBSD</b>、<b>OpenBSD</b>でも動きます。
-        ビルドには2.4以降のPyhtonが必要です。
-        V8エンジン(Nodeがビルドする)はIA-32とx64、ARMのみをサポートします。
-        V8エンジンはNodeのディストリビューションに含まれています。
-        TLSを使用するためにはOpenSSLが必要です。その他の依存関係はありません。
+        Node��<b>Linux</b>��<b>Macintosh</b>�A
+        <b>Solaris</b>��Ńe�X�g����Ă��܂��B<b>Windows/Cygwin</b>��
+        <b>FreeBSD</b>�A<b>OpenBSD</b>�ł������܂��B�r���h�ɂ́APython 2.4�ȍ~���K�v�ɂȂ�܂��B
+        V8�G���W��(Node���r���h���܂�)�́AIA-32��x64�AARM�̊e�v���Z�b�T�݂̂��T�|�[�g���Ă��܂��B
+        V8�G���W����Node�̃f�B�X�g���r���[�V�����Ɋ܂܂�Ă��܂��B
+        TLS���g�p���邽�߂ɂ�OpenSSL���K�v�ł��B���̑��Ɉˑ��֌W�͂���܂���B
       </p>
 
       <pre class="sh_none">
@@ -110,37 +109,37 @@ make
 make install</pre>
 
       <p>
-        そして、<a href="api.html">APIドキュメント</a>を見てください。
+        ���Ƃ́A<a href="api.html">API�h�L�������g</a>���������������B
       </p>
 
-      <p>テストを走らせるためには次のようにします</p>
+      <p>�e�X�g�𑖂点��ɂ͎��̃R�}���h�����s���܂��B</p>
 
       <pre class="sh_none">make test</pre>
 
-      <h2 id="about">概要</h2>
+      <h2 id="about">�T�v</h2>
 
       <p>
-        Nodeの目標は簡単にスケーラブルネットワークを構築できる方法を提供することです。
-        上記の"hello world"ウェブサーバーの例ではクライアントとのたくさんの接続を扱うことが出来ます。
-        NodeはOSに、新しい接続が来たら知らせるように(<code>epoll</code>や<code>kqueue</code>、
-        <code class="sh_none">/dev/poll</code>または<code>select</code>を通して)
-        指示し、スリープ状態になります。もし、なにか新しい接続があるとコールバックを実行します。
-        各接続には小さなヒープを割り当てます。
+        Node�̖ڕW�́A�ȒP�ɃX�P�[���u���ȃl�b�g���[�N�v���O�������쐬������@��񋟂��邱�Ƃł��B
+        ��L��"Hello World"WEB�T�[�o�̗�ł́A�����̃N���C�A���g�Ƃ̐ڑ��𓯎��Ɉ������Ƃ��ł��܂��B
+        Node��OS�ɁA(<code>epoll</code>��<code>kqueue</code>�A
+        <code class="sh_none">/dev/poll</code>��<code>select</code>��ʂ���)�V�����ڑ���������m�点��悤�Ɏw�����A
+        �X���[�v��ԂɂȂ�܂��B�����ĐV�����ڑ�������ƁA�R�[���o�b�N�����s���܂��B
+        �e�ڑ��ɂ͂ق�̏����ȃq�[�v�������蓖�Ă��܂���B
       </p>
 
       <p>
-        これはOSのスレッドを使う近頃のより一般的な同時実行モデルとは対照的です。
-        スレッドベースのネットワークは比較的に非効率的で、使いづらいのです。
-        これらをご覧ください:
-        <a href="http://www.sics.se/~joe/apachevsyaws.html">ここ</a>や
-        <a href="http://www.kegel.com/c10k.html">ここ</a>や 
-        <a href="http://bulk.fefe.de/scalable-networking.pdf">ここ</a>。
+        ����́AOS�̃X���b�h��p����ߍ��̂���ʓI�ȓ������s���f���Ƃ͑ΏƓI�ł��B
+        ���̎�@�ɔ�ׂ�ƁA�X���b�h�x�[�X�̃l�b�g���[�N�v���O�����͔�����I�ł���A�܂��ƂĂ��g���Â炢�̂ł��B
+        <a href="http://www.kegel.com/c10k.html">����</a>��
+        <a href="http://bulk.fefe.de/scalable-networking.pdf">����</a>���������������B
 
-        Nodeは接続ごとに2MBのスタックを割り当てるシステムに比べて高負荷時により良いメモリー効率を示します。
+        Node�́A1�ڑ����Ƃ�2MB�̃X�^�b�N�����������蓖�Ă�X���b�h�x�[�X�̃V�X�e���ɔ�ׂāA
+        �����׎��ɂƂĂ��ǂ��������������������܂��B
+        <!-- TODO benchmark -->
 
-        また、Nodeのユーザーはプロセスデッドロックの心配から開放されました&mdash;つまりロックがなくなったのです。
-        Nodeには直接I/Oを実行する関数がほとんど無く、絶対にプロセスをブロックしません。
-        ブロックが無ければエキスパートではないプログラマーも高速なシステムを開発できます。
+        ����ɁANode�̃��[�U�̓v���Z�X�̃f�b�h���b�N�̐S�z����J������܂����BNode�ɂ̓��b�N���Ȃ��̂ł��B
+        Node�ɂ͒���I/O�����s����֐����قƂ�ǖ������߁A�v���Z�X�͌����ău���b�N����܂���B
+        �u���b�N���Ȃ����߁A�G�L�X�p�[�g�ł͂Ȃ��v���O���}�ł����Ă������ȃV�X�e�����J�����邱�Ƃ��ł���̂ł��B
       </p>
 
       <p>
@@ -252,7 +251,7 @@ git config --global user.name "Ryan Dahl"
 
       <p>
         Before your code your code can be accepted you have to sign the
-        <a href="cla.html">contributor license agreement</a>.
+        <a href="http://nodejs.org/cla.html">contributor license agreement</a>.
       </p>
 
       <p>
