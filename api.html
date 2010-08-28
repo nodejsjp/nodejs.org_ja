@@ -857,68 +857,127 @@ occured, the stream came to an <code>'end'</code>, or <code>destroy()</code> was
 <p>Closes the underlying file descriptor. Stream will not emit any more events.</p>
 -->
 
+<h2 id="Writable Stream">書き込み可能なストリーム</h2>
+<!--
 <h2 id="Writable Stream">Writable Stream</h2>
+-->
 
+<p><code>Writable Stream</code>には以下のメソッド、メンバー、そしてイベントがあります。</p>
+<!--
 <p>A <code>Writable Stream</code> has the following methods, members, and events.</p>
+-->
 
+<h3>イベント: 'drain'</h3>
+<!--
 <h3>Event: 'drain'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>呼び出された<code>write()</code>メソッドが<code>false</code>で戻った後に生成され、
+再び安全に書き込むことができるようになったことを示します。</p>
+<!--
 <p>Emitted after a <code>write()</code> method was called that returned <code>false</code> to
 indicate that it is safe to write again.</p>
+-->
 
+<h3>イベント: 'error'</h3>
+<!--
 <h3>Event: 'error'</h3>
+-->
 
 <p><code>function (exception) { }</code></p>
 
+<p><code>exception</code>例外によるエラーについて生成されます。</p>
+<!--
 <p>Emitted on error with the exception <code>exception</code>.</p>
+-->
 
+<h3>イベント: 'close'</h3>
+<!--
 <h3>Event: 'close'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>背後でファイル記述子がクローズされた時に生成されます。</p>
+<!--
 <p>Emitted when the underlying file descriptor has been closed.</p>
+-->
 
 <h3>stream.writeable</h3>
 
+<p>デフォルトでは<code>true</code>ですが、<code>'error'</code>が発生した後、<code>end()</code> / <code>destroy()</code>が呼ばれた後で<code>false</code>に設定されるbooleanです。</p>
+<!--
 <p>A boolean that is <code>true</code> by default, but turns <code>false</code> after an <code>'error'</code>
 occurred or <code>end()</code> / <code>destroy()</code> was called.</p>
+-->
 
 <h3>stream.write(string, encoding='utf8', [fd])</h3>
 
+<p>与えられた<code>encoding</code>で<code>string</code>を書き込みます。
+文字列がカーネルバッファにフラッシュされた場合は<code>true</code>が返ります。
+カーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、
+<code>false</code>が返ります。
+<code>'drain'</code>イベントがカーネルバッファが再び空いたことを示します。
+<code>encoding</code>のデフォルトは<code>'utf8'</code>です。</p>
+<!--
 <p>Writes <code>string</code> with the given <code>encoding</code> to the stream.  Returns <code>true</code> if
 the string has been flushed to the kernel buffer.  Returns <code>false</code> to
 indicate that the kernel buffer is full, and the data will be sent out in
 the future. The <code>'drain'</code> event will indicate when the kernel buffer is
 empty again. The <code>encoding</code> defaults to <code>'utf8'</code>.</p>
+-->
 
+<p>オプションの<code>fd</code>引数が指定されると、
+ストリームに送信するための基礎となるファイル記述子として解釈されます。
+これはUNIXストリームでのみサポートされており、その他では黙って無視されます。
+このようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、
+データが不正な（クローズされた）ファイル記述子に送られるリスクがあります。</p>
+<!--
 <p>If the optional <code>fd</code> parameter is specified, it is interpreted as an integral
 file descriptor to be sent over the stream. This is only supported for UNIX
 streams, and is silently ignored otherwise. When writing a file descriptor in
 this manner, closing the descriptor before the stream drains risks sending an
 invalid (closed) FD.</p>
+-->
 
 <h3>stream.write(buffer)</h3>
 
+<p>生のバッファを使うこと以外は上記と同じです。</p>
+<!--
 <p>Same as the above except with a raw buffer.</p>
+-->
 
 <h3>stream.end()</h3>
 
+<p>ストリームをEOFまたはFINで終了します。</p>
+<!--
 <p>Terminates the stream with EOF or FIN.</p>
+-->
 
 <h3>stream.end(string, encoding)</h3>
 
+<p>与えられた<code>encoding</code>で<code>string</code>を送信してからEOFまたはFINでストリームを終了します。
+これは送信するパケットの数を減らすために便利です。</p>
+<!--
 <p>Sends <code>string</code> with the given <code>encoding</code> and terminates the stream with EOF
 or FIN. This is useful to reduce the number of packets sent.</p>
+-->
 
 <h3>stream.end(buffer)</h3>
 
+<p><code>buffer</code>であること以外は上記と同じです。</p>
+<!--
 <p>Same as above but with a <code>buffer</code>.</p>
+-->
 
 <h3>stream.destroy()</h3>
 
+<p>背後のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。</p>
+<!--
 <p>Closes the underlying file descriptor. Stream will not emit any more events.</p>
+-->
 
 <h2 id="Global Objects">Global Objects</h2>
 
