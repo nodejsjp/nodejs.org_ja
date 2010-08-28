@@ -1559,42 +1559,72 @@ console.log('Changed umask from: ' + oldmask.toString(8) +
 
 <h2 id="sys">sys</h2>
 
+<p>これらの関数はモジュール<code>'sys'</code>内にあります。
+<code>require('sys')</code>を使うことでこれらにアクセスします。</p>
+<!--
 <p>These functions are in the module <code>'sys'</code>. Use <code>require('sys')</code> to access
 them.</p>
+-->
 
 <h3>sys.print(string)</h3>
 
+<p><code>console.log()</code>と似ていますが、後に改行を続けません。</p>
+<!--
 <p>Like <code>console.log()</code> but without the trailing newline.</p>
+-->
 
 <pre><code>require('sys').print('String with no newline');</code></pre>
 
 <h3>sys.debug(string)</h3>
 
+<p>同期的な出力関数です。プロセスをブロックして即座に<code>string</code>を<code>stderr</code>に出力します。</p>
+<!--
 <p>A synchronous output function. Will block the process and
 output <code>string</code> immediately to <code>stderr</code>.</p>
+-->
 
 <pre><code>require('sys').debug('message on stderr');</code></pre>
 
 <h3>sys.log(string)</h3>
 
+<p>タイムスタンプとともに<code>stdout</code>へ出力します。</p>
+<!--
 <p>Output with timestamp on <code>stdout</code>.</p>
+-->
 
 <pre><code>require('sys').log('Timestmaped message.');</code></pre>
 
 <h3>sys.inspect(object, showHidden=false, depth=2)</h3>
 
+<p>デバッグで有用な、<code>object</code>の文字列表現を返します。</p>
+<!--
 <p>Return a string representation of <code>object</code>, which is useful for debugging.</p>
+-->
 
+<p><code>showHidden</code>が<code>true</code>の場合、オブジェクトのEnumerableでないプロパティも表示されます。</p>
+<!--
 <p>If <code>showHidden</code> is <code>true</code>, then the object's non-enumerable properties will be
 shown too.</p>
+-->
 
+<p><code>depth</code>が与えられた場合、オブジェクトをフォーマットするために何回再帰するかを<code>inspect</code>に伝えます。
+これは巨大で複雑なオブジェクトを調査する場合に便利です。</p>
+<!--
 <p>If <code>depth</code> is provided, it tells <code>inspect</code> how many times to recurse while
 formatting the object. This is useful for inspecting large complicated objects.</p>
+-->
 
+<p>デフォルトでは2回だけ再帰します。
+無限に再帰するには、<code>depth</code>に<code>null</code>を渡します。</p>
+<!--
 <p>The default is to only recurse twice.  To make it recurse indefinitely, pass
 in <code>null</code> for <code>depth</code>.</p>
+-->
 
+<p><code>sys</code>オブジェクトの全てのプロパティを調査する例:</p>
+<!--
 <p>Example of inspecting all properties of the <code>sys</code> object:</p>
+-->
 
 <pre><code>var sys = require('sys');
 
@@ -1602,12 +1632,22 @@ console.log(sys.inspect(sys, true, null));</code></pre>
 
 <h3>sys.pump(readableStream, writeableStream, [callback])</h3>
 
+<p>実験的</p>
+<!--
 <p>Experimental</p>
+-->
 
+<p><code>readableStream</code>からデータを読み、それを<code>writableStream</code>に送ります。
+<code>writeableStream.write(data)</code>が<code>false</code>を返す場合、
+<code>writableStream</code>が<code>drain</code>イベントを生成するまで、<code>readableStream</code>は中断します。
+<code>writableStream</code>がクローズされると<code>callback</code>が呼び出されます。
+</p>
+<!--
 <p>Read the data from <code>readableStream</code> and send it to the <code>writableStream</code>.
 When <code>writeableStream.write(data)</code> returns <code>false</code> <code>readableStream</code> will be
 paused until the <code>drain</code> event occurs on the <code>writableStream</code>. <code>callback</code> is
 called when <code>writableStream</code> is closed.</p>
+-->
 
 <h2 id="Timers">Timers</h2>
 
