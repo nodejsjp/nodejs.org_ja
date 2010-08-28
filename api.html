@@ -1071,19 +1071,35 @@ for more information.</p>
 
 <h2 id="process">process</h2>
 
+<p><code>process</code>はグローバルオブジェクトで、どこからでもアクセスすることができます。
+それは<code>EventEmitter</code>のインスタンスです。</p>
+<!--
 <p>The <code>process</code> object is a global object and can be accessed from anywhere.
 It is an instance of <code>EventEmitter</code>.</p>
+-->
 
+<h3>イベント: 'exit'</h3>
+<!--
 <h3>Event: 'exit'</h3>
+-->
 
 <p><code>function () {}</code></p>
 
+<p>プロセスが終了しようとしている時に生成されます。
+これは（ユニットテストのように）モジュールの状態を一定の時間でチェックするのに適したフックとなります。
+メインのイベントループは'exit'コールバックが終了するともはや動作しないので、
+タイマーはスケジュールされないかもしれません。</p>
+<!--
 <p>Emitted when the process is about to exit.  This is a good hook to perform
 constant time checks of the module's state (like for unit tests).  The main
 event loop will no longer be run after the 'exit' callback finishes, so
 timers may not be scheduled.</p>
+-->
 
+<p><code>exit</code>を監視する例:</p>
+<!--
 <p>Example of listening for <code>exit</code>:</p>
+-->
 
 <pre><code>process.on('exit', function () {
   process.nextTick(function () {
@@ -1092,15 +1108,26 @@ timers may not be scheduled.</p>
   console.log('About to exit.');
 });</code></pre>
 
+<h3>イベント: 'uncaughtException'</h3>
+<!--
 <h3>Event: 'uncaughtException'</h3>
+-->
 
 <p><code>function (err) { }</code></p>
 
+<p>発生した例外がイベントループまでたどり着いた場合に生成されます。
+もしこの例外に対するリスナーが加えられていれば、
+デフォルトの動作（それはスタックトレースをプリントして終了します）は起こりません。</p>
+<!--
 <p>Emitted when an exception bubbles all the way back to the event loop. If a
 listener is added for this exception, the default action (which is to print
 a stack trace and exit) will not occur.</p>
+-->
 
+<p><code>uncaughtException</code>を監視する例:</p>
+<!--
 <p>Example of listening for <code>uncaughtException</code>:</p>
+-->
 
 <pre><code>process.on('uncaughtException', function (err) {
   console.log('Caught exception: ' + err);
@@ -1114,19 +1141,35 @@ setTimeout(function () {
 nonexistentFunc();
 console.log('This will not run.');</code></pre>
 
+<p><code>uncaughtException</code>は例外を扱うとても荒削りなメカニズムであることに注意してください。
+プログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。
+特にサーバプログラムはいつまでも実行し続けるように設計されるので、
+<code>uncaughtException</code>は有益で安全なメカニズムになり得ます。</p>
+<!--
 <p>Note that <code>uncaughtException</code> is a very crude mechanism for exception
 handling.  Using try / catch in your program will give you more control over
 your program's flow.  Especially for server programs that are designed to
 stay running forever, <code>uncaughtException</code> can be a useful safety mechanism.</p>
+-->
 
+<h3>シグナルイベント</h3>
+<!--
 <h3>Signal Events</h3>
+-->
 
 <p><code>function () {}</code></p>
 
+<p>プロセスがシグナルを受信た場合に生成されます。
+SIGINT、SIGUSR1、その他のPOSIX標準シグナル名の一覧についてはsigaction(2)を参照してください。</p>
+<!--
 <p>Emitted when the processes receives a signal. See sigaction(2) for a list of
 standard POSIX signal names such as SIGINT, SIGUSR1, etc.</p>
+-->
 
+<p><code>SIGINT</code>を監視する例:</p>
+<!--
 <p>Example of listening for <code>SIGINT</code>:</p>
+-->
 
 <pre><code>var stdin = process.openStdin();
 
@@ -1134,14 +1177,23 @@ process.on('SIGINT', function () {
   console.log('Got SIGINT.  Press Control-D to exit.');
 });</code></pre>
 
+<p>多くの端末プログラムで簡単に<code>SIGINT</code>を送る方法は<code>Control-C</code>を押すことです。</p>
+<!--
 <p>An easy way to send the <code>SIGINT</code> signal is with <code>Control-C</code> in most terminal
 programs.</p>
+-->
 
 <h3>process.stdout</h3>
 
+<p><code>stdout</code>に対する<code>Writable Stream</code>です。</p>
+<!--
 <p>A <code>Writable Stream</code> to <code>stdout</code>.</p>
+-->
 
+<p>例: <code>console.log</code>の定義</p>
+<!--
 <p>Example: the definition of <code>console.log</code></p>
+-->
 
 <pre><code>console.log = function (d) {
   process.stdout.write(d + '\n');
@@ -1149,9 +1201,15 @@ programs.</p>
 
 <h3>process.openStdin()</h3>
 
+<p>標準入力ストリームをオープンし、<code>Readable Stream</code>を返します。</p>
+<!--
 <p>Opens the standard input stream, returns a <code>Readable Stream</code>.</p>
+-->
 
+<p>標準入力をオープンして二つのイベントを監視する例:</p>
+<!--
 <p>Example of opening standard input and listening for both events:</p>
+-->
 
 <pre><code>var stdin = process.openStdin();
 
@@ -1167,16 +1225,24 @@ stdin.on('end', function () {
 
 <h3>process.argv</h3>
 
+<p>コマンドライン引数を含む配列です。
+最初の要素は'node'、2番目の要素はJavaScriptファイルの名前になります。
+その後の要素はコマンドラインの追加の引数になります。</p>
+<!--
 <p>An array containing the command line arguments.  The first element will be
 'node', the second element will be the name of the JavaScript file.  The
 next elements will be any additional command line arguments.</p>
+-->
 
 <pre><code>// print process.argv
 process.argv.forEach(function (val, index, array) {
   console.log(index + ': ' + val);
 });</code></pre>
 
+<p>このように出力されます:</p>
+<!--
 <p>This will generate:</p>
+-->
 
 <pre><code>$ node process-2.js one two=three four
 0: node
@@ -1187,15 +1253,25 @@ process.argv.forEach(function (val, index, array) {
 
 <h3>process.execPath</h3>
 
+<p>プロセスによって開始された実行可能ファイルの絶対パスです。</p>
+<!--
 <p>This is the absolute pathname of the executable that started the process.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>/usr/local/bin/node</code></pre>
 
 <h3>process.chdir(directory)</h3>
 
+<p>プロセスのカレントワーキングディレクトリを変更します。
+もし失敗した場合は例外をスローします。</p>
+<!--
 <p>Changes the current working directory of the process or throws an exception if that fails.</p>
+-->
 
 <pre><code>console.log('Starting directory: ' + process.cwd());
 try {
@@ -1208,11 +1284,19 @@ catch (err) {
 
 <h3>process.compile(code, filename)</h3>
 
+<p><code>eval</code>と似ていますが、よりよいエラー報告のために<code>filename</code>を指定することができ、
+<code>code</code>はローカルスコープから不可視です。
+<code>filename</code>の値は、もしコンパイルされたコードによってスタックトレースが生成されると、ファイル名として使われます。</p>
+<!--
 <p>Similar to <code>eval</code> except that you can specify a <code>filename</code> for better
 error reporting and the <code>code</code> cannot see the local scope.  The value of <code>filename</code>
 will be used as a filename if a stack trace is generated by the compiled code.</p>
+-->
 
+<p><code>process.compile</code>と<code>eval</code>で同じコードを使った例:</p>
+<!--
 <p>Example of using <code>process.compile</code> and <code>eval</code> to run the same code:</p>
+-->
 
 <pre><code>var localVar = 123,
     compiled, evaled;
@@ -1225,43 +1309,77 @@ console.log('localVar: ' + localVar + ', evaled: ' + evaled);
 // localVar: 123, compiled: 1
 // localVar: 1, evaled: 1</code></pre>
 
+<p><code>process.compile</code>はローカルスコープにアクセスしないので、<code>localVar</code>は変更されません。
+<code>eval</code>はローカルスコープにアクセスするので、<code>localVar</code>は変更されます。</p>
+<!--
 <p><code>process.compile</code> does not have access to the local scope, so <code>localVar</code> is unchanged.
 <code>eval</code> does have access to the local scope, so <code>localVar</code> is changed.</p>
+-->
 
+<p><code>code</code>が文法エラーとなるケースでは、<code>process.compile</code>はnodeを終了します。</p>
+<!--
 <p>In case of syntax error in <code>code</code>, <code>process.compile</code> exits node.</p>
+-->
 
+<p>関連項目: <code>Script</code></p>
+<!--
 <p>See also: <code>Script</code></p>
+-->
 
 <h3>process.cwd()</h3>
 
+<p>プロセスのカレントワーキングディレクトリを返します。</p>
+<!--
 <p>Returns the current working directory of the process.</p>
+-->
 
 <pre><code>console.log('Current directory: ' + process.cwd());</code></pre>
 
 <h3>process.env</h3>
 
+<p>ユーザの環境を含むオブジェクトです。environ(7)を参照してください。</p>
+<!--
 <p>An object containing the user environment. See environ(7).</p>
+-->
 
 <h3>process.exit(code=0)</h3>
 
+<p>指定の<code>code</code>でプロセスを終了します。
+もし省略されると、「成功」を示すコード<code>0</code>を使って終了します。</p>
+<!--
 <p>Ends the process with the specified <code>code</code>.  If omitted, exit uses the 
 'success' code <code>0</code>.</p>
+-->
 
+<p>「失敗」を示すコードで終了する例:</p>
+<!--
 <p>To exit with a 'failure' code:</p>
+-->
 
 <pre><code>process.exit(1);</code></pre>
 
+<p>nodeを実行したシェルで終了コードが1であることを見ることができるでしょう。</p>
+<!--
 <p>The shell that executed node should see the exit code as 1.</p>
+-->
 
 <h3>process.getgid()</h3>
 
+<p>プロセスのグループ識別子を取得します。（getgid(2) 参照）
+これは数値によるグループIDで、グループ名ではありません。</p>
+<!--
 <p>Gets the group identity of the process. (See getgid(2).)  This is the numerical group id, not the group name.</p>
+-->
 
 <pre><code>console.log('Current gid: ' + process.getgid());</code></pre>
 
 <h3>process.setgid(id)</h3>
 
+<p>プロセスのグループ識別子を設定します。（setgid(2)参照）これは数値によるIDもグループ名の文字列のどちらも受け入れます。
+もしグループ名が指定されると、数値によるIDが解決できるまでこのメソッドはブロックします。</p>
+<!--
 <p>Sets the group identity of the process. (See setgid(2).)  This accepts either a numerical ID or a groupname string.  If a groupname is specified, this method blocks while resolving it to a numerical ID.</p>
+-->
 
 <pre><code>console.log('Current gid: ' + process.getgid());
 try {
@@ -1274,13 +1392,20 @@ catch (err) {
 
 <h3>process.getuid()</h3>
 
+<p>プロセスのユーザ識別子を取得します。（getuid(2)参照）これは数値によるユーザIDで、ユーザ名ではありません。</p>
+<!--
 <p>Gets the user identity of the process. (See getuid(2).)  This is the numerical userid, not the username.</p>
+-->
 
 <pre><code>console.log('Current uid: ' + process.getuid());</code></pre>
 
 <h3>process.setuid(id)</h3>
 
+<p>プロセスのユーザ識別子を設定します。（setuid(2)参照）これは数値によるIDもユーザ名の文字列のどちらも受け入れます。
+もしユーザ名が指定されると、数値によるIDが解決できるまでこのメソッドはブロックします。</p>
+<!--
 <p>Sets the user identity of the process. (See setuid(2).)  This accepts either a numerical ID or a username string.  If a username is specified, this method blocks while resolving it to a numerical ID.</p>
+-->
 
 <pre><code>console.log('Current uid: ' + process.getuid());
 try {
@@ -1293,28 +1418,49 @@ catch (err) {
 
 <h3>process.version</h3>
 
+<p><code>NODE_VERSION</code>を提示するコンパイル済みプロパティです。</p>
+<!--
 <p>A compiled-in property that exposes <code>NODE_VERSION</code>.</p>
+-->
 
 <pre><code>console.log('Version: ' + process.version);</code></pre>
 
 <h3>process.installPrefix</h3>
 
+<p><code>NODE_PREFIX</code>を提示するコンパイル済みプロパティです。</p>
+<!--
 <p>A compiled-in property that exposes <code>NODE_PREFIX</code>.</p>
+-->
 
 <pre><code>console.log('Prefix: ' + process.installPrefix);</code></pre>
 
 <h3>process.kill(pid, signal='SIGINT')</h3>
 
+<p>プロセスにシグナルを送ります。
+<code>pid</code>はプロセスIDで<code>signal</code>は送信されるシグナルを文字列で記述したものです。
+シグナルの名前は'SIGINT'や'SIGUSR1'のような文字列です。
+省略すると、シグナルは'SIGINT'となります。
+詳細はkill(2)を参照してください。</p>
+<!--
 <p>Send a signal to a process. <code>pid</code> is the process id and <code>signal</code> is the
 string describing the signal to send.  Signal names are strings like
 'SIGINT' or 'SIGUSR1'.  If omitted, the signal will be 'SIGINT'.
 See kill(2) for more information.</p>
+-->
 
+<p>この関数の名前が<code>process.kill</code>であるとおり、
+これは<code>kill</code>システムコールのように本当にシグナルを送信することに注意してください。
+対象のプロセスを殺すだけでなく、他のシグナルも送信されます。</p>
+<!--
 <p>Note that just because the name of this function is <code>process.kill</code>, it is
 really just a signal sender, like the <code>kill</code> system call.  The signal sent
 may do something other than kill the target process.</p>
+-->
 
+<p>自身にシグナルを送信する例:</p>
+<!--
 <p>Example of sending a signal to yourself:</p>
+-->
 
 <pre><code>process.on('SIGHUP', function () {
   console.log('Got SIGHUP signal.');
@@ -1329,29 +1475,44 @@ process.kill(process.pid, 'SIGHUP');</code></pre>
 
 <h3>process.pid</h3>
 
+<p>プロセスのPIDです。</p>
+<!--
 <p>The PID of the process.</p>
+-->
 
 <pre><code>console.log('This process is pid ' + process.pid);</code></pre>
 
 <h3>process.title</h3>
 
+<p>'ps'でどのよう表示されるかを設定するためのgetter/setterです。</p>
+<!--
 <p>Getter/setter to set what is displayed in 'ps'.</p>
+-->
 
 <h3>process.platform</h3>
 
+<p>どのプラットフォームで動いているかです。<code>'linux2'</code>、<code>'darwin'</code>、など。</p>
+<!--
 <p>What platform you're running on. <code>'linux2'</code>, <code>'darwin'</code>, etc.</p>
+-->
 
 <pre><code>console.log('This platform is ' + process.platform);</code></pre>
 
 <h3>process.memoryUsage()</h3>
 
+<p>Nodeプロセスのメモリ使用状況を記述したオブジェクトを返します。<p>
+<!--
 <p>Returns an object describing the memory usage of the Node process.</p>
+-->
 
 <pre><code>var sys = require('sys');
 
 console.log(sys.inspect(process.memoryUsage()));</code></pre>
 
+<p>このように生成されます:</p>
+<!--
 <p>This will generate:</p>
+-->
 
 <pre><code>{ rss: 4935680
 , vsize: 41893888
@@ -1359,13 +1520,21 @@ console.log(sys.inspect(process.memoryUsage()));</code></pre>
 , heapUsed: 650472
 }</code></pre>
 
+<p><code>heapTotal</code>と<code>heapUsed</code>はV8のメモリ使用状況を参照します。</p>
+<!--
 <p><code>heapTotal</code> and <code>heapUsed</code> refer to V8's memory usage.</p>
+-->
 
 <h3>process.nextTick(callback)</h3>
 
+<p>イベントループの次以降のループでコールバックを呼び出します。
+これは<code>setTimeout(fn, 0)</code>の単純なエイリアス<em>ではなく</em>、
+はるかに効率的です。</p>
+<!--
 <p>On the next loop around the event loop call this callback.
 This is <em>not</em> a simple alias to <code>setTimeout(fn, 0)</code>, it's much more
 efficient.</p>
+-->
 
 <pre><code>process.nextTick(function () {
   console.log('nextTick callback');
@@ -1373,9 +1542,14 @@ efficient.</p>
 
 <h3>process.umask([mask])</h3>
 
+<p>プロセスのファイルモード作成マスクを設定または読み込みます。
+子プロセスは親プロセスからマスクを継承します。
+<code>mask</code>引数が与えられると元のマスクが返され、そうでなければ現在のマスクが返されます。</p>
+<!--
 <p>Sets or reads the process's file mode creation mask. Child processes inherit
 the mask from the parent process. Returns the old mask if <code>mask</code> argument is
 given, otherwise returns the current mask.</p>
+-->
 
 <pre><code>var oldmask, newmask = 0644;
 
