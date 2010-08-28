@@ -592,44 +592,84 @@ console.log(buf2.toString('ascii', 0, buf2.length));
 // abc
 // !bc</code></pre>
 
-<h2 id="EventEmitter">EventEmitter</h2>
+<h2 id="EventEmitter">イベント生成</h2>
 
+<p>Nodeのオブジェクトの多くはイベントを生成します: TCPサーバはストリームがあるとそのたびにイベントを生成します。
+子プロセスは終了する際にイベントを生成します。
+イベントを生成する全てのオブジェクトは<code>events.EventEmitter</code>のインスタンスです。</p>
+<!--
 <p>Many objects in Node emit events: a TCP server emits an event each time
 there is a stream, a child process emits an event when it exits. All
 objects which emit events are instances of <code>events.EventEmitter</code>.</p>
+-->
 
+<p>イベントはキャメル記法による文字列で表現されます。
+いくつかの例: <code>'stream'</code>, <code>'data'</code>, <code>'messageBegin'</code></p>
+<!--
 <p>Events are represented by a camel-cased string. Here are some examples:
 <code>'stream'</code>, <code>'data'</code>, <code>'messageBegin'</code>.</p>
+-->
 
+<p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。
+これらの関数は<em>リスナー</em>と呼ばれます。</p>
+<!--
 <p>Functions can be then be attached to objects, to be executed when an event
 is emitted. These functions are called <em>listeners</em>.</p>
+-->
 
+<p><code>require('events').EventEmitter</code>で<code>EventEmitter</code>クラスにアクセスします。</p>
+<!--
 <p><code>require('events').EventEmitter</code> to access the <code>EventEmitter</code> class.</p>
+-->
 
+<p>全てのEventEmitterは、新しいリスナーが加えられるとイベント<code>'newListener'</code>を生成します。</p>
+<!--
 <p>All EventEmitters emit the event <code>'newListener'</code> when new listeners are
 added.</p>
+-->
 
+<p><code>EventEmitter</code>がエラーに遭遇した時、典型的な動作は<code>'error'</code>イベントを生成することです。
+エラーイベントは特別です － もしそのハンドラがなければ、スタックトレースが出力されてプログラムは終了します。</p>
+<!--
 <p>When an <code>EventEmitter</code> experiences an error, the typical action is to emit an
 <code>'error'</code> event.  Error events are special--if there is no handler for them
 they will print a stack trace and exit the program.</p>
+-->
 
+<h3>イベント: 'newListener'</h3>
+<!--
 <h3>Event: 'newListener'</h3>
+-->
 
 <p><code>function (event, listener) { }</code></p>
 
+<p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。</p>
+<!--
 <p>This event is emitted any time someone adds a new listener.</p>
+-->
 
+<h3>イベント: 'error'</h3>
+<!--
 <h3>Event: 'error'</h3>
+-->
 
 <p><code>function (exception) { }</code></p>
 
+<p>エラーに遭遇すると、このイベントが生成されます。
+このイベントは特別です － エラーを受け取るリスナーが存在しない場合、
+Nodeは実行を終了して例外のスタックトレースを表示します。</p>
+<!--
 <p>If an error was encountered, then this event is emitted. This event is
 special - when there are no listeners to receive the error Node will
 terminate execution and display the exception's stack trace.</p>
+-->
 
 <h3>emitter.on(event, listener)</h3>
 
+<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。</p>
+<!--
 <p>Adds a listener to the end of the listeners array for the specified event.</p>
+-->
 
 <pre><code>server.on('stream', function (stream) {
   console.log('someone connected!');
@@ -637,8 +677,11 @@ terminate execution and display the exception's stack trace.</p>
 
 <h3>emitter.removeListener(event, listener)</h3>
 
+<p>指定されたイベントに対するリスナー配列からリスナーを削除します。</p>
+<!--
 <p>Remove a listener from the listener array for the specified event.
 <strong>Caution</strong>: changes array indices in the listener array behind the listener.</p>
+-->
 
 <pre><code>var callback = function(stream) {
   console.log('someone connected!');
@@ -649,12 +692,19 @@ server.removeListener('stream', callback);</code></pre>
 
 <h3>emitter.removeAllListeners(event)</h3>
 
+<p>指定されたイベントに対するリスナー配列から全てのリスナーを削除します。</p>
+<!--
 <p>Removes all listeners from the listener array for the specified event.</p>
+-->
 
 <h3>emitter.listeners(event)</h3>
 
+<p>指定されたイベントに対するリスナー配列を返します。
+この配列は変更することができます、例えばリスナーを削除するなど。</p>
+<!--
 <p>Returns an array of listeners for the specified event. This array can be
 manipulated, e.g. to remove listeners.</p>
+-->
 
 <pre><code>server.on('stream', function (stream) {
   console.log('someone connected!');
@@ -664,7 +714,10 @@ console.log(sys.inspect(server.listeners('stream'));
 
 <h3>emitter.emit(event, [arg1], [arg2], [...])</h3>
 
+<p>それぞれのリスナーを引数で渡された順に実行します。</p>
+<!--
 <p>Execute each of the listeners in order with the supplied arguments.</p>
+-->
 
 <h2 id="Streams">Streams</h2>
 
