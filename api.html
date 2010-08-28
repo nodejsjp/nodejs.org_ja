@@ -735,67 +735,127 @@ For example a request to an HTTP server is a stream, as is stdout. Streams
 are readable, writable, or both. All streams are instances of <code>EventEmitter</code>.</p>
 -->
 
+<h2 id="Readable Stream">読み込み可能なストリーム</h2>
+<!--
 <h2 id="Readable Stream">Readable Stream</h2>
+-->
 
+<p><code>Readable Stream</code>には以下のメソッド、メンバー、そしてイベントがあります。</p>
+<!--
 <p>A <code>Readable Stream</code> has the following methods, members, and events.</p>
+-->
 
+<h3>イベント: 'data'</h3>
+<!--
 <h3>Event: 'data'</h3>
+-->
 
 <p><code>function (data) { }</code></p>
 
+<p><code>'data'</code>イベントは<code>Buffer</code>（デフォルト）または、<code>setEncoding()</code>された場合は文字列のどちらかを生成します</p>
+<!--
 <p>The <code>'data'</code> event emits either a <code>Buffer</code> (by default) or a string if
 <code>setEncoding()</code> was used.</p>
+-->
 
+<h3>イベント: 'end'</h3>
+<!--
 <h3>Event: 'end'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>ストリームがEOF（TCP用語ではFIN）を受信した時に生成されます。
+<code>'data'</code>イベントがもう発生しないことを示します。
+ストリームがもし書き込み可能でもあるなら、書き込みを続けることは可能かもしれません。</p>
+<!--
 <p>Emitted when the stream has received an EOF (FIN in TCP terminology).
 Indicates that no more <code>'data'</code> events will happen. If the stream is also
 writable, it may be possible to continue writing.</p>
+-->
 
+<h3>イベント: 'error'</h3>
+<!--
 <h3>Event: 'error'</h3>
+-->
 
 <p><code>function (exception) { }</code></p>
 
+<p>データ受信でエラーがあると生成されます。</p>
+<!--
 <p>Emitted if there was an error receiving data.</p>
+-->
 
+<h3>イベント: 'close'</h3>
+<!--
 <h3>Event: 'close'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>背後でファイル記述子がクローズされた時に生成されます。
+全てのストリームがこのイベントを発生するわけではありません。
+（例えば、インカミングのHTTPリクエストは<code>'close'</code>イベントを生成しません。）</p>
+<!--
 <p>Emitted when the underlying file descriptor has be closed. Not all streams
 will emit this.  (For example, an incoming HTTP request will not emit
 <code>'close'</code>.)</p>
+-->
 
+<h3>イベント: 'fd'</h3>
+<!--
 <h3>Event: 'fd'</h3>
+-->
 
 <p><code>function (fd) { }</code></p>
 
+<p>ストリームに関するファイル記述子を受け取った時に生成されます。
+UNIXストリームだけがこの機能をサポートしています;
+その他の全てのストリームはこのイベントを生成しません。</p>
+<!--
 <p>Emitted when a file descriptor is received on the stream. Only UNIX streams
 support this functionality; all others will simply never emit this event.</p>
+-->
 
 <h3>stream.readable</h3>
 
+<p>デフォルトでは<code>true</code>ですが、<code>'error'</code>が発生した後、
+ストリームが<code>'end'</code>に達した後、または<code>destroy()</code>が呼ばれた後で、
+<code>false</code>に設定されるbooleanです。</p>
+<!--
 <p>A boolean that is <code>true</code> by default, but turns <code>false</code> after an <code>'error'</code>
 occured, the stream came to an <code>'end'</code>, or <code>destroy()</code> was called.</p>
+-->
 
 <h3>stream.setEncoding(encoding)</h3>
 
+<p>dataイベントが<code>Buffer</code>ではなく文字列を生成するようにします。
+<code>encoding</code>には<code>'utf8'</code>、<code>'ascii'</code>、または<code>'base64'</code>を指定することができます。</p>
+<!--
 <p>Makes the data event emit a string instead of a <code>Buffer</code>. <code>encoding</code> can be
 <code>'utf8'</code>, <code>'ascii'</code>, or <code>'base64'</code>.</p>
+-->
 
 <h3>stream.pause()</h3>
 
+<p><code>'data'</code>イベントの到着を中断します。</p>
+<!--
 <p>Pauses the incoming <code>'data'</code> events.</p>
+-->
 
 <h3>stream.resume()</h3>
 
+<p><code>pause()</code>の後で<code>'data'</code>イベントの到着を再開します。</p>
+<!--
 <p>Resumes the incoming <code>'data'</code> events after a <code>pause()</code>.</p>
+-->
 
 <h3>stream.destroy()</h3>
 
+<p>背後のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。</p>
+<!--
 <p>Closes the underlying file descriptor. Stream will not emit any more events.</p>
+-->
 
 <h2 id="Writable Stream">Writable Stream</h2>
 
