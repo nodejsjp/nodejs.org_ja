@@ -357,48 +357,96 @@ variable with the same name as the module.</p>
 <p>It is possible to extend node with other modules.  See <code>'Modules'</code></p>
 -->
 
+<h2 id="Buffers">バッファ</h2>
+<!--
 <h2 id="Buffers">Buffers</h2>
+-->
 
+<p>純粋なJavaScriptはUnicodeと相性がいいものの、バイナリデータの扱いはうまくありません。
+TCPストリームやファイルシステムを扱う場合は、オクテットストリームを処理する必要があります。
+Nodeにはオクテットストリームを操作、作成、消費するためにいくつかの戦略があります。</p>
+<!--
 <p>Pure Javascript is Unicode friendly but not nice to binary data.  When
 dealing with TCP streams or the file system, it's necessary to handle octet
 streams. Node has several strategies for manipulating, creating, and
 consuming octet streams.</p>
+-->
 
+<p>生のデータは<code>Buffer</code>クラスのインスタンスに保存されます。
+<code>Buffer</code>は整数の配列と似ていますが、
+V8ヒープの外部に割り当てられた生のメモリに対応します。
+<code>Buffer</code>のサイズを変更することはできません。</p>
+<!--
 <p>Raw data is stored in instances of the <code>Buffer</code> class. A <code>Buffer</code> is similar
 to an array of integers but corresponds to a raw memory allocation outside
 the V8 heap. A <code>Buffer</code> cannot be resized.</p>
+-->
 
+<p><code>Buffer</code>オブジェクトはグローバルです。</p>
+<!--
 <p>The <code>Buffer</code> object is global.</p>
+-->
 
+<p>バッファをJavaScript文字列オブジェクトとの間で変換するにはエンコーディング方式を明示する必要があります。
+いくつかのエンコーディング方式があります。</p>
+<!--
 <p>Converting between Buffers and JavaScript string objects requires an explicit encoding
 method.  Here are the different string encodings;</p>
+-->
 
+<ul>
+<li><p><code>'ascii'</code> - 7bitのASCIIデータ専用です。  このエンコーディング方式はとても高速で、もし上位ビットがセットされていれば取り除かれます。</p></li>
+<li><p><code>'utf8'</code> - Unicode文字。  多くのWebページやその他のドキュメントはUTF-8を使っています。</p></li>
+<li><p><code>'base64'</code> - Base64文字列エンコーディング.</p></li>
+<li><p><code>'binary'</code> - 生のバイナリデータを各文字の最初の8bitとして使用するエンコーディング方式。
+このエンコーディング方式はもはや価値がなく、<code>Buffer</code>オブジェクトでは可能な限り使用すべきではありません。
+このエンコーディングは、Nodeの将来のバージョンで削除される予定です。</p></li></ul>
+<!--
 <ul><li><p><code>'ascii'</code> - for 7 bit ASCII data only.  This encoding method is very fast, and will
 strip the high bit if set.</p></li><li><p><code>'utf8'</code> - Unicode characters.  Many web pages and other document formats use UTF-8.</p></li><li><p><code>'base64'</code> - Base64 string encoding.</p></li><li><p><code>'binary'</code> - A way of encoding raw binary data into strings by using only
 the first 8 bits of each character. This encoding method is depreciated and
 should be avoided in favor of <code>Buffer</code> objects where possible. This encoding
 will be removed in future versions of Node.</p></li></ul>
+-->
 
 <h3>new Buffer(size)</h3>
 
+<p><code>size</code>オクテットの新しいバッファを割り当てます。</p>
+<!--
 <p>Allocates a new buffer of <code>size</code> octets.</p>
+-->
 
 <h3>new Buffer(array)</h3>
 
+<p>オクテットの<code>array</code>を使用する新しいバッファを割り当てます。</p>
+<!--
 <p>Allocates a new buffer using an <code>array</code> of octets.</p>
+-->
 
 <h3>new Buffer(str, encoding='utf8')</h3>
 
+<p>与えられた<code>str</code>を内容とする新しいバッファを割り当てます。</p>
+<!--
 <p>Allocates a new buffer containing the given <code>str</code>.</p>
+-->
 
 <h3>buffer.write(string, offset=0, encoding='utf8')</h3>
 
+<p>与えられたエンコーディングを使用して，<code>string</code>をバッファの<code>offset</code>から書き込みます。
+書き込まれたオクテット数を返します。
+もし<code>buffer</code>が文字列全体を挿入するのに十分なスペースを含んでいなければ、文字列の一部だけを書き込みます。
+<code>'utf8'</code>エンコーディングの場合、このメソッドは文字の一部だけを書き込むことはありません。</p>
+<!--
 <p>Writes <code>string</code> to the buffer at <code>offset</code> using the given encoding. Returns
 number of octets written.  If <code>buffer</code> did not contain enough space to fit
 the entire string it will write a partial amount of the string. In the case
 of <code>'utf8'</code> encoding, the method will not write partial characters.</p>
+-->
 
+<p>例: utf8の文字列をバッファに書き込み、それをプリントします</p>
+<!--
 <p>Example: write a utf8 string into a buffer, then print it</p>
+-->
 
 <pre><code>buf = new Buffer(256);
 len = buf.write('\u00bd + \u00bc = \u00be', 0);
@@ -408,17 +456,30 @@ console.log(len + " bytes: " + buf.toString('utf8', 0, len));
 
 <h3>buffer.toString(encoding, start=0, end=buffer.length)</h3>
 
+<p><code>encoding</code>でエンコードされたバッファデータの<code>start</code>から<code>end</code>までをデコードした文字列を返します。</p>
+<!--
 <p>Decodes and returns a string from buffer data encoded with <code>encoding</code>
 beginning at <code>start</code> and ending at <code>end</code>.</p>
+-->
 
+<p>上の<code>buffer.write()</code>の例を参照してください。</p>
+<!--
 <p>See <code>buffer.write()</code> example, above.</p>
+-->
 
 <h3>buffer[index]</h3>
 
+<p><code>index</code>の位置のオクテットを取得および設定します。
+その値は個々のバイトを参照するので、妥当な範囲は16進の<code>0x00</code>から<code>0xFF</code>または<code>0</code>から<code>255</code>までの間です。</p>
+<!--
 <p>Get and set the octet at <code>index</code>. The values refer to individual bytes,
 so the legal range is between <code>0x00</code> and <code>0xFF</code> hex or <code>0</code> and <code>255</code>.</p>
+-->
 
+<p>例: ASCII文字列を1バイトずつバッファにコピーする</p>
+<!--
 <p>Example: copy an ASCII string into a buffer, one byte at a time:</p>
+-->
 
 <pre><code>str = "node.js";
 buf = new Buffer(str.length);
@@ -433,11 +494,17 @@ console.log(buf);
 
 <h3>Buffer.byteLength(string, encoding='utf8')</h3>
 
+<p>文字列の実際のバイト数を返します。これは文字列の<em>文字</em>数を返す<code>String.prototype.length</code>と同じではありません。</p>
+<!--
 <p>Gives the actual byte length of a string.  This is not the same as 
 <code>String.prototype.length</code> since that returns the number of <em>characters</em> in a
 string.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>str = '\u00bd + \u00bc = \u00be';
 
@@ -448,9 +515,13 @@ console.log(str + ": " + str.length + " characters, " +
 
 <h3>buffer.length</h3>
 
+<p>バイト数によるバッファのサイズ。これは実際の内容のサイズではないことに注意してください。
+<code>length</code>はバッファオブジェクトに割り当てられたメモリ全体を参照します。</p>
+<!--
 <p>The size of the buffer in bytes.  Note that this is not necessarily the size
 of the contents. <code>length</code> refers to the amount of memory allocated for the 
 buffer object.  It does not change when the contents of the buffer are changed.</p>
+-->
 
 <pre><code>buf = new Buffer(1234);
 
@@ -463,10 +534,16 @@ console.log(buf.length);
 
 <h3>buffer.copy(targetBuffer, targetStart, sourceStart, sourceEnd=buffer.length)</h3>
 
+<p>バッファ間でmemcpy()をします。</p>
+<!--
 <p>Does a memcpy() between buffers.</p>
+-->
 
+<p>例: バッファを2個作成し、<code>buf1</code>の16バイト目から19バイト目を、<code>buf2</code>の8バイト目から始まる位置へコピーします。</p>
+<!--
 <p>Example: build two Buffers, then copy <code>buf1</code> from byte 16 through byte 19
 into <code>buf2</code>, starting at the 8th byte in <code>buf2</code>.</p>
+-->
 
 <pre><code>buf1 = new Buffer(26);
 buf2 = new Buffer(26);
@@ -483,14 +560,23 @@ console.log(buf2.toString('ascii', 0, 25));
 
 <h3>buffer.slice(start, end)</h3>
 
+<p>元のバッファと同じメモリを参照しますが、<code>start</code>と<code>end</code>で示されるオフセットで始まり短くされた新しいバッファを返します。</p>
+<!--
 <p>Returns a new buffer which references the
 same memory as the old, but offset and cropped by the <code>start</code> and <code>end</code>
 indexes.</p>
+-->
 
+<p><strong>新しいバッファスライスの変更は、オリジナルバッファのメモリを変更することになります！</strong></p>
+<!--
 <p><strong>Modifying the new buffer slice will modify memory in the original buffer!</strong></p>
+-->
 
+<p>例: ASCIIのアルファベットでバッファを構築してスライスし、元のバッファで1バイトを変更します。</p>
+<!--
 <p>Example: build a Buffer with the ASCII alphabet, take a slice, then modify one byte
 from the original Buffer.</p>
+-->
 
 <pre><code>var buf1 = new Buffer(26);
 
