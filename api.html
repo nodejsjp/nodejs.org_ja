@@ -2798,13 +2798,22 @@ stat object:</p>
 
 <h2 id="fs.ReadStream">fs.ReadStream</h2>
 
+<p><code>ReadStream</code>は<code>Readable Stream</code>です。</p>
+<!--
 <p><code>ReadStream</code> is a <code>Readable Stream</code>.</p>
+-->
 
 <h3>fs.createReadStream(path, [options])</h3>
 
+<p>新しいReadStreamオブジェクトを返します（<code>Readable Stream</code>を参照してください）。</p>
+<!--
 <p>Returns a new ReadStream object (See <code>Readable Stream</code>).</p>
+-->
 
+<p><code>options</code>は以下のデフォルト値を持つオブジェクトです:</p>
+<!--
 <p><code>options</code> is an object with the following defaults:</p>
+-->
 
 <pre><code>{ 'flags': 'r'
 , 'encoding': null
@@ -2812,11 +2821,20 @@ stat object:</p>
 , 'bufferSize': 4 * 1024
 }</code></pre>
 
+<p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、<code>options</code>に<code>start</code>および<code>end</code>を含めることができます。
+<code>start</code>と<code>end</code>はどちらも包含的で0から始まります。
+使う際にはいつでも、両方を同時に指定しなければなりません。
+</p>
+<!--
 <p><code>options</code> can include <code>start</code> and <code>end</code> values to read a range of bytes from
 the file instead of the entire file.  Both <code>start</code> and <code>end</code> are inclusive and
 start at 0.  When used, both the limits must be specified always.</p>
+-->
 
+<p>100バイトの長さを持つファイルの最後の10バイトを読み込む例:</p>
+<!--
 <p>An example to read the last 10 bytes of a file which is 100 bytes long:</p>
+-->
 
 <pre><code>fs.createReadStream('sample.txt', {start: 90, end: 99});</code></pre>
 
