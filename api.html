@@ -2915,90 +2915,178 @@ parse the actual headers or the body.</p>
 
 <h2 id="http.Server">http.Server</h2>
 
+<p>これは以下のイベントを持つ<code>EventEmitter</code>です:</p>
+<!--
 <p>This is an <code>EventEmitter</code> with the following events:</p>
+-->
 
+<h3>イベント: 'request'</h3>
+<!--
 <h3>Event: 'request'</h3>
+-->
 
 <p><code>function (request, response) { }</code></p>
 
+<p><code>request</code>は<code>http.ServerRequest</code>のインスタンス、<code>response</code>は<code>http.ServerResponse</code>のインスタンスです。</p>
+<!--
 <p> <code>request</code> is an instance of <code>http.ServerRequest</code> and <code>response</code> is
  an instance of <code>http.ServerResponse</code></p>
+-->
 
+<h3>イベント: 'connection'</h3>
+<!--
 <h3>Event: 'connection'</h3>
+-->
 
 <p><code>function (stream) { }</code></p>
 
+<p>新しいTCPストリームが確立した時。
+<code>stream</code>は<code>net.Stream</code>型のオブジェクトです。
+通常の利用者がこのイベントにアクセスしたくなることはないでしょう。
+<code>stream</code>は<code>request.connection</code>からアクセスすることもできます。</p>
+<!--
 <p> When a new TCP stream is established. <code>stream</code> is an object of type
  <code>net.Stream</code>. Usually users will not want to access this event. The
  <code>stream</code> can also be accessed at <code>request.connection</code>.</p>
+-->
 
+<h3>イベント: 'close'</h3>
+<!--
 <h3>Event: 'close'</h3>
+-->
 
 <p><code>function (errno) { }</code></p>
 
+<p>サーバがクローズした時に生成されます。</p>
+<!--
 <p> Emitted when the server closes. </p>
+-->
 
+<h3>イベント: 'request'</h3>
+<!--
 <h3>Event: 'request'</h3>
+-->
 
 <p><code>function (request, response) {}</code></p>
 
+<p>リクエストの度に生成されます。コネクションごとに複数のリクエストがあることに注意してください
+（Keep Aliveなコネクションの場合）。</p>
+<!--
 <p>Emitted each time there is request. Note that there may be multiple requests
 per connection (in the case of keep-alive connections).</p>
+-->
 
+<h3>イベント: 'upgrade'</h3>
+<!--
 <h3>Event: 'upgrade'</h3>
+-->
 
 <p><code>function (request, socket, head)</code></p>
 
+<p>クライアントがHTTPのアップグレードを要求する度に生成されます。
+このイベントが監視されない場合、アップグレードを要求したクライアントのコネクションはクローズされます。</p>
+<!--
 <p>Emitted each time a client requests a http upgrade. If this event isn't
 listened for, then clients requesting an upgrade will have their connections
 closed.</p>
+-->
 
+<ul>
+<li><code>request</code>はリクエストイベントと同様にHTTPリクエストへの引数です。</li>
+<li><code>socket</code>はサーバとクライアントの間のネットワークソケットです。</li>
+<li><code>head</code>はアップグレードストリームの最初のパケットを持つBufferのインスタンスです。空の場合もあります。</li>
+</ul>
+<!--
 <ul><li><code>request</code> is the arguments for the http request, as it is in the request event.</li><li><code>socket</code> is the network socket between the server and client.</li><li><code>head</code> is an instance of Buffer, the first packet of the upgraded stream, this may be empty.</li></ul>
+-->
 
+<p>このイベントが生成された後、リクエスト元のソケットはもう<code>data</code>イベントリスナーを持ちません。
+このソケットでサーバへ送られたデータを扱うためにそれをバインドしなければならないことを意味します。</p>
+<!--
 <p>After this event is emitted, the request's socket will not have a <code>data</code>
 event listener, meaning you will need to bind to it in order to handle data
 sent to the server on that socket.</p>
+-->
 
+<h3>イベント: 'clientError'</h3>
+<!--
 <h3>Event: 'clientError'</h3>
+-->
 
 <p><code>function (exception) {}</code></p>
 
+<p>クライアントコネクションが'error'イベントを発した場合 － ここに転送されます。</p>
+<!--
 <p>If a client connection emits an 'error' event - it will forwarded here.</p>
+-->
 
 <h3>http.createServer(requestListener)</h3>
 
+<p>新しいWebサーバオブジェクトを返します。</p>
+<!--
 <p>Returns a new web server object.</p>
+-->
 
+<p><code>requestListener</code>は自動的に<code>'request'</code>イベントに加えられる関数です。</p>
+<!--
 <p>The <code>requestListener</code> is a function which is automatically
 added to the <code>'request'</code> event.</p>
+-->
 
 <h3>server.listen(port, [hostname], [callback])</h3>
 
+<p>指定されたポートとホスト名でコネクションの受け入れを開始します。
+ホスト名が省略されると、サーバはどんなIPv4アドレスへの接続も受け入れます（<code>INADDR_ANY</code>）</p>
+<!--
 <p>Begin accepting connections on the specified port and hostname.  If the
 hostname is omitted, the server will accept connections directed to any
 IPv4 address (<code>INADDR_ANY</code>).</p>
+-->
 
+<p>UNIXドメインソケットを待ち受ける場合、ポートとホスト名ではなくファイル名を提供します。</p>
+<!--
 <p>To listen to a unix socket, supply a filename instead of port and hostname.</p>
+-->
 
+<p>この関数は非同期です。最後の引数の<code>callback</code>はサーバがポートをバインドすると呼び出されます。</p>
+<!--
 <p>This function is asynchronous. The last parameter <code>callback</code> will be called
 when the server has been bound to the port.</p>
+-->
 
 <h3>server.listen(path, [callback])</h3>
 
+<p><code>path</code>で与えられたコネクションを待ち受けるUNIXドメインソケットのサーバを開始します。</p>
+<!--
 <p>Start a UNIX socket server listening for connections on the given <code>path</code>.</p>
+-->
 
+<p>この関数は非同期です。最後の引数の<code>callback</code>はサーバがバインドすると呼び出されます。</p>
+<!--
 <p>This function is asynchronous. The last parameter <code>callback</code> will be called
 when the server has been bound.</p>
+-->
 
 <h3>server.setSecure(credentials)</h3>
 
+<p>秘密鍵とサーバ証明書を指定した暗号モジュールの認証情報で、サーバに対してHTTPSサポートを有効にします。オプションで認証局で証明されたクライアント認証を使うこともできます。</p>
+<!--
 <p>Enables HTTPS support for the server, with the crypto module credentials specifying the private key and certificate of the server, and optionally the CA certificates for use in client authentication.</p>
+-->
 
+<p>認証情報が一つ以上の認証局の証明書を持っている場合、
+サーバはHTTPSコネクションにおけるハンドシェークの一部としてクライアント証明書を送るようクライアントに要求します。
+その有効性と内容は、サーバの<code>resuest.connection</code>から<code>verifyPeer()</code>と<code>getPeerCertificate()</code>を通じてアクセスできます。</p>
+<!--
 <p>If the credentials hold one or more CA certificates, then the server will request for the client to submit a client certificate as part of the HTTPS connection handshake. The validity and content of this can be accessed via verifyPeer() and getPeerCertificate() from the server's request.connection.</p>
+-->
 
 <h3>server.close()</h3>
 
+<p>サーバが新しいコネクションを受け付けるのを終了します。</p>
+<!--
 <p>Stops the server from accepting new connections.</p>
+-->
 
 <h2 id="http.ServerRequest">http.ServerRequest</h2>
 
