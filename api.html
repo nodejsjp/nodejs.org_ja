@@ -1687,53 +1687,105 @@ you can also pass arguments to the callback.</p>
 <p>Stops a interval from triggering.</p>
 -->
 
+<h2 id="Child Processes">子プロセス</h2>
+<!--
 <h2 id="Child Processes">Child Processes</h2>
+-->
 
+<p>Nodeは<code>ChildProcess</code>クラスを通じて3方向の<code>popen(3)</code>機能を提供します。</p>
+<!--
 <p>Node provides a tri-directional <code>popen(3)</code> facility through the <code>ChildProcess</code>
 class.</p>
+-->
 
+<p>それは完全にノンブロッキングな方法で子プロセスの<code>stdin</code>、<code>stdout</code>、そして<code>stderr</code>を通じてデータを流すことを可能にします。</p>
+<!--
 <p>It is possible to stream data through the child's <code>stdin</code>, <code>stdout</code>, and
 <code>stderr</code> in a fully non-blocking way.</p>
+-->
 
+<p>子プロセスの生成は<code>require('child_process').spawn()</code>を使います。</p>
+<!--
 <p>To create a child process use <code>require('child_process').spawn()</code>.</p>
+-->
 
+<p>子プロセスは常に3本のストリームと関連づけられています。
+<code>child.stdin</code>、<code>child.stdout</code>、そして<code>child.stderr</code>です。
+</p>
+<!--
 <p>Child processes always have three streams associated with them. <code>child.stdin</code>,
 <code>child.stdout</code>, and <code>child.stderr</code>.</p>
+-->
 
+<p><code>ChildProcess</code>は<code>EventEmitter</code>です。</p>
+<!--
 <p><code>ChildProcess</code> is an <code>EventEmitter</code>.</p>
+-->
 
+<h3>イベント:  'exit'</h3>
+<!--
 <h3>Event:  'exit'</h3>
+-->
 
 <p><code>function (code, signal) {}</code></p>
 
+<p>このイベントは子プロセスが終了した後で生成されます。
+プロセスが普通に終了した場合、<code>code</code>はプロセスの終了コードです。
+それ以外の場合は<code>null</code>です。
+プロセスがシグナルを受け取って終了した場合、<code>signal</code>は文字列によるシグナルの名前です。
+それ以外の場合は<code>null</code>です。</p>
+<!--
 <p>This event is emitted after the child process ends. If the process terminated
 normally, <code>code</code> is the final exit code of the process, otherwise <code>null</code>. If
 the process terminated due to receipt of a signal, <code>signal</code> is the string name
 of the signal, otherwise <code>null</code>.</p>
+-->
 
+<p>このイベントが生成された後は、<code>'output'</code>および<code>'error'</code>コールバックはもう呼ばれなくなります。</p>
+<!--
 <p>After this event is emitted, the <code>'output'</code> and <code>'error'</code> callbacks will no
 longer be made.</p>
+-->
 
+<p><code>waitpid(2)</code>を参照してください。</p>
+<!--
 <p>See <code>waitpid(2)</code>.</p>
+-->
 
 <h3>child.stdin</h3>
 
+<p>子プロセスの<code>stdin</code>を表現する<code>Writable Stream</code>です。
+多くの場合、<code>end()</code>を通じてこのストリームを閉じると子プロセスが終了する原因となります。</p>
+<!--
 <p>A <code>Writable Stream</code> that represents the child process's <code>stdin</code>.
 Closing this stream via <code>end()</code> often causes the child process to terminate.</p>
+-->
 
 <h3>child.stdout</h3>
 
+<p>子プロセスの<code>stdout</code>を表現する<code>Readable Stream</code>です。</p>
+<!--
 <p>A <code>Readable Stream</code> that represents the child process's <code>stdout</code>.</p>
+-->
 
 <h3>child.stderr</h3>
 
+<p>子プロセスの<code>stderr</code>を表現する<code>Readable Stream</code>です。</p>
+<!--
 <p>A <code>Readable Stream</code> that represents the child process's <code>stderr</code>.</p>
+-->
 
 <h3>child.pid</h3>
 
+<p>子プロセスのPIDです。</p>
+<!--
 <p>The PID of the child process.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>var spawn = require('child_process').spawn,
     grep  = spawn('grep', ['ssh']);
@@ -1743,22 +1795,38 @@ grep.stdin.end();</code></pre>
 
 <h3>child_process.spawn(command, args=[], [options])</h3>
 
+<p><code>args</code>をコマンドライン引数として、与えられた<code>command</code>で新しいプロセスを起動します。
+<code>args</code>が省略された場合、空の配列がデフォルトです。</p>
+<!--
 <p>Launches a new process with the given <code>command</code>, with  command line arguments in <code>args</code>.
 If omitted, <code>args</code> defaults to an empty Array.</p>
+-->
 
+<p>第3引数は追加のオプションを指定するために使われ、そのデフォルトは:</p>
+<!--
 <p>The third argument is used to specify additional options, which defaults to:</p>
+-->
 
 <pre><code>{ cwd: undefined
 , env: process.env,
 , customFds: [-1, -1, -1]
 }</code></pre>
 
+<p><code>cwd</code>で起動されたプロセスのワーキングディレクトリを指定することができます。
+<code>env</code>は新しいプロセスに見える環境変数を指定するために使います。
+<code>customFds</code>は新しいプロセスの[stdin, stout, stderr]を既存のストリームに接続することを可能にします;
+<code>-1</code>は新しいストリームが作られなければならないことを意味します。</p>
+<!--
 <p><code>cwd</code> allows you to specify the working directory from which the process is spawned.
 Use <code>env</code> to specify environment variables that will be visible to the new process.
 With <code>customFds</code> it is possible to hook up the new process' [stdin, stout, stderr] to
 existing streams; <code>-1</code> means that a new stream should be created.</p>
+-->
 
+<p><code>ls -lh /usr</code>を実行して<code>stdout</code>、<code>stderr</code>、および終了コードを取得する例:</p>
+<!--
 <p>Example of running <code>ls -lh /usr</code>, capturing <code>stdout</code>, <code>stderr</code>, and the exit code:</p>
+-->
 
 <pre><code>var sys   = require('sys'),
     spawn = require('child_process').spawn,
@@ -1776,7 +1844,10 @@ ls.on('exit', function (code) {
   console.log('child process exited with code ' + code);
 });</code></pre>
 
+<p>とても手の込んだ方法で実行する'ps ax | grep ssh'の例:</p>
+<!--
 <p>Example: A very elaborate way to run 'ps ax | grep ssh'</p>
+-->
 
 <pre><code>var sys   = require('sys'),
     spawn = require('child_process').spawn,
@@ -1812,7 +1883,10 @@ grep.on('exit', function (code) {
   }
 });</code></pre>
 
+<p>execの失敗をチェックする例:</p>
+<!--
 <p>Example of checking for failed exec:</p>
+-->
 
 <pre><code>var spawn = require('child_process').spawn,
     child = spawn('bad_command');
@@ -1823,12 +1897,18 @@ child.stderr.on('data', function (data) {
   }
 });</code></pre>
 
+<p>関連項目: <code>child_process.exec()</code></p>
+<!--
 <p>See also: <code>child_process.exec()</code></p>
+-->
 
 <h3>child_process.exec(command, [options], callback)</h3>
 
+<p>コマンドを子プロセスとして実行し、その出力を蓄えて、その全てをコールバックに渡す高水準の方法です。</p>
+<!--
 <p>High-level way to execute a command as a child process, buffer the
 output, and return it all in a callback.</p>
+-->
 
 <pre><code>var sys   = require('sys'),
     exec  = require('child_process').exec,
@@ -1843,12 +1923,23 @@ child = exec('cat *.js bad_file | wc -l',
     }
 });</code></pre>
 
+<p>コールバックは引数<code>(error, stdout, stderr)</code>を得ます。
+成功すると、<code>error</code>は<code>null</code>になります。
+エラーだと、<code>error</code>は<code>Error</code>のインスタンスとなり、
+<code>err.code</code>は子プロセスの終了コード、
+<code>err.signal</code>はプロセスを終了させたシグナルとなります。</p>
+<!--
 <p>The callback gets the arguments <code>(error, stdout, stderr)</code>. On success, <code>error</code>
 will be <code>null</code>.  On error, <code>error</code> will be an instance of <code>Error</code> and <code>err.code</code>
 will be the exit code of the child process, and <code>err.signal</code> will be set to the
 signal that terminated the process.</p>
+-->
 
+<p>任意の第2引数でいくつかのオプションを指定することができます。
+オプションのデフォルトは</p>
+<!--
 <p>There is a second optional argument to specify several options. The default options are</p>
+-->
 
 <pre><code>{ encoding: 'utf8'
 , timeout: 0
@@ -1858,16 +1949,25 @@ signal that terminated the process.</p>
 , env: null
 }</code></pre>
 
+<p>もし<code>timeout</code>が0より大きいと、子プロセスは実行時間が<code>timeout</code>ミリ秒よりも長くなるとkillされます。子プロセスは<code>killSignal</code>でkillされます（デフォルト: <code>'SIGKILL'</code>）。
+<code>maxBuffer</code>は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスはkillされます。</p>
+<!--
 <p>If <code>timeout</code> is greater than 0, then it will kill the child process
 if it runs longer than <code>timeout</code> milliseconds. The child process is killed with
 <code>killSignal</code> (default: <code>'SIGKILL'</code>). <code>maxBuffer</code> specifies the largest
 amount of data allowed on stdout or stderr - if this value is exceeded then
 the child process is killed.</p>
+-->
 
 <h3>child.kill(signal='SIGTERM')</h3>
 
+<p>子プロセスにシグナルを送ります。
+引数が与えられない場合、子プロセスには<code>'SIGTERM'</code>が送られます。
+利用可能なシグナルの一覧は<code>signal(7)</code>を参照してください。</p>
+<!--
 <p>Send a signal to the child process. If no argument is given, the process will
 be sent <code>'SIGTERM'</code>. See <code>signal(7)</code> for a list of available signals.</p>
+-->
 
 <pre><code>var spawn = require('child_process').spawn,
     grep  = spawn('grep', ['ssh']);
@@ -1879,10 +1979,16 @@ grep.on('exit', function (code, signal) {
 // send SIGHUP to process
 grep.kill('SIGHUP');</code></pre>
 
+<p>この関数は<code>kill</code>と呼ばれるものの、子プロセスに届けられるシグナルが実際には子プロセスを殺さないかもしれないことに注意してください。<code>kill</code>はただプロセスにシグナルを送るだけです。</p>
+<!--
 <p>Note that while the function is called <code>kill</code>, the signal delivered to the child
 process may not actually kill it.  <code>kill</code> really just sends a signal to a process.</p>
+-->
 
+<p><code>kill(2)</code>を参照してください。</p>
+<!--
 <p>See <code>kill(2)</code></p>
+-->
 
 <h2 id="Script">Script</h2>
 
