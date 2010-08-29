@@ -2864,15 +2864,28 @@ start at 0.  When used, both the limits must be specified always.</p>
 
 <h2 id="HTTP">HTTP</h2>
 
+<p>HTTPサーバおよびクライアントを使用するにはいずれも<code>require('http')</code>が必要です。</p>
+<!--
 <p>To use the HTTP server and client one must <code>require('http')</code>.</p>
+-->
 
+<p>NodeのHTTPインタフェースは、伝統的に扱いが難しかったプロトコルの多くの機能をサポートするように設計されています。
+とりわけ大きくて、場合によってはチャンク化されたメッセージです。
+インタフェースは決してリクエストまたはレスポンス全体をバッファリングしないように気をつけています
+－ 利用者はストリームデータを使うことができます。
+</p>
+<!--
 <p>The HTTP interfaces in Node are designed to support many features
 of the protocol which have been traditionally difficult to use.
 In particular, large, possibly chunk-encoded, messages. The interface is
 careful to never buffer entire requests or responses--the
 user is able to stream data.</p>
+-->
 
+<p>HTTPメッセージヘッダはこのようおなオブジェクトとして表現されます:</p>
+<!--
 <p>HTTP message headers are represented by an object like this:</p>
+-->
 
 <pre><code>{ 'content-length': '123'
 , 'content-type': 'text/plain'
@@ -2880,14 +2893,25 @@ user is able to stream data.</p>
 , 'accept': '*/*'
 }</code></pre>
 
+<p>キーは小文字化されます。値は変更されません。</p>
+<!--
 <p>Keys are lowercased. Values are not modified.</p>
+-->
 
+<p>考えられるHTTPアプリケーションを完全にサポートするために、
+NodeのHTTP APIはとても低水準です。それはストリームのハンドリングとメッセージの解析だけに対処します。
+解析はメッセージをヘッダとボディに分けますが、実際のヘッダとボディは解析しません。</p>
+<!--
 <p>In order to support the full spectrum of possible HTTP applications, Node's
 HTTP API is very low-level. It deals with stream handling and message
 parsing only. It parses a message into headers and body but it does not
 parse the actual headers or the body.</p>
+-->
 
+<p>プラットフォームでOpenSSLが利用可能であればHTTPSがサポートされます。</p>
+<!--
 <p>HTTPS is supported if OpenSSL is available on the underlying platform.</p>
+-->
 
 <h2 id="http.Server">http.Server</h2>
 
