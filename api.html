@@ -2197,18 +2197,32 @@ global variable leakage, <code>script.runInNewContext</code> is quite useful, bu
 requires a separate process.</p>
 -->
 
-<h2 id="File System">File System</h2>
+<h2 id="File System">ファイルシステム</h2>
 
+<p>File I/OはPOSIX標準の関数に対する単純なラッパーとして提供されます。
+このモジュールを使用するには<code>require('fs')</code>してください。
+全てのメソッドは非同期と同期の形式があります。</p>
+<!--
 <p>File I/O is provided by simple wrappers around standard POSIX functions.  To
 use this module do <code>require('fs')</code>. All the methods have asynchronous and
 synchronous forms. </p>
+-->
 
+<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。
+引数として渡される完了コールバックはメソッドに依存しますが、
+最初の引数は常に例外のために予約されています。
+操作が成功で完了すると最初の引数は<code>null</code>または<code>undefined</code>となります</p>
+<!--
 <p>The asynchronous form always take a completion callback as its last argument.
 The arguments passed to the completion callback depend on the method, but the
 first argument is always reserved for an exception. If the operation was
 completed successfully, then the first argument will be <code>null</code> or <code>undefined</code>.</p>
+-->
 
+<p>非同期バージョンの例です:</p>
+<!--
 <p>Here is an example of the asynchronous version:</p>
+-->
 
 <pre><code>var fs = require('fs');
 
@@ -2217,15 +2231,22 @@ fs.unlink('/tmp/hello', function (err) {
   console.log('successfully deleted /tmp/hello');
 });</code></pre>
 
+<p>同期バージョンです:</p>
+<!--
 <p>Here is the synchronous version:</p>
+-->
 
 <pre><code>var fs = require('fs');
 
 fs.unlinkSync('/tmp/hello')
 console.log('successfully deleted /tmp/hello');</code></pre>
 
+<p>非同期メソッドでは順序の保証はありません。
+以下のような傾向のエラーがあります。</p>
+<!--
 <p>With the asynchronous methods there is no guaranteed ordering. So the
 following is prone to error:</p>
+-->
 
 <pre><code>fs.rename('/tmp/hello', '/tmp/world', function (err) {
   if (err) throw err;
@@ -2236,8 +2257,12 @@ fs.stat('/tmp/world', function (err, stats) {
   console.log('stats: ' + JSON.stringify(stats));
 });</code></pre>
 
+<p><code>fs.stat</code>は<code>fs.rename</code>より先に実行される可能性がありrます。
+正しい方法はコールバックをチェーンすることです。</p>
+<!--
 <p>It could be that <code>fs.stat</code> is executed before <code>fs.rename</code>.
 The correct way to do this is to chain the callbacks.</p>
+-->
 
 <pre><code>fs.rename('/tmp/hello', '/tmp/world', function (err) {
   if (err) throw err;
@@ -2247,37 +2272,62 @@ The correct way to do this is to chain the callbacks.</p>
   });
 });</code></pre>
 
+<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。
+同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。</p>
+<!--
 <p>In busy processes, the programmer is <em>strongly encouraged</em> to use the
 asynchronous versions of these calls. The synchronous versions will block
 the entire process until they complete--halting all connections.</p>
+-->
 
 <h3>fs.rename(path1, path2, [callback])</h3>
 
+<p>非同期のrename(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous rename(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.renameSync(path1, path2)</h3>
 
+<p>同期のrename(2)。</p>
+<!--
 <p>Synchronous rename(2).</p>
+-->
 
 <h3>fs.truncate(fd, len, [callback])</h3>
 
+<p>非同期のftruncate(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous ftruncate(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.truncateSync(fd, len)</h3>
 
+<p>同期のftruncate(2)。</p>
+<!--
 <p>Synchronous ftruncate(2).</p>
+-->
 
 <h3>fs.chmod(path, mode, [callback])</h3>
 
+<p>非同期のchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous chmod(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.chmodSync(path, mode)</h3>
 
+<p>同期のchmod(2)。</p>
+<!--
 <p>Synchronous chmod(2).</p>
+-->
 
 <h3>fs.stat(path, [callback])</h3>
 
+<p>非同期のstat(2)。コールバックは2つの引数を受け取る<code>(err, stats)</code>で、<code>stats</code>は<code>fs.Stats</code>オブジェクトです。</p>
+<!--
 <p>Asynchronous stat(2). The callback gets two arguments <code>(err, stats)</code> where <code>stats</code> is a <code>fs.Stats</code> object. It looks like this:</p>
+-->
 
 <pre><code>{ dev: 2049
 , ino: 305352
@@ -2294,209 +2344,387 @@ the entire process until they complete--halting all connections.</p>
 , ctime: '2009-06-29T11:11:40Z' 
 }</code></pre>
 
+<p>より詳しくは後述の<code>fs.Stats</code>の節を参照してください。</p>
+<!--
 <p>See the <code>fs.Stats</code> section below for more information.</p>
+-->
 
 <h3>fs.lstat(path, [callback])</h3>
 
+<p>非同期のlstat(2)。コールバックは2つの引数を受け取る<code>(err, stats)</code>で、<code>stats</code>は<code>fs.Stats</code>オブジェクトです。</p>
+<!--
 <p>Asynchronous lstat(2). The callback gets two arguments <code>(err, stats)</code> where <code>stats</code> is a <code>fs.Stats</code> object.</p>
+-->
 
 <h3>fs.fstat(fd, [callback])</h3>
 
+<p>非同期のfstat(2)。コールバックは2つの引数を受け取る<code>(err, stats)</code>で、<code>stats</code>は<code>fs.Stats</code>オブジェクトです。</p>
+<!--
 <p>Asynchronous fstat(2). The callback gets two arguments <code>(err, stats)</code> where <code>stats</code> is a <code>fs.Stats</code> object.</p>
+-->
 
 <h3>fs.statSync(path)</h3>
 
+<p>同期のstat(2)。<code>fs.Stats</code>のインスタンスを返します。</p>
+<!--
 <p>Synchronous stat(2). Returns an instance of <code>fs.Stats</code>.</p>
+-->
 
 <h3>fs.lstatSync(path)</h3>
 
+<p>同期のlstat(2)。<code>fs.Stats</code>のインスタンスを返します。</p>
+<!--
 <p>Synchronous lstat(2). Returns an instance of <code>fs.Stats</code>.</p>
+-->
 
 <h3>fs.fstatSync(fd)</h3>
 
+<p>同期のfstat(2)。<code>fs.Stats</code>のインスタンスを返します。</p>
+<!--
 <p>Synchronous fstat(2). Returns an instance of <code>fs.Stats</code>.</p>
+-->
 
 <h3>fs.link(srcpath, dstpath, [callback])</h3>
 
+<p>非同期のlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous link(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.linkSync(dstpath, srcpath)</h3>
 
+<p>同期のlink(2)。</p>
+<!--
 <p>Synchronous link(2).</p>
+-->
 
 <h3>fs.symlink(linkdata, path, [callback])</h3>
 
+<p>非同期のsymlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous symlink(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.symlinkSync(linkdata, path)</h3>
 
+<p>同期のsymlink(2)。</p>
+<!--
 <p>Synchronous symlink(2).</p>
+-->
 
 <h3>fs.readlink(path, [callback])</h3>
 
+<p>非同期のreadlink(2)。コールバックは2つの引数を受け取る<code>(err, resolvedPath)</code>です。</p>
+<!--
 <p>Asynchronous readlink(2). The callback gets two arguments <code>(err, resolvedPath)</code>. </p>
+-->
 
 <h3>fs.readlinkSync(path)</h3>
 
+<p>同期のreadlink(2)。解決されたパスを返します。</p>
+<!--
 <p>Synchronous readlink(2). Returns the resolved path.</p>
+-->
 
 <h3>fs.realpath(path, [callback])</h3>
 
+<p>非同期のrealpath(2)。コールバックは2つの引数を受け取る<code>(err, resolvedPath)</code>です。</p>
+<!--
 <p>Asynchronous realpath(2).  The callback gets two arguments <code>(err, resolvedPath)</code>.</p>
+-->
 
 <h3>fs.realpathSync(path)</h3>
 
+<p>同期のrealpath(2)。解決されたパスを返します。</p>
+<!--
 <p>Synchronous realpath(2). Returns the resolved path.</p>
+-->
 
 <h3>fs.unlink(path, [callback])</h3>
 
+<p>非同期のunlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous unlink(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.unlinkSync(path)</h3>
 
+<p>同期のunlink(2)。</p>
+<!--
 <p>Synchronous unlink(2).</p>
+-->
 
 <h3>fs.rmdir(path, [callback])</h3>
 
+<p>非同期のrmdir(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous rmdir(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.rmdirSync(path)</h3>
 
+<p>同期のrmdir(2)。</p>
+<!--
 <p>Synchronous rmdir(2).</p>
+-->
 
 <h3>fs.mkdir(path, mode, [callback])</h3>
 
+<p>非同期のmkdir(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous mkdir(2). No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.mkdirSync(path, mode)</h3>
 
+<p>同期のmkdir(2)。</p>
+<!--
 <p>Synchronous mkdir(2).</p>
+-->
 
 <h3>fs.readdir(path, [callback])</h3>
 
+<p>非同期のreaddir(3)。ディレクトリの内容を読み込みます。
+コールバックは2つの引数を受け取る<code>(err, files)</code>で、
+<code>files</code>は<code>'.'</code>と<code>'..'</code>を除くディレクトリ内のファイル名の配列です。</p>
+<!--
 <p>Asynchronous readdir(3).  Reads the contents of a directory.
 The callback gets two arguments <code>(err, files)</code> where <code>files</code> is an array of
 the names of the files in the directory excluding <code>'.'</code> and <code>'..'</code>.</p>
+-->
 
 <h3>fs.readdirSync(path)</h3>
 
+<p>同期のreaddir(3)。<code>'.'</code>と<code>'..'</code>を除くディレクトリ内のファイル名の配列を返します。</p>
+<!--
 <p>Synchronous readdir(3). Returns an array of filenames excluding <code>'.'</code> and
 <code>'..'</code>.</p>
+-->
 
 <h3>fs.close(fd, [callback])</h3>
 
+<p>非同期のclose(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。</p>
+<!--
 <p>Asynchronous close(2).  No arguments other than a possible exception are given to the completion callback.</p>
+-->
 
 <h3>fs.closeSync(fd)</h3>
 
+<p>同期のclose(2)。</p>
+<!--
 <p>Synchronous close(2).</p>
+-->
 
 <h3>fs.open(path, flags, mode=0666, [callback])</h3>
 
+<p>非同期のファイルオープン。open(2)を参照してください。
+フラグは'r'、'r+'、'w'、'w+'、'a'、あるいは'a+'です。
+コールバックは2つの引数を受け取る<code>(err, fd)</code>です。</p>
+<!--
 <p>Asynchronous file open. See open(2). Flags can be 'r', 'r+', 'w', 'w+', 'a',
 or 'a+'. The callback gets two arguments <code>(err, fd)</code>. </p>
+-->
 
 <h3>fs.openSync(path, flags, mode=0666)</h3>
 
+<p>同期のopen(2)。</p>
+<!--
 <p>Synchronous open(2). </p>
+-->
 
 <h3>fs.write(fd, buffer, offset, length, position, [callback])</h3>
 
+<p><code>fd</code>で指定されたファイルに<code>buffer</code>を書き込みます。</p>
+<!--
 <p>Write <code>buffer</code> to the file specified by <code>fd</code>.</p>
+-->
 
+<p><code>offset</code>と<code>length</code>でバッファのどの部分が書き込まれるかが決まります。</p>
+<!--
 <p><code>offset</code> and <code>length</code> determine the part of the buffer to be written.</p>
+-->
 
+<p><code>position</code>はデータが書き込まれる位置をファイルの先頭からのオフセットで示します。
+<code>position</code>が<code>null</code>の場合、データは現在の位置から書き込まれます。
+pwrite(2)を参照してください。</p>
+<!--
 <p><code>position</code> refers to the offset from the beginning of the file where this data
 should be written. If <code>position</code> is <code>null</code>, the data will be written at the
 current position.
 See pwrite(2).</p>
+-->
 
+<p>コールバックは2つの引数が与えられる<code>(err, written)</code>で、
+<code>written</code>は書き込まれた<em>バイト数</em>を示します。</p>
+<!--
 <p>The callback will be given two arguments <code>(err, written)</code> where <code>written</code>
 specifies how many <em>bytes</em> were written.</p>
+-->
 
 <h3>fs.write(fd, str, position, encoding='utf8', [callback])</h3>
 
+<p><code>fd</code>で指定されたファイルに与えられた<code>encoding</code>を使って文字列<code>str</code>全体を書き込みます。</p>
+<!--
 <p>Write the entire string <code>str</code> using the given <code>encoding</code> to the file specified
 by <code>fd</code>.</p>
+-->
 
+<p><code>position</code>はデータが書き込まれる位置をファイルの先頭からのオフセットで示します。
+<code>position</code>が<code>null</code>の場合、データは現在の位置から書き込まれます。
+pwrite(2)を参照してください。</p>
+<!--
 <p><code>position</code> refers to the offset from the beginning of the file where this data
 should be written. If <code>position</code> is <code>null</code>, the data will be written at the
 current position.
 See pwrite(2).</p>
+-->
 
+<p>コールバックは2つの引数が与えられる<code>(err, written)</code>で、
+<code>written</code>は書き込まれた<em>バイト数</em>を示します。</p>
+<!--
 <p>The callback will be given two arguments <code>(err, written)</code> where <code>written</code>
 specifies how many <em>bytes</em> were written.</p>
+-->
 
 <h3>fs.writeSync(fd, buffer, offset, length, position)</h3>
 
+<p>同期版のバッファベース<code>fs.write()</code>。書き込まれたバイト数を返します。</p>
+<!--
 <p>Synchronous version of buffer-based <code>fs.write()</code>. Returns the number of bytes written.</p>
+-->
 
 <h3>fs.writeSync(fd, str, position, encoding='utf8')</h3>
 
+<p>同期版の文字列ベース<code>fs.write()</code>。書き込まれたバイト数を返します。</p>
+<!--
 <p>Synchronous version of string-based <code>fs.write()</code>. Returns the number of bytes written.</p>
+-->
 
 <h3>fs.read(fd, buffer, offset, length, position, [callback])</h3>
 
+<p><code>fd</code>で指定されたファイルからデータを読み込みます。</p>
+<!--
 <p>Read data from the file specified by <code>fd</code>.</p>
+-->
 
+<p><code>buffer</code>はデータが書き込まれるバッファです。</p>
+<!--
 <p><code>buffer</code> is the buffer that the data will be written to.</p>
+-->
 
+<p><code>offset</code>は書き込みを開始するバッファ内のオフセットです。</p>
+<!--
 <p><code>offset</code> is offset within the buffer where writing will start.</p>
+-->
 
+<p><code>length</code>は読み込むバイト数を指定する整数です。</p>
+<!--
 <p><code>length</code> is an integer specifying the number of bytes to read.</p>
+-->
 
+<p><code>position</code>はファイルの読み込みを開始する位置を指定する整数です。
+<code>position</code>が<code>null</code>の場合、データは現在の位置から読み込まれます。</p>
+<!--
 <p><code>position</code> is an integer specifying where to begin reading from in the file.
 If <code>position</code> is <code>null</code>, data will be read from the current file position.</p>
+-->
 
+<p>コールバックは2つの引数が与えられる<code>(err, bytesRead)</code>です。</p>
+<!--
 <p>The callback is given the two arguments, <code>(err, bytesRead)</code>.</p>
+-->
 
 <h3>fs.read(fd, length, position, encoding, [callback])</h3>
 
+<p><code>fd</code>で指定されたファイルからデータを読み込みます。</p>
+<!--
 <p>Read data from the file specified by <code>fd</code>.</p>
+-->
 
+<p><code>length</code>は読み込むバイト数を指定する整数です。</p>
+<!--
 <p><code>length</code> is an integer specifying the number of bytes to read.</p>
+-->
 
+<p><code>position</code>はファイルの読み込みを開始する位置を指定する整数です。
+<code>position</code>が<code>null</code>の場合、データは現在の位置から読み込まれます。</p>
+<!--
 <p><code>position</code> is an integer specifying where to begin reading from in the file.
 If <code>position</code> is <code>null</code>, data will be read from the current file position.</p>
+-->
 
+<p><code>encoding</code>は<code>fd</code>から読み込まれるデータを文字列にするためのエンコーディングです。</p>
+<!--
 <p><code>encoding</code> is the desired encoding of the string of data read in from <code>fd</code>.</p>
+-->
 
+<p>コールバックは3つの引数が与えられる<code>(err, str, bytesRead)</code>です。</p>
+<!--
 <p>The callback is given the three arguments, <code>(err, str, bytesRead)</code>.</p>
+-->
 
 <h3>fs.readSync(fd, buffer, offset, length, position)</h3>
 
+<p>同期版のバッファベース<code>fs.read</code>。<code>bytesRead</code>の数を返します。</p>
+<!--
 <p>Synchronous version of buffer-based <code>fs.read</code>. Returns the number of <code>bytesRead</code>.</p>
+-->
 
 <h3>fs.readSync(fd, length, position, encoding)</h3>
 
+<p>同期版の文字列ベース<code>fs.read</code>。<code>bytesRead</code>の数を返します。</p>
+<!--
 <p>Synchronous version of string-based <code>fs.read</code>. Returns the number of <code>bytesRead</code>.</p>
+-->
 
 <h3>fs.readFile(filename, [encoding], [callback])</h3>
 
+<p>ファイル全体の内容を非同期に読み込みます。例:</p>
+<!--
 <p>Asynchronously reads the entire contents of a file. Example:</p>
+-->
 
 <pre><code>fs.readFile('/etc/passwd', function (err, data) {
   if (err) throw err;
   console.log(data);
 });</code></pre>
 
+<p>コールバックは2つの引数が渡される<code>(err, data)</code>で、<code>data</code>はファイルの内容です。</p>
+<!--
 <p>The callback is passed two arguments <code>(err, data)</code>, where <code>data</code> is the
 contents of the file.</p>
+-->
 
+<p>エンコーディングが指定されなければ、生のバッファが渡されます。</p>
+<!--
 <p>If no encoding is specified, then the raw buffer is returned.</p>
+-->
 
 <h3>fs.readFileSync(filename, [encoding])</h3>
 
+<p>同期版の<code>fs.readFile</code>。<code>filename</code>の内容を返します。</p>
+<!--
 <p>Synchronous version of <code>fs.readFile</code>. Returns the contents of the <code>filename</code>.</p>
+-->
 
+<p><code>encoding</code>が指定されるとこの関数は文字列を返します。
+そうでなければバッファを返します。</p>
+<!--
 <p>If <code>encoding</code> is specified then this function returns a string. Otherwise it
 returns a buffer.</p>
+-->
 
 <h3>fs.writeFile(filename, data, encoding='utf8', [callback])</h3>
 
+<p>非同期にデータをファイルに書き込みます。<code>data</code>は文字列またはバッファです。</p>
+<!--
 <p>Asynchronously writes data to a file. <code>data</code> can be a string or a buffer.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>fs.writeFile('message.txt', 'Hello Node', function (err) {
   if (err) throw err;
@@ -2505,29 +2733,47 @@ returns a buffer.</p>
 
 <h3>fs.writeFileSync(filename, data, encoding='utf8')</h3>
 
+<p>同期版の<code>fs.writeFile</code>。</p>
+<!--
 <p>The synchronous version of <code>fs.writeFile</code>.</p>
+-->
 
 <h3>fs.watchFile(filename, [options], listener)</h3>
 
+<p><code>filename</code>の変更を監視します。コールバックの<code>listener</code>はファイルが変更される度に呼び出されます。</p>
+<!--
 <p>Watch for changes on <code>filename</code>. The callback <code>listener</code> will be called each
 time the file changes.</p>
+-->
 
+<p>2番目の引数はオプションです。<code>options</code>が与えられるなら、オブジェクトはbooleanの2つのメンバ、
+<code>persistent</code>と<code>interval</code>（ポーリング間隔のミリ秒）を持つべきです。
+デフォルトは<code>{persistent: true, interval: 0}</code>です。</p>
+<!--
 <p>The second argument is optional. The <code>options</code> if provided should be an object
 containing two members a boolean, <code>persistent</code>, and <code>interval</code>, a polling
 value in milliseconds. The default is <code>{persistent: true, interval: 0}</code>.</p>
+-->
 
+<p><code>listener</code>は現在の状態オブジェクトと前の状態オブジェクトの2つの引数を受け取ります:</p>
+<!--
 <p>The <code>listener</code> gets two arguments the current stat object and the previous
 stat object:</p>
+-->
 
 <pre><code>fs.watchFile(f, function (curr, prev) {
   console.log('the current mtime is: ' + curr.mtime);
   console.log('the previous mtime was: ' + prev.mtime);
 });</code></pre>
 
+<p>これらの状態オブジェクトは<code>fs.Stat</code>のインスタンスです。</p>
+<!--
 <p>These stat objects are instances of <code>fs.Stat</code>. </p>
+-->
 
 <h3>fs.unwatchFile(filename)</h3>
 
+<p><code>filename</code>の変更に対する監視を終了します。</p>
 <p>Stop watching for changes on <code>filename</code>.</p>
 
 <h2 id="fs.Stats">fs.Stats</h2>
