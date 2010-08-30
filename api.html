@@ -3257,16 +3257,28 @@ authentication details.</p>
 
 <h2 id="http.ServerResponse">http.ServerResponse</h2>
 
+<p>このオブジェクトはHTTPサーバ内部 － ユーザではなく － で作成されます。
+<code>'request'</code>リスナーの第2引数として渡されます。
+これは<code>Writable Stream</code>です。</p>
+<!--
 <p>This object is created internally by a HTTP server--not by the user. It is
 passed as the second parameter to the <code>'request'</code> event. It is a <code>Writable Stream</code>.</p>
+-->
 
 <h3>response.writeHead(statusCode, [reasonPhrase], [headers])</h3>
 
+<p>レスポンスヘッダを送信します。
+ステータスコードは<code>404</code>のような3桁の数字によるHTTPステータスコードです。
+最後の引数<code>headers</code>は、レスポンスヘッダです。
+オプションとして人に読める形式の<code>reasonPhrase</code>を第2引数で与えることができます。</p>
+<!--
 <p>Sends a response header to the request. The status code is a 3-digit HTTP
 status code, like <code>404</code>. The last argument, <code>headers</code>, are the response headers.
 Optionally one can give a human-readable <code>reasonPhrase</code> as the second
 argument.</p>
+-->
 
+<p>例:</p>
 <p>Example:</p>
 
 <pre><code>var body = 'hello world';
@@ -3275,37 +3287,72 @@ response.writeHead(200, {
   'Content-Type': 'text/plain'
 });</code></pre>
 
+<p>このメソッドはメッセージごとに1回だけ呼び出されなくてはならず、
+<code>response.end()</code>の前に呼び出されなければなりません。</p>
+<!--
 <p>This method must only be called once on a message and it must
 be called before <code>response.end()</code> is called.</p>
+-->
 
 <h3>response.write(chunk, encoding='ascii')</h3>
 
+<p>このメソッドは<code>writeHead</code>の後に呼び出されなければなりません。
+これはレスポンスボディのチャンクを送信します。
+このメソッドはボディの連続した部分を提供するために複数回呼び出されるかもしれません。
+</p>
+<!--
 <p>This method must be called after <code>writeHead</code> was
 called. It sends a chunk of the response body. This method may
 be called multiple times to provide successive parts of the body.</p>
+-->
 
+<p><code>chunk</code>は文字列またはバッファにすることができます。
+<code>chunk</code>が文字列の場合、どのエンコードでバイトストリームにするかを第2引数で指定します。
+デフォルトの<code>encoding</code>は<code>'ascii'</code>です。</p>
+<!--
 <p><code>chunk</code> can be a string or a buffer. If <code>chunk</code> is a string,
 the second parameter specifies how to encode it into a byte stream.
 By default the <code>encoding</code> is <code>'ascii'</code>.</p>
+-->
 
+<p><strong>注意</strong>:これは生のHTTPボディで、
+高水準のマルチパートボディエンコーディングで使われるものとは無関係です。</p>
+<!--
 <p><strong>Note</strong>: This is the raw HTTP body and has nothing to do with
 higher-level multi-part body encodings that may be used.</p>
+-->
 
+<p>初めて<code>response.write()</code>が呼び出されると、
+バッファリングされていたヘッダ情報と最初のボディがクライアントに送信されます。
+2回目に<code>response.write()</code>が呼ばれると、
+Nodeはストリーミングデータを分割して送信しようとしていると仮定します。
+すなわち、レスポンスはボディの最初のチャンクまでバッファリングされます。</p>
+<!--
 <p>The first time <code>response.write()</code> is called, it will send the buffered
 header information and the first body to the client. The second time
 <code>response.write()</code> is called, Node assumes you're going to be streaming
 data, and sends that separately. That is, the response is buffered up to the
 first chunk of body.</p>
+-->
 
 <h3>response.end([data], [encoding])</h3>
 
+<p>このメソッドはレスポンスの全てのヘッダとボディを送信したことをサーバに伝えます;
+サーバはメッセージが終了したと考えるべきです。
+この<code>response.end()</code>メソッドは各レスポンスごとに呼び出さなければ<em>なりません</em>。</p>
+<!--
 <p>This method signals to the server that all of the response headers and body
 has been sent; that server should consider this message complete.
 The method, <code>response.end()</code>, MUST be called on each
 response.</p>
+-->
 
+<p><code>data</code>が指定された場合、
+<code>response.write(data, encoding)</code>に続けて<code>response.end()</code>を呼び出すのと等価です。</p>
+<!--
 <p>If <code>data</code> is specified, it is equivalent to calling <code>response.write(data, encoding)</code>
 followed by <code>response.end()</code>.</p>
+-->
 
 <h2 id="http.Client">http.Client</h2>
 
