@@ -3090,49 +3090,90 @@ when the server has been bound.</p>
 
 <h2 id="http.ServerRequest">http.ServerRequest</h2>
 
+<p>このオブジェクトはHTTPサーバ内部 － ユーザではなく － で作成され、
+<code>'request'</code>リスナーの第1引数として渡されます。</p>
+<!--
 <p>This object is created internally by a HTTP server--not by
 the user--and passed as the first argument to a <code>'request'</code> listener.</p>
+-->
 
+<p>これは以下のイベントを持つ<code>EventEmitter</code>です:</p>
+<!--
 <p>This is an <code>EventEmitter</code> with the following events:</p>
+-->
 
+<h3>イベント: 'data'</h3>
+<!--
 <h3>Event: 'data'</h3>
+-->
 
 <p><code>function (chunk) { }</code></p>
 
+<p>メッセージボディの断片を受信した場合に生成されます。<p>
+<!--
 <p>Emitted when a piece of the message body is received.</p>
+-->
 
+<p>例:一つの引数としてボディのチャンクが与えられます。
+転送エンコーディングでデコードされます。
+ボディのチャンクは文字列です。
+ボディのエンコーディングは<code>request.setBodyEncoding()</code>で設定されます。</p>
+<!--
 <p>Example: A chunk of the body is given as the single
 argument. The transfer-encoding has been decoded.  The
 body chunk is a string.  The body encoding is set with
 <code>request.setBodyEncoding()</code>.</p>
+-->
 
+<h3>イベント: 'end'</h3>
+<!--
 <h3>Event: 'end'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>メッセージごとに厳密に一回生成されます。引数はありません。
+このイベントが生成された後、このリクエストで生成されるイベントはありません。</p>
+<!--
 <p>Emitted exactly once for each message. No arguments.  After
 emitted no other events will be emitted on the request.</p>
+-->
 
 <h3>request.method</h3>
 
+<p>リクエストメソッドを表す文字列です。参照のみ可能です。
+例: <code>'GET'</code>、<code>'DELETE'</code></p>
+<!--
 <p>The request method as a string. Read only. Example:
 <code>'GET'</code>, <code>'DELETE'</code>.</p>
+-->
 
 <h3>request.url</h3>
 
+<p>リクエストURLを表す文字列です。
+これは実際のHTTPリクエストに存在するURLだけを含みます。</p>
+<!--
 <p>Request URL string. This contains only the URL that is
 present in the actual HTTP request. If the request is:</p>
+-->
 
 <pre><code>GET /status?name=ryan HTTP/1.1\r\n
 Accept: text/plain\r\n
 \r\n</code></pre>
 
+<p>この場合の<code>request.url</code>はこうなります:</p>
+<!--
 <p>Then <code>request.url</code> will be:</p>
+-->
 
 <pre><code>'/status?name=ryan'</code></pre>
 
+<p>URLの要素を解析したい場合は、
+<code>require('url').parse(request.url)</code>を参照してください。例:</p>
+<!--
 <p>If you would like to parse the URL into its parts, you can use
 <code>require('url').parse(request.url)</code>.  Example:</p>
+-->
 
 <pre><code>node&gt; require('url').parse('/status?name=ryan')
 { href: '/status?name=ryan'
@@ -3141,9 +3182,14 @@ Accept: text/plain\r\n
 , pathname: '/status'
 }</code></pre>
 
+<p>問い合わせ文字列からパラメータを取り出したい場合は、
+<code>require('querystring').parse</code>関数を参照するか、
+<code>require('url').parse</code>の第2引数に<code>true</code>を渡してください。例:</p>
+<!--
 <p>If you would like to extract the params from the query string,
 you can use the <code>require('querystring').parse</code> function, or pass
 <code>true</code> as the second argument to <code>require('url').parse</code>.  Example:</p>
+-->
 
 <pre><code>node&gt; require('url').parse('/status?name=ryan', true)
 { href: '/status?name=ryan'
@@ -3154,35 +3200,60 @@ you can use the <code>require('querystring').parse</code> function, or pass
 
 <h3>request.headers</h3>
 
+<p>参照のみ可能です。</p>
 <p>Read only.</p>
 
 <h3>request.httpVersion</h3>
 
+<p>HTTPプロトコルのバージョンを表す文字列です。参照のみ可能です。例:
+<code>'1.1'</code>、<code>'1.0'</code>。
+同様に<code>request.httpVersionMajor</code>は最初の整数、
+<code>request.httpVersionMinor</code>は2番目の整数です。</p>
+<!--
 <p>The HTTP protocol version as a string. Read only. Examples:
 <code>'1.1'</code>, <code>'1.0'</code>.
 Also <code>request.httpVersionMajor</code> is the first integer and
 <code>request.httpVersionMinor</code> is the second.</p>
+-->
 
 <h3>request.setEncoding(encoding=null)</h3>
 
+<p>リクエストボディのエンコーディングを設定します。
+<code>'utf8'</code>または<code>'binary'</code>のいずれかです。
+デフォルトは<code>null</code>で、<code>'data'</code>イベントが<code>Buffer</code>を生成することを意味します。</p>
+<!--
 <p>Set the encoding for the request body. Either <code>'utf8'</code> or <code>'binary'</code>. Defaults
 to <code>null</code>, which means that the <code>'data'</code> event will emit a <code>Buffer</code> object..</p>
+-->
 
 <h3>request.pause()</h3>
 
+<p>リクエストによるイベントの生成を中断します。アップロード速度を落とすのに便利です。</p>
+<!--
 <p>Pauses request from emitting events.  Useful to throttle back an upload.</p>
+-->
 
 <h3>request.resume()</h3>
 
+<p>中断されたリクエストを再開します。</p>
+<!--
 <p>Resumes a paused request.</p>
+-->
 
 <h3>request.connection</h3>
 
+<p>コネクションに関連づけられた<code>net.Stream</code>オブジェクトです。</p>
+<!--
 <p>The <code>net.Stream</code> object associated with the connection.</p>
+-->
 
+<p>HTTPSでは<code>request.connection.verifyPeer()</code>と<code>request.connection.getPeerCertificate()</code>で
+クライアントの認証の詳細を取得できます。</p>
+<!--
 <p>With HTTPS support, use request.connection.verifyPeer() and
 request.connection.getPeerCertificate() to obtain the client's
 authentication details.</p>
+-->
 
 <h2 id="http.ServerResponse">http.ServerResponse</h2>
 
