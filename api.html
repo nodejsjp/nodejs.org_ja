@@ -3372,13 +3372,23 @@ followed by <code>response.end()</code>.</p>
 
 <h2 id="http.Client">http.Client</h2>
 
+<p>HTTPクライアントは引数として渡されるサーバアドレスによって構築され、
+戻り値のハンドルは一つまたはそれ以上のリクエストを発行するのに使われます。
+接続されたサーバに応じて、クライアントはパイプライン化されたリクエストまたは、
+それぞれのストリームの後でストリームを再確立するかもしれません。
+<em>現在の実装はリクエストをパイプライン化しません。</em></p>
+<!--
 <p>An HTTP client is constructed with a server address as its
 argument, the returned handle is then used to issue one or more
 requests.  Depending on the server connected to, the client might
 pipeline the requests or reestablish the stream after each
 stream. <em>Currently the implementation does not pipeline requests.</em></p>
+-->
 
+<p><code>google.com</code>に接続する例:</p>
+<!--
 <p>Example of connecting to <code>google.com</code>:</p>
+-->
 
 <pre><code>var http = require('http');
 var google = http.createClient(80, 'www.google.com');
@@ -3394,58 +3404,117 @@ request.on('response', function (response) {
   });
 });</code></pre>
 
+<p>少数の特別なヘッダがあることに注意してください。</p>
+<!--
 <p>There are a few special headers that should be noted.</p>
+-->
 
+<ul>
+<li><p>'Host'ヘッダはNodeによって加えられませんが、通常のWebサイトに必要とされます。</p></li>
+<li><p>'Connection: keep-alive'を送信することで、サーバへの接続を次のリクエストまで維持することをNodeに通知します。</p></li>
+<li><p>'Content-length'ヘッダを送信することで、デフォルトのチャンクエンコーディングが無効になります。</p></li>
+</ul>
+<!--
 <ul><li><p>The 'Host' header is not added by Node, and is usually required by
 website.</p></li><li><p>Sending a 'Connection: keep-alive' will notify Node that the connection to
 the server should be persisted until the next request.</p></li><li><p>Sending a 'Content-length' header will disable the default chunked encoding.</p></li></ul>
+-->
 
+<h3>イベント: 'upgrade'</h3>
+<!--
 <h3>Event: 'upgrade'</h3>
+-->
 
 <p><code>function (request, socket, head)</code></p>
 
+<p>サーバがアップグレード要求に応答する度に生成されます。
+このイベントが監視されていない場合、クライアントがアップグレードヘッダを受信するとそのコネクションはクローズされます。</p>
+<!--
 <p>Emitted each time a server responds to a request with an upgrade. If this event
 isn't being listened for, clients receiving an upgrade header will have their
 connections closed.</p>
+-->
 
+<p>より詳しくは<code>http.Server</code>の<code>upgrade</code>イベントの説明を参照してください。</p>
+<!--
 <p>See the description of the <code>upgrade</code> event for <code>http.Server</code> for further details.</p>
+-->
 
 <h3>http.createClient(port, host='localhost', secure=false, [credentials])</h3>
 
+<p>新しいHTTPクライアントを構築します。
+<code>port</code>と<code>host</code>は接続先となるサーバを参照します。
+リクエストが発行されるまでストリームは確立されません。</p>
+<!--
 <p>Constructs a new HTTP client. <code>port</code> and
 <code>host</code> refer to the server to be connected to. A
 stream is not established until a request is issued.</p>
+-->
 
+<p><code>secure</code>はオプションのbooleanフラグでHTTPSサポートを有効にし、
+<code>credentials</code>はオプションで暗号モジュールの認証情報でクライアントの秘密鍵、証明書、そして信頼できる認証局の証明書を含むことができます。</p>
+<!--
 <p><code>secure</code> is an optional boolean flag to enable https support and <code>credentials</code> is an optional credentials object from the crypto module, which may hold the client's private key, certificate, and a list of trusted CA certificates.</p>
+-->
 
+<p>コネクションがセキュアな場合、証明情報で認証局の証明書が明示的に渡されないと、node.jsはデフォルトの信頼できる認証局のリストとしてhttp://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txtを与えます。</p>
+<!--
 <p>If the connection is secure, but no explicit CA certificates are passed in the credentials, then node.js will default to the publicly trusted list of CA certificates, as given in http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</p>
+-->
 
 <h3>client.request(method='GET', path, [request_headers])</h3>
 
+<p>リクエストを発行します; 必要であればストリームを確立します。<code>http.ClientRequest</code>のインスタンスを返します。</p>
+<!--
 <p>Issues a request; if necessary establishes stream. Returns a <code>http.ClientRequest</code> instance.</p>
+-->
 
+<p><code>method</code>はオプションで、省略された場合のデフォルトは'GET'です。</p>
+<!--
 <p><code>method</code> is optional and defaults to 'GET' if omitted.</p>
+-->
 
+<p><code>request_headers</code>はオプションです。
+Node内部で付加的なリクエストヘッダが加えられることがあります。
+<code>ClientRequest</code>オブジェクトを返します。</p>
+<!--
 <p><code>request_headers</code> is optional.
 Additional request headers might be added internally
 by Node. Returns a <code>ClientRequest</code> object.</p>
+-->
 
+<p>ボディを送信しようとしている場合は、<code>Content-Length</code>ヘッダを含めることを忘れないでください。
+ボディをストリーム化する場合は、おそらく<code>Transfer-Encoding: chunked</code>をセットしてください。</p>
+<!--
 <p>Do remember to include the <code>Content-Length</code> header if you
 plan on sending a body. If you plan on streaming the body, perhaps
 set <code>Transfer-Encoding: chunked</code>.</p>
+-->
 
+<p><em>注意</em>: リクエストは完了していません。このメソッドはリクエストのヘッダを送信するだけです。
+リクエストを完了してレスポンスを読み出すには<code>request.end()</code>を呼ぶ必要があります。
+（複雑に感じるかもしれませんが、これは<code>request.write()</code>でボディをストリーム化するチャンスをユーザに提供します。）</p>
+<!--
 <p><em>NOTE</em>: the request is not complete. This method only sends the header of
 the request. One needs to call <code>request.end()</code> to finalize the request and
 retrieve the response.  (This sounds convoluted but it provides a chance for
 the user to stream a body to the server with <code>request.write()</code>.)</p>
+-->
 
 <h3>client.verifyPeer()</h3>
 
+<p>指定された、あるいはデフォルトの信頼された認証局の証明書において、
+サーバの証明書の妥当性に応じてtrueまたはfalseを返します。</p>
+<!--
 <p>Returns true or false depending on the validity of the server's certificate in the context of the defined or default list of trusted CA certificates.</p>
+-->
 
 <h3>client.getPeerCertificate()</h3>
 
+<p>サーバ証明書の詳細を、'subject'、'issuer'、'valid_from'そして'valid_to'をキーとする証明書の辞書を含むJSON形式で返します。</p>
+<!--
 <p>Returns a JSON structure detailing the server's certificate, containing a dictionary with keys for the certificate 'subject', 'issuer', 'valid_from' and 'valid_to'</p>
+-->
 
 <h2 id="http.ClientRequest">http.ClientRequest</h2>
 
