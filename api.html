@@ -3650,60 +3650,111 @@ followed by <code>request.end()</code>.</p>
 
 <h2 id="http.ClientResponse">http.ClientResponse</h2>
 
+<p>このオブジェクトは<code>http.Client</code>によってリクエストと一緒に作成されます。
+これはリクエストオブジェクトの<code>'response'</code>イベントに渡されます。</p>
+<!--
 <p>This object is created when making a request with <code>http.Client</code>. It is
 passed to the <code>'response'</code> event of the request object.</p>
+-->
 
+<p>レスポンスは<code>Readable Stream</code>を実装します。</p>
+<!--
 <p>The response implements the <code>Readable Stream</code> interface.</p>
+-->
 
+<h3>イベント: 'data'</h3>
+<!--
 <h3>Event: 'data'</h3>
+-->
 
 <p><code>function (chunk) {}</code></p>
 
+<p>メッセージボディの断片を受信した場合に生成されます。</p>
+<!--
 <p>Emitted when a piece of the message body is received.</p>
+-->
 
+<p>例: ボディのチャンクは一つの引数として与えられます。
+転送エンコーディングでデコードされます。
+ボディのチャンクは文字列です。
+ボディエンコーディングは`response.setBodyEncoding()`によって設定されます。</p>
+<!--
 <pre><code>Example: A chunk of the body is given as the single
 argument. The transfer-encoding has been decoded.  The
 body chunk a String.  The body encoding is set with
 `response.setBodyEncoding()`.</code></pre>
+-->
 
+<h3>イベント: 'end'</h3>
+<!--
 <h3>Event: 'end'</h3>
+-->
 
 <p><code>function () {}</code></p>
 
+<p>メッセージごとに厳密に一回だけ生成されます。
+このイベントが生成された後、このレスポンスはどんなイベントも生成しません。</p>
+<!--
 <p>Emitted exactly once for each message. No arguments. After
 emitted no other events will be emitted on the response.</p>
+-->
 
 <h3>response.statusCode</h3>
 
+<p>3桁の数字によるレスポンスのステータスコードです。例えば<code>404</code>。</p>
+<!--
 <p>The 3-digit HTTP response status code. E.G. <code>404</code>.</p>
+-->
 
 <h3>response.httpVersion</h3>
 
+<p>接続しているサーバとのHTTPのバージョンです。
+おそらく<code>'1.1'</code>または<code>'1.0'</code>のどちらかです。
+同様に<code>response.httpVersionMajor</code>は最初の整数、<code>response.httpVersionMinor</code>は2番目の整数です。</p>
+<!--
 <p>The HTTP version of the connected-to server. Probably either
 <code>'1.1'</code> or <code>'1.0'</code>.
 Also <code>response.httpVersionMajor</code> is the first integer and
 <code>response.httpVersionMinor</code> is the second.</p>
+-->
 
 <h3>response.headers</h3>
 
+<p>レスポンスヘッダオブジェクトです。</p>
+<!--
 <p>The response headers object.</p>
+-->
 
 <h3>response.setEncoding(encoding=null)</h3>
 
+<p>レスポンスボディのエンコーディングを設定します。
+<code>'utf8'</code>、<code>'ascii'</code>、あるいは<code>'base64'</code>のいずれかです。
+デフォルトは<code>null</code>で、<code>'data'</code>イベントが<code>Buffer</code>を生成することを意味します。</p>
+<!--
 <p>Set the encoding for the response body. Either <code>'utf8'</code>, <code>'ascii'</code>, or <code>'base64'</code>.
 Defaults to <code>null</code>, which means that the <code>'data'</code> event will emit a <code>Buffer</code> object..</p>
+-->
 
 <h3>response.pause()</h3>
 
+<p>イベントの生成によるレスポンスを中断します。ダウンロード速度を落とすのに便利です。</p>
+<!--
 <p>Pauses response from emitting events.  Useful to throttle back a download.</p>
+-->
 
 <h3>response.resume()</h3>
 
+<p>中断されていたレスポンスを再開します。</p>
+<!--
 <p>Resumes a paused response.</p>
+-->
 
 <h3>response.client</h3>
 
+<p>このレスポンスを所有する<code>http.Client</code>への参照です。</p>
+<!--
 <p>A reference to the <code>http.Client</code> that this response belongs to.</p>
+-->
 
 <h2 id="net.Server">net.Server</h2>
 
