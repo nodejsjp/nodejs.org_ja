@@ -3526,21 +3526,38 @@ the user to stream a body to the server with <code>request.write()</code>.)</p>
 
 <h2 id="http.ClientRequest">http.ClientRequest</h2>
 
+<p>このオブジェクトはHTTPサーバ内部で作成され、<code>http.Client</code>の<code>request()</code>メソッドから返されます。
+それはヘッダが送信された<em>進行中</em>のリクエストを表現します。</p>
+<!--
 <p>This object is created internally and returned from the <code>request()</code> method
 of a <code>http.Client</code>. It represents an <em>in-progress</em> request whose header has
 already been sent.</p>
+-->
 
+<p>レスポンスを取得するには、<code>'response'</code>用のリスナーをリクエストオブジェクトに加えます。
+<code>'response'</code>イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。
+<code>'response'</code>イベントは<code>http.ClientResponse</code>のインスタンスを唯一の引数として実行されます。</p>
+<!--
 <p>To get the response, add a listener for <code>'response'</code> to the request object.
 <code>'response'</code> will be emitted from the request object when the response
 headers have been received.  The <code>'response'</code> event is executed with one
 argument which is an instance of <code>http.ClientResponse</code>.</p>
+-->
 
+<p><code>'response'</code>イベントの間、レスポンスオブジェクトにリスナーを加えることができます;
+とりわけ<code>'data'</code>イベントのリスナーです。
+<code>'response'</code>イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。
+そのため、ボディの最初の部分の受信と競合することを心配する必要はありません。
+<code>'response'</code>イベントの間に<code>'data'</code>イベントのリスナーが加えられる限り、
+ボディ全体を受信することができます。</p>
+<!--
 <p>During the <code>'response'</code> event, one can add listeners to the
 response object; particularly to listen for the <code>'data'</code> event. Note that
 the <code>'response'</code> event is called before any part of the response body is received,
 so there is no need to worry about racing to catch the first part of the
 body. As long as a listener for <code>'data'</code> is added during the <code>'response'</code>
 event, the entire body will be caught.</p>
+-->
 
 <pre><code>// Good
 request.on('response', function (response) {
@@ -3558,42 +3575,78 @@ request.on('response', function (response) {
   }, 10);
 });</code></pre>
 
+<p>これは<code>Writable Stream</code>です。</p>
+<!--
 <p>This is a <code>Writable Stream</code>.</p>
+-->
 
+<p>これは以下のイベントを持つ<code>EventEmitter</code>です。</p>
+<!--
 <p>This is an <code>EventEmitter</code> with the following events:</p>
+-->
 
+<h3>イベント 'response'</h3>
+<!--
 <h3>Event 'response'</h3>
+-->
 
 <p><code>function (response) { }</code></p>
 
+<p>このリクエストに対するレスポンスを受信した時に生成されます。
+このイベントは一回だけ生成されます。
+<code>response</code>引数は<code>http.ClientResponse</code>のインスタンスです。</p>
+<!--
 <p>Emitted when a response is received to this request. This event is emitted only once. The
 <code>response</code> argument will be an instance of <code>http.ClientResponse</code>.</p>
+-->
 
 <h3>request.write(chunk, encoding='ascii')</h3>
 
+<p>ボディのチャンクを送信します。
+このメソッドを何回も呼び出すと、サーバへのリクエストボディをストリーム化できます － 
+このケースは<code>['Transfer-Encoding', 'chunked']</code>ヘッダでリクエストを生成したことを意味します。</p>
+<!--
 <p>Sends a chunk of the body.  By calling this method
 many times, the user can stream a request body to a
 server--in that case it is suggested to use the
 <code>['Transfer-Encoding', 'chunked']</code> header line when
 creating the request.</p>
+-->
 
+<p><code>chunk</code>引数は整数の配列か文字列になります。</p>
+<!--
 <p>The <code>chunk</code> argument should be an array of integers
 or a string.</p>
+-->
 
+<p><code>encoding</code>引数はオプションで、<code>chunk</code>が文字列の場合だけ適用されます。
+エンコーディング引数は<code>'utf8'</code>か<code>'ascii'</code>のどちらかです。
+デフォルトはボディにより速いASCIIエンコーディングを使用します。</p>
+<!--
 <p>The <code>encoding</code> argument is optional and only
 applies when <code>chunk</code> is a string. The encoding
 argument should be either <code>'utf8'</code> or
 <code>'ascii'</code>. By default the body uses ASCII encoding,
 as it is faster.</p>
+-->
 
 <h3>request.end([data], [encoding])</h3>
 
+<p>リクエストの送信を終了します。
+ボディのいくつかの部分がまだ送信されていない場合、それはストリームにフラッシュされます。
+リクエストがチャンク化されている場合、これは終端の<code>'0\r\n\r\n'</code>を送信します。</p>
+<!--
 <p>Finishes sending the request. If any parts of the body are
 unsent, it will flush them to the stream. If the request is
 chunked, this will send the terminating <code>'0\r\n\r\n'</code>.</p>
+-->
 
+<p><code>data</code>が指定された場合は、
+<code>request.write(data, encoding)</code>に続けて<code>request.end()</code>を呼び出すのと等価です。</p>
+<!--
 <p>If <code>data</code> is specified, it is equivalent to calling <code>request.write(data, encoding)</code>
 followed by <code>request.end()</code>.</p>
+-->
 
 <h2 id="http.ClientResponse">http.ClientResponse</h2>
 
