@@ -4434,16 +4434,28 @@ access it with <code>require('assert')</code>.</p>
 
 <p>Tests if value is not a false value, throws if it is a true value. Useful when testing the first argument, <code>error</code> in callbacks.</p>
 
+<h2 id="Path">パス</h2>
+<!--
 <h2 id="Path">Path</h2>
+-->
 
+<p>このモジュールはファイルパスを扱うユーティリティを含みます。
+利用するには<code>require('path')</code>を呼び出してください。このモジュールは以下のメソッドを提供します。</p>
+
+<!--
 <p>This module contains utilities for dealing with file paths.  Use
 <code>require('path')</code> to use it.  It provides the following methods:</p>
+-->
 
 <h3>path.join([path1], [path2], [...])</h3>
-
+<p>全ての引数を一つに結合し、結果として得られるパスを決定します。</p>
+<!--
 <p>Join all arguments together and resolve the resulting path.</p>
-
+-->
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>node&gt; require('path').join(
 ...   '/foo', 'bar', 'baz/asdf', 'quux', '..')
@@ -4451,9 +4463,15 @@ access it with <code>require('assert')</code>.</p>
 
 <h3>path.normalizeArray(arr)</h3>
 
+<p>パスの各節の配列を正規化します。<code>'..'</code> と <code>'.'</code> の節には注意してください。</p>
+<!--
 <p>Normalize an array of path parts, taking care of <code>'..'</code> and <code>'.'</code> parts.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>path.normalizeArray(['', 
   'foo', 'bar', 'baz', 'asdf', 'quux', '..'])
@@ -4462,9 +4480,15 @@ access it with <code>require('assert')</code>.</p>
 
 <h3>path.normalize(p)</h3>
 
+<p>パス文字列を正規化します。<code>'..'</code> と <code>'.'</code> の節には注意してください。</p>
+<!--
 <p>Normalize a string path, taking care of <code>'..'</code> and <code>'.'</code> parts.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>path.normalize('/foo/bar/baz/asdf/quux/..')
 // returns
@@ -4472,9 +4496,15 @@ access it with <code>require('assert')</code>.</p>
 
 <h3>path.dirname(p)</h3>
 
+<p>パスに含まれるディレクトリ名を返します。Unixの <code>dirname</code> コマンドと同様です。</p>
+<!--
 <p>Return the directory name of a path.  Similar to the Unix <code>dirname</code> command.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>path.dirname('/foo/bar/baz/asdf/quux')
 // returns
@@ -4482,9 +4512,15 @@ access it with <code>require('assert')</code>.</p>
 
 <h3>path.basename(p, [ext])</h3>
 
+<p>パスの最後の節を返します。Unixの <code>basename</code> コマンドと同様です。</p>
+<!--
 <p>Return the last portion of a path.  Similar to the Unix <code>basename</code> command.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>path.basename('/foo/bar/baz/asdf/quux.html')
 // returns
@@ -4496,9 +4532,13 @@ path.basename('/foo/bar/baz/asdf/quux.html', '.html')
 
 <h3>path.extname(p)</h3>
 
+<p>パスの拡張子を返します。パスの最終節の中で、最後の'.'から後にある文字列が対象になります。
+パスの最終節に'.'が含まれていなかった場合、もしくは'.'が最初の文字だった場合は、空の文字列を返します。例:</p>
+<!--
 <p>Return the extension of the path.  Everything after the last '.' in the last portion
 of the path.  If there is no '.' in the last portion of the path or the only '.' is
 the first character, then it returns an empty string.  Examples:</p>
+-->
 
 <pre><code>path.extname('index.html')
 // returns 
@@ -4510,7 +4550,10 @@ path.extname('index')
 
 <h3>path.exists(p, [callback])</h3>
 
+<p>与えられたパスが存在するかどうか検査します。そして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。例:</p>
+<!--
 <p>Test whether or not the given path exists.  Then, call the <code>callback</code> argument with either true or false.  Example:</p>
+-->
 
 <pre><code>path.exists('/etc/passwd', function (exists) {
   sys.debug(exists ? "it's there" : "no passwd!");
@@ -4518,43 +4561,108 @@ path.extname('index')
 
 <h2 id="URL">URL</h2>
 
+<p>このモジュールはURLの解決や解析の為のユーティリティを持ちます。
+利用するには <code>require('url')</code> を呼び出してください。</p>
+<!--
 <p>This module has utilities for URL resolution and parsing.
 Call <code>require('url')</code> to use it.</p>
+-->
 
+<p>解析されたURLオブジェクトは、URL文字列の中に存在するかどうかに応じて
+次に示すフィールドをいくつかもしくは全てを持ちます。
+URL文字列に含まれないフィールドは解析結果のオブジェクトに含まれません。
+次のURLで例を示します。</p>
+<!--
 <p>Parsed URL objects have some or all of the following fields, depending on
 whether or not they exist in the URL string. Any parts that are not in the URL
 string will not be in the parsed object. Examples are shown for the URL</p>
+-->
 
 <p><code>'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'</code></p>
 
+<ul>
+<li><p><code>href</code></p>
+<p>解析する前の完全URL。 例:<br />
+<code>'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'</code></p></li>
+<li><p><code>protocol</code></p>
+<p>リクエストプロトコル。  例: 
+<code>'http:'</code></p></li>
+<li><p><code>host</code></p>
+<p>URLの完全なホスト情報。認証情報を含みます。 例:<br />
+<code>'user:pass@host.com:8080'</code></p></li>
+<li><p><code>auth</code></p>
+<p>URLの認証情報。  例: 
+<code>'user:pass'</code></p></li>
+<li><p><code>hostname</code></p>
+<p>ホスト情報の中のホスト名。 例: 
+<code>'host.com'</code></p></li>
+<li><p><code>port</code></p>
+<p>ホスト情報の中のポート番号。 例: 
+<code>'8080'</code></p></li>
+<li><p><code>pathname</code></p>
+<p>URLのパス部分。ホスト情報からクエリまでの間に位置し、最初にスラッシュが存在する場合はそれも含みます。例: 
+<code>'/p/a/t/h'</code></p></li>
+<li><p><code>search</code></p>
+<p>URLのクエリ文字列。先頭の?マークも含みます。 例: 
+<code>'?query=string'</code></p></li>
+<li><p><code>query</code></p>
+<p>クエリの変数部分の文字列、もしくはクエリ文字列を解析したオブジェクト。 例:<br />
+<code>'query=string'</code> or <code>{'query':'string'}</code></p></li>
+<li><p><code>hash</code></p>
+<p>URLの#マークを含む部分。 例: <code>'#hash'</code></p></li></ul>
+
+<!--
 <ul><li><p><code>href</code></p><p>The full URL that was originally parsed. Example:
 <code>'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'</code></p></li><li><p><code>protocol</code></p><p>The request protocol.  Example: <code>'http:'</code></p></li><li><p><code>host</code></p><p>The full host portion of the URL, including port and authentication information. Example:
 <code>'user:pass@host.com:8080'</code></p></li><li><p><code>auth</code></p><p>The authentication information portion of a URL.  Example: <code>'user:pass'</code></p></li><li><p><code>hostname</code></p><p>Just the hostname portion of the host.  Example: <code>'host.com'</code></p></li><li><p><code>port</code></p><p>The port number portion of the host.  Example: <code>'8080'</code></p></li><li><p><code>pathname</code></p><p>The path section of the URL, that comes after the host and before the query, including the initial slash if present.  Example: <code>'/p/a/t/h'</code></p></li><li><p><code>search</code></p><p>The 'query string' portion of the URL, including the leading question mark. Example: <code>'?query=string'</code></p></li><li><p><code>query</code></p><p>Either the 'params' portion of the query string, or a querystring-parsed object. Example:
 <code>'query=string'</code> or <code>{'query':'string'}</code></p></li><li><p><code>hash</code></p><p>The 'fragment' portion of the URL including the pound-sign. Example: <code>'#hash'</code></p></li></ul>
+-->
 
+<p>以下のメソッドはURLモジュールにより提供されます:</p>
+<!--
 <p>The following methods are provided by the URL module:</p>
+-->
 
 <h3>url.parse(urlStr, parseQueryString=false)</h3>
 
+<p>URL文字列を引数に取り、解析結果のオブジェクトを返します。
+<code>querystring</code>モジュールを使ってクエリ文字列も解析したい場合は、
+第2引数に <code>true</code> を渡してください。
+<!--
 <p>Take a URL string, and return an object.  Pass <code>true</code> as the second argument to also parse
 the query string using the <code>querystring</code> module.</p>
+-->
 
 <h3>url.format(urlObj)</h3>
 
+<p>URLオブジェクトを引数に取り、フォーマットしたURL文字列を返します。</p>
+<!--
 <p>Take a parsed URL object, and return a formatted URL string.</p>
+-->
 
 <h3>url.resolve(from, to)</h3>
 
+<p>ベースとなるURLと相対URLを引数に取り、ブラウザがアンカータグに対して行うのと同様にURLを解決します。</p>
+<!--
 <p>Take a base URL, and a href URL, and resolve them as a browser would for an anchor tag.</p>
+-->
 
+<h2 id="Query String">クエリ文字列</h2>
+<!--
 <h2 id="Query String">Query String</h2>
-
+-->
+<p>このモジュールはクエリ文字列を処理するユーティリティを提供します。 以下のメソッドから成ります:</p>
+<!--
 <p>This module provides utilities for dealing with query strings.  It provides the following methods:</p>
+-->
 
 <h3>querystring.stringify(obj, sep='&amp;', eq='=', munge=true)</h3>
 
+<p>クエリオブジェクトを文字列へ直列化します。オプションとしてデフォルトの区切り文字と代入文字を上書き指定できます。 例:</p>
+<!--
 <p>Serialize an object to a query string.  Optionally override the default separator and assignment characters.
 Example:</p>
+-->
 
 <pre><code>querystring.stringify({foo: 'bar'})
 // returns
@@ -4564,9 +4672,13 @@ querystring.stringify({foo: 'bar', baz: 'bob'}, ';', ':')
 // returns
 'foo:bar;baz:bob'</code></pre>
 
+<p>この関数はデフォルトでPHP/Railsスタイルのようにパラメータに複雑な処理を行います。
+配列やオブジェクトに対して <code>obj</code> に含まれる値を用いて処理を行います。 例:</p>
+<!--
 <p>By default, this function will perform PHP/Rails-style parameter munging for arrays and objects used as
 values within <code>obj</code>.
 Example:</p>
+-->
 
 <pre><code>querystring.stringify({foo: ['bar', 'baz', 'boz']})
 // returns
@@ -4576,19 +4688,29 @@ querystring.stringify({foo: {bar: 'baz'}})
 // returns
 'foo%5Bbar%5D=baz'</code></pre>
 
+<p>もし配列への複雑な処理を無効にしたい場合は (Javaサーブレット用にパラメータを生成する時など)、
+引数の <code>munge</code> に対して <code>false</code> を設定することができます。例:</p>
+<!--
 <p>If you wish to disable the array munging (e.g. when generating parameters for a Java servlet), you
 can set the <code>munge</code> argument to <code>false</code>.
 Example:</p>
+-->
 
 <pre><code>querystring.stringify({foo: ['bar', 'baz', 'boz']}, '&amp;', '=', false)
 // returns
 'foo=bar&amp;foo=baz&amp;foo=boz'</code></pre>
 
+<p><code>munge</code> に <code>false</code> が設定されている時でも、 値にオブジェクトが設定されている場合は複雑に処理されたままであることに注意してください。</p>
+<!--
 <p>Note that when <code>munge</code> is <code>false</code>, parameter names with object values will still be munged.</p>
+-->
 
 <h3>querystring.parse(str, sep='&amp;', eq='=')</h3>
 
+<p>クエリ文字列をオブジェクトに復元します。オプションとしてデフォルトの区切り文字と代入文字を上書き指定できます。</p>
+<!--
 <p>Deserialize a query string to an object.  Optionally override the default separator and assignment characters.</p>
+-->
 
 <pre><code>querystring.parse('a=b&amp;b=c')
 // returns
@@ -4596,15 +4718,24 @@ Example:</p>
 , 'b': 'c'
 }</code></pre>
 
+<p>この関数は複雑化したクエリ文字列/していないクエリ文字列どちらに対しても解析することができます。 (詳細は <code>stringify</code> を参照)。</p>
+<!--
 <p>This function can parse both munged and unmunged query strings (see <code>stringify</code> for details).</p>
+-->
 
 <h3>querystring.escape</h3>
 
+<p>escape関数は <code>querystring.stringify</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。</p>
+<!--
 <p>The escape function used by <code>querystring.stringify</code>, provided so that it could be overridden if necessary.</p>
+-->
 
 <h3>querystring.unescape</h3>
 
+<p>unescape関数は <code>querystring.parse</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。</p>
+<!--
 <p>The unescape function used by <code>querystring.parse</code>, provided so that it could be overridden if necessary.</p>
+-->
 
 <h2 id="REPL">REPL</h2>
 
