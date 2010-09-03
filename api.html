@@ -3758,10 +3758,16 @@ Defaults to <code>null</code>, which means that the <code>'data'</code> event wi
 
 <h2 id="net.Server">net.Server</h2>
 
+<p>このクラスはTCPまたはUNIXドメインのサーバを作成するために使われます。</p>
+<!--
 <p>This class is used to create a TCP or UNIX server.</p>
+-->
 
+<p>8124番のポートをリッスンするエコーサーバの例:</p>
+<!--
 <p>Here is an example of a echo server which listens for connections
 on port 8124:</p>
+-->
 
 <pre><code>var net = require('net');
 var server = net.createServer(function (stream) {
@@ -3779,67 +3785,120 @@ var server = net.createServer(function (stream) {
 });
 server.listen(8124, 'localhost');</code></pre>
 
+<p><code>'/tmp/echo.sock'</code>へのソケットを待ち受けるには、最後の行をこのように変更します。</p>
+<!--
 <p>To listen on the socket <code>'/tmp/echo.sock'</code>, the last line would just be
 changed to</p>
+-->
 
 <pre><code>server.listen('/tmp/echo.sock');</code></pre>
 
+<p>これは以下のイベントを持つ<code>EventEmitter</code>です:</p>
+<!--
 <p>This is an <code>EventEmitter</code> with the following events:</p>
+-->
 
+<h3>イベント: 'connection'</h3>
+<!--
 <h3>Event: 'connection'</h3>
+-->
 
 <p><code>function (stream) {}</code></p>
 
+<p>新しいコネクションが作成されると生成されます。
+<code>stream</code>は<code>net.Stream</code>のインスタンスです。</p>
+<!--
 <p>Emitted when a new connection is made. <code>stream</code> is an instance of
 <code>net.Stream</code>.</p>
+-->
 
+<h3>イベント: 'close'</h3>
+<!--
 <h3>Event: 'close'</h3>
+-->
 
 <p><code>function () {}</code></p>
 
+<p>サーバがクローズした時に生成されます。</p>
+<!--
 <p>Emitted when the server closes.</p>
+-->
 
 <h3>net.createServer(connectionListener)</h3>
 
+<p>新しいTCPサーバを作成します。
+<code>connectionListener</code>引数は<code>'connection'</code>イベントに対するリスナーとして自動的に加えられます。</p>
+<!--
 <p>Creates a new TCP server. The <code>connectionListener</code> argument is
 automatically set as a listener for the <code>'connection'</code> event.</p>
+-->
 
 <h3>server.listen(port, [host], [callback])</h3>
 
+<p>指定された<code>port</code>と<code>host</code>でコネクションの受け入れを開始します。
+<code>host</code>が省略されると、サーバはどんなIPv4アドレスへの接続も受け入れます（<code>INADDR_ANY</code>）</p>
+<!--
 <p>Begin accepting connections on the specified <code>port</code> and <code>host</code>.  If the
 <code>host</code> is omitted, the server will accept connections directed to any
 IPv4 address (<code>INADDR_ANY</code>).</p>
+-->
 
+<p>この関数は非同期です。最後の引数の<code>callback</code>はサーバがバインドすると呼び出されます。</p>
+<!--
 <p>This function is asynchronous. The last parameter <code>callback</code> will be called
 when the server has been bound.</p>
+-->
 
 <h3>server.listen(path, [callback])</h3>
 
+<p>与えられた<code>path</code>へのコネクションを待ち受けるするUNIXドメインソケットのサーバを開始します。</p>
+<!--
 <p>Start a UNIX socket server listening for connections on the given <code>path</code>.</p>
+-->
 
+<p>この関数は非同期です。
+最後の引数の<code>callback</code>はサーバがバインドすると呼び出されます。</p>
+<!--
 <p>This function is asynchronous. The last parameter <code>callback</code> will be called
 when the server has been bound.</p>
+-->
 
 <h3>server.listenFD(fd)</h3>
 
+<p>与えられたファイル記述子上のコネクションを待ち受けるサーバを開始します。</p>
+<!--
 <p>Start a server listening for connections on the given file descriptor.</p>
+-->
 
+<p>このファイル記述子は既に<code>bind(2)</code>および<code>listen(2)</code>システムコールが呼び出されていなければなりません。</p>
+<!--
 <p>This file descriptor must have already had the <code>bind(2)</code> and <code>listen(2)</code> system
 calls invoked on it.</p>
+-->
 
 <h3>server.close()</h3>
 
+<p>サーバが新しいコネクションを受け付けるのを終了します。
+この関数は非同期で、サーバは最終的に<code>'close'</code>イベントを生成した時にクローズされます。</p>
+<!--
 <p>Stops the server from accepting new connections. This function is
 asynchronous, the server is finally closed when the server emits a <code>'close'</code>
 event.</p>
+-->
 
 <h3>server.maxConnections</h3>
 
+<p>サーバの接続数が大きくなった時に接続を拒否するためにこのプロパティを設定します。</p>
+<!--
 <p>Set this property to reject connections when the server's connection count gets high.</p>
+-->
 
 <h3>server.connections</h3>
 
+<p>このサーバ上の並行コネクションの数です。</p>
+<!--
 <p>The number of concurrent connections on the server.</p>
+-->
 
 <h2 id="net.Stream">net.Stream</h2>
 
