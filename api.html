@@ -3902,179 +3902,345 @@ event.</p>
 
 <h2 id="net.Stream">net.Stream</h2>
 
+<p>このオブジェクトはTCPまたはUNIXドメインのソケットを抽象化したものです。
+<code>net.Stream</code>のインスタンスは双方向のストリームインタフェースを実装します。
+それらはユーザによって作成されて（<code>connect()</code>によって）クライアントとして使われるか、
+Nodeによって作成されてサーバの<code>'connection'</code>イベントを通じてユーザに渡されます。</p>
+<!--
 <p>This object is an abstraction of of a TCP or UNIX socket.  <code>net.Stream</code>
 instance implement a duplex stream interface.  They can be created by the
 user and used as a client (with <code>connect()</code>) or they can be created by Node
 and passed to the user through the <code>'connection'</code> event of a server.</p>
+-->
 
+<p><code>net.Stream</code>のインスタンスは以下のイベントを持つEventEmitterです:</p>
+<!--
 <p><code>net.Stream</code> instances are EventEmitters with the following events:</p>
+-->
 
+<h3>イベント: 'connect'</h3>
+<!--
 <h3>Event: 'connect'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>ストリームコネクションの確立が成功した場合に生成されます。
+<code>connect()</code>を参照してください。</p>
+<!--
 <p>Emitted when a stream connection successfully is established.
 See <code>connect()</code>.</p>
+-->
 
+<h3>イベント: 'secure'</h3>
+<!--
 <h3>Event: 'secure'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>ストリームコネクションにおいて、接続相手とのHTTPSハンドシェークの確立が成功した場合に生成されます。</p>
+<!--
 <p>Emitted when a stream connection successfully establishes a HTTPS handshake with its peer.</p>
+-->
 
+<h3>イベント: 'data'</h3>
+<!--
 <h3>Event: 'data'</h3>
+-->
 
 <p><code>function (data) { }</code></p>
 
+<p>データを受信した場合に生成されます。
+<code>data</code>引数は<code>Buffer</code>または<code>String</code>です。
+データのエンコーディングは<code>stream.setEncoding()</code>で設定されます。
+（より詳しい情報は<code>Readable Stream</code>を参照してください。）</p>
+<!--
 <p>Emitted when data is received.  The argument <code>data</code> will be a <code>Buffer</code> or
 <code>String</code>.  Encoding of data is set by <code>stream.setEncoding()</code>.
 (See the section on <code>Readable Stream</code> for more information.)</p>
+-->
 
+<h3>イベント: 'end'</h3>
+<!--
 <h3>Event: 'end'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>ストリームの相手側がFINパケットを送信した場合に生成されます。
+このイベントが生成された後、<code>readyState</code>は<code>'writeOnly'</code>になります。
+このイベントが生成されると、おそらく<code>stream.end()</code>を呼ばなければならないでしょう。</p>
+<!--
 <p>Emitted when the other end of the stream sends a FIN packet. After this is
 emitted the <code>readyState</code> will be <code>'writeOnly'</code>. One should probably just
 call <code>stream.end()</code> when this event is emitted.</p>
+-->
 
+<h3>イベント: 'timeout'</h3>
+<!--
 <h3>Event: 'timeout'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>ストリームがタイムアウトして非アクティブになった場合に生成されます。
+これはストリームがアイドルになったことを通知するだけです。
+利用者は手動でコネクションをクローズする必要があります。</p>
+<!--
 <p>Emitted if the stream times out from inactivity. This is only to notify that
 the stream has been idle. The user must manually close the connection.</p>
+-->
 
+<p>関連情報: <code>stream.setTimeout()</code></p>
+<!--
 <p>See also: <code>stream.setTimeout()</code></p>
+-->
 
+<h3>イベント: 'drain'</h3>
+<!--
 <h3>Event: 'drain'</h3>
+-->
 
 <p><code>function () { }</code></p>
 
+<p>書き込みバッファが空になった場合に生成されます。アップロード速度を落とすために使うことができます。</p>
+<!--
 <p>Emitted when the write buffer becomes empty. Can be used to throttle uploads.</p>
+-->
 
+<h3>イベント: 'error'</h3>
+<!--
 <h3>Event: 'error'</h3>
+-->
 
 <p><code>function (exception) { }</code></p>
 
+<p>エラーが発生した場合に生成されます。<code>'close'</code>イベントはこのイベントの後に直接呼び出されます。</p>
+<!--
 <p>Emitted when an error occurs.  The <code>'close'</code> event will be called directly
 following this event.</p>
+-->
 
+<h3>イベント: 'close'</h3>
+<!--
 <h3>Event: 'close'</h3>
+-->
 
 <p><code>function (had_error) { }</code></p>
 
+<p>ストリームが完全にクローズした場合に生成されます。
+引数<code>had_error</code>はbooleanで、ストリームが転送エラーでクローズされたのかどうかを示します。</p>
+<!--
 <p>Emitted once the stream is fully closed. The argument <code>had_error</code> is a boolean which says if
 the stream was closed due to a transmission
 error.</p>
+-->
 
 <h3>net.createConnection(port, host='127.0.0.1')</h3>
 
+<p>新しいストリームオブジェクトを構築し、指定の<code>port</code>と<code>host</code>へのストリームをオープンします。
+第2引数が省略されると、ローカルホストが仮定されます。</p>
+<!--
 <p>Construct a new stream object and opens a stream to the specified <code>port</code>
 and <code>host</code>. If the second parameter is omitted, localhost is assumed.</p>
+-->
 
+<p>ストリームが確立されると、<code>'connect'</code>イベントが生成されます。</p>
+<!--
 <p>When the stream is established the <code>'connect'</code> event will be emitted.</p>
+-->
 
 <h3>stream.connect(port, host='127.0.0.1')</h3>
 
+<p>指定の<code>port</code>と<code>host</code>でストリームをオープンします。
+<code>createConnection()</code>もまたストリームをオープンします: 通常このメソッドは必要とされません。
+これを使うのは、ストリームがクローズされた後にオブジェクトを再利用して別のサーバに接続する場合だけです。</p>
+<!--
 <p>Opens a stream to the specified <code>port</code> and <code>host</code>. <code>createConnection()</code>
 also opens a stream; normally this method is not needed. Use this only if
 a stream is closed and you want to reuse the object to connect to another
 server.</p>
+-->
 
+<p>この関数は非同期です。ストリームが確立されると<code>'connect'</code>イベントが生成されます。
+接続で問題があった場合は<code>'connect'</code>イベントは生成されず、
+例外とともに<code>'error'</code>イベントが生成されます。</p>
+<!--
 <p>This function is asynchronous. When the <code>'connect'</code> event is emitted the
 stream is established. If there is a problem connecting, the <code>'connect'</code>
 event will not be emitted, the <code>'error'</code> event will be emitted with 
 the exception.</p>
+-->
 
 <h3>stream.remoteAddress</h3>
 
+<p>リモートのIPアドレスを表現する文字列です。
+例えば、<code>'74.125.127.100'</code>あるいは<code>'2001:4860:a005::68'</code>。</p>
+<!--
 <p>The string representation of the remote IP address. For example,
 <code>'74.125.127.100'</code> or <code>'2001:4860:a005::68'</code>.</p>
+-->
 
+<p>このメンバはサーバサイドのコネクションでのみ与えられます。</p>
+<!--
 <p>This member is only present in server-side connections.</p>
+-->
 
 <h3>stream.readyState</h3>
 
+<p><code>'closed'</code>、<code>'open'</code>、<code>'opening'</code>、<code>'readOnly'</code>、あるいは<code>'writeOnly'</code>のいずれかです。</p>
+<!--
 <p>Either <code>'closed'</code>, <code>'open'</code>, <code>'opening'</code>, <code>'readOnly'</code>, or <code>'writeOnly'</code>.</p>
+-->
 
 <h3>stream.setEncoding(encoding=null)</h3>
 
+<p>受信したデータのエンコーディングを設定します（<code>'ascii'</code>、<code>'utf8'</code>，あるいは<code>'base64'</code>のいずれかです）。</p>
+<!--
 <p>Sets the encoding (either <code>'ascii'</code>, <code>'utf8'</code>, or <code>'base64'</code>) for data that is
 received.</p>
+-->
 
 <h3>stream.setSecure([credentials])</h3>
 
+<p>秘密鍵とサーバ証明書を指定した暗号モジュールの認証情報で、ストリームに対してHTTPSサポートを有効にします。オプションで認証局で証明された相手側の認証を使うこともできます。</p>
+<!--
 <p>Enables HTTPS support for the stream, with the crypto module credentials specifying the private key and certificate of the stream, and optionally the CA certificates for use in peer authentication.</p>
+-->
 
+<p>認証情報が一つ以上の認証局の証明書を持っている場合、
+ストリームはHTTPSコネクションにおけるハンドシェークの一部としてクライアント証明書を送るよう相手に要求します。
+その有効性と内容は、<code>verifyPeer()</code>と<code>getPeerCertificate()</code>を通じてアクセスできます。</p>
+<!--
 <p>If the credentials hold one ore more CA certificates, then the stream will request for the peer to submit a client certificate as part of the HTTPS connection handshake. The validity and content of this can be accessed via verifyPeer() and getPeerCertificate().</p>
+-->
 
 <h3>stream.verifyPeer()</h3>
 
+<p>指定された、あるいはデフォルトの信頼された認証局の証明書において、
+相手の証明書の妥当性に応じてtrueまたはfalseを返します。</p>
+<!--
 <p>Returns true or false depending on the validity of the peers's certificate in the context of the defined or default list of trusted CA certificates.</p>
+-->
 
 <h3>stream.getPeerCertificate()</h3>
 
+<p>相手の証明書の詳細を、'subject'、'issuer'、'valid_from'そして'valid_to'をキーとする証明書の辞書を含むJSON形式で返します。</p>
+<!--
 <p>Returns a JSON structure detailing the peer's certificate, containing a dictionary with keys for the certificate 'subject', 'issuer', 'valid_from' and 'valid_to'</p>
+-->
 
 <h3>stream.write(data, encoding='ascii')</h3>
 
+<p>ストリームにデータを送信します。
+文字列の場合、第2引数はエンコーディングを指定します － UTF8はより遅いため、デフォルトはASCIIです。</p>
+<!--
 <p>Sends data on the stream. The second parameter specifies the encoding in
 the case of a string--it defaults to ASCII because encoding to UTF8 is rather
 slow.</p>
+-->
 
+<p>データ全体のカーネルバッファへのフラッシュが成功すると<code>true</code>を返します。
+データ全体または一部がユーザメモリ内のキューに入れられた場合は<code>false</code>を返します。
+再びバッファが空いた場合は<code>'drain'</code>イベントが生成されます。</p>
+<!--
 <p>Returns <code>true</code> if the entire data was flushed successfully to the kernel
 buffer. Returns <code>false</code> if all or part of the data was queued in user memory.
 <code>'drain'</code> will be emitted when the buffer is again free.</p>
+-->
 
 <h3>stream.end([data], [encoding])</h3>
 
+<p>ストリームをハーフクローズします。例えばFINパケットを送信します。
+サーバがデータを送り続けてくることがあり得ます。
+このメソッドを呼び出した後の<code>readyState</code>は<code>'readOnly'</code>になります。</p>
+<!--
 <p>Half-closes the stream. I.E., it sends a FIN packet. It is possible the
 server will still send some data. After calling this <code>readyState</code> will be
 <code>'readOnly'</code>.</p>
+-->
 
+<p><code>data</code>が指定された場合は、
+<code>stream.write(data, encoding)</code>に続けて<code>stream.end()</code>を呼び出すのと等価です。</p>
+<!--
 <p>If <code>data</code> is specified, it is equivalent to calling <code>stream.write(data, encoding)</code>
 followed by <code>stream.end()</code>.</p>
+-->
 
 <h3>stream.destroy()</h3>
 
+<p>このストリーム上でどんなI/Oも起こらないことを保証します。
+（パースエラーなどの）エラーの場合にだけ必要です。</p>
+<!--
 <p>Ensures that no more I/O activity happens on this stream. Only necessary in
 case of errors (parse error or so).</p>
+-->
 
 <h3>stream.pause()</h3>
 
+<p>データの読み込みを中断します。つまり、<code>'data'</code>イベントは生成されません。
+アップロード速度を落とすために便利です。</p>
+<!--
 <p>Pauses the reading of data. That is, <code>'data'</code> events will not be emitted.
 Useful to throttle back an upload.</p>
+-->
 
 <h3>stream.resume()</h3>
 
+<p><code>pause()</code>を呼び出した後で読み込みを再開します。</p>
+<!--
 <p>Resumes reading after a call to <code>pause()</code>.</p>
+-->
 
 <h3>stream.setTimeout(timeout)</h3>
 
+<p>非アクティブなストリームが<code>timeout</code>ミリ秒後にタイムアウトするようにストリームを設定します。
+デフォルトでは<code>net.Stream</code>はタイムアウトしません。</p>
+<!--
 <p>Sets the stream to timeout after <code>timeout</code> milliseconds of inactivity on
 the stream. By default <code>net.Stream</code> do not have a timeout.</p>
+-->
 
+<p>アイドルタイムアウトが引き起こされると、ストリームは<code>'timeout'</code>イベントを受信しますが、
+コネクションは切断されません。
+ユーザは手動で<code>end()</code>または<code>destroy()</code>を呼び出す必要があります。</p>
+<!--
 <p>When an idle timeout is triggered the stream will receive a <code>'timeout'</code>
 event but the connection will not be severed. The user must manually <code>end()</code>
 or <code>destroy()</code> the stream.</p>
+-->
 
+<p><code>timeout</code>が0の場合、アイドルタイムアウトは無効にされます。</p>
+<!--
 <p>If <code>timeout</code> is 0, then the existing idle timeout is disabled.</p>
+-->
 
 <h3>stream.setNoDelay(noDelay=true)</h3>
 
+<p>Nagleアルゴリズムを無効にします。
+デフォルトではTCPコネクションはNagleアルゴリズムを使用し、データを送信する前にバッファリングします。
+<code>noDelay</code>に設定すると、データは<code>stream.write()</code>を呼び出す度に即座に送信されます。</p>
+<!--
 <p>Disables the Nagle algorithm. By default TCP connections use the Nagle
 algorithm, they buffer data before sending it off. Setting <code>noDelay</code> will
 immediately fire off data each time <code>stream.write()</code> is called.</p>
+-->
 
 <h3>stream.setKeepAlive(enable=false, [initialDelay])</h3>
 
+<p>キープアライブ機能を有効/無効にします。オプションでキープアライブの最初の調査がアイドルストリームに送信されるまでの初期遅延を設定します。
+<code>initialDelay</code>（ミリ秒）が設定されると、
+最後にデータパケットを受信してから最初のキープアライブ調査までの遅延が設定されます。
+初期遅延に0が設定されると、デフォルト設定から値を変更されないようにします。</p>
+<!--
 <p>Enable/disable keep-alive functionality, and optionally set the initial
 delay before the first keepalive probe is sent on an idle stream.
 Set <code>initialDelay</code> (in milliseconds) to set the delay between the last
 data packet received and the first keepalive probe. Setting 0 for
 initialDelay will leave the value unchanged from the default
 (or previous) setting.</p>
+-->
 
 <h2 id="Crypto">Crypto</h2>
 
