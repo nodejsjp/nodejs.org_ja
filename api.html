@@ -5021,7 +5021,7 @@ access it with <code>require('assert')</code>.</p>
 
 <h3>path.normalizeArray(arr)</h3>
 
-<p>パスの各節の配列を正規化します。<code>'..'</code> と <code>'.'</code> の節には注意してください。</p>
+<p>パスの要素の配列を正規化します。<code>'..'</code> と <code>'.'</code> の要素には注意してください。</p>
 <!--
 <p>Normalize an array of path parts, taking care of <code>'..'</code> and <code>'.'</code> parts.</p>
 -->
@@ -5033,12 +5033,12 @@ access it with <code>require('assert')</code>.</p>
 
 <pre><code>path.normalizeArray(['', 
   'foo', 'bar', 'baz', 'asdf', 'quux', '..'])
-// returns
+// 戻り値
 [ '', 'foo', 'bar', 'baz', 'asdf' ]</code></pre>
 
 <h3>path.normalize(p)</h3>
 
-<p>パス文字列を正規化します。<code>'..'</code> と <code>'.'</code> の節には注意してください。</p>
+<p>文字列によるパスを正規化します。<code>'..'</code> と <code>'.'</code> の要素には注意してください。</p>
 <!--
 <p>Normalize a string path, taking care of <code>'..'</code> and <code>'.'</code> parts.</p>
 -->
@@ -5049,7 +5049,7 @@ access it with <code>require('assert')</code>.</p>
 -->
 
 <pre><code>path.normalize('/foo/bar/baz/asdf/quux/..')
-// returns
+// 戻り値
 '/foo/bar/baz/asdf'</code></pre>
 
 <h3>path.dirname(p)</h3>
@@ -5065,12 +5065,12 @@ access it with <code>require('assert')</code>.</p>
 -->
 
 <pre><code>path.dirname('/foo/bar/baz/asdf/quux')
-// returns
+// 戻り値
 '/foo/bar/baz/asdf'</code></pre>
 
 <h3>path.basename(p, [ext])</h3>
 
-<p>パスの最後の節を返します。Unixの <code>basename</code> コマンドと同様です。</p>
+<p>パスの最後の要素を返します。Unixの <code>basename</code> コマンドと同様です。</p>
 <!--
 <p>Return the last portion of a path.  Similar to the Unix <code>basename</code> command.</p>
 -->
@@ -5081,17 +5081,17 @@ access it with <code>require('assert')</code>.</p>
 -->
 
 <pre><code>path.basename('/foo/bar/baz/asdf/quux.html')
-// returns
+// 戻り値
 'quux.html'
 
 path.basename('/foo/bar/baz/asdf/quux.html', '.html')
-// returns
+// 戻り値
 'quux'</code></pre>
 
 <h3>path.extname(p)</h3>
 
-<p>パスの拡張子を返します。パスの最終節の中で、最後の'.'から後にある文字列が対象になります。
-パスの最終節に'.'が含まれていなかった場合、もしくは'.'が最初の文字だった場合は、空の文字列を返します。例:</p>
+<p>パスの拡張子を返します。パスの最後の要素について、最後の'.'から後にある文字列が対象になります。
+最後の要素に'.'が含まれていなかった場合、もしくは'.'が最初の文字だった場合は、空の文字列を返します。例:</p>
 <!--
 <p>Return the extension of the path.  Everything after the last '.' in the last portion
 of the path.  If there is no '.' in the last portion of the path or the only '.' is
@@ -5099,11 +5099,11 @@ the first character, then it returns an empty string.  Examples:</p>
 -->
 
 <pre><code>path.extname('index.html')
-// returns 
+// 戻り値 
 '.html'
 
 path.extname('index')
-// returns
+// 戻り値
 ''</code></pre>
 
 <h3>path.exists(p, [callback])</h3>
@@ -5223,11 +5223,11 @@ Example:</p>
 -->
 
 <pre><code>querystring.stringify({foo: 'bar'})
-// returns
+// 戻り値
 'foo=bar'
 
 querystring.stringify({foo: 'bar', baz: 'bob'}, ';', ':')
-// returns
+// 戻り値
 'foo:bar;baz:bob'</code></pre>
 
 <p>この関数はデフォルトでPHP/Railsスタイルのようにパラメータに複雑な処理を行います。
@@ -5239,11 +5239,11 @@ Example:</p>
 -->
 
 <pre><code>querystring.stringify({foo: ['bar', 'baz', 'boz']})
-// returns
+// 戻り値
 'foo%5B%5D=bar&amp;foo%5B%5D=baz&amp;foo%5B%5D=boz'
 
 querystring.stringify({foo: {bar: 'baz'}})
-// returns
+// 戻り値
 'foo%5Bbar%5D=baz'</code></pre>
 
 <p>もし配列への複雑な処理を無効にしたい場合は (Javaサーブレット用にパラメータを生成する時など)、
@@ -5255,7 +5255,7 @@ Example:</p>
 -->
 
 <pre><code>querystring.stringify({foo: ['bar', 'baz', 'boz']}, '&amp;', '=', false)
-// returns
+// 戻り値
 'foo=bar&amp;foo=baz&amp;foo=boz'</code></pre>
 
 <p><code>munge</code> に <code>false</code> が設定されている時でも、 値にオブジェクトが設定されている場合は複雑に処理されたままであることに注意してください。</p>
@@ -5271,7 +5271,7 @@ Example:</p>
 -->
 
 <pre><code>querystring.parse('a=b&amp;b=c')
-// returns
+// 戻り値
 { 'a': 'b'
 , 'b': 'c'
 }</code></pre>
