@@ -5062,19 +5062,33 @@ about completing it.  <code>.break</code> will start over.</p></li><li><p><code>
 
 <h2 id="Modules">Modules</h2>
 
+<p>Node は CommonJS のモジュールシステムを使います。</p>
+<!-- 
 <p>Node uses the CommonJS module system.</p>
+-->
 
+<p>Node はシンプルなモジュールローディングシステムを持ちます。
+Node では、ファイルとモジュールは１対１で対応しています。
+例として、 <code>foo.js</code> は、同じディレクトリにある <code>circle.js</code> をロードしています。</p>
+<!-- 
 <p>Node has a simple module loading system.  In Node, files and modules are in
 one-to-one correspondence.  As an example, <code>foo.js</code> loads the module
 <code>circle.js</code> in the same directory.</p>
+-->
 
+<p><code>foo.js</code> の内容:</p>
+<!-- 
 <p>The contents of <code>foo.js</code>:</p>
+-->
 
 <pre><code>var circle = require('./circle');
 console.log( 'The area of a circle of radius 4 is '
            + circle.area(4));</code></pre>
 
+<p><code>circle.js</code> の内容:</p>
+<!-- 
 <p>The contents of <code>circle.js</code>:</p>
+-->
 
 <pre><code>var PI = 3.14;
 
@@ -5086,6 +5100,17 @@ exports.circumference = function (r) {
   return 2 * PI * r;
 };</code></pre>
 
+
+<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。
+エクスポートされたオブジェクトは、 <code>exports</code> という特別なオブジェクトに加えられます。
+(モジュールを読んだソースは、 <code>this</code> の代わりに <code>exports</code> を使うことが出来ます。)
+モジュールの変数はプライベートです。
+この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
+関数 <code>puts()</code> は ビルトインモジュールである <code>'sys'</code> の物です。
+<code>'./'</code> を付けずに読み込まれたモジュールはビルトインモジュールです。詳細は以降で説明します。
+
+
+<!--
 <p>The module <code>circle.js</code> has exported the functions <code>area()</code> and
 <code>circumference()</code>.  To export an object, add to the special <code>exports</code>
 object.  (Alternatively, one can use <code>this</code> instead of <code>exports</code>.) Variables
@@ -5093,57 +5118,158 @@ local to the module will be private. In this example the variable <code>PI</code
 private to <code>circle.js</code>. The function <code>puts()</code> comes from the module <code>'sys'</code>,
 which is a built-in module. Modules which are not prefixed by <code>'./'</code> are
 built-in module--more about this later.</p>
+-->
 
+<p><code>'./'</code> 付きで呼び出される場合、<code>require()</code> を呼んだモジュールファイルからの相対パスを指定します。
+つまり <code>circle.js</code> は <code>require('./circle')</code> を解決するために、<code>foo.js</code> と同じディレクトリになる必要が有ります。</p>
+
+<!--
 <p>A module prefixed with <code>'./'</code> is relative to the file calling <code>require()</code>.
 That is, <code>circle.js</code> must be in the same directory as <code>foo.js</code> for
 <code>require('./circle')</code> to find it.</p>
+-->
 
+<p><code>'./'</code> 無しで、例えば <code>require('assert')</code> の様にモジュールを指定した場合、
+モジュールは  <code>require.paths</code> の配列内の場所を起点に検索されます。
+私のシステムでは、 <code>require.paths</code> はこの様になっています。
+
+<!--
 <p>Without the leading <code>'./'</code>, like <code>require('assert')</code> the module is searched
 for in the <code>require.paths</code> array. <code>require.paths</code> on my system looks like
 this: </p>
+-->
 
 <p><code>[ '/home/ryan/.node_libraries' ]</code></p>
 
+<p>これによって、 <code>require('assert')</code> が呼ばれた場合、Node は以下の順でモジュールを検索します</p>
+
+<!--
 <p>That is, when <code>require('assert')</code> is called Node looks for: </p>
+-->
 
 <ul><li>1: <code>/home/ryan/.node_libraries/assert.js</code></li><li>2: <code>/home/ryan/.node_libraries/assert.node</code></li><li>3: <code>/home/ryan/.node_libraries/assert/index.js</code></li><li>4: <code>/home/ryan/.node_libraries/assert/index.node</code></li></ul>
 
+<p>ファイルが見つかると、その時点で検索は終了します。 ファイル名が <code>'.node'</code> で終わるファイルは、バイナリ形式のアドオンモジュールです。詳細は、'Addons' を参照。 <code>'index.js'</code> は、ディレクトリ内のモジュールをパッケージとして纏めるために、パッケージ内に一つだけ存在出来ます。</p>
+
+<!--
 <p>interrupting once a file is found. Files ending in <code>'.node'</code> are binary Addon
 Modules; see 'Addons' below. <code>'index.js'</code> allows one to package a module as
 a directory.</p>
+-->
 
+<p><code>require.paths</code> は、配列に新しいパスを加えるか、<code>NODE_PATH</code> 環境変数と共に起動することで変更することが出来ます(この場合は、コロンで区切られたパスのリストを渡す必要があります)。</p>
+
+<!--
 <p><code>require.paths</code> can be modified at runtime by simply unshifting new
 paths onto it, or at startup with the <code>NODE_PATH</code> environmental
 variable (which should be a list of paths, colon separated).</p>
+-->
 
 <h2 id="Addons">Addons</h2>
 
+<p>
+アドオンは動的に共有オブジェクトをリンクします。
+アドオンは、 C や C++ に接合点を提供しています。
+API はいくつかのライブラリの知識を含んでおり、(現時点では)かなり複雑です。
+</p>
+
+<!--
 <p>Addons are dynamically linked shared objects. They can provide glue to C and
 C++ libraries. The API (at the moment) is rather complex, involving
 knowledge of several libraries:</p>
+-->
 
-<ul><li><p>V8 JavaScript, a C++ library. Used for interfacing with JavaScript:
+
+<ul>
+<li>
+<p>
+V8 JavaScript は C++ のライブラリです。 JavaScript のオブジェクト作成や関数呼び出し等のインタフェースに使用されます。
+ドキュメントは主に、 <code>v8.h</code> のヘッダファイルに記されています ( Node のソースツリーの中の <code>deps/v8/include/v8.h</code> )。
+</p>
+<!--
+<p>
+V8 JavaScript, a C++ library. Used for interfacing with JavaScript:
 creating objects, calling functions, etc.  Documented mostly in the
-<code>v8.h</code> header file (<code>deps/v8/include/v8.h</code> in the Node source tree).</p></li><li><p>libev, C event loop library. Anytime one needs to wait for a file
+<code>v8.h</code> header file (<code>deps/v8/include/v8.h</code> in the Node source tree).
+</p>
+-->
+</li>
+<li>
+<p>
+libev は C の event loop ライブラリです。
+ファイル記述子が読み取り専用になるのを待つとき、タイマーを待つとき、シグナルを受信するのを待つとき等に、 libv のインタフェースが必要になります。
+つまり、何らかの I/O 処理をすると必ず libev を使う必要があるということです。
+Node は <code>EV_DEFAULT</code> というイベントループを使います。
+ドキュメントは、http:/cvs.schmorp.de/libev/ev.html[here] にあります。</p>
+
+<!--
+<p>
+libev, C event loop library. Anytime one needs to wait for a file
 descriptor to become readable, wait for a timer, or wait for a signal to
 received one will need to interface with libev.  That is, if you perform
 any I/O, libev will need to be used.  Node uses the <code>EV_DEFAULT</code> event
-loop.  Documentation can be found http:/cvs.schmorp.de/libev/ev.html[here].</p></li><li><p>libeio, C thread pool library. Used to execute blocking POSIX system
+loop.  Documentation can be found http:/cvs.schmorp.de/libev/ev.html[here].</p>
+</li>
+-->
+</li>
+<li>
+<p>
+libeio は C のスレッドプールライブラリです。
+排他 POSIX system を非同期に実行するときに使用します。
+こういった呼び出しのための大抵のラッパーは、既に <code>src/file.cc</code> に用意されているので、おそらくそれを使うことになるでしょう。
+必要になったら、 <code>deps/libeio/eio.h</code> のヘッダファイルを参照して下さい。
+</p>
+<!--
+<p>libeio, C thread pool library. Used to execute blocking POSIX system
 calls asynchronously. Mostly wrappers already exist for such calls, in
 <code>src/file.cc</code> so you will probably not need to use it. If you do need it,
-look at the header file <code>deps/libeio/eio.h</code>.</p></li><li><p>Internal Node libraries. Most importantly is the <code>node::ObjectWrap</code>
-class which you will likely want to derive from.</p></li><li><p>Others. Look in <code>deps/</code> for what else is available.</p></li></ul>
+look at the header file <code>deps/libeio/eio.h</code>.
+</p>
+-->
+</li>
+<li>
 
+<p>
+Node の内部ライブラリにおいて、もっとも重要なのは <code>node::ObjectWrap</code> クラスです。
+このクラスから派生させることが多くなるでしょう。
+</p>
+</li>
+<!--
+<p>Internal Node libraries. Most importantly is the <code>node::ObjectWrap</code>
+class which you will likely want to derive from.</p>
+-->
+</li>
+<li>
+<p>他にどのような物が有るかは、 <code>deps/</code> 以下をご覧下さい。</p>
+<!--
+<p>Others. Look in <code>deps/</code> for what else is available.</p>
+-->
+</li>
+</ul>
+<p>
+Node は実行時に依存するソースを静的にコンパイルします。
+モジュールのコンパイル時には、それらのリンクについて一切に気にする必要は有りません。
+</p>
+<!--
 <p>Node statically compiles all its dependencies into the executable. When
 compiling your module, you don't need to worry about linking to any of these
 libraries.</p>
+-->
 
+<p>では、 C++ で以下の様に動作する小さなアドオンを作成してみましょう。</p>
+
+<!--
 <p>To get started let's make a small Addon which does the following except in
 C++:</p>
+-->
 
 <pre><code>exports.hello = 'world';</code></pre>
 
+<p>まず <code>hello.cc</code> というファイルを作成します:</p>
+
+<!-- 
 <p>To get started we create a file <code>hello.cc</code>:</p>
+-->
 
 <pre><code>#include &lt;v8.h&gt;
 
@@ -5156,9 +5282,16 @@ init (Handle&lt;Object&gt; target)
   target-&gt;Set(String::New("hello"), String::New("World"));
 }</code></pre>
 
+<p>
+このソースコードは、 <code>hello.node</code> にバイナリアドオンとしてビルドされる必要が有ります。
+以上を実行するために <code>wscript</code>  という以下のようなコードを Python で書きました。
+</p>
+
+<!-- 
 <p>This source code needs to be built into <code>hello.node</code>, the binary Addon. To
 do this we create a file called <code>wscript</code> which is python code and looks
 like this:</p>
+-->
 
 <pre><code>srcdir = '.'
 blddir = 'build'
@@ -5176,18 +5309,38 @@ def build(bld):
   obj.target = 'hello'
   obj.source = 'hello.cc'</code></pre>
 
+<p><code>node-waf configure build</code> を実行すると、<code>build/default/hello.node</code> が作成されます。これが作成したアドオンです。</p>
+
+<!--
 <p>Running <code>node-waf configure build</code> will create a file
 <code>build/default/hello.node</code> which is our Addon.</p>
+-->
 
+<p><code>node-waf</code> は http://code.google.com/p/waf/[WAF] にあります。 Python ベースのビルドシステムである <code>node-waf</code> は、ユーザの負担を減らすために提供されています。</p>
+
+<!-- 
 <p><code>node-waf</code> is just http://code.google.com/p/waf/[WAF], the python-based build system. <code>node-waf</code> is
 provided for the ease of users.</p>
+-->
 
+<p>Node のアドオンは全て、<code>init</code> というシグネチャで呼び出せる様に、エクスポートされる必要が有ります。:</p>
+
+<!--
 <p>All Node addons must export a function called <code>init</code> with this signature:</p>
+-->
 
 <pre><code>extern 'C' void init (Handle&lt;Object&gt; target)</code></pre>
 
+<!--
+<pre><code>extern 'C' void init (Handle&lt;Object&gt; target)</code></pre>
+-->
+
+<p>現時点では、アドオンのドキュメントはこれで全てです。実際の例は、<a href="http://github.com/ry/node_postgres">http://github.com/ry/node_postgres</a> をご覧下さい。</p>
+
+<!--
 <p>For the moment, that is all the documentation on addons. Please see
 <a href="http://github.com/ry/node_postgres">http://github.com/ry/node_postgres</a> for a real example.</p>
+-->
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
