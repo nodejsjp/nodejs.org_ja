@@ -295,7 +295,7 @@
 <body>
 
 <div id="toc">
-	<div id="toctitle">Node v0.2.0</div>
+	<div id="toctitle">Node v0.2.1</div>
 	<noscript>JavaScript must be enabled in your browser to display the table of contents.</noscript>
 </div>
 <div id='man'>
@@ -1833,6 +1833,12 @@ start at 0.  When used, both the limits must be specified always.</p>
 
 <p><code>WriteStream</code> is a <code>Writable Stream</code>.</p>
 
+<h3>Event: 'open'</h3>
+
+<p><code>function (fd) { }</code></p>
+
+<p> <code>fd</code> is the file descriptor used by the WriteStream.</p>
+
 <h3>fs.createWriteStream(path, [options])</h3>
 
 <p>Returns a new WriteStream object (See <code>Writable Stream</code>).</p>
@@ -2077,7 +2083,7 @@ response.writeHead(200, {
 <p>This method must only be called once on a message and it must
 be called before <code>response.end()</code> is called.</p>
 
-<h3>response.write(chunk, encoding='ascii')</h3>
+<h3>response.write(chunk, encoding='utf8')</h3>
 
 <p>This method must be called after <code>writeHead</code> was
 called. It sends a chunk of the response body. This method may
@@ -2085,7 +2091,7 @@ be called multiple times to provide successive parts of the body.</p>
 
 <p><code>chunk</code> can be a string or a buffer. If <code>chunk</code> is a string,
 the second parameter specifies how to encode it into a byte stream.
-By default the <code>encoding</code> is <code>'ascii'</code>.</p>
+By default the <code>encoding</code> is <code>'utf8'</code>.</p>
 
 <p><strong>Note</strong>: This is the raw HTTP body and has nothing to do with
 higher-level multi-part body encodings that may be used.</p>
@@ -2228,7 +2234,7 @@ request.on('response', function (response) {
 <p>Emitted when a response is received to this request. This event is emitted only once. The
 <code>response</code> argument will be an instance of <code>http.ClientResponse</code>.</p>
 
-<h3>request.write(chunk, encoding='ascii')</h3>
+<h3>request.write(chunk, encoding='utf8')</h3>
 
 <p>Sends a chunk of the body.  By calling this method
 many times, the user can stream a request body to a
@@ -2240,10 +2246,7 @@ creating the request.</p>
 or a string.</p>
 
 <p>The <code>encoding</code> argument is optional and only
-applies when <code>chunk</code> is a string. The encoding
-argument should be either <code>'utf8'</code> or
-<code>'ascii'</code>. By default the body uses ASCII encoding,
-as it is faster.</p>
+applies when <code>chunk</code> is a string.</p>
 
 <h3>request.end([data], [encoding])</h3>
 
@@ -2416,7 +2419,7 @@ See <code>connect()</code>.</p>
 
 <p><code>function () { }</code></p>
 
-<p>Emitted when a stream connection successfully establishes a HTTPS handshake with its peer.</p>
+<p>Emitted when a stream connection successfully establishes an SSL handshake with its peer.</p>
 
 <h3>Event: 'data'</h3>
 
@@ -2501,9 +2504,9 @@ received.</p>
 
 <h3>stream.setSecure([credentials])</h3>
 
-<p>Enables HTTPS support for the stream, with the crypto module credentials specifying the private key and certificate of the stream, and optionally the CA certificates for use in peer authentication.</p>
+<p>Enables SSL support for the stream, with the crypto module credentials specifying the private key and certificate of the stream, and optionally the CA certificates for use in peer authentication.</p>
 
-<p>If the credentials hold one ore more CA certificates, then the stream will request for the peer to submit a client certificate as part of the HTTPS connection handshake. The validity and content of this can be accessed via verifyPeer() and getPeerCertificate().</p>
+<p>If the credentials hold one ore more CA certificates, then the stream will request for the peer to submit a client certificate as part of the SSL connection handshake. The validity and content of this can be accessed via verifyPeer() and getPeerCertificate().</p>
 
 <h3>stream.verifyPeer()</h3>
 
@@ -3387,6 +3390,25 @@ provided for the ease of users.</p>
 
 <p>For the moment, that is all the documentation on addons. Please see
 <a href="http://github.com/ry/node_postgres">http://github.com/ry/node_postgres</a> for a real example.</p>
+
+<h2 id="Appendix - Third Party Modules">Appendix - Third Party Modules</h2>
+
+<p>There are many third party modules for Node. At the time of writing, August
+2010, the master repository of modules is
+http://github.com/ry/node/wiki/modules[the wiki page].</p>
+
+<p>This appendix is intended as a SMALL guide to new-comers to help them
+quickly find what are considered to be quality modules. It is not intended
+to be a complete list.  There may be better more complete modules found
+elsewhere.</p>
+
+<ul><li><p>Module Installer: <a href="http://github.com/isaacs/npm">npm</a></p></li><li><p>HTTP Middleware: <a href="http://github.com/senchalabs/connect">Connect</a></p></li><li><p>Web Framework: <a href="http://github.com/visionmedia/express">Express</a></p></li><li><p>Web Sockets: <a href="http://github.com/LearnBoost/Socket.IO-node">Socket.IO</a></p></li><li><p>HTML Parsing: <a href="http://github.com/aredridel/html5">HTML5</a></p></li><li><p><a href="http://github.com/agnat/node_mdns">mDNS/Zeroconf/Bonjour</a></p></li><li><p><a href="http://github.com/ry/node-amqp">RabbitMQ, AMQP</a></p></li><li><p><a href="http://github.com/felixge/node-mysql">mysql</a></p></li><li><p>Serialization: <a href="http://github.com/pgriess/node-msgpack">msgpack</a></p></li><li><p>Scraping: <a href="http://github.com/silentrob/Apricot">Apricot</a></p></li><li><p>Debugger: <a href="http://github.com/smtlaissezfaire/ndb">ndb</a> is a CLI debugger
+<a href="http://github.com/dannycoates/node-inspector">inspector</a> is a web based
+tool.</p></li><li><p><a href="http://github.com/mranney/node_pcap">pcap binding</a></p></li><li><p><a href="http://github.com/mscdex/node-ncurses">ncurses</a></p></li><li><p>Testing/TDD/BDD: <a href="http://vowsjs.org/">vows</a>,
+<a href="http://github.com/visionmedia/expresso">expresso</a>,
+<a href="http://github.com/tmpvar/mjsunit.runner">mjsunit.runner</a></p></li></ul>
+
+<p>Patches to this list are welcome.</p>
 </div>
 </div>
 <script type="text/javascript" src="./jquery.js"></script>
