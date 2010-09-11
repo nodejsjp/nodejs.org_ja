@@ -1,8 +1,12 @@
 <!DOCTYPE html>
+<html>
 <head> 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name='generator' value='Ronn/v0.4.1'> 
+	<title>node(1) -- V8 JavaScript によるイベント化された I/O</title>
+	<!--
 	<title>node(1) -- evented I/O for V8 JavaScript</title> 
+	-->
 	<style type='text/css'> 
 		*{
 			margin: 0;padding: 0;
@@ -2915,11 +2919,17 @@ start at 0.  When used, both the limits must be specified always.</p>
 <p><code>WriteStream</code> is a <code>Writable Stream</code>.</p>
 -->
 
+<h3>イベント: 'open'</h3>
+<!--
 <h3>Event: 'open'</h3>
+-->
 
 <p><code>function (fd) { }</code></p>
 
+<p><code>fd</code> は WriteStream に使われているファイル記述子です。</p>
+<!--
 <p> <code>fd</code> is the file descriptor used by the WriteStream.</p>
+-->
 
 <h3>fs.createWriteStream(path, [options])</h3>
 
@@ -3395,7 +3405,7 @@ be called multiple times to provide successive parts of the body.</p>
 
 <p><code>chunk</code> は文字列またはバッファにすることができます。
 <code>chunk</code> が文字列の場合、どのエンコードでバイトストリームにするかを第 2 引数で指定します。
-デフォルトの <code>encoding</code> は <code>'ascii'</code> です。</p>
+デフォルトの <code>encoding</code> は <code>'utf8'</code> です。</p>
 <!--
 <p><code>chunk</code> can be a string or a buffer. If <code>chunk</code> is a string,
 the second parameter specifies how to encode it into a byte stream.
@@ -3690,8 +3700,6 @@ or a string.</p>
 -->
 
 <p><code>encoding</code> 引数はオプションで、<code>chunk</code> が文字列の場合だけ適用されます。
-エンコーディング引数は <code>'utf8'</code> か <code>'ascii'</code> のどちらかです。
-デフォルトはボディにより速い ASCII エンコーディングを使用します。</p>
 <!--
 <p>The <code>encoding</code> argument is optional and only
 applies when <code>chunk</code> is a string.</p>
@@ -4011,7 +4019,7 @@ See <code>connect()</code>.</p>
 
 <p><code>function () { }</code></p>
 
-<p>ストリームコネクションにおいて、接続相手との HTTPS ハンドシェークの確立が成功した場合に生成されます。</p>
+<p>ストリームコネクションにおいて、接続相手との SSL ハンドシェークの確立が成功した場合に生成されます。</p>
 <!--
 <p>Emitted when a stream connection successfully establishes an SSL handshake with its peer.</p>
 -->
@@ -4180,14 +4188,14 @@ received.</p>
 <h3>stream.setSecure([credentials])</h3>
 
 <p>秘密鍵とサーバ証明書を指定した暗号モジュールの認証情報で、
-ストリームに対して HTTPS サポートを有効にします。
+ストリームに対して SSL サポートを有効にします。
 オプションで認証局で証明された相手側の認証を使うこともできます。</p>
 <!--
 <p>Enables SSL support for the stream, with the crypto module credentials specifying the private key and certificate of the stream, and optionally the CA certificates for use in peer authentication.</p>
 -->
 
 <p>認証情報が一つ以上の認証局の証明書を持っている場合、
-ストリームは HTTPS コネクションにおけるハンドシェークの一部としてクライアント証明書を送るよう相手に要求します。
+ストリームは SSL コネクションにおけるハンドシェークの一部としてクライアント証明書を送るよう相手に要求します。
 その有効性と内容は、<code>verifyPeer()</code> と <code>getPeerCertificate()</code> を通じてアクセスできます。</p>
 <!--
 <p>If the credentials hold one ore more CA certificates, then the stream will request for the peer to submit a client certificate as part of the SSL connection handshake. The validity and content of this can be accessed via verifyPeer() and getPeerCertificate().</p>
@@ -5841,16 +5849,29 @@ provided for the ease of users.</p>
 <a href="http://github.com/ry/node_postgres">http://github.com/ry/node_postgres</a> for a real example.</p>
 -->
 
+<h2 id="Appendix - Third Party Modules">付録 - サードパーティのモジュール</h2>
+<!--
 <h2 id="Appendix - Third Party Modules">Appendix - Third Party Modules</h2>
+-->
 
+<p>Node 向けにサードパーティ製のモジュールが数多くあります。
+執筆時点 (2010 年 8 月) では、モジュールのマスタリポジトリは
+http://github.com/ry/node/wiki/modules[the wiki page] です。</p>
+<!--
 <p>There are many third party modules for Node. At the time of writing, August
 2010, the master repository of modules is
 http://github.com/ry/node/wiki/modules[the wiki page].</p>
+-->
 
+<p>この付録は、良質だと考えられているモジュールを初心者が素早く見つけることを手助けする「小さな」ガイドを意図しています。
+これは完全なリストは意図していません。
+どこかでより完全なモジュールが見つかるかもしれません。</p>
+<!--
 <p>This appendix is intended as a SMALL guide to new-comers to help them
 quickly find what are considered to be quality modules. It is not intended
 to be a complete list.  There may be better more complete modules found
 elsewhere.</p>
+-->
 
 <ul><li><p>Module Installer: <a href="http://github.com/isaacs/npm">npm</a></p></li><li><p>HTTP Middleware: <a href="http://github.com/senchalabs/connect">Connect</a></p></li><li><p>Web Framework: <a href="http://github.com/visionmedia/express">Express</a></p></li><li><p>Web Sockets: <a href="http://github.com/LearnBoost/Socket.IO-node">Socket.IO</a></p></li><li><p>HTML Parsing: <a href="http://github.com/aredridel/html5">HTML5</a></p></li><li><p><a href="http://github.com/agnat/node_mdns">mDNS/Zeroconf/Bonjour</a></p></li><li><p><a href="http://github.com/ry/node-amqp">RabbitMQ, AMQP</a></p></li><li><p><a href="http://github.com/felixge/node-mysql">mysql</a></p></li><li><p>Serialization: <a href="http://github.com/pgriess/node-msgpack">msgpack</a></p></li><li><p>Scraping: <a href="http://github.com/silentrob/Apricot">Apricot</a></p></li><li><p>Debugger: <a href="http://github.com/smtlaissezfaire/ndb">ndb</a> is a CLI debugger
 <a href="http://github.com/dannycoates/node-inspector">inspector</a> is a web based
@@ -5858,7 +5879,13 @@ tool.</p></li><li><p><a href="http://github.com/mranney/node_pcap">pcap binding<
 <a href="http://github.com/visionmedia/expresso">expresso</a>,
 <a href="http://github.com/tmpvar/mjsunit.runner">mjsunit.runner</a></p></li></ul>
 
+<p>このリストへのパッチを歓迎します。</p>
+<!--
 <p>Patches to this list are welcome.</p>
+-->
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 </div>
 </div>
 <script type="text/javascript" src="./jquery.js"></script>
