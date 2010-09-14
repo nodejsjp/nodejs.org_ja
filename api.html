@@ -5567,7 +5567,10 @@ about completing it.  <code>.break</code> will start over.</p></li><li><p><code>
 p></li></ul>
 -->
 
+<h2 id="Modules">モジュール</h2>
+<!--
 <h2 id="Modules">Modules</h2>
+-->
 
 <p>Node は CommonJS のモジュールシステムを使います。</p>
 <!-- 
@@ -5609,13 +5612,12 @@ exports.circumference = function (r) {
 
 
 <p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。
-エクスポートされたオブジェクトは、 <code>exports</code> という特別なオブジェクトに加えられます。
-(モジュールを読んだソースは、 <code>this</code> の代わりに <code>exports</code> を使うことが出来ます。)
-モジュールの変数はプライベートです。
+エクスポートされたオブジェクトは、 <code>exports</code> という特別なオブジェクトに加えられます
+(<code>exports</code> の代わりに <code>this</code> を使うことも出来ます)。
+モジュールのローカル変数はプライベートです。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
 関数 <code>puts()</code> は ビルトインモジュールである <code>'sys'</code> の物です。
-<code>'./'</code> を付けずに読み込まれたモジュールはビルトインモジュールです。詳細は以降で説明します。
-
+プレフィックス <code>'./'</code> のないモジュールはビルトインモジュールです。詳細は以降で説明します。
 
 <!--
 <p>The module <code>circle.js</code> has exported the functions <code>area()</code> and
@@ -5627,8 +5629,8 @@ which is a built-in module. Modules which are not prefixed by <code>'./'</code> 
 built-in module- -more about this later.</p>
 -->
 
-<p><code>'./'</code> 付きで呼び出される場合、<code>require()</code> を呼んだモジュールファイルからの相対パスを指定します。
-つまり <code>circle.js</code> は <code>require('./circle')</code> を解決するために、<code>foo.js</code> と同じディレクトリになる必要が有ります。</p>
+<p>プレフィックス <code>'./'</code> が付けられたモジュールは <code>require()</code> を呼び出したモジュールからの相対パスとなります。
+つまり <code>circle.js</code> は <code>require('./circle')</code> が見つけられるように <code>foo.js</code> と同じディレクトリにある必要が有ります。</p>
 
 <!--
 <p>A module prefixed with <code>'./'</code> is relative to the file calling <code>require()</code>.
@@ -5636,9 +5638,9 @@ That is, <code>circle.js</code> must be in the same directory as <code>foo.js</c
 <code>require('./circle')</code> to find it.</p>
 -->
 
-<p><code>'./'</code> 無しで、例えば <code>require('assert')</code> の様にモジュールを指定した場合、
-モジュールは  <code>require.paths</code> の配列内の場所を起点に検索されます。
-私のシステムでは、 <code>require.paths</code> はこの様になっています。
+<p>先頭の <code>'./'</code> 無しで、例えば <code>require('assert')</code> の様にモジュールを指定した場合、
+モジュールは <code>require.paths</code> の配列内の場所を起点に検索されます。
+私のシステムでは、 <code>require.paths</code> はこの様になっています:
 
 <!--
 <p>Without the leading <code>'./'</code>, like <code>require('assert')</code> the module is searched
@@ -5648,7 +5650,7 @@ this: </p>
 
 <p><code>[ '/home/ryan/.node_libraries' ]</code></p>
 
-<p>これによって、 <code>require('assert')</code> が呼ばれた場合、Node は以下の順でモジュールを検索します</p>
+<p>これによって、<code>require('assert')</code> が呼ばれた場合、Node は以下の順でモジュールを検索します</p>
 
 <!--
 <p>That is, when <code>require('assert')</code> is called Node looks for: </p>
@@ -5656,7 +5658,9 @@ this: </p>
 
 <ul><li>1: <code>/home/ryan/.node_libraries/assert.js</code></li><li>2: <code>/home/ryan/.node_libraries/assert.node</code></li><li>3: <code>/home/ryan/.node_libraries/assert/index.js</code></li><li>4: <code>/home/ryan/.node_libraries/assert/index.node</code></li></ul>
 
-<p>ファイルが見つかると、その時点で検索は終了します。 ファイル名が <code>'.node'</code> で終わるファイルは、バイナリ形式のアドオンモジュールです。詳細は、'Addons' を参照。 <code>'index.js'</code> は、ディレクトリ内のモジュールをパッケージとして纏めるために、パッケージ内に一つだけ存在出来ます。</p>
+<p>ファイルが見つかると、その時点で検索は終了します。 ファイル名が <code>'.node'</code> で終わるファイルは、バイナリ形式のアドオンモジュールです。
+詳細は「アドオン」を参照してください。
+<code>'index.js'</code> は、ディレクトリをモジュールとして一つにまとめることを可能にします。</p>
 
 <!--
 <p>interrupting once a file is found. Files ending in <code>'.node'</code> are binary Addon
@@ -5664,7 +5668,7 @@ Modules; see 'Addons' below. <code>'index.js'</code> allows one to package a mod
 a directory.</p>
 -->
 
-<p><code>require.paths</code> は、配列に新しいパスを加えるか、<code>NODE_PATH</code> 環境変数と共に起動することで変更することが出来ます(この場合は、コロンで区切られたパスのリストを渡す必要があります)。</p>
+<p><code>require.paths</code> は、配列に新しいパスを加えるか、<code>NODE_PATH</code> 環境変数と共に起動することで変更することが出来ます (この場合は、コロンで区切られたパスのリストを渡す必要があります)。</p>
 
 <!--
 <p><code>require.paths</code> can be modified at runtime by simply unshifting new
@@ -5672,12 +5676,15 @@ paths onto it, or at startup with the <code>NODE_PATH</code> environmental
 variable (which should be a list of paths, colon separated).</p>
 -->
 
+<h2 id="Addons">アドオン</h2>
+<!--
 <h2 id="Addons">Addons</h2>
+-->
 
 <p>
 アドオンは動的に共有オブジェクトをリンクします。
-アドオンは、 C や C++ に接合点を提供しています。
-API はいくつかのライブラリの知識を含んでおり、(現時点では)かなり複雑です。
+それは、C や C++ のライブラリに接合点を提供します。
+API はいくつかのライブラリの知識を含んでおり、(現時点では) かなり複雑です。
 </p>
 
 <!--
@@ -5722,7 +5729,7 @@ loop.  Documentation can be found http:/cvs.schmorp.de/libev/ev.html[here].</p>
 <li>
 <p>
 libeio は C のスレッドプールライブラリです。
-排他 POSIX system を非同期に実行するときに使用します。
+ブロックする POSIX システムコールを非同期に実行するために使用します。
 こういった呼び出しのための大抵のラッパーは、既に <code>src/file.cc</code> に用意されているので、おそらくそれを使うことになるでしょう。
 必要になったら、 <code>deps/libeio/eio.h</code> のヘッダファイルを参照して下さい。
 </p>
@@ -5791,7 +5798,7 @@ init (Handle&lt;Object&gt; target)
 
 <p>
 このソースコードは、 <code>hello.node</code> にバイナリアドオンとしてビルドされる必要が有ります。
-以上を実行するために <code>wscript</code>  という以下のようなコードを Python で書きました。
+以上を実行するために <code>wscript</code> という以下のようなコードを Python で書きました。
 </p>
 
 <!-- 
