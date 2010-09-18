@@ -295,7 +295,7 @@
 <body>
 
 <div id="toc">
-	<div id="toctitle">Node v0.2.1</div>
+	<div id="toctitle">Node v0.2.2</div>
 	<noscript>JavaScript must be enabled in your browser to display the table of contents.</noscript>
 </div>
 <div id='man'>
@@ -1111,8 +1111,9 @@ console.log(sys.inspect(sys, true, null));</code></pre>
 
 <p>Read the data from <code>readableStream</code> and send it to the <code>writableStream</code>.
 When <code>writeableStream.write(data)</code> returns <code>false</code> <code>readableStream</code> will be
-paused until the <code>drain</code> event occurs on the <code>writableStream</code>. <code>callback</code> is
-called when <code>writableStream</code> is closed.</p>
+paused until the <code>drain</code> event occurs on the <code>writableStream</code>. <code>callback</code> gets
+an error as its only argument and is called when <code>writableStream</code> is closed or
+when an error occurs.</p>
 
 <h2 id="Timers">Timers</h2>
 
@@ -1683,19 +1684,6 @@ See pwrite(2).</p>
 <p>The callback will be given two arguments <code>(err, written)</code> where <code>written</code>
 specifies how many <em>bytes</em> were written.</p>
 
-<h3>fs.write(fd, str, position, encoding='utf8', [callback])</h3>
-
-<p>Write the entire string <code>str</code> using the given <code>encoding</code> to the file specified
-by <code>fd</code>.</p>
-
-<p><code>position</code> refers to the offset from the beginning of the file where this data
-should be written. If <code>position</code> is <code>null</code>, the data will be written at the
-current position.
-See pwrite(2).</p>
-
-<p>The callback will be given two arguments <code>(err, written)</code> where <code>written</code>
-specifies how many <em>bytes</em> were written.</p>
-
 <h3>fs.writeSync(fd, buffer, offset, length, position)</h3>
 
 <p>Synchronous version of buffer-based <code>fs.write()</code>. Returns the number of bytes written.</p>
@@ -1718,19 +1706,6 @@ specifies how many <em>bytes</em> were written.</p>
 If <code>position</code> is <code>null</code>, data will be read from the current file position.</p>
 
 <p>The callback is given the two arguments, <code>(err, bytesRead)</code>.</p>
-
-<h3>fs.read(fd, length, position, encoding, [callback])</h3>
-
-<p>Read data from the file specified by <code>fd</code>.</p>
-
-<p><code>length</code> is an integer specifying the number of bytes to read.</p>
-
-<p><code>position</code> is an integer specifying where to begin reading from in the file.
-If <code>position</code> is <code>null</code>, data will be read from the current file position.</p>
-
-<p><code>encoding</code> is the desired encoding of the string of data read in from <code>fd</code>.</p>
-
-<p>The callback is given the three arguments, <code>(err, str, bytesRead)</code>.</p>
 
 <h3>fs.readSync(fd, buffer, offset, length, position)</h3>
 
