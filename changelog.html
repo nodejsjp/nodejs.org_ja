@@ -7,55 +7,70 @@
     </head>
     <body>
         <h1>Node.js ChangeLog</h1>
-        <pre>2010.10.02, Version 0.2.3
+        <pre>2010.10.23, Version 0.3.0 (unstable)
 
-* Fix require in REPL (bug introduced in v0.2.2)
+* Bugfix: Do not spin on aceept() with EMFILE
 
-* Pass correct message in client HTTP upgrade event.
-  (Fedor Indutny)
+* Improvments to readline.js (Trent Mick, Johan Euphrosine, Brian White)
 
-* Show function names in sys.inspect (Jorge Chamorro Bieling)
+* Safe constructors (missing 'new' doesn't segfault)
 
-* In HTTP, close connection on the "connection:close" header.
-  (Mikeal Rogers)
-
-* fs.ReadStream bug fixes (Tj Holowaychuk, Evan Larkin, Marco Rogers)
-
-* Fix zero length buffer bug for http res.end()
-
-
-2010.09.17, Version 0.2.2, 7bf46bc9808f4db98f1cf177d58a6ecf3a50b65d
-
-* REPL improvements (Trent Mick)
-
-* Fix bug in fs.realpath (Isaac Schlueter)
-
-* sys.pump catches errors (Russell Haering)
-
-
-2010.09.10, Version 0.2.1, da235fa12c208fc8243600e128db2c9b55624c5c
-
-* REPL improvements (Johan Euphrosine, Brian White)
-
-* nextTick bug fixes (Benjamin Thomas, Felix Geisendörfer,
-  Trent Mick)
-
-* fs module bug fixes (Russell Haering, Marco Rogers, Tobie Langel,
-  Isaac Schlueter)
-
-* Build script change for OpenEmbedded.
-
-* Most constrctuors work without 'new' now.
+* Fix process.nextTick so thrown errors don't confuse it.
+  (Benjamin Thomas)
 
 * Allow Strings for ports on net.Server.listen (Bradley Meck)
 
-* setInterval(cb, 0) loops infinitely
+* fs bugfixes (Tj Holowaychuk, Tobie Langel, Marco Rogers, isaacs)
 
-* Fixes for NODE_MODULE_CONTEXTS=1 (Herbert Vojčík)
+* http bug fixes (Fedor Indutny, Mikeal Rogers) 
 
-* Expose fingerproint from getPeerCertificate (Paul Querna)
+* Faster buffers; breaks C++ API (Tim-Smart, Stéphan Kochen)
 
-* API: forceClose -> destroy for WriteStreams
+* crypto, tls improvements (Paul Querna)
+
+* Add lfs flags to node addon script
+
+* Simpler querystring parsing; breaks API (Peter Griess)
+
+* HTTP trailers (Mark Nottingham)
+
+* http 100-continue support (Mark Nottingham)
+
+* Module system simplifications (Herbert Vojčík, isaacs, Tim-Smart)
+  - remove require.async
+  - remove registerExtension, add .extensions
+  - expose require.resolve
+  - expose require.cache
+  - require looks in  node_modules folders
+
+* Add --eval command line option (TJ Holowaychuk)
+
+* Commas last in sys.inspect
+
+* Constatnts moved from process object to require('constants')
+
+* Fix parsing of linux memory (Vitali Lovich)
+
+* inspect shows function names (Jorge Chamorro Bieling)
+
+* uncaughtException corner cases (Felix Geisendörfer)
+
+* TCP clients now buffer writes before connection
+
+* Rename sys module to 'util' (Micheil Smith)
+
+* Properly set stdio handlers to blocking on SIGTERM and SIGINT
+  (Tom Hughes)
+
+* Add destroy methods to HTTP messages
+
+* base64 improvements (isaacs, Jorge Chamorro Bieling)
+
+* API for defining REPL commands (Sami Samhuri)
+
+* child_process.exec timeout fix (Aaron Heckmann)
+
+* Upgrade V8 to 2.5.1, Libev to 4.00, libeio, http-parser
 
 
 2010.08.20, Version 0.2.0, 9283e134e558900ba89d9a33c18a9bdedab07cb9
@@ -176,7 +191,7 @@
 * Upgrade http-parser, V8 to 2.2.21
 
 
-2010.06.21, Version 0.1.99, a620b7298f68f68a855306437a3b60b650d61d78
+2010.06.21, Version 0.1.99, a620b7298f68f68a855306437a3b60b650d61d78 
 
 * Datagram sockets (Paul Querna)
 
@@ -282,7 +297,7 @@
 
 2010.05.06, Version 0.1.94, f711d5343b29d1e72e87107315708e40951a7826
 
-* Look in /usr/local/lib/node for modules, so that there's a way
+* Look in /usr/local/lib/node for modules, so that there's a way 
   to install modules globally (Issac Schlueter)
 
 * SSL improvements (Rhys Jones, Paulo Matias)
@@ -302,7 +317,7 @@
 * Bugfix: destroy() instead of end() http connection at end of
   pipeline
 
-* Bugfix: http.Client may be prematurely released back to the
+* Bugfix: http.Client may be prematurely released back to the 
   free pool.  (Thomas Lee)
 
 * Upgrade V8 to 2.2.8
