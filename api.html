@@ -641,7 +641,7 @@ objects which emit events are instances of <code>events.EventEmitter</code>.</p>
 -->
 
 <p>イベントはキャメル記法による文字列で表現されます。
-いくつかの例: <code>'stream'</code>、<code>'data'</code>、<code>'messageBegin'</code></p>
+いくつかの例: <code>'connection'</code>、<code>'data'</code>、<code>'messageBegin'</code></p>
 <!--
 <p>Events are represented by a camel-cased string. Here are some examples:
 <code>'connection'</code>, <code>'data'</code>, <code>'messageBegin'</code>.</p>
@@ -714,9 +714,13 @@ terminate execution and display the exception's stack trace.</p>
 
 <h3>emitter.once(event, listener)</h3>
 
+<p><strong>一回限り</strong>のリスナーをイベントに追加します。
+このリスナーはイベントが最初に発生した時に限り起動され、その後で削除されます。</p>
+<!--
 <p>Adds a <strong>one time</strong> listener for the event. The listener is
 invoked only the first time the event is fired, after which
 it is removed.</p>
+-->
 
 <pre><code>server.once('connection', function (stream) {
   console.log('Ah, we have our first user!');
@@ -1062,8 +1066,12 @@ or FIN. This is useful to reduce the number of packets sent.</p>
 
 <h3>require.resolve()</h3>
 
+<p><code>require()</code> の内部でモジュールの位置を検索するために使われます。
+モジュールのロードは行わず、ファイル名を解決して返すだけです。</p>
+<!--
 <p>Use the internal <code>require()</code> machinery to look up the location of a module,
 but rather than loading the module, just return the resolved filename.</p>
+-->
 
 <h3>require.paths</h3>
 
@@ -1618,8 +1626,8 @@ console.log('Changed umask from: ' + oldmask.toString(8) +
 
 <h2 id="util">util</h2>
 
-<p>これらの関数はモジュール <code>'sys'</code> 内にあります。
-<code>require('sys')</code> を使うことでこれらにアクセスします。</p>
+<p>これらの関数はモジュール <code>'util'</code> 内にあります。
+<code>require('util')</code> を使うことでこれらにアクセスします。</p>
 <!--
 <p>These functions are in the module <code>'util'</code>. Use <code>require('util')</code> to access
 them.</p>
@@ -1682,7 +1690,7 @@ formatting the object. This is useful for inspecting large complicated objects.<
 in <code>null</code> for <code>depth</code>.</p>
 -->
 
-<p><code>sys</code> オブジェクトの全てのプロパティを調査する例:</p>
+<p><code>util</code> オブジェクトの全てのプロパティを調査する例:</p>
 <!--
 <p>Example of inspecting all properties of the <code>util</code> object:</p>
 -->
@@ -2009,7 +2017,7 @@ signal that terminated the process.</p>
 
 <p>もし <code>timeout</code> が 0 より大きいと、
 子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。
-子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGKILL'</code>)。
+子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGTERM'</code>)。
 <code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。</p>
 <!--
 <p>If <code>timeout</code> is greater than 0, then it will kill the child process
@@ -3018,21 +3026,37 @@ parse the actual headers or the body.</p>
 per connection (in the case of keep-alive connections).</p>
 -->
 
+<h3>イベント: 'checkContinue'</h3>
+<!--
 <h3>Event: 'checkContinue'</h3>
+-->
 
 <p><code>function (request, response) {}</code></p>
 
+<p>httpの Expect: 100-continue リクエストを受信する度に生成されます。
+このイベントが監視されない場合、サーバは自動的に 100 Continue を応答します。</p>
+<!--
 <p>Emitted each time a request with an http Expect: 100-continue is received.
 If this event isn't listened for, the server will automatically respond
 with a 100 Continue as appropriate.</p>
+-->
 
+<p>このイベントを処理する場合、クライアントがリクエストボディを送信し続けるべきなら
+<code>response.writeContinue</code> を呼び出す必要があります。
+あるいは、クライアントがリクエストボディを送信し続けるべきでないなら、
+適切な HTTP レスポンス (例えば 400 Bad Request) を生成します。</p>
+<!--
 <p>Handling this event involves calling <code>response.writeContinue</code> if the client
 should continue to send the request body, or generating an appropriate HTTP
 response (e.g., 400 Bad Request) if the client should not continue to send the
 request body.</p>
+-->
 
+<p>このイベントが生成されて処理された場合、<code>request</code>イベントは生成されないことに注意してください。</p>
+<!--
 <p>Note that when this event is emitted and handled, the <code>request</code> event will
 not be emitted.</p>
+-->
 
 <h3>イベント: 'upgrade'</h3>
 <!--
@@ -3268,7 +3292,10 @@ you can use the <code>require('querystring').parse</code> function, or pass
 
 <h3>request.trailers</h3>
 
+<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。'end' イベントの後にだけ発生します。</p>
+<!--
 <p>Read only; HTTP trailers (if present). Only populated after the 'end' event.</p>
+-->
 
 <h3>request.httpVersion</h3>
 
@@ -3336,9 +3363,15 @@ passed as the second parameter to the <code>'request'</code> event. It is a <cod
 
 <h3>response.writeContinue()</h3>
 
+<p>HTTP/1.1 の 100 Continue メッセージをクライアントに送信し、
+リクエストボディを送信してもよいことを示します。
+<code>Server</code>の<code>checkContinue</code>イベントを参照してください。
+</p>
+<!--
 <p>Sends a HTTP/1.1 100 Continue message to the client, indicating that
 the request body should be sent. See the the <code>checkContinue</code> event on
 <code>Server</code>.</p>
+-->
 
 <h3>response.writeHead(statusCode, [reasonPhrase], [headers])</h3>
 
@@ -3414,15 +3447,25 @@ first chunk of body.</p>
 
 <h3>response.addTrailers(headers)</h3>
 
+<p>このメソッドは HTTP「トレーラ」ヘッダ (メッセージの最後に置かれるヘッダ) をレスポンスに追加します。</p>
+<!--
 <p>This method adds HTTP trailing headers (a header but at the end of the
 message) to the response. </p>
+-->
 
+<p>トレーラはレスポンスがチャンク化されたエンコーディングで<strong>のみ</strong>生成されます;
+そうでなければ (例えばリクエストが HTTP/1.0)、黙って破棄されます。</p>
+<!--
 <p>Trailers will <strong>only</strong> be emitted if chunked encoding is used for the 
 response; if it is not (e.g., if the request was HTTP/1.0), they will
 be silently discarded.</p>
+-->
 
+<p>HTTP は、トレーラを生成するならそのヘッダフィールドのリストを値として <code>Trailer</code> ヘッダを送信することを要求していることに注意してください。</p>
+<!--
 <p>Note that HTTP requires the <code>Trailer</code> header to be sent if you intend to
 emit trailers, with a list of the header fields in its value. E.g.,</p>
+-->
 
 <pre><code>response.writeHead(200, { 'Content-Type': 'text/plain',
                           'Trailer': 'TraceInfo' });
@@ -3492,6 +3535,9 @@ request.on('response', function (response) {
 <li><p>'Host' ヘッダは Node によって加えられませんが、通常の Web サイトに必要とされます。</p></li>
 <li><p>'Connection: keep-alive' を送信することで、サーバへの接続を次のリクエストまで維持することを Node に通知します。</p></li>
 <li><p>'Content-length' ヘッダを送信することで、デフォルトのチャンクエンコーディングが無効になります。</p></li>
+<li><p>'Expect' ヘッダを送信することで、リクエストヘッダを直ちに送信します。
+通常、'Expect: 100-continue' を送信する場合、タイムアウトと <code>continue</code> イベントの両方を設定します。
+より詳しくは RFC2616の8.2.3節を参照してください。</p></li>
 </ul>
 <!--
 <ul><li><p>The 'Host' header is not added by Node, and is usually required by
@@ -3522,13 +3568,22 @@ connections closed.</p>
 <p>See the description of the <code>upgrade</code> event for <code>http.Server</code> for further details.</p>
 -->
 
+<h3>イベント: 'continue'</h3>
+<!--
 <h3>Event: 'continue'</h3>
+-->
 
 <p><code>function ()</code></p>
 
+<p>通常、リクエストが 'Expect: 100-continue' を含んでいたことにより、
+サーバが '100 Continue' HTTP レスポンスを送信することで生成されます。
+これはクライアントがリクエストボディを送信すべき事を示します。
+</p>
+<!--
 <p>Emitted when the server sends a '100 Continue' HTTP response, usually because
 the request contained 'Expect: 100-continue'. This is an instruction that
 the client should send the request body.</p>
+-->
 
 <h3>http.createClient(port, host='localhost', secure=false, [credentials])</h3>
 
@@ -3812,7 +3867,11 @@ Also <code>response.httpVersionMajor</code> is the first integer and
 
 <h3>response.trailers</h3>
 
+<p>レスポンスのトレーラオブジェクトです。
+'end' イベントの後にだけ発生します。<p>
+<!--
 <p>The response trailers object. Only populated after the 'end' event.</p>
+-->
 
 <h3>response.setEncoding(encoding=null)</h3>
 
@@ -3997,16 +4056,26 @@ event.</p>
 
 <h3>net.isIP(input)</h3>
 
+<p>input が IP アドレスかテストします。
+不正な文字列なら 0、IP バージョン 4 のアドレスなら 4、IP バージョン 6 アドレスなら 6 を返します。</p>
+<!--
 <p>Tests if input is an IP address. Returns 0 for invalid strings,
 returns 4 for IP version 4 addresses, and returns 6 for IP version 6 addresses.</p>
+-->
 
 <h3>net.isIPv4(input)</h3>
 
+<p>input が バージョン 4 の IP アドレスなら true、そうでなければ false を返します。</p>
+<!--
 <p>Returns true if input is a version 4 IP address, otherwise returns false.</p>
+-->
 
 <h3>net.isIPv6(input)</h3>
 
+<p>input が バージョン 6 の IP アドレスなら true、そうでなければ false を返します。</p>
+<!--
 <p>Returns true if input is a version 6 IP address, otherwise returns false.</p>
+-->
 
 <h2 id="net.Stream">net.Stream</h2>
 
@@ -5350,10 +5419,13 @@ the query string using the <code>querystring</code> module.</p>
 
 <h3>querystring.stringify(obj, sep='&amp;', eq='=')</h3>
 
-<p>クエリオブジェクトを文字列へ直列化します。オプションとしてデフォルトの区切り文字と代入文字を上書き指定できます。 例:</p>
+<p>クエリオブジェクトを文字列へ直列化します。オプションとしてデフォルトの区切り文字と代入文字を上書き指定できます。</p>
 <!--
 <p>Serialize an object to a query string.  Optionally override the default separator and assignment characters.</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
 -->
 
@@ -5372,7 +5444,10 @@ querystring.stringify({foo: 'bar', baz: 'bob'}, ';', ':')
 <p>Deserialize a query string to an object.  Optionally override the default separator and assignment characters.</p>
 -->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>querystring.parse('a=b&amp;b=c')
 // 戻り値
@@ -5622,7 +5697,10 @@ which is a built-in module. Modules which are not prefixed by <code>'./'</code> 
 built-in module- -more about this later.</p>
 -->
 
+<h3>モジュールの解決</h3>
+<!--
 <h3>Module Resolving</h3>
+-->
 
 <p>プレフィックス <code>'./'</code> が付けられたモジュールは <code>require()</code> を呼び出したモジュールからの相対パスとなります。
 つまり <code>circle.js</code> は <code>require('./circle')</code> が見つけられるように <code>foo.js</code> と同じディレクトリにある必要が有ります。</p>
@@ -5645,7 +5723,7 @@ this: </p>
 
 <p><code>[ '/home/ryan/.node_modules' ]</code></p>
 
-<p>これによって、<code>require('assert')</code> が呼ばれた場合、Node は以下の順でモジュールを検索します</p>
+<p>これによって、<code>require('foo')</code> が呼ばれた場合、Node は以下の順でモジュールを検索します</p>
 
 <!--
 <p>That is, when <code>require('foo')</code> is called Node looks for:</p>
@@ -5663,8 +5741,15 @@ Modules; see 'Addons' below. <code>'index.js'</code> allows one to package a mod
 a directory.</p>
 -->
 
-<p><code>require.paths</code> は、配列に新しいパスを加えるか、<code>NODE_PATH</code> 環境変数と共に起動することで変更することが出来ます (この場合は、コロンで区切られたパスのリストを渡す必要があります)。</p>
-
+<p><code>require.paths</code> は、配列に新しいパスを加えるか、<code>NODE_PATH</code> 環境変数と共に起動することで変更することが出来ます (この場合は、コロンで区切られたパスのリストを渡す必要があります)。
+加えて、node は <code>node_modules</code> と呼ばれるディレクトリを、
+(モジュールが <code>require</code> で呼び出された) 現在のディレクトリからパッケージツリーのルートまで、
+上位に向かって検索します。
+この機能は、異なった環境のために異なったバージョンのモジュールを使うことを容易にします。
+開発環境とプロダクション環境で異なったバージョンの <code>foo</code> モジュール:
+<code>projects/x/development/node_modules/foo</code> と <code>projects/x/production/node_modules/foo</code>
+を使う状況を想像してください。
+</p>
 <!--
 <p><code>require.paths</code> can be modified at runtime by simply unshifting new
 paths onto it, or at startup with the <code>NODE_PATH</code> environmental
@@ -5677,11 +5762,19 @@ environments. Imagine the situation where you have a devopment environment
 and a production environment each with a different version of the <code>foo</code>
 module: <code>projects/x/development/node_modules/foo</code> and
 <code>projects/x/production/node_modules/foo</code>.</p>
+-->
 
+<p><code>require('foo')</code> の 2 度目の呼び出しでは、ディスクから再度読み込むことはしません。
+既にロード済みかを調べるために <code>require.cache</code> オブジェクトをチェックします。</p>
+<!--
 <p>The second time <code>require('foo')</code> is called, it is not loaded again from
 disk. It looks in the <code>require.cache</code> object to see if it has been loaded
 before.</p>
+-->
 
+<p><code>require()</code> が呼び出されると、正確なファイル名を得るために
+<code>require.resolve()</code> 関数が使われます。</p>
+<!--
 <p>To get the exact filename that will be loaded when <code>require()</code> is called, use
 the <code>require.resolve()</code> function.</p>
 -->
