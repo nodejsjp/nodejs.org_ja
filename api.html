@@ -629,13 +629,14 @@ console.log(buf2.toString('ascii', 0, buf2.length));
 // abc
 // !bc</code></pre>
 
-<h2 id="EventEmitter">イベント生成</h2>
+<h2 id="events">イベント</h2>
 <!--
 <h2 id="events">Events</h2>
 -->
 
-<p>Node のオブジェクトの多くはイベントを生成します: TCP サーバはストリームがあるとそのたびにイベントを生成します。
-子プロセスは終了する際にイベントを生成します。
+<p>Node のオブジェクトの多くはイベントを生成します:
+<code>net.Server</code>はストリームがあるとそのたびにイベントを生成し、
+<code>fs.readStream</code>はファイルがオープンされる度にイベントを生成します。
 イベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。</p>
 <!--
 <p>Many objects in Node emit events: a TCP server emits an event each time
@@ -643,13 +644,8 @@ there is a stream, a child process emits an event when it exits. All
 objects which emit events are instances of <code>events.EventEmitter</code>.</p>
 -->
 
-<p>Many objects in Node emit events: a <code>net.Server</code> emits an event each time
-a peer connects to it, a <code>fs.readStream</code> emits an event when the file is 
-opened. All objects which emit events are instances of <code>events.EventEmitter</code>.
-You can access this module by doing: <code>require("events");</code></p>
-
-<p>イベントはキャメル記法による文字列で表現されます。
-いくつかの例: <code>'connection'</code>、<code>'data'</code>、<code>'messageBegin'</code></p>
+<p>通常、イベント名はキャメル記法による文字列で表現されますが、
+厳格な制限ではなく、どんな文字列でも受け入れられます。</p>
 <!--
 <p>Typically, event names are represented by a camel-cased string, however, 
 there aren't any strict restrictions on that, as any string will be accepted.</p>
@@ -664,13 +660,15 @@ is emitted. These functions are called <em>listeners</em>.</p>
 
 <h3 id="events.EventEmitter">events.EventEmitter</h3>
 
-<p><code>require('events').EventEmitter</code> で <code>EventEmitter</code> クラスにアクセスします。</p>
+<p>EventEmitterクラスにアクセスするには、<code>require('events').EventEmitter</code> を使います。</p>
 <!--
 <p>To access the EventEmitter class, <code>require('events').EventEmitter</code>.</p>
 -->
 
-<p><code>EventEmitter</code> がエラーに遭遇した時、典型的な動作は <code>'error'</code> イベントを生成することです。
-エラーイベントは特別です － もしそのハンドラがなければ、スタックトレースが出力されてプログラムは終了します。</p>
+<p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、
+典型的な動作は <code>'error'</code> イベントを生成することです。
+nodeではエラーイベントは特別に扱われます．
+もしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。</p>
 <!--
 <p>When an <code>EventEmitter</code> instance experiences an error, the typical action is 
 to emit an <code>'error'</code> event.  Error events are treated as a special case in node.
@@ -678,8 +676,11 @@ If there is no listener for it, then the default action is to print a stack
 trace and exit the program.</p>
 -->
 
+<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>'newListener'</code> を生成します。</p>
+<!--
 <p>All EventEmitters emit the event <code>'newListener'</code> when new listeners are
 added.</p>
+-->
 
 <h4 id="emitter.addListener">emitter.addListener(event, listener)</h4>
 
@@ -1996,21 +1997,26 @@ process may not actually kill it.  <code>kill</code> really just sends a signal 
 <p>See <code>kill(2)</code></p>
 -->
 
+<h2 id="executing_JavaScript">JavaScript の実行</h2>
+<!--
 <h2 id="executing_JavaScript">Executing JavaScript</h2>
+-->
 
+<p>次のようにすることで、このモジュールにアクセスすることができます:</p>
+<!--
 <p>You can access this module with:</p>
+-->
 
 <pre><code>var vm = require('vm');</code></pre>
 
-<p>新しい JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。</p>
+<p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。</p>
 <!--
 <p>JavaScript code can be compiled and run immediately or compiled, saved, and run later.</p>
 -->
 
 <h3 id="vm.runInThisContext">vm.runInThisContext(code, [filename])</h3>
 
-<p><code>process.compile</code> と同様です。
-<code>Script.runInThisContext</code> は <code>code</code> を
+<p><code>vm.runInThisContext()</code> は <code>code</code> を
 <code>filename</code> からロードされたかのようにコンパイルし、
 それを実行して結果を返します。実行されるコードはローカルスコープにアクセスしません。
 <code>filename</code> はオプションです。</p>
@@ -2019,7 +2025,7 @@ process may not actually kill it.  <code>kill</code> really just sends a signal 
 runs it and returns the result. Running code does not have access to local scope. <code>filename</code> is optional.</p>
 -->
 
-<p><code>Script.runInThisContext</code> と <code>eval</code> で同じコードを実行する例:</p>
+<p><code>vm.runInThisContext</code> と <code>eval</code> で同じコードを実行する例:</p>
 <!--
 <p>Example of using <code>vm.runInThisContext</code> and <code>eval</code> to run the same code:</p>
 -->
@@ -2039,7 +2045,7 @@ console.log('localVar: ' + localVar + ', evaled: ' +
 // localVar: 123, usingscript: 1
 // localVar: 1, evaled: 1</code></pre>
 
-<p><code>Script.runInThisContext</code> はローカルスコープにアクセスしないので、
+<p><code>vm.runInThisContext</code> はローカルスコープにアクセスしないので、
 <code>localVar</code> は変更されません。
 <code>eval</code> はローカルスコープにアクセスするので、
 <code>localVar</code> は変更されます。</p>
@@ -2049,7 +2055,7 @@ console.log('localVar: ' + localVar + ', evaled: ' +
 -->
 
 <p><code>code</code> が文法エラーとなるケースでは、
-<code>Script.runInThisContext</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
+<code>vm.runInThisContext</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
 <!--
 <p>In case of syntax error in <code>code</code>, <code>vm.runInThisContext</code> emits the syntax error to stderr
 and throws.an exception.</p>
@@ -2057,7 +2063,7 @@ and throws.an exception.</p>
 
 <h3 id="vm.runInNewContext">vm.runInNewContext(code, [sandbox], [filename])</h3>
 
-<p><code>Script.runInNewContext</code> は <code>code</code> を
+<p><code>vm.runInNewContext</code> は <code>code</code> を
 <code>filename</code> からロードされたかのようにコンパイルし、
 それを <code>sandbox</code> の中で実行して結果を返します。
 実行されるコードはローカルスコープにアクセスせず、
@@ -2070,7 +2076,8 @@ the object <code>sandbox</code> will be used as the global object for <code>code
 <code>sandbox</code> and <code>filename</code> are optional.</p>
 -->
 
-<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。</p>
+<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。
+これらのグローバル変数はサンドボックスに含まれます。</p>
 <!--
 <p>Example: compile and execute code that increments a global variable and sets a new one.
 These globals are contained in the sandbox.</p>
@@ -2089,7 +2096,7 @@ console.log(util.inspect(sandbox));
 // { animal: 'cat', count: 3, name: 'kitty' }</code></pre>
 
 <p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
-偶然グローバル変数が漏れてしまうことを防ぐために、<code>Script.runInNewContext</code> はとても役立ちますが、
+偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInNewContext</code> はとても役立ちますが、
 信頼できないコードを安全に実行するために別のプロセスを要求します。</p>
 <!--
 <p>Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
@@ -2098,7 +2105,7 @@ requires a separate process.</p>
 -->
 
 <p><code>code</code> が文法エラーとなるケースでは、
-<code>Script.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
+<code>vm.runInThisContext</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
 <!--
 <p>In case of syntax error in <code>code</code>, <code>vm.runInThisContext</code> emits the syntax error to stderr
 and throws an exception.</p>
@@ -2106,9 +2113,9 @@ and throws an exception.</p>
 
 <h3 id="vm.createScript">vm.createScript(code, [filename])</h3>
 
-<p><code>new Script</code> は <code>code</code> を
+<p><code>createScript</code> は <code>code</code> を
 <code>filename</code> からロードされたかのようにコンパイルしますが、実行はしません。
-代わりに、コンパイルされたコードを表現する <code>Script</code> オブジェクトを返します。
+代わりに、コンパイルされたコードを表現する <code>vm.Script</code> オブジェクトを返します。
 このスクリプトは後述のメソッドを使って後から何度でも実行することができます。
 返されるスクリプトはどのグローバルオブジェクトとも結びつけられていません。
 それぞれの実行前に結びつけることで、そのとおりに実行されます。
@@ -2122,7 +2129,7 @@ It is bound before each run, just for that run. <code>filename</code> is optiona
 -->
 
 <p><code>code</code> が文法エラーとなるケースでは、
-<code>new Script</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
+<code>createScript</code> は標準エラーに文法エラーを出力して例外をスローします。</p>
 <!--
 <p>In case of syntax error in <code>code</code>, <code>createScript</code> prints the syntax error to stderr
 and throws an exception.</p>
@@ -2130,8 +2137,8 @@ and throws an exception.</p>
 
 <h3 id="script.runInThisContext">script.runInThisContext()</h3>
 
-<p><code>Script.runInThisContext</code> (大文字の'S'に注意) と同様ですが、
-こちらはコンパイル済みのスクリプトオブジェクトのメソッドです。
+<p><code>vm.runInThisContext</code> と同様ですが、
+こちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。
 <code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。
 実行されるコードはローカルスコープにアクセスしませんが、
 <code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。</p>
@@ -2163,8 +2170,8 @@ console.log(globalVar);
 
 <h3 id="script.runInNewContext">script.runInNewContext([sandbox])</h3>
 
-<p><code>Script.runInNewContext</code> (大文字の'S'に注意) と同様ですが、
-こちらはコンパイル済みのスクリプトオブジェクトのメソッドです。
+<p><code>vm.runInNewContext</code> と同様ですが、
+こちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。
 <code>script.runInNewContext</code> は <code>sandbox</code> がグローバルオブジェクトであるかのように
 <code>script</code> のコードを実行してその結果を返します。
 実行されるコードはローカルスコープにアクセスしません。
@@ -3835,24 +3842,54 @@ Defaults to <code>null</code>, which means that the <code>'data'</code> event wi
 
 <h2 id="net">net</h2>
 
+<p><code>net</code> モジュールは非同期なネットワークのラッパーを提供します。
+それはサーバとクライアントの両方 (ストリームと呼ばれます) を作成するための方法を含みます。
+このモジュールは<code>require("net");</code>によって取り込むことができます。</p>
+<!--
 <p>The <code>net</code> module provides you with an asynchronous network wrapper. It contains
 methods for creating both servers and clients (called streams). You can include 
 this module with <code>require("net");</code></p>
+-->
 
 <h3 id="net.createServer">net.createServer(connectionListener)</h3>
 
+<p>新しい TCP サーバを作成します。
+<code>connectionListener</code> 引数は <code>'connection'</code>
+イベントに対するリスナーとして自動的に加えられます。</p>
+<!--
 <p>Creates a new TCP server. The <code>connectionListener</code> argument is
 automatically set as a listener for the <code>'connection'</code> event.</p>
+-->
 
 <h3 id="net.createConnection">net.createConnection(arguments...)</h3>
 
+<p>新しいストリームオブジェクトを構築し、与えられたロケーションへのストリームをオープンします。
+ストリームが確立されると、<code>'connect'</code> イベントが生成されます。</p>
+<!--
 <p>Construct a new stream object and opens a stream to the given location. When
 the stream is established the <code>'connect'</code> event will be emitted.</p>
+-->
 
+<p>このメソッドの引数はコネクションの種類によって変わります。</p>
+<!--
 <p>The arguments for this method change the type of connection:</p>
+-->
 
+<ul>
+<li>
+<p><code>net.createConnection(port, [host])</code></p>
+<p><code>host</code> 上の <code>port</code> に対する TCP コネクションを作成します。
+<code>host</code> が省略されると <code>localhost</code> が仮定されます。</p>
+</li>
+<li>
+<p><code>net.createConnection(path)</code></p>
+<p><code>path</code> に対する UNIX ドメインソケットを作成します。</p>
+</li>
+</ul>
+<!--
 <ul><li><p><code>net.createConnection(port, [host])</code></p><p>Creates a TCP connection to <code>port</code> on <code>host</code>. If <code>host</code> is omitted, <code>localhost</code>
 will be assumed.</p></li><li><p><code>net.createConnection(path)</code></p><p>Creates unix socket connection to <code>path</code></p></li></ul>
+-->
 
 <hr />
 
@@ -3955,10 +3992,17 @@ event.</p>
 
 <h4 id="server.address">server.address()</h4>
 
+<p>オペレーティングシステムによってサーバにバインドされたアドレスを返します。
+OSによって割り当てられたアドレスが渡された時に、どのポートに割り当てられたものかを調べるのに便利です。</p>
+<!--
 <p>Returns the bound address of the server as seen by the operating system.
 Useful to find which port was assigned when giving getting an OS-assigned address</p>
+-->
 
+<p>例:</p>
+<!--
 <p>Example:</p>
+-->
 
 <pre><code>var server = net.createServer(function (socket) {
   socket.end("goodbye\n");
@@ -3984,18 +4028,31 @@ server.listen(function() {
 <p>The number of concurrent connections on the server.</p>
 -->
 
+<h4 id="event_connection_">イベント: 'connection'</h4>
+<!--
 <h4 id="event_connection_">Event: 'connection'</h4>
+-->
 
 <p><code>function (stream) {}</code></p>
 
+<p>新しいコネクションが作成されると生成されます。
+<code>stream</code> は <code>net.Stream</code> のインスタンスです。</p>
+<!--
 <p>Emitted when a new connection is made. <code>stream</code> is an instance of
 <code>net.Stream</code>.</p>
+-->
 
+<h4 id="event_close_">イベント: 'close'</h4>
+<!--
 <h4 id="event_close_">Event: 'close'</h4>
+-->
 
 <p><code>function () {}</code></p>
 
+<p>サーバがクローズした時に生成されます。</p>
+<!--
 <p>Emitted when the server closes.</p>
+-->
 
 <hr />
 
@@ -4022,15 +4079,23 @@ and passed to the user through the <code>'connection'</code> event of a server.<
 
 <h4 id="stream.connect">stream.connect(path)</h4>
 
-<p>指定の <code>port</code> と <code>host</code> でストリームをオープンします。
-<code>createConnection()</code> もまたストリームをオープンします: 通常このメソッドは必要とされません。
-これを使うのは、ストリームがクローズされた後にオブジェクトを再利用して別のサーバに接続する場合だけです。</p>
+<p>与えられたストリームでコネクションをオープンします。
+<code>port</code> と <code>host</code> が与えられた場合は、
+ストリームは TCP ストリームとしてオープンされます。
+<code>host</code> が省略された場合は <code>localhost</code> が仮定されます。
+<code>path</code> が与えられた場合は、
+ストリームはそのパスへの UNIX ドメインソケットとしてオープンされます。
 <!--
 <p>Opens the connection for a given stream. If <code>port</code> and <code>host</code> are given,
 then the stream will be opened as a TCP stream, if <code>host</code> is omitted,
 <code>localhost</code> will be assumed. If a <code>path</code> is given, the stream will be
 opened as a unix socket to that path.</p>
+-->
 
+<p>通常このメソッドは必要なく、<code>net.createConnection</code> でストリームをオープンします。
+これを使うのは、カスタマイズされたストリームを実装している場合や、
+ストリームがクローズされた後にコネクションを再利用して別のサーバに接続する場合だけです。</p>
+<!--
 <p>Normally this method is not needed, as <code>net.createConnection</code> opens the
 stream. Use this only if you are implementing a custom Stream or if a
 Stream is closed and you want to reuse it to connect to another server.</p>
@@ -4227,7 +4292,10 @@ initialDelay will leave the value unchanged from the default
 <p>Either <code>'closed'</code>, <code>'open'</code>, <code>'opening'</code>, <code>'readOnly'</code>, or <code>'writeOnly'</code>.</p>
 -->
 
+<h4 id="event_connect_">イベント: 'connect'</h4>
+<!--
 <h4 id="event_connect_">Event: 'connect'</h4>
+-->
 
 <p><code>function () { }</code></p>
 
@@ -4238,7 +4306,7 @@ initialDelay will leave the value unchanged from the default
 See <code>connect()</code>.</p>
 -->
 
-<h3>イベント: 'secure'</h3>
+<h4 id="event_secure_">イベント: 'secure'</h4>
 <!--
 <h4 id="event_secure_">Event: 'secure'</h4>
 -->
@@ -4250,7 +4318,7 @@ See <code>connect()</code>.</p>
 <p>Emitted when a stream connection successfully establishes an SSL handshake with its peer.</p>
 -->
 
-<h3>イベント: 'data'</h3>
+<h4 id="event_data_">イベント: 'data'</h4>
 <!--
 <h4 id="event_data_">Event: 'data'</h4>
 -->
@@ -4267,20 +4335,26 @@ See <code>connect()</code>.</p>
 (See the section on <code>Readable Stream</code> for more information.)</p>
 -->
 
-<h3>イベント: 'end'</h3>
+<h4 id="event_end_">イベント: 'end'</h4>
 <!--
 <h4 id="event_end_">Event: 'end'</h4>
 -->
 
 <p><code>function () { }</code></p>
 
-<p>ストリームの相手側が FIN パケットを送信した場合に生成されます。
-このイベントが生成された後、<code>readyState</code> は <code>'writeOnly'</code> になります。
-このイベントが生成されると、おそらく <code>stream.end()</code> を呼ばなければならないでしょう。</p>
+<p>ストリームの相手側が FIN パケットを送信した場合に生成されます。</p>
 <!--
 <p>Emitted when the other end of the stream sends a FIN packet.</p>
 -->
 
+<p>デフォルト (<code>allowHalfOpen == false</code>) では、
+保留されていた書き込みキューが出力されるとストリームはファイル識別子を破棄します。
+しかし、<code>allowHalfOpen == true</code> が設定されていると、
+ユーザがデータを書き込めるようにしておくために、ストリームは自動的に <code>end()</code> を呼び出さないので、
+ユーザが <code>end()</code> を呼び出す必要があります。
+<code>allowHalfOpen == true</code> のケースでは、
+<code>'end'</code> が生成された後の <code>readyState</code> は <code>'writeOnly'</code> となります。<p>
+<!--
 <p>By default (<code>allowHalfOpen == false</code>) the stream will destroy its file
 descriptor  once it has written out its pending write queue.  However, by
 setting <code>allowHalfOpen == true</code> the stream will not automatically <code>end()</code>
@@ -4288,8 +4362,9 @@ its side allowing the user to write arbitrary amounts of data, with the
 caveat that the user is required to <code>end()</code> their side now. In the
 <code>allowHalfOpen == true</code> case after <code>'end'</code> is emitted the <code>readyState</code> will
 be <code>'writeOnly'</code>.</p>
+-->
 
-<h3>イベント: 'timeout'</h3>
+<h4 id="event_timeout_">イベント: 'timeout'</h4>
 <!--
 <h4 id="event_timeout_">Event: 'timeout'</h4>
 -->
@@ -4309,7 +4384,7 @@ the stream has been idle. The user must manually close the connection.</p>
 <p>See also: <code>stream.setTimeout()</code></p>
 -->
 
-<h3>イベント: 'drain'</h3>
+<h4 id="event_drain_">イベント: 'drain'</h4>
 <!--
 <h4 id="event_drain_">Event: 'drain'</h4>
 -->
@@ -4321,7 +4396,7 @@ the stream has been idle. The user must manually close the connection.</p>
 <p>Emitted when the write buffer becomes empty. Can be used to throttle uploads.</p>
 -->
 
-<h3>イベント: 'error'</h3>
+<h4 id="event_error_">イベント: 'error'</h4>
 <!--
 <h4 id="event_error_">Event: 'error'</h4>
 -->
@@ -4334,7 +4409,7 @@ the stream has been idle. The user must manually close the connection.</p>
 following this event.</p>
 -->
 
-<h3>イベント: 'close'</h3>
+<h4 id="event_close_">イベント: 'close'</h4>
 <!--
 <h4 id="event_close_">Event: 'close'</h4>
 -->
