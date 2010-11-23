@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>child_processes - Node.js Manual &amp; Documentation</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="child_Processes">Child Processes</h2>
+
+<p>Nodeは <code>ChildProcess</code> クラスを通じて 3 方向の <code>popen(3)</code> 機能を提供します。</p>
+
+<p>それは完全にノンブロッキングな方法で子プロセスの <code>stdin</code>、<code>stdout</code>、
+そして <code>stderr</code> を通じたデータストリームを実現します。</p>
+
+<p>子プロセスの生成は <code>require('child_process').spawn()</code> を使います。</p>
+
+<p>子プロセスは常に 3 本のストリームと関連づけられています。
+<code>child.stdin</code>、<code>child.stdout</code>、そして <code>child.stderr</code> です。</p>
+
+<p><code>ChildProcess</code> は <code>EventEmitter</code> です。</p>
+
+<h3 id="event_exit_">Event:  'exit'</h3>
+
+<p><code>function (code, signal) {}</code></p>
+
+<p>このイベントは子プロセスが終了した後で生成されます。
+プロセスが普通に終了した場合、<code>code</code> はプロセスの終了コードです。
+それ以外の場合は <code>null</code> です。
+プロセスがシグナルを受け取って終了した場合、<code>signal</code> は文字列によるシグナルの名前です。
+それ以外の場合は <code>null</code> です。</p>
+
+<p><code>waitpid(2)</code> を参照してください。</p>
+
+<h3 id="child.stdin">child.stdin</h3>
+
+<p>子プロセスの <code>stdin</code> を表現する <code>Writable Stream</code> です。
+多くの場合、<code>end()</code> を通じてこのストリームを閉じると子プロセスが終了する原因となります。</p>
+
+<h3 id="child.stdout">child.stdout</h3>
+
+<p>子プロセスの <code>stdout</code> を表現する <code>Readable Stream</code> です。</p>
+
+<h3 id="child.stderr">child.stderr</h3>
+
+<p>子プロセスの <code>stderr</code> を表現する <code>Readable Stream</code> です。</p>
+
+<h3 id="child.pid">child.pid</h3>
+
+<p>子プロセスの PID です。</p>
+
+<p>例:</p>
+
+<pre><code>var spawn = require('child_process').spawn,
+    grep  = spawn('grep', ['ssh']);
+
+console.log('Spawned child pid: ' + grep.pid);
+grep.stdin.end();</code></pre>
+
+<h3 id="child_process.spawn">child_process.spawn(command, args=[], [options])</h3>
+
+<p><code>args</code> をコマンドライン引数として、与えられた <code>command</code> で新しいプロセスを起動します。
+<code>args</code> が省略された場合、空の配列がデフォルトとなります。</p>
+
+<p>第 3 引数は追加のオプションを指定するために使われ、そのデフォルトは:</p>
+
+<pre><code>{ cwd: undefined
+, env: process.env,
+, customFds: [-1, -1, -1]
+}</code></pre>
+
+<p><code>cwd</code> で起動されたプロセスのワーキングディレクトリを指定することができます。
+<code>env</code> は新しいプロセスに見える環境変数を指定するために使います。
+<code>customFds</code> は新しいプロセスの [stdin, stout, stderr] を既存のストリームに接続することを可能にします;
+<code>-1</code> は新しいストリームが作られなければならないことを意味します。</p>
+
+<p><code>ls -lh /usr</code> を実行して <code>stdout</code>、<code>stderr</code>、および終了コードを取得する例:</p>
+
+<pre><code>var util   = require('util'),
+    spawn = require('child_process').spawn,
+    ls    = spawn('ls', ['-lh', '/usr']);
+
+ls.stdout.on('data', function (data) {
+  console.log('stdout: ' + data);
+});
+
+ls.stderr.on('data', function (data) {
+  console.log('stderr: ' + data);
+});
+
+ls.on('exit', function (code) {
+  console.log('child process exited with code ' + code);
+});</code></pre>
+
+<p>とても手の込んだ方法で実行する 'ps ax | grep ssh' の例:</p>
+
+<pre><code>var util   = require('util'),
+    spawn = require('child_process').spawn,
+    ps    = spawn('ps', ['ax']),
+    grep  = spawn('grep', ['ssh']);
+
+ps.stdout.on('data', function (data) {
+  grep.stdin.write(data);
+});
+
+ps.stderr.on('data', function (data) {
+  console.log('ps stderr: ' + data);
+});
+
+ps.on('exit', function (code) {
+  if (code !== 0) {
+    console.log('ps process exited with code ' + code);
+  }
+  grep.stdin.end();
+});
+
+grep.stdout.on('data', function (data) {
+  console.log(data);
+});
+
+grep.stderr.on('data', function (data) {
+  console.log('grep stderr: ' + data);
+});
+
+grep.on('exit', function (code) {
+  if (code !== 0) {
+    console.log('grep process exited with code ' + code);
+  }
+});</code></pre>
+
+<p>exec の失敗をチェックする例:</p>
+
+<pre><code>var spawn = require('child_process').spawn,
+    child = spawn('bad_command');
+
+child.stderr.on('data', function (data) {
+  if (/^execvp\(\)/.test(data.asciiSlice(0,data.length))) {
+    console.log('Failed to start child process.');
+  }
+});</code></pre>
+
+<p>関連項目: <code>child_process.exec()</code></p>
+
+<h3 id="child_process.exec">child_process.exec(command, [options], callback)</h3>
+
+<p>コマンドを子プロセスとして実行し、その出力を蓄えて、その全てをコールバックに渡す高水準の方法です。</p>
+
+<pre><code>var util   = require('util'),
+    exec  = require('child_process').exec,
+    child;
+
+child = exec('cat *.js bad_file | wc -l', 
+  function (error, stdout, stderr) {
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});</code></pre>
+
+<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。
+成功すると、<code>error</code> は <code>null</code> になります。
+エラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、
+<code>err.code</code> は子プロセスの終了コード、
+<code>err.signal</code> はプロセスを終了させたシグナルとなります。</p>
+
+<p>任意の第 2 引数でいくつかのオプションを指定することができます。
+オプションのデフォルトは</p>
+
+<pre><code>{ encoding: 'utf8'
+, timeout: 0
+, maxBuffer: 200*1024
+, killSignal: 'SIGTERM'
+, cwd: null
+, env: null
+}</code></pre>
+
+<p>もし <code>timeout</code> が 0 より大きいと、
+子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。
+子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGTERM'</code>)。
+<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。</p>
+
+<h3 id="child.kill">child.kill(signal='SIGTERM')</h3>
+
+<p>子プロセスにシグナルを送ります。
+引数が与えられない場合、子プロセスには <code>'SIGTERM'</code> が送られます。
+利用可能なシグナルの一覧は <code>signal(7)</code> を参照してください。</p>
+
+<pre><code>var spawn = require('child_process').spawn,
+    grep  = spawn('grep', ['ssh']);
+
+grep.on('exit', function (code, signal) {
+  console.log('child process terminated due to receipt of signal '+signal);
+});
+
+// send SIGHUP to process
+grep.kill('SIGHUP');</code></pre>
+
+<p>この関数は <code>kill</code> と呼ばれるものの、
+子プロセスに届けられるシグナルが実際には子プロセスを殺さないかもしれないことに注意してください。
+<code>kill</code> はただプロセスにシグナルを送るだけです。</p>
+
+<p>See <code>kill(2)</code></p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>

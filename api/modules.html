@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>modules - Node.js Manual &amp; Documentation</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="standard_Modules">Standard Modules</h2>
+
+<p>Node にはプロセス内にコンパイルされたいくつかのモジュールが含まれており、
+そのほとんどは以下に文書化されています。
+これらのモジュールを使用するもっとも一般的な方法は、
+<code>require('name')</code> の戻り値を、モジュールと同じ名前のローカル変数に割り当てることです。</p>
+
+<p>例:</p>
+
+<pre><code>var util = require('util');</code></pre>
+
+<p>その他のモジュールで node を拡張することも可能です。「モジュール」を参照してください。</p>
+
+<h2 id="modules">Modules</h2>
+
+<p>Node は CommonJS のモジュールシステムを使います。</p>
+
+<p>Node はシンプルなモジュールローディングシステムを持ちます。
+Node では、ファイルとモジュールは１対１に対応します。
+例として、 <code>foo.js</code> は、同じディレクトリにある <code>circle.js</code> をロードしています。</p>
+
+<p><code>foo.js</code> の内容:</p>
+
+<pre><code>var circle = require('./circle');
+console.log( 'The area of a circle of radius 4 is '
+           + circle.area(4));</code></pre>
+
+<p><code>circle.js</code> の内容:</p>
+
+<pre><code>var PI = 3.14;
+
+exports.area = function (r) {
+  return PI * r * r;
+};
+
+exports.circumference = function (r) {
+  return 2 * PI * r;
+};</code></pre>
+
+<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。
+エクスポートされたオブジェクトは、 <code>exports</code> という特別なオブジェクトに加えられます
+(<code>exports</code> の代わりに <code>this</code> を使うことも出来ます)。
+モジュールのローカル変数はプライベートです。
+この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
+関数 <code>puts()</code> は ビルトインモジュールである <code>'sys'</code> の物です。
+プレフィックス <code>'./'</code> のないモジュールはビルトインモジュールです。詳細は以降で説明します。</p>
+
+<h3 id="module_Resolving">Module Resolving</h3>
+
+<p>プレフィックス <code>'./'</code> が付けられたモジュールは <code>require()</code> を呼び出したモジュールからの相対パスとなります。
+つまり <code>circle.js</code> は <code>require('./circle')</code> が見つけられるように <code>foo.js</code> と同じディレクトリにある必要が有ります。</p>
+
+<p>先頭の <code>'./'</code> 無しで、例えば <code>require('assert')</code> の様にモジュールを指定した場合、
+モジュールは <code>require.paths</code> の配列内の場所を起点に検索されます。
+私のシステムでは、 <code>require.paths</code> はこの様になっています: </p>
+
+<p><code>[ '/home/ryan/.node_modules' ]</code></p>
+
+<p>これによって、<code>require('foo')</code> が呼ばれると Node は以下の順でモジュールを検索します</p>
+
+<ul><li>1: <code>/home/ryan/.node_modules/foo</code></li><li>2: <code>/home/ryan/.node_modules/foo.js</code></li><li>3: <code>/home/ryan/.node_modules/foo.node</code></li><li>4: <code>/home/ryan/.node_modules/foo/index.js</code></li><li>5: <code>/home/ryan/.node_modules/foo/index.node</code></li></ul>
+
+<p>ファイルが見つかると、その時点で検索は終了します。
+ファイル名が <code>'.node'</code> で終わるファイルは、バイナリ形式のアドオンモジュールです。
+詳細は「アドオン」を参照してください。
+<code>'index.js'</code> は、ディレクトリをモジュールとして一つにまとめることを可能にします。</p>
+
+<p><code>require.paths</code> は、配列に新しいパスを加えるか、<code>NODE_PATH</code> 環境変数と共に起動することで変更することが出来ます
+(この場合は、コロンで区切られたパスのリストを渡す必要があります)。
+加えて、node は <code>node_modules</code> と呼ばれるディレクトリを
+(モジュールが <code>require</code> で呼び出された)、現在のディレクトリからパッケージツリーのルートまで、
+上位に向かって検索します。
+この機能は、異なった環境のために異なったバージョンのモジュールを使うことを容易にします。
+開発環境とプロダクション環境で異なったバージョンの <code>foo</code> モジュール:
+<code>projects/x/development/node_modules/foo</code> と <code>projects/x/production/node_modules/foo</code>
+を使う状況を想像してください。</p>
+
+<p><code>require('foo')</code> の 2 度目の呼び出しでは、ディスクから再度読み込むことはしません。
+既にロード済みかを調べるために <code>require.cache</code> オブジェクトをチェックします。</p>
+
+<p><code>require()</code> が呼び出されると、正確なファイル名を得るために
+<code>require.resolve()</code> 関数が使われます。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>
