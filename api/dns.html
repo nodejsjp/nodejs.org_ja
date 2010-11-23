@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>dns - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="dNS">DNS</h2>
+
+<p>このモジュールにアクセスするには <code>require('dns')</code> を使用します。</p>
+
+<p>これは <code>'www.google.com'</code> を解決して、返された IP アドレスを逆引きで解決する例です。</p>
+
+<pre><code>var dns = require('dns');
+
+dns.resolve4('www.google.com', function (err, addresses) {
+  if (err) throw err;
+
+  console.log('addresses: ' + JSON.stringify(addresses));
+
+  addresses.forEach(function (a) {
+    dns.reverse(a, function (err, domains) {
+      if (err) {
+        console.log('reverse for ' + a + ' failed: ' +
+          err.message);
+      } else {
+        console.log('reverse for ' + a + ': ' +
+          JSON.stringify(domains));
+      }
+    });
+  });
+});</code></pre>
+
+<h3 id="dns.lookup">dns.lookup(domain, family=null, callback)</h3>
+
+<p>ドメイン (例 <code>'google.com'</code>) を解決して最初に見つかった
+A (IPv4) または AAAA (IPv6) レコードにします。</p>
+
+<p>コールバックは引数 <code>(err, address, family)</code> を持ちます。
+<code>address</code> 引数は IP v4 または v6 アドレスを表現する文字列です。
+<code>family</code> 引数は 4 または 6 の整数で、<code>address</code> のファミリーを意味します
+(この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。</p>
+
+<h3 id="dns.resolve">dns.resolve(domain, rrtype='A', callback)</h3>
+
+<p>ドメイン (例 <code>'google.com'</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
+妥当な <code>rrtype</code> は <code>A</code> (IPV4アドレス)、<code>AAAA</code> (IPV6アドレス)、
+<code>MX</code> (mail exchangeレコード), <code>TXT</code> (テキストレコード)、<code>SRV</code> (SRVレコード)、
+<code>PTR</code> (IP を逆引きでルックアップするために使われる) です。</p>
+
+<p>コールバックは引数 <code>(err, addresses)</code> を持ちます。
+<code>addresses</code> の各要素の種類はレコードの種類によって決まり、
+対応する後述のルックアップメソッドで記述されます。</p>
+
+<p>エラー発生時、<code>err</code> は <code>Error</code> オブジェクトのインスタンスであり、
+<code>err.errno</code> は後述するエラーコードのいずれか、
+<code>err.message</code> はエラーを英語で説明する文字列となります。</p>
+
+<h3 id="dns.resolve4">dns.resolve4(domain, callback)</h3>
+
+<p><code>dns.resolve()</code> と同じですが、IPv4 アドレス (<code>A</code> レコード) だけを問い合わせます。
+<code>addresses</code> は IPv4 アドレスの配列です (例&lt;br /&gt;
+<code>['74.125.79.104', '74.125.79.105', '74.125.79.106']</code>)</p>
+
+<h3 id="dns.resolve6">dns.resolve6(domain, callback)</h3>
+
+<p>IPv6 (<code>AAAA</code> レコード) を問い合わせることを除いて <code>dns.resolve4()</code> と同じです。</p>
+
+<h3 id="dns.resolveMx">dns.resolveMx(domain, callback)</h3>
+
+<p><code>dns.resolve()</code> と同じですが、mail exchange (<code>MX</code> レコード) だけを問い合わせます。</p>
+
+<p><code>addresses</code>は MX レコードの配列で、それぞれは priority と exchange の属性を持ちます
+(例 <code>[{'priority': 10, 'exchange': 'mx.example.com'},...]</code>)。</p>
+
+<h3 id="dns.resolveTxt">dns.resolveTxt(domain, callback)</h3>
+
+<p><code>dns.resolve()</code> と同じですが、テキスト (<code>TXT</code> レコード) だけを問い合わせます。
+<code>addresses</code> は利用可能な <code>domain</code> のテキストレコードの配列です。
+(例、<code>['v=spf1 ip4:0.0.0.0 ~all']</code>)</p>
+
+<h3 id="dns.resolveSrv">dns.resolveSrv(domain, callback)</h3>
+
+<p><code>dns.resolve()</code> と同じですが、サービスレコード (<code>SRV</code> レコード) だけを問い合わせます。
+<code>addresses</code> は利用可能な <code>domain</code> の SRV レコードの配列です。
+SRV レコードのプロパティは priority、weight、port、そして name です
+(例 <code>[{'priority': 10, {'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]</code>)。</p>
+
+<h3 id="dns.reverse">dns.reverse(ip, callback)</h3>
+
+<p>IP アドレスからドメイン名の配列へ逆引きで解決します。</p>
+
+<p>コールバックは引数 <code>(err, domains)</code> を持ちます。</p>
+
+<p>エラーがあった場合、<code>err</code> は非 null で Error オブジェクトのインスタンスとなります。</p>
+
+<p>どの DNS 問い合わせもエラーコードを返せます。</p>
+
+<ul><li><code>dns.TEMPFAIL</code>: タイムアウト、SERVFAIL あるいは同様のもの。</li><li><code>dns.PROTOCOL</code>: 応答が不正。</li><li><code>dns.NXDOMAIN</code>: ドメインが存在しない。</li><li><code>dns.NODATA</code>: ドメインは存在するが、要求された種類のデータがない。</li><li><code>dns.NOMEM</code>: 処理中にメモリが不足。</li><li><code>dns.BADQUERY</code>: 問い合わせが不正な形式。</li></ul>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>

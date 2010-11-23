@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>streams - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="streams">Streams</h2>
+
+<p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。
+例えば HTTP サーバへのリクエストは標準出力と同様にストリームです。
+ストリームは読み込み可能、書き込み可能、またはその両方です。
+全てのストリームは <code>EventEmitter</code> のインスタンスです。</p>
+
+<h2 id="readable_Stream">Readable Stream</h2>
+
+<p><code>Readable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。</p>
+
+<h3 id="event_data_">Event: 'data'</h3>
+
+<p><code>function (data) { }</code></p>
+
+<p><code>'data'</code> イベントは <code>Buffer</code> (デフォルト) または、
+<code>setEncoding()</code> された場合は文字列のどちらかを生成します</p>
+
+<h3 id="event_end_">Event: 'end'</h3>
+
+<p><code>function () { }</code></p>
+
+<p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。
+<code>'data'</code> イベントがもう発生しないことを示します。
+ストリームがもし書き込み可能でもあるなら、書き込みを続けることは可能かもしれません。</p>
+
+<h3 id="event_error_">Event: 'error'</h3>
+
+<p><code>function (exception) { }</code></p>
+
+<p>データ受信でエラーがあると生成されます。</p>
+
+<h3 id="event_close_">Event: 'close'</h3>
+
+<p><code>function () { }</code></p>
+
+<p>下層でファイル記述子がクローズされた時に生成されます。
+全てのストリームがこのイベントを発生するわけではありません。
+(例えば、インカミングの HTTP リクエストは <code>'close'</code> イベントを生成しません。)</p>
+
+<h3 id="event_fd_">Event: 'fd'</h3>
+
+<p><code>function (fd) { }</code></p>
+
+<p>ストリームに関するファイル記述子を受け取った時に生成されます。
+UNIX ストリームだけがこの機能をサポートしています;
+その他の全てのストリームはこのイベントを生成しません。</p>
+
+<h3 id="stream.readable">stream.readable</h3>
+
+<p>デフォルトでは <code>true</code> ですが、<code>'error'</code> が発生した後、
+ストリームが <code>'end'</code> に達した後、または <code>destroy()</code> が呼ばれた後で、
+<code>false</code> に設定される boolean です。</p>
+
+<h3 id="stream.setEncoding">stream.setEncoding(encoding)</h3>
+
+<p>data イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
+<code>encoding</code> には <code>'utf8'</code>、<code>'ascii'</code>、
+または <code>'base64'</code> を指定することができます。</p>
+
+<h3 id="stream.pause">stream.pause()</h3>
+
+<p><code>'data'</code> イベントの到着を中断します。</p>
+
+<h3 id="stream.resume">stream.resume()</h3>
+
+<p><code>pause()</code> の後で <code>'data'</code> イベントの到着を再開します。</p>
+
+<h3 id="stream.destroy">stream.destroy()</h3>
+
+<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。</p>
+
+<h2 id="writable_Stream">Writable Stream</h2>
+
+<p><code>Writable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。</p>
+
+<h3 id="event_drain_">Event: 'drain'</h3>
+
+<p><code>function () { }</code></p>
+
+<p>呼び出された <code>write()</code> メソッドが <code>false</code> で戻った後に生成され、
+再び安全に書き込むことができるようになったことを示します。</p>
+
+<h3 id="event_error_">Event: 'error'</h3>
+
+<p><code>function (exception) { }</code></p>
+
+<p><code>exception</code>例外によるエラーについて生成されます。</p>
+
+<h3 id="event_close_">Event: 'close'</h3>
+
+<p><code>function () { }</code></p>
+
+<p>下層でファイル記述子がクローズされた時に生成されます。</p>
+
+<h3 id="stream.writeable">stream.writeable</h3>
+
+<p>デフォルトでは <code>true</code> ですが、<code>'error'</code> が発生した後、
+<code>end()</code> / <code>destroy()</code> が呼ばれた後で <code>false</code> に設定される boolean です。</p>
+
+<h3 id="stream.write">stream.write(string, encoding='utf8', [fd])</h3>
+
+<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。
+文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。
+カーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、
+<code>false</code> が返ります。
+<code>'drain'</code> イベントがカーネルバッファが再び空いたことを示します。
+<code>encoding</code> のデフォルトは <code>'utf8'</code> です。</p>
+
+<p>オプションの <code>fd</code> 引数が指定されると、
+ストリームに送信するための基礎となるファイル記述子として解釈されます。
+これは UNIX ストリームでのみサポートされており、その他では黙って無視されます。
+このようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、
+データが不正な (クローズされた) ファイル記述子に送られるリスクがあります。</p>
+
+<h3 id="stream.write">stream.write(buffer)</h3>
+
+<p>生のバッファを使うこと以外は上記と同じです。</p>
+
+<h3 id="stream.end">stream.end()</h3>
+
+<p>ストリームを EOF または FIN で終了します。</p>
+
+<h3 id="stream.end">stream.end(string, encoding)</h3>
+
+<p>与えられた <code>encoding</code> で <code>string</code> を送信してからEOFまたはFINでストリームを終了します。
+これは送信するパケットの数を減らすために便利です。</p>
+
+<h3 id="stream.end">stream.end(buffer)</h3>
+
+<p><code>buffer</code> であること以外は上記と同じです。</p>
+
+<h3 id="stream.destroy">stream.destroy()</h3>
+
+<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>

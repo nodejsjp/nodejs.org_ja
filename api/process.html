@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>process - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="process">process</h2>
+
+<p><code>process</code> はグローバルオブジェクトで、どこからでもアクセスすることができます。
+それは <code>EventEmitter</code> のインスタンスです。</p>
+
+<h3 id="event_exit_">Event: 'exit'</h3>
+
+<p><code>function () {}</code></p>
+
+<p>プロセスが終了しようとしている時に生成されます。
+これは (ユニットテストのように) モジュールの状態を一定の時間でチェックするのに適したフックとなります。
+メインのイベントループは 'exit' コールバックが終了するともはや動作しないので、
+タイマーはスケジュールされないかもしれません。</p>
+
+<p><code>exit</code> を監視する例:</p>
+
+<pre><code>process.on('exit', function () {
+  process.nextTick(function () {
+   console.log('This will not run');
+  });
+  console.log('About to exit.');
+});</code></pre>
+
+<h3 id="event_uncaughtException_">Event: 'uncaughtException'</h3>
+
+<p><code>function (err) { }</code></p>
+
+<p>発生した例外がイベントループまでたどり着いた場合に生成されます。
+もしこの例外に対するリスナーが加えられていれば、
+デフォルトの動作 (それはスタックトレースをプリントして終了します) は起こりません。</p>
+
+<p><code>uncaughtException</code> を監視する例:</p>
+
+<pre><code>process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ' + err);
+});
+
+setTimeout(function () {
+  console.log('This will still run.');
+}, 500);
+
+// Intentionally cause an exception, but don't catch it.
+nonexistentFunc();
+console.log('This will not run.');</code></pre>
+
+<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであることに注意してください。
+プログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。
+特にサーバプログラムはいつまでも実行し続けるように設計されるので、
+<code>uncaughtException</code> は有益で安全なメカニズムになり得ます。</p>
+
+<h3 id="signal_Events">Signal Events</h3>
+
+<p><code>function () {}</code></p>
+
+<p>プロセスがシグナルを受信た場合に生成されます。
+SIGINT、SIGUSR1、その他の POSIX 標準シグナル名の一覧について は sigaction(2) を参照してください。</p>
+
+<p><code>SIGINT</code>を監視する例:</p>
+
+<pre><code>var stdin = process.openStdin();
+
+process.on('SIGINT', function () {
+  console.log('Got SIGINT.  Press Control-D to exit.');
+});</code></pre>
+
+<p>多くの端末プログラムで簡単に <code>SIGINT</code> を送る方法は <code>Control-C</code> を押すことです。</p>
+
+<h3 id="process.stdout">process.stdout</h3>
+
+<p><code>stdout</code> に対する <code>Writable Stream</code> です。</p>
+
+<p>例: <code>console.log</code> の定義</p>
+
+<pre><code>console.log = function (d) {
+  process.stdout.write(d + '\n');
+};</code></pre>
+
+<h3 id="process.openStdin">process.openStdin()</h3>
+
+<p>標準入力ストリームをオープンし、<code>Readable Stream</code> を返します。</p>
+
+<p>標準入力をオープンして二つのイベントを監視する例:</p>
+
+<pre><code>var stdin = process.openStdin();
+
+stdin.setEncoding('utf8');
+
+stdin.on('data', function (chunk) {
+  process.stdout.write('data: ' + chunk);
+});
+
+stdin.on('end', function () {
+  process.stdout.write('end');
+});</code></pre>
+
+<h3 id="process.argv">process.argv</h3>
+
+<p>コマンドライン引数を含む配列です。
+最初の要素は 'node'、2 番目の要素は JavaScript ファイルの名前になります。
+その後の要素はコマンドラインの追加の引数になります。</p>
+
+<pre><code>// print process.argv
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
+});</code></pre>
+
+<p>このように出力されます:</p>
+
+<pre><code>$ node process-2.js one two=three four
+0: node
+1: /Users/mjr/work/node/process-2.js
+2: one
+3: two=three
+4: four</code></pre>
+
+<h3 id="process.execPath">process.execPath</h3>
+
+<p>プロセスによって開始された実行可能ファイルの絶対パスです。</p>
+
+<p>例:</p>
+
+<pre><code>/usr/local/bin/node</code></pre>
+
+<h3 id="process.chdir">process.chdir(directory)</h3>
+
+<p>プロセスのカレントワーキングディレクトリを変更します。
+もし失敗した場合は例外をスローします。</p>
+
+<pre><code>console.log('Starting directory: ' + process.cwd());
+try {
+  process.chdir('/tmp');
+  console.log('New directory: ' + process.cwd());
+}
+catch (err) {
+  console.log('chdir: ' + err);
+}</code></pre>
+
+<h3 id="process.cwd">process.cwd()</h3>
+
+<p>プロセスのカレントワーキングディレクトリを返します。</p>
+
+<pre><code>console.log('Current directory: ' + process.cwd());</code></pre>
+
+<h3 id="process.env">process.env</h3>
+
+<p>ユーザの環境を含むオブジェクトです。environ(7) を参照してください。</p>
+
+<h3 id="process.exit">process.exit(code=0)</h3>
+
+<p>指定の <code>code</code> でプロセスを終了します。
+もし省略されると、「成功」を示すコード <code>0</code> を使って終了します。</p>
+
+<p>「失敗」を示すコードで終了する例:</p>
+
+<pre><code>process.exit(1);</code></pre>
+
+<p>node を実行したシェルで終了コードが 1 であることを見ることができるでしょう。</p>
+
+<h3 id="process.getgid">process.getgid()</h3>
+
+<p>プロセスのグループ識別子を取得します (getgid(2) 参照)。
+これは数値によるグループ ID で、グループ名ではありません。</p>
+
+<pre><code>console.log('Current gid: ' + process.getgid());</code></pre>
+
+<h3 id="process.setgid">process.setgid(id)</h3>
+
+<p>プロセスのグループ識別子を設定します (setgid(2) 参照)。
+これは数値による ID もグループ名の文字列のどちらも受け入れます。
+もしグループ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。</p>
+
+<pre><code>console.log('Current gid: ' + process.getgid());
+try {
+  process.setgid(501);
+  console.log('New gid: ' + process.getgid());
+}
+catch (err) {
+  console.log('Failed to set gid: ' + err);
+}</code></pre>
+
+<h3 id="process.getuid">process.getuid()</h3>
+
+<p>プロセスのユーザ識別子を取得します (getuid(2) 参照)。
+これは数値によるユーザ ID で、ユーザ名ではありません。</p>
+
+<pre><code>console.log('Current uid: ' + process.getuid());</code></pre>
+
+<h3 id="process.setuid">process.setuid(id)</h3>
+
+<p>プロセスのユーザ識別子を設定します (setuid(2) 参照)。
+これは数値による ID もユーザ名の文字列のどちらも受け入れます。
+もしユーザ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。</p>
+
+<pre><code>console.log('Current uid: ' + process.getuid());
+try {
+  process.setuid(501);
+  console.log('New uid: ' + process.getuid());
+}
+catch (err) {
+  console.log('Failed to set uid: ' + err);
+}</code></pre>
+
+<h3 id="process.version">process.version</h3>
+
+<p><code>NODE_VERSION</code> を提示するコンパイル済みプロパティです。</p>
+
+<pre><code>console.log('Version: ' + process.version);</code></pre>
+
+<h3 id="process.installPrefix">process.installPrefix</h3>
+
+<p>&lt;--
+A compiled-in property that exposes <code>NODE_PREFIX</code>.
+--&gt;
+<code>NODE_PREFIX</code> を提示するコンパイル済みプロパティです。</p>
+
+<pre><code>console.log('Prefix: ' + process.installPrefix);</code></pre>
+
+<h3 id="process.kill">process.kill(pid, signal='SIGINT')</h3>
+
+<p>プロセスにシグナルを送ります。
+<code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
+シグナルの名前は 'SIGINT' や 'SIGUSR1' のような文字列です。
+省略すると、シグナルは 'SIGINT' となります。
+詳細は kill(2) を参照してください。</p>
+
+<p>この関数の名前が <code>process.kill</code> であるとおり、
+これは <code>kill</code> システムコールのように本当にシグナルを送信することに注意してください。
+対象のプロセスを殺すだけでなく、他のシグナルも送信されます。</p>
+
+<p>自身にシグナルを送信する例:</p>
+
+<pre><code>process.on('SIGHUP', function () {
+  console.log('Got SIGHUP signal.');
+});
+
+setTimeout(function () {
+  console.log('Exiting.');
+  process.exit(0);
+}, 100);
+
+process.kill(process.pid, 'SIGHUP');</code></pre>
+
+<h3 id="process.pid">process.pid</h3>
+
+<pre><code>console.log('This process is pid ' + process.pid);</code></pre>
+
+<h3 id="process.title">process.title</h3>
+
+<p>'ps' でどのよう表示されるかを設定するための getter/setter です。</p>
+
+<h3 id="process.platform">process.platform</h3>
+
+<p>どのプラットフォームで動いているかです。<code>'linux2'</code>、<code>'darwin'</code>、など。</p>
+
+<pre><code>console.log('This platform is ' + process.platform);</code></pre>
+
+<h3 id="process.memoryUsage">process.memoryUsage()</h3>
+
+<p>Node プロセスのメモリ使用状況を記述したオブジェクトを返します。</p>
+
+<pre><code>var util = require('util');
+
+console.log(util.inspect(process.memoryUsage()));</code></pre>
+
+<p>このように生成されます:</p>
+
+<pre><code>{ rss: 4935680
+, vsize: 41893888
+, heapTotal: 1826816
+, heapUsed: 650472
+}</code></pre>
+
+<p><code>heapTotal</code> と <code>heapUsed</code> は V8 のメモリ使用状況を参照します。</p>
+
+<h3 id="process.nextTick">process.nextTick(callback)</h3>
+
+<p>イベントループの次以降のループでコールバックを呼び出します。
+これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、
+はるかに効率的です。</p>
+
+<pre><code>process.nextTick(function () {
+  console.log('nextTick callback');
+});</code></pre>
+
+<h3 id="process.umask">process.umask([mask])</h3>
+
+<p>プロセスのファイルモード作成マスクを設定または読み込みます。
+子プロセスは親プロセスからマスクを継承します。
+<code>mask</code> 引数が与えられると元のマスクが返され、そうでなければ現在のマスクが返されます。</p>
+
+<pre><code>var oldmask, newmask = 0644;
+
+oldmask = process.umask(newmask);
+console.log('Changed umask from: ' + oldmask.toString(8) +
+            ' to ' + newmask.toString(8));</code></pre>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>

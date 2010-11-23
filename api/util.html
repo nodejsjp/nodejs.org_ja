@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>util - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="util">util</h2>
+
+<p>これらの関数はモジュール <code>'util'</code> 内にあります。
+<code>require('util')</code> を使うことでこれらにアクセスします。</p>
+
+<h3 id="util.debug">util.debug(string)</h3>
+
+<p>同期的な出力関数です。プロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。</p>
+
+<pre><code>require('util').debug('message on stderr');</code></pre>
+
+<h3 id="util.log">util.log(string)</h3>
+
+<p>タイムスタンプとともに <code>stdout</code> へ出力します。</p>
+
+<pre><code>require('util').log('Timestmaped message.');</code></pre>
+
+<h3 id="util.inspect">util.inspect(object, showHidden=false, depth=2)</h3>
+
+<p>デバッグで有用な、<code>object</code> の文字列表現を返します。</p>
+
+<p><code>showHidden</code> が <code>true</code> の場合、
+オブジェクトの Enumerable でないプロパティも表示されます。</p>
+
+<p><code>depth</code> が与えられた場合、
+オブジェクトをフォーマットするために何回再帰するかを <code>inspect</code> に伝えます。
+これは巨大で複雑なオブジェクトを調査する場合に便利です。</p>
+
+<p>デフォルトでは 2 回だけ再帰します。
+無限に再帰するには、<code>depth</code> に <code>null</code> を渡します。</p>
+
+<p><code>util</code> オブジェクトの全てのプロパティを調査する例:</p>
+
+<pre><code>var util = require('util');
+
+console.log(util.inspect(util, true, null));</code></pre>
+
+<h3 id="util.pump">util.pump(readableStream, writeableStream, [callback])</h3>
+
+<p>実験的</p>
+
+<p><code>readableStream</code> からデータを読み、それ を<code>writableStream</code> に送ります。
+<code>writeableStream.write(data)</code> が <code>false</code> を返す場合、
+<code>writableStream</code> が <code>drain</code> イベントを生成するまで、
+<code>readableStream</code> は中断します。
+<code>writableStream</code> がクローズされるかエラーが発生すると、<code>callback</code> は error を唯一の引数として呼び出されます。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>net - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="net">net</h2>
+
+<p><code>net</code> モジュールは非同期なネットワークのラッパーを提供します。
+それはサーバとクライアントの両方 (ストリームと呼ばれます) を作成するための方法を含みます。
+このモジュールは<code>require("net");</code>によって取り込むことができます。</p>
+
+<h3 id="net.createServer">net.createServer(connectionListener)</h3>
+
+<p>新しい TCP サーバを作成します。
+<code>connectionListener</code> 引数は <code>'connection'</code>
+イベントに対するリスナーとして自動的に加えられます。</p>
+
+<h3 id="net.createConnection">net.createConnection(arguments...)</h3>
+
+<p>新しいストリームオブジェクトを構築し、与えられたロケーションへのストリームをオープンします。
+ストリームが確立されると、<code>'connect'</code> イベントが生成されます。</p>
+
+<p>このメソッドの引数はコネクションの種類によって変わります。</p>
+
+<ul><li><p><code>net.createConnection(port, [host])</code></p><p><code>host</code> 上の <code>port</code> に対する TCP コネクションを作成します。
+<code>host</code> が省略されると <code>localhost</code> が仮定されます。</p></li><li><p><code>net.createConnection(path)</code></p><p><code>path</code> に対する UNIX ドメインソケットを作成します。</p></li></ul>
+
+<hr />
+
+<h3 id="net.Server">net.Server</h3>
+
+<p>このクラスは TCP または UNIX ドメインのサーバを作成するために使われます。</p>
+
+<p>8124 番のポートへの接続を待ち受けるエコーサーバの例:</p>
+
+<pre><code>var net = require('net');
+var server = net.createServer(function (stream) {
+  stream.setEncoding('utf8');
+  stream.on('connect', function () {
+    stream.write('hello\r\n');
+  });
+  stream.on('data', function (data) {
+    stream.write(data);
+  });
+  stream.on('end', function () {
+    stream.write('goodbye\r\n');
+    stream.end();
+  });
+});
+server.listen(8124, 'localhost');</code></pre>
+
+<p><code>'/tmp/echo.sock'</code> へのソケットを待ち受けるには、最後の行をこのように変更します。</p>
+
+<pre><code>server.listen('/tmp/echo.sock');</code></pre>
+
+<p>これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
+
+<h4 id="server.listen">server.listen(port, [host], [callback])</h4>
+
+<p>指定された <code>port</code> と <code>host</code> でコネクションの受け入れを開始します。
+<code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます
+(<code>INADDR_ANY</code>)。</p>
+
+<p>この関数は非同期です。最後の引数の <code>callback</code> はサーバがバインドすると呼び出されます。</p>
+
+<h4 id="server.listen">server.listen(path, [callback])</h4>
+
+<p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。</p>
+
+<p>この関数は非同期です。
+最後の引数の <code>callback</code> はサーバがバインドすると呼び出されます。</p>
+
+<h4 id="server.listenFD">server.listenFD(fd)</h4>
+
+<p>与えられたファイル記述子上のコネクションを待ち受けるサーバを開始します。</p>
+
+<p>このファイル記述子は既に <code>bind(2)</code> および
+<code>listen(2)</code> システムコールが呼び出されていなければなりません。</p>
+
+<h4 id="server.close">server.close()</h4>
+
+<p>サーバが新しいコネクションを受け付けるのを終了します。
+この関数は非同期で、サーバは最終的に <code>'close'</code> イベントを生成した時にクローズされます。</p>
+
+<h4 id="server.address">server.address()</h4>
+
+<p>オペレーティングシステムによってサーバにバインドされたアドレスを返します。
+OSによって割り当てられたアドレスが渡された時に、どのポートに割り当てられたものかを調べるのに便利です。</p>
+
+<p>例:</p>
+
+<pre><code>var server = net.createServer(function (socket) {
+  socket.end("goodbye\n");
+});
+
+// grab a random port.
+server.listen(function() {
+  address = server.address();
+  console.log("opened server on %j", address);
+});</code></pre>
+
+<h4 id="server.maxConnections">server.maxConnections</h4>
+
+<p>サーバの接続数が大きくなった時に接続を拒否するためにこのプロパティを設定します。</p>
+
+<h4 id="server.connections">server.connections</h4>
+
+<p>このサーバ上の並行コネクションの数です。</p>
+
+<h4 id="event_connection_">Event: 'connection'</h4>
+
+<p><code>function (stream) {}</code></p>
+
+<p>新しいコネクションが作成されると生成されます。
+<code>stream</code> は <code>net.Stream</code> のインスタンスです。</p>
+
+<h4 id="event_close_">Event: 'close'</h4>
+
+<p><code>function () {}</code></p>
+
+<p>サーバがクローズした時に生成されます。</p>
+
+<hr />
+
+<h3 id="net.Stream">net.Stream</h3>
+
+<p>このオブジェクトは TCP または UNIX ドメインのソケットを抽象化したものです。
+<code>net.Stream</code> のインスタンスは双方向のストリームインタフェースを実装します。
+それらはユーザによって (<code>connect()</code> によって) 作成されてクライアントとして使われるか、
+Node によって作成されてサーバの <code>'connection'</code> イベントを通じてユーザに渡されます。</p>
+
+<p><code>net.Stream</code> のインスタンスは以下のイベントを持つ EventEmitter です:</p>
+
+<h4 id="stream.connect">stream.connect(port, [host])</h4>
+
+<h4 id="stream.connect">stream.connect(path)</h4>
+
+<p>与えられたストリームでコネクションをオープンします。
+<code>port</code> と <code>host</code> が与えられた場合、
+ストリームは TCP ストリームとしてオープンされます。
+<code>host</code> が省略された場合は <code>localhost</code> が仮定されます。
+<code>path</code> が与えられた場合は、
+ストリームはそのパスへの UNIX ドメインソケットとしてオープンされます。</p>
+
+<p>通常このメソッドは必要なく、<code>net.createConnection</code> でストリームをオープンします。
+これを使うのは、カスタマイズされたストリームを実装している場合や、
+ストリームがクローズされた後にコネクションを再利用して別のサーバに接続する場合だけです。</p>
+
+<p>この関数は非同期です。ストリームが確立されると <code>'connect'</code> イベントが生成されます。
+接続で問題があった場合は <code>'connect'</code> イベントは生成されず、
+例外とともに <code>'error'</code> イベントが生成されます。</p>
+
+<h4 id="stream.setEncoding">stream.setEncoding(encoding=null)</h4>
+
+<p>受信したデータのエンコーディングを設定します (<code>'ascii'</code>、<code>'utf8'</code>、
+あるいは <code>'base64'</code> のいずれかです)。</p>
+
+<h4 id="stream.setSecure">stream.setSecure([credentials])</h4>
+
+<p>秘密鍵とサーバ証明書を指定した暗号モジュールの認証情報で、
+ストリームに対して SSL サポートを有効にします。
+オプションで認証局で証明された相手側の認証を使うこともできます。</p>
+
+<p>認証情報が一つ以上の認証局の証明書を持っている場合、
+ストリームは SSL コネクションにおけるハンドシェークの一部としてクライアント証明書を送るよう相手に要求します。
+その有効性と内容は、<code>verifyPeer()</code> と <code>getPeerCertificate()</code> を通じてアクセスできます。</p>
+
+<h4 id="stream.verifyPeer">stream.verifyPeer()</h4>
+
+<p>指定された、あるいはデフォルトの信頼された認証局の証明書において、
+相手の証明書の妥当性に応じて true または false を返します。</p>
+
+<h4 id="stream.getPeerCertificate">stream.getPeerCertificate()</h4>
+
+<p>相手の証明書の詳細を、'subject'、'issuer'、'valid<em>from'
+そして 'valid</em>to' をキーとする証明書の辞書を含む JSON 形式で返します。</p>
+
+<h4 id="stream.write">stream.write(data, encoding='ascii')</h4>
+
+<p>ストリームにデータを送信します。
+文字列の場合、第 2 引数はエンコーディングを指定します － UTF8 はより遅いため、デフォルトは ASCII です。</p>
+
+<p>データ全体のカーネルバッファへのフラッシュが成功すると <code>true</code> を返します。
+データ全体または一部がユーザメモリ内のキューに入れられた場合は <code>false</code> を返します。
+再びバッファが空いた場合は <code>'drain'</code> イベントが生成されます。</p>
+
+<h4 id="stream.end">stream.end([data], [encoding])</h4>
+
+<p>ストリームをハーフクローズします。例えば FIN パケットを送信します。
+サーバがデータを送り続けてくることがあり得ます。
+このメソッドを呼び出した後の <code>readyState</code> は <code>'readOnly'</code> になります。</p>
+
+<p><code>data</code> が指定された場合は、
+<code>stream.write(data, encoding)</code> に続けて <code>stream.end()</code> を呼び出すのと等価です。</p>
+
+<h4 id="stream.destroy">stream.destroy()</h4>
+
+<p>このストリーム上でどんな I/O も起こらないことを保証します。
+(パースエラーなどの) エラーの場合にだけ必要です。</p>
+
+<h4 id="stream.pause">stream.pause()</h4>
+
+<p>データの読み込みを中断します。つまり、<code>'data'</code> イベントは生成されません。
+アップロード速度を落とすために便利です。</p>
+
+<h4 id="stream.resume">stream.resume()</h4>
+
+<p><code>pause()</code> を呼び出した後で読み込みを再開します。</p>
+
+<h4 id="stream.setTimeout">stream.setTimeout(timeout)</h4>
+
+<p>アイドルタイムアウトが引き起こされると、ストリームは <code>'timeout'</code> イベントを受信しますが、
+コネクションは切断されません。
+ユーザは手動で <code>end()</code> または <code>destroy()</code> を呼び出す必要があります。</p>
+
+<p><code>timeout</code> が 0 の場合、アイドルタイムアウトは無効にされます。</p>
+
+<h4 id="stream.setNoDelay">stream.setNoDelay(noDelay=true)</h4>
+
+<p>Nagle アルゴリズムを無効にします。
+デフォルトでは TCP コネクションは Nagle アルゴリズムを使用し、データを送信する前にバッファリングします。
+<code>noDelay</code> に設定すると、データは <code>stream.write()</code> を呼び出す度に即座に送信されます。</p>
+
+<h4 id="stream.setKeepAlive">stream.setKeepAlive(enable=false, [initialDelay])</h4>
+
+<p>キープアライブ機能を有効/無効にします。
+オプションで最初の keepalive probe がアイドルストリームに送信されるまでの初期遅延を設定します。
+<code>initialDelay</code> (ミリ秒) が設定されると、
+最後にデータパケットを受信してから最初の keepalive probe までの遅延が設定されます。
+初期遅延に 0 が設定されると、デフォルト設定から値を変更されないようにします。</p>
+
+<h4 id="stream.remoteAddress">stream.remoteAddress</h4>
+
+<p>リモートの IP アドレスを表現する文字列です。
+例えば、<code>'74.125.127.100'</code> あるいは <code>'2001:4860:a005::68'</code>。</p>
+
+<p>このメンバはサーバサイドのコネクションでのみ与えられます。</p>
+
+<h4 id="stream.readyState">stream.readyState</h4>
+
+<p><code>'closed'</code>、<code>'open'</code>、<code>'opening'</code>、<code>'readOnly'</code>、
+あるいは <code>'writeOnly'</code> のいずれかです。</p>
+
+<h4 id="event_connect_">Event: 'connect'</h4>
+
+<p><code>function () { }</code></p>
+
+<p>ストリームコネクションの確立が成功した場合に生成されます。
+<code>connect()</code> を参照してください。</p>
+
+<h4 id="event_secure_">Event: 'secure'</h4>
+
+<p><code>function () { }</code></p>
+
+<p>ストリームコネクションにおいて、接続相手との SSL ハンドシェークの確立が成功した場合に生成されます。</p>
+
+<h4 id="event_data_">Event: 'data'</h4>
+
+<p><code>function (data) { }</code></p>
+
+<p>データを受信した場合に生成されます。
+<code>data</code> 引数は <code>Buffer</code> または <code>String</code> です。
+データのエンコーディングは <code>stream.setEncoding()</code> で設定されます。
+(より詳しい情報は <code>Readable Stream</code> を参照してください)。</p>
+
+<h4 id="event_end_">Event: 'end'</h4>
+
+<p><code>function () { }</code></p>
+
+<p>ストリームの相手側が FIN パケットを送信した場合に生成されます。</p>
+
+<p>デフォルト (<code>allowHalfOpen == false</code>) では、
+保留されていた書き込みキューが出力されるとストリームはファイル識別子を破棄します。
+しかし、<code>allowHalfOpen == true</code> が設定されていると、
+ユーザがデータを書き込めるようにしておくために、ストリームは自動的に <code>end()</code> を呼び出さないので、
+ユーザが <code>end()</code> を呼び出す必要があります。
+<code>allowHalfOpen == true</code> のケースでは、
+<code>'end'</code> が生成された後の <code>readyState</code> は <code>'writeOnly'</code> となります。</p>
+
+<h4 id="event_timeout_">Event: 'timeout'</h4>
+
+<p><code>function () { }</code></p>
+
+<p>ストリームがタイムアウトして非アクティブになった場合に生成されます。
+これはストリームがアイドルになったことを通知するだけです。
+利用者は手動でコネクションをクローズする必要があります。</p>
+
+<p>See also: <code>stream.setTimeout()</code></p>
+
+<h4 id="event_drain_">Event: 'drain'</h4>
+
+<p><code>function () { }</code></p>
+
+<p>書き込みバッファが空になった場合に生成されます。アップロード速度を落とすために使うことができます。</p>
+
+<h4 id="event_error_">Event: 'error'</h4>
+
+<p><code>function (exception) { }</code></p>
+
+<p>エラーが発生した場合に生成されます。<code>'close'</code> イベントはこのイベントの後に直接呼び出されます。</p>
+
+<h4 id="event_close_">Event: 'close'</h4>
+
+<p><code>function (had_error) { }</code></p>
+
+<p>ストリームが完全にクローズした場合に生成されます。
+引数 <code>had_error</code> は boolean で、ストリームが転送エラーでクローズされたのかどうかを示します。</p>
+
+<hr />
+
+<h3 id="net.isIP">net.isIP</h3>
+
+<h4 id="net.isIP">net.isIP(input)</h4>
+
+<h4 id="net.isIPv4">net.isIPv4(input)</h4>
+
+<p>input が バージョン 4 の IP アドレスなら true、そうでなければ false を返します。</p>
+
+<h4 id="net.isIPv6">net.isIPv6(input)</h4>
+
+<p>input が バージョン 6 の IP アドレスなら true、そうでなければ false を返します。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>

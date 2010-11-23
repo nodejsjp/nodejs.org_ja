@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>addons - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="addons">Addons</h2>
+
+<p>アドオンは動的に共有オブジェクトをリンクします。
+それらは、C や C++ のライブラリに接合点を提供します。
+API はいくつかのライブラリの知識が必要で、(現時点では) かなり複雑です。</p>
+
+<ul><li><p>V8 JavaScript は C++ のライブラリです。
+JavaScript のオブジェクト作成や関数呼び出し等のインタフェースに使用されます。
+ドキュメントは主に、<code>v8.h</code> のヘッダファイル
+(Node のソースツリーの中の <code>deps/v8/include/v8.h</code>) に記されています。</p></li><li><p>libev は C の event loop ライブラリです。
+ファイル記述子が読み取り可能になるのを待つとき、タイマーを待つとき、シグナルを受信するのを待つときはいつでも、
+libv のインタフェースが必要になります。
+つまり、何らかの I/O 処理をすると必ず libev を使う必要があるということです。
+Node は <code>EV_DEFAULT</code> というイベントループを使います。
+ドキュメントは、<a href="http:/cvs.schmorp.de/libev/ev.html">こちら</a> にあります。</p></li><li><p>libeio は C のスレッドプールライブラリです。
+ブロックする POSIX システムコールを非同期に実行するために使用されます。
+こういった呼び出しのための大抵のラッパーは、既に <code>src/file.cc</code> に用意されているので、
+おそらくこれを使う必要はないしょう。
+必要になったら、<code>deps/libeio/eio.h</code> のヘッダファイルを参照して下さい。</p></li><li><p>Node の内部ライブラリ。
+もっとも重要なのは <code>node::ObjectWrap</code> クラスで、
+このクラスから派生させることが多くなるでしょう。</p></li><li><p>その他。どのような物が利用できるかは <code>deps/</code> 以下を参照してさい。</p></li></ul>
+
+<p>Node は全ての依存ライブラリを実行ファイルに静的にコンパイルします。
+モジュールのコンパイル時には、それらのリンクについて一切気にする必要は有りません。</p>
+
+<p>では、 C++ で以下の様に動作する小さなアドオンを作成してみましょう。</p>
+
+<pre><code>exports.hello = 'world';</code></pre>
+
+<p>まず <code>hello.cc</code> というファイルを作成します:</p>
+
+<pre><code>#include &lt;v8.h&gt;
+
+using namespace v8;
+
+extern "C" void
+init (Handle&lt;Object&gt; target) 
+{
+  HandleScope scope;
+  target-&gt;Set(String::New("hello"), String::New("World"));
+}</code></pre>
+
+<p>このソースコードは、<code>hello.node</code> というバイナリアドオンとしてビルドされる必要が有ります。
+そのために <code>wscript</code> と呼ばれる以下のようなコードを Python で書きました:</p>
+
+<pre><code>srcdir = '.'
+blddir = 'build'
+VERSION = '0.0.1'
+
+def set_options(opt):
+  opt.tool_options('compiler_cxx')
+
+def configure(conf):
+  conf.check_tool('compiler_cxx')
+  conf.check_tool('node_addon')
+
+def build(bld):
+  obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
+  obj.target = 'hello'
+  obj.source = 'hello.cc'</code></pre>
+
+<p><code>node-waf configure build</code> を実行すると、<code>build/default/hello.node</code> が作成されます。これが作成したアドオンです。</p>
+
+<p><code>node-waf</code> は <a href="http://code.google.com/p/waf/">WAF</a> にある Python ベースのビルドシステムです。
+<code>node-waf</code> は、ユーザの負担を減らすために提供されています。</p>
+
+<p>全ての Node アドオンは次のシグネチャを持つ <code>init</code> という関数をエクスポートする必要が有ります:</p>
+
+<pre><code>extern 'C' void init (Handle&lt;Object&gt; target)</code></pre>
+
+<p>現時点では、アドオンのドキュメントはこれで全てです。
+実際の例は、<a href="http://github.com/ry/node_postgres">http://github.com/ry/node_postgres</a> を参照してください。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>
