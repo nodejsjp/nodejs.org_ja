@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
-  <script type="text/javascript" src="assets/jquery.js"></script>
 </head>
 <body>
   <div id="container">
@@ -16,7 +15,8 @@
       </div>
       <hr />
     </header>
-    <h2 id="streams">Streams</h2>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#streams">Streams</a></li><li><a href="#readable_Stream">Readable Stream</a><ul><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_fd_">Event: 'fd'</a></li><li><a href="#stream.readable">stream.readable</a></li><li><a href="#stream.setEncoding">stream.setEncoding(encoding)</a></li><li><a href="#stream.pause">stream.pause()</a></li><li><a href="#stream.resume">stream.resume()</a></li><li><a href="#stream.destroy">stream.destroy()</a></li><li><a href="#stream.pipe">stream.pipe(destination, [options])</a></li></ul></li><li><a href="#writable_Stream">Writable Stream</a><ul><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#stream.writeable">stream.writeable</a></li><li><a href="#stream.write">stream.write(string, encoding='utf8', [fd])</a></li><li><a href="#stream.write">stream.write(buffer)</a></li><li><a href="#stream.end">stream.end()</a></li><li><a href="#stream.end">stream.end(string, encoding)</a></li><li><a href="#stream.end">stream.end(buffer)</a></li><li><a href="#stream.destroy">stream.destroy()</a></li></ul></li></ul><hr /></div>
+<h2 id="streams">Streams</h2>
 
 <p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。
 例えば HTTP サーバへのリクエストは標準出力と同様にストリームです。
@@ -88,6 +88,31 @@ UNIX ストリームだけがこの機能をサポートしています;
 
 <p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。</p>
 
+<h3 id="stream.pipe">stream.pipe(destination, [options])</h3>
+
+<p>これは全ての <code>Stream</code> で利用可能な <code>Stream.prototype</code> メソッドです。</p>
+
+<p>読み込みストリームを <code>destination</code> の書き込みストリームに接続します。
+このストリームに入ってきたデータは <code>destination</code> に書き込まれます。
+接続先と接続元のストリームは、必要に応じて中断と再開することで同期を保ちます。</p>
+
+<p>Unix の <code>cat</code> コマンドのエミュレート:</p>
+
+<pre><code>process.openStdin().pipe(process.stdout);</code></pre>
+
+<p>デフォルトでは接続元ストリームで <code>end</code> イベントが生成されると、
+接続先の <code>end()</code> が呼ばれるので、もう書き込みはできません。
+<code>option</code> に <code>{ end: false }</code> を渡すと接続先はストリームはオープンされたままとなります。</p>
+
+<p>これは <code>process.stdout</code> をオープンしたままにして最後に "Goodbye" と出力します。</p>
+
+<pre><code>var stdin = process.openStdin();
+stdin.pipe(process.stdout, { end: false });
+stdin.on("end", function() { process.stdout.write("Goodbye\n"); });</code></pre>
+
+<p>注意: もし接続元ストリームが <code>pauses()</code> と <code>resume()</code> をサポートしない場合、
+この関数は単に <code>'pause'</code> と <code>'resume'</code> イベントを接続もとストリームで生成します。</p>
+
 <h2 id="writable_Stream">Writable Stream</h2>
 
 <p><code>Writable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。</p>
@@ -154,6 +179,6 @@ UNIX ストリームだけがこの機能をサポートしています;
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
-  <script type="text/javascript" src="assets/core.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
 </body>
 </html>
