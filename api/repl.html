@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
-  <script type="text/javascript" src="assets/jquery.js"></script>
 </head>
 <body>
   <div id="container">
@@ -16,7 +15,8 @@
       </div>
       <hr />
     </header>
-    <h2 id="rEPL">REPL</h2>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#rEPL">REPL</a><ul><li><a href="#repl.start_">repl.start(prompt='> ', stream=process.openStdin())</a></li><li><a href="#rEPL_Features">REPL Features</a></li></ul></li></ul><hr /></div>
+<h2 id="rEPL">REPL</h2>
 
 <p>Read-Eval-Print-Loop (REPL) は単独のプログラムとしても他のプログラムに手軽に取り込む形でも利用することができます。
 REPL は対話的に JavaScript を実行して結果を確認する手段を提供します。 
@@ -27,9 +27,9 @@ REPL は Emacs 風の簡易な行編集機能を備えています。</p>
 
 <pre><code>mjr:~$ node
 Type '.help' for options.
-node&gt; a = [ 1, 2, 3];
+&gt; a = [ 1, 2, 3];
 [ 1, 2, 3 ]
-node&gt; a.forEach(function (v) {
+&gt; a.forEach(function (v) {
 ...   console.log(v);
 ...   });
 1
@@ -43,10 +43,10 @@ node&gt; a.forEach(function (v) {
 
 <pre><code>alias node="env NODE_NO_READLINE=1 rlwrap node"</code></pre>
 
-<h3 id="repl.start_">repl.start(prompt='node&gt; ', stream=process.openStdin())</h3>
+<h3 id="repl.start_">repl.start(prompt='&gt; ', stream=process.openStdin())</h3>
 
 <p><code>prompt</code> でプロンプト記号を、 <code>stream</code> で I/O を引数に取って REPL を起動します。
-<code>prompt</code> は省略可能で、 デフォルトは <code>node&gt; </code> です。
+<code>prompt</code> は省略可能で、 デフォルトは <code>&gt; </code> です。
 <code>stream</code> は省略可能で、 デフォルトは <code>process.openStdin()</code>です。</p>
 
 <p>複数の REPL を起動した場合、同一の node インスタンスが実行されないことがあります。
@@ -85,11 +85,11 @@ net.createServer(function (socket) {
 
 <p>特別な変数である <code>_</code> (アンダースコア) は一番最後の式の結果を保持します。</p>
 
-<pre><code>node&gt; [ "a", "b", "c" ]
+<pre><code>&gt; [ "a", "b", "c" ]
 [ 'a', 'b', 'c' ]
-node&gt; _.length 
+&gt; _.length
 3
-node&gt; _ += 1
+&gt; _ += 1
 4</code></pre>
 
 <p>REPL はグローバルスコープに存在する全ての変数にアクセス可能です。
@@ -104,14 +104,14 @@ repl.start().context.m = msg;</code></pre>
 
 <p><code>context</code> オブジェクトに設定された変数は、REPL の中ではローカルな変数として現れます:</p>
 
-<pre><code>mjr:~$ node repl_test.js 
-node&gt; m
+<pre><code>mjr:~$ node repl_test.js
+&gt; m
 'message'</code></pre>
 
 <ul><li><code>.break</code> - 複数行に渡って式を入力している間に、途中で分からなくなったり完了させなくても良くなることがあります。<code>.break</code> で最初からやり直します。</li><li><code>.clear</code> - <code>context</code> オブジェクトを空の状態にリセットし、複数行に入力している式をクリアします。</li><li><code>.exit</code> - I/Oストリームを閉じ、REPLを終了させます。</li><li><code>.help</code> - このコマンドの一覧を表示します。</li></ul>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
-  <script type="text/javascript" src="assets/core.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
 </body>
 </html>

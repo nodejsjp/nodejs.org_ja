@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
-  <script type="text/javascript" src="assets/jquery.js"></script>
 </head>
 <body>
   <div id="container">
@@ -16,7 +15,8 @@
       </div>
       <hr />
     </header>
-    <h2 id="crypto">Crypto</h2>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#crypto">Crypto</a><ul><li><a href="#crypto.createCredentials">crypto.createCredentials(details)</a></li><li><a href="#crypto.createHash">crypto.createHash(algorithm)</a></li><li><a href="#hash.update">hash.update(data)</a></li><li><a href="#hash.digest">hash.digest(encoding='binary')</a></li><li><a href="#crypto.createHmac">crypto.createHmac(algorithm, key)</a></li><li><a href="#hmac.update">hmac.update(data)</a></li><li><a href="#hmac.digest">hmac.digest(encoding='binary')</a></li><li><a href="#crypto.createCipher">crypto.createCipher(algorithm, key)</a></li><li><a href="#cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#cipher.final">cipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createDecipher">crypto.createDecipher(algorithm, key)</a></li><li><a href="#decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#decipher.final">decipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createSign">crypto.createSign(algorithm)</a></li><li><a href="#signer.update">signer.update(data)</a></li><li><a href="#signer.sign">signer.sign(private_key, output_format='binary')</a></li><li><a href="#crypto.createVerify">crypto.createVerify(algorithm)</a></li><li><a href="#verifier.update">verifier.update(data)</a></li><li><a href="#verifier.verify">verifier.verify(public_key, signature, signature_format='binary')</a></li></ul></li></ul><hr /></div>
+<h2 id="crypto">Crypto</h2>
 
 <p>このモジュールにアクセスするには <code>require('crypto')</code> を使用します。</p>
 
@@ -33,7 +33,7 @@
 <ul><li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列</li><li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列</li><li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または文字列の配列</li></ul>
 
 <p>'ca' の詳細が与えられなかった場合、node.js はデフォルトとして
-http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt
+<a href="http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a>
 で与えられる、信頼できる認証局の公開されたリストを使用します。</p>
 
 <h3 id="crypto.createHash">crypto.createHash(algorithm)</h3>
@@ -43,7 +43,7 @@ http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.tx
 
 <p><code>algorithm</code> は、プラットフォーム上の OpenSSL 
 のバージョンでサポートされている利用可能なアルゴリズムに依存します。
-例えば sha1、md5、sha256、sha512、などです。
+例えば <code>'sha1'</code>、<code>'md5'</code>、<code>'sha256'</code>、<code>'sha512'</code>、などです。
 最近のリリースでは、<code>openssl list-message-digest-algorithms</code>
 で利用可能なダイジェストアルゴリズムが表示されます。</p>
 
@@ -55,7 +55,7 @@ http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.tx
 <h3 id="hash.digest">hash.digest(encoding='binary')</h3>
 
 <p>渡された全てのデータがハッシュ化されたダイジェストを計算します。
-<code>encoding</code> は 'hex'、'binary'、または 'base64' のいずれかです。</p>
+<code>encoding</code> は <code>'hex'</code>、<code>'binary'</code>、または <code>'base64'</code> のいずれかです。</p>
 
 <h3 id="crypto.createHmac">crypto.createHmac(algorithm, key)</h3>
 
@@ -72,29 +72,29 @@ http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.tx
 <h3 id="hmac.digest">hmac.digest(encoding='binary')</h3>
 
 <p>渡された全てのデータが HMAC 化されたダイジェストを計算します。
-<code>encoding</code> は 'hex'、'binary'、または 'base64' のいずれかです。</p>
+<code>encoding</code> は <code>'hex'</code>、<code>'binary'</code>、または <code>'base64'</code> のいずれかです。</p>
 
 <h3 id="crypto.createCipher">crypto.createCipher(algorithm, key)</h3>
 
 <p>与えられたアルゴリズムとキーを使用する暗号オブジェクトを作成して返します。</p>
 
-<p><code>algorithm</code> は、OpenSSL に依存します。例えば aes192 などです。
+<p><code>algorithm</code> は、OpenSSL に依存します。例えば <code>'aes192'</code> などです。
 最近のリリースでは、<code>openssl list-cipher-algorithms</code>
 で利用可能な暗号アルゴリズムが表示されます。</p>
 
 <h3 id="cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</h3>
 
 <p><code>data</code> で暗号を更新します。
-<code>input_encoding</code> で与えられるエンコーディングは 'utf8'、'ascii'、'binary' のいずれかです。
+<code>input_encoding</code> で与えられるエンコーディングは <code>'utf8'</code>、<code>'ascii'</code>、<code>'binary'</code> のいずれかです。
 <code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、
-'binary'、'base64' または 'hex' のいずれかです。</p>
+<code>'utf8'</code>、<code>'ascii'</code> または <code>'binary'</code> のいずれかです。</p>
 
 <p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
 
 <h3 id="cipher.final">cipher.final(output_encoding='binary')</h3>
 
 <p>暗号化されたコンテンツの残りを返します。
-<code>output_encoding</code> は次のいずれかです: 'binary'、'base64' または 'hex'</p>
+<code>output_encoding</code> は次のいずれかです: <code>'binary'</code>、<code>'ascii'</code> または <code>'utf8'</code></p>
 
 <h3 id="crypto.createDecipher">crypto.createDecipher(algorithm, key)</h3>
 
@@ -103,14 +103,14 @@ http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.tx
 
 <h3 id="decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</h3>
 
-<p>'binary'、'base64' または 'hex' のいずれかでエンコードされた復号を <code>data</code> で更新します。
+<p><code>'binary'</code>、<code>'base64'</code> または <code>'hex'</code> のいずれかでエンコードされた復号を <code>data</code> で更新します。
 <code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、
-'binary'、'ascii' あるいは 'utf8' のいずれかです。</p>
+<code>'binary'</code>、<code>'ascii'</code> あるいは <code>'utf8'</code> のいずれかです。</p>
 
 <h3 id="decipher.final">decipher.final(output_encoding='binary')</h3>
 
 <p>復号化されたプレーンテキストの残りを返します。
-<code>output_decoding</code> は 'binary'、'ascii' あるいは 'utf8' のいずれかです。</p>
+<code>output_decoding</code> は <code>'binary'</code>、<code>'ascii'</code> あるいは <code>'utf8'</code> のいずれかです。</p>
 
 <h3 id="crypto.createSign">crypto.createSign(algorithm)</h3>
 
@@ -128,7 +128,7 @@ http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.tx
 <p>署名オブジェクトに渡された全ての更新データで署名を計算します。
 <code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。</p>
 
-<p>'binary'、'hex'、あるいは 'base64' のいずれかを指定した <code>output_format</code> による署名を返します。</p>
+<p><code>'binary'</code>、<code>'hex'</code>、あるいは <code>'base64'</code> のいずれかを指定した <code>output_format</code> による署名を返します。</p>
 
 <h3 id="crypto.createVerify">crypto.createVerify(algorithm)</h3>
 
@@ -144,12 +144,12 @@ http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.tx
 <p>署名されたデータを <code>public_key</code> と <code>signature</code> で検証します。
 <code>public_key</code> は PEM でエンコードされた公開鍵を含む文字列です。
 <code>signature</code> は先に計算したデータの署名で、
-その <code>signature_format</code> は 'binary'、'hex'、または 'base64' のいずれかです。</p>
+その <code>signature_format</code> は <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
 
 <p>署名されたデータと公開鍵による検証の結果によって true または false を返します。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
-  <script type="text/javascript" src="assets/core.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
 </body>
 </html>

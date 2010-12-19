@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
-  <script type="text/javascript" src="assets/jquery.js"></script>
 </head>
 <body>
   <div id="container">
@@ -16,7 +15,8 @@
       </div>
       <hr />
     </header>
-    <h2 id="hTTP">HTTP</h2>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#hTTP">HTTP</a></li><li><a href="#http.Server">http.Server</a><ul><li><a href="#event_request_">Event: 'request'</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_request_">Event: 'request'</a></li><li><a href="#event_checkContinue_">Event: 'checkContinue'</a></li><li><a href="#event_upgrade_">Event: 'upgrade'</a></li><li><a href="#event_clientError_">Event: 'clientError'</a></li><li><a href="#http.createServer">http.createServer(requestListener)</a></li><li><a href="#server.listen">server.listen(port, [hostname], [callback])</a></li><li><a href="#server.listen">server.listen(path, [callback])</a></li><li><a href="#server.close">server.close()</a></li></ul></li><li><a href="#http.ServerRequest">http.ServerRequest</a><ul><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#request.method">request.method</a></li><li><a href="#request.url">request.url</a></li><li><a href="#request.headers">request.headers</a></li><li><a href="#request.trailers">request.trailers</a></li><li><a href="#request.httpVersion">request.httpVersion</a></li><li><a href="#request.setEncoding">request.setEncoding(encoding=null)</a></li><li><a href="#request.pause">request.pause()</a></li><li><a href="#request.resume">request.resume()</a></li><li><a href="#request.connection">request.connection</a></li></ul></li><li><a href="#http.ServerResponse">http.ServerResponse</a><ul><li><a href="#response.writeContinue">response.writeContinue()</a></li><li><a href="#response.writeHead">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li><li><a href="#response.write">response.write(chunk, encoding='utf8')</a></li><li><a href="#response.addTrailers">response.addTrailers(headers)</a></li><li><a href="#response.end">response.end([data], [encoding])</a></li></ul></li><li><a href="#http.Client">http.Client</a><ul><li><a href="#event_upgrade_">Event: 'upgrade'</a></li><li><a href="#event_continue_">Event: 'continue'</a></li><li><a href="#http.createClient">http.createClient(port, host='localhost', secure=false, [credentials])</a></li><li><a href="#client.request">client.request(method='GET', path, [request_headers])</a></li><li><a href="#client.verifyPeer">client.verifyPeer()</a></li><li><a href="#client.getPeerCertificate">client.getPeerCertificate()</a></li></ul></li><li><a href="#http.ClientRequest">http.ClientRequest</a><ul><li><a href="#event_response_">Event 'response'</a></li><li><a href="#request.write">request.write(chunk, encoding='utf8')</a></li><li><a href="#request.end">request.end([data], [encoding])</a></li></ul></li><li><a href="#http.ClientResponse">http.ClientResponse</a><ul><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#response.statusCode">response.statusCode</a></li><li><a href="#response.httpVersion">response.httpVersion</a></li><li><a href="#response.headers">response.headers</a></li><li><a href="#response.trailers">response.trailers</a></li><li><a href="#response.setEncoding">response.setEncoding(encoding=null)</a></li><li><a href="#response.pause">response.pause()</a></li><li><a href="#response.resume">response.resume()</a></li><li><a href="#response.client">response.client</a></li></ul></li></ul><hr /></div>
+<h2 id="hTTP">HTTP</h2>
 
 <p>HTTP サーバおよびクライアントを使用するにはいずれも <code>require('http')</code> が必要です。</p>
 
@@ -28,11 +28,10 @@
 
 <p>HTTP メッセージヘッダはこのようなオブジェクトとして表現されます:</p>
 
-<pre><code>{ 'content-length': '123'
-, 'content-type': 'text/plain'
-, 'connection': 'keep-alive'
-, 'accept': '*/*'
-}</code></pre>
+<pre><code>{ 'content-length': '123',
+  'content-type': 'text/plain',
+  'connection': 'keep-alive',
+  'accept': '*/*' }</code></pre>
 
 <p>キーは小文字化されます。値は変更されません。</p>
 
@@ -129,16 +128,6 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> はサーバがバインドすると呼び出されます。</p>
 
-<h3 id="server.setSecure">server.setSecure(credentials)</h3>
-
-<p>秘密鍵とサーバ証明書を指定した暗号モジュールの認証情報で、サーバに対して HTTPS サポートを有効にします。
-オプションで認証局で証明されたクライアント認証を使うこともできます。</p>
-
-<p>認証情報が一つ以上の認証局の証明書を持っている場合、
-サーバは HTTPS コネクションにおけるハンドシェークの一部としてクライアント証明書を送るようクライアントに要求します。
-その有効性と内容は、サーバの <code>resuest.connection</code> から
-<code>verifyPeer()</code> と <code>getPeerCertificate()</code> を通じてアクセスできます。</p>
-
 <h3 id="server.close">server.close()</h3>
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。</p>
@@ -191,22 +180,20 @@ Accept: text/plain\r\n
 <code>require('url').parse(request.url)</code> を参照してください。例:</p>
 
 <pre><code>node&gt; require('url').parse('/status?name=ryan')
-{ href: '/status?name=ryan'
-, search: '?name=ryan'
-, query: 'name=ryan'
-, pathname: '/status'
-}</code></pre>
+{ href: '/status?name=ryan',
+  search: '?name=ryan',
+  query: 'name=ryan',
+  pathname: '/status' }</code></pre>
 
 <p>問い合わせ文字列からパラメータを取り出したい場合は、
 <code>require('querystring').parse</code> 関数を参照するか、
 <code>require('url').parse</code> の第 2 引数に <code>true</code> を渡してください。例:</p>
 
 <pre><code>node&gt; require('url').parse('/status?name=ryan', true)
-{ href: '/status?name=ryan'
-, search: '?name=ryan'
-, query: { name: 'ryan' }
-, pathname: '/status'
-}</code></pre>
+{ href: '/status?name=ryan',
+  search: '?name=ryan',
+  query: { name: 'ryan' },
+  pathname: '/status' }</code></pre>
 
 <h3 id="request.headers">request.headers</h3>
 
@@ -270,8 +257,7 @@ Accept: text/plain\r\n
 <pre><code>var body = 'hello world';
 response.writeHead(200, {
   'Content-Length': body.length,
-  'Content-Type': 'text/plain'
-});</code></pre>
+  'Content-Type': 'text/plain' });</code></pre>
 
 <p>このメソッドはメッセージごとに 1 回だけ呼び出されなくてはならず、
 <code>response.end()</code> の前に呼び出されなければなりません。</p>
@@ -379,7 +365,7 @@ request.on('response', function (response) {
 
 <p>コネクションがセキュアな場合、証明情報で認証局の証明書が明示的に渡されないと、
 node.js はデフォルトの信頼できる認証局のリストとして
-http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt を与えます。</p>
+<a href="http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a> を与えます。</p>
 
 <h3 id="client.request">client.request(method='GET', path, [request_headers])</h3>
 
@@ -407,8 +393,8 @@ Node 内部で付加的なリクエストヘッダが加えられることがあ
 
 <h3 id="client.getPeerCertificate">client.getPeerCertificate()</h3>
 
-<p>サーバ証明書の詳細を、'subject'、'issuer'、'valid<em>from' そして
-'valid</em>to' をキーとする証明書の辞書を含む JSON 形式で返します。</p>
+<p>サーバ証明書の詳細を、<code>'subject'</code>、<code>'issuer'</code>、<code>'valid_from'</code> そして
+<code>'valid_to'</code> をキーとする証明書の辞書を含む JSON 形式で返します。</p>
 
 <h2 id="http.ClientRequest">http.ClientRequest</h2>
 
@@ -540,6 +526,6 @@ request.on('response', function (response) {
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
-  <script type="text/javascript" src="assets/core.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
 </body>
 </html>
