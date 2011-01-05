@@ -98,7 +98,8 @@ UNIX ストリームだけがこの機能をサポートしています;
 
 <p>Unix の <code>cat</code> コマンドのエミュレート:</p>
 
-<pre><code>process.openStdin().pipe(process.stdout);</code></pre>
+<pre><code>process.stdin.resume();
+process.stdin.pipe(process.stdout);</code></pre>
 
 <p>デフォルトでは接続元ストリームで <code>end</code> イベントが生成されると、
 接続先の <code>end()</code> が呼ばれるので、もう書き込みはできません。
@@ -106,9 +107,13 @@ UNIX ストリームだけがこの機能をサポートしています;
 
 <p>これは <code>process.stdout</code> をオープンしたままにして最後に "Goodbye" と出力します。</p>
 
-<pre><code>var stdin = process.openStdin();
-stdin.pipe(process.stdout, { end: false });
-stdin.on("end", function() { process.stdout.write("Goodbye\n"); });</code></pre>
+<pre><code>process.stdin.resume();
+
+process.stdin.pipe(process.stdout, { end: false });
+
+process.stdin.on("end", function() {
+  process.stdout.write("Goodbye\n");
+});</code></pre>
 
 <p>注意: もし接続元ストリームが <code>pauses()</code> と <code>resume()</code> をサポートしない場合、
 この関数は単に <code>'pause'</code> と <code>'resume'</code> イベントを接続もとストリームで生成します。</p>
