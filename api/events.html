@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>events - Node.js Manual &amp; Documentation</title>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <title>events - Node.js Manual &amp; Documentation</title>
+  <link href="assets/specification.css" rel=stylesheet /> 
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+
 </head>
 <body>
   <div id="container">
@@ -15,7 +16,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#events">Events</a><ul><li><a href="#events.EventEmitter">events.EventEmitter</a><ul><li><a href="#emitter.addListener">emitter.addListener(event, listener)</a></li><li><a href="#emitter.on">emitter.on(event, listener)</a></li><li><a href="#emitter.once">emitter.once(event, listener)</a></li><li><a href="#emitter.removeListener">emitter.removeListener(event, listener)</a></li><li><a href="#emitter.removeAllListeners">emitter.removeAllListeners(event)</a></li><li><a href="#emitter.listeners">emitter.listeners(event)</a></li><li><a href="#emitter.emit">emitter.emit(event, [arg1], [arg2], [...])</a></li><li><a href="#event_newListener_">Event: 'newListener'</a></li></ul></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#events">Events</a><ul><li><a href="#events.EventEmitter">events.EventEmitter</a><ul><li><a href="#emitter.addListener">emitter.addListener(event, listener)</a></li><li><a href="#emitter.on">emitter.on(event, listener)</a></li><li><a href="#emitter.once">emitter.once(event, listener)</a></li><li><a href="#emitter.removeListener">emitter.removeListener(event, listener)</a></li><li><a href="#emitter.removeAllListeners">emitter.removeAllListeners(event)</a></li><li><a href="#emitter.setMaxListeners">emitter.setMaxListeners(n)</a></li><li><a href="#emitter.listeners">emitter.listeners(event)</a></li><li><a href="#emitter.emit">emitter.emit(event, [arg1], [arg2], [...])</a></li><li><a href="#event_newListener_">Event: 'newListener'</a></li></ul></li></ul></li></ul><hr /></div>
 <h2 id="events">Events</h2>
 
 <p>Node のオブジェクトの多くはイベントを生成します:
@@ -75,6 +76,14 @@ server.removeListener('connection', callback);</code></pre>
 <h4 id="emitter.removeAllListeners">emitter.removeAllListeners(event)</h4>
 
 <p>指定されたイベントに対するリスナー配列から全てのリスナーを削除します。</p>
+
+<h4 id="emitter.setMaxListeners">emitter.setMaxListeners(n)</h4>
+
+<p>デフォルトでは、EventEmitter は 10 を越えるリスナが追加されると警告を出力します。
+これはメモリリークを見つけるために役に立つデフォルト値です。
+全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。
+この関数は制限を増やすことを許可します。
+0 を設定すると無制限になります。</p>
 
 <h4 id="emitter.listeners">emitter.listeners(event)</h4>
 

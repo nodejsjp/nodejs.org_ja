@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>path - Node.js Manual &amp; Documentation</title>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <title>path - Node.js Manual &amp; Documentation</title>
+  <link href="assets/specification.css" rel=stylesheet /> 
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+
 </head>
 <body>
   <div id="container">
@@ -48,32 +49,41 @@ Windows ではバックスラッシュが使われます。</p>
 
 <h3 id="path.resolve">path.resolve([from ...], to)</h3>
 
-<p><code>to</code> の絶対パスを解決して正規化します。</p>
+<p><code>to</code> の絶対パスを解決します。</p>
 
-<p>パスを解決する際の基準点を指定するために一つ以上の <code>from</code> 引数を与えることができます。
- <code>resolve()</code> は絶対パスが見つかるまで <code>from</code> 引数を右から左へ先頭に追加します。
-<code>from</code> 引数が指定されなかった場合や、絶対パスが見つからなかった場合は、
-最終的に現在の作業ディレクトリを先頭に追加されます。</p>
+<p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。
+全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。
+結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。</p>
 
-<p>解決した結果がルートディレクトリの場合を除いて、末尾のスラッシュは削除されます。</p>
+<p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。</p>
 
 <p>例:</p>
 
-<pre><code>path.resolve('index.html')
-// returns
-'/home/tank/index.html'
+<pre><code>path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')</code></pre>
 
-path.resolve('/foo/bar', './baz')
+<p>これは以下と同様です。</p>
+
+<pre><code>cd foo/bar
+cd /tmp/file/
+cd ..
+cd a/../subfile
+pwd</code></pre>
+
+<p>違いは、それぞれのパスが必ずしも存在する必要がないことと、ファイルでも構わないことです。</p>
+
+<p>例:</p>
+
+<pre><code>path.resolve('/foo/bar', './baz')
 // returns
-'/foo/baz/baz'
+'/foo/bar/baz'
 
 path.resolve('/foo/bar', '/tmp/file/')
 // returns
 '/tmp/file'
 
 path.resolve('wwwroot', 'static_files/png/', '../gif/image.gif')
-// returns
-'/home/tank/wwwroot/static_files/gif/image.gif'</code></pre>
+// if currently in /home/myself/node, it returns
+'/home/myself/node/wwwroot/static_files/gif/image.gif'</code></pre>
 
 <h3 id="path.dirname">path.dirname(p)</h3>
 
