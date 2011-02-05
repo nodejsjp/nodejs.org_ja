@@ -15,8 +15,8 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dgram">dgram</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, path, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(path)</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li></ul></li></ul><hr /></div>
-<h2 id="dgram">dgram</h2>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#uDP_Datagram_Sockets">UDP / Datagram Sockets</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, path, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(path)</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li><li><a href="#dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</a></li><li><a href="#dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</a></li><li><a href="#dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</a></li><li><a href="#dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li></ul></li></ul><hr /></div>
+<h2 id="uDP_Datagram_Sockets">UDP / Datagram Sockets</h2>
 
 <p>データグラムソケットは <code>require('dgram')</code> で利用可能になります。
 データグラムはほとんどの場合 IP/UDP メッセージで扱われますが、UNIX ドメインソケットでも使用することができます。</p>
@@ -178,11 +178,38 @@ UNIX ドメインソケットでは、<code>address</code> だけを持ってい
 
 <p>ソケットオプションの <code>IP_TTL</code> を設定します。
 TTL は「生存期間」を表しますが、このコンテキストではパケットが通過を許可される IP のホップ数を指定します。
-各ルーターまたはゲートウェイはパケットを送出する際 TTL をデクリメントします。
+各ルータまたはゲートウェイはパケットを送出する際 TTL をデクリメントします。
 ルータによって TTL がデクリメントされて 0 になるとそれは送出されません。
 TTL 値の変更は通常、ネットワークの調査やマルチキャストで使われます。</p>
 
 <p><code>setTTL()</code> の引数は 1 から 255 のホップ数でです。ほとんどのシステムでデフォルトは 64 です。</p>
+
+<h3 id="dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</h3>
+
+<p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。
+TTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。
+それぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。
+TTL がルーターによって 0 までデクリメントされると、それは転送されません。
+<code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。
+ほとんどのシステムでデフォルトは 64 です。</p>
+
+<h3 id="dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</h3>
+
+<p><code>IP_MULTICAST_LOOP</code> ソケットオプションを設定またはクリアします。
+このオプションが設定されると、マルチキャストのパケットはローカルインタフェースでも受信できるようになります。</p>
+
+<h3 id="dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</h3>
+
+<p><code>IP_ADD_MEMBERSHIP</code> ソケットオプションを設定し、マルチキャストグループに参加することをカーネルに伝えます。</p>
+
+<p><code>multicastAddress</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップに加えようとします。</p>
+
+<h3 id="dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</h3>
+
+<p><code>addMembership</code> の反対です - <code>IP_DROP_MEMBERSHIP</code> ソケットオプションによって、マルチキャストグループから抜けることをカーネルに伝えます。
+これはソケットのクローズ時やプロセスの終了時にカーネルによって自動的に呼び出されるため、ほとんどのアプリケーションはこれを呼び出す必要がありません。</p>
+
+<p><code>multicastAddress</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップから削除しようとします。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>

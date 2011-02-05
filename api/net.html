@@ -15,7 +15,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#net">net</a><ul><li><a href="#net.createServer">net.createServer(connectionListener)</a></li><li><a href="#net.createConnection">net.createConnection(arguments...)</a></li><li><a href="#net.Server">net.Server</a><ul><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.listen">server.listen(path, [callback])</a></li><li><a href="#server.listenFD">server.listenFD(fd)</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.Socket">net.Socket</a><ul><li><a href="#socket.connect">socket.connect(port, [host], [callback])</a></li><li><a href="#socket.connect">socket.connect(path, [callback])</a></li><li><a href="#socket.setEncoding">socket.setEncoding(encoding=null)</a></li><li><a href="#socket.setSecure">socket.setSecure()</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.write">socket.write(data, [encoding], [fileDescriptor], [callback])</a></li><li><a href="#socket.end">socket.end([data], [encoding])</a></li><li><a href="#socket.destroy">socket.destroy()</a></li><li><a href="#socket.pause">socket.pause()</a></li><li><a href="#socket.resume">socket.resume()</a></li><li><a href="#socket.setTimeout">socket.setTimeout(timeout, [callback])</a></li><li><a href="#socket.setNoDelay">socket.setNoDelay(noDelay=true)</a></li><li><a href="#socket.setKeepAlive">socket.setKeepAlive(enable=false, [initialDelay])</a></li><li><a href="#socket.remoteAddress">socket.remoteAddress</a></li><li><a href="#event_connect_">Event: 'connect'</a></li><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_timeout_">Event: 'timeout'</a></li><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.isIP">net.isIP</a><ul><li><a href="#net.isIP">net.isIP(input)</a></li><li><a href="#net.isIPv4">net.isIPv4(input)</a></li><li><a href="#net.isIPv6">net.isIPv6(input)</a></li></ul></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#net">net</a><ul><li><a href="#net.createServer">net.createServer(connectionListener)</a></li><li><a href="#net.createConnection">net.createConnection(arguments...)</a></li><li><a href="#net.Server">net.Server</a><ul><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.listen">server.listen(path, [callback])</a></li><li><a href="#server.listenFD">server.listenFD(fd)</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.Socket">net.Socket</a><ul><li><a href="#socket.connect">socket.connect(port, [host], [callback])</a></li><li><a href="#socket.connect">socket.connect(path, [callback])</a></li><li><a href="#socket.bufferSize">socket.bufferSize</a></li><li><a href="#socket.setEncoding">socket.setEncoding(encoding=null)</a></li><li><a href="#socket.setSecure">socket.setSecure()</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.write">socket.write(data, [encoding], [fileDescriptor], [callback])</a></li><li><a href="#socket.end">socket.end([data], [encoding])</a></li><li><a href="#socket.destroy">socket.destroy()</a></li><li><a href="#socket.pause">socket.pause()</a></li><li><a href="#socket.resume">socket.resume()</a></li><li><a href="#socket.setTimeout">socket.setTimeout(timeout, [callback])</a></li><li><a href="#socket.setNoDelay">socket.setNoDelay(noDelay=true)</a></li><li><a href="#socket.setKeepAlive">socket.setKeepAlive(enable=false, [initialDelay])</a></li><li><a href="#socket.remoteAddress">socket.remoteAddress</a></li><li><a href="#event_connect_">Event: 'connect'</a></li><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_timeout_">Event: 'timeout'</a></li><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.isIP">net.isIP</a><ul><li><a href="#net.isIP">net.isIP(input)</a></li><li><a href="#net.isIPv4">net.isIPv4(input)</a></li><li><a href="#net.isIPv6">net.isIPv6(input)</a></li></ul></li></ul></li></ul><hr /></div>
 <h2 id="net">net</h2>
 
 <p><code>net</code> モジュールは非同期なネットワークのラッパーを提供します。
@@ -81,7 +81,7 @@ server.listen(8124, 'localhost');</code></pre>
 これは次のようになります</p>
 
 <pre><code>server.on('error', function (e) {
-  if (e.errno == require('constants').EADDRINUSE) {
+  if (e.code == 'EADDRINUSE') {
     console.log('Address in use, retrying...');
     setTimeout(function () {
       server.close();
@@ -180,6 +180,19 @@ Node によって作成されてサーバの <code>'connection'</code> イベン
 例外とともに <code>'error'</code> イベントが生成されます。</p>
 
 <p><code>callback</code> 引数は 'connect' イベントのリスナに加えられます。</p>
+
+<h4 id="socket.bufferSize">socket.bufferSize</h4>
+
+<p><code>net.Socket</code> には、<code>socket.write()</code> と常に協調するプロパティがあります。
+これはユーザが実行速度を向上させる手助けになります。
+コンピュータはソケットに書き込まれるデータ量と必ずしも同じ速度で進むわけではありません - ネットワーク接続は、単純に遅すぎます。
+Node は、ソケットに書き込まれるデータを内部のキューに入れ、可能になった時にワイヤ上に送信します (内部ではソケットのファイル記述子が書き込み可能になるのをポーリングします)。</p>
+
+<p>内部的なバッファリングの結果、メモリ消費が増大するかもしれません。
+このプロパティは、現在書き込みのためにバッファリングされている文字数を示します。
+(文字数は書き込まれるバイト数とほぼ同じですが、バッファが文字列を含んでいる場合、文字列は遅延的にエンコードされるため、正確なバイト数は分かっていません)</p>
+
+<p>大きな、あるいは増大する <code>bufferSize</code> を体験したユーザは、そのプログラムで <code>pause()</code> および <code>resume()</code> を使ってデータフローを「抑えよう」としなければなりません。</p>
 
 <h4 id="socket.setEncoding">socket.setEncoding(encoding=null)</h4>
 
