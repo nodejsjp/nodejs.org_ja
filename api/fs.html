@@ -301,7 +301,11 @@ pwrite(2) を参照してください。</p>
 
 <h3 id="fs.watchFile">fs.watchFile(filename, [options], listener)</h3>
 
-<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルが変更される度に呼び出されます。</p>
+<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。</p>
+
+<p>第 2 引数はオプションです．
+<code>options</code> が与えられる場合、それは <code>persistent</code> とポーリング間隔をミリ秒で表す <code>interval</code> の二つの boolean メンバを含むオブジェクトです。
+デフォルトは <code>{ persistent: true, interval: 0}</code> です。</p>
 
 <p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:</p>
 
@@ -311,6 +315,8 @@ pwrite(2) を参照してください。</p>
 });</code></pre>
 
 <p>これらの状態オブジェクトは <code>fs.Stat</code> のインスタンスです。</p>
+
+<p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。</p>
 
 <h3 id="fs.unwatchFile">fs.unwatchFile(filename)</h3>
 

@@ -15,7 +15,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tTY">TTY</a><ul><li><a href="#tty.open">tty.open(path, args=[])</a></li><li><a href="#tty.isatty">tty.isatty(fd)</a></li><li><a href="#tty.setRawMode">tty.setRawMode(mode)</a></li><li><a href="#tty.getColumns">tty.getColumns()</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tTY">TTY</a><ul><li><a href="#tty.open">tty.open(path, args=[])</a></li><li><a href="#tty.isatty">tty.isatty(fd)</a></li><li><a href="#tty.setRawMode">tty.setRawMode(mode)</a></li><li><a href="#tty.setWindowSize">tty.setWindowSize(fd, row, col)</a></li><li><a href="#tty.getWindowSize">tty.getWindowSize(fd)</a></li></ul></li></ul><hr /></div>
 <h2 id="tTY">TTY</h2>
 
 <p><code>require('tty')</code> でこのモジュールにアクセスします。</p>
@@ -37,17 +37,13 @@
 <p><code>mode</code> は <code>true</code> または <code>false</code> です。
 これは現在のプロセスの標準入力ファイル記述子をローデバイスまたはデフォルトに振る舞うよう設定します。</p>
 
-<h3 id="tty.getColumns">tty.getColumns()</h3>
+<h3 id="tty.setWindowSize">tty.setWindowSize(fd, row, col)</h3>
 
-<p>現在のプロセスに関連づけられた TTY のカラム数を返します。</p>
+<p>ファイル記述子に関するウィンドウサイズの設定を <code>ioctl</code> します。</p>
 
-<p>この数はプロセスが <code>SIGWINCH</code> を受信する度に変化することに注意してください。
-次のようにキャッシュを保持することができます。</p>
+<h3 id="tty.getWindowSize">tty.getWindowSize(fd)</h3>
 
-<pre><code>var columns = tty.getColumns();
-process.on('SIGWINCH', function() {
-  columns = tty.getColumns();
-});</code></pre>
+<p>ファイル記述子に関連づけられた TTY の <code>[row, col]</code> を返します。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
