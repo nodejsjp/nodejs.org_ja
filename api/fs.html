@@ -234,6 +234,9 @@ pwrite(2) を参照してください。</p>
 <p>コールバックは 2 つの引数が与えられる <code>(err, written)</code> で、
 <code>written</code> は書き込まれた<em>バイト数</em>を示します。</p>
 
+<p>同じファイルに対してコールバックされるのを待つことなく <code>fs.write()</code> を何度も呼び出すことは、安全ではないことに注意してください。
+このシナリオでは、 <code>fs.createWriteStream()</code> を強く推奨します。</p>
+
 <h3 id="fs.writeSync">fs.writeSync(fd, buffer, offset, length, position)</h3>
 
 <p>同期版のバッファに基づく <code>fs.write()</code>。書き込まれたバイト数を返します。</p>
@@ -287,7 +290,9 @@ pwrite(2) を参照してください。</p>
 
 <h3 id="fs.writeFile">fs.writeFile(filename, data, encoding='utf8', [callback])</h3>
 
-<p>非同期にデータをファイルに書き込みます。<code>data</code> は文字列またはバッファです。</p>
+<p>非同期にデータをファイルに書き込みます。
+ファイルが既に存在する場合は置き換えられます。
+<code>data</code> は文字列またはバッファです。</p>
 
 <p>例:</p>
 
