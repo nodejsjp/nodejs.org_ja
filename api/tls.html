@@ -15,7 +15,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#s_tls.connect">s = tls.connect(port, [host], [options], callback)</a></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#tls.createServer">tls.createServer(options, secureConnectionListener)</a></li><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#s_tls.connect">s = tls.connect(port, [host], [options], callback)</a></li><li><a href="#sTARTTLS">STARTTLS</a></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#tls.createServer">tls.createServer(options, secureConnectionListener)</a></li><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li></ul></li></ul><hr /></div>
 <h2 id="tLS_">TLS (SSL)</h2>
 
 <p><code>require('tls')</code> でこのモジュールにアクセスします。</p>
@@ -62,6 +62,17 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 サーバ証明書が指定した認証局に承認されたかチェックするために
 <code>s.authorized</code> を確認するかはユーザ次第です。
 <code>s.authorized === false</code>の場合、<code>s.authorizationError</code> からエラーを見つけることができます。</p>
+
+<h3 id="sTARTTLS">STARTTLS</h3>
+
+<p>v0.4 ブランチでは、既に存在する TCP コネクション上で TLS セッションを開始する機能はありません。
+それには少しの作業が必要となります。
+そのテクニックは <code>tls.createSecurePair()</code> が返す二つのストリーム:
+暗号化されたストリームと平文のストリームを使います。
+暗号化されたストリームは既存のソケットにつながれ、
+平文のストリームはその後ユーザとのインタラクションで使われます。</p>
+
+<p><a href="http://gist.github.com/848444">ここにそのコードがあります。</a></p>
 
 <h3 id="tls.Server">tls.Server</h3>
 
