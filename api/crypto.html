@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>crypto - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
 </head>
@@ -46,6 +48,24 @@
 例えば <code>'sha1'</code>、<code>'md5'</code>、<code>'sha256'</code>、<code>'sha512'</code>、などです。
 最近のリリースでは、<code>openssl list-message-digest-algorithms</code>
 で利用可能なダイジェストアルゴリズムが表示されます。</p>
+
+<p>例: このプログラムはファイルのsha1ハッシュ値を求めます。</p>
+
+<pre><code>var filename = process.argv[2];
+var crypto = require('crypto');
+var fs = require('fs');
+
+var shasum = crypto.createHash('sha1');
+
+var s = fs.ReadStream(filename);
+s.on('data', function(d) {
+  shasum.update(d);
+});
+
+s.on('end', function() {
+  var d = shasum.digest('hex');
+  console.log(d + '  ' + filename);
+});</code></pre>
 
 <h3 id="hash.update">hash.update(data)</h3>
 

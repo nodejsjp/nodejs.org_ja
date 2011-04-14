@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>modules - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
 </head>
@@ -15,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a><ul><li><a href="#optimizations_to_the_node_modules_Lookup_Process">Optimizations to the `node_modules` Lookup Process</a></li></ul></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a><ul><li><a href="#optimizations_to_the_node_modules_Lookup_Process">Optimizations to the `node_modules` Lookup Process</a></li></ul></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a></li><li><a href="#module.exports">module.exports</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
 <h2 id="standard_Modules">Standard Modules</h2>
 
 <p>Node は多くのコンパイル済みのモジュールを備えています。
@@ -29,8 +31,6 @@
 <p>標準モジュール以外のモジュールを用いて Node を拡張することがでいます。 <code>'Modules'</code> をご覧ください。</p>
 
 <h2 id="modules">Modules</h2>
-
-<p>Node は CommonJS のモジュールシステムを使います。</p>
 
 <p>Node はシンプルなモジュールローディングシステムを持ちます。
 Node では、ファイルとモジュールは１対１に対応します。
@@ -133,6 +133,44 @@ exports.circumference = function (r) {
 
 <p>モジュールは初めて読み込まれたときにキャッシュされます。
 すなわち（他のキャッシュと同様に） <code>require('foo')</code> を呼ぶたびに、もし引数の意味するものが同一のファイルであったなら全く同一のオブジェクトが返されます。</p>
+
+<h3 id="module.exports">module.exports</h3>
+
+<p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。
+時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。
+それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
+例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら</p>
+
+<pre><code>var EventEmitter = require('events').EventEmitter;
+
+module.exports = new EventEmitter();
+
+// Do some work, and after some time emit
+// the 'ready' event from the module itself.
+setTimeout(function() {
+  module.exports.emit('ready');
+}, 1000);</code></pre>
+
+<p>そして別のファイルで</p>
+
+<pre><code>var a = require('./a');
+a.on('ready', function() {
+  console.log('module a is ready');
+});</code></pre>
+
+<p><code>module.exports</code> への代入はすぐに行わなければなりません。
+コールバックの中ではできません。以下は動きません。</p>
+
+<p>x.js:</p>
+
+<pre><code>setTimeout(function() {
+  module.exports = { a: "hello" };
+}, 0);</code></pre>
+
+<p>y.js</p>
+
+<pre><code>var x = require('./x');
+console.log(x.a);</code></pre>
 
 <h3 id="all_Together...">All Together...</h3>
 

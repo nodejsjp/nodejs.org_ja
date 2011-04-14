@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>buffers - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
 </head>
@@ -56,13 +58,17 @@ BMP (基本多言語面、U+0000～U+FFFF) のみエンコードすることが�
 <p>与えられたエンコーディングを使用して、<code>string</code> をバッファの <code>offset</code> から書き込みます。
 書き込まれたオクテット数を返します。
 もし <code>buffer</code> が文字列全体を挿入するのに十分なスペースを含んでいなければ、文字列の一部だけを書き込みます。
-<code>'utf8'</code> エンコーディングの場合、このメソッドは文字の一部だけを書き込むことはありません。</p>
+このメソッドは文字の一部だけを書き込むことはありません。</p>
 
 <p>例: utf8 の文字列をバッファに書き込み、それをプリントします</p>
 
 <pre><code>buf = new Buffer(256);
 len = buf.write('\u00bd + \u00bc = \u00be', 0);
 console.log(len + " bytes: " + buf.toString('utf8', 0, len));</code></pre>
+
+<p>書き込まれた文字数 (書き込まれたバイト数とは異なる場合があります) は、
+次に <code>buf.write()</code> が呼び出されて上書きされるまで
+<code>Buffer._charsWritten</code> に設定されています。</p>
 
 <h3 id="buffer.toString">buffer.toString(encoding, start=0, end=buffer.length)</h3>
 

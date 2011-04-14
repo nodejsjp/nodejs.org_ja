@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>globals - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
   <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
 </head>
@@ -18,7 +20,8 @@
     <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#global_Objects">Global Objects</a><ul><li><a href="#global">global</a></li><li><a href="#process">process</a></li><li><a href="#require">require()</a></li><li><a href="#require.resolve">require.resolve()</a></li><li><a href="#require.paths">require.paths</a></li><li><a href="#__filename">__filename</a></li><li><a href="#__dirname">__dirname</a></li><li><a href="#module">module</a></li><li><a href="#setTimeout">setTimeout(cb, ms)</a></li><li><a href="#clearTimeout">clearTimeout(t)</a></li><li><a href="#setInterval">setInterval(cb, ms)</a></li><li><a href="#clearInterval">clearInterval(t)</a></li></ul></li></ul><hr /></div>
 <h2 id="global_Objects">Global Objects</h2>
 
-<p>これらのオブジェクトはグローバルスコープで有効であり、どこからでもアクセスすることができます。</p>
+<p>これらのオブジェクトは全てのモジュールで有効です。
+これらのオブジェクトのいくつかは実際はグローバルスコープではなくモジュールスコープです - 注意してください。</p>
 
 <h3 id="global">global</h3>
 
@@ -36,7 +39,8 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
 
 <h3 id="require">require()</h3>
 
-<p>require モジュールを指します。<a href="modules.html#modules">モジュール</a> の節を参照してください。</p>
+<p>require モジュールを指します。<a href="modules.html#modules">モジュール</a> の節を参照してください。
+<code>require</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
 
 <h3 id="require.resolve">require.resolve()</h3>
 
@@ -62,6 +66,8 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
 <pre><code>console.log(__filename);
 // /Users/mjr/example.js</code></pre>
 
+<p><code>__filename</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+
 <h3 id="__dirname">__dirname</h3>
 
 <p>スクリプトが実行されているディレクトリ名です。</p>
@@ -71,11 +77,14 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
 <pre><code>console.log(__dirname);
 // /Users/mjr</code></pre>
 
+<p><code>__dirname</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+
 <h3 id="module">module</h3>
 
 <p>現在のモジュールへの参照です。
 特に <code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
-より詳しくは <code>src/node.js</code> を参照してください。</p>
+より詳しくは <code>src/node.js</code> を参照してください。
+<code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
 
 <h3 id="setTimeout">setTimeout(cb, ms)</h3>
 
