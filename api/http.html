@@ -261,6 +261,11 @@ response.writeHead(200, {
 
 <p>もしこのメソッドが呼び出される前に <code>response.write()</code> または <code>response.end()</code> が呼ばれると、暗黙的で可変のヘッダが算出されてこの関数が呼び出されます。</p>
 
+<p>注意: <code>Content-Length</code> は文字数ではなくバイト数で与えられます。
+上の例が動作するのは <code>'hello world'</code> という文字列が単一バイト文字だけを含むためです。
+もしボディがより上位にコード化された文字を含む場合は、
+指定したエンコーディングによるバイト数を得るために <code>Buffer.byteLength()</code> を使うべきです。</p>
+
 <h3 id="response.statusCode">response.statusCode</h3>
 
 <p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。</p>
