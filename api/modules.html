@@ -17,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a><ul><li><a href="#optimizations_to_the_node_modules_Lookup_Process">Optimizations to the `node_modules` Lookup Process</a></li></ul></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a></li><li><a href="#module.exports">module.exports</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a><ul><li><a href="#optimizations_to_the_node_modules_Lookup_Process">Optimizations to the `node_modules` Lookup Process</a></li></ul></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
 <h2 id="standard_Modules">Standard Modules</h2>
 
 <p>Node は多くのコンパイル済みのモジュールを備えています。
@@ -134,6 +134,22 @@ exports.circumference = function (r) {
 <p>モジュールは初めて読み込まれたときにキャッシュされます。
 すなわち（他のキャッシュと同様に） <code>require('foo')</code> を呼ぶたびに、もし引数の意味するものが同一のファイルであったなら全く同一のオブジェクトが返されます。</p>
 
+<p><code>require('foo')</code> が複数回呼び出されても、モジュールが複数回実行されることにはなりません。
+これは重要な特徴です。
+そのため、「部分的に完了した」オブジェクトを返すことで、
+推移的な依存関係が循環していてもロードすることができます。</p>
+
+<p>もしモジュールを複数回実行したければ、関数を公開して、
+その関数を呼び出してください。</p>
+
+<h4 id="module_Caching_Caveats">Module Caching Caveats</h4>
+
+<p>モジュールは解決されたファイル名に基づいてキャッシュされます。
+異なる場所にあるモジュールから呼び出されたモジュールは、
+(<code>node_module</code> フォルダからロードされるため) 異なったファイル名で
+解決されることがあるため、 <code>require('foo')</code> が常に同じオブジェクトを返す
+<em>保証</em>はなく、異なるファイルとして解決されます。</p>
+
 <h3 id="module.exports">module.exports</h3>
 
 <p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。
@@ -167,7 +183,7 @@ a.on('ready', function() {
   module.exports = { a: "hello" };
 }, 0);</code></pre>
 
-<p>y.js</p>
+<p>y.js:</p>
 
 <pre><code>var x = require('./x');
 console.log(x.a);</code></pre>
@@ -178,11 +194,11 @@ console.log(x.a);</code></pre>
 
 <p>上で述べたことをまとめると、 require.resolve は以下の擬似コードで記述されるようなハイレベルなアルゴリズムに則っています:</p>
 
-<pre><code>require(X)
+<pre><code>require(X) from module at path Y
 1. If X is a core module,
    a. return the core module
    b. STOP
-2. If X begins with `./` or `/`,
+2. If X begins with './' or '/' or '../'
    a. LOAD_AS_FILE(Y + X)
    b. LOAD_AS_DIRECTORY(Y + X)
 3. LOAD_NODE_MODULES(X, dirname(Y))
@@ -215,6 +231,7 @@ NODE_MODULES_PATHS(START)
    a. if PARTS[I] = "node_modules" CONTINUE
    c. DIR = path join(PARTS[0 .. I] + "node_modules")
    b. DIRS = DIRS + DIR
+   c. let I = I - 1
 6. return DIRS</code></pre>
 
 <h3 id="loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</h3>
@@ -242,8 +259,7 @@ NODE_MODULES_PATHS(START)
 
 <h4 id="_Note_Please_Avoid_Modifying_require.paths_">**Note:** Please Avoid Modifying `require.paths`</h4>
 
-<p>後方互換性を保つために <code>require.paths</code> は今のところモジュールを探す過程において最も優先されます。
-しかし、将来のバージョンでは <code>require.paths</code> は無くなる予定です。</p>
+<p>将来のバージョンでは <code>require.paths</code> は無くなる予定です。</p>
 
 <p>実装当時はよいアイデアだと思われ実験的に使う分にはとても有用でしたが、実際に使いだしてみると変更可能な <code>require.paths</code> のリストというものはやっかいな混乱と頭痛の種になることがしばしばあったのです。</p>
 
@@ -274,8 +290,23 @@ NODE_MODULES_PATHS(START)
 <p>（残念なことに）たった一つの <code>require.paths</code> 配列が全てのモジュールによって使われるという設計になっています。</p>
 
 <p>その結果、もしある Node プログラムが上記の挙動を行っていたら、同じプロセス上にいる他の全ての Node プログラムの動作も永遠にそして微妙に変化させてしまいます。
-アプリケーションが成長するにつれ、私たちは機能をまとめていきます。
-そしてその中に上記のような他へ影響を及ぼす箇所があると、それはとても予測するのが難しい問題となってしまいます。</p>
+アプリケーションが成長するにつれ、私たちは機能をまとめていきますが、
+それらがどのように影響するかを予測するのが難しくなります。</p>
+
+<h3 id="accessing_the_main_module">Accessing the main module</h3>
+
+<p>ファイルがNodeによって直接実行される場合、その <code>module</code> が
+<code>require.main</code> に設定されます。
+これは、ファイルが直接実行されたかを決定できることを意味します。</p>
+
+<pre><code>require.main === module</code></pre>
+
+<p><code>foo.js</code> ファイルの場合、<code>node foo.js</code> と実行された場合にこれは <code>true</code> 
+になりますが、<code>require('./foo')</code> で実行された場合は <code>false</code> になります。</p>
+
+<p><code>module</code> は <code>filename</code> プロパティ (通常 <code>__filename</code> と同じです) 
+を提供するため、現在のアプリケーションのエントリポイントは
+<code>require.main.filename</code> をチェックすることで得ることができます。</p>
 
 <h2 id="addenda_Package_Manager_Tips">Addenda: Package Manager Tips</h2>
 
