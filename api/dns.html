@@ -17,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dNS">DNS</a><ul><li><a href="#dns.lookup">dns.lookup(domain, family=null, callback)</a></li><li><a href="#dns.resolve">dns.resolve(domain, rrtype='A', callback)</a></li><li><a href="#dns.resolve4">dns.resolve4(domain, callback)</a></li><li><a href="#dns.resolve6">dns.resolve6(domain, callback)</a></li><li><a href="#dns.resolveMx">dns.resolveMx(domain, callback)</a></li><li><a href="#dns.resolveTxt">dns.resolveTxt(domain, callback)</a></li><li><a href="#dns.resolveSrv">dns.resolveSrv(domain, callback)</a></li><li><a href="#dns.reverse">dns.reverse(ip, callback)</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dNS">DNS</a><ul><li><a href="#dns.lookup">dns.lookup(domain, family=null, callback)</a></li><li><a href="#dns.resolve">dns.resolve(domain, rrtype='A', callback)</a></li><li><a href="#dns.resolve4">dns.resolve4(domain, callback)</a></li><li><a href="#dns.resolve6">dns.resolve6(domain, callback)</a></li><li><a href="#dns.resolveMx">dns.resolveMx(domain, callback)</a></li><li><a href="#dns.resolveTxt">dns.resolveTxt(domain, callback)</a></li><li><a href="#dns.resolveSrv">dns.resolveSrv(domain, callback)</a></li><li><a href="#dns.reverse">dns.reverse(ip, callback)</a></li><li><a href="#dns.resolveNs">dns.resolveNs(domain, callback)</a></li><li><a href="#dns.resolveCname">dns.resolveCname(domain, callback)</a></li></ul></li></ul><hr /></div>
 <h2 id="dNS">DNS</h2>
 
 <p>このモジュールにアクセスするには <code>require('dns')</code> を使用します。</p>
@@ -59,7 +59,8 @@ A (IPv4) または AAAA (IPv6) レコードにします。</p>
 <p>ドメイン (例 <code>'google.com'</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
 妥当な <code>rrtype</code> は <code>A</code> (IPV4アドレス)、<code>AAAA</code> (IPV6アドレス)、
 <code>MX</code> (mail exchangeレコード), <code>TXT</code> (テキストレコード)、<code>SRV</code> (SRVレコード)、
-<code>PTR</code> (IP を逆引きでルックアップするために使われる) です。</p>
+<code>PTR</code> (IP を逆引きでルックアップするために使われる)、<code>NS</code>
+(ネームサーバレコード)、そして CNAME (別名レコード) です。</p>
 
 <p>コールバックは引数 <code>(err, addresses)</code> を持ちます。
 <code>addresses</code> の各要素の種類はレコードの種類によって決まり、
@@ -89,13 +90,13 @@ A (IPv4) または AAAA (IPv6) レコードにします。</p>
 <h3 id="dns.resolveTxt">dns.resolveTxt(domain, callback)</h3>
 
 <p><code>dns.resolve()</code> と同じですが、テキスト (<code>TXT</code> レコード) だけを問い合わせます。
-<code>addresses</code> は利用可能な <code>domain</code> のテキストレコードの配列です。
+<code>addresses</code> は <code>domain</code> で利用可能なテキストレコードの配列です。
 (例、<code>['v=spf1 ip4:0.0.0.0 ~all']</code>)</p>
 
 <h3 id="dns.resolveSrv">dns.resolveSrv(domain, callback)</h3>
 
 <p><code>dns.resolve()</code> と同じですが、サービスレコード (<code>SRV</code> レコード) だけを問い合わせます。
-<code>addresses</code> は利用可能な <code>domain</code> の SRV レコードの配列です。
+<code>addresses</code> は <code>domain</code> で利用可能な SRV レコードの配列です。
 SRV レコードのプロパティは priority、weight、port、そして name です
 (例 <code>[{'priority': 10, {'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]</code>)。</p>
 
@@ -104,6 +105,20 @@ SRV レコードのプロパティは priority、weight、port、そして name 
 <p>IP アドレスからドメイン名の配列へ逆引きで解決します。</p>
 
 <p>コールバックは引数 <code>(err, domains)</code> を持ちます。</p>
+
+<h3 id="dns.resolveNs">dns.resolveNs(domain, callback)</h3>
+
+<p><code>dns.resolve()</code> と同じですが、ネームサーバレコード (<code>NS</code> レコード) 
+だけを問い合わせます。
+<code>address</code> は <code>domain</code> で利用可能なネームサーバレコードの配列です
+(例 <code>['ns1.example.com', 'ns2.example.com']</code>)。</p>
+
+<h3 id="dns.resolveCname">dns.resolveCname(domain, callback)</h3>
+
+<p><code>dns.resolve()</code> と同じですが、別名レコード (<code>CNAME</code> レコード) 
+だけを問い合わせます。
+<code>address</code> は <code>domain</code> で利用可能な別名レコードの配列です
+<code>domain</code> (e.g., <code>['bar.example.com']</code>)。</p>
 
 <p>エラーがあった場合、<code>err</code> は非 null で Error オブジェクトのインスタンスとなります。</p>
 
