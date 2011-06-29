@@ -17,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#crypto">Crypto</a><ul><li><a href="#crypto.createCredentials">crypto.createCredentials(details)</a></li><li><a href="#crypto.createHash">crypto.createHash(algorithm)</a></li><li><a href="#hash.update">hash.update(data)</a></li><li><a href="#hash.digest">hash.digest(encoding='binary')</a></li><li><a href="#crypto.createHmac">crypto.createHmac(algorithm, key)</a></li><li><a href="#hmac.update">hmac.update(data)</a></li><li><a href="#hmac.digest">hmac.digest(encoding='binary')</a></li><li><a href="#crypto.createCipher">crypto.createCipher(algorithm, key)</a></li><li><a href="#cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#cipher.final">cipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createDecipher">crypto.createDecipher(algorithm, key)</a></li><li><a href="#decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#decipher.final">decipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createSign">crypto.createSign(algorithm)</a></li><li><a href="#signer.update">signer.update(data)</a></li><li><a href="#signer.sign">signer.sign(private_key, output_format='binary')</a></li><li><a href="#crypto.createVerify">crypto.createVerify(algorithm)</a></li><li><a href="#verifier.update">verifier.update(data)</a></li><li><a href="#verifier.verify">verifier.verify(cert, signature, signature_format='binary')</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#crypto">Crypto</a><ul><li><a href="#crypto.createCredentials">crypto.createCredentials(details)</a></li><li><a href="#crypto.createHash">crypto.createHash(algorithm)</a></li><li><a href="#hash.update">hash.update(data)</a></li><li><a href="#hash.digest">hash.digest(encoding='binary')</a></li><li><a href="#crypto.createHmac">crypto.createHmac(algorithm, key)</a></li><li><a href="#hmac.update">hmac.update(data)</a></li><li><a href="#hmac.digest">hmac.digest(encoding='binary')</a></li><li><a href="#crypto.createCipher">crypto.createCipher(algorithm, key)</a></li><li><a href="#cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#cipher.final">cipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createDecipher">crypto.createDecipher(algorithm, key)</a></li><li><a href="#decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#decipher.final">decipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createSign">crypto.createSign(algorithm)</a></li><li><a href="#signer.update">signer.update(data)</a></li><li><a href="#signer.sign">signer.sign(private_key, output_format='binary')</a></li><li><a href="#crypto.createVerify">crypto.createVerify(algorithm)</a></li><li><a href="#verifier.update">verifier.update(data)</a></li><li><a href="#verifier.verify">verifier.verify(object, signature, signature_format='binary')</a></li></ul></li></ul><hr /></div>
 <h2 id="crypto">Crypto</h2>
 
 <p>このモジュールにアクセスするには <code>require('crypto')</code> を使用します。</p>
@@ -114,7 +114,7 @@ s.on('end', function() {
 <h3 id="cipher.final">cipher.final(output_encoding='binary')</h3>
 
 <p>暗号化されたコンテンツの残りを返します。
-<code>output_encoding</code> は次のいずれかです: <code>'binary'</code>、<code>'ascii'</code> または <code>'utf8'</code></p>
+<code>output_encoding</code> は次のいずれかです: <code>'binary'</code>、<code>'base64'</code> または <code>'hex'</code></p>
 
 <h3 id="crypto.createDecipher">crypto.createDecipher(algorithm, key)</h3>
 
@@ -159,10 +159,11 @@ s.on('end', function() {
 <p>検証オブジェクトをデータで更新します。
 これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
 
-<h3 id="verifier.verify">verifier.verify(cert, signature, signature_format='binary')</h3>
+<h3 id="verifier.verify">verifier.verify(object, signature, signature_format='binary')</h3>
 
-<p>署名されたデータを <code>cert</code> と <code>signature</code> で検証します。
-<code>cert</code> は PEM でエンコードされた証明書を含む文字列です。
+<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。
+<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを
+PEM でエンコードしたオブジェクトです。
 <code>signature</code> は先に計算したデータの署名で、
 その <code>signature_format</code> は <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
 

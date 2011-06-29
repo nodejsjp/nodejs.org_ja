@@ -17,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a><ul><li><a href="#optimizations_to_the_node_modules_Lookup_Process">Optimizations to the `node_modules` Lookup Process</a></li></ul></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
 <h2 id="standard_Modules">Standard Modules</h2>
 
 <p>Node は多くのコンパイル済みのモジュールを備えています。
@@ -95,19 +95,6 @@ exports.circumference = function (r) {
 <ul><li><code>/home/ry/projects/node_modules/bar.js</code></li><li><code>/home/ry/node_modules/bar.js</code></li><li><code>/home/node_modules/bar.js</code></li><li><code>/node_modules/bar.js</code></li></ul>
 
 <p>この仕組みによって、プログラムはクラッシュを避けるために依存関係を上書きすることができるのです。</p>
-
-<h4 id="optimizations_to_the_node_modules_Lookup_Process">Optimizations to the `node_modules` Lookup Process</h4>
-
-<p>ネストした依存関係には様々な深さがあるため、ファイルツリーがかなり長くなってしまうことがあります。
-それ故、次のような最適化が行われています。</p>
-
-<p>まず、 <code>/node_modules</code> はフォルダ名が <code>node_modules</code> で終わっている場合には追加されません。</p>
-
-<p>次に、 <code>require()</code> を呼び出しているファイルがすでに <code>node_modules</code> 配下のフォルダ内に存在していれば、一番上に存在している <code>node_modules</code> フォルダが検索ツリーのrootとして扱われます。</p>
-
-<p>例えば、 <code>'/home/ry/projects/foo/node_modules/bar/node_modules/baz/quux.js'</code> にあるファイルが <code>require('asdf.js')</code> を呼んでいた場合、 Node は次の順番で探しにいきます。</p>
-
-<ul><li><code>/home/ry/projects/foo/node_modules/bar/node_modules/baz/node_modules/asdf.js</code></li><li><code>/home/ry/projects/foo/node_modules/bar/node_modules/asdf.js</code></li><li><code>/home/ry/projects/foo/node_modules/asdf.js</code></li></ul>
 
 <h3 id="folders_as_Modules">Folders as Modules</h3>
 
@@ -307,6 +294,21 @@ NODE_MODULES_PATHS(START)
 <p><code>module</code> は <code>filename</code> プロパティ (通常 <code>__filename</code> と同じです) 
 を提供するため、現在のアプリケーションのエントリポイントは
 <code>require.main.filename</code> をチェックすることで得ることができます。</p>
+
+<h3 id="accessing_the_main_module">Accessing the main module</h3>
+
+<p>ファイルが Node によって直接実行される場合、そのファイルの <code>module</code> が
+<code>require.main</code> に設定されます。
+これは、ファイルが直接実行されているかテストできることを意味します。</p>
+
+<pre><code>require.main === module</code></pre>
+
+<p><code>foo.js</code> ファイルでは、<code>node foo.js</code> と実行された場合これは <code>true</code>
+となりますが、<code>require('./foo')</code> の場合は <code>false</code> となります。</p>
+
+<p><code>module</code> は <code>filename</code> プロパティ (通常 <code>__filename</code> と同じです)
+を提供するので、現在のアプリケーションのエントリポイントを
+<code>require.main.filename</code> で得ることが出来ます。</p>
 
 <h2 id="addenda_Package_Manager_Tips">Addenda: Package Manager Tips</h2>
 
