@@ -17,7 +17,69 @@
       </div>
       <hr />
     </header>
-    Sorry, this section is currently undocumented, but we'll be working on it.
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#readline">Readline</a><ul><li><a href="#createInterface">createInterface(input, output, completer)</a></li><li><a href="#interface.setPrompt">interface.setPrompt(prompt, length)</a></li><li><a href="#interface.prompt">interface.prompt()</a></li><li><a href="#interface.question">interface.question(query, cb)</a></li><li><a href="#interface.close">interface.close()</a></li><li><a href="#interface.pause">interface.pause()</a></li><li><a href="#interface.resume">interface.resume()</a></li><li><a href="#interface.write">interface.write()</a></li></ul></li></ul><hr /></div>
+<h2 id="readline">Readline</h2>
+
+<p>このモジュールはストリーム (たとえば標準入力)
+を行ごとに読み込むことを可能にします。</p>
+
+<p>このモジュールを一度起動すると、このインタフェースと 
+(標準入力などの) ストリームをクローズするまで node
+プログラムは終了しないことに注意してください。
+きれいに終了する方法を以下に示します:</p>
+
+<p>&lt;pre&gt;
+var readline = require('readline');</p>
+
+<p>var i = readline.createInterface(process.sdtin, process.stdout, null);
+i.question("What do you think of node.js?", function(answer) {
+  //TODO: Log the answer in a database
+  console.log("Thank you for your valuable feedback.");
+  i.close();                //These two lines together allow the program to
+  process.stdin.destroy();  //terminate. Without them, it would run forever.
+});
+&lt;/pre&gt;</p>
+
+<h3 id="createInterface">createInterface(input, output, completer)</h3>
+
+<p><code>input</code> を読み込み、<code>output</code> へ書き込むインターフェースオブジェクトを返します。
+TODO: <code>completer</code> は TAB による補完に使われると思いますが、確かではありません。</p>
+
+<h3 id="interface.setPrompt">interface.setPrompt(prompt, length)</h3>
+
+<p>TODO</p>
+
+<h3 id="interface.prompt">interface.prompt()</h3>
+
+<p>TODO: プロンプトを表示するために呼び出されると思われる。</p>
+
+<h3 id="interface.question">interface.question(query, cb)</h3>
+
+<p><code>query</code> を表示しして、ユーザが応答をタイプするとコールバックが呼び出されます。</p>
+
+<p>使用例:</p>
+
+<p>&lt;pre&gt;
+interface.question("What is your favorite food?", function(answer) {
+  console.log("Oh, so your favorite food is " + answer);
+});
+&lt;/pre&gt;</p>
+
+<h3 id="interface.close">interface.close()</h3>
+
+<p>TODO</p>
+
+<h3 id="interface.pause">interface.pause()</h3>
+
+<p>TODO</p>
+
+<h3 id="interface.resume">interface.resume()</h3>
+
+<p>TODO</p>
+
+<h3 id="interface.write">interface.write()</h3>
+
+<p>TODO</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>

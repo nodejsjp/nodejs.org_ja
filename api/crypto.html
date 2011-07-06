@@ -17,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#crypto">Crypto</a><ul><li><a href="#crypto.createCredentials">crypto.createCredentials(details)</a></li><li><a href="#crypto.createHash">crypto.createHash(algorithm)</a></li><li><a href="#hash.update">hash.update(data)</a></li><li><a href="#hash.digest">hash.digest(encoding='binary')</a></li><li><a href="#crypto.createHmac">crypto.createHmac(algorithm, key)</a></li><li><a href="#hmac.update">hmac.update(data)</a></li><li><a href="#hmac.digest">hmac.digest(encoding='binary')</a></li><li><a href="#crypto.createCipher">crypto.createCipher(algorithm, key)</a></li><li><a href="#cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#cipher.final">cipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createDecipher">crypto.createDecipher(algorithm, key)</a></li><li><a href="#decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#decipher.final">decipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createSign">crypto.createSign(algorithm)</a></li><li><a href="#signer.update">signer.update(data)</a></li><li><a href="#signer.sign">signer.sign(private_key, output_format='binary')</a></li><li><a href="#crypto.createVerify">crypto.createVerify(algorithm)</a></li><li><a href="#verifier.update">verifier.update(data)</a></li><li><a href="#verifier.verify">verifier.verify(object, signature, signature_format='binary')</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#crypto">Crypto</a><ul><li><a href="#crypto.createCredentials">crypto.createCredentials(details)</a></li><li><a href="#crypto.createHash">crypto.createHash(algorithm)</a></li><li><a href="#hash.update">hash.update(data)</a></li><li><a href="#hash.digest">hash.digest(encoding='binary')</a></li><li><a href="#crypto.createHmac">crypto.createHmac(algorithm, key)</a></li><li><a href="#hmac.update">hmac.update(data)</a></li><li><a href="#hmac.digest">hmac.digest(encoding='binary')</a></li><li><a href="#crypto.createCipher">crypto.createCipher(algorithm, key)</a></li><li><a href="#cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#cipher.final">cipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createDecipher">crypto.createDecipher(algorithm, key)</a></li><li><a href="#decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#decipher.final">decipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createSign">crypto.createSign(algorithm)</a></li><li><a href="#signer.update">signer.update(data)</a></li><li><a href="#signer.sign">signer.sign(private_key, output_format='binary')</a></li><li><a href="#crypto.createVerify">crypto.createVerify(algorithm)</a></li><li><a href="#verifier.update">verifier.update(data)</a></li><li><a href="#verifier.verify">verifier.verify(object, signature, signature_format='binary')</a></li><li><a href="#crypto.createDiffieHellman">crypto.createDiffieHellman(prime_length)</a></li><li><a href="#crypto.createDiffieHellman">crypto.createDiffieHellman(prime, encoding='binary')</a></li><li><a href="#diffieHellman.generateKeys">diffieHellman.generateKeys(encoding='binary')</a></li><li><a href="#diffieHellman.computeSecret">diffieHellman.computeSecret(other_public_key, input_encoding='binary', output_encoding=input_encoding)</a></li><li><a href="#diffieHellman.getPrime">diffieHellman.getPrime(encoding='binary')</a></li><li><a href="#diffieHellman.getGenerator">diffieHellman.getGenerator(encoding='binary')</a></li><li><a href="#diffieHellman.getPublicKey">diffieHellman.getPublicKey(encoding='binary')</a></li><li><a href="#diffieHellman.getPrivateKey">diffieHellman.getPrivateKey(encoding='binary')</a></li><li><a href="#diffieHellman.setPublicKey">diffieHellman.setPublicKey(public_key, encoding='binary')</a></li><li><a href="#diffieHellman.setPrivateKey">diffieHellman.setPrivateKey(public_key, encoding='binary')</a></li></ul></li></ul><hr /></div>
 <h2 id="crypto">Crypto</h2>
 
 <p>このモジュールにアクセスするには <code>require('crypto')</code> を使用します。</p>
@@ -168,6 +168,62 @@ PEM でエンコードしたオブジェクトです。
 その <code>signature_format</code> は <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
 
 <p>署名されたデータと公開鍵による検証の結果によって true または false を返します。</p>
+
+<h3 id="crypto.createDiffieHellman">crypto.createDiffieHellman(prime_length)</h3>
+
+<p>ディフィー・ヘルマン鍵共有オブジェクトを作成し、
+与えられた長さの素数を生成します。生成元は <code>2</code> です。</p>
+
+<h3 id="crypto.createDiffieHellman">crypto.createDiffieHellman(prime, encoding='binary')</h3>
+
+<p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。
+生成元は <code>2</code> です。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.generateKeys">diffieHellman.generateKeys(encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、
+指定の方法でエンコーディングされた公開鍵を返します。
+この鍵は相手側に渡されるものです。</p>
+
+<h3 id="diffieHellman.computeSecret">diffieHellman.computeSecret(other_public_key, input_encoding='binary', output_encoding=input_encoding)</h3>
+
+<p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。
+与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、
+秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。
+出力のエンコーディングが与えられなかった場合は、入力のエンコーディングが
+出力エンコーディングとして使われます。</p>
+
+<h3 id="diffieHellman.getPrime">diffieHellman.getPrime(encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.getGenerator">diffieHellman.getGenerator(encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.getPublicKey">diffieHellman.getPublicKey(encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.getPrivateKey">diffieHellman.getPrivateKey(encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.setPublicKey">diffieHellman.setPublicKey(public_key, encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法による公開鍵を設定します。
+鍵のエンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.setPrivateKey">diffieHellman.setPrivateKey(public_key, encoding='binary')</h3>
+
+<p>ディフィー・ヘルマン法による秘密鍵を設定します。
+鍵のエンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>

@@ -17,7 +17,7 @@
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#child_Processes">Child Processes</a><ul><li><a href="#event_exit_">Event:  'exit'</a></li><li><a href="#child.stdin">child.stdin</a></li><li><a href="#child.stdout">child.stdout</a></li><li><a href="#child.stderr">child.stderr</a></li><li><a href="#child.pid">child.pid</a></li><li><a href="#child_process.spawn">child_process.spawn(command, args=[], [options])</a></li><li><a href="#child_process.exec">child_process.exec(command, [options], callback)</a></li><li><a href="#child.kill">child.kill(signal='SIGTERM')</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#child_Processes">Child Processes</a><ul><li><a href="#event_exit_">Event:  'exit'</a></li><li><a href="#child.stdin">child.stdin</a></li><li><a href="#child.stdout">child.stdout</a></li><li><a href="#child.stderr">child.stderr</a></li><li><a href="#child.pid">child.pid</a></li><li><a href="#child_process.spawn">child_process.spawn(command, args=[], [options])</a></li><li><a href="#child_process.exec">child_process.exec(command, [options], callback)</a></li><li><a href="#child_process.fork">child_process.fork(modulePath, arguments, options)</a></li><li><a href="#child.kill">child.kill(signal='SIGTERM')</a></li></ul></li></ul><hr /></div>
 <h2 id="child_Processes">Child Processes</h2>
 
 <p>Nodeは <code>ChildProcess</code> クラスを通じて 3 方向の <code>popen(3)</code> 機能を提供します。</p>
@@ -84,7 +84,7 @@ grep.stdin.end();</code></pre>
 
 <p><code>cwd</code> で起動されたプロセスのワーキングディレクトリを指定することができます。
 <code>env</code> は新しいプロセスに見える環境変数を指定するために使います。
-<code>customFds</code> は新しいプロセスの [stdin, stout, stderr] を既存のストリームに接続することを可能にします;
+<code>customFds</code> は新しいプロセスの [stdin, stdout, stderr] を既存のストリームに接続することを可能にします;
 <code>-1</code> は新しいストリームが作られなければならないことを意味します。
 <code>setsid</code> に true が設定されると、サブプロセスは新しいセッションで実行されます。</p>
 
@@ -193,6 +193,46 @@ child = exec('cat *.js bad_file | wc -l',
 子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。
 子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGTERM'</code>)。
 <code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。</p>
+
+<h3 id="child_process.fork">child_process.fork(modulePath, arguments, options)</h3>
+
+<p>これは <code>spawn()</code> の特別版で、Node プロセスを起動します。
+返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
+組み込みの通信チャネルを持ちます。
+チャネルは <code>child.send(message)</code> によって書き込まれ、
+メッセージを受信すると <code>child</code> 上で <code>'message'</code> イベントが生成されます。</p>
+
+<p>例:</p>
+
+<pre><code>var cp = require('child_process');
+
+var n = cp.fork(__dirname + '/sub.js');
+
+n.on('message', function(m) {
+  console.log('PARENT got message:', m);
+});
+
+n.send({ hello: 'world' });</code></pre>
+
+<p>そして子スクリプトの <code>'sub.js'</code> は次のようになります:</p>
+
+<pre><code>process.on('message', function(m) {
+  console.log('CHILD got message:', m);
+});
+
+process.send({ foo: 'bar' });</code></pre>
+
+<p>子供の <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、
+<code>process</code> はチャネルでメッセージを受信するたびにイベントを生成します。</p>
+
+<p>デフォルトでは，起動された Node プロセスは親プロセスに関連づけられた標準入力、
+標準出力、標準エラー出力を持ちます。
+これは <code>customFds</code> オプションによって上書きすることが出来ます。</p>
+
+<p>これらの子 Node は、やはり V8 の新しいインスタンスです。
+新しい Node ごとに少なくとも 30 ミリ秒の起動時間と 
+10MB のメモリを前提としてください。
+つまり、数千の子プロセスを作ることは出来ません。</p>
 
 <h3 id="child.kill">child.kill(signal='SIGTERM')</h3>
 
