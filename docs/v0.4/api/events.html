@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>events - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#events">Events</a><ul><li><a href="#events.EventEmitter">events.EventEmitter</a><ul><li><a href="#emitter.addListener">emitter.addListener(event, listener)</a></li><li><a href="#emitter.on">emitter.on(event, listener)</a></li><li><a href="#emitter.once">emitter.once(event, listener)</a></li><li><a href="#emitter.removeListener">emitter.removeListener(event, listener)</a></li><li><a href="#emitter.removeAllListeners">emitter.removeAllListeners(event)</a></li><li><a href="#emitter.setMaxListeners">emitter.setMaxListeners(n)</a></li><li><a href="#emitter.listeners">emitter.listeners(event)</a></li><li><a href="#emitter.emit">emitter.emit(event, [arg1], [arg2], [...])</a></li><li><a href="#event_newListener_">Event: 'newListener'</a></li></ul></li></ul></li></ul><hr /></div>
+<h2 id="events">Events</h2>
+
+<p>Node のオブジェクトの多くはイベントを生成します:
+<code>net.Server</code>は相手から接続するたびにイベントを生成し、
+<code>fs.readStream</code>はファイルがオープンされるたびにイベントを生成します。
+イベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。
+次のようにすることでこのモジュールにアクセスできます: <code>require("events");</code></p>
+
+<p>通常、イベント名はキャメル記法による文字列で表現されますが、
+厳格な制限ではなく、どんな文字列でも受け入れられます。</p>
+
+<p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。
+これらの関数は<em>リスナー</em>と呼ばれます。</p>
+
+<h3 id="events.EventEmitter">events.EventEmitter</h3>
+
+<p>EventEmitterクラスにアクセスするには、<code>require('events').EventEmitter</code> を使います。</p>
+
+<p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、
+典型的な動作は <code>'error'</code> イベントを生成することです。
+node ではエラーイベントは特別に扱われます．
+もしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。</p>
+
+<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>'newListener'</code> を生成します。</p>
+
+<h4 id="emitter.addListener">emitter.addListener(event, listener)</h4>
+
+<h4 id="emitter.on">emitter.on(event, listener)</h4>
+
+<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。</p>
+
+<pre><code>server.on('connection', function (stream) {
+  console.log('someone connected!');
+});</code></pre>
+
+<h4 id="emitter.once">emitter.once(event, listener)</h4>
+
+<p><strong>一回限り</strong>のリスナーをイベントに追加します。
+このリスナーはイベントが最初に発生した時に限り起動され、その後で削除されます。</p>
+
+<pre><code>server.once('connection', function (stream) {
+  console.log('Ah, we have our first user!');
+});</code></pre>
+
+<h4 id="emitter.removeListener">emitter.removeListener(event, listener)</h4>
+
+<p>指定されたイベントに対するリスナー配列からリスナーを削除します。
+<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。</p>
+
+<pre><code>var callback = function(stream) {
+  console.log('someone connected!');
+};
+server.on('connection', callback);
+// ...
+server.removeListener('connection', callback);</code></pre>
+
+<h4 id="emitter.removeAllListeners">emitter.removeAllListeners(event)</h4>
+
+<p>指定されたイベントに対するリスナー配列から全てのリスナーを削除します。</p>
+
+<h4 id="emitter.setMaxListeners">emitter.setMaxListeners(n)</h4>
+
+<p>デフォルトでは、EventEmitter は 10 を越えるリスナが追加されると警告を出力します。
+これはメモリリークを見つけるために役に立つデフォルト値です。
+全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。
+この関数は制限を増やすことを許可します。
+0 を設定すると無制限になります。</p>
+
+<h4 id="emitter.listeners">emitter.listeners(event)</h4>
+
+<p>指定されたイベントに対するリスナー配列を返します。
+この配列は変更することができます、例えばリスナーを削除するなど。</p>
+
+<pre><code>server.on('connection', function (stream) {
+  console.log('someone connected!');
+});
+console.log(util.inspect(server.listeners('connection')); // [ [Function] ]</code></pre>
+
+<h4 id="emitter.emit">emitter.emit(event, [arg1], [arg2], [...])</h4>
+
+<p>提供された引数の並びでそれぞれのリスナーを実行します。</p>
+
+<h4 id="event_newListener_">Event: 'newListener'</h4>
+
+<p><code>function (event, listener) { }</code></p>
+
+<p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

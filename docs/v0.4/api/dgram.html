@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>dgram - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#uDP_Datagram_Sockets">UDP / Datagram Sockets</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, path, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(path)</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li><li><a href="#dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</a></li><li><a href="#dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</a></li><li><a href="#dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</a></li><li><a href="#dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li></ul></li></ul><hr /></div>
+<h2 id="uDP_Datagram_Sockets">UDP / Datagram Sockets</h2>
+
+<p>データグラムソケットは <code>require('dgram')</code> で利用可能になります。
+データグラムはほとんどの場合 IP/UDP メッセージで扱われますが、UNIX ドメインソケットでも使用することができます。</p>
+
+<h3 id="event_message_">Event: 'message'</h3>
+
+<p><code>function (msg, rinfo) { }</code></p>
+
+<p>ソケット上で新しいデータグラムが到着した時に生成されます。<code>msg</code> は <code>Buffer</code> で、
+<code>rinfo</code> は送信者のアドレス情報とデータグラムのバイト数を持ったオブジェクトです。</p>
+
+<h3 id="event_listening_">Event: 'listening'</h3>
+
+<p><code>function () { }</code></p>
+
+<p>ソケットでデータグラムの待ち受けを開始すると生成されます。
+これは UDP ソケットが作成されるとすぐに発生します。
+UNIX ドメインソケットでは <code>bind()</code> を呼び出すまで待ち受けを開始しません。</p>
+
+<h3 id="event_close_">Event: 'close'</h3>
+
+<p><code>function () { }</code></p>
+
+<p><code>close()</code> によってソケットがクローズすると生成されます。
+このソケットでは新しい <code>message</code> イベントは生成されなくなります。</p>
+
+<h3 id="dgram.createSocket">dgram.createSocket(type, [callback])</h3>
+
+<p>指定された種類のデータグラムソケットを作成します。
+妥当な種類は: <code>udp4</code>、<code>udp6</code>、そして<code>unix_dgram</code> です。</p>
+
+<p>オプションのコールバックは <code>message</code> イベントのリスナーとして加えられます。</p>
+
+<h3 id="dgram.send">dgram.send(buf, offset, length, path, [callback])</h3>
+
+<p>UNIX ドメインのデータグラムソケット用です。相手先のアドレスはファイルシステムのパス名です。
+オプションのコールバックはOSによって<code>sendto</code>の呼び出しが完了した後に起動されるために提供されるかもしれません。
+コールバックが呼び出されるまで <code>buf</code> の再利用は安全ではありません。
+<code>bind()</code> によってソケットがパスネームにバインドされていない限り、
+このソケットでメッセージを受信することはないことに注意してください。</p>
+
+<p>UNIXドメインソケット <code>/var/run/syslog</code> を通じて OSX 上の syslogd にメッセージを送信する例:</p>
+
+<pre><code>var dgram = require('dgram');
+var message = new Buffer("A message to log.");
+var client = dgram.createSocket("unix_dgram");
+client.send(message, 0, message.length, "/var/run/syslog",
+  function (err, bytes) {
+    if (err) {
+      throw err;
+    }
+    console.log("Wrote " + bytes + " bytes to socket.");
+});</code></pre>
+
+<h3 id="dgram.send">dgram.send(buf, offset, length, port, address, [callback])</h3>
+
+<p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。
+<code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。
+DNS エラーと <code>buf</code> が再利用可能になった時のためにオプションのコールバックを指定することができます。
+DNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。
+送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。</p>
+
+<p><code>localhost</code> の適当なポートに UDP パケットを送信する例;</p>
+
+<pre><code>var dgram = require('dgram');
+var message = new Buffer("Some bytes");
+var client = dgram.createSocket("udp4");
+client.send(message, 0, message.length, 41234, "localhost");
+client.close();</code></pre>
+
+<h3 id="dgram.bind">dgram.bind(path)</h3>
+
+<p>UNIX ドメインのデータグラムソケット用です。
+<code>path</code> で指定されたソケット上でデータグラムの着信待ち受けを開始します。
+クライアントは <code>bind()</code> しなくても <code>send()</code> することができますが、
+<code>bind()</code> しないでデータグラムを受信することはありません。</p>
+
+<p>受信した全てのメッセージをエコーバックする UNIX ドメインのデータグラムソケットサーバの例:</p>
+
+<pre><code>var dgram = require("dgram");
+var serverPath = "/tmp/dgram_server_sock";
+var server = dgram.createSocket("unix_dgram");
+
+server.on("message", function (msg, rinfo) {
+  console.log("got: " + msg + " from " + rinfo.address);
+  server.send(msg, 0, msg.length, rinfo.address);
+});
+
+server.on("listening", function () {
+  console.log("server listening " + server.address().address);
+})
+
+server.bind(serverPath);</code></pre>
+
+<p>このサーバと対話する UNIX ドメインのデータグラムクライアントの例:</p>
+
+<pre><code>var dgram = require("dgram");
+var serverPath = "/tmp/dgram_server_sock";
+var clientPath = "/tmp/dgram_client_sock";
+
+var message = new Buffer("A message at " + (new Date()));
+
+var client = dgram.createSocket("unix_dgram");
+
+client.on("message", function (msg, rinfo) {
+  console.log("got: " + msg + " from " + rinfo.address);
+});
+
+client.on("listening", function () {
+  console.log("client listening " + client.address().address);
+  client.send(message, 0, message.length, serverPath);
+});
+
+client.bind(clientPath);</code></pre>
+
+<h3 id="dgram.bind">dgram.bind(port, [address])</h3>
+
+<p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを待ち受けます。
+<code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。</p>
+
+<p>41234 番ポートを待ち受ける UDP サーバの例:</p>
+
+<pre><code>var dgram = require("dgram");
+
+var server = dgram.createSocket("udp4");
+
+server.on("message", function (msg, rinfo) {
+  console.log("server got: " + msg + " from " +
+    rinfo.address + ":" + rinfo.port);
+});
+
+server.on("listening", function () {
+  var address = server.address();
+  console.log("server listening " +
+      address.address + ":" + address.port);
+});
+
+server.bind(41234);
+// server listening 0.0.0.0:41234</code></pre>
+
+<h3 id="dgram.close">dgram.close()</h3>
+
+<p>下層のソケットをクローズし、データの待ち受けを終了します。
+<code>bind()</code> が呼び出されていない、自動的にメッセージを待ち受けていた UDP ソケットでも同じです。</p>
+
+<h3 id="dgram.address">dgram.address()</h3>
+
+<p>オブジェクトが持っているソケットのアドレス情報を返します。
+UDP ソケットでは、このオブジェクトは <code>address</code> と <code>port</code> を持っています。
+UNIX ドメインソケットでは、<code>address</code> だけを持っています。</p>
+
+<h3 id="dgram.setBroadcast">dgram.setBroadcast(flag)</h3>
+
+<p>ソケットのオプション <code>SO_BROADCAST</code> を設定またはクリアします。
+このオプションが設定されると、UDP パケットはローカルインタフェースのブロードキャスト用アドレスに送信されます。</p>
+
+<h3 id="dgram.setTTL">dgram.setTTL(ttl)</h3>
+
+<p>ソケットオプションの <code>IP_TTL</code> を設定します。
+TTL は「生存期間」を表しますが、このコンテキストではパケットが通過を許可される IP のホップ数を指定します。
+各ルータまたはゲートウェイはパケットを送出する際 TTL をデクリメントします。
+ルータによって TTL がデクリメントされて 0 になるとそれは送出されません。
+TTL 値の変更は通常、ネットワークの調査やマルチキャストで使われます。</p>
+
+<p><code>setTTL()</code> の引数は 1 から 255 のホップ数でです。ほとんどのシステムでデフォルトは 64 です。</p>
+
+<h3 id="dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</h3>
+
+<p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。
+TTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。
+それぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。
+TTL がルーターによって 0 までデクリメントされると、それは転送されません。
+<code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。
+ほとんどのシステムでデフォルトは 64 です。</p>
+
+<h3 id="dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</h3>
+
+<p><code>IP_MULTICAST_LOOP</code> ソケットオプションを設定またはクリアします。
+このオプションが設定されると、マルチキャストのパケットはローカルインタフェースでも受信できるようになります。</p>
+
+<h3 id="dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</h3>
+
+<p><code>IP_ADD_MEMBERSHIP</code> ソケットオプションを設定し、マルチキャストグループに参加することをカーネルに伝えます。</p>
+
+<p><code>multicastAddress</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップに加えようとします。</p>
+
+<h3 id="dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</h3>
+
+<p><code>addMembership</code> の反対です - <code>IP_DROP_MEMBERSHIP</code> ソケットオプションによって、マルチキャストグループから抜けることをカーネルに伝えます。
+これはソケットのクローズ時やプロセスの終了時にカーネルによって自動的に呼び出されるため、ほとんどのアプリケーションはこれを呼び出す必要がありません。</p>
+
+<p><code>multicastAddress</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップから削除しようとします。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

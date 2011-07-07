@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>path - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#path">Path</a><ul><li><a href="#path.normalize">path.normalize(p)</a></li><li><a href="#path.join">path.join([path1], [path2], [...])</a></li><li><a href="#path.resolve">path.resolve([from ...], to)</a></li><li><a href="#path.dirname">path.dirname(p)</a></li><li><a href="#path.basename">path.basename(p, [ext])</a></li><li><a href="#path.extname">path.extname(p)</a></li><li><a href="#path.exists">path.exists(p, [callback])</a></li><li><a href="#path.existsSync">path.existsSync(p)</a></li></ul></li></ul><hr /></div>
+<h2 id="path">Path</h2>
+
+<p>このモジュールはファイルパスを扱うユーティリティを含みます。
+利用するには<code>require('path')</code>を呼び出してください。
+このモジュールは以下のメソッドを提供します。</p>
+
+<h3 id="path.normalize">path.normalize(p)</h3>
+
+<p>文字列によるパスを正規化します。<code>'..'</code> と <code>'.'</code> の要素には注意してください。</p>
+
+<p>複数のスラッシュが見つかると、それらは一つに置換されます;
+パスの最後にスラッシュが含まれていると、それは維持されます。
+Windows ではバックスラッシュが使われます。</p>
+
+<p>例:</p>
+
+<pre><code>path.normalize('/foo/bar//baz/asdf/quux/..')
+// returns
+'/foo/bar/baz/asdf'</code></pre>
+
+<h3 id="path.join">path.join([path1], [path2], [...])</h3>
+
+<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。</p>
+
+<p>例:</p>
+
+<pre><code>node&gt; require('path').join(
+...   '/foo', 'bar', 'baz/asdf', 'quux', '..')
+'/foo/bar/baz/asdf'</code></pre>
+
+<h3 id="path.resolve">path.resolve([from ...], to)</h3>
+
+<p><code>to</code> の絶対パスを解決します。</p>
+
+<p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。
+全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。
+結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。</p>
+
+<p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。</p>
+
+<p>例:</p>
+
+<pre><code>path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')</code></pre>
+
+<p>これは以下と同様です。</p>
+
+<pre><code>cd foo/bar
+cd /tmp/file/
+cd ..
+cd a/../subfile
+pwd</code></pre>
+
+<p>違いは、それぞれのパスが必ずしも存在する必要がないことと、ファイルでも構わないことです。</p>
+
+<p>例:</p>
+
+<pre><code>path.resolve('/foo/bar', './baz')
+// returns
+'/foo/bar/baz'
+
+path.resolve('/foo/bar', '/tmp/file/')
+// returns
+'/tmp/file'
+
+path.resolve('wwwroot', 'static_files/png/', '../gif/image.gif')
+// if currently in /home/myself/node, it returns
+'/home/myself/node/wwwroot/static_files/gif/image.gif'</code></pre>
+
+<h3 id="path.dirname">path.dirname(p)</h3>
+
+<p>パスに含まれるディレクトリ名を返します。Unixの <code>dirname</code> コマンドと同様です。</p>
+
+<p>例:</p>
+
+<pre><code>path.dirname('/foo/bar/baz/asdf/quux')
+// returns
+'/foo/bar/baz/asdf'</code></pre>
+
+<h3 id="path.basename">path.basename(p, [ext])</h3>
+
+<p>パスの最後の要素を返します。Unixの <code>basename</code> コマンドと同様です。</p>
+
+<p>例:</p>
+
+<pre><code>path.basename('/foo/bar/baz/asdf/quux.html')
+// returns
+'quux.html'
+
+path.basename('/foo/bar/baz/asdf/quux.html', '.html')
+// returns
+'quux'</code></pre>
+
+<h3 id="path.extname">path.extname(p)</h3>
+
+<p>パスの拡張子を返します。
+パスの最後の要素について、最後の '.' から後にある文字列が対象になります。
+最後の要素に '.' が含まれていなかった場合、もしくは '.' が最初の文字だった場合は、空の文字列を返します。
+例:</p>
+
+<pre><code>path.extname('index.html')
+// returns
+'.html'
+
+path.extname('index')
+// returns
+''</code></pre>
+
+<h3 id="path.exists">path.exists(p, [callback])</h3>
+
+<p>与えられたパスが存在するかどうか検査します。
+そして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。
+例:</p>
+
+<pre><code>path.exists('/etc/passwd', function (exists) {
+  util.debug(exists ? "it's there" : "no passwd!");
+});</code></pre>
+
+<h3 id="path.existsSync">path.existsSync(p)</h3>
+
+<p>同期版の <code>path.exists</code> です。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

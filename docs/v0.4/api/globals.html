@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>globals - Node.js Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#global_Objects">Global Objects</a><ul><li><a href="#global">global</a></li><li><a href="#process">process</a></li><li><a href="#console">console</a></li><li><a href="#require">require()</a></li><li><a href="#require.resolve">require.resolve()</a></li><li><a href="#require.cache">require.cache</a></li><li><a href="#require.paths">require.paths</a></li><li><a href="#__filename">__filename</a></li><li><a href="#__dirname">__dirname</a></li><li><a href="#module">module</a></li><li><a href="#setTimeout">setTimeout(cb, ms)</a></li><li><a href="#clearTimeout">clearTimeout(t)</a></li><li><a href="#setInterval">setInterval(cb, ms)</a></li><li><a href="#clearInterval">clearInterval(t)</a></li></ul></li></ul><hr /></div>
+<h2 id="global_Objects">Global Objects</h2>
+
+<p>これらのオブジェクトは全てのモジュールで有効です。
+これらのオブジェクトのいくつかは実際はグローバルスコープではなくモジュールスコープです - 注意してください。</p>
+
+<h3 id="global">global</h3>
+
+<p>グローバルなネームスペースのオブジェクトです。</p>
+
+<p>ブラウザでは、トップレベルのスコープはグローバルスコープです。
+これは、ブラウザではグローバルスコープで <code>var something</code> と定義するとグローバル変数になることを意味します。
+Node では異なります。
+トップレベルのスコープはグローバルスコープではありません;
+Node のモジュール内での <code>var something</code> はそのモジュールでローカルになります。</p>
+
+<h3 id="process">process</h3>
+
+<p>プロセスオブジェクトです。<a href="process.html#process">process object</a> の節を参照してください。</p>
+
+<h3 id="console">console</h3>
+
+<p>標準出力および標準エラー出力へのプリントに使われます。
+<a href="stdio.html">標準入出力</a> を参照してください。</p>
+
+<h3 id="require">require()</h3>
+
+<p>require モジュールを指します。<a href="modules.html#modules">モジュール</a> の節を参照してください。
+<code>require</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+
+<h3 id="require.resolve">require.resolve()</h3>
+
+<p><code>require()</code> の内部でモジュールの位置を検索するために使われます。
+モジュールのロードは行わず、ファイル名を解決して返すだけです。</p>
+
+<h3 id="require.cache">require.cache</h3>
+
+<p>モジュールが要求されると、このオブジェクトの中にキャッシュされます。
+このオブジェクトからキーと値を削除すると、次にそのモジュールが
+<code>require</code> されたときにリロードされます。</p>
+
+<h3 id="require.paths">require.paths</h3>
+
+<p><code>require()</code> のためのサーチパスの配列です。
+この配列はカスタムパスを追加するために変更することができます。</p>
+
+<p>例: サーチリストの先頭に新しいパスを追加する</p>
+
+<pre><code>require.paths.unshift('/usr/local/node');</code></pre>
+
+<h3 id="__filename">__filename</h3>
+
+<p>実行されているスクリプトのファイル名です。これは絶対パスであり、
+必ずしもコマンドライン引数で渡されたファイル名と同じではありません。</p>
+
+<p>例: <code>node example.js</code> を <code>/Users/mjr</code> で実行する</p>
+
+<pre><code>console.log(__filename);
+// /Users/mjr/example.js</code></pre>
+
+<p><code>__filename</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+
+<h3 id="__dirname">__dirname</h3>
+
+<p>スクリプトが実行されているディレクトリ名です。</p>
+
+<p>例: <code>node example.js</code> を <code>/Users/mjr</code> で実行する</p>
+
+<pre><code>console.log(__dirname);
+// /Users/mjr</code></pre>
+
+<p><code>__dirname</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+
+<h3 id="module">module</h3>
+
+<p>現在のモジュールへの参照です。
+特に <code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
+より詳しくは <code>src/node.js</code> を参照してください。
+<code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+
+<h3 id="setTimeout">setTimeout(cb, ms)</h3>
+
+<h3 id="clearTimeout">clearTimeout(t)</h3>
+
+<h3 id="setInterval">setInterval(cb, ms)</h3>
+
+<h3 id="clearInterval">clearInterval(t)</h3>
+
+<p>タイマー関数はグローバル変数です。<a href="timers.html">タイマー</a> を参照してください。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <style type="text/css">
+    ul {
+      padding: 0;
+      margin: 0;
+    }
+    </style>
+    <link type="image/x-icon" rel="icon" href="favicon.ico" />
+    <link type="image/x-icon" rel="shortcut icon" href="favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="pipe.css" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>node v0.4 announcement</title>
+  </head>
+  <body>
+    <!--
+    <h2>Second Stable Branch of Node released</h2>
+    -->
+    <h2>Nodeの2番目の安定版リリース</h2>
+
+    <p>
+    <!--
+    <a
+      href="https://github.com/ry/node/wiki/Migrating-from-v0.2-to-v0.3">Wiki
+    page detailing API changes between v0.4 and v0.2</a>
+    -->
+    <a
+      href="https://github.com/ry/node/wiki/Migrating-from-v0.2-to-v0.3">Wiki
+    ページに v0.2 から v0.4 の間の API の変更の詳細</a>があります。
+
+    <p>
+    <!--
+    Major changes since v0.2:
+    -->
+    v0.2 からの主な変更:
+
+    <ul>
+      <!--
+      <li> Major overhaul of TLS/SSL system. Previously the binding to
+      OpenSSL was heavily interwoven into the socket code. This binding was
+      reworked to present each connection as a pair of "streams" instead: a
+      duplex encrypted stream and a duplex cleartext stream. The encrypted
+      stream is piped to a raw TCP socket using the general purpose
+      <code>Stream.prototype.pipe()</code> method. Functionality was
+      enhanced and API simplified.
+      -->
+      <li> TLS/SSL システムが大きくオーバーホールされました。
+      前のOpenSSLへのバインディングはソケットのコードに激しく混入していました。
+      このバインディングはコネクションを「ストリーム」のペアとして提示するために作り替えられました:
+      双方向の暗号化されたストリームと双方向の平文のストリームです。
+      暗号化されたストリームは、汎用目的の <code>Stream.prototype.pipe()</code>
+      メソッドによって生の TCP ソケットにつながれます。
+      機能は拡張されましたが、APIは単純化されました。
+
+      <!--
+      <li>Simpler HTTP client API with connection pools.
+      -->
+      <li>コネクションプールを備えた、よりシンプルな HTTP クライアント API。
+
+      <!--
+      <li> Cheaper <code>Buffer</code> allocation. Node uses
+      <code>Buffer</code> objects in many places - it was noticed that they
+      were relatively slow to allocate and difficult to garbage collect. The
+      implementation changed to use pure javascript objects instead of
+      an <code>ObjectWrap</code> which improved performance.
+      -->
+      <li> より低コストな <code>Buffer</code> の割り当て。
+      Node は多くの場所で <code>Buffer</code> オブジェクトを使用します -
+      それは割り当てが相対的に遅く、ガーベッジコレクションが困難です。
+      実装を <code>ObjectWrap</code> ではなく純粋な JavaScript 
+      オブジェクトに変更したことで、パフォーマンスが改善しました。
+
+      <!--
+      <li> With a good amount of experience now, some modifications to the
+      module loading system were made to better support package managers.
+      In particular, NPM was forced to resort to deep symlinks and "shim"
+      modules to work around missing features in <code>require()</code>. The main
+      changes are:
+      -->
+      <li> 多くのよい知見により、パッケージマネージャをよりよくサポートするために
+      モジュールのローディングシステムが変更されました。
+      特に NPM は、深いシンボリックリンクや <code>require()</code> 
+      に欠けていた機能に対処するために "shim" モジュールを強制されていました。
+      主な変更は:
+      <ol>
+        <!--
+        <li><code>require()</code> calls realpath. That is,
+        it resolves symbolic links. This allows symlinked modules to make
+        relative requires.
+        -->
+        <li><code>require()</code> はリアルパスで呼び出します。
+        それはシンボリックリンクを解決します。
+        これはシンボリックリンクによるモジュールを相対的に要求することを可能にします。
+
+        <!--
+        <li><code>require()</code> now has a primitive understanding of
+        <code>package.json</code>. It looks for the <code>main</code>
+        script. This allows <code>require()</code> to work on package
+        directories directly.
+        -->
+        <li><code>require()</code> は今や最低限の <code>package.json</code>
+        を理解します。
+        それは <code>main</code> スクリプトを認識します。
+        これで <code>require()</code> はパッケージのディレクトリを直接扱えるようになりました。
+
+        <!--
+        <li>A specially named directory, <code>node_modules/</code>, is
+        searched in the current directory for any modules. This will
+        hopefully encourage programmers to bundle modules rather than
+        rely on a global namespace.
+        -->
+        <li>特別な名前のディレクトリ <code>node_modules/</code> は、
+        モジュールの現在のディレクトリから探されます。
+        これはグローバルな名前空間に頼るのではなく、モジュールを束にすることをプログラマに推奨します。
+      </ol>
+      <!--
+      Read more about these features in <a
+        href="https://github.com/ry/node/blob/01a864a29d64119054401784cd9255c3a813bdbc/doc/api/modules.markdown">the
+        module documentation</a>.
+      -->
+      この機能をより詳しく知るには <a 
+        href="http://nodejs.jp/nodejs.org_ja/api/modules.html">モジュールのドキュメント</a>
+      を参照してください。
+
+      <!--
+      <li> A half-complete but good start a native windows build with MinGW
+      is underway by Bert Builder. Build instructions can be found <a
+        href="https://github.com/ry/node/wiki/Building-node.js-on-mingw">on
+        the wiki</a>.
+      -->
+      <li> まだ未完成ですが、MinGW を使用したネイティブ Windows ビルドが Bert Builder によって始まりました。
+      ビルド手順は <a 
+        href="https://github.com/ry/node/wiki/Building-node.js-on-mingw">Wiki</a>
+      にあります。
+
+      <!--
+      <li> Node upgraded to the latest version of V8, <code>v3.1.2</code>.
+      This includes much work including V8's new compilation infrastructure
+      and a GDB plugin on Linux.
+      Read <a
+        href="https://github.com/ry/node/blob/583f2e599962f2664dbaafa0ae98a8d6c1242441/deps/v8/ChangeLog">the
+        full V8 ChangeLog</a>.
+      -->
+      <li> Node は最新版の V8 <code>v3.1.2</code> にアップグレードしました。
+      それには V8 の新しいコンパイラ・インフラストラクチャや Linux での GDB 
+      プラグインが含まれています。 <a
+        href="https://github.com/ry/node/blob/583f2e599962f2664dbaafa0ae98a8d6c1242441/deps/v8/ChangeLog">
+        完全な V8 の変更履歴</a> を参照してください。
+
+      <!--
+      <li>A new built-in client for V8's debugger was added to Node. It is
+      still very primitive but usable for simple task. There is a <a
+        href="http://vimeo.com/19465332">small introduction video</a> and
+      some <a
+        href="https://github.com/ry/node/blob/01a864a29d64119054401784cd9255c3a813bdbc/doc/api/debugger.markdown">documentation</a>.
+      -->
+      <li>V8 デバッガの組み込みクライアントが Node に追加されました。
+      それは最低限のものですが、シンプルな作業には便利です。 <a
+        href="http://vimeo.com/19465332">紹介ビデオ</a>
+      や <a
+        href="http://nodejs.jp/nodejs.org_ja/api/debugger.html">ドキュメント</a>
+      を参照してください。
+
+      <!--
+      <li>An <code>os</code> module was added by Brian White which exposes
+      a lot of basic but useful system information: <code>os.cpus(),
+        os.freemem(), os.totalmem(), os.loadavg()</code>
+      -->
+      Brian White によって <code>os</code> モジュールが基本的ながら有益なシステム情報を提供するようになりました:
+      <code>os.cpus(), os.freemem(), os.totalmem(), os.loadavg()</code>
+
+      <!--
+      <li> And, of course, many of bug fixes. See the
+      <a
+        href="https://github.com/ry/node/blob/01a864a29d64119054401784cd9255c3a813bdbc/ChangeLog">full
+        changelog</a>.
+      -->
+      <li>そしてもちろん、多くのバグが修正されました。
+      <a
+        href="https://github.com/ry/node/blob/01a864a29d64119054401784cd9255c3a813bdbc/ChangeLog">完全な
+        変更履歴</a> を参照してください。
+
+    </ul>
+
+  </body>
+</html>
