@@ -40,13 +40,18 @@ Windows ではバックスラッシュが使われます。</p>
 
 <h3 id="path.join">path.join([path1], [path2], [...])</h3>
 
-<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。</p>
+<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。
+文字列でない引数は無視されます。</p>
 
 <p>例:</p>
 
-<pre><code>node&gt; require('path').join(
-...   '/foo', 'bar', 'baz/asdf', 'quux', '..')
-'/foo/bar/baz/asdf'</code></pre>
+<pre><code>path.join('/foo', 'bar', 'baz/asdf', 'quux', '..')
+// returns
+'/foo/bar/baz/asdf'
+
+path.join('foo', {}, 'bar')
+// returns
+'foo/bar'</code></pre>
 
 <h3 id="path.resolve">path.resolve([from ...], to)</h3>
 
@@ -54,7 +59,8 @@ Windows ではバックスラッシュが使われます。</p>
 
 <p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。
 全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。
-結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。</p>
+結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。
+文字列でない引数は無視されます。</p>
 
 <p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。</p>
 
