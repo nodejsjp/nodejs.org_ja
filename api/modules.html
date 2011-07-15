@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>modules - Node.js Manual &amp; Documentation</title>
+  <title>modules - Node.js v0.5.1 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.1 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#aMD_Compatibility">AMD Compatibility</a><ul><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#module.require">module.require</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#aMD_Compatibility">AMD Compatibility</a><ul><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
 <h2 id="standard_Modules">Standard Modules</h2>
 
 <p>Node は多くのコンパイル済みのモジュールを備えています。
@@ -174,6 +174,16 @@ a.on('ready', function() {
 
 <pre><code>var x = require('./x');
 console.log(x.a);</code></pre>
+
+<h3 id="module.require">module.require</h3>
+
+<p><code>module.require</code> メソッドは、元のモジュールが <code>require()</code>
+を呼び出したかのようにモジュールをロードするために提供されています。</p>
+
+<p>それには <code>module</code> オブジェクトの参照が必要なことに注意してください。
+<code>require()</code> が <code>exports</code> を返した後、一般的に <code>module</code> 
+はそのモジュールのコードで <em>のみ</em> 利用可能です。
+それが使われるようにするには、明示的にエクスポートする必要があります。</p>
 
 <h3 id="all_Together...">All Together...</h3>
 
