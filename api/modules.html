@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>modules - Node.js v0.5.1 Manual &amp; Documentation</title>
+  <title>modules - Node.js v0.5.2 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.1 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.2 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#module.require">module.require</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</a><ul><li><a href="#note_Please_Avoid_Modifying_require.paths_">Note:** Please Avoid Modifying `require.paths`</a><ul><li><a href="#setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</a></li><li><a href="#putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</a></li><li><a href="#zero_Isolation">Zero Isolation</a></li></ul></li></ul></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#aMD_Compatibility">AMD Compatibility</a><ul><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#module.require">module.require</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_global_folders">Loading from the global folders</a></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#aMD_Compatibility">AMD Compatibility</a></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
 <h2 id="standard_Modules">Standard Modules</h2>
 
 <p>Node は多くのコンパイル済みのモジュールを備えています。
@@ -231,64 +231,22 @@ NODE_MODULES_PATHS(START)
    c. let I = I - 1
 6. return DIRS</code></pre>
 
-<h3 id="loading_from_the_require.paths_Folders">Loading from the `require.paths` Folders</h3>
+<h3 id="loading_from_the_global_folders">Loading from the global folders</h3>
 
-<p><code>require.paths</code> は、指定されたモジュール名が <code>'/'</code> や <code>'./'</code> や <code>'../'</code> から始まっていないときにモジュールを探しにいくパスを文字列として保持している配列です。
-例えば、require.pathsが次のように設定されているとします: </p>
+<p><code>NODE_PATH</code> 環境変数に絶対パスをコロンで区切ったリストを設定すると、
+node は他で見つからなかったモジュールをそれらのパスから探します。
+(注意: Windows では、<code>NODE_PATH</code> はコロンではなくセミコロンで区切られます)</p>
 
-<pre><code>[ '/home/micheil/.node_modules',
-  '/usr/local/lib/node_modules' ]</code></pre>
+<p>加えると、node は以下の場所から検索します。</p>
 
-<p>そして、 <code>require('baz/baz.js')</code> を呼ぶと次の場所を探しにいきます:</p>
+<ul><li>1: <code>$HOME/.node_modules</code></li><li>2: <code>$HOME/.node_libraries</code></li><li>3: <code>$PREFIX/lib/node</code></li></ul>
 
-<ul><li>1: <code>'/home/micheil/.node_modules/bar/baz.js'</code></li><li>2: <code>'/usr/local/lib/node_modules/bar/baz.js'</code></li></ul>
+<p><code>$HOME</code> はユーザのホームディレクトリ、<code>$PREFIX</code> は node を
+configure した時の <code>installPrefix</code> です。</p>
 
-<p>これらの動作を修正することができるよう、 <code>require.paths</code> 配列は実行時に変更することができます。</p>
-
-<p><code>require.paths</code> は <code>NODE_PATH</code> という環境変数の値によって初期化されます。
-<code>NODE_PATH</code> にはコロンで区切った複数のパスを記述することができます。
-上の例では、 <code>NODE_PATH</code> には次のような値がセットされていたものと考えられます:</p>
-
-<pre><code>/home/micheil/.node_modules:/usr/local/lib/node_modules</code></pre>
-
-<p><code>require.paths</code> からロードされるのは、モジュールが前述の <code>node_modules</code> アルゴリズムで見つけられなかった場合だけです。
-グローバルモジュールはバンドルされた依存性よりも低プライオリティです。</p>
-
-<h4 id="_Note_Please_Avoid_Modifying_require.paths_">**Note:** Please Avoid Modifying `require.paths`</h4>
-
-<p>将来のバージョンでは <code>require.paths</code> は無くなる予定です。</p>
-
-<p>実装当時はよいアイデアだと思われ実験的に使う分にはとても有用でしたが、実際に使いだしてみると変更可能な <code>require.paths</code> のリストというものはやっかいな混乱と頭痛の種になることがしばしばあったのです。</p>
-
-<h5 id="setting_require.paths_to_some_other_value_does_nothing.">Setting `require.paths` to some other value does nothing.</h5>
-
-<p>次のコードは、希望通りには動きません:</p>
-
-<pre><code>require.paths = [ '/usr/lib/node' ];</code></pre>
-
-<p>これは、 <em>実際の</em> Node モジュールへの参照パスを消滅させ、使われることのないパスに対する新たな参照を作り出しています。</p>
-
-<h5 id="putting_relative_paths_in_require.paths_is..._weird.">Putting relative paths in `require.paths` is... weird.</h5>
-
-<p>次のようにするとします:</p>
-
-<pre><code>require.paths.push('./lib');</code></pre>
-
-<p>これは、ファイルシステム上の <code>./lib</code> のある場所への絶対パスを追加する <em>わけではありません</em> 。
-代わりに、文字通り <code>'./lib'</code> を追加します。
-すなわち、もし <code>/a/b/x.js</code> ファイル内で <code>require('y.js')</code> した場合、 <code>/a/b/lib/y.js</code> を探しにいきます。
-同様に <code>/l/m/n/o/p.js</code> ファイル内で <code>require('y.js')</code> した場合は、 <code>/l/m/n/o/lib/y.js</code> を探しにいきます。</p>
-
-<p>実際に、これらはアドホックな依存性をバンドルするために用いられています。
-しかしこれらのテクニックはとても不安定です。</p>
-
-<h5 id="zero_Isolation">Zero Isolation</h5>
-
-<p>（残念なことに）たった一つの <code>require.paths</code> 配列が全てのモジュールによって使われるという設計になっています。</p>
-
-<p>その結果、もしある Node プログラムが上記の挙動を行っていたら、同じプロセス上にいる他の全ての Node プログラムの動作も永遠にそして微妙に変化させてしまいます。
-アプリケーションが成長するにつれ、私たちは機能をまとめていきますが、
-それらがどのように影響するかを予測するのが難しくなります。</p>
+<p>これらは主に歴史的な理由によるものです。
+あなたが依存するものはローカルの <code>node_modules</code> フォルダに置くことが
+強く推奨されます。それは素早くロードされ、確実です。</p>
 
 <h3 id="accessing_the_main_module">Accessing the main module</h3>
 
@@ -334,21 +292,6 @@ node プログラムには関係がないので、その他の引数は無視さ
 <strong>実際には同期的です</strong>。<code>define()</code> を使用してもこの事実は変わりません。
 Node はコールバックをすぐに実行します。
 それに応じてプログラムを設計してください。</li></ul>
-
-<h3 id="accessing_the_main_module">Accessing the main module</h3>
-
-<p>ファイルが Node によって直接実行される場合、そのファイルの <code>module</code> が
-<code>require.main</code> に設定されます。
-これは、ファイルが直接実行されているかテストできることを意味します。</p>
-
-<pre><code>require.main === module</code></pre>
-
-<p><code>foo.js</code> ファイルでは、<code>node foo.js</code> と実行された場合これは <code>true</code>
-となりますが、<code>require('./foo')</code> の場合は <code>false</code> となります。</p>
-
-<p><code>module</code> は <code>filename</code> プロパティ (通常 <code>__filename</code> と同じです)
-を提供するので、現在のアプリケーションのエントリポイントを
-<code>require.main.filename</code> で得ることが出来ます。</p>
 
 <h2 id="addenda_Package_Manager_Tips">Addenda: Package Manager Tips</h2>
 
