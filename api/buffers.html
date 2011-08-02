@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>buffers - Node.js v0.5.2 Manual &amp; Documentation</title>
+  <title>buffers - Node.js v0.5.3 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.2 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.3 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#buffers">Buffers</a><ul><li><a href="#new_Buffer">new Buffer(size)</a></li><li><a href="#new_Buffer">new Buffer(array)</a></li><li><a href="#new_Buffer">new Buffer(str, encoding='utf8')</a></li><li><a href="#buffer.write">buffer.write(string, offset=0, encoding='utf8')</a></li><li><a href="#buffer.toString">buffer.toString(encoding, start=0, end=buffer.length)</a></li><li><a href="#buffer_index_">buffer[index]</a></li><li><a href="#buffer.isBuffer">Buffer.isBuffer(obj)</a></li><li><a href="#buffer.byteLength">Buffer.byteLength(string, encoding='utf8')</a></li><li><a href="#buffer.length">buffer.length</a></li><li><a href="#buffer.copy">buffer.copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)</a></li><li><a href="#buffer.slice">buffer.slice(start, end=buffer.length)</a></li><li><a href="#buffer.readUInt8">buffer.readUInt8(offset, endian)</a></li><li><a href="#buffer.readUInt16">buffer.readUInt16(offset, endian)</a></li><li><a href="#buffer.readUInt32">buffer.readUInt32(offset, endian)</a></li><li><a href="#buffer.readInt8">buffer.readInt8(offset, endian)</a></li><li><a href="#buffer.readInt16">buffer.readInt16(offset, endian)</a></li><li><a href="#buffer.readInt32">buffer.readInt32(offset, endian)</a></li><li><a href="#buffer.readFloat">buffer.readFloat(offset, endian)</a></li><li><a href="#buffer.readDouble">buffer.readDouble(offset, endian)</a></li><li><a href="#buffer.writeUInt8">buffer.writeUInt8(value, offset, endian)</a></li><li><a href="#buffer.writeUInt16">buffer.writeUInt16(value, offset, endian)</a></li><li><a href="#buffer.writeUInt32">buffer.writeUInt32(value, offset, endian)</a></li><li><a href="#buffer.writeInt8">buffer.writeInt8(value, offset, endian)</a></li><li><a href="#buffer.writeInt16">buffer.writeInt16(value, offset, endian)</a></li><li><a href="#buffer.writeInt32">buffer.writeInt32(value, offset, endian)</a></li><li><a href="#buffer.writeFloat">buffer.writeFloat(value, offset, endian)</a></li><li><a href="#buffer.writeDouble">buffer.writeDouble(value, offset, endian)</a></li><li><a href="#buffer.fill">buffer.fill(value, offset=0, length=-1)</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#buffers">Buffers</a><ul><li><a href="#new_Buffer">new Buffer(size)</a></li><li><a href="#new_Buffer">new Buffer(array)</a></li><li><a href="#new_Buffer">new Buffer(str, encoding='utf8')</a></li><li><a href="#buffer.write">buffer.write(string, offset=0, length=buffer.length-offset, encoding='utf8')</a></li><li><a href="#buffer.toString">buffer.toString(encoding, start=0, end=buffer.length)</a></li><li><a href="#buffer_index_">buffer[index]</a></li><li><a href="#buffer.isBuffer">Buffer.isBuffer(obj)</a></li><li><a href="#buffer.byteLength">Buffer.byteLength(string, encoding='utf8')</a></li><li><a href="#buffer.length">buffer.length</a></li><li><a href="#buffer.copy">buffer.copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)</a></li><li><a href="#buffer.slice">buffer.slice(start, end=buffer.length)</a></li><li><a href="#buffer.readUInt8">buffer.readUInt8(offset, endian)</a></li><li><a href="#buffer.readUInt16">buffer.readUInt16(offset, endian)</a></li><li><a href="#buffer.readUInt32">buffer.readUInt32(offset, endian)</a></li><li><a href="#buffer.readInt8">buffer.readInt8(offset, endian)</a></li><li><a href="#buffer.readInt16">buffer.readInt16(offset, endian)</a></li><li><a href="#buffer.readInt32">buffer.readInt32(offset, endian)</a></li><li><a href="#buffer.readFloat">buffer.readFloat(offset, endian)</a></li><li><a href="#buffer.readDouble">buffer.readDouble(offset, endian)</a></li><li><a href="#buffer.writeUInt8">buffer.writeUInt8(value, offset, endian)</a></li><li><a href="#buffer.writeUInt16">buffer.writeUInt16(value, offset, endian)</a></li><li><a href="#buffer.writeUInt32">buffer.writeUInt32(value, offset, endian)</a></li><li><a href="#buffer.writeInt8">buffer.writeInt8(value, offset, endian)</a></li><li><a href="#buffer.writeInt16">buffer.writeInt16(value, offset, endian)</a></li><li><a href="#buffer.writeInt32">buffer.writeInt32(value, offset, endian)</a></li><li><a href="#buffer.writeFloat">buffer.writeFloat(value, offset, endian)</a></li><li><a href="#buffer.writeDouble">buffer.writeDouble(value, offset, endian)</a></li><li><a href="#buffer.fill">buffer.fill(value, offset=0, length=-1)</a></li></ul></li></ul><hr /></div>
 <h2 id="buffers">Buffers</h2>
 
 <p>純粋な JavaScript は Unicode と相性がいいものの、バイナリデータの扱いはうまくありません。
@@ -56,10 +56,10 @@ BMP (基本多言語面、U+0000～U+FFFF) のみエンコードすることが�
 
 <p>与えられた <code>str</code> を内容とする新しいバッファを割り当てます。</p>
 
-<h3 id="buffer.write">buffer.write(string, offset=0, encoding='utf8')</h3>
+<h3 id="buffer.write">buffer.write(string, offset=0, length=buffer.length-offset, encoding='utf8')</h3>
 
 <p>与えられたエンコーディングを使用して、<code>string</code> をバッファの <code>offset</code> から書き込みます。
-書き込まれたオクテット数を返します。
+<code>length</code> は書き込むバイト数です。書き込まれたオクテット数を返します。
 もし <code>buffer</code> が文字列全体を挿入するのに十分なスペースを含んでいなければ、文字列の一部だけを書き込みます。
 このメソッドは文字の一部だけを書き込むことはありません。</p>
 
@@ -191,8 +191,8 @@ buf[2] = 0x23;
 buf[3] = 0x42;
 
 for (ii = 0; ii &lt; buf.length; ii++) {
-  console.log(buf.readUInt8(ii, 'big');
-  console.log(buf.readUInt8(ii, 'little');
+  console.log(buf.readUInt8(ii, 'big'));
+  console.log(buf.readUInt8(ii, 'little'));
 }
 
 // 0x3
@@ -219,12 +219,12 @@ buf[1] = 0x4;
 buf[2] = 0x23;
 buf[3] = 0x42;
 
-console.log(buf.readUInt16(0, 'big');
-console.log(buf.readUInt16(0, 'little');
-console.log(buf.readUInt16(1, 'big');
-console.log(buf.readUInt16(1, 'little');
-console.log(buf.readUInt16(2, 'big');
-console.log(buf.readUInt16(2, 'little');
+console.log(buf.readUInt16(0, 'big'));
+console.log(buf.readUInt16(0, 'little'));
+console.log(buf.readUInt16(1, 'big'));
+console.log(buf.readUInt16(1, 'little'));
+console.log(buf.readUInt16(2, 'big'));
+console.log(buf.readUInt16(2, 'little'));
 
 // 0x0304
 // 0x0403
@@ -248,8 +248,8 @@ buf[1] = 0x4;
 buf[2] = 0x23;
 buf[3] = 0x42;
 
-console.log(buf.readUInt32(0, 'big');
-console.log(buf.readUInt32(0, 'little');
+console.log(buf.readUInt32(0, 'big'));
+console.log(buf.readUInt32(0, 'little'));
 
 // 0x03042342
 // 0x42230403</code></pre>
@@ -296,7 +296,7 @@ buf[1] = 0x00;
 buf[2] = 0x80;
 buf[3] = 0x3f;
 
-console.log(buf.readFloat(0, 'little');
+console.log(buf.readFloat(0, 'little'));
 
 // 0x01</code></pre>
 
@@ -319,7 +319,7 @@ buf[5] = 0x55;
 buf[6] = 0xd5;
 buf[7] = 0x3f;
 
-console.log(buf.readDouble(0, 'little');
+console.log(buf.readDouble(0, 'little'));
 
 // 0.3333333333333333</code></pre>
 
