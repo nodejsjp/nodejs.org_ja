@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>tls - Node.js v0.5.3 Manual &amp; Documentation</title>
+  <title>tls - Node.js v0.5.4 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.3 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.4 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#s_tls.connect">s = tls.connect(port, [host], [options], callback)</a></li><li><a href="#sTARTTLS">STARTTLS</a></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#tls.createServer">tls.createServer(options, secureConnectionListener)</a></li><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#s_tls.connect">s = tls.connect(port, [host], [options], callback)</a></li><li><a href="#sTARTTLS">STARTTLS</a></li><li><a href="#nPN_and_SNI">NPN and SNI</a></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#tls.createServer">tls.createServer(options, secureConnectionListener)</a></li><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.addContext">server.addContext(hostname, credentials)</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li></ul></li></ul><hr /></div>
 <h2 id="tLS_">TLS (SSL)</h2>
 
 <p><code>require('tls')</code> でこのモジュールにアクセスします。</p>
@@ -55,7 +55,11 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 
 <ul><li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です (必須)。</p></li><li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p></li><li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
-これらはコネクションの認証に使われます。</p></li></ul>
+これらはコネクションの認証に使われます。</p></li><li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> 
+の配列です。
+<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>
+最初のバイトは次のプロトコル名の長さです
+(通常、配列を渡す方がシンプルです: <code>['hello', 'world']</code>)。</p></li><li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p></li></ul>
 
 <p><code>tls.connect()</code> は平文の <code>CryptoStream</code> オブジェクトを返します。</p>
 
@@ -63,7 +67,9 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 <code>callback</code> は証明書がサーバに認証されたかどうかに関わらず呼び出されます。
 サーバ証明書が指定した認証局に承認されたかチェックするために
 <code>s.authorized</code> を確認するかはユーザ次第です。
-<code>s.authorized === false</code>の場合、<code>s.authorizationError</code> からエラーを見つけることができます。</p>
+<code>s.authorized === false</code>の場合、<code>s.authorizationError</code> からエラーを見つけることができます。
+同様に NPN が使われている場合は <code>s.npnProtocol</code> から合意されたプロトコルを
+チェックすることが出来ます。</p>
 
 <h3 id="sTARTTLS">STARTTLS</h3>
 
@@ -75,6 +81,13 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 平文のストリームはその後ユーザとのインタラクションで使われます。</p>
 
 <p><a href="http://gist.github.com/848444">ここにそのコードがあります。</a></p>
+
+<h3 id="nPN_and_SNI">NPN and SNI</h3>
+
+<p>NPN (Next Protocol Negotitation) と SNI (Server Name Indication) は
+TLS の拡張で、以下を可能にします。</p>
+
+<ul><li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li><li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li></ul>
 
 <h3 id="tls.Server">tls.Server</h3>
 
@@ -112,7 +125,15 @@ tls.createServer(options, function (s) {
 デフォルトは <code>false</code> です。</p></li><li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、
 サーバは提供された認証局のリストによって認証されていないコネクションを破棄します．
 このオプションは <code>requestCert</code> が <code>true</code> の場合だけ効果があります。
-デフォルトは <code>false</code> です。</p></li></ul>
+デフォルトは <code>false</code> です。</p></li><li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列
+(プロトコルはその優先度に応じて並んでいる必要があります)。</p></li><li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に
+呼び出される関数です。
+<code>servername</code> が唯一の引数として渡されます。
+<code>SNICallback</code> は SecureContext のインスタンスを返す必要があります
+(SecureContext を取得するために <code>crypto.createCredentials(...).context</code>
+を使用することができます)。
+<code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして
+後述する高水準 API が使用されます。</p></li></ul>
 
 <h4 id="event_secureConnection_">Event: 'secureConnection'</h4>
 
@@ -126,7 +147,10 @@ tls.createServer(options, function (s) {
 <code>cleartextStream.authorized</code> が false の場合、
 <code>cleartextStream.authorizationError</code> にはどのように認証が失敗したのかが設定されます。
 暗黙的ですが言及する価値のあること:
-TLS サーバの設定に依存しますが、認証されていないコネクションも受け入れられることがあります。</p>
+TLS サーバの設定に依存しますが、認証されていないコネクションも受け入れられることがあります。
+<code>cleartextStream.npnProtocol</code> は、選択された NPN プロトコルを持つ文字列です。
+<code>cleartextStream.servername</code> は、SNI でリクエストされたサーバ名を持つ
+文字列です。</p>
 
 <h4 id="server.listen">server.listen(port, [host], [callback])</h4>
 
@@ -142,6 +166,12 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
 
 <p>サーバが新しい接続を受け入れることを終了します。
 この関数は非同期で、サーバが最終的にクローズされるとサーバは <code>'close'</code> イベントを生成します。</p>
+
+<h4 id="server.addContext">server.addContext(hostname, credentials)</h4>
+
+<p>クライアントが要求してきた SNI ホスト名と <code>hostname</code> (ワイルドカードを使用可能)
+がマッチした場合のセキュリティコンテキストを追加します。
+<code>credentials</code> は <code>key</code>、<code>cert</code>、そして <code>ca</code> を含むことができます。</p>
 
 <h4 id="server.maxConnections">server.maxConnections</h4>
 

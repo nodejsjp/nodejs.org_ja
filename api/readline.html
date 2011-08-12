@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>readline - Node.js v0.5.3 Manual &amp; Documentation</title>
+  <title>readline - Node.js v0.5.4 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,75 +11,145 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.3 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.4 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#readline">Readline</a><ul><li><a href="#createInterface">createInterface(input, output, completer)</a></li><li><a href="#interface.setPrompt">interface.setPrompt(prompt, length)</a></li><li><a href="#interface.prompt">interface.prompt()</a></li><li><a href="#interface.question">interface.question(query, cb)</a></li><li><a href="#interface.close">interface.close()</a></li><li><a href="#interface.pause">interface.pause()</a></li><li><a href="#interface.resume">interface.resume()</a></li><li><a href="#interface.write">interface.write()</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#readline">Readline</a><ul><li><a href="#rl.createInterface">rl.createInterface(input, output, completer)</a></li><li><a href="#rl.setPrompt">rl.setPrompt(prompt, length)</a></li><li><a href="#rl.prompt">rl.prompt()</a></li><li><a href="#rl.question">rl.question(query, callback)</a></li><li><a href="#rl.close">rl.close()</a></li><li><a href="#rl.pause">rl.pause()</a></li><li><a href="#rl.resume">rl.resume()</a></li><li><a href="#rl.write">rl.write()</a></li><li><a href="#event_line_">Event: 'line'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li></ul><hr /></div>
 <h2 id="readline">Readline</h2>
 
-<p>このモジュールはストリーム (たとえば標準入力)
-を行ごとに読み込むことを可能にします。</p>
+<p>このモジュールを使用するには、<code>require('readline')</code> をします。
+Readline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。</p>
 
 <p>このモジュールを一度起動すると、このインタフェースと 
 (標準入力などの) ストリームをクローズするまで node
 プログラムは終了しないことに注意してください。
 きれいに終了する方法を以下に示します:</p>
 
-<p>&lt;pre&gt;
-var readline = require('readline');</p>
+<pre><code>var rl = require('readline');
 
-<p>var i = readline.createInterface(process.sdtin, process.stdout, null);
+var i = rl.createInterface(process.sdtin, process.stdout, null);
 i.question("What do you think of node.js?", function(answer) {
-  //TODO: Log the answer in a database
+  // TODO: Log the answer in a database
   console.log("Thank you for your valuable feedback.");
-  i.close();                //These two lines together allow the program to
-  process.stdin.destroy();  //terminate. Without them, it would run forever.
-});
-&lt;/pre&gt;</p>
 
-<h3 id="createInterface">createInterface(input, output, completer)</h3>
+  // These two lines together allow the program to terminate. Without
+  // them, it would run forever.
+  i.close();
+  process.stdin.destroy();
+});</code></pre>
 
-<p><code>input</code> を読み込み、<code>output</code> へ書き込むインターフェースオブジェクトを返します。
-TODO: <code>completer</code> は TAB による補完に使われると思いますが、確かではありません。</p>
+<h3 id="rl.createInterface">rl.createInterface(input, output, completer)</h3>
 
-<h3 id="interface.setPrompt">interface.setPrompt(prompt, length)</h3>
+<p>二つのストリームを受け取り、readline のインタフェースを作成します。
+<code>completer</code> 関数は補完のために使われます。
+それは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>
+を返します。</p>
 
-<p>TODO</p>
+<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と
+<code>process.stdout</code> が使用されます。</p>
 
-<h3 id="interface.prompt">interface.prompt()</h3>
+<pre><code>var readline = require('readline'),
+  rl = readline.createInterface(process.stdin, process.stdout);</code></pre>
 
-<p>TODO: プロンプトを表示するために呼び出されると思われる。</p>
+<h3 id="rl.setPrompt">rl.setPrompt(prompt, length)</h3>
 
-<h3 id="interface.question">interface.question(query, cb)</h3>
+<p>プロンプトを設定します。
+たとえば、コマンドプロンプトで <code>node</code> コマンドを実行すると、
+<code>&gt; </code> を見ることができます。これが Node のプロンプトです。</p>
 
-<p><code>query</code> を表示しして、ユーザが応答をタイプするとコールバックが呼び出されます。</p>
+<h3 id="rl.prompt">rl.prompt()</h3>
+
+<p>ユーザからの入力を 1 行読み込みます。
+現在の <code>setPrompt()</code> の値を新しい行に出力し、
+ユーザに新しい入力エリアを与えます。</p>
+
+<h3 id="rl.question">rl.question(query, callback)</h3>
+
+<p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。
+ユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。</p>
 
 <p>使用例:</p>
 
-<p>&lt;pre&gt;
-interface.question("What is your favorite food?", function(answer) {
-  console.log("Oh, so your favorite food is " + answer);
+<pre><code>interface.question('What is your favorite food?', function(answer) {
+  console.log('Oh, so your favorite food is ' + answer);
+});</code></pre>
+
+<h3 id="rl.close">rl.close()</h3>
+
+<p>tty をクローズします。</p>
+
+<h3 id="rl.pause">rl.pause()</h3>
+
+<p>tty からの入力を中断します。</p>
+
+<h3 id="rl.resume">rl.resume()</h3>
+
+<p>tty からの入力を再開します。</p>
+
+<h3 id="rl.write">rl.write()</h3>
+
+<p>tty へ出力します。</p>
+
+<h3 id="event_line_">Event: 'line'</h3>
+
+<p><code>function (line) {}</code></p>
+
+<p><code>in</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
+通常、ユーザがエンターまたはリターンを打つごとに受信します。
+これはユーザ入浴のよいフックとなります。</p>
+
+<p><code>line</code> を監視する例:</p>
+
+<pre><code>rl.on('line', function (cmd) {
+  console.log('You just typed: '+cmd);
+});</code></pre>
+
+<h3 id="event_close_">Event: 'close'</h3>
+
+<p><code>function () {}</code></p>
+
+<p><code>in</code> ストリームから <code>^C</code> または <code>^D</code> を受信すると生成されます。
+それぞれ <code>SIGINT</code> および <code>EOT</code> として知られています。
+これはユーザがプログラムの使用を終わらせようとしていることを知るよい方法です。</p>
+
+<p><code>close</code> を監視し、その後プログラムを終了する例:</p>
+
+<pre><code>rl.on('close', function() {
+  console.log('goodbye!');
+  process.exit(0);
+});</code></pre>
+
+<p>全てを一緒に使う、小さなコマンドラインインタフェースの例:</p>
+
+<pre><code>var readline = require('readline'),
+  rl = readline.createInterface(process.stdin, process.stdout),
+  prefix = 'OHAI&gt; ';
+
+rl.on('line', function(line) {
+  switch(line.trim()) {
+    case 'hello':
+      console.log('world!');
+      break;
+    default:
+      console.log('Say what? I might have heard `' + line.trim() + '`');
+      break;
+  }
+  rl.setPrompt(prefix, prefix.length);
+  rl.prompt();
+}).on('close', function() {
+  console.log('Have a great day!');
+  process.exit(0);
 });
-&lt;/pre&gt;</p>
+console.log(prefix + 'Good to see you. Try typing stuff.');
+rl.setPrompt(prefix, prefix.length);
+rl.prompt();</code></pre>
 
-<h3 id="interface.close">interface.close()</h3>
-
-<p>TODO</p>
-
-<h3 id="interface.pause">interface.pause()</h3>
-
-<p>TODO</p>
-
-<h3 id="interface.resume">interface.resume()</h3>
-
-<p>TODO</p>
-
-<h3 id="interface.write">interface.write()</h3>
-
-<p>TODO</p>
+<p>より複雑な <a href="https://gist.github.com/901104">例</a> や、実践的なユースケースとして
+<a href="http://github.com/cloudhead/http-console">http-console</a>
+を見ることが出来ます。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
