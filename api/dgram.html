@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>dgram - Node.js v0.5.4 Manual &amp; Documentation</title>
+  <title>dgram - Node.js v0.5.5 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,17 +11,16 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.4 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.5 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#uDP_Datagram_Sockets">UDP / Datagram Sockets</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, path, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(path)</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li><li><a href="#dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</a></li><li><a href="#dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</a></li><li><a href="#dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</a></li><li><a href="#dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#uDP_Datagram_Sockets">UDP / Datagram Sockets</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li><li><a href="#dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</a></li><li><a href="#dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</a></li><li><a href="#dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</a></li><li><a href="#dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li></ul></li></ul><hr /></div>
 <h2 id="uDP_Datagram_Sockets">UDP / Datagram Sockets</h2>
 
-<p>データグラムソケットは <code>require('dgram')</code> で利用可能になります。
-データグラムはほとんどの場合 IP/UDP メッセージで扱われますが、UNIX ドメインソケットでも使用することができます。</p>
+<p>データグラムソケットは <code>require('dgram')</code> で利用可能になります。</p>
 
 <h3 id="event_message_">Event: 'message'</h3>
 
@@ -35,8 +34,7 @@
 <p><code>function () { }</code></p>
 
 <p>ソケットでデータグラムの待ち受けを開始すると生成されます。
-これは UDP ソケットが作成されるとすぐに発生します。
-UNIX ドメインソケットでは <code>bind()</code> を呼び出すまで待ち受けを開始しません。</p>
+これは UDP ソケットが作成されるとすぐに発生します。</p>
 
 <h3 id="event_close_">Event: 'close'</h3>
 
@@ -48,30 +46,15 @@ UNIX ドメインソケットでは <code>bind()</code> を呼び出すまで待
 <h3 id="dgram.createSocket">dgram.createSocket(type, [callback])</h3>
 
 <p>指定された種類のデータグラムソケットを作成します。
-妥当な種類は: <code>udp4</code>、<code>udp6</code>、そして<code>unix_dgram</code> です。</p>
+妥当な種類は <code>udp4</code> と <code>udp6</code>です。</p>
 
 <p>オプションのコールバックは <code>message</code> イベントのリスナーとして加えられます。</p>
 
-<h3 id="dgram.send">dgram.send(buf, offset, length, path, [callback])</h3>
-
-<p>UNIX ドメインのデータグラムソケット用です。相手先のアドレスはファイルシステムのパス名です。
-オプションのコールバックはOSによって<code>sendto</code>の呼び出しが完了した後に起動されるために提供されるかもしれません。
-コールバックが呼び出されるまで <code>buf</code> の再利用は安全ではありません。
-<code>bind()</code> によってソケットがパスネームにバインドされていない限り、
-このソケットでメッセージを受信することはないことに注意してください。</p>
-
-<p>UNIXドメインソケット <code>/var/run/syslog</code> を通じて OSX 上の syslogd にメッセージを送信する例:</p>
-
-<pre><code>var dgram = require('dgram');
-var message = new Buffer("A message to log.");
-var client = dgram.createSocket("unix_dgram");
-client.send(message, 0, message.length, "/var/run/syslog",
-  function (err, bytes) {
-    if (err) {
-      throw err;
-    }
-    console.log("Wrote " + bytes + " bytes to socket.");
-});</code></pre>
+<p>データグラムを受信したい場合は <code>socket.bind()</code> を呼び出します。
+<code>socket.bind()</code> は「全てのインタフェース」のアドレスにランダムなポート
+(<code>udp4</code> と <code>udp6</code> ソケットの両方で正しいものです) をバインドします。
+そのアドレスとポートは <code>socket.address().address</code> および
+<code>socket.address().port</code> で取得することができます。</p>
 
 <h3 id="dgram.send">dgram.send(buf, offset, length, port, address, [callback])</h3>
 
@@ -81,6 +64,10 @@ DNS エラーと <code>buf</code> が再利用可能になった時のために�
 DNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。
 送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。</p>
 
+<p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、
+ランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます
+(<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。</p>
+
 <p><code>localhost</code> の適当なポートに UDP パケットを送信する例;</p>
 
 <pre><code>var dgram = require('dgram');
@@ -88,51 +75,6 @@ var message = new Buffer("Some bytes");
 var client = dgram.createSocket("udp4");
 client.send(message, 0, message.length, 41234, "localhost");
 client.close();</code></pre>
-
-<h3 id="dgram.bind">dgram.bind(path)</h3>
-
-<p>UNIX ドメインのデータグラムソケット用です。
-<code>path</code> で指定されたソケット上でデータグラムの着信待ち受けを開始します。
-クライアントは <code>bind()</code> しなくても <code>send()</code> することができますが、
-<code>bind()</code> しないでデータグラムを受信することはありません。</p>
-
-<p>受信した全てのメッセージをエコーバックする UNIX ドメインのデータグラムソケットサーバの例:</p>
-
-<pre><code>var dgram = require("dgram");
-var serverPath = "/tmp/dgram_server_sock";
-var server = dgram.createSocket("unix_dgram");
-
-server.on("message", function (msg, rinfo) {
-  console.log("got: " + msg + " from " + rinfo.address);
-  server.send(msg, 0, msg.length, rinfo.address);
-});
-
-server.on("listening", function () {
-  console.log("server listening " + server.address().address);
-})
-
-server.bind(serverPath);</code></pre>
-
-<p>このサーバと対話する UNIX ドメインのデータグラムクライアントの例:</p>
-
-<pre><code>var dgram = require("dgram");
-var serverPath = "/tmp/dgram_server_sock";
-var clientPath = "/tmp/dgram_client_sock";
-
-var message = new Buffer("A message at " + (new Date()));
-
-var client = dgram.createSocket("unix_dgram");
-
-client.on("message", function (msg, rinfo) {
-  console.log("got: " + msg + " from " + rinfo.address);
-});
-
-client.on("listening", function () {
-  console.log("client listening " + client.address().address);
-  client.send(message, 0, message.length, serverPath);
-});
-
-client.bind(clientPath);</code></pre>
 
 <h3 id="dgram.bind">dgram.bind(port, [address])</h3>
 
@@ -161,14 +103,12 @@ server.bind(41234);
 
 <h3 id="dgram.close">dgram.close()</h3>
 
-<p>下層のソケットをクローズし、データの待ち受けを終了します。
-<code>bind()</code> が呼び出されていない、自動的にメッセージを待ち受けていた UDP ソケットでも同じです。</p>
+<p>下層のソケットをクローズし、データの待ち受けを終了します。</p>
 
 <h3 id="dgram.address">dgram.address()</h3>
 
 <p>オブジェクトが持っているソケットのアドレス情報を返します。
-UDP ソケットでは、このオブジェクトは <code>address</code> と <code>port</code> を持っています。
-UNIX ドメインソケットでは、<code>address</code> だけを持っています。</p>
+このオブジェクトは <code>address</code> と <code>port</code> を持っています。</p>
 
 <h3 id="dgram.setBroadcast">dgram.setBroadcast(flag)</h3>
 

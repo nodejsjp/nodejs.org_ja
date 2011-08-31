@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>tls - Node.js v0.5.4 Manual &amp; Documentation</title>
+  <title>tls - Node.js v0.5.5 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.4 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.5 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#s_tls.connect">s = tls.connect(port, [host], [options], callback)</a></li><li><a href="#sTARTTLS">STARTTLS</a></li><li><a href="#nPN_and_SNI">NPN and SNI</a></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#tls.createServer">tls.createServer(options, secureConnectionListener)</a></li><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.addContext">server.addContext(hostname, credentials)</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#s_tls.connect">s = tls.connect(port, [host], [options], callback)</a></li><li><a href="#sTARTTLS">STARTTLS</a></li><li><a href="#nPN_and_SNI">NPN and SNI</a></li><li><a href="#pair_tls.createSecurePair">pair = tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a><ul><li><a href="#event_secure_">Event: 'secure'</a></li></ul></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#tls.createServer">tls.createServer(options, secureConnectionListener)</a></li><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.addContext">server.addContext(hostname, credentials)</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li><li><a href="#tls.CleartextStream">tls.CleartextStream</a><ul><li><a href="#cleartextStream.authorized">cleartextStream.authorized</a></li><li><a href="#cleartextStream.authorizationError">cleartextStream.authorizationError</a></li><li><a href="#cleartextStream.getPeerCertificate">cleartextStream.getPeerCertificate()</a></li></ul></li></ul></li></ul><hr /></div>
 <h2 id="tLS_">TLS (SSL)</h2>
 
 <p><code>require('tls')</code> でこのモジュールにアクセスします。</p>
@@ -61,7 +61,8 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 最初のバイトは次のプロトコル名の長さです
 (通常、配列を渡す方がシンプルです: <code>['hello', 'world']</code>)。</p></li><li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p></li></ul>
 
-<p><code>tls.connect()</code> は平文の <code>CryptoStream</code> オブジェクトを返します。</p>
+<p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a> 
+オブジェクトを返します。</p>
 
 <p>TLS/SSL ハンドシェークの後で <code>callback</code> が呼び出されます。
 <code>callback</code> は証明書がサーバに認証されたかどうかに関わらず呼び出されます。
@@ -88,6 +89,32 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 TLS の拡張で、以下を可能にします。</p>
 
 <ul><li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li><li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li></ul>
+
+<h3 id="pair_tls.createSecurePair">pair = tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</h3>
+
+<p>二つのストリームを持つセキュアペアオブジェクトを作成します。
+一つは暗号化されたデータを読み書きし、もう一つは平文のデータを読み書きします。
+通常、暗号化されたストリームに外部からの暗号化されたデータが連結され、
+暗号化されたストリームの代わりに平文のストリームが使われます。</p>
+
+<ul><li><p><code>credentials</code>: <code>crypto.createCredentials( ... )</code> で作成された
+証明書オブジェクト。</p></li><li><p><code>isServer</code>: この TLS コネクションをサーバとしてオープンするかどうかを示す
+ブーリアン値。</p></li><li><p><code>requestCert</code>: クライアントからの接続に対して、サーバがクライアントに
+証明書を要求するかどうかを示すブーリアン値。
+サーバコネクションにのみ適用されます。</p></li><li><p><code>rejectUnauthorized</code>: クライアント認証が不正だった場合に、
+自動的にクライアントを破棄するかどうかを示すブーリアン値。
+<code>requestCert</code> が有効なサーバにのみ適用されます。</p></li></ul>
+
+<p><code>tls.createSequrePair()</code> は、<a href="#tls.CleartextStream">cleartext</a> と <code>encrypted</code>
+をプロパティとして持つ <code>SecurePair</code> オブジェクトを返します。</p>
+
+<h4 id="event_secure_">Event: 'secure'</h4>
+
+<p>SecurePair オブジェクトのペアが安全な接続を確立した場合に発生します。</p>
+
+<p>サーバの <code>'secureConnection'</code> イベントと同様に、
+<code>pari.cleartext.authorized</code> によって接続相手の証明書を承認できたかどうかを
+チェックすることができます。</p>
 
 <h3 id="tls.Server">tls.Server</h3>
 
@@ -140,7 +167,7 @@ tls.createServer(options, function (s) {
 <p><code>function (cleartextStream) {}</code></p>
 
 <p>このイベントは、新しい接続のハンドシェークが成功した場合に生成されます。
-引数は <code>stream.Stream</code> のインスタンスです。
+引数は <a href="#tls.CleartextStream">CleartextStream</a> のインスタンスです。
 これはストリームに共通する全てのメソッドとイベントを持っています。</p>
 
 <p><code>cleartextStream.authorized</code> は提供された認証局のいずれかによって認証されたかを示す boolean 値です。
@@ -180,6 +207,54 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
 <h4 id="server.connections">server.connections</h4>
 
 <p>サーバの並行コネクションの数です。</p>
+
+<h3 id="tls.CleartextStream">tls.CleartextStream</h3>
+
+<p>暗号化されたストリーム上で、暗号化されたデータを平文のデータとして
+読み書きすることができるストリームです。</p>
+
+<p>このインスタンスは双方向の <a href="streams.html#streams">Stream</a> インタフェースを
+実装します。
+ストリームに共通な全てのメソッドとイベントを持ちます。</p>
+
+<h4 id="cleartextStream.authorized">cleartextStream.authorized</h4>
+
+<p>接続相手の証明書が CA の一つによって署名されていれば <code>true</code>、
+そうでなければ <code>false</code> です。</p>
+
+<h4 id="cleartextStream.authorizationError">cleartextStream.authorizationError</h4>
+
+<p>接続相手の証明書が認証されなかった理由です。
+このプロパティは <code>cleartextStream.authorized === false</code>
+の場合だけ利用可能になります。</p>
+
+<h4 id="cleartextStream.getPeerCertificate">cleartextStream.getPeerCertificate()</h4>
+
+<p>接続相手の証明書を表現するオブジェクトを返します。
+返されるオブジェクトは証明書のフィールドに対応するプロパティを持ちます。</p>
+
+<p>例:</p>
+
+<pre><code>{ subject: 
+   { C: 'UK',
+     ST: 'Acknack Ltd',
+     L: 'Rhys Jones',
+     O: 'node.js',
+     OU: 'Test TLS Certificate',
+     CN: 'localhost' },
+  issuer: 
+   { C: 'UK',
+     ST: 'Acknack Ltd',
+     L: 'Rhys Jones',
+     O: 'node.js',
+     OU: 'Test TLS Certificate',
+     CN: 'localhost' },
+  valid_from: 'Nov 11 09:52:22 2009 GMT',
+  valid_to: 'Nov  6 09:52:22 2029 GMT',
+  fingerprint: '2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF' }</code></pre>
+
+<p>接続相手が証明書を提供しなかった場合は、
+<code>null</code> または空のオブジェクトを返します。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
