@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>streams - Node.js v0.5.5 Manual &amp; Documentation</title>
+  <title>streams - Node.js v0.5.6 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.5 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -134,8 +134,9 @@ process.stdin.on("end", function() {
 
 <p><code>function () { }</code></p>
 
-<p>呼び出された <code>write()</code> メソッドが <code>false</code> で戻った後に生成され、
-再び安全に書き込むことができるようになったことを示します。</p>
+<p><code>write()</code> メソッドが <code>false</code> でリターンした後、
+再び安全に書き込むことができるようになったことを示すために、
+このイベントは生成されます。</p>
 
 <h3 id="event_error_">Event: 'error'</h3>
 
@@ -181,7 +182,9 @@ process.stdin.on("end", function() {
 
 <h3 id="stream.end">stream.end()</h3>
 
-<p>ストリームを EOF または FIN で終了します。</p>
+<p>ストリームを EOF または FIN で終了します。
+この呼び出しは、ストリームがクローズされる前にキューイングされたデータが
+送信されることを許します。</p>
 
 <h3 id="stream.end">stream.end(string, encoding)</h3>
 
@@ -194,7 +197,8 @@ process.stdin.on("end", function() {
 
 <h3 id="stream.destroy">stream.destroy()</h3>
 
-<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。</p>
+<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+キューイングされたデータは送信されません。</p>
 
 <h3 id="stream.destroySoon">stream.destroySoon()</h3>
 

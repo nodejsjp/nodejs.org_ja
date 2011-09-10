@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>fs - Node.js v0.5.5 Manual &amp; Documentation</title>
+  <title>fs - Node.js v0.5.6 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.5 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -28,6 +28,9 @@
 引数として渡される完了コールバックはメソッドに依存しますが、
 最初の引数は常に例外のために予約されています。
 操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります</p>
+
+<p>同期の形式では、全ての例外はすぐにスローされます。
+例外は try/catch で捕まえることも、そのまま通過させることもできます。</p>
 
 <p>非同期バージョンの例です:</p>
 
@@ -203,15 +206,16 @@ fs.stat('/tmp/world', function (err, stats) {
 
 <h3 id="fs.readlink">fs.readlink(path, [callback])</h3>
 
-<p>非同期の readlink(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。</p>
+<p>非同期の readlink(2)。コールバックは 2 つの引数を受け取る <code>(err, linkString)</code>です。</p>
 
 <h3 id="fs.readlinkSync">fs.readlinkSync(path)</h3>
 
-<p>同期の readlink(2)。解決されたパスを返します。</p>
+<p>同期の readlink(2)。シンボリックリンクの持つ文字列値を返します。</p>
 
 <h3 id="fs.realpath">fs.realpath(path, [callback])</h3>
 
-<p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。</p>
+<p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。
+相対パスを解決するために <code>process.cwd</code> を使用することができます。</p>
 
 <h3 id="fs.realpathSync">fs.realpathSync(path)</h3>
 
