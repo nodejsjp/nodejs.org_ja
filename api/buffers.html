@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>buffers - Node.js v0.5.4 Manual &amp; Documentation</title>
+  <title>buffers - Node.js v0.5.6 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.4 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#buffers">Buffers</a><ul><li><a href="#new_Buffer">new Buffer(size)</a></li><li><a href="#new_Buffer">new Buffer(array)</a></li><li><a href="#new_Buffer">new Buffer(str, encoding='utf8')</a></li><li><a href="#buffer.write">buffer.write(string, offset=0, length=buffer.length-offset, encoding='utf8')</a></li><li><a href="#buffer.toString">buffer.toString(encoding, start=0, end=buffer.length)</a></li><li><a href="#buffer_index_">buffer[index]</a></li><li><a href="#buffer.isBuffer">Buffer.isBuffer(obj)</a></li><li><a href="#buffer.byteLength">Buffer.byteLength(string, encoding='utf8')</a></li><li><a href="#buffer.length">buffer.length</a></li><li><a href="#buffer.copy">buffer.copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)</a></li><li><a href="#buffer.slice">buffer.slice(start, end=buffer.length)</a></li><li><a href="#buffer.readUInt8">buffer.readUInt8(offset, bigEndian)</a></li><li><a href="#buffer.readUInt16">buffer.readUInt16(offset, bigEndian)</a></li><li><a href="#buffer.readUInt32">buffer.readUInt32(offset, bigEndian)</a></li><li><a href="#buffer.readInt8">buffer.readInt8(offset, bigEndian)</a></li><li><a href="#buffer.readInt16">buffer.readInt16(offset, bigEndian)</a></li><li><a href="#buffer.readInt32">buffer.readInt32(offset, bigEndian)</a></li><li><a href="#buffer.readFloat">buffer.readFloat(offset, bigEndian)</a></li><li><a href="#buffer.readDouble">buffer.readDouble(offset, bigEndian)</a></li><li><a href="#buffer.writeUInt8">buffer.writeUInt8(value, offset, bigEndian)</a></li><li><a href="#buffer.writeUInt16">buffer.writeUInt16(value, offset, bigEndian)</a></li><li><a href="#buffer.writeUInt32">buffer.writeUInt32(value, offset, bigEndian)</a></li><li><a href="#buffer.writeInt8">buffer.writeInt8(value, offset, bigEndian)</a></li><li><a href="#buffer.writeInt16">buffer.writeInt16(value, offset, bigEndian)</a></li><li><a href="#buffer.writeInt32">buffer.writeInt32(value, offset, bigEndian)</a></li><li><a href="#buffer.writeFloat">buffer.writeFloat(value, offset, bigEndian)</a></li><li><a href="#buffer.writeDouble">buffer.writeDouble(value, offset, bigEndian)</a></li><li><a href="#buffer.readUInt8NoChk">buffer.readUInt8NoChk(value, offset, bigEndian)</a></li><li><a href="#buffer.readUInt16NoChk">buffer.readUInt16NoChk(value, offset, bigEndian)</a></li><li><a href="#buffer.readUInt32NoChk">buffer.readUInt32NoChk(value, offset, bigEndian)</a></li><li><a href="#buffer.writeUInt8NoChk">buffer.writeUInt8NoChk(value, offset, bigEndian)</a></li><li><a href="#buffer.writeUInt16NoChk">buffer.writeUInt16NoChk(value, offset, bigEndian)</a></li><li><a href="#buffer.writeUInt32NoChk">buffer.writeUInt32NoChk(value, offset, bigEndian)</a></li><li><a href="#buffer.fill">buffer.fill(value, offset=0, length=-1)</a></li><li><a href="#iNSPECT_MAX_BYTES">INSPECT_MAX_BYTES</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#buffers">Buffers</a><ul><li><a href="#new_Buffer">new Buffer(size)</a></li><li><a href="#new_Buffer">new Buffer(array)</a></li><li><a href="#new_Buffer">new Buffer(str, encoding='utf8')</a></li><li><a href="#buffer.write">buffer.write(string, offset=0, length=buffer.length-offset, encoding='utf8')</a></li><li><a href="#buffer.toString">buffer.toString(encoding, start=0, end=buffer.length)</a></li><li><a href="#buffer_index_">buffer[index]</a></li><li><a href="#buffer.isBuffer">Buffer.isBuffer(obj)</a></li><li><a href="#buffer.byteLength">Buffer.byteLength(string, encoding='utf8')</a></li><li><a href="#buffer.length">buffer.length</a></li><li><a href="#buffer.copy">buffer.copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)</a></li><li><a href="#buffer.slice">buffer.slice(start, end=buffer.length)</a></li><li><a href="#buffer.readUInt8">buffer.readUInt8(offset, noAssert=false)</a></li><li><a href="#buffer.readUInt16LE">buffer.readUInt16LE(offset, noAssert=false)</a></li><li><a href="#buffer.readUInt16BE">buffer.readUInt16BE(offset, noAssert=false)</a></li><li><a href="#buffer.readUInt32LE">buffer.readUInt32LE(offset, noAssert=false)</a></li><li><a href="#buffer.readUInt32BE">buffer.readUInt32BE(offset, noAssert=false)</a></li><li><a href="#buffer.readInt8">buffer.readInt8(offset, noAssert=false)</a></li><li><a href="#buffer.readInt16LE">buffer.readInt16LE(offset, noAssert=false)</a></li><li><a href="#buffer.readInt16BE">buffer.readInt16BE(offset, noAssert=false)</a></li><li><a href="#buffer.readInt32LE">buffer.readInt32LE(offset, noAssert=false)</a></li><li><a href="#buffer.readInt32BE">buffer.readInt32BE(offset, noAssert=false)</a></li><li><a href="#buffer.readFloatLE">buffer.readFloatLE(offset, noAssert=false)</a></li><li><a href="#buffer.readFloatBE">buffer.readFloatBE(offset, noAssert=false)</a></li><li><a href="#buffer.readDoubleLE">buffer.readDoubleLE(offset, noAssert=false)</a></li><li><a href="#buffer.readDoubleBE">buffer.readDoubleBE(offset, noAssert=false)</a></li><li><a href="#buffer.writeUInt8">buffer.writeUInt8(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeUInt16LE">buffer.writeUInt16LE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeUInt16BE">buffer.writeUInt16BE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeUInt32LE">buffer.writeUInt32LE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeUInt32BE">buffer.writeUInt32BE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeInt8">buffer.writeInt8(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeInt16LE">buffer.writeInt16LE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeInt16BE">buffer.writeInt16BE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeInt32LE">buffer.writeInt32LE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeInt32BE">buffer.writeInt32BE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeFloatLE">buffer.writeFloatLE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeFloatBE">buffer.writeFloatBE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeDoubleLE">buffer.writeDoubleLE(value, offset, noAssert=false)</a></li><li><a href="#buffer.writeDoubleBE">buffer.writeDoubleBE(value, offset, noAssert=false)</a></li><li><a href="#buffer.fill">buffer.fill(value, offset=0, length=-1)</a></li><li><a href="#iNSPECT_MAX_BYTES">INSPECT_MAX_BYTES</a></li></ul></li></ul><hr /></div>
 <h2 id="buffers">Buffers</h2>
 
 <p>純粋な JavaScript は Unicode と相性がいいものの、バイナリデータの扱いはうまくありません。
@@ -134,7 +134,8 @@ console.log(buf.length);
 
 <h3 id="buffer.copy">buffer.copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)</h3>
 
-<p>バッファ間で memcpy() をします。</p>
+<p>バッファ間でコピーします。
+ソースとターゲットの領域は重なっていても構いません。</p>
 
 <p>例: バッファを2個作成し、<code>buf1</code> の 16 バイト目から 19 バイト目を、
 <code>buf2</code> の 8 バイト目から始まる位置へコピーします。</p>
@@ -175,11 +176,12 @@ console.log(buf2.toString('ascii', 0, buf2.length));
 // abc
 // !bc</code></pre>
 
-<h3 id="buffer.readUInt8">buffer.readUInt8(offset, bigEndian)</h3>
+<h3 id="buffer.readUInt8">buffer.readUInt8(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を符号無し 8bit 整数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイトを読み込みます。</p>
+<p>バッファの指定された位置を符号無し 8bit 整数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>例:</p>
 
@@ -191,24 +193,22 @@ buf[2] = 0x23;
 buf[3] = 0x42;
 
 for (ii = 0; ii &lt; buf.length; ii++) {
-  console.log(buf.readUInt8(ii, true));
-  console.log(buf.readUInt8(ii, false));
+  console.log(buf.readUInt8(ii);
 }
 
 // 0x3
-// 0x3
-// 0x4
 // 0x4
 // 0x23
-// 0x23
-// 0x42
 // 0x42</code></pre>
 
-<h3 id="buffer.readUInt16">buffer.readUInt16(offset, bigEndian)</h3>
+<h3 id="buffer.readUInt16LE">buffer.readUInt16LE(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を符号無し 16bit 整数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイト列を読み込みます。</p>
+<h3 id="buffer.readUInt16BE">buffer.readUInt16BE(offset, noAssert=false)</h3>
+
+<p>バッファの指定された位置を符号無し 16bit 整数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>例:</p>
 
@@ -219,12 +219,12 @@ buf[1] = 0x4;
 buf[2] = 0x23;
 buf[3] = 0x42;
 
-console.log(buf.readUInt16(0, true));
-console.log(buf.readUInt16(0, false));
-console.log(buf.readUInt16(1, true));
-console.log(buf.readUInt16(1, false));
-console.log(buf.readUInt16(2, true));
-console.log(buf.readUInt16(2, false));
+console.log(buf.readUInt16BE(0));
+console.log(buf.readUInt16LE(0));
+console.log(buf.readUInt16BE(1));
+console.log(buf.readUInt16LE(1));
+console.log(buf.readUInt16BE(2));
+console.log(buf.readUInt16LE(2));
 
 // 0x0304
 // 0x0403
@@ -233,11 +233,14 @@ console.log(buf.readUInt16(2, false));
 // 0x2342
 // 0x4223</code></pre>
 
-<h3 id="buffer.readUInt32">buffer.readUInt32(offset, bigEndian)</h3>
+<h3 id="buffer.readUInt32LE">buffer.readUInt32LE(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を符号無し 32bit 整数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイト列を読み込みます。</p>
+<h3 id="buffer.readUInt32BE">buffer.readUInt32BE(offset, noAssert=false)</h3>
+
+<p>バッファの指定された位置を符号無し 32bit 整数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>例:</p>
 
@@ -248,44 +251,54 @@ buf[1] = 0x4;
 buf[2] = 0x23;
 buf[3] = 0x42;
 
-console.log(buf.readUInt32(0, true));
-console.log(buf.readUInt32(0, false));
+console.log(buf.readUInt32BE(0));
+console.log(buf.readUInt32LE(0));
 
 // 0x03042342
 // 0x42230403</code></pre>
 
-<h3 id="buffer.readInt8">buffer.readInt8(offset, bigEndian)</h3>
+<h3 id="buffer.readInt8">buffer.readInt8(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を符号付き 8bit 整数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイトを読み込みます。</p>
+<p>バッファの指定された位置を符号付き 8bit 整数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は
 <code>buffer.readUInt8</code> と同じように動作します。</p>
 
-<h3 id="buffer.readInt16">buffer.readInt16(offset, bigEndian)</h3>
+<h3 id="buffer.readInt16LE">buffer.readInt16LE(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を符号付き 16bit 整数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイト列を読み込みます。</p>
+<h3 id="buffer.readInt16BE">buffer.readInt16BE(offset, noAssert=false)</h3>
+
+<p>バッファの指定された位置を符号付き 16bit 整数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は
 <code>buffer.readUInt16</code> と同じように動作します。</p>
 
-<h3 id="buffer.readInt32">buffer.readInt32(offset, bigEndian)</h3>
+<h3 id="buffer.readInt32LE">buffer.readInt32LE(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を符号付き 32bit 整数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイト列を読み込みます。</p>
+<h3 id="buffer.readInt32BE">buffer.readInt32BE(offset, noAssert=false)</h3>
+
+<p>バッファの指定された位置を符号付き 32bit 整数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は
 <code>buffer.readUInt32</code> と同じように動作します。</p>
 
-<h3 id="buffer.readFloat">buffer.readFloat(offset, bigEndian)</h3>
+<h3 id="buffer.readFloatLE">buffer.readFloatLE(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を 32bit 浮動小数点数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイト列を読み込みます。</p>
+<h3 id="buffer.readFloatBE">buffer.readFloatBE(offset, noAssert=false)</h3>
+
+<p>バッファの指定された位置を 32bit 浮動小数点数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>例:</p>
 
@@ -296,15 +309,18 @@ buf[1] = 0x00;
 buf[2] = 0x80;
 buf[3] = 0x3f;
 
-console.log(buf.readFloat(0, false));
+console.log(buf.readFloatLE(0));
 
 // 0x01</code></pre>
 
-<h3 id="buffer.readDouble">buffer.readDouble(offset, bigEndian)</h3>
+<h3 id="buffer.readDoubleLE">buffer.readDoubleLE(offset, noAssert=false)</h3>
 
-<p>バッファの指定された位置を 64bit 倍精度浮動小数点数として読み込みます。
-もし <code>bigEndian</code> が <code>true</code> ならビッグエンディアン、
-それ以外ならリトルエンディアンでバイト列を読み込みます。</p>
+<h3 id="buffer.readDoubleBE">buffer.readDoubleBE(offset, noAssert=false)</h3>
+
+<p>バッファの指定された位置を 64bit 倍精度浮動小数点数として読み込みます。</p>
+
+<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。
+これは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。</p>
 
 <p>例:</p>
 
@@ -319,161 +335,188 @@ buf[5] = 0x55;
 buf[6] = 0xd5;
 buf[7] = 0x3f;
 
-console.log(buf.readDouble(0, false));
+console.log(buf.readDoubleLE(0));
 
 // 0.3333333333333333</code></pre>
 
-<h3 id="buffer.writeUInt8">buffer.writeUInt8(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeUInt8">buffer.writeUInt8(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を符号無し 8bit 整数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 8bit 符号無し整数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p>例:</p>
 
 <pre><code>var buf = new Buffer(4);
-buf.writeUInt8(0x3, 0, true);
-buf.writeUInt8(0x4, 1, true);
-buf.writeUInt8(0x23, 2, true);
-buf.writeUInt8(0x42, 3, true);
+buf.writeUInt8(0x3, 0);
+buf.writeUInt8(0x4, 1);
+buf.writeUInt8(0x23, 2);
+buf.writeUInt8(0x42, 3);
 
 console.log(buf);
 
-buf.writeUInt8(0x3, 0, false);
-buf.writeUInt8(0x4, 1, false);
-buf.writeUInt8(0x23, 2, false);
-buf.writeUInt8(0x42, 3, false);
-
-console.log(buf);
-
-// &lt;Buffer 03 04 23 42&gt;
 // &lt;Buffer 03 04 23 42&gt;</code></pre>
 
-<h3 id="buffer.writeUInt16">buffer.writeUInt16(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeUInt16LE">buffer.writeUInt16LE(value, offset, noAssert=false)</h3>
+
+<h3 id="buffer.writeUInt16BE">buffer.writeUInt16BE(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を符号無し 16bit 整数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 16bit 符号無し整数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p>例:</p>
 
 <pre><code>var buf = new Buffer(4);
-buf.writeUInt16(0xdead, 0, true);
-buf.writeUInt16(0xbeef, 2, true);
+buf.writeUInt16BE(0xdead, 0);
+buf.writeUInt16BE(0xbeef, 2);
 
 console.log(buf);
 
-buf.writeUInt16(0xdead, 0, false);
-buf.writeUInt16(0xbeef, 2, false);
+buf.writeUInt16LE(0xdead, 0);
+buf.writeUInt16LE(0xbeef, 2);
 
 console.log(buf);
 
 // &lt;Buffer de ad be ef&gt;
 // &lt;Buffer ad de ef be&gt;</code></pre>
 
-<h3 id="buffer.writeUInt32">buffer.writeUInt32(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeUInt32LE">buffer.writeUInt32LE(value, offset, noAssert=false)</h3>
+
+<h3 id="buffer.writeUInt32BE">buffer.writeUInt32BE(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を符号無し 32bit 整数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 32bit 符号無し整数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p>例:</p>
 
 <pre><code>var buf = new Buffer(4);
-buf.writeUInt32(0xfeedface, 0, true);
+buf.writeUInt32BE(0xfeedface, 0);
 
 console.log(buf);
 
-buf.writeUInt32(0xfeedface, 0, false);
+buf.writeUInt32LE(0xfeedface, 0);
 
 console.log(buf);
 
 // &lt;Buffer fe ed fa ce&gt;
 // &lt;Buffer ce fa ed fe&gt;</code></pre>
 
-<h3 id="buffer.writeInt8">buffer.writeInt8(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeInt8">buffer.writeInt8(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を符号付き 8bit 整数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 8bit 符号付き整数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は 
 <code>buffer.writeUInt8</code> と同じように動作します。</p>
 
-<h3 id="buffer.writeInt16">buffer.writeInt16(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeInt16LE">buffer.writeInt16LE(value, offset, noAssert=false)</h3>
+
+<h3 id="buffer.writeInt16BE">buffer.writeInt16BE(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を符号付き 16bit 整数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 16bit 符号付き整数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は 
 <code>buffer.writeUInt16</code> と同じように動作します。</p>
 
-<h3 id="buffer.writeInt32">buffer.writeInt32(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeInt32LE">buffer.writeInt32LE(value, offset, noAssert=false)</h3>
+
+<h3 id="buffer.writeInt32BE">buffer.writeInt32BE(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を符号付き 32bit 整数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 32bit 符号付き整数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は 
 <code>buffer.writeUInt32</code> と同じように動作します。</p>
 
-<h3 id="buffer.writeFloat">buffer.writeFloat(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeFloatLE">buffer.writeFloatLE(value, offset, noAssert=false)</h3>
+
+<h3 id="buffer.writeFloatBE">buffer.writeFloatBE(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を 32bit 浮動小数点数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 32bit 浮動小数点数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
+<p>例:</p>
+
 <pre><code>var buf = new Buffer(4);
-buf.writeFloat(0xcafebabe, 0, true);
+buf.writeFloatBE(0xcafebabe, 0);
 
 console.log(buf);
 
-buf.writeFloat(0xcafebabe, 0, false);
+buf.writeFloatLE(0xcafebabe, 0);
 
 console.log(buf);
 
 // &lt;Buffer 4f 4a fe bb&gt;
 // &lt;Buffer bb fe 4a 4f&gt;</code></pre>
 
-<h3 id="buffer.writeDouble">buffer.writeDouble(value, offset, bigEndian)</h3>
+<h3 id="buffer.writeDoubleLE">buffer.writeDoubleLE(value, offset, noAssert=false)</h3>
+
+<h3 id="buffer.writeDoubleBE">buffer.writeDoubleBE(value, offset, noAssert=false)</h3>
 
 <p><code>value</code> を 64bit 倍精度浮動小数点数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
 <code>value</code> は妥当な 64bit 倍精度浮動小数点数でなければならないことに注意してください。</p>
 
+<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
+これは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> 
+がバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。
+正確性に確信がない限り、これらを使用すべきではありません。</p>
+
 <p>例:</p>
 
 <pre><code>var buf = new Buffer(8);
-buf.writeFloat(0xdeadbeefcafebabe, 0, true);
+buf.writeDoubleBE(0xdeadbeefcafebabe, 0);
 
 console.log(buf);
 
-buf.writeFloat(0xdeadbeefcafebabe, 0, false);
+buf.writeDoubleLE(0xdeadbeefcafebabe, 0);
 
 console.log(buf);
 
 // &lt;Buffer 43 eb d5 b7 dd f9 5f d7&gt;
 // &lt;Buffer d7 5f f9 dd b7 d5 eb 43&gt;</code></pre>
-
-<h3 id="buffer.readUInt8NoChk">buffer.readUInt8NoChk(value, offset, bigEndian)</h3>
-
-<h3 id="buffer.readUInt16NoChk">buffer.readUInt16NoChk(value, offset, bigEndian)</h3>
-
-<h3 id="buffer.readUInt32NoChk">buffer.readUInt32NoChk(value, offset, bigEndian)</h3>
-
-<h3 id="buffer.writeUInt8NoChk">buffer.writeUInt8NoChk(value, offset, bigEndian)</h3>
-
-<h3 id="buffer.writeUInt16NoChk">buffer.writeUInt16NoChk(value, offset, bigEndian)</h3>
-
-<h3 id="buffer.writeUInt32NoChk">buffer.writeUInt32NoChk(value, offset, bigEndian)</h3>
-
-<p>これらの関数は、接尾辞 NoChk 無しのバージョンと同様に動作します。
-これらの関数は正確性のための検証をすることなく、生の機能を利用可能にします。
-これは、特定の関数で扱えるよりも大きな値や、
-バッファの終端を越えるオフセットが指定された場合は静かに切り捨てられることを
-意味します。
-正確性に確信がない限り、これらを使用すべきではありません。</p>
 
 <h3 id="buffer.fill">buffer.fill(value, offset=0, length=-1)</h3>
 
@@ -485,8 +528,8 @@ b.fill("h");</code></pre>
 
 <h3 id="iNSPECT_MAX_BYTES">INSPECT_MAX_BYTES</h3>
 
-<p>How many bytes will be returned when <code>b.inspect()</code> is called. This can
-be overriden by user modules.</p>
+<p><code>buffer.inspect()</code> が呼び出された場合に返すバイト数です。
+これはユーザモジュールによって上書きすることができます。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>vm - Node.js v0.5.4 Manual &amp; Documentation</title>
+  <title>vm - Node.js v0.5.6 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.4 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#executing_JavaScript">Executing JavaScript</a><ul><li><a href="#vm.runInThisContext">vm.runInThisContext(code, [filename])</a></li><li><a href="#vm.runInNewContext">vm.runInNewContext(code, [sandbox], [filename])</a></li><li><a href="#vm.createScript">vm.createScript(code, [filename])</a></li><li><a href="#script.runInThisContext">script.runInThisContext()</a></li><li><a href="#script.runInNewContext">script.runInNewContext([sandbox])</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#executing_JavaScript">Executing JavaScript</a><ul><li><a href="#vm.runInThisContext">vm.runInThisContext(code, [filename])</a></li><li><a href="#vm.runInNewContext">vm.runInNewContext(code, [sandbox], [filename])</a></li><li><a href="#vm.runInContext">vm.runInContext(code, context, [filename])</a></li><li><a href="#vm.createContext">vm.createContext([initSandbox])</a></li><li><a href="#vm.createScript">vm.createScript(code, [filename])</a></li><li><a href="#script.runInThisContext">script.runInThisContext()</a></li><li><a href="#script.runInNewContext">script.runInNewContext([sandbox])</a></li></ul></li></ul><hr /></div>
 <h2 id="executing_JavaScript">Executing JavaScript</h2>
 
 <p>次のようにすることで、このモジュールにアクセスすることができます:</p>
@@ -84,6 +84,47 @@ console.log(util.inspect(sandbox));
 
 <p><code>code</code> が文法エラーとなるケースでは、
 <code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
+
+<h3 id="vm.runInContext">vm.runInContext(code, context, [filename])</h3>
+
+<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、
+<code>filename</code> としてロードされたかのように、<code>context</code> をコンテキストとして
+実行し、その結果を返します。
+(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、
+グローバルオブジェクトを含みます。
+実行されるコードはローカルスコープにアクセスせず、
+<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
+<code>filename</code> はオプションです。</p>
+
+<pre><code>var util = require('util'),
+    vm = require('vm'),
+    initSandbox = {
+      animal: 'cat',
+      count: 2
+    },
+    context = vm.createContext(initSandbox);
+
+vm.runInContext('count += 1; name = "CATT"', context, 'myfile.vm');
+console.log(util.inspect(context));
+
+// { animal: 'cat', count: 3, name: 'CATT' }</code></pre>
+
+<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを
+初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを
+作成することに注意してください。</p>
+
+<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
+偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、
+信頼できないコードを安全に実行するために別のプロセスを要求します。</p>
+
+<h3 id="vm.createContext">vm.createContext([initSandbox])</h3>
+
+<p><code>vm.createContext</code> は、続けて呼び出される <code>vm.runInContext</code> の第 2 引数として
+使用するのに適した新しいコンテキストを作成します。
+(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、
+グローバルオブジェクトを含みます。
+オプションの引数 <code>initSandbox</code> は、このコンテキストで使用される
+グローバルオブジェクトの初期値としてシャローコピーされます。</p>
 
 <h3 id="vm.createScript">vm.createScript(code, [filename])</h3>
 
