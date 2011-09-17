@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>modules - Node.js v0.5.6 Manual &amp; Documentation</title>
+  <title>modules - Node.js v0.5.7 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.7 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#module.require">module.require</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_global_folders">Loading from the global folders</a></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#standard_Modules">Standard Modules</a></li><li><a href="#modules">Modules</a><ul><li><a href="#cycles">Cycles</a></li><li><a href="#core_Modules">Core Modules</a></li><li><a href="#file_Modules">File Modules</a></li><li><a href="#loading_from_node_modules_Folders">Loading from `node_modules` Folders</a></li><li><a href="#folders_as_Modules">Folders as Modules</a></li><li><a href="#caching">Caching</a><ul><li><a href="#module_Caching_Caveats">Module Caching Caveats</a></li></ul></li><li><a href="#module.exports">module.exports</a></li><li><a href="#module.require">module.require</a></li><li><a href="#all_Together...">All Together...</a></li><li><a href="#loading_from_the_global_folders">Loading from the global folders</a></li><li><a href="#accessing_the_main_module">Accessing the main module</a></li></ul></li><li><a href="#addenda_Package_Manager_Tips">Addenda: Package Manager Tips</a></li></ul><hr /></div>
 <h2 id="standard_Modules">Standard Modules</h2>
 
 <p>Node は多くのコンパイル済みのモジュールを備えています。
@@ -58,6 +58,60 @@ exports.circumference = function (r) {
 オブジェクトをエクスポートするには、 <code>exports</code> という特別なオブジェクトに加えます。
 モジュールのローカル変数はプライベートです。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。</p>
+
+<h3 id="cycles">Cycles</h3>
+
+<p><code>require()</code> が循環的に呼び出される場合、実行が完了していないモジュールが
+返されることがあります。</p>
+
+<p>次の状況を考えてください:</p>
+
+<p><code>a.js</code>:</p>
+
+<pre><code>console.log('a starting');
+exports.done = false;
+var b = require('./b.js');
+console.log('in a, b.done = %j', b.done);
+exports.done = true;
+console.log('a done');</code></pre>
+
+<p><code>b.js</code>:</p>
+
+<pre><code>console.log('b starting');
+exports.done = false;
+var a = require('./a.js');
+console.log('in b, a.done = %j', a.done);
+exports.done = true;
+console.log('b done');</code></pre>
+
+<p><code>main.js</code>:</p>
+
+<pre><code>console.log('main starting');
+var a = require('./a.js');
+var b = require('./b.js');
+console.log('in main, a.done=%j, b.done=%j', a.done, b.done);</code></pre>
+
+<p><code>main.js</code> が <code>a.js</code> をロードすると、<code>a.js</code> は <code>b.js</code> をロードします。
+ポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。
+無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの
+<strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。
+<code>b.js</code> のロードが完了すると、エクスポートされたオブジェクトが <code>a.js</code>
+モジュールに提供されます。</p>
+
+<p><code>main.js</code> が両方のモジュールをロードするまでには、どちらも完了します。
+このプログラムの出力はこのようになります:</p>
+
+<pre><code>$ node main.js
+main starting
+a starting
+b starting
+in b, a.done = false
+b done
+in a, b.done = true
+a done
+in main, a.done=true, b.done=true</code></pre>
+
+<p>プログラムが循環参照するモジュールを持つ場合は、計画が適切か確認してください。</p>
 
 <h3 id="core_Modules">Core Modules</h3>
 
