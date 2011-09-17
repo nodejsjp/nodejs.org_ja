@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>child_processes - Node.js v0.5.6 Manual &amp; Documentation</title>
+  <title>child_processes - Node.js v0.5.7 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.7 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#child_Processes">Child Processes</a><ul><li><a href="#event_exit_">Event:  'exit'</a></li><li><a href="#child.stdin">child.stdin</a></li><li><a href="#child.stdout">child.stdout</a></li><li><a href="#child.stderr">child.stderr</a></li><li><a href="#child.pid">child.pid</a></li><li><a href="#child_process.spawn">child_process.spawn(command, args=[], [options])</a></li><li><a href="#child_process.exec">child_process.exec(command, [options], callback)</a></li><li><a href="#child_process.fork">child_process.fork(modulePath, arguments, options)</a></li><li><a href="#child.kill">child.kill(signal='SIGTERM')</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#child_Processes">Child Processes</a><ul><li><a href="#event_exit_">Event:  'exit'</a></li><li><a href="#child.stdin">child.stdin</a></li><li><a href="#child.stdout">child.stdout</a></li><li><a href="#child.stderr">child.stderr</a></li><li><a href="#child.pid">child.pid</a></li><li><a href="#child_process.spawn">child_process.spawn(command, args=[], [options])</a></li><li><a href="#child_process.exec">child_process.exec(command, [options], callback)</a></li><li><a href="#child_process.execFile">child_process.execFile(file, args, options, callback)</a></li><li><a href="#child_process.fork">child_process.fork(modulePath, arguments, options)</a></li><li><a href="#child.kill">child.kill(signal='SIGTERM')</a></li></ul></li></ul><hr /></div>
 <h2 id="child_Processes">Child Processes</h2>
 
 <p>Nodeは <code>ChildProcess</code> クラスを通じて 3 方向の <code>popen(3)</code> 機能を提供します。</p>
@@ -158,7 +158,7 @@ child.stderr.on('data', function (data) {
 
 <h3 id="child_process.exec">child_process.exec(command, [options], callback)</h3>
 
-<p>コマンドを子プロセスとして実行し、その出力を蓄えて、その全てをコールバックに渡す高水準の方法です。</p>
+<p>コマンドをシェルで実行し、その出力をバッファに格納します。</p>
 
 <pre><code>var util = require('util'),
     exec = require('child_process').exec,
@@ -193,6 +193,12 @@ child = exec('cat *.js bad_file | wc -l',
 子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。
 子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGTERM'</code>)。
 <code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。</p>
+
+<h3 id="child_process.execFile">child_process.execFile(file, args, options, callback)</h3>
+
+<p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて
+<code>child_process.exec()</code> と同様です。
+これは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。</p>
 
 <h3 id="child_process.fork">child_process.fork(modulePath, arguments, options)</h3>
 

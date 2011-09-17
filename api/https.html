@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>https - Node.js v0.5.6 Manual &amp; Documentation</title>
+  <title>https - Node.js v0.5.7 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.6 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.7 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -82,7 +82,46 @@ req.on('error', function(e) {
 
 <p><code>options</code> 引数は以下のオプションを持ちます。</p>
 
-<ul><li><code>host</code>: リクエストするホストのIPまたはドメイン。デフォルトは <code>'localhost'</code> です。</li><li><code>port</code>: リクエストするホストのポート。デフォルトは 443 です。</li><li><code>path</code>: リクエストのパス。デフォルトは <code>'/'</code> です。</li><li><code>method</code>: HTTP りくえすとのメソッド。デフォルトは <code>'GET'</code> です。</li><li><code>key</code>: SSLで使用する秘密鍵。デフォルトは <code>null</code> です。</li><li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li><li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li></ul>
+<ul><li><code>host</code>: リクエストするホストのIPまたはドメイン。デフォルトは <code>'localhost'</code> です。</li><li><code>port</code>: リクエストするホストのポート。デフォルトは 443 です。</li><li><code>path</code>: リクエストのパス。デフォルトは <code>'/'</code> です。</li><li><code>method</code>: HTTP りくえすとのメソッド。デフォルトは <code>'GET'</code> です。</li></ul>
+
+<p>以下のオプションを指定することもできますが、
+グローバル <a href="http.html#http.Agent">エージェント</a> を使うことはできません。</p>
+
+<ul><li><code>key</code>: SSLで使用する秘密鍵。デフォルトは <code>null</code> です。</li><li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li><li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li></ul>
+
+<p>これらのオプションを指定するには、カスタムエージェントを使用します。</p>
+
+<p>例:</p>
+
+<pre><code>var options = {
+  host: 'encrypted.google.com',
+  port: 443,
+  path: '/',
+  method: 'GET',
+  key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+  cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+};
+options.agent = new https.Agent(options);
+
+var req = https.request(options, function(res) {
+  ...
+}</code></pre>
+
+<p>あるいは、エージェントを使用しません。</p>
+
+<pre><code>var options = {
+  host: 'encrypted.google.com',
+  port: 443,
+  path: '/',
+  method: 'GET',
+  key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+  cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem'),
+  agent: false
+};
+
+var req = https.request(options, function(res) {
+  ...
+}</code></pre>
 
 <h2 id="https.get">https.get(options, callback)</h2>
 
