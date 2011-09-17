@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>stdio - Node.js v0.4.11 Manual &amp; Documentation</title>
+  <title>stdio - Node.js v0.4.12 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.4.11 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.4.12 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -29,8 +29,26 @@
 
 <pre><code>console.log('count: %d', count);</code></pre>
 
-<p>最初の引数文字列からフォーマット要素が見つからなかった場合は、
-<code>util.inspect</code> が各引数に使われます。</p>
+<p>第一引数は文字列で、0 個以上の <em>プレースホルダ</em> を含みます。
+それぞれのプレースホルダは対応する引数を変換した値で置換されます。
+サポートするプレースホルダは:</p>
+
+<ul><li><code>%s</code> - 文字列。</li><li><code>%d</code> - 数値 (整数と浮動小数点数の両方)。</li><li><code>%j</code> - JSON。</li></ul>
+
+<p>プレースホルダに対応する引数が無い場合は、<code>undefined</code> が使われます</p>
+
+<pre><code>console.log('%s:%s', 'foo'); // 'foo:undefined'</code></pre>
+
+<p>プレースホルダより多くの引数がある場合、余った引数は <code>util.inspect()</code> によって
+文字列化され、それらはスペース区切りで連結されます。</p>
+
+<pre><code>console.log('%s:%s', 'foo', 'bar', 'baz'); // 'foo:bar baz'</code></pre>
+
+<p>第一引数がフォーマット文字列ではない場合、<code>console.log()</code> は全ての引数を
+スペース区切りで連結して出力します。
+個々の引数は <code>util.inspect()</code> で文字列に変換されます。</p>
+
+<pre><code>console.log(1, 2, 3); // '1 2 3'</code></pre>
 
 <h3 id="console.info">console.info()</h3>
 
