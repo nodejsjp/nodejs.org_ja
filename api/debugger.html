@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>debugger - Node.js v0.5.7 Manual &amp; Documentation</title>
+  <title>debugger - Node.js v0.5.8 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.7 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.8 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -26,16 +26,13 @@ Node にはこのデバッガへのクライアントが組み込まれていま
 次のようになります:</p>
 
 <pre><code>% node debug myscript.js
+&lt; debugger listening on port 5858
+connecting... ok
+break in /home/indutny/Code/git/indutny/myscript.js:1
+  1 x = 5;
+  2 setTimeout(function () {
+  3   debugger;
 debug&gt;</code></pre>
-
-<p>ポイントは，<code>myscript.js</code> はまだ実行されないことです。
-スクリプトを開始するには、<code>run</code> コマンドを入力します。
-全てがうまくいけば、出力はこのようになります:</p>
-
-<pre><code>% node debug myscript.js
-debug&gt; run
-debugger listening on port 5858
-connecting...ok</code></pre>
 
 <p>Node のデバッガクライアントはあらゆるコマンドを完全にサポートしているわけではありませんが、
 単純なステップ実行やインスペクションが可能です。
@@ -54,32 +51,46 @@ console.log("hello");</code></pre>
 
 <p>ひとたびデバッガを実行すると、4行目で中断します。</p>
 
-<pre><code>% ./node debug myscript.js
-debug&gt; run
-debugger listening on port 5858
-connecting...ok
-hello
-break in #&lt;an Object&gt;._onTimeout(), myscript.js:4
-  debugger;
-  ^
+<pre><code>% node debug myscript.js
+&lt; debugger listening on port 5858
+connecting... ok
+break in /home/indutny/Code/git/indutny/myscript.js:1
+  1 x = 5;
+  2 setTimeout(function () {
+  3   debugger;
+debug&gt; cont
+&lt; hello
+break in /home/indutny/Code/git/indutny/myscript.js:3
+  1 x = 5;
+  2 setTimeout(function () {
+  3   debugger;
+  4   console.log("world");
+  5 }, 1000);
 debug&gt; next
-break in #&lt;an Object&gt;._onTimeout(), myscript.js:5
-  console.log("world");
-  ^
-debug&gt; print x
+break in /home/indutny/Code/git/indutny/myscript.js:4
+  2 setTimeout(function () {
+  3   debugger;
+  4   console.log("world");
+  5 }, 1000);
+  6 console.log("hello");
+debug&gt; repl
+Press Ctrl + C to leave debug repl
+&gt; x
 5
-debug&gt; print 2+2
+&gt; 2+2
 4
 debug&gt; next
-world
-break in #&lt;an Object&gt;._onTimeout() returning undefined, myscript.js:6
-}, 1000);
-^
+&lt; world
+break in /home/indutny/Code/git/indutny/myscript.js:5
+  3   debugger;
+  4   console.log("world");
+  5 }, 1000);
+  6 console.log("hello");
+  7
 debug&gt; quit
-A debugging session is active. Quit anyway? (y or n) y
 %</code></pre>
 
-<p><code>print</code> コマンドは変数を評価します。
+<p><code>repl</code> コマンドはコードをリモートで評価します。
 <code>next</code> コマンドは次の行にステップオーバーします。
 他にもいくつかのコマンドを利用することができます。
 それらについては <code>help</code> をタイプしてください。</p>
