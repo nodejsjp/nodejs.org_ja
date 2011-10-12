@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>child_processes - Node.js v0.5.8 Manual &amp; Documentation</title>
+  <title>child_processes - Node.js v0.5.9 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.8 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -205,7 +205,7 @@ child = exec('cat *.js bad_file | wc -l',
 <p>これは <code>spawn()</code> の特別版で、Node プロセスを起動します。
 返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
 組み込みの通信チャネルを持ちます。
-チャネルは <code>child.send(message)</code> によって書き込まれ、
+チャネルは <code>child.send(message, [sendHandle])</code> によって書き込まれ、
 メッセージを受信すると <code>child</code> 上で <code>'message'</code> イベントが生成されます。</p>
 
 <p>例:</p>
@@ -231,7 +231,7 @@ process.send({ foo: 'bar' });</code></pre>
 <p>子供の <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、
 <code>process</code> はチャネルでメッセージを受信するたびにイベントを生成します。</p>
 
-<p>デフォルトでは，起動された Node プロセスは親プロセスに関連づけられた標準入力、
+<p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準入力、
 標準出力、標準エラー出力を持ちます。
 これは <code>customFds</code> オプションによって上書きすることが出来ます。</p>
 
@@ -239,6 +239,25 @@ process.send({ foo: 'bar' });</code></pre>
 新しい Node ごとに少なくとも 30 ミリ秒の起動時間と 
 10MB のメモリを前提としてください。
 つまり、数千の子プロセスを作ることは出来ません。</p>
+
+<p><code>child.send()</code> の <code>sendHandle</code> オプションはハンドルオブジェクトを別プロセスに
+送ります。
+子プロセスはそのハンドルを <code>message</code> イベントの第2引数として受け取ります。
+これはハンドルを送信するサンプルです。</p>
+
+<pre><code>var server = require('net').createServer();
+var child = require('child_process').fork(__dirname + '/child.js');
+// Open up the server object and send the handle.
+child.send({ server: true }, server._handle);</code></pre>
+
+<p>これはサーバのハンドルを受信してプロセス間で共有するサンプルです。</p>
+
+<pre><code>process.on('message', function(m, serverHandle) {
+  if (serverHandle) {
+    var server = require('net').createServer();
+    server.listen(serverHandle);
+  }
+});</code></pre>
 
 <h3 id="child.kill">child.kill(signal='SIGTERM')</h3>
 
