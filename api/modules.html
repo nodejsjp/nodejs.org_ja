@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>modules - Node.js v0.5.9 Manual &amp; Documentation</title>
+  <title>modules - Node.js v0.5.10 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -59,7 +59,7 @@ exports.circumference = function (r) {
 モジュールのローカル変数はプライベートです。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。</p>
 
-<h3 id="cycles">Cycles</h3>
+<h3 id="cycles">Cycles <a href="#cycles">#</a></h3>
 
 <p><code>require()</code> が循環的に呼び出される場合、実行が完了していないモジュールが
 返されることがあります。</p>
@@ -113,7 +113,7 @@ in main, a.done=true, b.done=true</code></pre>
 
 <p>プログラムが循環参照するモジュールを持つ場合は、計画が適切か確認してください。</p>
 
-<h3 id="core_Modules">Core Modules</h3>
+<h3 id="core_Modules">Core Modules <a href="#core_Modules">#</a></h3>
 
 <p>Node にはバイナリにコンパイル済みのいくつかのモジュールがあります。
 これらのモジュールについては、このドキュメントの他の場所でより詳しく記述されています。</p>
@@ -123,12 +123,15 @@ in main, a.done=true, b.done=true</code></pre>
 <p><code>require()</code> では常にコアモジュールの識別名を優先的に解釈します。
 例えば <code>require('http')</code> は、例え同名のファイルが存在していたとしても、常にビルトイインの HTTP モジュールを返します。</p>
 
-<h3 id="file_Modules">File Modules</h3>
+<h3 id="file_Modules">File Modules <a href="#file_Modules">#</a></h3>
 
-<p>指定された名前のファイルが見つからなかったら、 Node は指定されたファイル名に <code>.js</code> を付けたものと <code>.node</code> を付けたものを読み込もうとします。</p>
+<p>指定された名前のファイルが見つからなかったら、 Node は指定されたファイル名に
+<code>.js</code>、<code>.json</code>、または <code>.node</code> を付けたものを読み込もうとします。</p>
 
-<p><code>.js</code> ファイルは JavaScript ファイルとして解釈されます。
-一方 <code>.node</code> ファイルはコンパイル済みのアドオンモジュールとして解釈され、 <code>dlopen</code> を使って読み込まれます。</p>
+<p><code>.js</code> ファイルは JavaScript ファイルとして解釈され、
+<code>.json</code> ファイルは JSON ファイルとして解釈されます。
+一方 <code>.node</code> ファイルはコンパイル済みのアドオンモジュールとして解釈され、
+<code>dlopen</code> を使って読み込まれます。</p>
 
 <p><code>'/'</code> から始まるモジュールは、ファイルへの絶対パスと見なされます。
 例えば、 <code>require('/home/marco/foo.js')</code> は <code>/home/macro/foo.js</code> を読み込みます。</p>
@@ -138,7 +141,7 @@ in main, a.done=true, b.done=true</code></pre>
 
 <p>'/' や './' が先頭になければ、モジュールは "コアモジュール" であるかもしくは <code>node_modules</code> フォルダから読み込まれることになります。</p>
 
-<h3 id="loading_from_node_modules_Folders">Loading from `node_modules` Folders</h3>
+<h3 id="loading_from_node_modules_Folders">Loading from `node_modules` Folders <a href="#loading_from_node_modules_Folders">#</a></h3>
 
 <p>もし <code>require()</code> に渡されたモジュール識別子がネイティブモジュールではなく、かつ  <code>'/'</code> や <code>'../'</code> や <code>'./'</code> から始まらないならば、 Node は現在のモジュールの親ディレクトリに <code>'/node_modules'</code> を付与してそこからモジュールを読み込もうとします。</p>
 
@@ -150,7 +153,7 @@ in main, a.done=true, b.done=true</code></pre>
 
 <p>この仕組みによって、プログラムはクラッシュを避けるために依存関係を上書きすることができるのです。</p>
 
-<h3 id="folders_as_Modules">Folders as Modules</h3>
+<h3 id="folders_as_Modules">Folders as Modules <a href="#folders_as_Modules">#</a></h3>
 
 <p>プログラムとライブラリをディレクトリ内にまとめて、そのエントリポイントを提示するという便利な方法もあります。
 それには <code>require()</code> に引数として何を渡すかによって3通りの方法があります。</p>
@@ -170,7 +173,7 @@ in main, a.done=true, b.done=true</code></pre>
 
 <ul><li><code>./some-library/index.js</code></li><li><code>./some-library/index.node</code></li></ul>
 
-<h3 id="caching">Caching</h3>
+<h3 id="caching">Caching <a href="#caching">#</a></h3>
 
 <p>モジュールは初めて読み込まれたときにキャッシュされます。
 すなわち（他のキャッシュと同様に） <code>require('foo')</code> を呼ぶたびに、もし引数の意味するものが同一のファイルであったなら全く同一のオブジェクトが返されます。</p>
@@ -183,7 +186,7 @@ in main, a.done=true, b.done=true</code></pre>
 <p>もしモジュールを複数回実行したければ、関数を公開して、
 その関数を呼び出してください。</p>
 
-<h4 id="module_Caching_Caveats">Module Caching Caveats</h4>
+<h4 id="module_Caching_Caveats">Module Caching Caveats <a href="#module_Caching_Caveats">#</a></h4>
 
 <p>モジュールは解決されたファイル名に基づいてキャッシュされます。
 異なる場所にあるモジュールから呼び出されたモジュールは、
@@ -191,7 +194,7 @@ in main, a.done=true, b.done=true</code></pre>
 解決されることがあるため、 <code>require('foo')</code> が常に同じオブジェクトを返す
 <em>保証</em>はなく、異なるファイルとして解決されます。</p>
 
-<h3 id="module.exports">module.exports</h3>
+<h3 id="module.exports">module.exports <a href="#module.exports">#</a></h3>
 
 <p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。
 時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。
@@ -229,7 +232,7 @@ a.on('ready', function() {
 <pre><code>var x = require('./x');
 console.log(x.a);</code></pre>
 
-<h3 id="module.require">module.require</h3>
+<h3 id="module.require">module.require <a href="#module.require">#</a></h3>
 
 <p><code>module.require</code> メソッドは、元のモジュールが <code>require()</code>
 を呼び出したかのようにモジュールをロードするために提供されています。</p>
@@ -239,7 +242,7 @@ console.log(x.a);</code></pre>
 はそのモジュールのコードで <em>のみ</em> 利用可能です。
 それが使われるようにするには、明示的にエクスポートする必要があります。</p>
 
-<h3 id="all_Together...">All Together...</h3>
+<h3 id="all_Together...">All Together... <a href="#all_Together...">#</a></h3>
 
 <p><code>require()</code> が呼び出されると、正確なファイル名を得るために <code>require.resolve()</code> が使われます。</p>
 
@@ -286,7 +289,7 @@ NODE_MODULES_PATHS(START)
    c. let I = I - 1
 6. return DIRS</code></pre>
 
-<h3 id="loading_from_the_global_folders">Loading from the global folders</h3>
+<h3 id="loading_from_the_global_folders">Loading from the global folders <a href="#loading_from_the_global_folders">#</a></h3>
 
 <p><code>NODE_PATH</code> 環境変数に絶対パスをコロンで区切ったリストを設定すると、
 node は他で見つからなかったモジュールをそれらのパスから探します。
@@ -303,7 +306,7 @@ configure した時の <code>installPrefix</code> です。</p>
 あなたが依存するものはローカルの <code>node_modules</code> フォルダに置くことが
 強く推奨されます。それは素早くロードされ、確実です。</p>
 
-<h3 id="accessing_the_main_module">Accessing the main module</h3>
+<h3 id="accessing_the_main_module">Accessing the main module <a href="#accessing_the_main_module">#</a></h3>
 
 <p>ファイルがNodeによって直接実行される場合、その <code>module</code> が
 <code>require.main</code> に設定されます。

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>readline - Node.js v0.5.9 Manual &amp; Documentation</title>
+  <title>readline - Node.js v0.5.10 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -41,12 +41,18 @@ i.question("What do you think of node.js?", function(answer) {
   process.stdin.destroy();
 });</code></pre>
 
-<h3 id="rl.createInterface">rl.createInterface(input, output, completer)</h3>
+<h3 id="rl.createInterface">rl.createInterface(input, output, completer) <a href="#rl.createInterface">#</a></h3>
 
 <p>二つのストリームを受け取り、readline のインタフェースを作成します。
 <code>completer</code> 関数は補完のために使われます。
 それは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>
 を返します。</p>
+
+<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。</p>
+
+<p>  function completer(linePartial, callback) {
+    callback(null, [['123'], linePartial]);
+  }</p>
 
 <p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と
 <code>process.stdout</code> が使用されます。</p>
@@ -54,19 +60,19 @@ i.question("What do you think of node.js?", function(answer) {
 <pre><code>var readline = require('readline'),
   rl = readline.createInterface(process.stdin, process.stdout);</code></pre>
 
-<h3 id="rl.setPrompt">rl.setPrompt(prompt, length)</h3>
+<h3 id="rl.setPrompt">rl.setPrompt(prompt, length) <a href="#rl.setPrompt">#</a></h3>
 
 <p>プロンプトを設定します。
 たとえば、コマンドプロンプトで <code>node</code> コマンドを実行すると、
 <code>&gt; </code> を見ることができます。これが Node のプロンプトです。</p>
 
-<h3 id="rl.prompt">rl.prompt()</h3>
+<h3 id="rl.prompt">rl.prompt() <a href="#rl.prompt">#</a></h3>
 
 <p>ユーザからの入力を 1 行読み込みます。
 現在の <code>setPrompt()</code> の値を新しい行に出力し、
 ユーザに新しい入力エリアを与えます。</p>
 
-<h3 id="rl.question">rl.question(query, callback)</h3>
+<h3 id="rl.question">rl.question(query, callback) <a href="#rl.question">#</a></h3>
 
 <p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。
 ユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。</p>
@@ -77,23 +83,23 @@ i.question("What do you think of node.js?", function(answer) {
   console.log('Oh, so your favorite food is ' + answer);
 });</code></pre>
 
-<h3 id="rl.close">rl.close()</h3>
+<h3 id="rl.close">rl.close() <a href="#rl.close">#</a></h3>
 
 <p>tty をクローズします。</p>
 
-<h3 id="rl.pause">rl.pause()</h3>
+<h3 id="rl.pause">rl.pause() <a href="#rl.pause">#</a></h3>
 
 <p>tty からの入力を中断します。</p>
 
-<h3 id="rl.resume">rl.resume()</h3>
+<h3 id="rl.resume">rl.resume() <a href="#rl.resume">#</a></h3>
 
 <p>tty からの入力を再開します。</p>
 
-<h3 id="rl.write">rl.write()</h3>
+<h3 id="rl.write">rl.write() <a href="#rl.write">#</a></h3>
 
 <p>tty へ出力します。</p>
 
-<h3 id="event_line_">Event: 'line'</h3>
+<h3 id="event_line_">Event: 'line' <a href="#event_line_">#</a></h3>
 
 <p><code>function (line) {}</code></p>
 
@@ -107,7 +113,7 @@ i.question("What do you think of node.js?", function(answer) {
   console.log('You just typed: '+cmd);
 });</code></pre>
 
-<h3 id="event_close_">Event: 'close'</h3>
+<h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
 
 <p><code>function () {}</code></p>
 

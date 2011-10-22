@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>child_processes - Node.js v0.5.9 Manual &amp; Documentation</title>
+  <title>child_processes - Node.js v0.5.10 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -32,7 +32,7 @@
 
 <p><code>ChildProcess</code> は <code>EventEmitter</code> です。</p>
 
-<h3 id="event_exit_">Event:  'exit'</h3>
+<h3 id="event_exit_">Event:  'exit' <a href="#event_exit_">#</a></h3>
 
 <p><code>function (code, signal) {}</code></p>
 
@@ -44,20 +44,20 @@
 
 <p><code>waitpid(2)</code> を参照してください。</p>
 
-<h3 id="child.stdin">child.stdin</h3>
+<h3 id="child.stdin">child.stdin <a href="#child.stdin">#</a></h3>
 
 <p>子プロセスの <code>stdin</code> を表現する <code>Writable Stream</code> です。
 多くの場合、<code>end()</code> を通じてこのストリームを閉じると子プロセスが終了する原因となります。</p>
 
-<h3 id="child.stdout">child.stdout</h3>
+<h3 id="child.stdout">child.stdout <a href="#child.stdout">#</a></h3>
 
 <p>子プロセスの <code>stdout</code> を表現する <code>Readable Stream</code> です。</p>
 
-<h3 id="child.stderr">child.stderr</h3>
+<h3 id="child.stderr">child.stderr <a href="#child.stderr">#</a></h3>
 
 <p>子プロセスの <code>stderr</code> を表現する <code>Readable Stream</code> です。</p>
 
-<h3 id="child.pid">child.pid</h3>
+<h3 id="child.pid">child.pid <a href="#child.pid">#</a></h3>
 
 <p>子プロセスの PID です。</p>
 
@@ -69,7 +69,7 @@
 console.log('Spawned child pid: ' + grep.pid);
 grep.stdin.end();</code></pre>
 
-<h3 id="child_process.spawn">child_process.spawn(command, args=[], [options])</h3>
+<h3 id="child_process.spawn">child_process.spawn(command, args=[], [options]) <a href="#child_process.spawn">#</a></h3>
 
 <p><code>args</code> をコマンドライン引数として、与えられた <code>command</code> で新しいプロセスを起動します。
 <code>args</code> が省略された場合、空の配列がデフォルトとなります。</p>
@@ -78,15 +78,19 @@ grep.stdin.end();</code></pre>
 
 <pre><code>{ cwd: undefined,
   env: process.env,
-  customFds: [-1, -1, -1],
   setsid: false
 }</code></pre>
 
 <p><code>cwd</code> で起動されたプロセスのワーキングディレクトリを指定することができます。
-<code>env</code> は新しいプロセスに見える環境変数を指定するために使います。
-<code>customFds</code> は新しいプロセスの [stdin, stdout, stderr] を既存のストリームに接続することを可能にします;
-<code>-1</code> は新しいストリームが作られなければならないことを意味します。
-<code>setsid</code> に true が設定されると、サブプロセスは新しいセッションで実行されます。</p>
+<code>env</code> は新しいプロセスに見える環境変数を指定するために使います。</p>
+
+<p>特定のファイル記述子を子プロセスの標準入出力に指定することを可能にする、
+<code>customFds</code> と呼ばれる廃止されたオプションがありました。
+この API は全てのプラットフォームに移植可能ではないために削除されました。
+<code>customFds</code> は新しいプロセスの [stdin, stdout, stderr] を既存のストリームに接続することを可能にしました;
+<code>-1</code> は新しいストリームが作られなければならないことを意味していました。</p>
+
+<p><code>setsid</code> に true が設定されると、サブプロセスは新しいセッションで実行されます。</p>
 
 <p><code>ls -lh /usr</code> を実行して <code>stdout</code>、<code>stderr</code>、および終了コードを取得する例:</p>
 
@@ -154,9 +158,13 @@ child.stderr.on('data', function (data) {
   }
 });</code></pre>
 
+<p><code>spawn()</code> は空の <code>options</code> オブジェクトを受け取ると、
+<code>process.env</code> を使うのではなく，空の環境変数で子プロセスを起動します。
+これは廃止された API との互換性のためです。</p>
+
 <p>関連項目: <code>child_process.exec()</code></p>
 
-<h3 id="child_process.exec">child_process.exec(command, [options], callback)</h3>
+<h3 id="child_process.exec">child_process.exec(command, [options], callback) <a href="#child_process.exec">#</a></h3>
 
 <p>コマンドをシェルで実行し、その出力をバッファに格納します。</p>
 
@@ -194,13 +202,13 @@ child = exec('cat *.js bad_file | wc -l',
 子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGTERM'</code>)。
 <code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。</p>
 
-<h3 id="child_process.execFile">child_process.execFile(file, args, options, callback)</h3>
+<h3 id="child_process.execFile">child_process.execFile(file, args, options, callback) <a href="#child_process.execFile">#</a></h3>
 
 <p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて
 <code>child_process.exec()</code> と同様です。
 これは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。</p>
 
-<h3 id="child_process.fork">child_process.fork(modulePath, arguments, options)</h3>
+<h3 id="child_process.fork">child_process.fork(modulePath, arguments, options) <a href="#child_process.fork">#</a></h3>
 
 <p>これは <code>spawn()</code> の特別版で、Node プロセスを起動します。
 返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
@@ -232,8 +240,7 @@ process.send({ foo: 'bar' });</code></pre>
 <code>process</code> はチャネルでメッセージを受信するたびにイベントを生成します。</p>
 
 <p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準入力、
-標準出力、標準エラー出力を持ちます。
-これは <code>customFds</code> オプションによって上書きすることが出来ます。</p>
+標準出力、標準エラー出力を持ちます。</p>
 
 <p>これらの子 Node は、やはり V8 の新しいインスタンスです。
 新しい Node ごとに少なくとも 30 ミリ秒の起動時間と 
@@ -248,7 +255,9 @@ process.send({ foo: 'bar' });</code></pre>
 <pre><code>var server = require('net').createServer();
 var child = require('child_process').fork(__dirname + '/child.js');
 // Open up the server object and send the handle.
-child.send({ server: true }, server._handle);</code></pre>
+server.listen(1337, function() {
+  child.send({ server: true }, server._handle);
+});</code></pre>
 
 <p>これはサーバのハンドルを受信してプロセス間で共有するサンプルです。</p>
 
@@ -259,7 +268,7 @@ child.send({ server: true }, server._handle);</code></pre>
   }
 });</code></pre>
 
-<h3 id="child.kill">child.kill(signal='SIGTERM')</h3>
+<h3 id="child.kill">child.kill(signal='SIGTERM') <a href="#child.kill">#</a></h3>
 
 <p>子プロセスにシグナルを送ります。
 引数が与えられない場合、子プロセスには <code>'SIGTERM'</code> が送られます。

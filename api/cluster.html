@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>cluster - Node.js v0.5.10 Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#cluster">Cluster</a></li></ul><hr /></div>
+<h2 id="cluster">Cluster</h2>
+
+<p>一つの Node インスタンスは一つのスレッドで実行されます。
+マルチコアシステムのメリットを生かすために、
+ユーザは時々 Node プロセスのクラスを起動して負荷を分散したくなります。</p>
+
+<p>node を <code>cluster</code> オプションと共に開始すると、Node はマシン上の
+CPU 数を検出して、多くのプロセスを開始します:</p>
+
+<pre><code>require('http').createServer(function(req, res) {
+  res.writeHead(200);
+  res.end('hello world\n');
+}).listen(8000);</code></pre>
+
+<p>次のように開始すると</p>
+
+<pre><code>% node cluster server.js 
+Detected 2 cpus
+Worker 2438 online
+Worker 2437 online</code></pre>
+
+<p>Node は複数のインスタンス間で 8000 番ポートを自動的に共有します。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

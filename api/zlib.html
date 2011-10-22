@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>zlib - Node.js v0.5.9 Manual &amp; Documentation</title>
+  <title>zlib - Node.js v0.5.10 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,62 +11,128 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#zlib">Zlib</a><ul><li><a href="#constants">Constants</a></li><li><a href="#zlib.Gzip">zlib.Gzip</a></li><li><a href="#zlib.Gunzip">zlib.Gunzip</a></li><li><a href="#zlib.Deflate">zlib.Deflate</a></li><li><a href="#zlib.Inflate">zlib.Inflate</a></li><li><a href="#zlib.DeflateRaw">zlib.DeflateRaw</a></li><li><a href="#zlib.InflateRaw">zlib.InflateRaw</a></li><li><a href="#zlib.Unzip">zlib.Unzip</a></li><li><a href="#options">Options</a></li><li><a href="#memory_Usage_Tuning">Memory Usage Tuning</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#zlib">Zlib</a><ul><li><a href="#examples">Examples</a></li><li><a href="#constants">Constants</a></li><li><a href="#zlib.Gzip">zlib.Gzip</a></li><li><a href="#zlib.Gunzip">zlib.Gunzip</a></li><li><a href="#zlib.Deflate">zlib.Deflate</a></li><li><a href="#zlib.Inflate">zlib.Inflate</a></li><li><a href="#zlib.DeflateRaw">zlib.DeflateRaw</a></li><li><a href="#zlib.InflateRaw">zlib.InflateRaw</a></li><li><a href="#zlib.Unzip">zlib.Unzip</a></li><li><a href="#options">Options</a></li><li><a href="#memory_Usage_Tuning">Memory Usage Tuning</a></li></ul></li></ul><hr /></div>
 <h2 id="zlib">Zlib</h2>
 
 <p>このモジュールは次のようにアクセスできます。</p>
 
-<pre><code>var zlib = require('zlib');
-var gzip = zlib.createGzip();
+<pre><code>var zlib = require('zlib');</code></pre>
+
+<p>これは Gzip/Gunzip、Deflate/Inflate、そして DeflateRaw/InflateRaw
+へバインディングするクラスを提供します。
+どのクラスも同じオプションを持つ、読み込みと書き込みが可能なストリームです。</p>
+
+<h3 id="examples">Examples <a href="#examples">#</a></h3>
+
+<p>ファイルを圧縮および解凍するには、fs.ReadStream から zlib へ、
+そして fs.WriteStream へパイプをつなぐだけです。</p>
+
+<pre><code>var gzip = zlib.createGzip();
 var fs = require('fs');
 var inp = fs.createReadStream('input.txt');
 var out = fs.createWriteStream('input.txt.gz');
 
 inp.pipe(gzip).pipe(out);</code></pre>
 
-<p>これは Gzip/Gunzip、Deflate/Inflate、そしてDeflateRaw/InflateRaw へバインディングするクラスを提供します。各クラスは同じオプションを持ち、読み込みと書き込みが可能なストリームです。</p>
+<p>このモジュールを HTTP クライアントとサーバで使うには、リクエストに
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3">accept-encoding</a>
+ヘッダ、レスポンスに
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.11">content-encoding</a>
+ヘッダを使用します。</p>
 
-<h3 id="constants">Constants</h3>
+<pre><code>// client request example
+var zlib = require('zlib');
+var http = require('http');
+var fs = require('fs');
+var request = http.get({ host: 'izs.me',
+                         path: '/',
+                         port: 80,
+                         headers: { 'accept-encoding': 'gzip,deflate' } });
+request.on('response', function(response) {
+  var output = fs.createWriteStream('izs.me_index.html');
+
+  switch (response.headers['content-encoding']) {
+    // or, just use zlib.createUnzip() to handle both cases
+    case 'gzip':
+      response.pipe(zlib.createGunzip()).pipe(output);
+      break;
+    case 'deflate':
+      response.pipe(zlib.createInflate()).pipe(output);
+      break;
+    default:
+      response.pipe(output);
+      break;
+  }
+});
+
+// server example
+// Running a gzip operation on every request is quite expensive.
+// It would be much more efficient to cache the compressed buffer.
+var zlib = require('zlib');
+var http = require('http');
+var fs = require('fs');
+http.createServer(function(request, response) {
+  var raw = fs.createReadStream('index.html');
+  var acceptEncoding = request.headers['accept-encoding'];
+  if (!acceptEncoding) {
+    acceptEncoding = '';
+  }
+
+  // Note: this is not a conformant accept-encoding parser.
+  // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3
+  if (acceptEncoding.match(/\bdeflate\b/)) {
+    response.writeHead(200, { 'content-encoding': 'deflate' });
+    raw.pipe(zlib.createDeflate()).pipe(response);
+  } else if (acceptEncoding.match(/\bgzip\b/)) {
+    response.writeHead(200, { 'content-encoding': 'gzip' });
+    raw.pipe(zlib.createGzip()).pipe(response);
+  } else {
+    response.writeHead(200, {});
+    raw.pipe(response);
+  }
+}).listen(1337);</code></pre>
+
+<h3 id="constants">Constants <a href="#constants">#</a></h3>
 
 <p>zlib.ht に定義された定数は <code>require('zlib')</code> でも定義されます。
 それらは zlib のドキュメントでより詳しく説明されます。
 詳細は <a href="http://zlib.net/manual.html#Constants">http://zlib.net/manual.html#Constants</a> を参照してください。</p>
 
-<h3 id="zlib.Gzip">zlib.Gzip</h3>
+<h3 id="zlib.Gzip">zlib.Gzip <a href="#zlib.Gzip">#</a></h3>
 
 <p>gzip を使ってデータを圧縮します。</p>
 
-<h3 id="zlib.Gunzip">zlib.Gunzip</h3>
+<h3 id="zlib.Gunzip">zlib.Gunzip <a href="#zlib.Gunzip">#</a></h3>
 
 <p>gzip ストリームを解凍します。</p>
 
-<h3 id="zlib.Deflate">zlib.Deflate</h3>
+<h3 id="zlib.Deflate">zlib.Deflate <a href="#zlib.Deflate">#</a></h3>
 
 <p>deflate を使ってデータを圧縮します。</p>
 
-<h3 id="zlib.Inflate">zlib.Inflate</h3>
+<h3 id="zlib.Inflate">zlib.Inflate <a href="#zlib.Inflate">#</a></h3>
 
 <p>deflate ストリームを解凍します。</p>
 
-<h3 id="zlib.DeflateRaw">zlib.DeflateRaw</h3>
+<h3 id="zlib.DeflateRaw">zlib.DeflateRaw <a href="#zlib.DeflateRaw">#</a></h3>
 
 <p>deflate を使ってデータを圧縮しますが、zlib ヘッダを付加しません。</p>
 
-<h3 id="zlib.InflateRaw">zlib.InflateRaw</h3>
+<h3 id="zlib.InflateRaw">zlib.InflateRaw <a href="#zlib.InflateRaw">#</a></h3>
 
 <p>生の deflate ストリームを解凍します。</p>
 
-<h3 id="zlib.Unzip">zlib.Unzip</h3>
+<h3 id="zlib.Unzip">zlib.Unzip <a href="#zlib.Unzip">#</a></h3>
 
 <p>Gzip または Deflate で圧縮されたストリームをヘッダで自動判別して解凍します。</p>
 
-<h3 id="options">Options</h3>
+<h3 id="options">Options <a href="#options">#</a></h3>
 
 <p>どのクラスもオプションオブジェクトを受け取ります。
 全てのオプションは任意です。</p>
@@ -79,7 +145,7 @@ inp.pipe(gzip).pipe(out);</code></pre>
 <p>これらの詳細は <a href="http://zlib.net/manual.html#Advanced">http://zlib.net/manual.html#Advanced</a> の
 <code>deflateInit2</code> および <code>inflateInit2</code> の説明を参照してください。</p>
 
-<h3 id="memory_Usage_Tuning">Memory Usage Tuning</h3>
+<h3 id="memory_Usage_Tuning">Memory Usage Tuning <a href="#memory_Usage_Tuning">#</a></h3>
 
 <p>node は <code>zlib/zconf.h</code> を変更して使っています:</p>
 
@@ -102,6 +168,15 @@ memLevel = 8 の場合 128K (デフォルト値) に加えて数キロバイト�
 小さなオブジェクトのために使われます。</p>
 
 <p>これは、デフォルト値 16K の <code>chunkSize</code> で指定されたサイズの内部バッファに加えられます。</p>
+
+<p>zlib の圧縮速度は <code>level</code> の設定で劇的に変化します
+高レベルにするとより圧縮できますが、完了までの時間が長くなります。
+低レベルにするとあまり圧縮されませんが、高速になります。</p>
+
+<p>一般的に、メモリをより多く使うオプションにすると node が zlib を呼び出す回数が
+少なくなることを意味し、
+一回の <code>write</code> 操作でより多くのデータを処理できることになります。
+これはあスピードに影響するもう一つのファクタで、メモリ使用量を犠牲にします。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
