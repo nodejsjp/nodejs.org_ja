@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>dns - Node.js v0.5.9 Manual &amp; Documentation</title>
+  <title>dns - Node.js v0.5.10 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -20,7 +20,16 @@
     <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dNS">DNS</a><ul><li><a href="#dns.lookup">dns.lookup(domain, family=null, callback)</a></li><li><a href="#dns.resolve">dns.resolve(domain, rrtype='A', callback)</a></li><li><a href="#dns.resolve4">dns.resolve4(domain, callback)</a></li><li><a href="#dns.resolve6">dns.resolve6(domain, callback)</a></li><li><a href="#dns.resolveMx">dns.resolveMx(domain, callback)</a></li><li><a href="#dns.resolveTxt">dns.resolveTxt(domain, callback)</a></li><li><a href="#dns.resolveSrv">dns.resolveSrv(domain, callback)</a></li><li><a href="#dns.reverse">dns.reverse(ip, callback)</a></li><li><a href="#dns.resolveNs">dns.resolveNs(domain, callback)</a></li><li><a href="#dns.resolveCname">dns.resolveCname(domain, callback)</a></li></ul></li></ul><hr /></div>
 <h2 id="dNS">DNS</h2>
 
-<p>このモジュールにアクセスするには <code>require('dns')</code> を使用します。</p>
+<p>このモジュールにアクセスするには <code>require('dns')</code> を使用します。
+dns モジュールの全てのメソッドは C-Ares を使用します。
+ただし、<code>dns.lookup</code> はスレッドプール上で <code>getaddrinfo(3)</code> を使用します。
+C-Ares は <code>getaddrinfo</code> よりずっと速いものの、
+他のシステムと連携するにはシステムリゾルバの方が安定しています。
+ユーザが <code>net.connect(80, 'google.com')</code> または
+<code>http.get({ host: 'google.com' })</code> を行った時、<code>dns.lookup</code>
+メソッドが使われます。
+多数のルックアップを素早く実行したいユーザは、
+C-Ares を呼び出すメソッドを使用すべきです。</p>
 
 <p>これは <code>'www.google.com'</code> を解決して、返された IP アドレスを逆引きで解決する例です。</p>
 
@@ -44,7 +53,7 @@ dns.resolve4('www.google.com', function (err, addresses) {
   });
 });</code></pre>
 
-<h3 id="dns.lookup">dns.lookup(domain, family=null, callback)</h3>
+<h3 id="dns.lookup">dns.lookup(domain, family=null, callback) <a href="#dns.lookup">#</a></h3>
 
 <p>ドメイン (例 <code>'google.com'</code>) を解決して最初に見つかった
 A (IPv4) または AAAA (IPv6) レコードにします。</p>
@@ -54,7 +63,7 @@ A (IPv4) または AAAA (IPv6) レコードにします。</p>
 <code>family</code> 引数は 4 または 6 の整数で、<code>address</code> のファミリーを意味します
 (この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。</p>
 
-<h3 id="dns.resolve">dns.resolve(domain, rrtype='A', callback)</h3>
+<h3 id="dns.resolve">dns.resolve(domain, rrtype='A', callback) <a href="#dns.resolve">#</a></h3>
 
 <p>ドメイン (例 <code>'google.com'</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
 妥当な <code>rrtype</code> は <code>A</code> (IPV4アドレス)、<code>AAAA</code> (IPV6アドレス)、
@@ -70,50 +79,50 @@ A (IPv4) または AAAA (IPv6) レコードにします。</p>
 <code>err.errno</code> は後述するエラーコードのいずれか、
 <code>err.message</code> はエラーを英語で説明する文字列となります。</p>
 
-<h3 id="dns.resolve4">dns.resolve4(domain, callback)</h3>
+<h3 id="dns.resolve4">dns.resolve4(domain, callback) <a href="#dns.resolve4">#</a></h3>
 
 <p><code>dns.resolve()</code> と同じですが、IPv4 アドレス (<code>A</code> レコード) だけを問い合わせます。
 <code>addresses</code> は IPv4 アドレスの配列です (例&lt;br /&gt;
 <code>['74.125.79.104', '74.125.79.105', '74.125.79.106']</code>)</p>
 
-<h3 id="dns.resolve6">dns.resolve6(domain, callback)</h3>
+<h3 id="dns.resolve6">dns.resolve6(domain, callback) <a href="#dns.resolve6">#</a></h3>
 
 <p>IPv6 (<code>AAAA</code> レコード) を問い合わせることを除いて <code>dns.resolve4()</code> と同じです。</p>
 
-<h3 id="dns.resolveMx">dns.resolveMx(domain, callback)</h3>
+<h3 id="dns.resolveMx">dns.resolveMx(domain, callback) <a href="#dns.resolveMx">#</a></h3>
 
 <p><code>dns.resolve()</code> と同じですが、mail exchange (<code>MX</code> レコード) だけを問い合わせます。</p>
 
 <p><code>addresses</code>は MX レコードの配列で、それぞれは priority と exchange の属性を持ちます
 (例 <code>[{'priority': 10, 'exchange': 'mx.example.com'},...]</code>)。</p>
 
-<h3 id="dns.resolveTxt">dns.resolveTxt(domain, callback)</h3>
+<h3 id="dns.resolveTxt">dns.resolveTxt(domain, callback) <a href="#dns.resolveTxt">#</a></h3>
 
 <p><code>dns.resolve()</code> と同じですが、テキスト (<code>TXT</code> レコード) だけを問い合わせます。
 <code>addresses</code> は <code>domain</code> で利用可能なテキストレコードの配列です。
 (例、<code>['v=spf1 ip4:0.0.0.0 ~all']</code>)</p>
 
-<h3 id="dns.resolveSrv">dns.resolveSrv(domain, callback)</h3>
+<h3 id="dns.resolveSrv">dns.resolveSrv(domain, callback) <a href="#dns.resolveSrv">#</a></h3>
 
 <p><code>dns.resolve()</code> と同じですが、サービスレコード (<code>SRV</code> レコード) だけを問い合わせます。
 <code>addresses</code> は <code>domain</code> で利用可能な SRV レコードの配列です。
 SRV レコードのプロパティは priority、weight、port、そして name です
 (例 <code>[{'priority': 10, {'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]</code>)。</p>
 
-<h3 id="dns.reverse">dns.reverse(ip, callback)</h3>
+<h3 id="dns.reverse">dns.reverse(ip, callback) <a href="#dns.reverse">#</a></h3>
 
 <p>IP アドレスからドメイン名の配列へ逆引きで解決します。</p>
 
 <p>コールバックは引数 <code>(err, domains)</code> を持ちます。</p>
 
-<h3 id="dns.resolveNs">dns.resolveNs(domain, callback)</h3>
+<h3 id="dns.resolveNs">dns.resolveNs(domain, callback) <a href="#dns.resolveNs">#</a></h3>
 
 <p><code>dns.resolve()</code> と同じですが、ネームサーバレコード (<code>NS</code> レコード) 
 だけを問い合わせます。
 <code>address</code> は <code>domain</code> で利用可能なネームサーバレコードの配列です
 (例 <code>['ns1.example.com', 'ns2.example.com']</code>)。</p>
 
-<h3 id="dns.resolveCname">dns.resolveCname(domain, callback)</h3>
+<h3 id="dns.resolveCname">dns.resolveCname(domain, callback) <a href="#dns.resolveCname">#</a></h3>
 
 <p><code>dns.resolve()</code> と同じですが、別名レコード (<code>CNAME</code> レコード) 
 だけを問い合わせます。

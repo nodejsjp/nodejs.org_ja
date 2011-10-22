@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>repl - Node.js v0.5.9 Manual &amp; Documentation</title>
+  <title>repl - Node.js v0.5.10 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.9 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#rEPL">REPL</a><ul><li><a href="#repl.start">repl.start(prompt='> ', stream=process.stdin)</a></li><li><a href="#rEPL_Features">REPL Features</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#rEPL">REPL</a><ul><li><a href="#repl.start">repl.start(prompt='> ', stream=process.stdin, eval=eval, useGlobal=false)</a></li><li><a href="#rEPL_Features">REPL Features</a></li></ul></li></ul><hr /></div>
 <h2 id="rEPL">REPL</h2>
 
 <p>Read-Eval-Print-Loop (REPL) は単独のプログラムとしても他のプログラムに手軽に取り込む形でも利用することができます。
@@ -45,11 +45,21 @@ Type '.help' for options.
 
 <pre><code>alias node="env NODE_NO_READLINE=1 rlwrap node"</code></pre>
 
-<h3 id="repl.start">repl.start(prompt='&gt; ', stream=process.stdin)</h3>
+<h3 id="repl.start">repl.start(prompt='&gt; ', stream=process.stdin, eval=eval, useGlobal=false) <a href="#repl.start">#</a></h3>
 
 <p><code>prompt</code> でプロンプト記号を、 <code>stream</code> で I/O を引数に取って REPL を起動します。
 <code>prompt</code> は省略可能で、 デフォルトは <code>&gt; </code> です。
-<code>stream</code> は省略可能で、 デフォルトは <code>process.stdin</code> です。</p>
+<code>stream</code> は省略可能で、 デフォルトは <code>process.stdin</code> です。
+<code>eval</code> も省略可能で、デフォルトは <code>eval()</code> の非同期ラッパーです。</p>
+
+<p><code>useGlobal</code> を <code>true</code> に指定した場合、REPL は別のコンテキストでスクリプトを
+実行するのではなく、グローバルオブジェクトを使用します。</p>
+
+<p>独自の <code>eval()</code> 関数は以下のシグネチャを持ちます。</p>
+
+<pre><code>function eval(cmd, callback) {
+  callback(null, result);
+}</code></pre>
 
 <p>複数の REPL を起動した場合、同一の node インスタンスが実行されないことがあります。
 それぞれの REPL はグローバルオブジェクトを共有しますが、I/O は固有のものを持ちます。</p>
@@ -81,7 +91,7 @@ net.createServer(function (socket) {
 <p>標準入力の代わりに Unix ドメインソケットをベースとしたサーバから REPL を起動することによって、
 再起動することなく node の常駐プロセスへ接続することができます。</p>
 
-<h3 id="rEPL_Features">REPL Features</h3>
+<h3 id="rEPL_Features">REPL Features <a href="#rEPL_Features">#</a></h3>
 
 <p>REPL の中で Control+D を実行すると終了します。複数行に渡る式を入力とすることができます。</p>
 
