@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>https - Node.js v0.5.10 Manual &amp; Documentation</title>
+  <title>https - Node.js v0.6.0 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.0 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#hTTPS">HTTPS</a></li><li><a href="#https.Server">https.Server</a></li><li><a href="#https.createServer">https.createServer(options, [requestListener])</a></li><li><a href="#https.request">https.request(options, callback)</a></li><li><a href="#https.get">https.get(options, callback)</a></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#hTTPS">HTTPS</a></li><li><a href="#https.Server">https.Server</a></li><li><a href="#https.createServer">https.createServer(options, [requestListener])</a></li><li><a href="#https.request">https.request(options, callback)</a></li><li><a href="#https.get">https.get(options, callback)</a></li><li><a href="#https.Agent">https.Agent</a></li><li><a href="#https.globalAgent">https.globalAgent</a></li></ul><hr /></div>
 <h2 id="hTTPS">HTTPS</h2>
 
 <p>HTTPS は TLS/SSL 上の HTTP プロトコルです。
@@ -53,7 +53,7 @@ https.createServer(options, function (req, res) {
 <h2 id="https.request">https.request(options, callback)</h2>
 
 <p>セキュアな Web サーバへのリクエストを作成します。
-<code>http.request()</code> と同様のオプションが指定できます。</p>
+<a href="http.html#http.request">http.request()</a> の全てと同様のオプションが指定できます。</p>
 
 <p>例:</p>
 
@@ -82,12 +82,20 @@ req.on('error', function(e) {
 
 <p><code>options</code> 引数は以下のオプションを持ちます。</p>
 
-<ul><li><code>host</code>: リクエストするホストのIPまたはドメイン。デフォルトは <code>'localhost'</code> です。</li><li><code>port</code>: リクエストするホストのポート。デフォルトは 443 です。</li><li><code>path</code>: リクエストのパス。デフォルトは <code>'/'</code> です。</li><li><code>method</code>: HTTP りくえすとのメソッド。デフォルトは <code>'GET'</code> です。</li></ul>
+<ul><li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。
+デフォルトは <code>'localhost'</code> です。</li><li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li><li><code>port</code>: リモートサーバのポート。デフォルトは 443 です。</li><li><code>method</code>: HTTPS リクエストのメソッドの文字列。デフォルトは <code>'GET'</code> です。</li><li><code>path</code>: リクエストのパス。デフォルトは <code>'/'</code> です。
+必要なら問い合わせ文字列を含めるべきです．
+例 <code>'/index.html?page=12'</code></li><li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li><li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>'user:password'</code>。</li><li><code>agent</code>: <a href="#https.Agent">Agent</a> の振る舞いを制御します。
+エージェントが使われる場合、<code>Connection:keep-alive</code> がデフォルトになります。
+可能な値は:<ul><li><code>undefined</code> (デフォルト): ホストとポートで
+<a href="#https.globalAgent">グローバル Agent</a> を使用します。</li><li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li><li><code>false</code>: Agent によるコネクションプーリングを使用しません。
+<code>Connection:close</code> の場合のデフォルトです。</li></ul></li></ul>
 
-<p>以下のオプションを指定することもできますが、
-グローバル <a href="http.html#http.Agent">エージェント</a> を使うことはできません。</p>
+<p>以下の <a href="tls.html#tls.connect">tls.connect()</a> 由来のオプションを
+指定することもできますが、
+グローバル <a href="http.html#http.Agent">エージェント</a> はこれらを無視します。</p>
 
-<ul><li><code>key</code>: SSLで使用する秘密鍵。デフォルトは <code>null</code> です。</li><li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li><li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li></ul>
+<ul><li><code>key</code>: SSLで使用する秘密鍵。デフォルトは <code>null</code> です。</li><li><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列。デフォルトは <code>null</code> です。</li><li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li><li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li></ul>
 
 <p>これらのオプションを指定するには、カスタムエージェントを使用します。</p>
 
@@ -142,6 +150,16 @@ https.get({ host: 'encrypted.google.com', path: '/' }, function(res) {
 }).on('error', function(e) {
   console.error(e);
 });</code></pre>
+
+<h2 id="https.Agent">https.Agent</h2>
+
+<p>HTTPS 用の Agent オブジェクトで，
+<a href="http.html#http.Agent">http.Agent</a> と同様です。</p>
+
+<h2 id="https.globalAgent">https.globalAgent</h2>
+
+<p>全ての HTTPS クライアントリクエストで使用される、デフォルトの
+<a href="#https.Agent">https.Agent</a> のインスタンスです。</p>
   </div>
   <script type="text/javascript" src="assets/sh_main.js"></script>
   <script type="text/javascript" src="assets/sh_javascript.min.js"></script>

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>util - Node.js v0.5.10 Manual &amp; Documentation</title>
+  <title>util - Node.js v0.6.0 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.0 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#util">util</a><ul><li><a href="#util.format">util.format()</a></li><li><a href="#util.debug">util.debug(string)</a></li><li><a href="#util.log">util.log(string)</a></li><li><a href="#util.inspect">util.inspect(object, showHidden=false, depth=2)</a></li><li><a href="#util.pump">util.pump(readableStream, writableStream, [callback])</a></li><li><a href="#util.inherits">util.inherits(constructor, superConstructor)</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#util">util</a><ul><li><a href="#util.format">util.format()</a></li><li><a href="#util.debug">util.debug(string)</a></li><li><a href="#util.log">util.log(string)</a></li><li><a href="#util.inspect">util.inspect(object, showHidden=false, depth=2)</a></li><li><a href="#util.isArray">util.isArray(object)</a></li><li><a href="#util.isRegExp">util.isRegExp(object)</a></li><li><a href="#util.isDate">util.isDate(object)</a></li><li><a href="#util.isError">util.isError(object)</a></li><li><a href="#util.pump">util.pump(readableStream, writableStream, [callback])</a></li><li><a href="#util.inherits">util.inherits(constructor, superConstructor)</a></li></ul></li></ul><hr /></div>
 <h2 id="util">util</h2>
 
 <p>これらの関数はモジュール <code>'util'</code> 内にあります。
@@ -80,6 +80,58 @@
 <pre><code>var util = require('util');
 
 console.log(util.inspect(util, true, null));</code></pre>
+
+<h3 id="util.isArray">util.isArray(object) <a href="#util.isArray">#</a></h3>
+
+<p><code>object</code> が配列なら <code>true</code> を、それ以外は <code>false</code> を返します。</p>
+
+<pre><code>var util = require('util');
+
+util.isArray([])
+  // true
+util.isArray(new Array)
+  // true
+util.isArray({})
+  // false</code></pre>
+
+<h3 id="util.isRegExp">util.isRegExp(object) <a href="#util.isRegExp">#</a></h3>
+
+<p><code>object</code> が <code>RegExp</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。</p>
+
+<pre><code>var util = require('util');
+
+util.isRegExp(/some regexp/)
+  // true
+util.isRegExp(new RegExp('another regexp'))
+  // true
+util.isRegExp({})
+  // false</code></pre>
+
+<h3 id="util.isDate">util.isDate(object) <a href="#util.isDate">#</a></h3>
+
+<p><code>object</code> が <code>Date</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。</p>
+
+<pre><code>var util = require('util');
+
+util.isDate(new Date())
+  // true
+util.isDate(Date())
+  // false (without 'new' returns a String)
+util.isDate({})
+  // false</code></pre>
+
+<h3 id="util.isError">util.isError(object) <a href="#util.isError">#</a></h3>
+
+<p><code>object</code> が <code>Error</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。</p>
+
+<pre><code>var util = require('util');
+
+util.isError(new Error())
+  // true
+util.isError(new TypeError())
+  // true
+util.isError({ name: 'Error', message: 'an error occurred' })
+  // false</code></pre>
 
 <h3 id="util.pump">util.pump(readableStream, writableStream, [callback]) <a href="#util.pump">#</a></h3>
 

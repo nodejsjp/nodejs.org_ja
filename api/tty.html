@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>tty - Node.js v0.5.10 Manual &amp; Documentation</title>
+  <title>tty - Node.js v0.6.0 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,13 +11,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.0 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr />
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tTY">TTY</a><ul><li><a href="#tty.open">tty.open(path, args=[])</a></li><li><a href="#tty.isatty">tty.isatty(fd)</a></li><li><a href="#tty.setRawMode">tty.setRawMode(mode)</a></li><li><a href="#tty.setWindowSize">tty.setWindowSize(fd, row, col)</a></li><li><a href="#tty.getWindowSize">tty.getWindowSize(fd)</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tTY">TTY</a><ul><li><a href="#tty.isatty">tty.isatty(fd)</a></li><li><a href="#tty.setRawMode">tty.setRawMode(mode)</a></li><li><a href="#tty.setWindowSize">tty.setWindowSize(fd, row, col)</a></li><li><a href="#tty.getWindowSize">tty.getWindowSize(fd)</a></li></ul></li></ul><hr /></div>
 <h2 id="tTY">TTY</h2>
 
 <p><code>require('tty')</code> でこのモジュールにアクセスします。</p>
@@ -25,22 +25,14 @@
 <p>例:</p>
 
 <pre><code>var tty = require('tty');
-tty.setRawMode(true);
 process.stdin.resume();
+tty.setRawMode(true);
 process.stdin.on('keypress', function(char, key) {
   if (key &amp;&amp; key.ctrl &amp;&amp; key.name == 'c') {
     console.log('graceful exit');
     process.exit()
   }
 });</code></pre>
-
-<h3 id="tty.open">tty.open(path, args=[]) <a href="#tty.open">#</a></h3>
-
-<p>`path で指定された実行ファイルから新しいプロセスを新しい疑似端末のセッションリーダとして起動します。</p>
-
-<p>配列 <code>[slaveFD, childProcess]</code> を返します。
-<code>slaveFD</code> は疑似端末のスレーブ側のファイル記述子です。
-<code>childProcess</code> は子プロセスのオブジェクトです。</p>
 
 <h3 id="tty.isatty">tty.isatty(fd) <a href="#tty.isatty">#</a></h3>
 
