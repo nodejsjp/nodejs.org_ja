@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>child_processes - Node.js v0.5.10 Manual &amp; Documentation</title>
+  <title>child_processes - Node.js v0.6.0 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.0 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -84,12 +84,6 @@ grep.stdin.end();</code></pre>
 <p><code>cwd</code> で起動されたプロセスのワーキングディレクトリを指定することができます。
 <code>env</code> は新しいプロセスに見える環境変数を指定するために使います。</p>
 
-<p>特定のファイル記述子を子プロセスの標準入出力に指定することを可能にする、
-<code>customFds</code> と呼ばれる廃止されたオプションがありました。
-この API は全てのプラットフォームに移植可能ではないために削除されました。
-<code>customFds</code> は新しいプロセスの [stdin, stdout, stderr] を既存のストリームに接続することを可能にしました;
-<code>-1</code> は新しいストリームが作られなければならないことを意味していました。</p>
-
 <p><code>setsid</code> に true が設定されると、サブプロセスは新しいセッションで実行されます。</p>
 
 <p><code>ls -lh /usr</code> を実行して <code>stdout</code>、<code>stderr</code>、および終了コードを取得する例:</p>
@@ -161,6 +155,19 @@ child.stderr.on('data', function (data) {
 <p><code>spawn()</code> は空の <code>options</code> オブジェクトを受け取ると、
 <code>process.env</code> を使うのではなく，空の環境変数で子プロセスを起動します。
 これは廃止された API との互換性のためです。</p>
+
+<p>特定のファイル記述子を子プロセスの標準入出力に指定することを可能にする、
+<code>customFds</code> と呼ばれる廃止されたオプションがありました。
+この API は全てのプラットフォームに移植可能ではないために削除されました。
+<code>customFds</code> は新しいプロセスの [stdin, stdout, stderr] を既存のストリームに接続することを可能にしました;
+<code>-1</code> は新しいストリームが作られなければならないことを意味していました。
+使用する場合は自己責任で。</p>
+
+<p>よく似た内部的なオプションがあります。
+具体的には <code>stdinStream</code>、<code>stdoutStream</code>、<code>stderrStream</code> です。
+これらは <strong>内部用途</strong>です。
+Node のドキュメント化されていない API と同様に、
+これらを使用すべきではありません。</p>
 
 <p>関連項目: <code>child_process.exec()</code></p>
 

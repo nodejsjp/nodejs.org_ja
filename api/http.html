@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>http - Node.js v0.5.10 Manual &amp; Documentation</title>
+  <title>http - Node.js v0.6.0 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.5.10 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.0 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -67,7 +67,7 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 
 <h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
 
-<p><code>function (errno) { }</code></p>
+<p><code>function () { }</code></p>
 
 <p>サーバがクローズした時に生成されます。</p>
 
@@ -156,18 +156,10 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 
 <h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
 
-<p><code>function (err) { }</code></p>
+<p><code>function () { }</code></p>
 
 <p><code>response.end()</code> が呼び出されたり、フラッシュされる前に下層の接続が
 切断されたことを示します。</p>
-
-<p><code>err</code> パラメータは常に与えられ、クローズの理由を示します。</p>
-
-<p><code>err.code === 'timeout'</code> は下層のコネクションがタイムアウトしたことを示します。
-これは、全ての着信側の接続はデフォルト 2 分でタイムアウトするために発生します。</p>
-
-<p><code>err.code === 'aborted'</code> はクライアントが仮想の接続をいち早く切断したことを
-意味します。</p>
 
 <p><code>'end'</code> と同様、このイベントはリクエスト上で一度だけ発生し、その後ではもう
 <code>'data'</code> イベントが発生することはありません。</p>
@@ -385,12 +377,12 @@ response.end();</code></pre>
 
 <p>オプション:</p>
 
-<ul><li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li><li><code>port</code>: リモートサーバのポート。</li><li><code>socketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li><li><code>method</code>: HTTP リクエストのメソッドを指定する文字列。 可能な値:
-<code>'GET'</code> (デフォルト), <code>'POST'</code>, <code>'PUT'</code>, そして <code>'DELETE'</code>。</li><li><code>path</code>: リクエストのパス。問い合わせ文字列やフラグメントがあるなら含めるべきです。
-例. <code>'/index.html?page=12'</code></li><li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li><li><code>agent</code>: <code>Agent</code> の振る舞いを制御します。
+<ul><li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li><li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li><li><code>port</code>: リモートサーバのポート。デフォルトは 80 です。</li><li><code>socketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li><li><code>method</code>: HTTP リクエストのメソッドの文字列。デフォルトは <code>'GET'</code> です。</li><li><code>path</code>: リクエストのパス。デフォルトは <code>'/'</code> です。
+必要なら問い合わせ文字列を含めるべきです．
+例 <code>'/index.html?page=12'</code></li><li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li><li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>'user:password'</code>。</li><li><code>agent</code>: <code>Agent</code> の振る舞いを制御します。
 エージェントが使われる場合、Connection:keep-alive がデフォルトになります。
-可能な値は:<ul><li><code>undefined</code> (デフォルト): ホストとポートからデフォルトの <code>Agent</code> 
-を使用します。</li><li><code>Agent</code>: オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li><li><code>false</code>: Agent によるコネクションプーリングを使用しません。
+可能な値は:<ul><li><code>undefined</code> (デフォルト): ホストとポートで
+<a href="#http.globalAgent">グローバル Agent</a> を使用します。</li><li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li><li><code>false</code>: Agent によるコネクションプーリングを使用しません。
 Connection:close の場合のデフォルトです。</li></ul></li></ul>
 
 <p><code>http.request()</code> は <code>http.ClientRequest</code> クラスのインスタンスを返します。
@@ -435,7 +427,8 @@ req.end();</code></pre>
 <p>いくつかの特別なヘッダに注意が必要です。</p>
 
 <ul><li><p>'Connection: keep-alive' の送信は、サーバへのコネクションを次のリクエストまで持続することを Node に通知します。</p></li><li><p>'Content-length' ヘッダの送信は、デフォルトのチャンクエンコーディングを無効にします。</p></li><li><p>'Expect' ヘッダの送信は、リクエストヘッダを即時に送信します。
-通常、'Expect: 100-continue' を送信すると、タイムアウトと <code>continue</code> イベントを待ち受けます。詳細は RFC2616 の 8.2.3 節を参照してください。</p></li></ul>
+通常、'Expect: 100-continue' を送信すると、タイムアウトと <code>continue</code> イベントを待ち受けます。詳細は RFC2616 の 8.2.3 節を参照してください。</p></li><li><p>Authorization ヘッダの送信は、<code>auth</code> オプションによるベーシック認証を
+上書きします。</p></li></ul>
 
 <h2 id="http.get">http.get(options, callback)</h2>
 
@@ -655,17 +648,20 @@ srv.listen(1337, '127.0.0.1', function() {
 <h3 id="request.setTimeout">request.setTimeout(timeout, [callback]) <a href="#request.setTimeout">#</a></h3>
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<code>socket.setTimeout(timeout, [callback])</code> が呼び出されます。</p>
+<a href="net.html#socket.setTimeout">socket.setTimeout(timeout, [callback])</a>
+が呼び出されます。</p>
 
 <h3 id="request.setNoDelay">request.setNoDelay(noDelay=true) <a href="#request.setNoDelay">#</a></h3>
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<code>socket.setNoDelay(noDelay)</code> が呼び出されます。</p>
+<a href="net.html#socket.setNoDelay">socket.setNoDelay(noDelay)</a>
+が呼び出されます。</p>
 
 <h3 id="request.setSocketKeepAlive">request.setSocketKeepAlive(enable=false, [initialDelay]) <a href="#request.setSocketKeepAlive">#</a></h3>
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<code>socket.setKeepAlive(enable, [initialDelay])</code> が呼び出されます。</p>
+<a href="net.html#socket.setKeepAlive">socket.setKeepAlive(enable, [initialDelay])</a>
+が呼び出されます。</p>
 
 <h2 id="http.ClientResponse">http.ClientResponse</h2>
 
