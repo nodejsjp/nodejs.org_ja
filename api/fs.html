@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>fs - Node.js v0.6.1 Manual &amp; Documentation</title>
+  <title>fs - Node.js v0.6.2 Manual &amp; Documentation</title>
   <link type="image/x-icon" rel="icon" href="/favicon.ico" />
   <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
   <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
@@ -11,7 +11,7 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.6.1 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.2 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
@@ -381,8 +381,12 @@ pwrite(2) を参照してください。</p>
 <p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。</p>
 
 <p>第 2 引数はオプションです．
-<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と、
-ポーリング間隔をミリ秒で表す <code>interval</code> の二つのメンバを含むオブジェクトです。
+<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と <code>interval</code>
+の二つのメンバを含むオブジェクトです。
+<code>persistent</code> はファイルが監視されている間、
+プロセスが実行し続けることを示します。
+<code>interval</code> は対象をポーリングする間隔をミリ秒で示します
+(inotify を備えた Linux システムでは <code>interval</code> は無視されます)。
 デフォルトは <code>{ persistent: true, interval: 0}</code> です。</p>
 
 <p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:</p>
@@ -408,7 +412,10 @@ pwrite(2) を参照してください。</p>
 
 <p>第 2 引数はオプションです。
 もし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを
-持つオブジェクトであるべきです。デフォルトは <code>{ persistent: true }</code> です。</p>
+持つオブジェクトであるべきです。
+<code>persistent</code> はファイルが監視されている間、
+プロセスが実行し続けることを示します。
+デフォルトは <code>{ persistent: true }</code> です。</p>
 
 <p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。
 <code>event</code> は <code>'rename'</code> または <code>'change'</code>、そして <code>filename</code> はイベントを
