@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>http - Node.js v0.6.2 Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js v0.6.2 Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#hTTP">HTTP</a></li><li><a href="#http.Server">http.Server</a><ul><li><a href="#event_request_">Event: 'request'</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_checkContinue_">Event: 'checkContinue'</a></li><li><a href="#event_upgrade_">Event: 'upgrade'</a></li><li><a href="#event_clientError_">Event: 'clientError'</a></li><li><a href="#http.createServer">http.createServer([requestListener])</a></li><li><a href="#server.listen">server.listen(port, [hostname], [callback])</a></li><li><a href="#server.listen">server.listen(path, [callback])</a></li><li><a href="#server.close">server.close()</a></li></ul></li><li><a href="#http.ServerRequest">http.ServerRequest</a><ul><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#request.method">request.method</a></li><li><a href="#request.url">request.url</a></li><li><a href="#request.headers">request.headers</a></li><li><a href="#request.trailers">request.trailers</a></li><li><a href="#request.httpVersion">request.httpVersion</a></li><li><a href="#request.setEncoding">request.setEncoding(encoding=null)</a></li><li><a href="#request.pause">request.pause()</a></li><li><a href="#request.resume">request.resume()</a></li><li><a href="#request.connection">request.connection</a></li></ul></li><li><a href="#http.ServerResponse">http.ServerResponse</a><ul><li><a href="#response.writeContinue">response.writeContinue()</a></li><li><a href="#response.writeHead">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li><li><a href="#response.statusCode">response.statusCode</a></li><li><a href="#response.setHeader">response.setHeader(name, value)</a></li><li><a href="#response.getHeader">response.getHeader(name)</a></li><li><a href="#response.removeHeader">response.removeHeader(name)</a></li><li><a href="#response.write">response.write(chunk, encoding='utf8')</a></li><li><a href="#response.addTrailers">response.addTrailers(headers)</a></li><li><a href="#response.end">response.end([data], [encoding])</a></li></ul></li><li><a href="#http.request">http.request(options, callback)</a></li><li><a href="#http.get">http.get(options, callback)</a></li><li><a href="#http.Agent">http.Agent</a></li><li><a href="#http.globalAgent">http.globalAgent</a><ul><li><a href="#agent.maxSockets">agent.maxSockets</a></li><li><a href="#agent.sockets">agent.sockets</a></li><li><a href="#agent.requests">agent.requests</a></li></ul></li><li><a href="#http.ClientRequest">http.ClientRequest</a><ul><li><a href="#event_response_">Event 'response'</a></li><li><a href="#event_socket_">Event: 'socket'</a></li><li><a href="#event_upgrade_">Event: 'upgrade'</a></li><li><a href="#event_continue_">Event: 'continue'</a></li><li><a href="#request.write">request.write(chunk, encoding='utf8')</a></li><li><a href="#request.end">request.end([data], [encoding])</a></li><li><a href="#request.abort">request.abort()</a></li><li><a href="#request.setTimeout">request.setTimeout(timeout, [callback])</a></li><li><a href="#request.setNoDelay">request.setNoDelay(noDelay=true)</a></li><li><a href="#request.setSocketKeepAlive">request.setSocketKeepAlive(enable=false, [initialDelay])</a></li></ul></li><li><a href="#http.ClientResponse">http.ClientResponse</a><ul><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#response.statusCode">response.statusCode</a></li><li><a href="#response.httpVersion">response.httpVersion</a></li><li><a href="#response.headers">response.headers</a></li><li><a href="#response.trailers">response.trailers</a></li><li><a href="#response.setEncoding">response.setEncoding(encoding=null)</a></li><li><a href="#response.pause">response.pause()</a></li><li><a href="#response.resume">response.resume()</a></li></ul></li></ul><hr /></div>
+<h2 id="hTTP">HTTP</h2>
+
+<p>HTTP サーバおよびクライアントを使用するにはいずれも <code>require('http')</code> が必要です。</p>
+
+<p>Node の HTTP インタフェースは、
+伝統的に扱いが難しかったプロトコルの多くの機能をサポートするように設計されています。
+とりわけ大きくて、場合によってはチャンク化されたメッセージです。
+インタフェースは決してリクエストまたはレスポンス全体をバッファリングしないように気をつけています
+－ 利用者はストリームデータを使うことができます。</p>
+
+<p>HTTP メッセージヘッダはこのようなオブジェクトとして表現されます:</p>
+
+<pre><code>{ 'content-length': '123',
+  'content-type': 'text/plain',
+  'connection': 'keep-alive',
+  'accept': '*/*' }</code></pre>
+
+<p>キーは小文字化されます。値は変更されません。</p>
+
+<p>考えられる HTTP アプリケーションを完全にサポートするために、
+Node の HTTP API はとても低水準です。それはストリームのハンドリングとメッセージの解析だけに対処します。
+解析はメッセージをヘッダとボディに分けますが、実際のヘッダとボディは解析しません。</p>
+
+<h2 id="http.Server">http.Server</h2>
+
+<p>これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
+
+<h3 id="event_request_">Event: 'request' <a href="#event_request_">#</a></h3>
+
+<p><code>function (request, response) { }</code></p>
+
+<p>リクエストの度に生成されます。
+コネクションごとに複数のリクエストがあるかもしれないことに注意してください
+(Keep Alive なコネクションの場合)。</p>
+
+<p><code>request</code> は <code>http.ServerRequest</code> のインスタンス、
+<code>response</code> は <code>http.ServerResponse</code> のインスタンスです。</p>
+
+<h3 id="event_connection_">Event: 'connection' <a href="#event_connection_">#</a></h3>
+
+<p><code>function (socket) { }</code></p>
+
+<p>新しい TCP ストリームが確立した時。
+<code>socket</code> は <code>net.Socket</code> 型のオブジェクトです。
+通常の利用者がこのイベントにアクセスしたくなることはないでしょう。
+<code>socket</code> は <code>request.connection</code> からアクセスすることもできます。</p>
+
+<h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
+
+<p><code>function () { }</code></p>
+
+<p>サーバがクローズした時に生成されます。</p>
+
+<h3 id="event_checkContinue_">Event: 'checkContinue' <a href="#event_checkContinue_">#</a></h3>
+
+<p><code>function (request, response) { }</code></p>
+
+<p>httpの Expect: 100-continue リクエストを受信する度に生成されます。
+このイベントが監視されない場合、サーバは自動的に 100 Continue を応答します。</p>
+
+<p>このイベントを処理する場合、クライアントがリクエストボディを送信し続けるべきなら
+<code>response.writeContinue</code> を呼び出す必要があります。
+あるいは、クライアントがリクエストボディを送信し続けるべきでないなら、
+適切な HTTP レスポンス (例えば 400 Bad Request) を生成します。</p>
+
+<p>このイベントが生成されて処理された場合、<code>request</code>イベントは生成されないことに注意してください。</p>
+
+<h3 id="event_upgrade_">Event: 'upgrade' <a href="#event_upgrade_">#</a></h3>
+
+<p><code>function (request, socket, head) { }</code></p>
+
+<p>クライアントが HTTP のアップグレードを要求する度に生成されます。
+このイベントが監視されない場合、アップグレードを要求したクライアントのコネクションはクローズされます。</p>
+
+<ul><li><code>request</code> はリクエストイベントと同様に HTTP リクエストへの引数です。</li><li><code>socket</code> はサーバとクライアントの間のネットワークソケットです。</li><li><code>head</code> はアップグレードストリームの最初のパケットを持つ Buffer のインスタンスです。
+空の場合もあります。</li></ul>
+
+<p>このイベントが生成された後、リクエスト元のソケットはもう <code>data</code> イベントリスナーを持ちません。
+このソケットでサーバへ送られたデータを扱うためにそれをバインドしなければならないことを意味します。</p>
+
+<h3 id="event_clientError_">Event: 'clientError' <a href="#event_clientError_">#</a></h3>
+
+<p><code>function (exception) { }</code></p>
+
+<p>クライアントコネクションが 'error' イベントを発した場合 － ここに転送されます。</p>
+
+<h3 id="http.createServer">http.createServer([requestListener]) <a href="#http.createServer">#</a></h3>
+
+<p>新しい Web サーバオブジェクトを返します。</p>
+
+<p><code>requestListener</code> は自動的に <code>'request'</code> イベントに加えられる関数です。</p>
+
+<h3 id="server.listen">server.listen(port, [hostname], [callback]) <a href="#server.listen">#</a></h3>
+
+<p>指定されたポートとホスト名でコネクションの受け入れを開始します。
+ホスト名が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます (<code>INADDR_ANY</code>)。</p>
+
+<p>UNIX ドメインソケットを待ち受ける場合、ポートとホスト名ではなくファイル名を提供します。</p>
+
+<p>この関数は非同期です。最後の引数の <code>callback</code> はサーバがポートをバインドすると呼び出されます。</p>
+
+<h3 id="server.listen">server.listen(path, [callback]) <a href="#server.listen">#</a></h3>
+
+<p><code>path</code> で与えられたコネクションを待ち受ける UNIX ドメインソケットのサーバを開始します。</p>
+
+<p>この関数は非同期です。最後の引数の <code>callback</code> はサーバがバインドすると呼び出されます。</p>
+
+<h3 id="server.close">server.close() <a href="#server.close">#</a></h3>
+
+<p>サーバが新しいコネクションを受け付けるのを終了します。</p>
+
+<h2 id="http.ServerRequest">http.ServerRequest</h2>
+
+<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成され、
+<code>'request'</code> リスナーの第1引数として渡されます。</p>
+
+<p>これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
+
+<h3 id="event_data_">Event: 'data' <a href="#event_data_">#</a></h3>
+
+<p><code>function (chunk) { }</code></p>
+
+<p>メッセージボディの断片を受信した場合に生成されます。</p>
+
+<p>例: 一つの引数としてボディのチャンクが与えられます。
+転送エンコーディングでデコードされます。
+ボディのチャンクは文字列です。
+ボディのエンコーディングは <code>request.setBodyEncoding()</code> で設定されます。</p>
+
+<h3 id="event_end_">Event: 'end' <a href="#event_end_">#</a></h3>
+
+<p><code>function () { }</code></p>
+
+<p>リクエストごとに厳密に一回生成されます。
+その後、このリクエストで <code>'data'</code> イベントが生成されることはありません。</p>
+
+<h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
+
+<p><code>function () { }</code></p>
+
+<p><code>response.end()</code> が呼び出されたり、フラッシュされる前に下層の接続が
+切断されたことを示します。</p>
+
+<p><code>'end'</code> と同様、このイベントはリクエスト上で一度だけ発生し、その後ではもう
+<code>'data'</code> イベントが発生することはありません。</p>
+
+<p>注意: <code>'close'</code> は <code>'end'</code> の後で発生することがあります。
+その逆もあります。</p>
+
+<h3 id="request.method">request.method <a href="#request.method">#</a></h3>
+
+<p>リクエストメソッドを表す文字列です。参照のみ可能です。
+例: <code>'GET'</code>、<code>'DELETE'</code></p>
+
+<h3 id="request.url">request.url <a href="#request.url">#</a></h3>
+
+<p>リクエスト URL を表す文字列です。
+これは実際の HTTP リクエストに存在する URL だけを含みます。
+リクエストがこうなら:</p>
+
+<pre><code>GET /status?name=ryan HTTP/1.1\r\n
+Accept: text/plain\r\n
+\r\n</code></pre>
+
+<p>この場合の <code>request.url</code> はこうなります:</p>
+
+<pre><code>'/status?name=ryan'</code></pre>
+
+<p>URL の要素を解析したい場合は、
+<code>require('url').parse(request.url)</code> を参照してください。例:</p>
+
+<pre><code>node&gt; require('url').parse('/status?name=ryan')
+{ href: '/status?name=ryan',
+  search: '?name=ryan',
+  query: 'name=ryan',
+  pathname: '/status' }</code></pre>
+
+<p>問い合わせ文字列からパラメータを取り出したい場合は、
+<code>require('querystring').parse</code> 関数を参照するか、
+<code>require('url').parse</code> の第 2 引数に <code>true</code> を渡してください。例:</p>
+
+<pre><code>node&gt; require('url').parse('/status?name=ryan', true)
+{ href: '/status?name=ryan',
+  search: '?name=ryan',
+  query: { name: 'ryan' },
+  pathname: '/status' }</code></pre>
+
+<h3 id="request.headers">request.headers <a href="#request.headers">#</a></h3>
+
+<p>参照のみ可能です。</p>
+
+<h3 id="request.trailers">request.trailers <a href="#request.trailers">#</a></h3>
+
+<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。'end' イベントの後にだけ発生します。</p>
+
+<h3 id="request.httpVersion">request.httpVersion <a href="#request.httpVersion">#</a></h3>
+
+<p>HTTP プロトコルのバージョンを表す文字列です。参照のみ可能です。例:
+<code>'1.1'</code>、<code>'1.0'</code>。
+同様に <code>request.httpVersionMajor</code> は最初の整数、
+<code>request.httpVersionMinor</code> は 2 番目の整数です。</p>
+
+<h3 id="request.setEncoding">request.setEncoding(encoding=null) <a href="#request.setEncoding">#</a></h3>
+
+<p>リクエストボディのエンコーディングを設定します。
+<code>'utf8'</code> または <code>'binary'</code> のいずれかです。
+デフォルトは <code>null</code> で、<code>'data'</code> イベントが
+<code>Buffer</code> を生成することを意味します。</p>
+
+<h3 id="request.pause">request.pause() <a href="#request.pause">#</a></h3>
+
+<p>リクエストによるイベントの生成を中断します。アップロード速度を落とすのに便利です。</p>
+
+<h3 id="request.resume">request.resume() <a href="#request.resume">#</a></h3>
+
+<p>中断されたリクエストを再開します。</p>
+
+<h3 id="request.connection">request.connection <a href="#request.connection">#</a></h3>
+
+<p>コネクションに関連づけられた <code>net.Socket</code> オブジェクトです。</p>
+
+<p>HTTPS では <code>request.connection.verifyPeer()</code> と
+<code>request.connection.getPeerCertificate()</code> で
+クライアントの認証の詳細を取得できます。</p>
+
+<h2 id="http.ServerResponse">http.ServerResponse</h2>
+
+<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。
+<code>'request'</code> リスナーの第 2 引数として渡されます。
+これは <code>Writable Stream</code> です。</p>
+
+<h3 id="response.writeContinue">response.writeContinue() <a href="#response.writeContinue">#</a></h3>
+
+<p>HTTP/1.1 の 100 Continue メッセージをクライアントに送信し、
+リクエストボディを送信してもよいことを示します。
+<code>Server</code>の <a href="#event_checkContinue_">checkContinue</a> イベントを参照してください。</p>
+
+<h3 id="response.writeHead">response.writeHead(statusCode, [reasonPhrase], [headers]) <a href="#response.writeHead">#</a></h3>
+
+<p>レスポンスヘッダを送信します。
+ステータスコードは <code>404</code> のような 3 桁の数字による HTTP ステータスコードです。
+最後の引数 <code>headers</code> は、レスポンスヘッダです。
+オプションとして人に読める形式の <code>reasonPhrase</code> を第 2 引数で与えることができます。</p>
+
+<p>例:</p>
+
+<pre><code>var body = 'hello world';
+response.writeHead(200, {
+  'Content-Length': body.length,
+  'Content-Type': 'text/plain' });</code></pre>
+
+<p>このメソッドはメッセージごとに 1 回だけ呼び出されなくてはならず、
+<code>response.end()</code> の前に呼び出されなければなりません。</p>
+
+<p>もしこのメソッドが呼び出される前に <code>response.write()</code> または <code>response.end()</code> が呼ばれると、暗黙的で可変のヘッダが算出されてこの関数が呼び出されます。</p>
+
+<p>注意: <code>Content-Length</code> は文字数ではなくバイト数で与えられます。
+上の例が動作するのは <code>'hello world'</code> という文字列が単一バイト文字だけを含むためです。
+もしボディがより上位にコード化された文字を含む場合は、
+指定したエンコーディングによるバイト数を得るために <code>Buffer.byteLength()</code> を使うべきです。
+Node は、Content-Length と実際に送信されたレスポンスボディの長さが等しいかどうかチェックしません。</p>
+
+<h3 id="response.statusCode">response.statusCode <a href="#response.statusCode">#</a></h3>
+
+<p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。</p>
+
+<p>例:</p>
+
+<pre><code>response.statusCode = 404;</code></pre>
+
+<p>レスポンスヘッダがクライアントに送信された後、
+このプロパティは送信されたステータスコードを示します。</p>
+
+<h3 id="response.setHeader">response.setHeader(name, value) <a href="#response.setHeader">#</a></h3>
+
+<p>暗黙的ヘッダのヘッダ値を設定します。
+送信されようとしているレスポンスヘッダにこのヘッダが既に含まれている場合、
+その値は置き換えられます。
+同じ名前で複数のヘッダを送信したい場合は文字列の配列を使ってください。</p>
+
+<p>例:</p>
+
+<pre><code>response.setHeader("Content-Type", "text/html");</code></pre>
+
+<p>or</p>
+
+<pre><code>response.setHeader("Set-Cookie", ["type=ninja", "language=javascript"]);</code></pre>
+
+<h3 id="response.getHeader">response.getHeader(name) <a href="#response.getHeader">#</a></h3>
+
+<p>すでにキューに入れられているが未送信のヘッダを読み上げます．
+名前は大文字小文字を区別しないことに注意してください。
+これはヘッダが暗黙的にフラッシュされる前だけ呼び出すことができます。</p>
+
+<p>例:</p>
+
+<pre><code>var contentType = response.getHeader('content-type');</code></pre>
+
+<h3 id="response.removeHeader">response.removeHeader(name) <a href="#response.removeHeader">#</a></h3>
+
+<p>暗黙的に送信するためキューに入れられたヘッダを削除します。</p>
+
+<p>例:</p>
+
+<pre><code>response.removeHeader("Content-Encoding");</code></pre>
+
+<h3 id="response.write">response.write(chunk, encoding='utf8') <a href="#response.write">#</a></h3>
+
+<p>このメソッドが呼び出され、<code>response.writeHead()</code> が呼び出されなければ、
+暗黙的ヘッダモードに切り替わり、暗黙的ヘッダはフラッシュされます。</p>
+
+<p>これはレスポンスボディのチャンクを送信します。
+このメソッドはボディの連続した部分を提供するために複数回呼び出されるかもしれません。</p>
+
+<p><code>chunk</code> は文字列またはバッファにすることができます。
+<code>chunk</code> が文字列の場合、どのエンコードでバイトストリームにするかを第 2 引数で指定します。
+デフォルトの <code>encoding</code> は <code>'utf8'</code> です。</p>
+
+<p><strong>注意</strong>: これは生の HTTP ボディで、
+高水準のマルチパートボディエンコーディングで使われるものとは無関係です。</p>
+
+<p>初めて <code>response.write()</code> が呼び出されると、
+バッファリングされていたヘッダ情報と最初のボディがクライアントに送信されます。
+2 回目に <code>response.write()</code> が呼ばれると、
+Node はストリーミングデータを分割して送信しようとしていると仮定します。
+すなわち、レスポンスはボディの最初のチャンクまでバッファリングされます。</p>
+
+<h3 id="response.addTrailers">response.addTrailers(headers) <a href="#response.addTrailers">#</a></h3>
+
+<p>このメソッドは HTTP トレーラヘッダ (メッセージの最後に置かれるヘッダ) をレスポンスに追加します。</p>
+
+<p>トレーラはレスポンスがチャンク化されたエンコーディングで<strong>のみ</strong>生成されます;
+そうでなければ (例えばリクエストが HTTP/1.0)、黙って破棄されます。</p>
+
+<p>HTTP は、トレーラを生成するならそのヘッダフィールドのリストを値として
+<code>Trailer</code> ヘッダを送信することを要求していることに注意してください。</p>
+
+<pre><code>response.writeHead(200, { 'Content-Type': 'text/plain',
+                          'Trailer': 'Content-MD5' });
+response.write(fileData);
+response.addTrailers({'Content-MD5': "7895bf4b8828b55ceaf47747b4bca667"});
+response.end();</code></pre>
+
+<h3 id="response.end">response.end([data], [encoding]) <a href="#response.end">#</a></h3>
+
+<p>このメソッドはレスポンスの全てのヘッダとボディを送信したことをサーバに伝えます;
+サーバはメッセージが終了したと考えるべきです。
+この <code>response.end()</code> メソッドは各レスポンスごとに呼び出さなければ<em>なりません</em>。</p>
+
+<p><code>data</code> が指定された場合、
+<code>response.write(data, encoding)</code> に続けて <code>response.end()</code> を呼び出すのと等価です。</p>
+
+<h2 id="http.request">http.request(options, callback)</h2>
+
+<p>Node は HTTP リクエストを行うために、サーバごとにいくつかのコネクションを保持します。
+この関数はその一つを使って透過的にリクエストを発行できるようにします。</p>
+
+<p>オプション:</p>
+
+<ul><li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li><li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li><li><code>port</code>: リモートサーバのポート。デフォルトは 80 です。</li><li><code>socketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li><li><code>method</code>: HTTP リクエストのメソッドの文字列。デフォルトは <code>'GET'</code> です。</li><li><code>path</code>: リクエストのパス。デフォルトは <code>'/'</code> です。
+必要なら問い合わせ文字列を含めるべきです．
+例 <code>'/index.html?page=12'</code></li><li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li><li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>'user:password'</code>。</li><li><code>agent</code>: <code>Agent</code> の振る舞いを制御します。
+エージェントが使われる場合、Connection:keep-alive がデフォルトになります。
+可能な値は:<ul><li><code>undefined</code> (デフォルト): ホストとポートで
+<a href="#http.globalAgent">グローバル Agent</a> を使用します。</li><li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li><li><code>false</code>: Agent によるコネクションプーリングを使用しません。
+Connection:close の場合のデフォルトです。</li></ul></li></ul>
+
+<p><code>http.request()</code> は <code>http.ClientRequest</code> クラスのインスタンスを返します。
+<code>http.ClientRequest</code> のインスタンスは書き込み可能なストリームです。
+もし POST リクエストでファイルのアップロードがしたければ、
+<code>http.ClientRequest</code> オブジェクトに出力してください。</p>
+
+<p>例:</p>
+
+<pre><code>var options = {
+  host: 'www.google.com',
+  port: 80,
+  path: '/upload',
+  method: 'POST'
+};
+
+var req = http.request(options, function(res) {
+  console.log('STATUS: ' + res.statusCode);
+  console.log('HEADERS: ' + JSON.stringify(res.headers));
+  res.setEncoding('utf8');
+  res.on('data', function (chunk) {
+    console.log('BODY: ' + chunk);
+  });
+});
+
+req.on('error', function(e) {
+  console.log('problem with request: ' + e.message);
+});
+
+// write data to request body
+req.write('data\n');
+req.write('data\n');
+req.end();</code></pre>
+
+<p>この例で <code>req.end()</code> が呼ばれていることに注意してください。
+<code>http.request()</code> では、リクエストが終了したことを示すために、
+常に <code>req.end()</code> を呼び出さなければなりません
+- リクエストのボディに出力するデータがなかったとしても。</p>
+
+<p>リクエスト中に何らかのエラー (DNS 解決、TCP レベルのエラー、HTTP パースエラーなど) が発生すると、戻り値のリクエストオブジェクトで <code>'error'</code> イベントが生成されます。</p>
+
+<p>いくつかの特別なヘッダに注意が必要です。</p>
+
+<ul><li><p>'Connection: keep-alive' の送信は、サーバへのコネクションを次のリクエストまで持続することを Node に通知します。</p></li><li><p>'Content-length' ヘッダの送信は、デフォルトのチャンクエンコーディングを無効にします。</p></li><li><p>'Expect' ヘッダの送信は、リクエストヘッダを即時に送信します。
+通常、'Expect: 100-continue' を送信すると、タイムアウトと <code>continue</code> イベントを待ち受けます。詳細は RFC2616 の 8.2.3 節を参照してください。</p></li><li><p>Authorization ヘッダの送信は、<code>auth</code> オプションによるベーシック認証を
+上書きします。</p></li></ul>
+
+<h2 id="http.get">http.get(options, callback)</h2>
+
+<p>ほとんどのリクエストは本文のない GET リクエストであるため、
+Node は便利なメソッドを提供します。
+このメソッドと <code>http.request()</code> の間の違いは、メソッドを GET に設定して <code>req.end()</code> を自動的に呼び出すことだけです。</p>
+
+<p>例:</p>
+
+<pre><code>var options = {
+  host: 'www.google.com',
+  port: 80,
+  path: '/index.html'
+};
+
+http.get(options, function(res) {
+  console.log("Got response: " + res.statusCode);
+}).on('error', function(e) {
+  console.log("Got error: " + e.message);
+});</code></pre>
+
+<h2 id="http.Agent">http.Agent</h2>
+
+<p>Node 0.5.3 以降には、HTTP クライアントリクエストのソケットを
+プーリングするために新しい HTTP Agent の実装が存在します。</p>
+
+<p>以前は、エージェントの一つのインスタンスが一つのホスト + ポートのプールを
+助けていましたが、現在の実装では任意の数のホストに対するソケットを
+保持できるようになりました。</p>
+
+<p>現在の HTTP Agent では、クライアントリクエストはデフォルトで
+Connection:keep-alive を使うようにもなりました。
+ソケットを待ってペンディングになっている HTTP リクエストがなければ、
+ソケットはクローズされます。
+これは、node のプールは高負荷時に keep-alive のメリットを持ちながら、
+keep-alive を使用する HTTP クライアントを開発者が手動でクローズする
+必要がないことを意味します。</p>
+
+<p>ソケットは <code>'close'</code> イベントまたは特別な <code>'agentRemove'</code> イベントが
+生成された時にエージェントのプールから削除されます。
+これは、一つの HTTP リクエストを長時間オープンしたままにするために、
+プールにソケットがとどまらないことを意図するなら、
+以下のようにすることができることを意味します:</p>
+
+<pre><code>http.get(options, function(res) {
+  // Do stuff
+}).on("socket", function (socket) {
+  socket.emit("agentRemove");
+});</code></pre>
+
+<p>別の方法として、 <code>agent: false</code> を指定することで、
+プーリングを使用しないこともできます:</p>
+
+<pre><code>http.get({host:'localhost', port:80, path:'/', agent:false}, function (res) {
+  // Do stuff
+})</code></pre>
+
+<h2 id="http.globalAgent">http.globalAgent</h2>
+
+<p>全ての HTTP クライアントリクエストで使用される、デフォルトの Agent のインスタンスです。</p>
+
+<h3 id="agent.maxSockets">agent.maxSockets <a href="#agent.maxSockets">#</a></h3>
+
+<p>デフォルトでは 5 に設定されます。
+エージェントがいくつのソケットを並行にオープンするかを決定します。</p>
+
+<h3 id="agent.sockets">agent.sockets <a href="#agent.sockets">#</a></h3>
+
+<p>エージェントが現在使っているソケットの配列です。
+変更しないでください。</p>
+
+<h3 id="agent.requests">agent.requests <a href="#agent.requests">#</a></h3>
+
+<p>まだソケットが割り当てられていないリクエストのキューを含むオブジェクトです。
+変更しないでください。</p>
+
+<h2 id="http.ClientRequest">http.ClientRequest</h2>
+
+<p>このオブジェクトは HTTP サーバ内部で作成され、<code>http.request()</code> から返されます。
+それはヘッダがキューに入れられた <em>進行中</em> のリクエストを表現します。
+ヘッダは <code>setHeader(name, value)</code>, <code>getHeader(name)</code>, <code>removeHeader(name)</code> API によってまだ可変のままです。
+実際にヘッダが送信されるのは、最初のデータチャンクが送信される時またはコネクションがクローズされる時です。</p>
+
+<p>レスポンスを取得するには、<code>'response'</code> 用のリスナーをリクエストオブジェクトに加えます。
+<code>'response'</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。
+<code>'response'</code> イベントは <code>http.ClientResponse</code> のインスタンスを唯一の引数として実行されます。</p>
+
+<p><code>'response'</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;
+とりわけ <code>'data'</code> イベントのリスナーです。
+<code>'response'</code> イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。
+そのため、ボディの最初の部分の受信と競合することを心配する必要はありません。
+<code>'response'</code> イベントの間に <code>'data'</code> イベントのリスナーが加えられる限り、
+ボディ全体を受信することができます。</p>
+
+<pre><code>// Good
+request.on('response', function (response) {
+  response.on('data', function (chunk) {
+    console.log('BODY: ' + chunk);
+  });
+});
+
+// Bad - misses all or part of the body
+request.on('response', function (response) {
+  setTimeout(function () {
+    response.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+  }, 10);
+});</code></pre>
+
+<p>これは <code>Writable Stream</code> です。
+注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。</p>
+
+<p>これは以下のイベントを持つ <code>EventEmitter</code> です。</p>
+
+<h3 id="event_response_">Event 'response' <a href="#event_response_">#</a></h3>
+
+<p><code>function (response) { }</code></p>
+
+<p>このリクエストに対するレスポンスを受信した時に生成されます。
+このイベントは一回だけ生成されます。
+<code>response</code> 引数は <code>http.ClientResponse</code> のインスタンスです。</p>
+
+<p>オプション:</p>
+
+<ul><li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li><li><code>port</code>: リモートサーバのポート。</li><li><code>soocketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li></ul>
+
+<h3 id="event_socket_">Event: 'socket' <a href="#event_socket_">#</a></h3>
+
+<p><code>function (socket) { }</code></p>
+
+<p>このリクエストにソケットが割り当てられた後に生成されます。</p>
+
+<h3 id="event_upgrade_">Event: 'upgrade' <a href="#event_upgrade_">#</a></h3>
+
+<p><code>function (response, socket, head) { }</code></p>
+
+<p>サーバがアップグレード要求に応答する度に生成されます。
+このイベントが監視されていない場合、クライアントがアップグレードヘッダを受信するとそのコネクションはクローズされます。</p>
+
+<p><code>http.getAget</code> を使ってどのように <code>upgrade</code> イベントを監視するかを示す、
+クライアントとサーバのペア:</p>
+
+<pre><code>var http = require('http');
+var net = require('net');
+
+// Create an HTTP server
+var srv = http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('okay');
+});
+srv.on('upgrade', function(req, socket, upgradeHead) {
+  socket.write('HTTP/1.1 101 Web Socket Protocol Handshake\r\n' +
+               'Upgrade: WebSocket\r\n' +
+               'Connection: Upgrade\r\n' +
+               '\r\n\r\n');
+
+  socket.ondata = function(data, start, end) {
+    socket.write(data.toString('utf8', start, end), 'utf8'); // echo back
+  };
+});
+
+// now that server is running
+srv.listen(1337, '127.0.0.1', function() {
+
+  // make a request
+  var options = {
+    port: 1337,
+    host: '127.0.0.1',
+    headers: {
+      'Connection': 'Upgrade',
+      'Upgrade': 'websocket'
+    }
+  };
+
+  var req = http.request(options);
+  req.end();
+
+  req.on('upgrade', function(res, socket, upgradeHead) {
+    console.log('got upgraded!');
+    socket.end();
+    process.exit(0);
+  });
+});</code></pre>
+
+<h3 id="event_continue_">Event: 'continue' <a href="#event_continue_">#</a></h3>
+
+<p><code>function ()</code></p>
+
+<p>通常、リクエストが 'Expect: 100-continue' を含んでいたことにより、
+サーバが '100 Continue' HTTP レスポンスを送信することで生成されます。
+これはクライアントがリクエストボディを送信すべき事を示します。</p>
+
+<h3 id="request.write">request.write(chunk, encoding='utf8') <a href="#request.write">#</a></h3>
+
+<p>ボディのチャンクを送信します。
+このメソッドを何回も呼び出すと、サーバへのリクエストボディをストリーム化できます － 
+このケースは <code>['Transfer-Encoding', 'chunked']</code> ヘッダでリクエストを生成したことを意味します。</p>
+
+<p><code>chunk</code> 引数は整数の配列か文字列になります。</p>
+
+<p><code>encoding</code> 引数はオプションで、<code>chunk</code> が文字列の場合だけ適用されます。</p>
+
+<h3 id="request.end">request.end([data], [encoding]) <a href="#request.end">#</a></h3>
+
+<p>リクエストの送信を終了します。
+ボディのいくつかの部分がまだ送信されていない場合、それはストリームにフラッシュされます。
+リクエストがチャンク化されている場合、これは終端の <code>'0\r\n\r\n'</code> を送信します。</p>
+
+<p><code>data</code> が指定された場合は、
+<code>request.write(data, encoding)</code> に続けて <code>request.end()</code> を呼び出すのと等価です。</p>
+
+<h3 id="request.abort">request.abort() <a href="#request.abort">#</a></h3>
+
+<p>リクエストをアボートします (v0.3.8 からの新機能)</p>
+
+<h3 id="request.setTimeout">request.setTimeout(timeout, [callback]) <a href="#request.setTimeout">#</a></h3>
+
+<p>このリクエストにソケットが割り当てられて接続した際に、
+<a href="net.html#socket.setTimeout">socket.setTimeout(timeout, [callback])</a>
+が呼び出されます。</p>
+
+<h3 id="request.setNoDelay">request.setNoDelay(noDelay=true) <a href="#request.setNoDelay">#</a></h3>
+
+<p>このリクエストにソケットが割り当てられて接続した際に、
+<a href="net.html#socket.setNoDelay">socket.setNoDelay(noDelay)</a>
+が呼び出されます。</p>
+
+<h3 id="request.setSocketKeepAlive">request.setSocketKeepAlive(enable=false, [initialDelay]) <a href="#request.setSocketKeepAlive">#</a></h3>
+
+<p>このリクエストにソケットが割り当てられて接続した際に、
+<a href="net.html#socket.setKeepAlive">socket.setKeepAlive(enable, [initialDelay])</a>
+が呼び出されます。</p>
+
+<h2 id="http.ClientResponse">http.ClientResponse</h2>
+
+<p>このオブジェクトは <code>http.request()</code> によってリクエストと一緒に作成されます。
+これはリクエストオブジェクトの <code>'response'</code> イベントに渡されます。</p>
+
+<p>レスポンスは <code>Readable Stream</code> インタフェースを実装します。</p>
+
+<h3 id="event_data_">Event: 'data' <a href="#event_data_">#</a></h3>
+
+<p><code>function (chunk) { }</code></p>
+
+<p>メッセージボディの断片を受信した場合に生成されます。</p>
+
+<h3 id="event_end_">Event: 'end' <a href="#event_end_">#</a></h3>
+
+<p><code>function () { }</code></p>
+
+<p>メッセージごとに厳密に一回だけ生成されます。
+このイベントが生成された後、このレスポンスはどんなイベントも生成しません。</p>
+
+<h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
+
+<p><code>function (err) { }</code></p>
+
+<p><code>'end'</code> イベントが生成される前に下層の接続が切断されたことを示します。
+<a href="#http.ServerRequest">http.ServerRequest</a> の <code>'close'</code>
+イベントにより多くの情報があります。</p>
+
+<h3 id="response.statusCode">response.statusCode <a href="#response.statusCode">#</a></h3>
+
+<p>3 桁の数字によるレスポンスのステータスコードです。例えば <code>404</code>。</p>
+
+<h3 id="response.httpVersion">response.httpVersion <a href="#response.httpVersion">#</a></h3>
+
+<p>接続しているサーバとの HTTP のバージョンです。
+おそらく <code>'1.1'</code> または <code>'1.0'</code> のどちらかです。
+同様に <code>response.httpVersionMajor</code> は最初の整数、
+<code>response.httpVersionMinor</code> は 2 番目の整数です。</p>
+
+<h3 id="response.headers">response.headers <a href="#response.headers">#</a></h3>
+
+<p>レスポンスヘッダオブジェクトです。</p>
+
+<h3 id="response.trailers">response.trailers <a href="#response.trailers">#</a></h3>
+
+<p>レスポンスのトレーラオブジェクトです。
+'end' イベントの後にだけ発生します。</p>
+
+<h3 id="response.setEncoding">response.setEncoding(encoding=null) <a href="#response.setEncoding">#</a></h3>
+
+<p>レスポンスボディのエンコーディングを設定します。
+<code>'utf8'</code>、<code>'ascii'</code>、あるいは <code>'base64'</code> のいずれかです。
+デフォルトは <code>null</code> で、
+<code>'data'</code> イベントが <code>Buffer</code> を生成することを意味します。</p>
+
+<h3 id="response.pause">response.pause() <a href="#response.pause">#</a></h3>
+
+<p>イベントの生成によるレスポンスを中断します。ダウンロード速度を落とすのに便利です。</p>
+
+<h3 id="response.resume">response.resume() <a href="#response.resume">#</a></h3>
+
+<p>中断されていたレスポンスを再開します。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

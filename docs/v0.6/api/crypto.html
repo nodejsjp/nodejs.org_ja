@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>crypto - Node.js v0.6.2 Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js v0.6.2 Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#crypto">Crypto</a><ul><li><a href="#crypto.createCredentials">crypto.createCredentials(details)</a></li><li><a href="#crypto.createHash">crypto.createHash(algorithm)</a></li><li><a href="#hash.update">hash.update(data)</a></li><li><a href="#hash.digest">hash.digest(encoding='binary')</a></li><li><a href="#crypto.createHmac">crypto.createHmac(algorithm, key)</a></li><li><a href="#hmac.update">hmac.update(data)</a></li><li><a href="#hmac.digest">hmac.digest(encoding='binary')</a></li><li><a href="#crypto.createCipher">crypto.createCipher(algorithm, password)</a></li><li><a href="#crypto.createCipheriv">crypto.createCipheriv(algorithm, key, iv)</a></li><li><a href="#cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#cipher.final">cipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createDecipher">crypto.createDecipher(algorithm, password)</a></li><li><a href="#crypto.createDecipheriv">crypto.createDecipheriv(algorithm, key, iv)</a></li><li><a href="#decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary')</a></li><li><a href="#decipher.final">decipher.final(output_encoding='binary')</a></li><li><a href="#crypto.createSign">crypto.createSign(algorithm)</a></li><li><a href="#signer.update">signer.update(data)</a></li><li><a href="#signer.sign">signer.sign(private_key, output_format='binary')</a></li><li><a href="#crypto.createVerify">crypto.createVerify(algorithm)</a></li><li><a href="#verifier.update">verifier.update(data)</a></li><li><a href="#verifier.verify">verifier.verify(object, signature, signature_format='binary')</a></li><li><a href="#crypto.createDiffieHellman">crypto.createDiffieHellman(prime_length)</a></li><li><a href="#crypto.createDiffieHellman">crypto.createDiffieHellman(prime, encoding='binary')</a></li><li><a href="#diffieHellman.generateKeys">diffieHellman.generateKeys(encoding='binary')</a></li><li><a href="#diffieHellman.computeSecret">diffieHellman.computeSecret(other_public_key, input_encoding='binary', output_encoding=input_encoding)</a></li><li><a href="#diffieHellman.getPrime">diffieHellman.getPrime(encoding='binary')</a></li><li><a href="#diffieHellman.getGenerator">diffieHellman.getGenerator(encoding='binary')</a></li><li><a href="#diffieHellman.getPublicKey">diffieHellman.getPublicKey(encoding='binary')</a></li><li><a href="#diffieHellman.getPrivateKey">diffieHellman.getPrivateKey(encoding='binary')</a></li><li><a href="#diffieHellman.setPublicKey">diffieHellman.setPublicKey(public_key, encoding='binary')</a></li><li><a href="#diffieHellman.setPrivateKey">diffieHellman.setPrivateKey(public_key, encoding='binary')</a></li><li><a href="#pbkdf2">pbkdf2(password, salt, iterations, keylen, callback)</a></li><li><a href="#randomBytes">randomBytes(size, [callback])</a></li></ul></li></ul><hr /></div>
+<h2 id="crypto">Crypto</h2>
+
+<p>このモジュールにアクセスするには <code>require('crypto')</code> を使用します。</p>
+
+<p>暗号化モジュールは下層のプラットフォームで OpenSSL が有効であることを必要とします。
+それは安全な HTTPS ネットワークや http コネクションの一部として使われる、
+安全な認証情報をカプセル化する方法を提供します。</p>
+
+<p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。</p>
+
+<h3 id="crypto.createCredentials">crypto.createCredentials(details) <a href="#crypto.createCredentials">#</a></h3>
+
+<p>認証情報オブジェクトを作成します。オプションの <code>details</code> は以下のキーを持つ辞書です:</p>
+
+<ul><li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列</li><li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列</li><li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または文字列の配列</li></ul>
+
+<p>'ca' の詳細が与えられなかった場合、node.js はデフォルトとして
+<a href="http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a>
+で与えられる、信頼できる認証局の公開されたリストを使用します。</p>
+
+<h3 id="crypto.createHash">crypto.createHash(algorithm) <a href="#crypto.createHash">#</a></h3>
+
+<p>ハッシュオブジェクトを生成して返します。
+与えられたアルゴリズムによる暗号ハッシュ関数はダイジェストの生成に使われます。</p>
+
+<p><code>algorithm</code> は、プラットフォーム上の OpenSSL 
+のバージョンでサポートされている利用可能なアルゴリズムに依存します。
+例えば <code>'sha1'</code>、<code>'md5'</code>、<code>'sha256'</code>、<code>'sha512'</code>、などです。
+最近のリリースでは、<code>openssl list-message-digest-algorithms</code>
+で利用可能なダイジェストアルゴリズムが表示されます。</p>
+
+<p>例: このプログラムはファイルのsha1ハッシュ値を求めます。</p>
+
+<pre><code>var filename = process.argv[2];
+var crypto = require('crypto');
+var fs = require('fs');
+
+var shasum = crypto.createHash('sha1');
+
+var s = fs.ReadStream(filename);
+s.on('data', function(d) {
+  shasum.update(d);
+});
+
+s.on('end', function() {
+  var d = shasum.digest('hex');
+  console.log(d + '  ' + filename);
+});</code></pre>
+
+<h3 id="hash.update">hash.update(data) <a href="#hash.update">#</a></h3>
+
+<p>与えられた <code>data</code> でハッシュの内容を更新します。
+これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
+
+<h3 id="hash.digest">hash.digest(encoding='binary') <a href="#hash.digest">#</a></h3>
+
+<p>渡された全てのデータがハッシュ化されたダイジェストを計算します。
+<code>encoding</code> は <code>'hex'</code>、<code>'binary'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> 
+オブジェクトを使うことはできません。</p>
+
+<h3 id="crypto.createHmac">crypto.createHmac(algorithm, key) <a href="#crypto.createHmac">#</a></h3>
+
+<p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。</p>
+
+<p><code>algorithm</code> は OpenSSL でサポートされているアルゴリズムに依存します － 
+前述の <code>createHash</code> を参照してください。</p>
+
+<h3 id="hmac.update">hmac.update(data) <a href="#hmac.update">#</a></h3>
+
+<p>与えられた <code>data</code> で HMAC の内容を更新します。
+これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
+
+<h3 id="hmac.digest">hmac.digest(encoding='binary') <a href="#hmac.digest">#</a></h3>
+
+<p>渡された全てのデータが HMAC 化されたダイジェストを計算します。
+<code>encoding</code> は <code>'hex'</code>、<code>'binary'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> 
+オブジェクトを使うことはできません。</p>
+
+<h3 id="crypto.createCipher">crypto.createCipher(algorithm, password) <a href="#crypto.createCipher">#</a></h3>
+
+<p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。
+<code>algorithm</code> は、OpenSSL に依存します。例えば <code>'aes192'</code> などです。
+最近のリリースでは、<code>openssl list-cipher-algorithms</code>
+で利用可能な暗号アルゴリズムが表示されます。
+<code>password</code> はキーと IV の生成に使用されます。
+これは <code>'binary'</code> でエンコードされた文字列でなければなりません
+(より詳細は <a href="buffers.html">Buffers</a> を参照してください)。</p>
+
+<h3 id="crypto.createCipheriv">crypto.createCipheriv(algorithm, key, iv) <a href="#crypto.createCipheriv">#</a></h3>
+
+<p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して返します。
+<code>algorithm</code> は <code>createCSipher()</code> と同じです。
+<code>key</code> はアルゴリズムで使用される生のキーです。 <code>iv</code> は初期化ベクトルです。
+<code>key</code> と <code>iv</code> は <code>'binary'</code> でエンコードされた文字列でなければなりません
+(より詳細は <a href="buffers.html">Buffers</a> を参照してください)。</p>
+
+<h3 id="cipher.update">cipher.update(data, input_encoding='binary', output_encoding='binary') <a href="#cipher.update">#</a></h3>
+
+<p><code>data</code> で暗号を更新します。
+<code>input_encoding</code> で与えられるエンコーディングは <code>'utf8'</code>、<code>'ascii'</code>、<code>'binary'</code> のいずれかです。
+<code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、
+<code>'utf8'</code>、<code>'ascii'</code> または <code>'binary'</code> のいずれかです。</p>
+
+<p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
+
+<h3 id="cipher.final">cipher.final(output_encoding='binary') <a href="#cipher.final">#</a></h3>
+
+<p>暗号化されたコンテンツの残りを返します。
+<code>output_encoding</code> は次のいずれかです: <code>'binary'</code>、<code>'base64'</code> または <code>'hex'</code></p>
+
+<p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> 
+オブジェクトを使うことはできません。</p>
+
+<h3 id="crypto.createDecipher">crypto.createDecipher(algorithm, password) <a href="#crypto.createDecipher">#</a></h3>
+
+<p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。
+これは前述の <a href="#crypto.createCipher">createCipher()</a> の鏡写しです。</p>
+
+<h3 id="crypto.createDecipheriv">crypto.createDecipheriv(algorithm, key, iv) <a href="#crypto.createDecipheriv">#</a></h3>
+
+<p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。
+これは前述の <a href="#crypto.createCipheriv">createCipheriv()</a> の鏡写しです。</p>
+
+<h3 id="decipher.update">decipher.update(data, input_encoding='binary', output_encoding='binary') <a href="#decipher.update">#</a></h3>
+
+<p><code>'binary'</code>、<code>'base64'</code> または <code>'hex'</code> のいずれかでエンコードされた復号を <code>data</code> で更新します。
+<code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、
+<code>'binary'</code>、<code>'ascii'</code> あるいは <code>'utf8'</code> のいずれかです。</p>
+
+<h3 id="decipher.final">decipher.final(output_encoding='binary') <a href="#decipher.final">#</a></h3>
+
+<p>復号化されたプレーンテキストの残りを返します。
+<code>output_decoding</code> は <code>'binary'</code>、<code>'ascii'</code> あるいは <code>'utf8'</code> のいずれかです。</p>
+
+<p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> 
+オブジェクトを使うことはできません。</p>
+
+<h3 id="crypto.createSign">crypto.createSign(algorithm) <a href="#crypto.createSign">#</a></h3>
+
+<p>与えられたアルゴリズムで署名オブジェクトを作成して返します。
+最近のOpenSSLのリリースでは、<code>openssl list-public-key-algorithms</code>
+で利用可能な署名アルゴリズムの一覧が表示されます。例えば 'RSA-SHA256'。</p>
+
+<h3 id="signer.update">signer.update(data) <a href="#signer.update">#</a></h3>
+
+<p>署名オブジェクトをデータで更新します。
+これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
+
+<h3 id="signer.sign">signer.sign(private_key, output_format='binary') <a href="#signer.sign">#</a></h3>
+
+<p>署名オブジェクトに渡された全ての更新データで署名を計算します。
+<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。</p>
+
+<p><code>'binary'</code>、<code>'hex'</code>、あるいは <code>'base64'</code> のいずれかを指定した <code>output_format</code> による署名を返します。</p>
+
+<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> 
+オブジェクトを使うことはできません。</p>
+
+<h3 id="crypto.createVerify">crypto.createVerify(algorithm) <a href="#crypto.createVerify">#</a></h3>
+
+<p>与えられたアルゴリズムで検証オブジェクトを作成して返します。これは前述の署名オブジェクトと鏡写しです。</p>
+
+<h3 id="verifier.update">verifier.update(data) <a href="#verifier.update">#</a></h3>
+
+<p>検証オブジェクトをデータで更新します。
+これは新しいデータがストリームに流される際に何度も呼び出されます。</p>
+
+<h3 id="verifier.verify">verifier.verify(object, signature, signature_format='binary') <a href="#verifier.verify">#</a></h3>
+
+<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。
+<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを
+PEM でエンコードしたオブジェクトです。
+<code>signature</code> は先に計算したデータの署名で、
+その <code>signature_format</code> は <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<p>署名されたデータと公開鍵による検証の結果によって true または false を返します。</p>
+
+<p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> 
+オブジェクトを使うことはできません。</p>
+
+<h3 id="crypto.createDiffieHellman">crypto.createDiffieHellman(prime_length) <a href="#crypto.createDiffieHellman">#</a></h3>
+
+<p>ディフィー・ヘルマン鍵共有オブジェクトを作成し、
+与えられた長さの素数を生成します。生成元は <code>2</code> です。</p>
+
+<h3 id="crypto.createDiffieHellman">crypto.createDiffieHellman(prime, encoding='binary') <a href="#crypto.createDiffieHellman">#</a></h3>
+
+<p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。
+生成元は <code>2</code> です。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.generateKeys">diffieHellman.generateKeys(encoding='binary') <a href="#diffieHellman.generateKeys">#</a></h3>
+
+<p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、
+指定の方法でエンコーディングされた公開鍵を返します。
+この鍵は相手側に渡されるものです。</p>
+
+<h3 id="diffieHellman.computeSecret">diffieHellman.computeSecret(other_public_key, input_encoding='binary', output_encoding=input_encoding) <a href="#diffieHellman.computeSecret">#</a></h3>
+
+<p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。
+与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、
+秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。
+出力のエンコーディングが与えられなかった場合は、入力のエンコーディングが
+出力エンコーディングとして使われます。</p>
+
+<h3 id="diffieHellman.getPrime">diffieHellman.getPrime(encoding='binary') <a href="#diffieHellman.getPrime">#</a></h3>
+
+<p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.getGenerator">diffieHellman.getGenerator(encoding='binary') <a href="#diffieHellman.getGenerator">#</a></h3>
+
+<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.getPublicKey">diffieHellman.getPublicKey(encoding='binary') <a href="#diffieHellman.getPublicKey">#</a></h3>
+
+<p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.getPrivateKey">diffieHellman.getPrivateKey(encoding='binary') <a href="#diffieHellman.getPrivateKey">#</a></h3>
+
+<p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。
+エンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.setPublicKey">diffieHellman.setPublicKey(public_key, encoding='binary') <a href="#diffieHellman.setPublicKey">#</a></h3>
+
+<p>ディフィー・ヘルマン法による公開鍵を設定します。
+鍵のエンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="diffieHellman.setPrivateKey">diffieHellman.setPrivateKey(public_key, encoding='binary') <a href="#diffieHellman.setPrivateKey">#</a></h3>
+
+<p>ディフィー・ヘルマン法による秘密鍵を設定します。
+鍵のエンコーディングは <code>'binary'</code>、<code>'hex'</code>、または <code>'base64'</code> のいずれかです。</p>
+
+<h3 id="pbkdf2">pbkdf2(password, salt, iterations, keylen, callback) <a href="#pbkdf2">#</a></h3>
+
+<p>疑似乱数を HMAC-SHA1 関数に適用して、与えられたパスワードと salt 
+(ランダムなバイト値)、および繰り返しから、指定された長さの鍵を生成する、
+非同期の PBKDF2 です。
+コールバック関数は二つの引数を受け取る <code>(err, derivedKey)</code> です。</p>
+
+<h3 id="randomBytes">randomBytes(size, [callback]) <a href="#randomBytes">#</a></h3>
+
+<p>暗号学的に強い疑似乱数データを生成します。使用法:</p>
+
+<pre><code>// async
+crypto.randomBytes(256, function(ex, buf) {
+  if (ex) throw ex;
+  console.log('Have %d bytes of random data: %s', buf.length, buf);
+});
+
+// sync
+try {
+  var buf = crypto.randomBytes(256);
+  console.log('Have %d bytes of random data: %s', buf.length, buf);
+} catch (ex) {
+  // handle error
+}</code></pre>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

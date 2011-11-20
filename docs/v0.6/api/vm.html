@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>vm - Node.js v0.6.2 Manual &amp; Documentation</title>
+  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js v0.6.2 Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#executing_JavaScript">Executing JavaScript</a><ul><li><a href="#vm.runInThisContext">vm.runInThisContext(code, [filename])</a></li><li><a href="#vm.runInNewContext">vm.runInNewContext(code, [sandbox], [filename])</a></li><li><a href="#vm.runInContext">vm.runInContext(code, context, [filename])</a></li><li><a href="#vm.createContext">vm.createContext([initSandbox])</a></li><li><a href="#vm.createScript">vm.createScript(code, [filename])</a></li><li><a href="#script.runInThisContext">script.runInThisContext()</a></li><li><a href="#script.runInNewContext">script.runInNewContext([sandbox])</a></li></ul></li></ul><hr /></div>
+<h2 id="executing_JavaScript">Executing JavaScript</h2>
+
+<p>次のようにすることで、このモジュールにアクセスすることができます:</p>
+
+<pre><code>var vm = require('vm');</code></pre>
+
+<p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。</p>
+
+<h3 id="vm.runInThisContext">vm.runInThisContext(code, [filename]) <a href="#vm.runInThisContext">#</a></h3>
+
+<p><code>vm.runInThisContext()</code> は <code>code</code> を <code>filename</code> からロードされたかのようにコンパイルし、
+それを実行して結果を返します。実行されるコードはローカルスコープにアクセスしません。
+<code>filename</code> はオプションです。</p>
+
+<p><code>vm.runInThisContext</code> と <code>eval</code> で同じコードを実行する例:</p>
+
+<pre><code>var localVar = 123,
+    usingscript, evaled,
+    vm = require('vm');
+
+usingscript = vm.runInThisContext('localVar = 1;',
+  'myfile.vm');
+console.log('localVar: ' + localVar + ', usingscript: ' +
+  usingscript);
+evaled = eval('localVar = 1;');
+console.log('localVar: ' + localVar + ', evaled: ' +
+  evaled);
+
+// localVar: 123, usingscript: 1
+// localVar: 1, evaled: 1</code></pre>
+
+<p><code>vm.runInThisContext</code> はローカルスコープにアクセスしないので、<code>localVar</code> は変更されません。
+<code>eval</code> はローカルスコープにアクセスするので、<code>localVar</code> は変更されます。</p>
+
+<p><code>code</code> が文法エラーとなるケースでは、<code>vm.runInThisContext</code> は標準エラーに文法エラーを出力し、
+例外をスローします。</p>
+
+<h3 id="vm.runInNewContext">vm.runInNewContext(code, [sandbox], [filename]) <a href="#vm.runInNewContext">#</a></h3>
+
+<p><code>vm.runInNewContext</code> は <code>code</code> を <code>filename</code> からロードされたかのようにコンパイルし、
+それを <code>sandbox</code> の中で実行して結果を返します。
+実行されるコードはローカルスコープにアクセスせず、
+<code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
+<code>sandbox</code> および <code>filename</code> はオプションです。</p>
+
+<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。
+これらのグローバル変数はサンドボックスに含まれます。</p>
+
+<pre><code>var util = require('util'),
+    vm = require('vm'),
+    sandbox = {
+      animal: 'cat',
+      count: 2
+    };
+
+vm.runInNewContext('count += 1; name = "kitty"', sandbox, 'myfile.vm');
+console.log(util.inspect(sandbox));
+
+// { animal: 'cat', count: 3, name: 'kitty' }</code></pre>
+
+<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
+偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInNewContext</code> はとても役立ちますが、
+信頼できないコードを安全に実行するために別のプロセスを要求します。</p>
+
+<p><code>code</code> が文法エラーとなるケースでは、
+<code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。</p>
+
+<h3 id="vm.runInContext">vm.runInContext(code, context, [filename]) <a href="#vm.runInContext">#</a></h3>
+
+<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、
+<code>filename</code> としてロードされたかのように、<code>context</code> をコンテキストとして
+実行し、その結果を返します。
+(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、
+グローバルオブジェクトを含みます。
+実行されるコードはローカルスコープにアクセスせず、
+<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
+<code>filename</code> はオプションです。</p>
+
+<pre><code>var util = require('util'),
+    vm = require('vm'),
+    initSandbox = {
+      animal: 'cat',
+      count: 2
+    },
+    context = vm.createContext(initSandbox);
+
+vm.runInContext('count += 1; name = "CATT"', context, 'myfile.vm');
+console.log(util.inspect(context));
+
+// { animal: 'cat', count: 3, name: 'CATT' }</code></pre>
+
+<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを
+初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを
+作成することに注意してください。</p>
+
+<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
+偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、
+信頼できないコードを安全に実行するために別のプロセスを要求します。</p>
+
+<h3 id="vm.createContext">vm.createContext([initSandbox]) <a href="#vm.createContext">#</a></h3>
+
+<p><code>vm.createContext</code> は、続けて呼び出される <code>vm.runInContext</code> の第 2 引数として
+使用するのに適した新しいコンテキストを作成します。
+(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、
+グローバルオブジェクトを含みます。
+オプションの引数 <code>initSandbox</code> は、このコンテキストで使用される
+グローバルオブジェクトの初期値としてシャローコピーされます。</p>
+
+<h3 id="vm.createScript">vm.createScript(code, [filename]) <a href="#vm.createScript">#</a></h3>
+
+<p><code>createScript</code> は <code>code</code> を
+<code>filename</code> からロードされたかのようにコンパイルしますが、実行はしません。
+代わりに、コンパイルされたコードを表現する <code>vm.Script</code> オブジェクトを返します。
+このスクリプトは後述のメソッドを使って後から何度でも実行することができます。
+返されるスクリプトはどのグローバルオブジェクトとも結びつけられていません。
+それぞれの実行前に結びつけることで、そのとおりに実行されます。
+<code>filename</code> はオプションです。</p>
+
+<p><code>code</code> が文法エラーとなるケースでは、
+<code>createScript</code> は標準エラーに文法エラーを出力して例外をスローします。</p>
+
+<h3 id="script.runInThisContext">script.runInThisContext() <a href="#script.runInThisContext">#</a></h3>
+
+<p><code>vm.runInThisContext</code> と同様ですが、
+こちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。
+<code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。
+実行されるコードはローカルスコープにアクセスしませんが、
+<code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。</p>
+
+<p><code>script.runInThisContext</code> を使ってコードを一度だけコンパイルし、複数回実行する例:</p>
+
+<pre><code>var vm = require('vm');
+
+globalVar = 0;
+
+var script = vm.createScript('globalVar += 1', 'myfile.vm');
+
+for (var i = 0; i &lt; 1000 ; i += 1) {
+  script.runInThisContext();
+}
+
+console.log(globalVar);
+
+// 1000</code></pre>
+
+<h3 id="script.runInNewContext">script.runInNewContext([sandbox]) <a href="#script.runInNewContext">#</a></h3>
+
+<p><code>vm.runInNewContext</code> と同様ですが、
+こちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。
+<code>script.runInNewContext</code> は <code>sandbox</code> がグローバルオブジェクトであるかのように
+<code>script</code> のコードを実行してその結果を返します。
+実行されるコードはローカルスコープにアクセスしません。
+<code>sandbox</code> はオプションです。</p>
+
+<p>例: グローバル変数をインクリメントしてセットするコードをコンパイルして、このコードを複数回実行します。
+これらのグローバル変数はサンドボックスに含まれます。</p>
+
+<pre><code>var util = require('util'),
+    vm = require('vm'),
+    sandbox = {
+      animal: 'cat',
+      count: 2
+    };
+
+var script = vm.createScript('count += 1; name = "kitty"', 'myfile.vm');
+
+for (var i = 0; i &lt; 10 ; i += 1) {
+  script.runInNewContext(sandbox);
+}
+
+console.log(util.inspect(sandbox));
+
+// { animal: 'cat', count: 12, name: 'kitty' }</code></pre>
+
+<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
+偶然グローバル変数が漏れてしまうことを防ぐために、<code>script.runInNewContext</code> はとても役立ちますが、
+信頼できないコードを安全に実行するために別のプロセスを要求します。</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
