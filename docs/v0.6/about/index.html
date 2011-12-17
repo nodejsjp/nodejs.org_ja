@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <style type="text/css">
+    ul {
+      padding: 0;
+      margin: 0;
+    }
+    </style>
+    <link type="image/x-icon" rel="icon" href="../favicon.ico">
+    <link type="image/x-icon" rel="shortcut icon" href="../favicon.ico">
+    <link type="text/css" rel="stylesheet" href="../pipe.css">
+    <link type="text/css" rel="stylesheet" href="../sh_vim-dark.css">
+    <link rel="alternate"
+          type="application/rss+xml"
+          title="node blog"
+          href="http://feeds.feedburner.com/nodejs/123123123">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>node.js</title>
+  </head>
+  <body>
+    <div id="intro">
+        <img id="logo" src="../logo.png" alt="node.js">
+    </div>
+    <div id="content" class="clearfix">
+            <div id="column1" class="interior">
+                <!--
+                <h2>About</h2>
+                -->
+                <h2>概要</h2>
+
+              <pre>
+var http = require('http');
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World\n');
+}).listen(1337, "127.0.0.1");
+console.log('Server running at http://127.0.0.1:1337/');</pre>
+
+              <!--
+              <p>Node's goal is to provide an easy way to build scalable
+              network programs. In the "hello world" web server example
+              above, many client connections can be handled concurrently.
+              Node tells the operating system (through <code>epoll</code>,
+              <code>kqueue</code>, <code>/dev/poll</code>, or
+              <code>select</code>) that it should be notified when a new
+              connection is made, and then it goes to sleep. If someone new
+              connects, then it executes the callback. Each connection is
+              only a small heap allocation.</p>
+              -->
+              <p>Nodeの目標は、
+              簡単にスケーラブルなネットワークプログラムを作成する方法を提供することです。
+              上記の"Hello World"WEBサーバの例では、多数のクライアントとの
+              接続を同時に扱うことができます。
+              NodeはOSに (<code>epoll</code> や <code>kqueue</code>、
+              <code class="sh_none">/dev/poll</code> や <code>select</code>
+              を通じて) 新しい接続が来たら知らせるように指示し、
+              スリープ状態になります。そして新しい接続があると、
+              コールバックを実行します。
+              各接続にはほんの小さなヒープしか割り当てられません。</p>
+
+              <!--
+              <p>This is in contrast to today's more common concurrency
+              model where OS threads are employed. Thread-based networking
+              is relatively inefficient and very difficult to use. See: <a
+                href="http://www.kegel.com/c10k.html">this</a> and <a
+                href="http://bulk.fefe.de/scalable-networking.pdf">this</a>.
+              Node will show much better memory efficiency under high-loads
+              than systems which allocate 2mb thread stacks for each
+              connection. Furthermore, users of Node are free from worries
+              of dead-locking the process—there are no locks. Almost no
+              function in Node directly performs I/O, so the process never
+              blocks. Because nothing blocks, less-than-expert programmers
+              are able to develop fast systems.</p>
+              -->
+              <p>これは、OS のスレッドを用いる近頃のより一般的な同時実行モデルとは対照的です。
+              この手法に比べると、スレッドベースのネットワークプログラムは非効率的であり、
+              またとても使いづらいのです。
+              <a href="http://www.kegel.com/c10k.html">ここ</a>や
+              <a href="http://bulk.fefe.de/scalable-networking.pdf">ここ</a>
+              をご覧ください。Node は、
+              1接続ごとに2MBのスタックメモリを割り当てるスレッドベースのシステムに比べて、
+              高負荷時にとても良いメモリ効率を実現します。
+              さらに、Node のユーザはプロセスのデッドロックの心配から開放されました。
+              Node にはロックがないのです。
+              Node には直接 I/O を実行する関数がほとんど無いため、
+              プロセスは決してブロックされません。ブロックがないため、
+              エキスパートではないプログラマであっても高速なシステムを開発することができるのです。</p>
+
+              <!--
+              <p>Node is similar in design to and influenced by systems like
+              Ruby's <a href="http://rubyeventmachine.com/">Event
+                Machine</a> or Python's <a
+                href="http://twistedmatrix.com/">Twisted</a>. Node takes the
+              event model a bit further—it presents the event loop as a
+              language construct instead of as a library. In other systems
+              there is always a blocking call to start the event-loop.
+              Typically one defines behavior through callbacks at the
+              beginning of a script and at the end starts a server through a
+              blocking call like <code>EventMachine::run()</code>. In Node
+              there is no such start-the-event-loop call. Node simply enters
+              the event loop after executing the input script. Node exits
+              the event loop when there are no more callbacks to perform.
+              This behavior is like browser javascript—the event loop is
+              hidden from the user.</p>
+              -->
+              <p>Node は、Ruby の
+              <a href="http://rubyeventmachine.com/">Event Machine</a>
+              や Python の <a href="http://twistedmatrix.com/">Twisted</a>
+              の影響を受けており、よく似たデザインになっています。
+              しかし、Node はイベントモデルをさらに推し進めています。
+              すなわち、イベントループをライブラリとして提供するのではなく、
+              言語自体に組み込まれた構成として提供しています。
+              Node 以外のシステムでは、イベントループを開始する際に必ずブロック呼び出しが存在します。
+              それらのシステムでは、一般的にスクリプトの先頭でコールバックを通じて行う動作を定義し、
+              スクリプトの最後で <code>EventMachine::run()</code> のような
+              ブロック呼び出しを行ってサーバを開始させています。
+              Node では、そのような「イベントループの開始」呼び出しはありません。Node は入力されたスクリプトを実行し終えると、
+              そのままイベントループに入ります。
+              そして動作すべきコールバックがなくなるとイベントループから抜け出します。
+              こういった挙動は、ブラウザ上の JavaSciprt と同じです。
+              すなわち、イベントループはユーザからは隠匿されているのです。</p>
+
+              <!--
+              <p>HTTP is a first class protocol in Node. Node's HTTP library
+              has grown out of the author's experiences developing and
+              working with web servers. For example, streaming data through
+              most web frameworks is impossible. Node attempts to correct
+              these problems in its HTTP <a
+              href="https://github.com/joyent/http-parser/tree/master">parser</a>
+              and API. Coupled with Node's purely evented infrastructure, it
+              makes a good foundation for web libraries or frameworks.</p>
+              -->
+              <p>HTTP は Node における第一級のプロトコルです。
+              Node の HTTP ライブラリは、作者の WEB サーバ開発における経験から発展しました。
+              例えば、ほとんどの WEB フレームワークでは、データをストリーミングさせることができません。
+              Node はこの問題を HTTP
+              <a href="https://github.com/joyent/http-parser/tree/master">パーサ</a>
+              と API によって解決しようとしています。
+              Node のイベント駆動な仕組みと連動させれば、
+              WEB ライブラリやフレームワークのとてもよい基盤になることでしょう。</p>
+
+              <!--
+              <p>But what about multiple-processor concurrency? Aren't
+              threads necessary to scale programs to multi-core computers?
+              You can start new processes via <code><a
+              href="http://nodejs.org/docs/latest/api/child_processes.html#child_process.fork">child_process.fork()</a></code>
+              these other processes will be scheduled in parallel. For load
+              balancing incoming connections across multiple processes use
+              <a href="http://nodejs.org/docs/latest/api/cluster.html">the
+              cluster module</a>.</p>
+              -->
+              <p>でも、マルチプロセッサ環境ではどうなるんだ？
+              マルチコアのコンピュータ上でプログラムをスケールさせるためには、
+              スレッドを使う必要があるんじゃないのか？
+              <code><a href="http://nodejs.jp/nodejs.org_ja/api/child_processes.html#child_process.fork">child_process.fork()</a></code>
+              によって新しいプロセスを開始することができます。
+              それらは並列にスケジュールされます。
+              コネクションの着信を複数のプロセス間でロードバランスする方法は
+              <a href="api/cluster.html">cluster モジュール</a>
+              を参照してください。
+
+            <!--
+            <p>See also:</p>
+            -->
+            <p>参照:</p>
+            <ul>
+                <!--
+                <li><a href="http://s3.amazonaws.com/four.livejournal/20091117/jsconf.pdf">Slides from JSConf 2009</a></li>
+                <li><a href="http://nodejs.org/jsconf2010.pdf">Slides from JSConf 2010</a></li>
+                <li><a href="http://www.yuiblog.com/blog/2010/05/20/video-dahl/">Video from a talk at Yahoo in May 2010</a></li>
+                -->
+                <li><a href="http://s3.amazonaws.com/four.livejournal/20091117/jsconf.pdf">JSConf 2009 のスライド</a></li>
+                <li><a href="http://nodejs.org/jsconf2010.pdf">JSConf 2010 のスライド</a></li>
+                <li><a href="http://www.yuiblog.com/blog/2010/05/20/video-dahl/">2010/05 Yahoo におけるビデオ</a></li>
+            </ul>
+            <!--
+            <p><a href="/">Go back to the home page</a></p>
+            -->
+            <p><a href="../">ホームページへ戻る</a></p>
+        </div>
+        <div id="column2" class="interior">
+    </div>
+</div>
+    <div id="footer">
+      <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js
+      is a <a href="trademark-policy.pdf">trademark of Joyent, Inc</a>.
+    </div>
+
+    <script type="text/javascript" src="../sh_main.js"></script>
+    <script type="text/javascript" src="../sh_javascript.min.js"></script>
+    <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ?
+      "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-10874194-2");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>
