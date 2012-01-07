@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>net - Node.js v0.6.6 Manual &amp; Documentation</title>
+  <meta charset="utf-8">
+  <title>net - Node.js v0.6.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/net.html">
@@ -10,13 +10,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.6.6 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.7 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr>
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#net">net</a><ul><li><a href="#net.createServer">net.createServer([options], [connectionListener])</a></li><li><a href="#net.connect">net.connect(arguments...)</a></li><li><a href="#net.createConnection">net.createConnection(arguments...)</a></li><li><a href="#net.Server">net.Server</a><ul><li><a href="#server.listen">server.listen(port, [host], [listeningListener])</a></li><li><a href="#server.listen">server.listen(path, [listeningListener])</a></li><li><a href="#server.pause">server.pause(msecs)</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_error_">Event: 'error'</a></li></ul></li><li><a href="#net.Socket">net.Socket</a><ul><li><a href="#new_net.Socket">new net.Socket([options])</a></li><li><a href="#socket.connect">socket.connect(port, [host], [connectListener])</a></li><li><a href="#socket.connect">socket.connect(path, [connectListener])</a></li><li><a href="#socket.bufferSize">socket.bufferSize</a></li><li><a href="#socket.setEncoding">socket.setEncoding(encoding=null)</a></li><li><a href="#socket.setSecure">socket.setSecure()</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.end">socket.end([data], [encoding])</a></li><li><a href="#socket.destroy">socket.destroy()</a></li><li><a href="#socket.pause">socket.pause()</a></li><li><a href="#socket.resume">socket.resume()</a></li><li><a href="#socket.setTimeout">socket.setTimeout(timeout, [callback])</a></li><li><a href="#socket.setNoDelay">socket.setNoDelay(noDelay=true)</a></li><li><a href="#socket.setKeepAlive">socket.setKeepAlive(enable=false, [initialDelay])</a></li><li><a href="#socket.address">socket.address()</a></li><li><a href="#socket.remoteAddress">socket.remoteAddress</a></li><li><a href="#socket.remotePort">socket.remotePort</a></li><li><a href="#socket.bytesRead">socket.bytesRead</a></li><li><a href="#socket.bytesWritten">socket.bytesWritten</a></li><li><a href="#event_connect_">Event: 'connect'</a></li><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_timeout_">Event: 'timeout'</a></li><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.isIP">net.isIP</a><ul><li><a href="#net.isIP">net.isIP(input)</a></li><li><a href="#net.isIPv4">net.isIPv4(input)</a></li><li><a href="#net.isIPv6">net.isIPv6(input)</a></li></ul></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#net">net</a><ul><li><a href="#net.createServer">net.createServer([options], [connectionListener])</a></li><li><a href="#net.connect">net.connect(arguments...)</a></li><li><a href="#net.createConnection">net.createConnection(arguments...)</a></li><li><a href="#net.Server">net.Server</a><ul><li><a href="#server.listen">server.listen(port, [host], [listeningListener])</a></li><li><a href="#server.listen">server.listen(path, [listeningListener])</a></li><li><a href="#server.pause">server.pause(msecs)</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_error_">Event: 'error'</a></li></ul></li><li><a href="#net.Socket">net.Socket</a><ul><li><a href="#new_net.Socket">new net.Socket([options])</a></li><li><a href="#socket.connect">socket.connect(port, [host], [connectListener])</a></li><li><a href="#socket.connect">socket.connect(path, [connectListener])</a></li><li><a href="#socket.bufferSize">socket.bufferSize</a></li><li><a href="#socket.setEncoding">socket.setEncoding([encoding])</a></li><li><a href="#socket.setSecure">socket.setSecure()</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.end">socket.end([data], [encoding])</a></li><li><a href="#socket.destroy">socket.destroy()</a></li><li><a href="#socket.pause">socket.pause()</a></li><li><a href="#socket.resume">socket.resume()</a></li><li><a href="#socket.setTimeout">socket.setTimeout(timeout, [callback])</a></li><li><a href="#socket.setNoDelay">socket.setNoDelay([noDelay])</a></li><li><a href="#socket.setKeepAlive">socket.setKeepAlive([enable], [initialDelay])</a></li><li><a href="#socket.address">socket.address()</a></li><li><a href="#socket.remoteAddress">socket.remoteAddress</a></li><li><a href="#socket.remotePort">socket.remotePort</a></li><li><a href="#socket.bytesRead">socket.bytesRead</a></li><li><a href="#socket.bytesWritten">socket.bytesWritten</a></li><li><a href="#event_connect_">Event: 'connect'</a></li><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_timeout_">Event: 'timeout'</a></li><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.isIP">net.isIP</a><ul><li><a href="#net.isIP">net.isIP(input)</a></li><li><a href="#net.isIPv4">net.isIPv4(input)</a></li><li><a href="#net.isIPv6">net.isIPv6(input)</a></li></ul></li></ul></li></ul><hr /></div>
 <h2 id="net">net</h2>
 
 <p><code>net</code> モジュールは非同期なネットワークのラッパーを提供します。
@@ -274,10 +274,10 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <p>大きな、あるいは増大する <code>bufferSize</code> を体験したユーザは、そのプログラムで <code>pause()</code> および <code>resume()</code> を使ってデータフローを「抑えよう」としなければなりません。</p>
 
-<h4 id="socket.setEncoding">socket.setEncoding(encoding=null) <a href="#socket.setEncoding">#</a></h4>
+<h4 id="socket.setEncoding">socket.setEncoding([encoding]) <a href="#socket.setEncoding">#</a></h4>
 
 <p>受信したデータのエンコーディングを設定します (<code>'ascii'</code>、<code>'utf8'</code>、
-あるいは <code>'base64'</code> のいずれかです)。</p>
+あるいは <code>'base64'</code> のいずれかです)。デフォルトは <code>null</code> です。</p>
 
 <h4 id="socket.setSecure">socket.setSecure() <a href="#socket.setSecure">#</a></h4>
 
@@ -334,19 +334,23 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <p>オプションの <code>callback</code> 引数は、<code>timeouot</code> イベントの一回限りのリスナを追加します。</p>
 
-<h4 id="socket.setNoDelay">socket.setNoDelay(noDelay=true) <a href="#socket.setNoDelay">#</a></h4>
+<h4 id="socket.setNoDelay">socket.setNoDelay([noDelay]) <a href="#socket.setNoDelay">#</a></h4>
 
 <p>Nagle アルゴリズムを無効にします。
 デフォルトでは TCP コネクションは Nagle アルゴリズムを使用し、データを送信する前にバッファリングします。
-<code>noDelay</code> に設定すると、データは <code>socket.write()</code> を呼び出す度に即座に送信されます。</p>
+<code>noDelay</code> に <code>true</code> を設定すると、データは <code>socket.write()</code>
+を呼び出す度に即座に送信されます。デフォルトは <code>true</code> です。</p>
 
-<h4 id="socket.setKeepAlive">socket.setKeepAlive(enable=false, [initialDelay]) <a href="#socket.setKeepAlive">#</a></h4>
+<h4 id="socket.setKeepAlive">socket.setKeepAlive([enable], [initialDelay]) <a href="#socket.setKeepAlive">#</a></h4>
 
 <p>キープアライブ機能を有効/無効にします。
 オプションで最初の keepalive probe がアイドルソケットに送信されるまでの初期遅延を設定します。
-<code>initialDelay</code> (ミリ秒) が設定されると、
+<code>enable</code> のデフォルトは <code>false</code> です。</p>
+
+<p><code>initialDelay</code> (ミリ秒) が設定されると、
 最後にデータパケットを受信してから最初の keepalive probe までの遅延が設定されます。
-初期遅延に 0 が設定されると、デフォルト設定から値を変更されないようにします。</p>
+初期遅延に 0 が設定されると、デフォルト設定から値を変更されないようにします。
+デフォルトは <code>0</code> です。</p>
 
 <h4 id="socket.address">socket.address() <a href="#socket.address">#</a></h4>
 
@@ -452,16 +456,15 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
-  <script type="text/javascript">
+  <script>
     var gaJsHost = (("https:" == document.location.protocol) ?
     "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
   </script>
-  <script type="text/javascript">
+  <script>
     try {
       var pageTracker = _gat._getTracker("UA-10874194-2");
       pageTracker._trackPageview();
       } catch(err) {}</script>
-  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
 </body>
 </html>

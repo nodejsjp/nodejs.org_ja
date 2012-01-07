@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>dns - Node.js v0.6.6 Manual &amp; Documentation</title>
+  <meta charset="utf-8">
+  <title>dns - Node.js v0.6.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/dns.html">
@@ -10,13 +10,13 @@
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.6.6 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.6.7 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
       <hr>
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dNS">DNS</a><ul><li><a href="#dns.lookup">dns.lookup(domain, family=null, callback)</a></li><li><a href="#dns.resolve">dns.resolve(domain, rrtype='A', callback)</a></li><li><a href="#dns.resolve4">dns.resolve4(domain, callback)</a></li><li><a href="#dns.resolve6">dns.resolve6(domain, callback)</a></li><li><a href="#dns.resolveMx">dns.resolveMx(domain, callback)</a></li><li><a href="#dns.resolveTxt">dns.resolveTxt(domain, callback)</a></li><li><a href="#dns.resolveSrv">dns.resolveSrv(domain, callback)</a></li><li><a href="#dns.reverse">dns.reverse(ip, callback)</a></li><li><a href="#dns.resolveNs">dns.resolveNs(domain, callback)</a></li><li><a href="#dns.resolveCname">dns.resolveCname(domain, callback)</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dNS">DNS</a><ul><li><a href="#dns.lookup">dns.lookup(domain, [family], callback)</a></li><li><a href="#dns.resolve">dns.resolve(domain, [rrtype], callback)</a></li><li><a href="#dns.resolve4">dns.resolve4(domain, callback)</a></li><li><a href="#dns.resolve6">dns.resolve6(domain, callback)</a></li><li><a href="#dns.resolveMx">dns.resolveMx(domain, callback)</a></li><li><a href="#dns.resolveTxt">dns.resolveTxt(domain, callback)</a></li><li><a href="#dns.resolveSrv">dns.resolveSrv(domain, callback)</a></li><li><a href="#dns.reverse">dns.reverse(ip, callback)</a></li><li><a href="#dns.resolveNs">dns.resolveNs(domain, callback)</a></li><li><a href="#dns.resolveCname">dns.resolveCname(domain, callback)</a></li></ul></li></ul><hr /></div>
 <h2 id="dNS">DNS</h2>
 
 <p>このモジュールにアクセスするには <code>require('dns')</code> を使用します。
@@ -52,23 +52,25 @@ dns.resolve4('www.google.com', function (err, addresses) {
   });
 });</code></pre>
 
-<h3 id="dns.lookup">dns.lookup(domain, family=null, callback) <a href="#dns.lookup">#</a></h3>
+<h3 id="dns.lookup">dns.lookup(domain, [family], callback) <a href="#dns.lookup">#</a></h3>
 
 <p>ドメイン (例 <code>'google.com'</code>) を解決して最初に見つかった
-A (IPv4) または AAAA (IPv6) レコードにします。</p>
+A (IPv4) または AAAA (IPv6) レコードにします。
+<code>family</code> は整数の <code>4</code> または <code>6</code> を指定することができます。
+デフォルトは <code>null</code> で、IP v4 と v6 の両方をアドレスファミリーを意味します。</p>
 
 <p>コールバックは引数 <code>(err, address, family)</code> を持ちます。
 <code>address</code> 引数は IP v4 または v6 アドレスを表現する文字列です。
-<code>family</code> 引数は 4 または 6 の整数で、<code>address</code> のファミリーを意味します
+<code>family</code> 引数は整数の 4 または 6 で、<code>address</code> のファミリーを意味します
 (この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。</p>
 
-<h3 id="dns.resolve">dns.resolve(domain, rrtype='A', callback) <a href="#dns.resolve">#</a></h3>
+<h3 id="dns.resolve">dns.resolve(domain, [rrtype], callback) <a href="#dns.resolve">#</a></h3>
 
 <p>ドメイン (例 <code>'google.com'</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
-妥当な <code>rrtype</code> は <code>A</code> (IPV4アドレス)、<code>AAAA</code> (IPV6アドレス)、
-<code>MX</code> (mail exchangeレコード), <code>TXT</code> (テキストレコード)、<code>SRV</code> (SRVレコード)、
-<code>PTR</code> (IP を逆引きでルックアップするために使われる)、<code>NS</code>
-(ネームサーバレコード)、そして CNAME (別名レコード) です。</p>
+妥当な <code>rrtype</code> は <code>'A'</code> (IPV4アドレス)、<code>'AAAA'</code> (IPV6アドレス)、
+<code>'MX'</code> (mail exchangeレコード), <code>'TXT'</code> (テキストレコード)、
+<code>'SRV'</code> (SRVレコード)、<code>'PTR'</code> (IP を逆引きでルックアップするために使われる)、
+<code>'NS'</code> (ネームサーバレコード)、そして <code>'CNAME'</code> (別名レコード) です。</p>
 
 <p>コールバックは引数 <code>(err, addresses)</code> を持ちます。
 <code>addresses</code> の各要素の種類はレコードの種類によって決まり、
@@ -137,16 +139,15 @@ SRV レコードのプロパティは priority、weight、port、そして name 
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
-  <script type="text/javascript">
+  <script>
     var gaJsHost = (("https:" == document.location.protocol) ?
     "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
   </script>
-  <script type="text/javascript">
+  <script>
     try {
       var pageTracker = _gat._getTracker("UA-10874194-2");
       pageTracker._trackPageview();
       } catch(err) {}</script>
-  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
 </body>
 </html>
