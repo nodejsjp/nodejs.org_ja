@@ -1,23 +1,22 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>cluster - Node.js v0.6.1 Manual &amp; Documentation</title>
-  <link type="image/x-icon" rel="icon" href="/favicon.ico" />
-  <link type="image/x-icon" rel="shortcut icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
-  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <meta charset="utf-8">
+  <title>cluster - Node.js v0.7.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/docs/latest/api/cluster.html">
 </head>
 <body>
   <div id="container">
     <header>
-      <h1>Node.js v0.6.1 Manual &amp; Documentation</h1>
+      <h1>Node.js v0.7.0 Manual &amp; Documentation</h1>
       <div id="gtoc">
         <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
       </div>
-      <hr />
+      <hr>
     </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#cluster">Cluster</a><ul><li><a href="#cluster.fork">cluster.fork()</a></li><li><a href="#cluster.isMaster">cluster.isMaster</a></li><li><a href="#cluster.isWorker">cluster.isWorker</a></li><li><a href="#event_death_">Event: 'death'</a></li></ul></li></ul><hr /></div>
+    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#cluster">Cluster</a><ul><li><a href="#cluster.isMaster">cluster.isMaster</a></li><li><a href="#cluster.isWorker">cluster.isWorker</a></li><li><a href="#event_fork_">Event: 'fork'</a></li><li><a href="#event_online_">Event: 'online'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_death_">Event: 'death'</a></li><li><a href="#cluster.fork">cluster.fork([env])</a></li><li><a href="#cluster.workers">cluster.workers</a></li></ul></li><li><a href="#worker">Worker</a><ul><li><a href="#worker.uniqueID">Worker.uniqueID</a></li><li><a href="#worker.process">Worker.process</a></li><li><a href="#worker.send">Worker.send(message, [sendHandle])</a></li><li><a href="#worker.destroy">Worker.destroy()</a></li><li><a href="#worker.suicide">Worker.suicide</a></li><li><a href="#event_message">Event: message</a></li><li><a href="#event_online">Event: online</a></li><li><a href="#event_listening">Event: listening</a></li><li><a href="#event_death">Event: death</a></li></ul></li></ul><hr /></div>
 <h2 id="cluster">Cluster</h2>
 
 <p>一つの Node インスタンスは一つのスレッドで実行されます。
@@ -41,8 +40,9 @@ if (cluster.isMaster) {
     console.log('worker ' + worker.pid + ' died');
   });
 } else {
-  // Worker processes have a http server.
-  http.Server(function(req, res) {
+  // Workers can share any TCP connection
+  // In this case its a HTTP server
+  http.createServer(function(req, res) {
     res.writeHead(200);
     res.end("hello world\n");
   }).listen(8000);
@@ -54,72 +54,247 @@ if (cluster.isMaster) {
 Worker 2438 online
 Worker 2437 online</code></pre>
 
-<p><code>cluster.fork()</code> と <code>child_process.fork()</code> の違いは単純で、
-クラスタはワーカ間で共有する TCP サーバを実現できることです。
-<code>cluster.fork()</code> は <code>child_process.fork()</code> 上に実装されています。
-<code>child_process.fork()</code> によって実現されるメッセージパッシング API は
-<code>cluseter</code> でも同様に利用できます。
-以下のクラスタの例は、メッセージパッシングを通じてマスタプロセスで
-リクエスト数をカウントします。</p>
-
-<pre><code>var cluster = require('cluster');
-var http = require('http');
-var numReqs = 0;
-
-if (cluster.isMaster) {
-  // Fork workers.
-  for (var i = 0; i &lt; 2; i++) {
-    var worker = cluster.fork();
-
-    worker.on('message', function(msg) {
-      if (msg.cmd &amp;&amp; msg.cmd == 'notifyRequest') {
-        numReqs++;
-      }
-    });
-  }
-
-  setInterval(function() {
-    console.log("numReqs =", numReqs);
-  }, 1000);
-} else {
-  // Worker processes have a http server.
-  http.Server(function(req, res) {
-    res.writeHead(200);
-    res.end("hello world\n");
-    // Send message to master process
-    process.send({ cmd: 'notifyRequest' });
-  }).listen(8000);
-}</code></pre>
-
-<h3 id="cluster.fork">cluster.fork() <a href="#cluster.fork">#</a></h3>
-
-<p>新しいワーカプロセスを起動します。
-マスタプロセスから飲み呼び出すことができます。</p>
-
 <h3 id="cluster.isMaster">cluster.isMaster <a href="#cluster.isMaster">#</a></h3>
+
+<p>現在のプロセスがマスタの場合、この論理値型のフラグは <code>true</code> です。
+これは <code>process.env.NODE_UNIQUE_ID</code> から決定されます。
+<code>process.env.NODE_UNIQUE_ID</code> が未定義だと <code>isMaster</code> は <code>true</code> になります。</p>
 
 <h3 id="cluster.isWorker">cluster.isWorker <a href="#cluster.isWorker">#</a></h3>
 
-<p>現在のプロセスがクラスタ内でマスタかワーカかを決定することができる
-Boolean 値です。
-<code>isMaster</code> は <code>process.env.NODE_WORKER_ID</code> が未定義かどうかです。</p>
+<p>現在のプロセスがマスタからフォークされたワーカの場合、
+この論理値型のフラグは <code>true</code> です。
+<code>process.env.NODE_UNIQUE_ID</code> に値が設定されていると <code>isWorker</code> は <code>true</code>
+になります。</p>
+
+<h3 id="event_fork_">Event: 'fork' <a href="#event_fork_">#</a></h3>
+
+<p>新しいワーカがフォークされると、クラスタモジュールは <code>'fork'</code> イベントを
+生成します。
+これはワーカの活動をロギングしたり、タイムアウトのために使うことができます。</p>
+
+<pre><code>var timeouts = [];
+var errorMsg = function () {
+  console.error("Something must be wrong with the connection ...");
+});
+
+cluster.on('fork', function (worker) {
+  timeouts[worker.uniqueID] = setTimeout(errorMsg, 2000);
+});
+cluster.on('listening', function (worker) {
+  clearTimeout(timeouts[worker.uniqueID]);
+});
+cluster.on('death', function (worker) {
+  clearTimeout(timeouts[worker.uniqueID]);
+  errorMsg();
+});</code></pre>
+
+<h3 id="event_online_">Event: 'online' <a href="#event_online_">#</a></h3>
+
+<p>新しいワーカをフォークした後、ワーカはオンラインメッセージを応答します。
+マスタがオンラインメッセージを受信すると、このイベントが生成されます。
+<code>'fork'</code> と <code>'online'</code> の違いは、<code>'fork'</code> はマスタがワーカのフォークを
+試みた時点で生成されるのに対し、<code>'online'</code> はワーカの実行が開始されてから
+生成される点です。</p>
+
+<pre><code>cluster.on('online', function (worker) {
+  console.log("Yay, the worker responded after it was forked");
+});</code></pre>
+
+<h3 id="event_listening_">Event: 'listening' <a href="#event_listening_">#</a></h3>
+
+<p>ワーカが <code>net.Server.listen()</code> を呼び出すと、<code>'listening'</code> イベントは自動的に
+<code>net.Server</code> インスタンスに割り当てられます。
+<code>net.Server</code> が <code>'listening'</code> メッセージをマスタに送信すると、
+<code>'listening'</code> イベントが生成されます。</p>
+
+<pre><code>cluster.on('listening', function (worker) {
+  console.log("We are now connected");
+});</code></pre>
 
 <h3 id="event_death_">Event: 'death' <a href="#event_death_">#</a></h3>
 
-<p>ワーカが死ぬとクラスタモジュールは <code>'deth'</code> イベントを生成します。
-これはワーカを再起動するために再び <code>fork()</code>
-を呼び出すことに使うことができます。</p>
+<p>どのワーカが死んだ場合でも、クラスタモジュールは <code>'death'</code> イベントを
+生成します。
+これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。</p>
 
 <pre><code>cluster.on('death', function(worker) {
   console.log('worker ' + worker.pid + ' died. restart...');
   cluster.fork();
 });</code></pre>
 
-<p>アプリケーションによっては、ワーカを再起動するために
-別のテクニックを使うこともできます。</p>
+<h3 id="cluster.fork">cluster.fork([env]) <a href="#cluster.fork">#</a></h3>
+
+<p>新しいワーカプロセスを起動します。
+これはマスタプロセスから飲み呼び出すことができます。
+この関数はオプションの <code>env</code> オブジェクトを受け取ることができます。
+このオブジェクトのプロパティはワーカプロセスの環境変数に加えられます。</p>
+
+<h3 id="cluster.workers">cluster.workers <a href="#cluster.workers">#</a></h3>
+
+<p>このクラスタで生きている全てのワーカオブジェクトを、その <code>uniqueID</code>
+をキーとして保存しているオブジェクトです。
+これは全ての生きているワーカに対して繰り返しを行うことを容易にします。</p>
+
+<pre><code>// Go through all workers
+function eachWorker(callback) {
+  for (var uniqueID in cluster.workers) {
+    callback(cluster.workers[uniqueID]);
+  }
+}
+eachWorker(function (worker) {
+  worker.send('big announcement to all workers');
+});</code></pre>
+
+<p>通信チャネルを越えてワーカの参照を渡す場合は、
+ワーカのユニーク ID を使ってワーカを探すのが簡単です。</p>
+
+<pre><code>socket.on('data', function (uniqueID) {
+  var worker = cluster.workers[uniqueID];
+});</code></pre>
+
+<h2 id="worker">Worker</h2>
+
+<p>このオブジェクトはワーカに関する全ての公開された情報やメソッドを持ちます。
+マスタでは <code>cluster.wrokers</code> から取得することができます。
+ワーカでは <code>cluster.worker</code> から取得することができます。</p>
+
+<h3 id="worker.uniqueID">Worker.uniqueID <a href="#worker.uniqueID">#</a></h3>
+
+<p>新しいワーカはいずれもユニークな ID を与えられます。
+この ID は <code>uniqueID</code> に保存されます。.</p>
+
+<h3 id="worker.process">Worker.process <a href="#worker.process">#</a></h3>
+
+<p>全てのワーカは <code>child_process.fork()</code> によって作成されます。
+その戻り値が <code>process</code> に設定されます。</p>
+
+<h3 id="worker.send">Worker.send(message, [sendHandle]) <a href="#worker.send">#</a></h3>
+
+<p>この関数は <code>child_process.fork()</code> が返すオブジェクトの <code>send()</code>
+メソッドと同じです．
+マスタは特定のワーカにメッセージを送信するためにこの関数を
+使用することができます。
+しかし、ワーカでは <code>process.send(message)</code> を使うこともできます。</p>
+
+<p>この例はマスタからのメッセージをエコーバックします。</p>
+
+<pre><code>if (cluster.isMaster) {
+  var worker = cluster.fork();
+  worker.send('hi there');
+
+} else if (cluster.isWorker) {
+  process.on('message', function (msg) {
+    process.send(msg);
+  });
+}</code></pre>
+
+<h3 id="worker.destroy">Worker.destroy() <a href="#worker.destroy">#</a></h3>
+
+<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。
+意図しない終了と区別するために <code>suicide</code> プロパティに <code>true</code>
+が設定されることを知っておいてください。</p>
+
+<pre><code>cluster.on('death', function (worker) {
+  if (worker.suicide === true) {
+    console.log('Oh, it was just suicide' – no need to worry').
+  }
+});
+
+// destroy worker
+worker.destroy();</code></pre>
+
+<h3 id="worker.suicide">Worker.suicide <a href="#worker.suicide">#</a></h3>
+
+<p>このプロパティは論理値型です。
+ワーカが終了するまで、これは <code>undefined</code> です。
+ワーカが <code>.destroy()</code> で終了した場合は <code>true</code> に、その他の場合は
+<code>false</code> に設定されます。</p>
+
+<h3 id="event_message">Event: message <a href="#event_message">#</a></h3>
+
+<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。
+マスタではこのイベントを使うべきですが、ワーカでは <code>process.on('message')</code>
+を使うこともできます。</p>
+
+<p>メッセージシステムを使用してクラスタ全体のリクエスト数を
+マスタプロセスで保持する例です:</p>
+
+<pre><code>var cluster = require('cluster');
+var http = require('http');
+
+if (cluster.isMaster) {
+
+  // Keep track of http requests
+  var numReqs = 0;
+  setInterval(function() {
+    console.log("numReqs =", numReqs);
+  }, 1000);
+
+  // Count requestes
+  var messageHandler = function (msg) {
+    if (msg.cmd &amp;&amp; msg.cmd == 'notifyRequest') {
+      numReqs += 1;
+    }
+  };
+
+  // Start workers and listen for messages containing notifyRequest
+  cluster.autoFork();
+  Object.keys(cluster.workers).forEach(function (uniqueID) {
+    cluster.workers[uniqueID].on('message', messageHandler);
+  });
+
+} else {
+
+  // Worker processes have a http server.
+  http.Server(function(req, res) {
+    res.writeHead(200);
+    res.end("hello world\n");
+
+    // notify master about the request
+    process.send({ cmd: 'notifyRequest' });
+  }).listen(8000);
+}</code></pre>
+
+<h3 id="event_online">Event: online <a href="#event_online">#</a></h3>
+
+<p><code>cluster.on('online')</code> と同様ですが，特定のワーカの状態が変化した場合のみ
+イベントを生成します。</p>
+
+<pre><code>cluster.fork().on('online', function (worker) {
+  // Worker is online
+};</code></pre>
+
+<h3 id="event_listening">Event: listening <a href="#event_listening">#</a></h3>
+
+<p><code>cluster.on('listening')</code> と同様ですが、特定のワーカの状態が変化した場合のみ
+イベントを生成します。</p>
+
+<pre><code>cluster.fork().on('listening', function (worker) {
+  // Worker is listening
+};</code></pre>
+
+<h3 id="event_death">Event: death <a href="#event_death">#</a></h3>
+
+<p><code>cluster.on('death')</code> と同様ですが、特定のワーカの状態が変化した場合のみ
+イベントを生成します。</p>
+
+<pre><code>cluster.fork().on('death', function (worker) {
+  // Worker has died
+};</code></pre>
   </div>
-  <script type="text/javascript" src="assets/sh_main.js"></script>
-  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
-  <script type="text/javascript">highlight(undefined, undefined, 'pre');</script>
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    var gaJsHost = (("https:" == document.location.protocol) ?
+    "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script>
+    try {
+      var pageTracker = _gat._getTracker("UA-10874194-2");
+      pageTracker._trackPageview();
+      } catch(err) {}</script>
 </body>
 </html>
