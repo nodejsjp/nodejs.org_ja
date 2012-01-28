@@ -2,22 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>addons - Node.js v0.6.8 Manual &amp; Documentation</title>
+  <title>addons - Node.js v0.6.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/addons.html">
 </head>
-<body>
-  <div id="container">
-    <header>
-      <h1>Node.js v0.6.8 Manual &amp; Documentation</h1>
-      <div id="gtoc">
-        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
-      </div>
-      <hr>
-    </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#addons">Addons</a><ul><li><a href="#hello_world">Hello world</a></li></ul></li><li><a href="#addon_patterns">Addon patterns</a><ul><li><a href="#function_arguments">Function arguments</a></li><li><a href="#callbacks">Callbacks</a></li><li><a href="#object_factory">Object factory</a></li><li><a href="#function_factory">Function factory</a></li><li><a href="#wrapping_C_objects">Wrapping C++ objects</a></li><li><a href="#factory_of_wrapped_objects">Factory of wrapped objects</a></li><li><a href="#passing_wrapped_objects_around">Passing wrapped objects around</a></li></ul></li></ul></li></ul><hr /></div>
-<h2 id="addons">Addons</h2>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="assets/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about current">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.6.9 Manual &amp; Documentation</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#addons">Addons</a><ul><li><a href="#hello_world">Hello world</a></li></ul></li><li><a href="#addon_patterns">Addon patterns</a><ul><li><a href="#function_arguments">Function arguments</a></li><li><a href="#callbacks">Callbacks</a></li><li><a href="#object_factory">Object factory</a></li><li><a href="#function_factory">Function factory</a></li><li><a href="#wrapping_C_objects">Wrapping C++ objects</a></li><li><a href="#factory_of_wrapped_objects">Factory of wrapped objects</a></li><li><a href="#passing_wrapped_objects_around">Passing wrapped objects around</a></li></ul></li></ul></li></ul><hr></div>
+<h2 id="addons">Addons <span><a class="top" href="#">↑</a><a class="mark" href="#addons">#</a></span></h2>
 
 <p>アドオンは動的に共有オブジェクトをリンクします。
 それらは、C や C++ のライブラリに接合点を提供します。
@@ -39,7 +70,7 @@ libv のインタフェースが必要になります。
 <p>Node は全ての依存ライブラリを実行ファイルに静的にコンパイルします。
 モジュールのコンパイル時には、それらのリンクについて一切気にする必要は有りません。</p>
 
-<h3 id="hello_world">Hello world <a href="#hello_world">#</a></h3>
+<h3 id="hello_world">Hello world <span><a class="top" href="#">↑</a><a class="mark" href="#hello_world">#</a></span></h3>
 
 <p>では、 以下の JavaScript コードと同じ様に動作する小さなアドオンを
 C++ で作成してみましょう。</p>
@@ -112,7 +143,7 @@ console.log(addon.hello()); // 'world'</code></pre>
 <a href="https://github.com/pietern/hiredis-node">https://github.com/pietern/hiredis-node</a> を実際のプロダクトにおける
 例として参照してください。</p>
 
-<h2 id="addon_patterns">Addon patterns</h2>
+<h2 id="addon_patterns">Addon patterns <span><a class="top" href="#">↑</a><a class="mark" href="#addon_patterns">#</a></span></h2>
 
 <p>以下は初心者に役立つアドオンのパターンです。
 v8 の様々な API についてはオンラインの
@@ -142,7 +173,7 @@ def build(bld):
 
 <pre><code>obj.source = ['addon.cc', 'myexample.cc']</code></pre>
 
-<h4 id="function_arguments">Function arguments <a href="#function_arguments">#</a></h4>
+<h4 id="function_arguments">Function arguments <span><a class="top" href="#">↑</a><a class="mark" href="#function_arguments">#</a></span></h4>
 
 <p>以下のパターンは JavaScript から呼び出された関数で引数を読み出したり、
 結果を返す方法を示します。これは <code>addon.cc</code> でのみ必要となります。</p>
@@ -183,7 +214,7 @@ NODE_MODULE(addon, Init)</code></pre>
 
 console.log( 'This should be eight:', addon.add(3,5) );</code></pre>
 
-<h4 id="callbacks">Callbacks <a href="#callbacks">#</a></h4>
+<h4 id="callbacks">Callbacks <span><a class="top" href="#">↑</a><a class="mark" href="#callbacks">#</a></span></h4>
 
 <p>JavaScript の関数を C++ の関数に渡してそこから呼び出すことができます。
 これは <code>addon.cc</code> です:</p>
@@ -219,7 +250,7 @@ addon.runCallback(function(msg){
   console.log(msg); // 'hello world'
 });</code></pre>
 
-<h4 id="object_factory">Object factory <a href="#object_factory">#</a></h4>
+<h4 id="object_factory">Object factory <span><a class="top" href="#">↑</a><a class="mark" href="#object_factory">#</a></span></h4>
 
 <p>C++ 関数の中から新しいオブジェクトを作成して返すことができます。
 以下の <code>addon.cc</code> のパターンでは、<code>createObject()</code> に渡された文字列を
@@ -254,7 +285,7 @@ var obj1 = addon.createObject('hello');
 var obj2 = addon.createObject('world');
 console.log(obj1.msg+' '+obj2.msg); // 'hello world'</code></pre>
 
-<h4 id="function_factory">Function factory <a href="#function_factory">#</a></h4>
+<h4 id="function_factory">Function factory <span><a class="top" href="#">↑</a><a class="mark" href="#function_factory">#</a></span></h4>
 
 <p>このパターンは C++ 関数をラップした JavaScript 関数を作成して返す方法を
 示します。</p>
@@ -293,7 +324,7 @@ NODE_MODULE(addon, Init)</code></pre>
 var fn = addon.createFunction();
 console.log(fn()); // 'hello world'</code></pre>
 
-<h4 id="wrapping_C_objects">Wrapping C++ objects <a href="#wrapping_C_objects">#</a></h4>
+<h4 id="wrapping_C_objects">Wrapping C++ objects <span><a class="top" href="#">↑</a><a class="mark" href="#wrapping_C_objects">#</a></span></h4>
 
 <p>ここでは、
 C++ オブジェクト／クラスをラップし、JavaScript から new 演算子を使って
@@ -387,7 +418,7 @@ console.log( obj.plusOne() ); // 11
 console.log( obj.plusOne() ); // 12
 console.log( obj.plusOne() ); // 13</code></pre>
 
-<h4 id="factory_of_wrapped_objects">Factory of wrapped objects <a href="#factory_of_wrapped_objects">#</a></h4>
+<h4 id="factory_of_wrapped_objects">Factory of wrapped objects <span><a class="top" href="#">↑</a><a class="mark" href="#factory_of_wrapped_objects">#</a></span></h4>
 
 <p>JavaScript の <code>new</code> 演算子で明示的にインスタンス化することなく、
 ネイティブオブジェクトを作成できるようにしたい場合に便利です。例:</p>
@@ -512,7 +543,7 @@ console.log( obj2.plusOne() ); // 21
 console.log( obj2.plusOne() ); // 22
 console.log( obj2.plusOne() ); // 23</code></pre>
 
-<h4 id="passing_wrapped_objects_around">Passing wrapped objects around <a href="#passing_wrapped_objects_around">#</a></h4>
+<h4 id="passing_wrapped_objects_around">Passing wrapped objects around <span><a class="top" href="#">↑</a><a class="mark" href="#passing_wrapped_objects_around">#</a></span></h4>
 
 <p>C++ オブジェクトをラップして返すことに加えて、Node が提供するヘルパ関数
 <code>node::ObjectWrap::Unwrap</code> を使用してアンラップすることもできます。
@@ -632,7 +663,35 @@ var obj2 = addon.createObject(20);
 var result = addon.add(obj1, obj2);
 
 console.log(result); // 30</code></pre>
-  </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.9/LICENSE">license</a>.</p>
+    </div>
+    
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
