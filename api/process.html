@@ -2,27 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>process - Node.js v0.7.1 Manual &amp; Documentation</title>
+  <title>process - Node.js v0.7.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/process.html">
 </head>
-<body>
-  <div id="container">
-    <header>
-      <h1>Node.js v0.7.1 Manual &amp; Documentation</h1>
-      <div id="gtoc">
-        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
-      </div>
-      <hr>
-    </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#process">process</a><ul><li><a href="#event_exit_">Event: 'exit'</a></li><li><a href="#event_uncaughtException_">Event: 'uncaughtException'</a></li><li><a href="#signal_Events">Signal Events</a></li><li><a href="#process.stdout">process.stdout</a></li><li><a href="#process.stderr">process.stderr</a></li><li><a href="#process.stdin">process.stdin</a></li><li><a href="#process.argv">process.argv</a></li><li><a href="#process.execPath">process.execPath</a></li><li><a href="#process.abort">process.abort()</a></li><li><a href="#process.chdir">process.chdir(directory)</a></li><li><a href="#process.cwd">process.cwd()</a></li><li><a href="#process.env">process.env</a></li><li><a href="#process.exit">process.exit([code])</a></li><li><a href="#process.getgid">process.getgid()</a></li><li><a href="#process.setgid">process.setgid(id)</a></li><li><a href="#process.getuid">process.getuid()</a></li><li><a href="#process.setuid">process.setuid(id)</a></li><li><a href="#process.version">process.version</a></li><li><a href="#process.versions">process.versions</a></li><li><a href="#process.installPrefix">process.installPrefix</a></li><li><a href="#process.kill">process.kill(pid, [signal])</a></li><li><a href="#process.pid">process.pid</a></li><li><a href="#process.title">process.title</a></li><li><a href="#process.arch">process.arch</a></li><li><a href="#process.platform">process.platform</a></li><li><a href="#process.memoryUsage">process.memoryUsage()</a></li><li><a href="#process.nextTick">process.nextTick(callback)</a></li><li><a href="#process.umask">process.umask([mask])</a></li><li><a href="#process.uptime">process.uptime()</a></li></ul></li></ul><hr /></div>
-<h2 id="process">process</h2>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="assets/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.7.2 Manual &amp; Documentation</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#process">process</a><ul><li><a href="#event_exit_">Event: 'exit'</a></li><li><a href="#event_uncaughtException_">Event: 'uncaughtException'</a></li><li><a href="#signal_Events">Signal Events</a></li><li><a href="#process.stdout">process.stdout</a></li><li><a href="#process.stderr">process.stderr</a></li><li><a href="#process.stdin">process.stdin</a></li><li><a href="#process.argv">process.argv</a></li><li><a href="#process.execPath">process.execPath</a></li><li><a href="#process.abort">process.abort()</a></li><li><a href="#process.chdir">process.chdir(directory)</a></li><li><a href="#process.cwd">process.cwd()</a></li><li><a href="#process.env">process.env</a></li><li><a href="#process.exit">process.exit([code])</a></li><li><a href="#process.getgid">process.getgid()</a></li><li><a href="#process.setgid">process.setgid(id)</a></li><li><a href="#process.getuid">process.getuid()</a></li><li><a href="#process.setuid">process.setuid(id)</a></li><li><a href="#process.version">process.version</a></li><li><a href="#process.versions">process.versions</a></li><li><a href="#process.installPrefix">process.installPrefix</a></li><li><a href="#process.kill">process.kill(pid, [signal])</a></li><li><a href="#process.pid">process.pid</a></li><li><a href="#process.title">process.title</a></li><li><a href="#process.arch">process.arch</a></li><li><a href="#process.platform">process.platform</a></li><li><a href="#process.memoryUsage">process.memoryUsage()</a></li><li><a href="#process.nextTick">process.nextTick(callback)</a></li><li><a href="#process.umask">process.umask([mask])</a></li><li><a href="#process.uptime">process.uptime()</a></li></ul></li></ul><hr></div>
+<h2 id="process">process <span><a class="top" href="#">↑</a><a class="mark" href="#process">#</a></span></h2>
 
 <p><code>process</code> はグローバルオブジェクトで、どこからでもアクセスすることができます。
 それは <code>EventEmitter</code> のインスタンスです。</p>
 
-<h3 id="event_exit_">Event: 'exit' <a href="#event_exit_">#</a></h3>
+<h3 id="event_exit_">Event: 'exit' <span><a class="top" href="#">↑</a><a class="mark" href="#event_exit_">#</a></span></h3>
 
 <p><code>function () {}</code></p>
 
@@ -40,7 +71,7 @@
   console.log('About to exit.');
 });</code></pre>
 
-<h3 id="event_uncaughtException_">Event: 'uncaughtException' <a href="#event_uncaughtException_">#</a></h3>
+<h3 id="event_uncaughtException_">Event: 'uncaughtException' <span><a class="top" href="#">↑</a><a class="mark" href="#event_uncaughtException_">#</a></span></h3>
 
 <p><code>function (err) { }</code></p>
 
@@ -67,7 +98,7 @@ console.log('This will not run.');</code></pre>
 特にサーバプログラムはいつまでも実行し続けるように設計されるので、
 <code>uncaughtException</code> は有益で安全なメカニズムになり得ます。</p>
 
-<h3 id="signal_Events">Signal Events <a href="#signal_Events">#</a></h3>
+<h3 id="signal_Events">Signal Events <span><a class="top" href="#">↑</a><a class="mark" href="#signal_Events">#</a></span></h3>
 
 <p><code>function () {}</code></p>
 
@@ -85,7 +116,7 @@ process.on('SIGINT', function () {
 
 <p>多くの端末プログラムで簡単に <code>SIGINT</code> を送る方法は <code>Control-C</code> を押すことです。</p>
 
-<h3 id="process.stdout">process.stdout <a href="#process.stdout">#</a></h3>
+<h3 id="process.stdout">process.stdout <span><a class="top" href="#">↑</a><a class="mark" href="#process.stdout">#</a></span></h3>
 
 <p><code>stdout</code> に対する <code>Writable Stream</code> です。</p>
 
@@ -101,7 +132,7 @@ process.on('SIGINT', function () {
 それらはブロックします。
 パイプを参照しているケースでは、他のストリームと同様にブロックしません。</p>
 
-<h3 id="process.stderr">process.stderr <a href="#process.stderr">#</a></h3>
+<h3 id="process.stderr">process.stderr <span><a class="top" href="#">↑</a><a class="mark" href="#process.stderr">#</a></span></h3>
 
 <p><code>stderr</code> に対する <code>Writable Stream</code> です。</p>
 
@@ -111,7 +142,7 @@ process.on('SIGINT', function () {
 それらはブロックします。
 パイプを参照しているケースでは、他のストリームと同様にブロックしません。</p>
 
-<h3 id="process.stdin">process.stdin <a href="#process.stdin">#</a></h3>
+<h3 id="process.stdin">process.stdin <span><a class="top" href="#">↑</a><a class="mark" href="#process.stdin">#</a></span></h3>
 
 <p>標準入力に対する <code>Readable Stream</code> です。
 デフォルトでは、標準入力に対するストリームは中断されているため、
@@ -130,7 +161,7 @@ process.stdin.on('end', function () {
   process.stdout.write('end');
 });</code></pre>
 
-<h3 id="process.argv">process.argv <a href="#process.argv">#</a></h3>
+<h3 id="process.argv">process.argv <span><a class="top" href="#">↑</a><a class="mark" href="#process.argv">#</a></span></h3>
 
 <p>コマンドライン引数を含む配列です。
 最初の要素は 'node'、2 番目の要素は JavaScript ファイルの名前になります。
@@ -150,7 +181,7 @@ process.argv.forEach(function (val, index, array) {
 3: two=three
 4: four</code></pre>
 
-<h3 id="process.execPath">process.execPath <a href="#process.execPath">#</a></h3>
+<h3 id="process.execPath">process.execPath <span><a class="top" href="#">↑</a><a class="mark" href="#process.execPath">#</a></span></h3>
 
 <p>プロセスによって開始された実行可能ファイルの絶対パスです。</p>
 
@@ -158,12 +189,12 @@ process.argv.forEach(function (val, index, array) {
 
 <pre><code>/usr/local/bin/node</code></pre>
 
-<h3 id="process.abort">process.abort() <a href="#process.abort">#</a></h3>
+<h3 id="process.abort">process.abort() <span><a class="top" href="#">↑</a><a class="mark" href="#process.abort">#</a></span></h3>
 
 <p>これは node がアボートさせます。
 これは node が終了してコアファイルを生成する原因となります。</p>
 
-<h3 id="process.chdir">process.chdir(directory) <a href="#process.chdir">#</a></h3>
+<h3 id="process.chdir">process.chdir(directory) <span><a class="top" href="#">↑</a><a class="mark" href="#process.chdir">#</a></span></h3>
 
 <p>プロセスのカレントワーキングディレクトリを変更します。
 もし失敗した場合は例外をスローします。</p>
@@ -177,17 +208,17 @@ catch (err) {
   console.log('chdir: ' + err);
 }</code></pre>
 
-<h3 id="process.cwd">process.cwd() <a href="#process.cwd">#</a></h3>
+<h3 id="process.cwd">process.cwd() <span><a class="top" href="#">↑</a><a class="mark" href="#process.cwd">#</a></span></h3>
 
 <p>プロセスのカレントワーキングディレクトリを返します。</p>
 
 <pre><code>console.log('Current directory: ' + process.cwd());</code></pre>
 
-<h3 id="process.env">process.env <a href="#process.env">#</a></h3>
+<h3 id="process.env">process.env <span><a class="top" href="#">↑</a><a class="mark" href="#process.env">#</a></span></h3>
 
 <p>ユーザの環境を含むオブジェクトです。environ(7) を参照してください。</p>
 
-<h3 id="process.exit">process.exit([code]) <a href="#process.exit">#</a></h3>
+<h3 id="process.exit">process.exit([code]) <span><a class="top" href="#">↑</a><a class="mark" href="#process.exit">#</a></span></h3>
 
 <p>指定の <code>code</code> でプロセスを終了します。
 もし省略されると、「成功」を示すコード <code>0</code> を使って終了します。</p>
@@ -198,14 +229,14 @@ catch (err) {
 
 <p>node を実行したシェルで終了コードが 1 であることを見ることができるでしょう。</p>
 
-<h3 id="process.getgid">process.getgid() <a href="#process.getgid">#</a></h3>
+<h3 id="process.getgid">process.getgid() <span><a class="top" href="#">↑</a><a class="mark" href="#process.getgid">#</a></span></h3>
 
 <p>プロセスのグループ識別子を取得します (getgid(2) 参照)。
 これは数値によるグループ ID で、グループ名ではありません。</p>
 
 <pre><code>console.log('Current gid: ' + process.getgid());</code></pre>
 
-<h3 id="process.setgid">process.setgid(id) <a href="#process.setgid">#</a></h3>
+<h3 id="process.setgid">process.setgid(id) <span><a class="top" href="#">↑</a><a class="mark" href="#process.setgid">#</a></span></h3>
 
 <p>プロセスのグループ識別子を設定します (setgid(2) 参照)。
 これは数値による ID もグループ名の文字列のどちらも受け入れます。
@@ -220,14 +251,14 @@ catch (err) {
   console.log('Failed to set gid: ' + err);
 }</code></pre>
 
-<h3 id="process.getuid">process.getuid() <a href="#process.getuid">#</a></h3>
+<h3 id="process.getuid">process.getuid() <span><a class="top" href="#">↑</a><a class="mark" href="#process.getuid">#</a></span></h3>
 
 <p>プロセスのユーザ識別子を取得します (getuid(2) 参照)。
 これは数値によるユーザ ID で、ユーザ名ではありません。</p>
 
 <pre><code>console.log('Current uid: ' + process.getuid());</code></pre>
 
-<h3 id="process.setuid">process.setuid(id) <a href="#process.setuid">#</a></h3>
+<h3 id="process.setuid">process.setuid(id) <span><a class="top" href="#">↑</a><a class="mark" href="#process.setuid">#</a></span></h3>
 
 <p>プロセスのユーザ識別子を設定します (setuid(2) 参照)。
 これは数値による ID もユーザ名の文字列のどちらも受け入れます。
@@ -242,13 +273,13 @@ catch (err) {
   console.log('Failed to set uid: ' + err);
 }</code></pre>
 
-<h3 id="process.version">process.version <a href="#process.version">#</a></h3>
+<h3 id="process.version">process.version <span><a class="top" href="#">↑</a><a class="mark" href="#process.version">#</a></span></h3>
 
 <p><code>NODE_VERSION</code> を提示するコンパイル済みプロパティです。</p>
 
 <pre><code>console.log('Version: ' + process.version);</code></pre>
 
-<h3 id="process.versions">process.versions <a href="#process.versions">#</a></h3>
+<h3 id="process.versions">process.versions <span><a class="top" href="#">↑</a><a class="mark" href="#process.versions">#</a></span></h3>
 
 <p>node と依存ライブラリのバージョン文字列を提示します。</p>
 
@@ -262,13 +293,13 @@ catch (err) {
   ev: '4.4',
   openssl: '1.0.0e-fips' }</code></pre>
 
-<h3 id="process.installPrefix">process.installPrefix <a href="#process.installPrefix">#</a></h3>
+<h3 id="process.installPrefix">process.installPrefix <span><a class="top" href="#">↑</a><a class="mark" href="#process.installPrefix">#</a></span></h3>
 
 <p><code>NODE_PREFIX</code> を提示するコンパイル済みプロパティです。</p>
 
 <pre><code>console.log('Prefix: ' + process.installPrefix);</code></pre>
 
-<h3 id="process.kill">process.kill(pid, [signal]) <a href="#process.kill">#</a></h3>
+<h3 id="process.kill">process.kill(pid, [signal]) <span><a class="top" href="#">↑</a><a class="mark" href="#process.kill">#</a></span></h3>
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
@@ -293,28 +324,28 @@ setTimeout(function () {
 
 process.kill(process.pid, 'SIGHUP');</code></pre>
 
-<h3 id="process.pid">process.pid <a href="#process.pid">#</a></h3>
+<h3 id="process.pid">process.pid <span><a class="top" href="#">↑</a><a class="mark" href="#process.pid">#</a></span></h3>
 
 <pre><code>console.log('This process is pid ' + process.pid);</code></pre>
 
-<h3 id="process.title">process.title <a href="#process.title">#</a></h3>
+<h3 id="process.title">process.title <span><a class="top" href="#">↑</a><a class="mark" href="#process.title">#</a></span></h3>
 
 <p>'ps' でどのよう表示されるかを設定するための getter/setter です。</p>
 
-<h3 id="process.arch">process.arch <a href="#process.arch">#</a></h3>
+<h3 id="process.arch">process.arch <span><a class="top" href="#">↑</a><a class="mark" href="#process.arch">#</a></span></h3>
 
 <p>実行しているプロセッサのアーキテクチャ: <code>'arm'</code>、<code>'ia32'</code>、または
 <code>'x64'</code>。</p>
 
 <pre><code>console.log('This processor architecture is ' + process.arch);</code></pre>
 
-<h3 id="process.platform">process.platform <a href="#process.platform">#</a></h3>
+<h3 id="process.platform">process.platform <span><a class="top" href="#">↑</a><a class="mark" href="#process.platform">#</a></span></h3>
 
 <p>どのプラットフォームで動いているかです。<code>'linux2'</code>、<code>'darwin'</code>、など。</p>
 
 <pre><code>console.log('This platform is ' + process.platform);</code></pre>
 
-<h3 id="process.memoryUsage">process.memoryUsage() <a href="#process.memoryUsage">#</a></h3>
+<h3 id="process.memoryUsage">process.memoryUsage() <span><a class="top" href="#">↑</a><a class="mark" href="#process.memoryUsage">#</a></span></h3>
 
 <p>Node プロセスのメモリ使用状況をバイト単位で記述したオブジェクトを返します。</p>
 
@@ -330,7 +361,7 @@ console.log(util.inspect(process.memoryUsage()));</code></pre>
 
 <p><code>heapTotal</code> と <code>heapUsed</code> は V8 のメモリ使用状況を参照します。</p>
 
-<h3 id="process.nextTick">process.nextTick(callback) <a href="#process.nextTick">#</a></h3>
+<h3 id="process.nextTick">process.nextTick(callback) <span><a class="top" href="#">↑</a><a class="mark" href="#process.nextTick">#</a></span></h3>
 
 <p>イベントループの次以降のループでコールバックを呼び出します。
 これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、
@@ -340,7 +371,7 @@ console.log(util.inspect(process.memoryUsage()));</code></pre>
   console.log('nextTick callback');
 });</code></pre>
 
-<h3 id="process.umask">process.umask([mask]) <a href="#process.umask">#</a></h3>
+<h3 id="process.umask">process.umask([mask]) <span><a class="top" href="#">↑</a><a class="mark" href="#process.umask">#</a></span></h3>
 
 <p>プロセスのファイルモード作成マスクを設定または読み込みます。
 子プロセスは親プロセスからマスクを継承します。
@@ -352,10 +383,38 @@ oldmask = process.umask(newmask);
 console.log('Changed umask from: ' + oldmask.toString(8) +
             ' to ' + newmask.toString(8));</code></pre>
 
-<h3 id="process.uptime">process.uptime() <a href="#process.uptime">#</a></h3>
+<h3 id="process.uptime">process.uptime() <span><a class="top" href="#">↑</a><a class="mark" href="#process.uptime">#</a></span></h3>
 
 <p>Node が実行されてからの秒数です。</p>
-  </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.2/LICENSE">license</a>.</p>
+    </div>
+    
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>

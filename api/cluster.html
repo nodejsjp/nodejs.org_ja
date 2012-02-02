@@ -2,22 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>cluster - Node.js v0.7.1 Manual &amp; Documentation</title>
+  <title>cluster - Node.js v0.7.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/cluster.html">
 </head>
-<body>
-  <div id="container">
-    <header>
-      <h1>Node.js v0.7.1 Manual &amp; Documentation</h1>
-      <div id="gtoc">
-        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
-      </div>
-      <hr>
-    </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#cluster">Cluster</a><ul><li><a href="#cluster.isMaster">cluster.isMaster</a></li><li><a href="#cluster.isWorker">cluster.isWorker</a></li><li><a href="#event_fork_">Event: 'fork'</a></li><li><a href="#event_online_">Event: 'online'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_death_">Event: 'death'</a></li><li><a href="#event_setup_">Event 'setup'</a></li><li><a href="#cluster.setupMaster">cluster.setupMaster([options])</a></li><li><a href="#cluster.settings">cluster.settings</a></li><li><a href="#cluster.fork">cluster.fork([env])</a></li><li><a href="#cluster.workers">cluster.workers</a></li></ul></li><li><a href="#worker">Worker</a><ul><li><a href="#worker.uniqueID">Worker.uniqueID</a></li><li><a href="#worker.process">Worker.process</a></li><li><a href="#worker.send">Worker.send(message, [sendHandle])</a></li><li><a href="#worker.destroy">Worker.destroy()</a></li><li><a href="#worker.suicide">Worker.suicide</a></li><li><a href="#event_message">Event: message</a></li><li><a href="#event_online">Event: online</a></li><li><a href="#event_listening">Event: listening</a></li><li><a href="#event_death">Event: death</a></li></ul></li></ul><hr /></div>
-<h2 id="cluster">Cluster</h2>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="assets/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.7.2 Manual &amp; Documentation</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#cluster">Cluster</a><ul><li><a href="#cluster.isMaster">cluster.isMaster</a></li><li><a href="#cluster.isWorker">cluster.isWorker</a></li><li><a href="#event_fork_">Event: 'fork'</a></li><li><a href="#event_online_">Event: 'online'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_death_">Event: 'death'</a></li><li><a href="#event_setup_">Event 'setup'</a></li><li><a href="#cluster.setupMaster">cluster.setupMaster([options])</a></li><li><a href="#cluster.settings">cluster.settings</a></li><li><a href="#cluster.fork">cluster.fork([env])</a></li><li><a href="#cluster.workers">cluster.workers</a></li></ul></li><li><a href="#worker">Worker</a><ul><li><a href="#worker.uniqueID">Worker.uniqueID</a></li><li><a href="#worker.process">Worker.process</a></li><li><a href="#worker.send">Worker.send(message, [sendHandle])</a></li><li><a href="#worker.destroy">Worker.destroy()</a></li><li><a href="#worker.suicide">Worker.suicide</a></li><li><a href="#event_message">Event: message</a></li><li><a href="#event_online">Event: online</a></li><li><a href="#event_listening">Event: listening</a></li><li><a href="#event_death">Event: death</a></li></ul></li></ul><hr></div>
+<h2 id="cluster">Cluster <span><a class="top" href="#">↑</a><a class="mark" href="#cluster">#</a></span></h2>
 
 <p>一つの Node インスタンスは一つのスレッドで実行されます。
 マルチコアシステムのメリットを生かすために、
@@ -54,20 +85,20 @@ if (cluster.isMaster) {
 Worker 2438 online
 Worker 2437 online</code></pre>
 
-<h3 id="cluster.isMaster">cluster.isMaster <a href="#cluster.isMaster">#</a></h3>
+<h3 id="cluster.isMaster">cluster.isMaster <span><a class="top" href="#">↑</a><a class="mark" href="#cluster.isMaster">#</a></span></h3>
 
 <p>現在のプロセスがマスタの場合、この論理値型のフラグは <code>true</code> です。
 これは <code>process.env.NODE_UNIQUE_ID</code> から決定されます。
 <code>process.env.NODE_UNIQUE_ID</code> が未定義だと <code>isMaster</code> は <code>true</code> になります。</p>
 
-<h3 id="cluster.isWorker">cluster.isWorker <a href="#cluster.isWorker">#</a></h3>
+<h3 id="cluster.isWorker">cluster.isWorker <span><a class="top" href="#">↑</a><a class="mark" href="#cluster.isWorker">#</a></span></h3>
 
 <p>現在のプロセスがマスタからフォークされたワーカの場合、
 この論理値型のフラグは <code>true</code> です。
 <code>process.env.NODE_UNIQUE_ID</code> に値が設定されていると <code>isWorker</code> は <code>true</code>
 になります。</p>
 
-<h3 id="event_fork_">Event: 'fork' <a href="#event_fork_">#</a></h3>
+<h3 id="event_fork_">Event: 'fork' <span><a class="top" href="#">↑</a><a class="mark" href="#event_fork_">#</a></span></h3>
 
 <p>新しいワーカがフォークされると、クラスタモジュールは <code>'fork'</code> イベントを
 生成します。
@@ -89,7 +120,7 @@ cluster.on('death', function (worker) {
   errorMsg();
 });</code></pre>
 
-<h3 id="event_online_">Event: 'online' <a href="#event_online_">#</a></h3>
+<h3 id="event_online_">Event: 'online' <span><a class="top" href="#">↑</a><a class="mark" href="#event_online_">#</a></span></h3>
 
 <p>新しいワーカをフォークした後、ワーカはオンラインメッセージを応答します。
 マスタがオンラインメッセージを受信すると、このイベントが生成されます。
@@ -101,7 +132,7 @@ cluster.on('death', function (worker) {
   console.log("Yay, the worker responded after it was forked");
 });</code></pre>
 
-<h3 id="event_listening_">Event: 'listening' <a href="#event_listening_">#</a></h3>
+<h3 id="event_listening_">Event: 'listening' <span><a class="top" href="#">↑</a><a class="mark" href="#event_listening_">#</a></span></h3>
 
 <p>ワーカが <code>net.Server.listen()</code> を呼び出すと、<code>'listening'</code> イベントは自動的に
 <code>net.Server</code> インスタンスに割り当てられます。
@@ -112,7 +143,7 @@ cluster.on('death', function (worker) {
   console.log("We are now connected");
 });</code></pre>
 
-<h3 id="event_death_">Event: 'death' <a href="#event_death_">#</a></h3>
+<h3 id="event_death_">Event: 'death' <span><a class="top" href="#">↑</a><a class="mark" href="#event_death_">#</a></span></h3>
 
 <p>どのワーカが死んだ場合でも、クラスタモジュールは <code>'death'</code> イベントを
 生成します。
@@ -123,13 +154,13 @@ cluster.on('death', function (worker) {
   cluster.fork();
 });</code></pre>
 
-<h3 id="event_setup_">Event 'setup' <a href="#event_setup_">#</a></h3>
+<h3 id="event_setup_">Event 'setup' <span><a class="top" href="#">↑</a><a class="mark" href="#event_setup_">#</a></span></h3>
 
 <p><code>setupMaster()</code> が実行された時、このイベントが生成されます。
 <code>fork()</code>  または <code>autoFork()</code> の前に<code>setupMaster()</code> が呼ばれなかった場合、
 それは引数無しで実行されます。</p>
 
-<h3 id="cluster.setupMaster">cluster.setupMaster([options]) <a href="#cluster.setupMaster">#</a></h3>
+<h3 id="cluster.setupMaster">cluster.setupMaster([options]) <span><a class="top" href="#">↑</a><a class="mark" href="#cluster.setupMaster">#</a></span></h3>
 
 <p><code>setupMaster()</code> は 'fork' のデフォルト動作を変更するために使われます。
 引数として一つのオプションオブジェクトを受け取ります。</p>
@@ -148,19 +179,19 @@ cluster.autoFork();</code></pre>
 
 <ul><li><code>exec</code> はワーカが実行するファイルのパスで、デフォルトはマスタと同じファイルです。</li><li><code>args</code> は和アー化に渡される引数の配列で、デフォルトは <code>process.argv.slice(2)</code> です。</li><li><code>silent</code> が <code>true</code> ならワーカの標準出力および標準エラー出力はマスタに伝播しません。デフォルトは <code>false</code> です。</li></ul>
 
-<h3 id="cluster.settings">cluster.settings <a href="#cluster.settings">#</a></h3>
+<h3 id="cluster.settings">cluster.settings <span><a class="top" href="#">↑</a><a class="mark" href="#cluster.settings">#</a></span></h3>
 
 <p><code>setupMaster()</code> の設定はこのオブジェクトに保存されます。
 このオブジェクトは変更されることを想定していません。</p>
 
-<h3 id="cluster.fork">cluster.fork([env]) <a href="#cluster.fork">#</a></h3>
+<h3 id="cluster.fork">cluster.fork([env]) <span><a class="top" href="#">↑</a><a class="mark" href="#cluster.fork">#</a></span></h3>
 
 <p>新しいワーカプロセスを起動します。
 これはマスタプロセスから飲み呼び出すことができます。
 この関数はオプションの <code>env</code> オブジェクトを受け取ることができます。
 このオブジェクトのプロパティはワーカプロセスの環境変数に加えられます。</p>
 
-<h3 id="cluster.workers">cluster.workers <a href="#cluster.workers">#</a></h3>
+<h3 id="cluster.workers">cluster.workers <span><a class="top" href="#">↑</a><a class="mark" href="#cluster.workers">#</a></span></h3>
 
 <p>このクラスタで生きている全てのワーカオブジェクトを、その <code>uniqueID</code>
 をキーとして保存しているオブジェクトです。
@@ -183,23 +214,23 @@ eachWorker(function (worker) {
   var worker = cluster.workers[uniqueID];
 });</code></pre>
 
-<h2 id="worker">Worker</h2>
+<h2 id="worker">Worker <span><a class="top" href="#">↑</a><a class="mark" href="#worker">#</a></span></h2>
 
 <p>このオブジェクトはワーカに関する全ての公開された情報やメソッドを持ちます。
 マスタでは <code>cluster.wrokers</code> から取得することができます。
 ワーカでは <code>cluster.worker</code> から取得することができます。</p>
 
-<h3 id="worker.uniqueID">Worker.uniqueID <a href="#worker.uniqueID">#</a></h3>
+<h3 id="worker.uniqueID">Worker.uniqueID <span><a class="top" href="#">↑</a><a class="mark" href="#worker.uniqueID">#</a></span></h3>
 
 <p>新しいワーカはいずれもユニークな ID を与えられます。
 この ID は <code>uniqueID</code> に保存されます。.</p>
 
-<h3 id="worker.process">Worker.process <a href="#worker.process">#</a></h3>
+<h3 id="worker.process">Worker.process <span><a class="top" href="#">↑</a><a class="mark" href="#worker.process">#</a></span></h3>
 
 <p>全てのワーカは <code>child_process.fork()</code> によって作成されます。
 その戻り値が <code>process</code> に設定されます。</p>
 
-<h3 id="worker.send">Worker.send(message, [sendHandle]) <a href="#worker.send">#</a></h3>
+<h3 id="worker.send">Worker.send(message, [sendHandle]) <span><a class="top" href="#">↑</a><a class="mark" href="#worker.send">#</a></span></h3>
 
 <p>この関数は <code>child_process.fork()</code> が返すオブジェクトの <code>send()</code>
 メソッドと同じです．
@@ -219,7 +250,7 @@ eachWorker(function (worker) {
   });
 }</code></pre>
 
-<h3 id="worker.destroy">Worker.destroy() <a href="#worker.destroy">#</a></h3>
+<h3 id="worker.destroy">Worker.destroy() <span><a class="top" href="#">↑</a><a class="mark" href="#worker.destroy">#</a></span></h3>
 
 <p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。
 意図しない終了と区別するために <code>suicide</code> プロパティに <code>true</code>
@@ -234,14 +265,14 @@ eachWorker(function (worker) {
 // destroy worker
 worker.destroy();</code></pre>
 
-<h3 id="worker.suicide">Worker.suicide <a href="#worker.suicide">#</a></h3>
+<h3 id="worker.suicide">Worker.suicide <span><a class="top" href="#">↑</a><a class="mark" href="#worker.suicide">#</a></span></h3>
 
 <p>このプロパティは論理値型です。
 ワーカが終了するまで、これは <code>undefined</code> です。
 ワーカが <code>.destroy()</code> で終了した場合は <code>true</code> に、その他の場合は
 <code>false</code> に設定されます。</p>
 
-<h3 id="event_message">Event: message <a href="#event_message">#</a></h3>
+<h3 id="event_message">Event: message <span><a class="top" href="#">↑</a><a class="mark" href="#event_message">#</a></span></h3>
 
 <p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。
 マスタではこのイベントを使うべきですが、ワーカでは <code>process.on('message')</code>
@@ -286,7 +317,7 @@ if (cluster.isMaster) {
   }).listen(8000);
 }</code></pre>
 
-<h3 id="event_online">Event: online <a href="#event_online">#</a></h3>
+<h3 id="event_online">Event: online <span><a class="top" href="#">↑</a><a class="mark" href="#event_online">#</a></span></h3>
 
 <p><code>cluster.on('online')</code> と同様ですが，特定のワーカの状態が変化した場合のみ
 イベントを生成します。</p>
@@ -295,7 +326,7 @@ if (cluster.isMaster) {
   // Worker is online
 };</code></pre>
 
-<h3 id="event_listening">Event: listening <a href="#event_listening">#</a></h3>
+<h3 id="event_listening">Event: listening <span><a class="top" href="#">↑</a><a class="mark" href="#event_listening">#</a></span></h3>
 
 <p><code>cluster.on('listening')</code> と同様ですが、特定のワーカの状態が変化した場合のみ
 イベントを生成します。</p>
@@ -304,7 +335,7 @@ if (cluster.isMaster) {
   // Worker is listening
 };</code></pre>
 
-<h3 id="event_death">Event: death <a href="#event_death">#</a></h3>
+<h3 id="event_death">Event: death <span><a class="top" href="#">↑</a><a class="mark" href="#event_death">#</a></span></h3>
 
 <p><code>cluster.on('death')</code> と同様ですが、特定のワーカの状態が変化した場合のみ
 イベントを生成します。</p>
@@ -312,7 +343,35 @@ if (cluster.isMaster) {
 <pre><code>cluster.fork().on('death', function (worker) {
   // Worker has died
 };</code></pre>
-  </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.2/LICENSE">license</a>.</p>
+    </div>
+    
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>

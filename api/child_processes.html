@@ -2,22 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>child_processes - Node.js v0.7.1 Manual &amp; Documentation</title>
+  <title>child_processes - Node.js v0.7.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/child_processes.html">
 </head>
-<body>
-  <div id="container">
-    <header>
-      <h1>Node.js v0.7.1 Manual &amp; Documentation</h1>
-      <div id="gtoc">
-        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
-      </div>
-      <hr>
-    </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#child_Processes">Child Processes</a><ul><li><a href="#event_exit_">Event:  'exit'</a></li><li><a href="#child.stdin">child.stdin</a></li><li><a href="#child.stdout">child.stdout</a></li><li><a href="#child.stderr">child.stderr</a></li><li><a href="#child.pid">child.pid</a></li><li><a href="#child_process.spawn">child_process.spawn(command, [args], [options])</a></li><li><a href="#child_process.exec">child_process.exec(command, [options], callback)</a></li><li><a href="#child_process.execFile">child_process.execFile(file, args, options, callback)</a></li><li><a href="#child_process.fork">child_process.fork(modulePath, [arguments], [options])</a></li><li><a href="#child.kill">child.kill([signal])</a></li></ul></li></ul><hr /></div>
-<h2 id="child_Processes">Child Processes</h2>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="assets/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.7.2 Manual &amp; Documentation</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#child_Processes">Child Processes</a><ul><li><a href="#event_exit_">Event:  'exit'</a></li><li><a href="#event_disconnect_">Event: 'disconnect'</a></li><li><a href="#child.stdin">child.stdin</a></li><li><a href="#child.stdout">child.stdout</a></li><li><a href="#child.stderr">child.stderr</a></li><li><a href="#child.pid">child.pid</a></li><li><a href="#child_process.spawn">child_process.spawn(command, [args], [options])</a></li><li><a href="#child_process.exec">child_process.exec(command, [options], callback)</a></li><li><a href="#child_process.execFile">child_process.execFile(file, args, options, callback)</a></li><li><a href="#child_process.fork">child_process.fork(modulePath, [arguments], [options])</a></li><li><a href="#child.kill">child.kill([signal])</a></li></ul></li></ul><hr></div>
+<h2 id="child_Processes">Child Processes <span><a class="top" href="#">↑</a><a class="mark" href="#child_Processes">#</a></span></h2>
 
 <p>Nodeは <code>ChildProcess</code> クラスを通じて 3 方向の <code>popen(3)</code> 機能を提供します。</p>
 
@@ -31,7 +62,7 @@
 
 <p><code>ChildProcess</code> は <code>EventEmitter</code> です。</p>
 
-<h3 id="event_exit_">Event:  'exit' <a href="#event_exit_">#</a></h3>
+<h3 id="event_exit_">Event:  'exit' <span><a class="top" href="#">↑</a><a class="mark" href="#event_exit_">#</a></span></h3>
 
 <p><code>function (code, signal) {}</code></p>
 
@@ -43,20 +74,28 @@
 
 <p><code>waitpid(2)</code> を参照してください。</p>
 
-<h3 id="child.stdin">child.stdin <a href="#child.stdin">#</a></h3>
+<h3 id="event_disconnect_">Event: 'disconnect' <span><a class="top" href="#">↑</a><a class="mark" href="#event_disconnect_">#</a></span></h3>
+
+<p>このイベントは、親プロセスまたは子プロセスで <code>disconnect()</code> メソッドが
+呼び出された場合に生成されます。
+この後では、プロセス間でのメッセージ送信はもうできません。
+メッセージを送信できるかを調べるには、<code>child.connected</code> プロパティが <code>true</code>
+かチェックしてください。</p>
+
+<h3 id="child.stdin">child.stdin <span><a class="top" href="#">↑</a><a class="mark" href="#child.stdin">#</a></span></h3>
 
 <p>子プロセスの <code>stdin</code> を表現する <code>Writable Stream</code> です。
 多くの場合、<code>end()</code> を通じてこのストリームを閉じると子プロセスが終了する原因となります。</p>
 
-<h3 id="child.stdout">child.stdout <a href="#child.stdout">#</a></h3>
+<h3 id="child.stdout">child.stdout <span><a class="top" href="#">↑</a><a class="mark" href="#child.stdout">#</a></span></h3>
 
 <p>子プロセスの <code>stdout</code> を表現する <code>Readable Stream</code> です。</p>
 
-<h3 id="child.stderr">child.stderr <a href="#child.stderr">#</a></h3>
+<h3 id="child.stderr">child.stderr <span><a class="top" href="#">↑</a><a class="mark" href="#child.stderr">#</a></span></h3>
 
 <p>子プロセスの <code>stderr</code> を表現する <code>Readable Stream</code> です。</p>
 
-<h3 id="child.pid">child.pid <a href="#child.pid">#</a></h3>
+<h3 id="child.pid">child.pid <span><a class="top" href="#">↑</a><a class="mark" href="#child.pid">#</a></span></h3>
 
 <p>子プロセスの PID です。</p>
 
@@ -68,7 +107,7 @@
 console.log('Spawned child pid: ' + grep.pid);
 grep.stdin.end();</code></pre>
 
-<h3 id="child_process.spawn">child_process.spawn(command, [args], [options]) <a href="#child_process.spawn">#</a></h3>
+<h3 id="child_process.spawn">child_process.spawn(command, [args], [options]) <span><a class="top" href="#">↑</a><a class="mark" href="#child_process.spawn">#</a></span></h3>
 
 <p><code>args</code> をコマンドライン引数として、与えられた <code>command</code> で新しいプロセスを起動します。
 <code>args</code> が省略された場合、空の配列がデフォルトとなります。</p>
@@ -170,7 +209,7 @@ Node のドキュメント化されていない API と同様に、
 
 <p>関連項目: <code>child_process.exec()</code></p>
 
-<h3 id="child_process.exec">child_process.exec(command, [options], callback) <a href="#child_process.exec">#</a></h3>
+<h3 id="child_process.exec">child_process.exec(command, [options], callback) <span><a class="top" href="#">↑</a><a class="mark" href="#child_process.exec">#</a></span></h3>
 
 <p>コマンドをシェルで実行し、その出力をバッファに格納します。</p>
 
@@ -208,13 +247,13 @@ child = exec('cat *.js bad_file | wc -l',
 子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>'SIGTERM'</code>)。
 <code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。</p>
 
-<h3 id="child_process.execFile">child_process.execFile(file, args, options, callback) <a href="#child_process.execFile">#</a></h3>
+<h3 id="child_process.execFile">child_process.execFile(file, args, options, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#child_process.execFile">#</a></span></h3>
 
 <p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて
 <code>child_process.exec()</code> と同様です。
 これは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。</p>
 
-<h3 id="child_process.fork">child_process.fork(modulePath, [arguments], [options]) <a href="#child_process.fork">#</a></h3>
+<h3 id="child_process.fork">child_process.fork(modulePath, [arguments], [options]) <span><a class="top" href="#">↑</a><a class="mark" href="#child_process.fork">#</a></span></h3>
 
 <p>これは <code>spawn()</code> の特別版で、Node プロセスを起動します。
 返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
@@ -282,7 +321,16 @@ server.listen(1337, function() {
   }
 });</code></pre>
 
-<h3 id="child.kill">child.kill([signal]) <a href="#child.kill">#</a></h3>
+<p>親プロセスと子プロセス間の IPC 接続を閉じるには、<code>child.disconnect()</code>
+メソッドを使用します。
+これは IPC チャネルを解放することにより、子プロセスが通常通りに終了することを
+可能にします。
+このメソッドが呼び出されると、親プロセスと子プロセスの両方で <code>'disconnect'</code>
+イベントが生成され、<code>connected</code> フラグは <code>false</code> に設定されます。
+子プロセスでは <code>process.disconnect()</code> を呼び出すこともできることに
+注意してください。</p>
+
+<h3 id="child.kill">child.kill([signal]) <span><a class="top" href="#">↑</a><a class="mark" href="#child.kill">#</a></span></h3>
 
 <p>子プロセスにシグナルを送ります。
 引数が与えられない場合、子プロセスには <code>'SIGTERM'</code> が送られます。
@@ -303,7 +351,35 @@ grep.kill('SIGHUP');</code></pre>
 <code>kill</code> はただプロセスにシグナルを送るだけです。</p>
 
 <p>See <code>kill(2)</code></p>
-  </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.2/LICENSE">license</a>.</p>
+    </div>
+    
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>

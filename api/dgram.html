@@ -2,47 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>dgram - Node.js v0.7.1 Manual &amp; Documentation</title>
+  <title>dgram - Node.js v0.7.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/dgram.html">
 </head>
-<body>
-  <div id="container">
-    <header>
-      <h1>Node.js v0.7.1 Manual &amp; Documentation</h1>
-      <div id="gtoc">
-        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
-      </div>
-      <hr>
-    </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#uDP_Datagram_Sockets">UDP / Datagram Sockets</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li><li><a href="#dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</a></li><li><a href="#dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</a></li><li><a href="#dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</a></li><li><a href="#dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li></ul></li></ul><hr /></div>
-<h2 id="uDP_Datagram_Sockets">UDP / Datagram Sockets</h2>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="assets/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.7.2 Manual &amp; Documentation</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#uDP_Datagram_Sockets">UDP / Datagram Sockets</a><ul><li><a href="#event_message_">Event: 'message'</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#dgram.createSocket">dgram.createSocket(type, [callback])</a></li><li><a href="#dgram.send">dgram.send(buf, offset, length, port, address, [callback])</a></li><li><a href="#dgram.bind">dgram.bind(port, [address])</a></li><li><a href="#dgram.close">dgram.close()</a></li><li><a href="#dgram.address">dgram.address()</a></li><li><a href="#dgram.setBroadcast">dgram.setBroadcast(flag)</a></li><li><a href="#dgram.setTTL">dgram.setTTL(ttl)</a></li><li><a href="#dgram.setMulticastTTL">dgram.setMulticastTTL(ttl)</a></li><li><a href="#dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag)</a></li><li><a href="#dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface])</a></li><li><a href="#dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li></ul></li></ul><hr></div>
+<h2 id="uDP_Datagram_Sockets">UDP / Datagram Sockets <span><a class="top" href="#">↑</a><a class="mark" href="#uDP_Datagram_Sockets">#</a></span></h2>
 
 <p>データグラムソケットは <code>require('dgram')</code> で利用可能になります。</p>
 
-<h3 id="event_message_">Event: 'message' <a href="#event_message_">#</a></h3>
+<h3 id="event_message_">Event: 'message' <span><a class="top" href="#">↑</a><a class="mark" href="#event_message_">#</a></span></h3>
 
 <p><code>function (msg, rinfo) { }</code></p>
 
 <p>ソケット上で新しいデータグラムが到着した時に生成されます。<code>msg</code> は <code>Buffer</code> で、
 <code>rinfo</code> は送信者のアドレス情報とデータグラムのバイト数を持ったオブジェクトです。</p>
 
-<h3 id="event_listening_">Event: 'listening' <a href="#event_listening_">#</a></h3>
+<h3 id="event_listening_">Event: 'listening' <span><a class="top" href="#">↑</a><a class="mark" href="#event_listening_">#</a></span></h3>
 
 <p><code>function () { }</code></p>
 
 <p>ソケットでデータグラムの待ち受けを開始すると生成されます。
 これは UDP ソケットが作成されるとすぐに発生します。</p>
 
-<h3 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h3>
+<h3 id="event_close_">Event: 'close' <span><a class="top" href="#">↑</a><a class="mark" href="#event_close_">#</a></span></h3>
 
 <p><code>function () { }</code></p>
 
 <p><code>close()</code> によってソケットがクローズすると生成されます。
 このソケットでは新しい <code>message</code> イベントは生成されなくなります。</p>
 
-<h3 id="event_error_">Event: 'error' <a href="#event_error_">#</a></h3>
+<h3 id="event_error_">Event: 'error' <span><a class="top" href="#">↑</a><a class="mark" href="#event_error_">#</a></span></h3>
 
 <p><code>function (exception) {}</code></p>
 
@@ -50,7 +81,7 @@
 
 <hr />
 
-<h3 id="dgram.createSocket">dgram.createSocket(type, [callback]) <a href="#dgram.createSocket">#</a></h3>
+<h3 id="dgram.createSocket">dgram.createSocket(type, [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.createSocket">#</a></span></h3>
 
 <p>指定された種類のデータグラムソケットを作成します。
 妥当な種類は <code>udp4</code> と <code>udp6</code>です。</p>
@@ -63,7 +94,7 @@
 そのアドレスとポートは <code>socket.address().address</code> および
 <code>socket.address().port</code> で取得することができます。</p>
 
-<h3 id="dgram.send">dgram.send(buf, offset, length, port, address, [callback]) <a href="#dgram.send">#</a></h3>
+<h3 id="dgram.send">dgram.send(buf, offset, length, port, address, [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.send">#</a></span></h3>
 
 <p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。
 <code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。
@@ -109,7 +140,7 @@ IP ヘッダとデータ含めて 64K オクテットより長くなれないこ
 (パケットは送り主に知らされることなく黙って捨てられ、
 意図した受信者に到達することはありません)。</p>
 
-<h3 id="dgram.bind">dgram.bind(port, [address]) <a href="#dgram.bind">#</a></h3>
+<h3 id="dgram.bind">dgram.bind(port, [address]) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.bind">#</a></span></h3>
 
 <p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを待ち受けます。
 <code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。</p>
@@ -134,21 +165,21 @@ server.on("listening", function () {
 server.bind(41234);
 // server listening 0.0.0.0:41234</code></pre>
 
-<h3 id="dgram.close">dgram.close() <a href="#dgram.close">#</a></h3>
+<h3 id="dgram.close">dgram.close() <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.close">#</a></span></h3>
 
 <p>下層のソケットをクローズし、データの待ち受けを終了します。</p>
 
-<h3 id="dgram.address">dgram.address() <a href="#dgram.address">#</a></h3>
+<h3 id="dgram.address">dgram.address() <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.address">#</a></span></h3>
 
 <p>オブジェクトが持っているソケットのアドレス情報を返します。
 このオブジェクトは <code>address</code> と <code>port</code> を持っています。</p>
 
-<h3 id="dgram.setBroadcast">dgram.setBroadcast(flag) <a href="#dgram.setBroadcast">#</a></h3>
+<h3 id="dgram.setBroadcast">dgram.setBroadcast(flag) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.setBroadcast">#</a></span></h3>
 
 <p>ソケットのオプション <code>SO_BROADCAST</code> を設定またはクリアします。
 このオプションが設定されると、UDP パケットはローカルインタフェースのブロードキャスト用アドレスに送信されます。</p>
 
-<h3 id="dgram.setTTL">dgram.setTTL(ttl) <a href="#dgram.setTTL">#</a></h3>
+<h3 id="dgram.setTTL">dgram.setTTL(ttl) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.setTTL">#</a></span></h3>
 
 <p>ソケットオプションの <code>IP_TTL</code> を設定します。
 TTL は「生存期間」を表しますが、このコンテキストではパケットが通過を許可される IP のホップ数を指定します。
@@ -158,7 +189,7 @@ TTL 値の変更は通常、ネットワークの調査やマルチキャスト�
 
 <p><code>setTTL()</code> の引数は 1 から 255 のホップ数でです。ほとんどのシステムでデフォルトは 64 です。</p>
 
-<h3 id="dgram.setMulticastTTL">dgram.setMulticastTTL(ttl) <a href="#dgram.setMulticastTTL">#</a></h3>
+<h3 id="dgram.setMulticastTTL">dgram.setMulticastTTL(ttl) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.setMulticastTTL">#</a></span></h3>
 
 <p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。
 TTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。
@@ -167,24 +198,52 @@ TTL がルーターによって 0 までデクリメントされると、それ�
 <code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。
 ほとんどのシステムでデフォルトは 64 です。</p>
 
-<h3 id="dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag) <a href="#dgram.setMulticastLoopback">#</a></h3>
+<h3 id="dgram.setMulticastLoopback">dgram.setMulticastLoopback(flag) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.setMulticastLoopback">#</a></span></h3>
 
 <p><code>IP_MULTICAST_LOOP</code> ソケットオプションを設定またはクリアします。
 このオプションが設定されると、マルチキャストのパケットはローカルインタフェースでも受信できるようになります。</p>
 
-<h3 id="dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface]) <a href="#dgram.addMembership">#</a></h3>
+<h3 id="dgram.addMembership">dgram.addMembership(multicastAddress, [multicastInterface]) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.addMembership">#</a></span></h3>
 
 <p><code>IP_ADD_MEMBERSHIP</code> ソケットオプションを設定し、マルチキャストグループに参加することをカーネルに伝えます。</p>
 
 <p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップに加えようとします。</p>
 
-<h3 id="dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface]) <a href="#dgram.dropMembership">#</a></h3>
+<h3 id="dgram.dropMembership">dgram.dropMembership(multicastAddress, [multicastInterface]) <span><a class="top" href="#">↑</a><a class="mark" href="#dgram.dropMembership">#</a></span></h3>
 
 <p><code>addMembership</code> の反対です - <code>IP_DROP_MEMBERSHIP</code> ソケットオプションによって、マルチキャストグループから抜けることをカーネルに伝えます。
 これはソケットのクローズ時やプロセスの終了時にカーネルによって自動的に呼び出されるため、ほとんどのアプリケーションはこれを呼び出す必要がありません。</p>
 
 <p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップから削除しようとします。</p>
-  </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.2/LICENSE">license</a>.</p>
+    </div>
+    
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
