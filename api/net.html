@@ -2,28 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>net - Node.js v0.7.1 Manual &amp; Documentation</title>
+  <title>net - Node.js v0.7.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/net.html">
 </head>
-<body>
-  <div id="container">
-    <header>
-      <h1>Node.js v0.7.1 Manual &amp; Documentation</h1>
-      <div id="gtoc">
-        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
-      </div>
-      <hr>
-    </header>
-    <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#net">net</a><ul><li><a href="#net.createServer">net.createServer([options], [connectionListener])</a></li><li><a href="#net.connect">net.connect(options, [cnnectionListener])</a></li><li><a href="#net.createConnection">net.createConnection(options, [cnnectionListener])</a></li><li><a href="#net.connect">net.connect(port, [host], [connectListener])</a></li><li><a href="#net.createConnection">net.createConnection(port, [host], [connectListener])</a></li><li><a href="#net.connect">net.connect(path, [connectListener])</a></li><li><a href="#net.createConnection">net.createConnection(path, [connectListener])</a></li><li><a href="#net.Server">net.Server</a><ul><li><a href="#server.listen">server.listen(port, [host], [listeningListener])</a></li><li><a href="#server.listen">server.listen(path, [listeningListener])</a></li><li><a href="#server.pause">server.pause(msecs)</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_error_">Event: 'error'</a></li></ul></li><li><a href="#net.Socket">net.Socket</a><ul><li><a href="#new_net.Socket">new net.Socket([options])</a></li><li><a href="#socket.connect">socket.connect(port, [host], [connectListener])</a></li><li><a href="#socket.connect">socket.connect(path, [connectListener])</a></li><li><a href="#socket.bufferSize">socket.bufferSize</a></li><li><a href="#socket.setEncoding">socket.setEncoding([encoding])</a></li><li><a href="#socket.setSecure">socket.setSecure()</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.end">socket.end([data], [encoding])</a></li><li><a href="#socket.destroy">socket.destroy()</a></li><li><a href="#socket.pause">socket.pause()</a></li><li><a href="#socket.resume">socket.resume()</a></li><li><a href="#socket.setTimeout">socket.setTimeout(timeout, [callback])</a></li><li><a href="#socket.setNoDelay">socket.setNoDelay([noDelay])</a></li><li><a href="#socket.setKeepAlive">socket.setKeepAlive([enable], [initialDelay])</a></li><li><a href="#socket.address">socket.address()</a></li><li><a href="#socket.remoteAddress">socket.remoteAddress</a></li><li><a href="#socket.remotePort">socket.remotePort</a></li><li><a href="#socket.bytesRead">socket.bytesRead</a></li><li><a href="#socket.bytesWritten">socket.bytesWritten</a></li><li><a href="#event_connect_">Event: 'connect'</a></li><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_timeout_">Event: 'timeout'</a></li><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.isIP">net.isIP</a><ul><li><a href="#net.isIP">net.isIP(input)</a></li><li><a href="#net.isIPv4">net.isIPv4(input)</a></li><li><a href="#net.isIPv6">net.isIPv6(input)</a></li></ul></li></ul></li></ul><hr /></div>
-<h2 id="net">net</h2>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="assets/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.7.2 Manual &amp; Documentation</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#net">net</a><ul><li><a href="#net.createServer">net.createServer([options], [connectionListener])</a></li><li><a href="#net.connect">net.connect(options, [cnnectionListener])</a></li><li><a href="#net.createConnection">net.createConnection(options, [cnnectionListener])</a></li><li><a href="#net.connect">net.connect(port, [host], [connectListener])</a></li><li><a href="#net.createConnection">net.createConnection(port, [host], [connectListener])</a></li><li><a href="#net.connect">net.connect(path, [connectListener])</a></li><li><a href="#net.createConnection">net.createConnection(path, [connectListener])</a></li><li><a href="#net.Server">net.Server</a><ul><li><a href="#server.listen">server.listen(port, [host], [listeningListener])</a></li><li><a href="#server.listen">server.listen(path, [listeningListener])</a></li><li><a href="#server.pause">server.pause(msecs)</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li><li><a href="#event_listening_">Event: 'listening'</a></li><li><a href="#event_connection_">Event: 'connection'</a></li><li><a href="#event_close_">Event: 'close'</a></li><li><a href="#event_error_">Event: 'error'</a></li></ul></li><li><a href="#net.Socket">net.Socket</a><ul><li><a href="#new_net.Socket">new net.Socket([options])</a></li><li><a href="#socket.connect">socket.connect(port, [host], [connectListener])</a></li><li><a href="#socket.connect">socket.connect(path, [connectListener])</a></li><li><a href="#socket.bufferSize">socket.bufferSize</a></li><li><a href="#socket.setEncoding">socket.setEncoding([encoding])</a></li><li><a href="#socket.setSecure">socket.setSecure()</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.write">socket.write(data, [encoding], [callback])</a></li><li><a href="#socket.end">socket.end([data], [encoding])</a></li><li><a href="#socket.destroy">socket.destroy()</a></li><li><a href="#socket.pause">socket.pause()</a></li><li><a href="#socket.resume">socket.resume()</a></li><li><a href="#socket.setTimeout">socket.setTimeout(timeout, [callback])</a></li><li><a href="#socket.setNoDelay">socket.setNoDelay([noDelay])</a></li><li><a href="#socket.setKeepAlive">socket.setKeepAlive([enable], [initialDelay])</a></li><li><a href="#socket.address">socket.address()</a></li><li><a href="#socket.remoteAddress">socket.remoteAddress</a></li><li><a href="#socket.remotePort">socket.remotePort</a></li><li><a href="#socket.bytesRead">socket.bytesRead</a></li><li><a href="#socket.bytesWritten">socket.bytesWritten</a></li><li><a href="#event_connect_">Event: 'connect'</a></li><li><a href="#event_data_">Event: 'data'</a></li><li><a href="#event_end_">Event: 'end'</a></li><li><a href="#event_timeout_">Event: 'timeout'</a></li><li><a href="#event_drain_">Event: 'drain'</a></li><li><a href="#event_error_">Event: 'error'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li><li><a href="#net.isIP">net.isIP</a><ul><li><a href="#net.isIP">net.isIP(input)</a></li><li><a href="#net.isIPv4">net.isIPv4(input)</a></li><li><a href="#net.isIPv6">net.isIPv6(input)</a></li></ul></li></ul></li></ul><hr></div>
+<h2 id="net">net <span><a class="top" href="#">↑</a><a class="mark" href="#net">#</a></span></h2>
 
 <p><code>net</code> モジュールは非同期なネットワークのラッパーを提供します。
 それはサーバとクライアントの両方 (ストリームと呼ばれます) を作成するための方法を含みます。
 このモジュールは<code>require("net");</code>によって取り込むことができます。</p>
 
-<h3 id="net.createServer">net.createServer([options], [connectionListener]) <a href="#net.createServer">#</a></h3>
+<h3 id="net.createServer">net.createServer([options], [connectionListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.createServer">#</a></span></h3>
 
 <p>新しい TCP サーバを作成します。
 <code>connectionListener</code> 引数は <a href="#event_connection_">'connection'</a>
@@ -66,9 +97,9 @@ server.listen(8124, function() { //'listening' listener
 
 <pre><code>nc -U /tmp/echo.sock</code></pre>
 
-<h3 id="net.connect">net.connect(options, [cnnectionListener]) <a href="#net.connect">#</a></h3>
+<h3 id="net.connect">net.connect(options, [cnnectionListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.connect">#</a></span></h3>
 
-<h3 id="net.createConnection">net.createConnection(options, [cnnectionListener]) <a href="#net.createConnection">#</a></h3>
+<h3 id="net.createConnection">net.createConnection(options, [cnnectionListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.createConnection">#</a></span></h3>
 
 <p>新しいソケットオブジェクトを構築し、与えられたロケーションへのソケットを
 オープンします。
@@ -111,18 +142,18 @@ client.on('end', function() {
 
 <pre><code>var client = net.connect({path: '/tmp/echo.sock'},</code></pre>
 
-<h3 id="net.connect">net.connect(port, [host], [connectListener]) <a href="#net.connect">#</a></h3>
+<h3 id="net.connect">net.connect(port, [host], [connectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.connect">#</a></span></h3>
 
-<h3 id="net.createConnection">net.createConnection(port, [host], [connectListener]) <a href="#net.createConnection">#</a></h3>
+<h3 id="net.createConnection">net.createConnection(port, [host], [connectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.createConnection">#</a></span></h3>
 
 <p><code>host</code> 上の <code>port</code> に対する TCP コネクションを作成します。
 <code>host</code> が省略されると <code>localhost</code> が仮定されます。
 <code>connectListener</code> 引数は <a href="#event_connect_">'connect'</a>
 イベントのリスナとして追加されます。</p>
 
-<h3 id="net.connect">net.connect(path, [connectListener]) <a href="#net.connect">#</a></h3>
+<h3 id="net.connect">net.connect(path, [connectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.connect">#</a></span></h3>
 
-<h3 id="net.createConnection">net.createConnection(path, [connectListener]) <a href="#net.createConnection">#</a></h3>
+<h3 id="net.createConnection">net.createConnection(path, [connectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#net.createConnection">#</a></span></h3>
 
 <p><code>path</code> に対する UNIX ドメインソケットを作成します。
 <code>connectListener</code> 引数は <a href="#event_connect_">'connect'</a>
@@ -130,12 +161,12 @@ client.on('end', function() {
 
 <hr />
 
-<h3 id="net.Server">net.Server <a href="#net.Server">#</a></h3>
+<h3 id="net.Server">net.Server <span><a class="top" href="#">↑</a><a class="mark" href="#net.Server">#</a></span></h3>
 
 <p>このクラスは TCP または UNIX ドメインのサーバを作成するために使われます。
 サーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。</p>
 
-<h4 id="server.listen">server.listen(port, [host], [listeningListener]) <a href="#server.listen">#</a></h4>
+<h4 id="server.listen">server.listen(port, [host], [listeningListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#server.listen">#</a></span></h4>
 
 <p>指定された <code>port</code> と <code>host</code> でコネクションの受け入れを開始します。
 <code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます
@@ -165,7 +196,7 @@ client.on('end', function() {
 
 <p>注意: Node の全てのソケットは <code>SO_REUSEADDR</code> が設定されます)</p>
 
-<h4 id="server.listen">server.listen(path, [listeningListener]) <a href="#server.listen">#</a></h4>
+<h4 id="server.listen">server.listen(path, [listeningListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#server.listen">#</a></span></h4>
 
 <p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。</p>
 
@@ -174,18 +205,18 @@ client.on('end', function() {
 最後の引数 <code>listeningListener</code> は <a href="#event_listening_">'listening'</a>
 のリスナとして加えられます。</p>
 
-<h4 id="server.pause">server.pause(msecs) <a href="#server.pause">#</a></h4>
+<h4 id="server.pause">server.pause(msecs) <span><a class="top" href="#">↑</a><a class="mark" href="#server.pause">#</a></span></h4>
 
 <p>接続の待ち受けをミリ秒で与えられた時間だけ中断します (デフォルトは 1 秒です)。
 これは、新しい接続を抑えることで DoS 攻撃やその他の加入超過に対抗するために
 役立ちます。</p>
 
-<h4 id="server.close">server.close() <a href="#server.close">#</a></h4>
+<h4 id="server.close">server.close() <span><a class="top" href="#">↑</a><a class="mark" href="#server.close">#</a></span></h4>
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。
 この関数は非同期で、サーバは最終的に <code>'close'</code> イベントを生成した時にクローズされます。</p>
 
-<h4 id="server.address">server.address() <a href="#server.address">#</a></h4>
+<h4 id="server.address">server.address() <span><a class="top" href="#">↑</a><a class="mark" href="#server.address">#</a></span></h4>
 
 <p>オペレーティングシステムから報告された、サーバにバインドされたアドレスとポートを返します。
 OSによって割り当てられたアドレスが渡された時に、どのポートに割り当てられたものかを調べるのに便利です。
@@ -204,36 +235,36 @@ server.listen(function() {
   console.log("opened server on %j", address);
 });</code></pre>
 
-<h4 id="server.maxConnections">server.maxConnections <a href="#server.maxConnections">#</a></h4>
+<h4 id="server.maxConnections">server.maxConnections <span><a class="top" href="#">↑</a><a class="mark" href="#server.maxConnections">#</a></span></h4>
 
 <p>サーバの接続数が大きくなった時に接続を拒否するためにこのプロパティを設定します。</p>
 
-<h4 id="server.connections">server.connections <a href="#server.connections">#</a></h4>
+<h4 id="server.connections">server.connections <span><a class="top" href="#">↑</a><a class="mark" href="#server.connections">#</a></span></h4>
 
 <p>このサーバ上の並行コネクションの数です。</p>
 
 <p><code>net.Server</code> は以下のイベントを持つ <code>EventEmitter</code> です:</p>
 
-<h4 id="event_listening_">Event: 'listening' <a href="#event_listening_">#</a></h4>
+<h4 id="event_listening_">Event: 'listening' <span><a class="top" href="#">↑</a><a class="mark" href="#event_listening_">#</a></span></h4>
 
 <p><code>function () {}</code></p>
 
 <p><code>server.listen()</code> が呼ばれた後、サーバがバインドされると生成されます。</p>
 
-<h4 id="event_connection_">Event: 'connection' <a href="#event_connection_">#</a></h4>
+<h4 id="event_connection_">Event: 'connection' <span><a class="top" href="#">↑</a><a class="mark" href="#event_connection_">#</a></span></h4>
 
 <p><code>function (socket) {}</code></p>
 
 <p>新しいコネクションが作成されると生成されます。
 <code>socket</code> は <code>net.Socket</code> のインスタンスです。</p>
 
-<h4 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h4>
+<h4 id="event_close_">Event: 'close' <span><a class="top" href="#">↑</a><a class="mark" href="#event_close_">#</a></span></h4>
 
 <p><code>function () {}</code></p>
 
 <p>サーバがクローズした時に生成されます。</p>
 
-<h4 id="event_error_">Event: 'error' <a href="#event_error_">#</a></h4>
+<h4 id="event_error_">Event: 'error' <span><a class="top" href="#">↑</a><a class="mark" href="#event_error_">#</a></span></h4>
 
 <p><code>function (exception) {}</code></p>
 
@@ -243,14 +274,14 @@ server.listen(function() {
 
 <hr />
 
-<h3 id="net.Socket">net.Socket <a href="#net.Socket">#</a></h3>
+<h3 id="net.Socket">net.Socket <span><a class="top" href="#">↑</a><a class="mark" href="#net.Socket">#</a></span></h3>
 
 <p>このオブジェクトは TCP または UNIX ドメインのソケットを抽象化したものです。
 <code>net.Socket</code> のインスタンスは双方向のストリームインタフェースを実装します。
 それらはユーザによって (<code>connect()</code> によって) 作成されてクライアントとして使われるか、
 Node によって作成されてサーバの <code>'connection'</code> イベントを通じてユーザに渡されます。</p>
 
-<h4 id="new_net.Socket">new net.Socket([options]) <a href="#new_net.Socket">#</a></h4>
+<h4 id="new_net.Socket">new net.Socket([options]) <span><a class="top" href="#">↑</a><a class="mark" href="#new_net.Socket">#</a></span></h4>
 
 <p>新しいソケットオブジェクトを構築します。</p>
 
@@ -266,9 +297,9 @@ Node によって作成されてサーバの <code>'connection'</code> イベン
 指定できるのは <code>'tcp4'</code>、<code>'tcp6'</code> または <code>'unix'</code> のいずれかです。
 <code>allowHalfOpen</code> については <code>createServer()</code> および <code>'end'</code> イベントを参照してください。</p>
 
-<h4 id="socket.connect">socket.connect(port, [host], [connectListener]) <a href="#socket.connect">#</a></h4>
+<h4 id="socket.connect">socket.connect(port, [host], [connectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.connect">#</a></span></h4>
 
-<h4 id="socket.connect">socket.connect(path, [connectListener]) <a href="#socket.connect">#</a></h4>
+<h4 id="socket.connect">socket.connect(path, [connectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.connect">#</a></span></h4>
 
 <p>与えられたソケットでコネクションをオープンします。
 <code>port</code> と <code>host</code> が与えられた場合、
@@ -289,7 +320,7 @@ Node によって作成されてサーバの <code>'connection'</code> イベン
 <p><code>connectListener</code> 引数は <a href="#event_connect_">'connect'</a>
 イベントのリスナに加えられます。</p>
 
-<h4 id="socket.bufferSize">socket.bufferSize <a href="#socket.bufferSize">#</a></h4>
+<h4 id="socket.bufferSize">socket.bufferSize <span><a class="top" href="#">↑</a><a class="mark" href="#socket.bufferSize">#</a></span></h4>
 
 <p><code>net.Socket</code> には、<code>socket.write()</code> と常に協調するプロパティがあります。
 これはユーザが実行速度を向上させる手助けになります。
@@ -303,18 +334,18 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <p>大きな、あるいは増大する <code>bufferSize</code> を体験したユーザは、そのプログラムで <code>pause()</code> および <code>resume()</code> を使ってデータフローを「抑えよう」としなければなりません。</p>
 
-<h4 id="socket.setEncoding">socket.setEncoding([encoding]) <a href="#socket.setEncoding">#</a></h4>
+<h4 id="socket.setEncoding">socket.setEncoding([encoding]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.setEncoding">#</a></span></h4>
 
 <p>受信したデータのエンコーディングを設定します (<code>'ascii'</code>、<code>'utf8'</code>、
 あるいは <code>'base64'</code> のいずれかです)。デフォルトは <code>null</code> です。</p>
 
-<h4 id="socket.setSecure">socket.setSecure() <a href="#socket.setSecure">#</a></h4>
+<h4 id="socket.setSecure">socket.setSecure() <span><a class="top" href="#">↑</a><a class="mark" href="#socket.setSecure">#</a></span></h4>
 
 <p>この関数は v0.3 で削除されました。
 これはコネクションを SSL/TLS にアップグレードするために使われていました。
 新しい API である <a href="tls.html#tLS_">TLS の章</a> を参照してください。</p>
 
-<h4 id="socket.write">socket.write(data, [encoding], [callback]) <a href="#socket.write">#</a></h4>
+<h4 id="socket.write">socket.write(data, [encoding], [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.write">#</a></span></h4>
 
 <p>ソケットにデータを送信します。
 文字列の場合、第 2 引数はエンコーディングを指定します － デフォルトは UTF-8 です。</p>
@@ -326,12 +357,12 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 <p>オプションの <code>callback</code> 引数はデータが最終的に出力された時に実行されます
 － これはすぐには起きないでしょう。</p>
 
-<h4 id="socket.write">socket.write(data, [encoding], [callback]) <a href="#socket.write">#</a></h4>
+<h4 id="socket.write">socket.write(data, [encoding], [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.write">#</a></span></h4>
 
 <p>データを出力します。オプションのエンコーディングを指定することができます。
 コールバックはデータがカーネルにフラッシュされると呼び出されます。</p>
 
-<h4 id="socket.end">socket.end([data], [encoding]) <a href="#socket.end">#</a></h4>
+<h4 id="socket.end">socket.end([data], [encoding]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.end">#</a></span></h4>
 
 <p>ソケットをハーフクローズします。例えば FIN パケットを送信します。
 サーバはまだデータを送り続けてくることができます。</p>
@@ -339,21 +370,21 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 <p><code>data</code> が指定された場合は、
 <code>socket.write(data, encoding)</code> に続けて <code>socket.end()</code> を呼び出すのと等価です。</p>
 
-<h4 id="socket.destroy">socket.destroy() <a href="#socket.destroy">#</a></h4>
+<h4 id="socket.destroy">socket.destroy() <span><a class="top" href="#">↑</a><a class="mark" href="#socket.destroy">#</a></span></h4>
 
 <p>このソケット上でどんな I/O も起こらないことを保証します。
 (パースエラーなどの) エラーの場合にだけ必要です。</p>
 
-<h4 id="socket.pause">socket.pause() <a href="#socket.pause">#</a></h4>
+<h4 id="socket.pause">socket.pause() <span><a class="top" href="#">↑</a><a class="mark" href="#socket.pause">#</a></span></h4>
 
 <p>データの読み込みを中断します。つまり、<code>'data'</code> イベントは生成されません。
 アップロード速度を落とすために便利です。</p>
 
-<h4 id="socket.resume">socket.resume() <a href="#socket.resume">#</a></h4>
+<h4 id="socket.resume">socket.resume() <span><a class="top" href="#">↑</a><a class="mark" href="#socket.resume">#</a></span></h4>
 
 <p><code>pause()</code> を呼び出した後で読み込みを再開します。</p>
 
-<h4 id="socket.setTimeout">socket.setTimeout(timeout, [callback]) <a href="#socket.setTimeout">#</a></h4>
+<h4 id="socket.setTimeout">socket.setTimeout(timeout, [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.setTimeout">#</a></span></h4>
 
 <p>アイドルタイムアウトが引き起こされると、ソケットは <code>'timeout'</code> イベントを受信しますが、
 コネクションは切断されません。
@@ -363,14 +394,14 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <p>オプションの <code>callback</code> 引数は、<code>timeouot</code> イベントの一回限りのリスナを追加します。</p>
 
-<h4 id="socket.setNoDelay">socket.setNoDelay([noDelay]) <a href="#socket.setNoDelay">#</a></h4>
+<h4 id="socket.setNoDelay">socket.setNoDelay([noDelay]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.setNoDelay">#</a></span></h4>
 
 <p>Nagle アルゴリズムを無効にします。
 デフォルトでは TCP コネクションは Nagle アルゴリズムを使用し、データを送信する前にバッファリングします。
 <code>noDelay</code> に <code>true</code> を設定すると、データは <code>socket.write()</code>
 を呼び出す度に即座に送信されます。デフォルトは <code>true</code> です。</p>
 
-<h4 id="socket.setKeepAlive">socket.setKeepAlive([enable], [initialDelay]) <a href="#socket.setKeepAlive">#</a></h4>
+<h4 id="socket.setKeepAlive">socket.setKeepAlive([enable], [initialDelay]) <span><a class="top" href="#">↑</a><a class="mark" href="#socket.setKeepAlive">#</a></span></h4>
 
 <p>キープアライブ機能を有効/無効にします。
 オプションで最初の keepalive probe がアイドルソケットに送信されるまでの初期遅延を設定します。
@@ -381,42 +412,42 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 初期遅延に 0 が設定されると、デフォルト設定から値を変更されないようにします。
 デフォルトは <code>0</code> です。</p>
 
-<h4 id="socket.address">socket.address() <a href="#socket.address">#</a></h4>
+<h4 id="socket.address">socket.address() <span><a class="top" href="#">↑</a><a class="mark" href="#socket.address">#</a></span></h4>
 
 <p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスとポートを返します。
 返されるオブジェクトは二つのプロパティを持ちます。
 例えば <code>{"address":"192.168.57.1", "port":62053}</code></p>
 
-<h4 id="socket.remoteAddress">socket.remoteAddress <a href="#socket.remoteAddress">#</a></h4>
+<h4 id="socket.remoteAddress">socket.remoteAddress <span><a class="top" href="#">↑</a><a class="mark" href="#socket.remoteAddress">#</a></span></h4>
 
 <p>リモートの IP アドレスを表現する文字列です。
 例えば、<code>'74.125.127.100'</code> あるいは <code>'2001:4860:a005::68'</code>。</p>
 
 <p>このメンバはサーバサイドのコネクションにのみ与えられます。</p>
 
-<h4 id="socket.remotePort">socket.remotePort <a href="#socket.remotePort">#</a></h4>
+<h4 id="socket.remotePort">socket.remotePort <span><a class="top" href="#">↑</a><a class="mark" href="#socket.remotePort">#</a></span></h4>
 
 <p>リモートポートの数値表現です。
 たとえば、<code>80</code> や <code>21</code>。</p>
 
-<h4 id="socket.bytesRead">socket.bytesRead <a href="#socket.bytesRead">#</a></h4>
+<h4 id="socket.bytesRead">socket.bytesRead <span><a class="top" href="#">↑</a><a class="mark" href="#socket.bytesRead">#</a></span></h4>
 
 <p>受信したバイトの合計です。</p>
 
-<h4 id="socket.bytesWritten">socket.bytesWritten <a href="#socket.bytesWritten">#</a></h4>
+<h4 id="socket.bytesWritten">socket.bytesWritten <span><a class="top" href="#">↑</a><a class="mark" href="#socket.bytesWritten">#</a></span></h4>
 
 <p>送信したバイトの合計です。</p>
 
 <p><code>net.Socket</code> のインスタンスは以下のイベントを持つ EventEmitter です:</p>
 
-<h4 id="event_connect_">Event: 'connect' <a href="#event_connect_">#</a></h4>
+<h4 id="event_connect_">Event: 'connect' <span><a class="top" href="#">↑</a><a class="mark" href="#event_connect_">#</a></span></h4>
 
 <p><code>function () { }</code></p>
 
 <p>ソケットコネクションの確立が成功した場合に生成されます。
 <code>connect()</code> を参照してください。</p>
 
-<h4 id="event_data_">Event: 'data' <a href="#event_data_">#</a></h4>
+<h4 id="event_data_">Event: 'data' <span><a class="top" href="#">↑</a><a class="mark" href="#event_data_">#</a></span></h4>
 
 <p><code>function (data) { }</code></p>
 
@@ -425,7 +456,7 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 データのエンコーディングは <code>socket.setEncoding()</code> で設定されます。
 (より詳しい情報は <a href="streams.html#readable_Stream">Readable Stream</a> を参照してください)。</p>
 
-<h4 id="event_end_">Event: 'end' <a href="#event_end_">#</a></h4>
+<h4 id="event_end_">Event: 'end' <span><a class="top" href="#">↑</a><a class="mark" href="#event_end_">#</a></span></h4>
 
 <p><code>function () { }</code></p>
 
@@ -437,7 +468,7 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 ユーザがデータを書き込めるようにしておくために、ソケットは自動的に <code>end()</code> を呼び出さないので、
 ユーザが <code>end()</code> を呼び出す必要があります。</p>
 
-<h4 id="event_timeout_">Event: 'timeout' <a href="#event_timeout_">#</a></h4>
+<h4 id="event_timeout_">Event: 'timeout' <span><a class="top" href="#">↑</a><a class="mark" href="#event_timeout_">#</a></span></h4>
 
 <p><code>function () { }</code></p>
 
@@ -447,7 +478,7 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <p><code>socket.setTimeout()</code> を参照してください。</p>
 
-<h4 id="event_drain_">Event: 'drain' <a href="#event_drain_">#</a></h4>
+<h4 id="event_drain_">Event: 'drain' <span><a class="top" href="#">↑</a><a class="mark" href="#event_drain_">#</a></span></h4>
 
 <p><code>function () { }</code></p>
 
@@ -455,13 +486,13 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <p><code>socket.write()</code> の戻り値を参照してください。</p>
 
-<h4 id="event_error_">Event: 'error' <a href="#event_error_">#</a></h4>
+<h4 id="event_error_">Event: 'error' <span><a class="top" href="#">↑</a><a class="mark" href="#event_error_">#</a></span></h4>
 
 <p><code>function (exception) { }</code></p>
 
 <p>エラーが発生した場合に生成されます。<code>'close'</code> イベントはこのイベントの後に直接呼び出されます。</p>
 
-<h4 id="event_close_">Event: 'close' <a href="#event_close_">#</a></h4>
+<h4 id="event_close_">Event: 'close' <span><a class="top" href="#">↑</a><a class="mark" href="#event_close_">#</a></span></h4>
 
 <p><code>function (had_error) { }</code></p>
 
@@ -470,18 +501,46 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 
 <hr />
 
-<h3 id="net.isIP">net.isIP <a href="#net.isIP">#</a></h3>
+<h3 id="net.isIP">net.isIP <span><a class="top" href="#">↑</a><a class="mark" href="#net.isIP">#</a></span></h3>
 
-<h4 id="net.isIP">net.isIP(input) <a href="#net.isIP">#</a></h4>
+<h4 id="net.isIP">net.isIP(input) <span><a class="top" href="#">↑</a><a class="mark" href="#net.isIP">#</a></span></h4>
 
-<h4 id="net.isIPv4">net.isIPv4(input) <a href="#net.isIPv4">#</a></h4>
+<h4 id="net.isIPv4">net.isIPv4(input) <span><a class="top" href="#">↑</a><a class="mark" href="#net.isIPv4">#</a></span></h4>
 
 <p>input が バージョン 4 の IP アドレスなら true、そうでなければ false を返します。</p>
 
-<h4 id="net.isIPv6">net.isIPv6(input) <a href="#net.isIPv6">#</a></h4>
+<h4 id="net.isIPv6">net.isIPv6(input) <span><a class="top" href="#">↑</a><a class="mark" href="#net.isIPv6">#</a></span></h4>
 
 <p>input が バージョン 6 の IP アドレスなら true、そうでなければ false を返します。</p>
-  </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.2/LICENSE">license</a>.</p>
+    </div>
+    
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
