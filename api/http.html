@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>http - Node.js v0.7.2 Manual &amp; Documentation</title>
+  <title>http - Node.js v0.7.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
         <header>
-          <h1>Node.js v0.7.2 Manual &amp; Documentation</h1>
+          <h1>Node.js v0.7.3 Manual &amp; Documentation</h1>
           <div id="gtoc">
             <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
           </div>
@@ -183,7 +183,9 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 <p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成され、
 <code>'request'</code> リスナーの第1引数として渡されます。</p>
 
-<p>これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
+<p>リクエストは <a href="streams.html#readable_Stream">Readable Stream</a>
+インタフェースを実装します。
+これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
 
 <h3 id="event_data_">Event: 'data' <span><a class="top" href="#">↑</a><a class="mark" href="#event_data_">#</a></span></h3>
 
@@ -195,6 +197,9 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 転送エンコーディングでデコードされます。
 ボディのチャンクは文字列です。
 ボディのエンコーディングは <code>request.setBodyEncoding()</code> で設定されます。</p>
+
+<p><code>ServerRequest</code> が <code>'data'</code> イベントを生成した時にリスナが存在しなければ、
+<strong>データは失われる</strong>ことに注意してください。</p>
 
 <h3 id="event_end_">Event: 'end' <span><a class="top" href="#">↑</a><a class="mark" href="#event_end_">#</a></span></h3>
 
@@ -295,8 +300,11 @@ Accept: text/plain\r\n
 <h2 id="http.ServerResponse">http.ServerResponse <span><a class="top" href="#">↑</a><a class="mark" href="#http.ServerResponse">#</a></span></h2>
 
 <p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。
-<code>'request'</code> リスナーの第 2 引数として渡されます。
-これは <code>Writable Stream</code> です。</p>
+<code>'request'</code> リスナーの第 2 引数として渡されます。</p>
+
+<p>レスポンスは <a href="streams.html#writable_Stream">Writable  Stream</a>
+インタフェースを実装します。
+これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
 
 <h3 id="event_close_">Event: 'close' <span><a class="top" href="#">↑</a><a class="mark" href="#event_close_">#</a></span></h3>
 
@@ -598,7 +606,12 @@ request.on('response', function (response) {
 <p>これは <code>Writable Stream</code> です。
 注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。</p>
 
-<p>これは以下のイベントを持つ <code>EventEmitter</code> です。</p>
+<p><code>ServerRequest</code> が <code>'data'</code> イベントを生成した時にリスナが存在しなければ、
+<strong>データは失われる</strong>ことに注意してください。</p>
+
+<p>リクエストは <a href="streams.html#writable_Stream">Writable  Stream</a>
+インタフェースを実装します。
+これは以下のイベントを持つ <code>EventEmitter</code> です。</p>
 
 <h3 id="event_response_">Event 'response' <span><a class="top" href="#">↑</a><a class="mark" href="#event_response_">#</a></span></h3>
 
@@ -784,13 +797,18 @@ srv.listen(1337, '127.0.0.1', function() {
 <p>このオブジェクトは <code>http.request()</code> によってリクエストと一緒に作成されます。
 これはリクエストオブジェクトの <code>'response'</code> イベントに渡されます。</p>
 
-<p>レスポンスは <code>Readable Stream</code> インタフェースを実装します。</p>
+<p>レスポンスは <a href="streams.html#readable_Stream">Readable Stream</a>
+インタフェースを実装します。
+これは以下のイベントを持つ <code>EventEmitter</code> です:</p>
 
 <h3 id="event_data_">Event: 'data' <span><a class="top" href="#">↑</a><a class="mark" href="#event_data_">#</a></span></h3>
 
 <p><code>function (chunk) { }</code></p>
 
 <p>メッセージボディの断片を受信した場合に生成されます。</p>
+
+<p><code>ServerRequest</code> が <code>'data'</code> イベントを生成した時にリスナが存在しなければ、
+<strong>データは失われる</strong>ことに注意してください。</p>
 
 <h3 id="event_end_">Event: 'end' <span><a class="top" href="#">↑</a><a class="mark" href="#event_end_">#</a></span></h3>
 
@@ -867,7 +885,7 @@ srv.listen(1337, '127.0.0.1', function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.2/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.3/LICENSE">license</a>.</p>
     </div>
     
   <script src="assets/sh_main.js"></script>
