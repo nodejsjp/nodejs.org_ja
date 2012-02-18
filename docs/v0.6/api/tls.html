@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>tls - Node.js v0.6.10 Manual &amp; Documentation</title>
+  <title>tls - Node.js v0.6.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/tls.html">
@@ -41,13 +41,16 @@
 
         <div id="column1" class="interior">
         <header>
-          <h1>Node.js v0.6.10 Manual &amp; Documentation</h1>
+          <!--
+          <h1>Node.js v0.6.11 Manual &amp; Documentation</h1>
+          -->
+          <h1>Node.js v0.6.11 マニュアル &amp; ドキュメンテーション</h1>
           <div id="gtoc">
             <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
           </div>
           <hr>
         </header>
-        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#tls.createServer">tls.createServer(options, [secureConnectionListener])</a></li><li><a href="#tls.connect">tls.connect(port, [host], [options], [secureConnectListener])</a></li></ul></li><li><a href="#sTARTTLS">STARTTLS</a></li><li><a href="#nPN_and_SNI">NPN and SNI</a></li><li><a href="#pair_tls.createSecurePair">pair = tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a><ul><li><a href="#event_secure_">Event: 'secure'</a></li></ul></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#event_clientError_">Event: 'clientError'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.addContext">server.addContext(hostname, credentials)</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li><li><a href="#tls.CleartextStream">tls.CleartextStream</a><ul><li><a href="#event_secureConnect_">Event: 'secureConnect'</a></li><li><a href="#cleartextStream.authorized">cleartextStream.authorized</a></li><li><a href="#cleartextStream.authorizationError">cleartextStream.authorizationError</a></li><li><a href="#cleartextStream.getPeerCertificate">cleartextStream.getPeerCertificate()</a></li><li><a href="#cleartextStream.address">cleartextStream.address()</a></li><li><a href="#cleartextStream.remoteAddress">cleartextStream.remoteAddress</a></li><li><a href="#cleartextStream.remotePort">cleartextStream.remotePort</a></li></ul></li></ul></li></ul><hr></div>
+        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a><ul><li><a href="#tls.createServer">tls.createServer(options, [secureConnectionListener])</a></li><li><a href="#tls.connect">tls.connect(port, [host], [options], [secureConnectListener])</a></li></ul></li><li><a href="#nPN_and_SNI">NPN and SNI</a></li><li><a href="#pair_tls.createSecurePair">pair = tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a><ul><li><a href="#event_secure_">Event: 'secure'</a></li></ul></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#event_clientError_">Event: 'clientError'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.addContext">server.addContext(hostname, credentials)</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li><li><a href="#tls.CleartextStream">tls.CleartextStream</a><ul><li><a href="#event_secureConnect_">Event: 'secureConnect'</a></li><li><a href="#cleartextStream.authorized">cleartextStream.authorized</a></li><li><a href="#cleartextStream.authorizationError">cleartextStream.authorizationError</a></li><li><a href="#cleartextStream.getPeerCertificate">cleartextStream.getPeerCertificate()</a></li><li><a href="#cleartextStream.address">cleartextStream.address()</a></li><li><a href="#cleartextStream.remoteAddress">cleartextStream.remoteAddress</a></li><li><a href="#cleartextStream.remotePort">cleartextStream.remotePort</a></li></ul></li></ul></li></ul><hr></div>
 <h2 id="tLS_">TLS (SSL) <span><a class="top" href="#">↑</a><a class="mark" href="#tLS_">#</a></span></h2>
 
 <p><code>require('tls')</code> でこのモジュールにアクセスします。</p>
@@ -77,6 +80,27 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 <p>(TODO: CA を作るドキュメント、現在は興味あるユーザは Node のソースコードから
 <code>test/fixtures/keys/Makefile</code> を見る必要がある)</p>
 
+<h3 id="client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation <span><a class="top" href="#">↑</a><a class="mark" href="#client_initiated_renegotiation_attack_mitigation">#</a></span></h3>
+
+<p>TLS では、クライアントから TLS セッションの再ネゴシエーションが可能です。</p>
+
+<p>残念なことに、セッションの再ネゴシエーションは過度な量のサーバサイドリソースを
+要求し、それは潜在的にサービスを強制停止する攻撃となります。</p>
+
+<p>これを緩和するために、再ネゴシエーションは 10 分あたり 3 回までに
+制限されています。この閾値を超えると、<a href="#tls.CleartextStream">CleartextStream</a>
+のインスタンスで <code>'error'</code> が生成されます。
+この制限はコンフィグレーション可能です:</p>
+
+<ul><li><p><code>tls.CLIENT_RENEG_LIMIT</code>: 再ネゴシエーションの上限、デフォルトは 3 です。</p></li><li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 再ネゴシエーションのウィンドウサイズ (秒単位)、
+デフォルトは 10 分です。</p></li></ul>
+
+<p>あなたが何をしたいのか理解していない限り、デフォルトを変更しないでください。</p>
+
+<p>サーバをテストするために、<code>openssl s_client -connect address:port</code> で
+接続して <code>R&lt;CR&gt;</code> (これは <code>R</code> の後に復帰改行を続けます)
+を、数回試すことができます。</p>
+
 <h4 id="tls.createServer">tls.createServer(options, [secureConnectionListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#tls.createServer">#</a></span></h4>
 
 <p>新しい <a href="#tls.Server">tls.Server</a> を作成します。
@@ -88,7 +112,9 @@ Secure Socket Layer: 暗号化されたストリーム通信を提供します�
 (必須)。</p></li><li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p></li><li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
 (必須)。</p></li><li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
-これらはコネクションの認証に使われます。</p></li><li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
+これらはコネクションの認証に使われます。</p></li><li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列。
+詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>
+を参照してください。</p></li><li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
 証明書を要求します。デフォルトは <code>false</code> です。</p></li><li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバは提供された認証局の
 リストによって認証されていないコネクションを破棄します．
 このオプションは <code>requestCert</code> が <code>true</code> の場合だけ効果があります。
@@ -149,10 +175,11 @@ server.listen(8000, function() {
 の配列です。
 <code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>
 最初のバイトは次のプロトコル名の長さです
-(通常、配列を渡す方がシンプルです: <code>['hello', 'world']</code>)。</p></li><li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p></li></ul>
-
-<p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a> 
-オブジェクトを返します。</p>
+(通常、配列を渡す方がシンプルです: <code>['hello', 'world']</code>)。</p></li><li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p></li><li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で
+セキュアな接続を確立します。
+このオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。
+これは内部的な利用のみを意図しています。他のアンドキュメンテッドな
+API と同様、これを使用すべきではありません。</p></li></ul>
 
 <p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">'secureConnect'</a>
 イベントのリスナとして加えられます。</p>
@@ -187,17 +214,6 @@ cleartextStream.on('data', function(data) {
 cleartextStream.on('end', function() {
   server.close();
 });</code></pre>
-
-<h3 id="sTARTTLS">STARTTLS <span><a class="top" href="#">↑</a><a class="mark" href="#sTARTTLS">#</a></span></h3>
-
-<p>v0.4 ブランチでは、既に存在する TCP コネクション上で TLS セッションを開始する機能はありません。
-それには少しの作業が必要となります。
-そのテクニックは <code>tls.createSecurePair()</code> が返す二つのストリーム:
-暗号化されたストリームと平文のストリームを使います。
-暗号化されたストリームは既存のソケットにつながれ、
-平文のストリームはその後ユーザとのインタラクションで使われます。</p>
-
-<p><a href="http://gist.github.com/848444">ここにそのコードがあります。</a></p>
 
 <h3 id="nPN_and_SNI">NPN and SNI <span><a class="top" href="#">↑</a><a class="mark" href="#nPN_and_SNI">#</a></span></h3>
 
@@ -401,7 +417,7 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.10/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.11/LICENSE">license</a>.</p>
     </div>
     
   <script src="assets/sh_main.js"></script>
