@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>readline - Node.js v0.7.4 Manual &amp; Documentation</title>
+  <title>readline - Node.js v0.7.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/docs/latest/api/readline.html">
@@ -41,23 +41,22 @@
 
         <div id="column1" class="interior">
         <header>
-          <h1>Node.js v0.7.4 Manual &amp; Documentation</h1>
+          <h1>Node.js v0.7.5 マニュアル &amp; ドキュメンテーション</h1>
           <div id="gtoc">
             <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
           </div>
           <hr>
         </header>
         <div id="apicontent">
-          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#readline">Readline</a><ul><li><a href="#rl.createInterface">rl.createInterface(input, output, completer)</a></li><li><a href="#rl.setPrompt">rl.setPrompt(prompt, length)</a></li><li><a href="#rl.prompt">rl.prompt()</a></li><li><a href="#rl.question">rl.question(query, callback)</a></li><li><a href="#rl.close">rl.close()</a></li><li><a href="#rl.pause">rl.pause()</a></li><li><a href="#rl.resume">rl.resume()</a></li><li><a href="#rl.write">rl.write()</a></li><li><a href="#event_line_">Event: 'line'</a></li><li><a href="#event_close_">Event: 'close'</a></li></ul></li></ul><hr></div>
+          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#readline">Readline</a><ul><li><a href="#rl.createInterface">rl.createInterface(input, output, completer)</a></li><li><a href="#rl.setPrompt">rl.setPrompt(prompt, length)</a></li><li><a href="#rl.prompt">rl.prompt()</a></li><li><a href="#rl.question">rl.question(query, callback)</a></li><li><a href="#rl.pause">rl.pause()</a></li><li><a href="#rl.resume">rl.resume()</a></li><li><a href="#rl.write">rl.write()</a></li><li><a href="#event_line_">Event: 'line'</a></li><li><a href="#event_pause_">Event: 'pause'</a></li><li><a href="#event_resume_">Event: 'resume'</a></li><li><a href="#event_SIGINT_">Event: 'SIGINT'</a></li><li><a href="#event_SIGTSTP_">Event: 'SIGTSTP'</a></li><li><a href="#event_SIGCONT_">Event: 'SIGCONT'</a></li></ul></li></ul><hr></div>
 <h2 id="readline">Readline <span><a class="top" href="#">↑</a><a class="mark" href="#readline">#</a></span></h2>
 
 <p>このモジュールを使用するには、<code>require('readline')</code> をします。
 Readline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。</p>
 
-<p>このモジュールを一度起動すると、このインタフェースと 
-(標準入力などの) ストリームをクローズするまで node
-プログラムは終了しないことに注意してください。
-きれいに終了する方法を以下に示します:</p>
+<p>このモジュールを一度起動すると、このインタフェースを
+中断するまで node プログラムは終了しないことに注意してください。
+プログラムをスムーズに中断する方法を以下に示します:</p>
 
 <pre><code>var rl = require('readline');
 
@@ -66,10 +65,7 @@ i.question("What do you think of node.js?", function(answer) {
   // TODO: Log the answer in a database
   console.log("Thank you for your valuable feedback.");
 
-  // These two lines together allow the program to terminate. Without
-  // them, it would run forever.
-  i.close();
-  process.stdin.destroy();
+  i.pause();
 });</code></pre>
 
 <h3 id="rl.createInterface">rl.createInterface(input, output, completer) <span><a class="top" href="#">↑</a><a class="mark" href="#rl.createInterface">#</a></span></h3>
@@ -103,10 +99,16 @@ i.question("What do you think of node.js?", function(answer) {
 現在の <code>setPrompt()</code> の値を新しい行に出力し、
 ユーザに新しい入力エリアを与えます。</p>
 
+<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+中断されていれば再開します。</p>
+
 <h3 id="rl.question">rl.question(query, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#rl.question">#</a></span></h3>
 
 <p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。
 ユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。</p>
+
+<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+中断されていれば再開します。</p>
 
 <p>使用例:</p>
 
@@ -114,21 +116,21 @@ i.question("What do you think of node.js?", function(answer) {
   console.log('Oh, so your favorite food is ' + answer);
 });</code></pre>
 
-<h3 id="rl.close">rl.close() <span><a class="top" href="#">↑</a><a class="mark" href="#rl.close">#</a></span></h3>
-
-<p>tty をクローズします。</p>
-
 <h3 id="rl.pause">rl.pause() <span><a class="top" href="#">↑</a><a class="mark" href="#rl.pause">#</a></span></h3>
 
-<p>tty からの入力を中断します。</p>
+<p><code>in</code> ストリームからの入力を中断します。
+必要なら後で再開することができます。</p>
 
 <h3 id="rl.resume">rl.resume() <span><a class="top" href="#">↑</a><a class="mark" href="#rl.resume">#</a></span></h3>
 
-<p>tty からの入力を再開します。</p>
+<p><code>in</code> ストリームからの入力を再開します。</p>
 
 <h3 id="rl.write">rl.write() <span><a class="top" href="#">↑</a><a class="mark" href="#rl.write">#</a></span></h3>
 
 <p>tty へ出力します。</p>
+
+<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+中断されていれば再開します。</p>
 
 <h3 id="event_line_">Event: 'line' <span><a class="top" href="#">↑</a><a class="mark" href="#event_line_">#</a></span></h3>
 
@@ -144,26 +146,100 @@ i.question("What do you think of node.js?", function(answer) {
   console.log('You just typed: '+cmd);
 });</code></pre>
 
-<h3 id="event_close_">Event: 'close' <span><a class="top" href="#">↑</a><a class="mark" href="#event_close_">#</a></span></h3>
+<h3 id="event_pause_">Event: 'pause' <span><a class="top" href="#">↑</a><a class="mark" href="#event_pause_">#</a></span></h3>
 
 <p><code>function () {}</code></p>
 
-<p><code>in</code> ストリームから <code>^C</code> または <code>^D</code> を受信すると生成されます。
-それぞれ <code>SIGINT</code> および <code>EOT</code> として知られています。
-これはユーザがプログラムの使用を終わらせようとしていることを知るよい方法です。</p>
+<p><code>in</code> ストリームが中断された時、または <code>EOT</code> として知られる <code>^D</code> 
+を受信すると生成されます。
+このイベントは、<code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した際に、
+<code>SIGINT</code> イベントのリスナが存在しない場合にも生成されます。</p>
 
-<p><code>close</code> を監視し、その後プログラムを終了する例:</p>
+<p><code>in</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも
+生成されます (<code>SIGTSTP</code> および <code>SIGCONT</code> も参照してください)。</p>
 
-<pre><code>rl.on('close', function() {
-  console.log('goodbye!');
-  process.exit(0);
+<p><code>'pause'</code> を監視する例:</p>
+
+<pre><code>rl.on('pause', function() {
+  console.log('Readline paused.');
+});</code></pre>
+
+<h3 id="event_resume_">Event: 'resume' <span><a class="top" href="#">↑</a><a class="mark" href="#event_resume_">#</a></span></h3>
+
+<p><code>function () {}</code></p>
+
+<p><code>in</code> ストリームが再開された時に生成されます。</p>
+
+<p><code>'resume'</code> を監視する例:</p>
+
+<pre><code>rl.on('resume', function() {
+  console.log('Readline resumed.');
+});</code></pre>
+
+<h3 id="event_SIGINT_">Event: 'SIGINT' <span><a class="top" href="#">↑</a><a class="mark" href="#event_SIGINT_">#</a></span></h3>
+
+<p><code>function () {}</code></p>
+
+<p><code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に生成されます。
+もし <code>in</code> ストリームが <code>SIGINT</code> を受信した時に <code>'SIGINT'</code> イベントの
+リスナが存在しなければ、<code>'pause'</code> イベントがトリガされます。</p>
+
+<p><code>'SIGINT'</code> を監視する例:</p>
+
+<pre><code>rl.on('SIGINT', function() {
+  rl.question('Are you sure you want to exit?', function(answer) {
+    if (answer.match(/^y(es)?$/i)) rl.pause();
+  });
+});</code></pre>
+
+<h3 id="event_SIGTSTP_">Event: 'SIGTSTP' <span><a class="top" href="#">↑</a><a class="mark" href="#event_SIGTSTP_">#</a></span></h3>
+
+<p><code>function () {}</code></p>
+
+<p><strong>これは Windows では動作しません。</strong></p>
+
+<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に生成されます。
+もし <code>in</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>'SIGTSTP'</code> イベントの
+リスナが存在しなければ、プログラムはバックグラウンドに送られます。</p>
+
+<p>プログラムが <code>fg</code> により再開されると、<code>'pause'</code> および <code>'SIGCONT'</code> イベントが
+生成されます。どちらもストリームを再開するために使うことができます。</p>
+
+<p>プログラムがバックグラウンドに送られる前にストリームが中断されていると、
+<code>'pause'</code> および <code>'SIGCONT'</code> イベントは生成されません。</p>
+
+<p><code>'SIGTSTP'</code> を監視する例:</p>
+
+<pre><code>rl.on('SIGTSTP', function() {
+  // This will override SIGTSTP and prevent the program from going to the
+  // background.
+  console.log('Caught SIGTSTP.');
+});</code></pre>
+
+<h3 id="event_SIGCONT_">Event: 'SIGCONT' <span><a class="top" href="#">↑</a><a class="mark" href="#event_SIGCONT_">#</a></span></h3>
+
+<p><code>function () {}</code></p>
+
+<p><strong>これは Windows では動作しません。</strong></p>
+
+<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに
+送られた後で、<code>fg</code> によって再開されるた場合に生成されます。
+このイベントはプログラムがバックグラウンドに送られる前にストリームが中断されていなかった場合にのみ生成されます。</p>
+
+<p><code>'SIGCONT'</code> を監視する例:</p>
+
+<pre><code>rl.on('SIGCONT', function() {
+  // `prompt` will automatically resume the stream
+  rl.prompt();
 });</code></pre>
 
 <p>全てを一緒に使う、小さなコマンドラインインタフェースの例:</p>
 
 <pre><code>var readline = require('readline'),
-  rl = readline.createInterface(process.stdin, process.stdout),
-  prefix = 'OHAI&gt; ';
+    rl = readline.createInterface(process.stdin, process.stdout);
+
+rl.setPrompt('OHAI&gt; ');
+rl.prompt();
 
 rl.on('line', function(line) {
   switch(line.trim()) {
@@ -174,19 +250,11 @@ rl.on('line', function(line) {
       console.log('Say what? I might have heard `' + line.trim() + '`');
       break;
   }
-  rl.setPrompt(prefix, prefix.length);
   rl.prompt();
-}).on('close', function() {
+}).on('pause', function() {
   console.log('Have a great day!');
   process.exit(0);
-});
-console.log(prefix + 'Good to see you. Try typing stuff.');
-rl.setPrompt(prefix, prefix.length);
-rl.prompt();</code></pre>
-
-<p>より複雑な <a href="https://gist.github.com/901104">例</a> や、実践的なユースケースとして
-<a href="https://github.com/cloudhead/http-console">http-console</a>
-を見ることが出来ます。</p>
+});</code></pre>
         </div>
         </div>
     </div>
@@ -214,7 +282,7 @@ rl.prompt();</code></pre>
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.4/LICENSE">license</a>.</p>
+        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.5/LICENSE">license</a>.</p>
     </div>
     
   <script src="assets/sh_main.js"></script>
