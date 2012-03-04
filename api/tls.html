@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>tls - Node.js v0.6.11 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.6.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/tls.html">
+  <link rel="canonical" href="http://nodejs.org/api/tls.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-tls">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
-            <img id="logo" src="assets/logo-light.png" alt="node.js">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
         </a>
     </div>
     <div id="content" class="clearfix">
@@ -40,227 +40,609 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <!--
-          <h1>Node.js v0.6.11 Manual &amp; Documentation</h1>
-          -->
-          <h1>Node.js v0.6.11 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
-          </div>
-          <hr>
-        </header>
-        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tLS_">TLS (SSL)</a><ul><li><a href="#client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a><ul><li><a href="#tls.createServer">tls.createServer(options, [secureConnectionListener])</a></li><li><a href="#tls.connect">tls.connect(port, [host], [options], [secureConnectListener])</a></li></ul></li><li><a href="#nPN_and_SNI">NPN and SNI</a></li><li><a href="#pair_tls.createSecurePair">pair = tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a><ul><li><a href="#event_secure_">Event: 'secure'</a></li></ul></li><li><a href="#tls.Server">tls.Server</a><ul><li><a href="#event_secureConnection_">Event: 'secureConnection'</a></li><li><a href="#event_clientError_">Event: 'clientError'</a></li><li><a href="#server.listen">server.listen(port, [host], [callback])</a></li><li><a href="#server.close">server.close()</a></li><li><a href="#server.address">server.address()</a></li><li><a href="#server.addContext">server.addContext(hostname, credentials)</a></li><li><a href="#server.maxConnections">server.maxConnections</a></li><li><a href="#server.connections">server.connections</a></li></ul></li><li><a href="#tls.CleartextStream">tls.CleartextStream</a><ul><li><a href="#event_secureConnect_">Event: 'secureConnect'</a></li><li><a href="#cleartextStream.authorized">cleartextStream.authorized</a></li><li><a href="#cleartextStream.authorizationError">cleartextStream.authorizationError</a></li><li><a href="#cleartextStream.getPeerCertificate">cleartextStream.getPeerCertificate()</a></li><li><a href="#cleartextStream.address">cleartextStream.address()</a></li><li><a href="#cleartextStream.remoteAddress">cleartextStream.remoteAddress</a></li><li><a href="#cleartextStream.remotePort">cleartextStream.remotePort</a></li></ul></li></ul></li></ul><hr></div>
-<h2 id="tLS_">TLS (SSL) <span><a class="top" href="#">↑</a><a class="mark" href="#tLS_">#</a></span></h2>
+          <header>
+            <!--
+            <h1>Node.js v0.6.12 Manual &amp; Documentation</h1>
+            -->
+            <h1>Node.js v0.6.12 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+            </div>
+            <hr>
+          </header>
 
-<p><code>require('tls')</code> でこのモジュールにアクセスします。</p>
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#tls_tls_ssl">TLS (SSL)</a><ul>
+<li><a href="#tls_client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a></li>
+<li><a href="#tls_npn_and_sni">NPN and SNI</a></li>
+<li><a href="#tls_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
+<li><a href="#tls_tls_connect_port_host_options_secureconnectlistener">tls.connect(port, [host], [options], [secureConnectListener])</a></li>
+<li><a href="#tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a></li>
+<li><a href="#tls_class_securepair">Class: SecurePair</a><ul>
+<li><a href="#tls_event_secure">Event: &apos;secure&apos;</a></li>
+</ul>
+</li>
+<li><a href="#tls_class_tls_server">Class: tls.Server</a><ul>
+<li><a href="#tls_event_secureconnection">Event: &apos;secureConnection&apos;</a></li>
+<li><a href="#tls_event_clienterror">Event: &apos;clientError&apos;</a></li>
+<li><a href="#tls_server_listen_port_host_callback">server.listen(port, [host], [callback])</a></li>
+<li><a href="#tls_server_close">server.close()</a></li>
+<li><a href="#tls_server_address">server.address()</a></li>
+<li><a href="#tls_server_addcontext_hostname_credentials">server.addContext(hostname, credentials)</a></li>
+<li><a href="#tls_server_maxconnections">server.maxConnections</a></li>
+<li><a href="#tls_server_connections">server.connections</a></li>
+</ul>
+</li>
+<li><a href="#tls_class_tls_cleartextstream">Class: tls.CleartextStream</a><ul>
+<li><a href="#tls_event_secureconnect">Event: &apos;secureConnect&apos;</a></li>
+<li><a href="#tls_cleartextstream_authorized">cleartextStream.authorized</a></li>
+<li><a href="#tls_cleartextstream_authorizationerror">cleartextStream.authorizationError</a></li>
+<li><a href="#tls_cleartextstream_getpeercertificate">cleartextStream.getPeerCertificate()</a></li>
+<li><a href="#tls_cleartextstream_address">cleartextStream.address()</a></li>
+<li><a href="#tls_cleartextstream_remoteaddress">cleartextStream.remoteAddress</a></li>
+<li><a href="#tls_cleartextstream_remoteport">cleartextStream.remotePort</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>TLS (SSL)<span><a class="mark" href="#tls_tls_ssl" id="tls_tls_ssl">#</a></span></h1>
+<!--
+Use `require('tls')` to access this module.
+-->
+
+<p><code>require(&apos;tls&apos;)</code> でこのモジュールにアクセスします。
+
+</p>
+<!--
+The `tls` module uses OpenSSL to provide Transport Layer Security and/or
+Secure Socket Layer: encrypted stream communication.
+-->
 
 <p><code>tls</code> モジュールは OpenSSL を使用することで Transport Layer Security および
-Secure Socket Layer: 暗号化されたストリーム通信を提供します。</p>
+Secure Socket Layer: 暗号化されたストリーム通信を提供します。
+
+</p>
+<!--
+TLS/SSL is a public/private key infrastructure. Each client and each
+server must have a private key. A private key is created like this
+-->
 
 <p>TLS/SSL は公開／秘密鍵を基礎とします。
 どのクライアントとサーバも秘密鍵が必要です。
-秘密鍵は次のように作成します</p>
+秘密鍵は次のように作成します
 
+</p>
 <pre><code>openssl genrsa -out ryans-key.pem 1024</code></pre>
+<!--
+All severs and some clients need to have a certificate. Certificates are public
+keys signed by a Certificate Authority or self-signed. The first step to
+getting a certificate is to create a "Certificate Signing Request" (CSR)
+file. This is done with:
+-->
 
 <p>全てのサーバと一部のクライアントは証明書を必要とします。
 証明書は認証局の公開鍵または自身によって署名されます。
 証明書を作成する最初のステップは「証明書署名要求 (CSR)」ファイルです。
-次のようにします:</p>
+次のようにします:
 
+</p>
 <pre><code>openssl req -new -key ryans-key.pem -out ryans-csr.pem</code></pre>
+<!--
+To create a self-signed certificate with the CSR, do this:
+-->
 
-<p>CSR から自己署名証明書を作成するには次のようにします:</p>
+<p>CSR から自己署名証明書を作成するには次のようにします:
 
+</p>
 <pre><code>openssl x509 -req -in ryans-csr.pem -signkey ryans-key.pem -out ryans-cert.pem</code></pre>
+<!--
+Alternatively you can send the CSR to a Certificate Authority for signing.
+-->
 
-<p>他に CSR を認証局に送って署名してもらうこともできます。</p>
+<p>他に CSR を認証局に送って署名してもらうこともできます。
+
+</p>
+<!--
+(TODO: docs on creating a CA, for now interested users should just look at
+`test/fixtures/keys/Makefile` in the Node source code)
+-->
 
 <p>(TODO: CA を作るドキュメント、現在は興味あるユーザは Node のソースコードから
-<code>test/fixtures/keys/Makefile</code> を見る必要がある)</p>
+<code>test/fixtures/keys/Makefile</code> を見る必要がある)
 
-<h3 id="client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation <span><a class="top" href="#">↑</a><a class="mark" href="#client_initiated_renegotiation_attack_mitigation">#</a></span></h3>
+</p>
+<h2>Client-initiated renegotiation attack mitigation<span><a class="mark" href="#tls_client_initiated_renegotiation_attack_mitigation" id="tls_client_initiated_renegotiation_attack_mitigation">#</a></span></h2>
+<!-- type=misc -->
 
-<p>TLS では、クライアントから TLS セッションの再ネゴシエーションが可能です。</p>
+<!--
+The TLS protocol lets the client renegotiate certain aspects of the TLS session.
+Unfortunately, session renegotiation requires a disproportional amount of
+server-side resources, which makes it a potential vector for denial-of-service
+attacks.
 
+To mitigate this, renegotiations are limited to three times every 10 minutes. An
+error is emitted on the [CleartextStream](#tls.CleartextStream) instance when
+the threshold is exceeded. The limits are configurable:
+
+  - `tls.CLIENT_RENEG_LIMIT`: renegotiation limit, default is 3.
+
+  - `tls.CLIENT_RENEG_WINDOW`: renegotiation window in seconds, default is
+                               10 minutes.
+
+Don't change the defaults unless you know what you are doing.
+
+To test your server, connect to it with `openssl s_client -connect address:port`
+and tap `R<CR>` (that's the letter `R` followed by a carriage return) a few
+times.
+-->
+
+<p>TLS では、クライアントから TLS セッションの再ネゴシエーションが可能です。
+
+</p>
 <p>残念なことに、セッションの再ネゴシエーションは過度な量のサーバサイドリソースを
-要求し、それは潜在的にサービスを強制停止する攻撃となります。</p>
+要求し、それは潜在的にサービスを強制停止する攻撃となります。
 
+</p>
 <p>これを緩和するために、再ネゴシエーションは 10 分あたり 3 回までに
 制限されています。この閾値を超えると、<a href="#tls.CleartextStream">CleartextStream</a>
-のインスタンスで <code>'error'</code> が生成されます。
-この制限はコンフィグレーション可能です:</p>
+のインスタンスで <code>&apos;error&apos;</code> が生成されます。
+この制限はコンフィグレーション可能です:
 
-<ul><li><p><code>tls.CLIENT_RENEG_LIMIT</code>: 再ネゴシエーションの上限、デフォルトは 3 です。</p></li><li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 再ネゴシエーションのウィンドウサイズ (秒単位)、
-デフォルトは 10 分です。</p></li></ul>
+</p>
+<ul>
+<li><p><code>tls.CLIENT_RENEG_LIMIT</code>: 再ネゴシエーションの上限、デフォルトは 3 です。</p>
+</li>
+<li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 再ネゴシエーションのウィンドウサイズ (秒単位)、
+デフォルトは 10 分です。</p>
+</li>
+</ul>
+<p>あなたが何をしたいのか理解していない限り、デフォルトを変更しないでください。
 
-<p>あなたが何をしたいのか理解していない限り、デフォルトを変更しないでください。</p>
-
+</p>
 <p>サーバをテストするために、<code>openssl s_client -connect address:port</code> で
 接続して <code>R&lt;CR&gt;</code> (これは <code>R</code> の後に復帰改行を続けます)
-を、数回試すことができます。</p>
+を、数回試すことができます。
 
-<h4 id="tls.createServer">tls.createServer(options, [secureConnectionListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#tls.createServer">#</a></span></h4>
+</p>
+<h2>NPN and SNI<span><a class="mark" href="#tls_npn_and_sni" id="tls_npn_and_sni">#</a></span></h2>
+<!-- type=misc -->
+
+<!--
+NPN (Next Protocol Negotiation) and SNI (Server Name Indication) are TLS
+handshake extensions allowing you:
+-->
+
+<p>NPN (Next Protocol Negotitation) と SNI (Server Name Indication) は
+TLS の拡張で、以下を可能にします。
+
+</p>
+<!--
+  * NPN - to use one TLS server for multiple protocols (HTTP, SPDY)
+  * SNI - to use one TLS server for multiple hostnames with different SSL
+    certificates.
+-->
+
+<ul>
+<li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li>
+<li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li>
+</ul>
+<h2>tls.createServer(options, [secureConnectionListener])<span><a class="mark" href="#tls_tls_createserver_options_secureconnectionlistener" id="tls_tls_createserver_options_secureconnectionlistener">#</a></span></h2>
+<!--
+Creates a new [tls.Server](#tls.Server).
+The `connectionListener` argument is automatically set as a listener for the
+[secureConnection](#event_secureConnection_) event.
+The `options` object has these possibilities:
+-->
 
 <p>新しい <a href="#tls.Server">tls.Server</a> を作成します。
 <code>connectionListener</code> は <a href="#event_secureConnection_">secureConnection</a>
 イベントのリスナとして自動的に登録されます。
-<code>options</code> は以下を持つことができます:</p>
+<code>options</code> は以下を持つことができます:
 
-<ul><li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です
-(必須)。</p></li><li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p></li><li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
-(必須)。</p></li><li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
+
+</p>
+<!--
+  - `key`: A string or `Buffer` containing the private key of the server in
+    PEM format. (Required)
+
+  - `passphrase`: A string of passphrase for the private key.
+
+  - `cert`: A string or `Buffer` containing the certificate key of the server in
+    PEM format. (Required)
+
+  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is
+    omitted several well known "root" CAs will be used, like VeriSign.
+    These are used to authorize connections.
+
+  - `ciphers`: A string describing the ciphers to use or exclude. Consult
+    <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for
+    details on the format.
+
+  - `requestCert`: If `true` the server will request a certificate from
+    clients that connect and attempt to verify that certificate. Default:
+    `false`.
+
+  - `rejectUnauthorized`: If `true` the server will reject any connection
+    which is not authorized with the list of supplied CAs. This option only
+    has an effect if `requestCert` is `true`. Default: `false`.
+
+  - `NPNProtocols`: An array or `Buffer` of possible NPN protocols. (Protocols
+    should be ordered by their priority).
+
+  - `SNICallback`: A function that will be called if client supports SNI TLS
+    extension. Only one argument will be passed to it: `servername`. And
+    `SNICallback` should return SecureContext instance.
+    (You can use `crypto.createCredentials(...).context` to get proper
+    SecureContext). If `SNICallback` wasn't provided - default callback with
+    high-level API will be used (see below).
+
+  - `sessionIdContext`: A string containing a opaque identifier for session
+    resumption. If `requestCert` is `true`, the default is MD5 hash value
+    generated from command-line. Otherwise, the default is not provided.
+-->
+
+<ul>
+<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です
+(必須)。</p>
+</li>
+<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>
+</li>
+<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
+(必須)。</p>
+</li>
+<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
-これらはコネクションの認証に使われます。</p></li><li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列。
+これらはコネクションの認証に使われます。</p>
+</li>
+<li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列。
 詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>
-を参照してください。</p></li><li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
-証明書を要求します。デフォルトは <code>false</code> です。</p></li><li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバは提供された認証局の
+を参照してください。</p>
+</li>
+<li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
+証明書を要求します。デフォルトは <code>false</code> です。</p>
+</li>
+<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバは提供された認証局の
 リストによって認証されていないコネクションを破棄します．
 このオプションは <code>requestCert</code> が <code>true</code> の場合だけ効果があります。
-デフォルトは <code>false</code> です。</p></li><li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列
-(プロトコルはその優先度に応じて並んでいる必要があります)。</p></li><li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に
+デフォルトは <code>false</code> です。</p>
+</li>
+<li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列
+(プロトコルはその優先度に応じて並んでいる必要があります)。</p>
+</li>
+<li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に
 呼び出される関数です。
 <code>servername</code> が唯一の引数として渡されます。
 <code>SNICallback</code> は SecureContext のインスタンスを返す必要があります
 (SecureContext を取得するために <code>crypto.createCredentials(...).context</code>
 を使用することができます)。
 <code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして
-後述する高水準 API が使用されます。</p></li><li><p><code>sessionIdContext</code>: セッション再開のための識別子となる文字列です。
+後述する高水準 API が使用されます。</p>
+</li>
+<li><p><code>sessionIdContext</code>: セッション再開のための識別子となる文字列です。
 <code>requestCedrt</code> が <code>true</code> の場合、デフォルトはコマンドライン引数から
 生成された MD5 ハッシュ値となります。
-そうでない場合はデフォルトは提供されません。</p></li></ul>
+そうでない場合はデフォルトは提供されません。</p>
+</li>
+</ul>
+<!--
+Here is a simple example echo server:
 
-<p>これはシンプルはエコーサーバの例です:</p>
 
-<pre><code>var tls = require('tls');
-var fs = require('fs');
+    var tls = require('tls');
+    var fs = require('fs');
+
+    var options = {
+      key: fs.readFileSync('server-key.pem'),
+      cert: fs.readFileSync('server-cert.pem'),
+
+      // This is necessary only if using the client certificate authentication.
+      requestCert: true,
+
+      // This is necessary only if the client uses the self-signed certificate.
+      ca: [ fs.readFileSync('client-cert.pem') ]
+    };
+
+    var server = tls.createServer(options, function(cleartextStream) {
+      console.log('server connected',
+                  cleartextStream.authorized ? 'authorized' : 'unauthorized');
+      cleartextStream.write("welcome!\n");
+      cleartextStream.setEncoding('utf8');
+      cleartextStream.pipe(cleartextStream);
+    });
+    server.listen(8000, function() {
+      console.log('server bound');
+    });
+-->
+
+<p>これはシンプルはエコーサーバの例です:
+
+
+</p>
+<pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
 
 var options = {
-  key: fs.readFileSync('server-key.pem'),
-  cert: fs.readFileSync('server-cert.pem'),
+  key: fs.readFileSync(&apos;server-key.pem&apos;),
+  cert: fs.readFileSync(&apos;server-cert.pem&apos;),
 
   // これはクライアント証明書を用いた認証を行う場合だけ必要です
   requestCert: true,
 
   // これは自己署名のクライアント証明書を認証する場合だけ必要です
-  ca: [ fs.readFileSync('client-cert.pem') ]
+  ca: [ fs.readFileSync(&apos;client-cert.pem&apos;) ]
 };
 
 var server = tls.createServer(options, function(cleartextStream) {
-  console.log('server connected',
-              cleartextStream.authorized ? 'authorized' : 'unauthorized');
-  cleartextStream.write("welcome!\n");
-  cleartextStream.setEncoding('utf8');
+  console.log(&apos;server connected&apos;,
+              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  cleartextStream.write(&quot;welcome!\n&quot;);
+  cleartextStream.setEncoding(&apos;utf8&apos;);
   cleartextStream.pipe(cleartextStream);
 });
 server.listen(8000, function() {
-  console.log('server bound');
+  console.log(&apos;server bound&apos;);
 });</code></pre>
+<!--
+You can test this server by connecting to it with `openssl s_client`:
+-->
 
-<p><code>openssl s_client</code> を使用してこのサーバに接続するテストを行うことができます。</p>
+<p><code>openssl s_client</code> を使用してこのサーバに接続するテストを行うことができます。
 
+
+</p>
 <pre><code>openssl s_client -connect 127.0.0.1:8000</code></pre>
-
-<h4 id="tls.connect">tls.connect(port, [host], [options], [secureConnectListener]) <span><a class="top" href="#">↑</a><a class="mark" href="#tls.connect">#</a></span></h4>
+<h2>tls.connect(port, [host], [options], [secureConnectListener])<span><a class="mark" href="#tls_tls_connect_port_host_options_secureconnectlistener" id="tls_tls_connect_port_host_options_secureconnectlistener">#</a></span></h2>
+<!--
+Creates a new client connection to the given `port` and `host`. (If `host`
+defaults to `localhost`.) `options` should be an object which specifies
+-->
 
 <p>与えられた <code>port</code> と <code>host</code> で新しいクライアントコネクションを作成します
 (<code>host</code> のデフォルトは <code>localhost</code> です)。
-<code>options</code> は以下を指定したオブジェクトです。</p>
+<code>options</code> は以下を指定したオブジェクトです。
 
-<ul><li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または
-<code>Buffer</code> です。</p></li><li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p></li><li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p></li><li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
+</p>
+<!--
+  - `key`: A string or `Buffer` containing the private key of the client in
+    PEM format.
+
+  - `passphrase`: A string of passphrase for the private key.
+
+  - `cert`: A string or `Buffer` containing the certificate key of the client in
+    PEM format.
+
+  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is
+    omitted several well known "root" CAs will be used, like VeriSign.
+    These are used to authorize connections.
+
+  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN
+    protocols. `Buffer` should have following format: `0x05hello0x05world`,
+    where first byte is next protocol name's length. (Passing array should
+    usually be much simpler: `['hello', 'world']`.)
+
+  - `servername`: Servername for SNI (Server Name Indication) TLS extension.
+
+  - `socket`: Establish secure connection on a given socket rather than
+    creating a new socket. If this option is specified, `host` and `port`
+    are ignored.  This is intended FOR INTERNAL USE ONLY.  As with all
+    undocumented APIs in Node, they should not be used.
+-->
+
+<ul>
+<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または
+<code>Buffer</code> です。</p>
+</li>
+<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>
+</li>
+<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>
+</li>
+<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
-これらはコネクションの認証に使われます。</p></li><li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> 
+これらはコネクションの認証に使われます。</p>
+</li>
+<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> 
 の配列です。
 <code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>
 最初のバイトは次のプロトコル名の長さです
-(通常、配列を渡す方がシンプルです: <code>['hello', 'world']</code>)。</p></li><li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p></li><li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で
+(通常、配列を渡す方がシンプルです: <code>[&apos;hello&apos;, &apos;world&apos;]</code>)。</p>
+</li>
+<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>
+</li>
+<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で
 セキュアな接続を確立します。
 このオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。
 これは内部的な利用のみを意図しています。他のアンドキュメンテッドな
-API と同様、これを使用すべきではありません。</p></li></ul>
+API と同様、これを使用すべきではありません。</p>
+</li>
+</ul>
+<!--
+The `secureConnectListener` parameter will be added as a listener for the
+['secureConnect'](#event_secureConnect_) event.
 
-<p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">'secureConnect'</a>
-イベントのリスナとして加えられます。</p>
+`tls.connect()` returns a [CleartextStream](#tls.CleartextStream) object.
 
+Here is an example of a client of echo server as described previously:
+
+    var tls = require('tls');
+    var fs = require('fs');
+
+    var options = {
+      // These are necessary only if using the client certificate authentication
+      key: fs.readFileSync('client-key.pem'),
+      cert: fs.readFileSync('client-cert.pem'),
+
+      // This is necessary only if the server uses the self-signed certificate
+      ca: [ fs.readFileSync('server-cert.pem') ]
+    };
+
+    var cleartextStream = tls.connect(8000, options, function() {
+      console.log('client connected',
+                  cleartextStream.authorized ? 'authorized' : 'unauthorized');
+      process.stdin.pipe(cleartextStream);
+      process.stdin.resume();
+    });
+    cleartextStream.setEncoding('utf8');
+    cleartextStream.on('data', function(data) {
+      console.log(data);
+    });
+    cleartextStream.on('end', function() {
+      server.close();
+    });
+-->
+
+<p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">&apos;secureConnect&apos;</a>
+イベントのリスナとして加えられます。
+
+</p>
 <p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a>
-オブジェクトを返します。</p>
+オブジェクトを返します。
 
-<p>これは前述のエコーサーバに接続するクライアントの例です:</p>
+</p>
+<p>これは前述のエコーサーバに接続するクライアントの例です:
 
-<pre><code>var tls = require('tls');
-var fs = require('fs');
+</p>
+<pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
 
 var options = {
   // これらはクライアント証明書による認証を行う場合だけ必要ですn
-  key: fs.readFileSync('client-key.pem'),
-  cert: fs.readFileSync('client-cert.pem'),
+  key: fs.readFileSync(&apos;client-key.pem&apos;),
+  cert: fs.readFileSync(&apos;client-cert.pem&apos;),
 
   // これはサーバが自己署名証明書を使う場合だけ必要です
-  ca: [ fs.readFileSync('server-cert.pem') ]
+  ca: [ fs.readFileSync(&apos;server-cert.pem&apos;) ]
 };
 
 var cleartextStream = tls.connect(8000, options, function() {
-  console.log('client connected',
-              cleartextStream.authorized ? 'authorized' : 'unauthorized');
+  console.log(&apos;client connected&apos;,
+              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
   process.stdin.pipe(cleartextStream);
   process.stdin.resume();
 });
-cleartextStream.setEncoding('utf8');
-cleartextStream.on('data', function(data) {
+cleartextStream.setEncoding(&apos;utf8&apos;);
+cleartextStream.on(&apos;data&apos;, function(data) {
   console.log(data);
 });
-cleartextStream.on('end', function() {
+cleartextStream.on(&apos;end&apos;, function() {
   server.close();
 });</code></pre>
+<h2>tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])<span><a class="mark" href="#tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized" id="tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">#</a></span></h2>
+<!--
+Creates a new secure pair object with two streams, one of which reads/writes
+encrypted data, and one reads/writes cleartext data.
+Generally the encrypted one is piped to/from an incoming encrypted data stream,
+and the cleartext one is used as a replacement for the initial encrypted stream.
+ - `credentials`: A credentials object from crypto.createCredentials( ... )
 
-<h3 id="nPN_and_SNI">NPN and SNI <span><a class="top" href="#">↑</a><a class="mark" href="#nPN_and_SNI">#</a></span></h3>
+ - `isServer`: A boolean indicating whether this tls connection should be
+   opened as a server or a client.
 
-<p>NPN (Next Protocol Negotitation) と SNI (Server Name Indication) は
-TLS の拡張で、以下を可能にします。</p>
+ - `requestCert`: A boolean indicating whether a server should request a
+   certificate from a connecting client. Only applies to server connections.
 
-<ul><li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li><li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li></ul>
+ - `rejectUnauthorized`: A boolean indicating whether a server should
+   automatically reject clients with invalid certificates. Only applies to
+   servers with `requestCert` enabled.
 
-<h3 id="pair_tls.createSecurePair">pair = tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized]) <span><a class="top" href="#">↑</a><a class="mark" href="#pair_tls.createSecurePair">#</a></span></h3>
+`tls.createSecurePair()` returns a SecurePair object with
+[cleartext](#tls.CleartextStream) and `encrypted` stream properties.
+-->
 
 <p>二つのストリームを持つセキュアペアオブジェクトを作成します。
 一つは暗号化されたデータを読み書きし、もう一つは平文のデータを読み書きします。
 通常、暗号化されたストリームに外部からの暗号化されたデータが連結され、
-暗号化されたストリームの代わりに平文のストリームが使われます。</p>
+暗号化されたストリームの代わりに平文のストリームが使われます。
 
-<ul><li><p><code>credentials</code>: <code>crypto.createCredentials( ... )</code> で作成された
-証明書オブジェクト。</p></li><li><p><code>isServer</code>: この TLS コネクションをサーバとしてオープンするかどうかを示す
-ブーリアン値。</p></li><li><p><code>requestCert</code>: クライアントからの接続に対して、サーバがクライアントに
+</p>
+<ul>
+<li><p><code>credentials</code>: <code>crypto.createCredentials( ... )</code> で作成された
+証明書オブジェクト。</p>
+</li>
+<li><p><code>isServer</code>: この TLS コネクションをサーバとしてオープンするかどうかを示す
+ブーリアン値。</p>
+</li>
+<li><p><code>requestCert</code>: クライアントからの接続に対して、サーバがクライアントに
 証明書を要求するかどうかを示すブーリアン値。
-サーバコネクションにのみ適用されます。</p></li><li><p><code>rejectUnauthorized</code>: クライアント認証が不正だった場合に、
+サーバコネクションにのみ適用されます。</p>
+</li>
+<li><p><code>rejectUnauthorized</code>: クライアント認証が不正だった場合に、
 自動的にクライアントを破棄するかどうかを示すブーリアン値。
-<code>requestCert</code> が有効なサーバにのみ適用されます。</p></li></ul>
-
+<code>requestCert</code> が有効なサーバにのみ適用されます。</p>
+</li>
+</ul>
 <p><code>tls.createSequrePair()</code> は、<a href="#tls.CleartextStream">cleartext</a> と <code>encrypted</code>
-をプロパティとして持つ <code>SecurePair</code> オブジェクトを返します。</p>
+をプロパティとして持つ <code>SecurePair</code> オブジェクトを返します。
 
-<h4 id="event_secure_">Event: 'secure' <span><a class="top" href="#">↑</a><a class="mark" href="#event_secure_">#</a></span></h4>
+</p>
+<h2>Class: SecurePair<span><a class="mark" href="#tls_class_securepair" id="tls_class_securepair">#</a></span></h2>
+<p>Returned by tls.createSecurePair.
 
-<p>SecurePair オブジェクトのペアが安全な接続を確立した場合に発生します。</p>
+</p>
+<h3>Event: &apos;secure&apos;<span><a class="mark" href="#tls_event_secure" id="tls_event_secure">#</a></span></h3>
+<!--
+The event is emitted from the SecurePair once the pair has successfully
+established a secure connection.
 
-<p>サーバの <code>'secureConnection'</code> イベントと同様に、
+Similarly to the checking for the server 'secureConnection' event,
+pair.cleartext.authorized should be checked to confirm whether the certificate
+used properly authorized.
+-->
+
+<p>SecurePair オブジェクトのペアが安全な接続を確立した場合に発生します。
+
+</p>
+<p>サーバの <code>&apos;secureConnection&apos;</code> イベントと同様に、
 <code>pari.cleartext.authorized</code> によって接続相手の証明書を承認できたかどうかを
-チェックすることができます。</p>
+チェックすることができます。
 
-<h3 id="tls.Server">tls.Server <span><a class="top" href="#">↑</a><a class="mark" href="#tls.Server">#</a></span></h3>
+</p>
+<h2>Class: tls.Server<span><a class="mark" href="#tls_class_tls_server" id="tls_class_tls_server">#</a></span></h2>
+<!--
+This class is a subclass of `net.Server` and has the same methods on it.
+Instead of accepting just raw TCP connections, this accepts encrypted
+connections using TLS or SSL.
+-->
 
 <p>このクラスは <code>net.Server</code> のサブクラスで、同じメソッドを持っています。
 生の TCP コネクションを受け入れる代わりに、
-TLS または SSL を使った暗号化されたコネクションを受け付けます。</p>
+TLS または SSL を使った暗号化されたコネクションを受け付けます。
 
-<h4 id="event_secureConnection_">Event: 'secureConnection' <span><a class="top" href="#">↑</a><a class="mark" href="#event_secureConnection_">#</a></span></h4>
 
-<p><code>function (cleartextStream) {}</code></p>
+</p>
+<h3>Event: &apos;secureConnection&apos;<span><a class="mark" href="#tls_event_secureconnection" id="tls_event_secureconnection">#</a></span></h3>
+<p><code>function (cleartextStream) {}</code>
+
+</p>
+<!--
+This event is emitted after a new connection has been successfully
+handshaked. The argument is a instance of
+[CleartextStream](#tls.CleartextStream). It has all the common stream methods
+and events.
+-->
 
 <p>このイベントは、新しい接続のハンドシェークが成功した場合に生成されます。
 引数は <a href="#tls.CleartextStream">CleartextStream</a> のインスタンスです。
-これはストリームに共通する全てのメソッドとイベントを持っています。</p>
+これはストリームに共通する全てのメソッドとイベントを持っています。
+
+</p>
+<!--
+`cleartextStream.authorized` is a boolean value which indicates if the
+client has verified by one of the supplied certificate authorities for the
+server. If `cleartextStream.authorized` is false, then
+`cleartextStream.authorizationError` is set to describe how authorization
+failed. Implied but worth mentioning: depending on the settings of the TLS
+server, you unauthorized connections may be accepted.
+`cleartextStream.npnProtocol` is a string containing selected NPN protocol.
+`cleartextStream.servername` is a string containing servername requested with
+SNI.
+-->
 
 <p><code>cleartextStream.authorized</code> は提供された認証局のいずれかによって認証されたかを示す boolean 値です。
 <code>cleartextStream.authorized</code> が false の場合、
@@ -269,63 +651,137 @@ TLS または SSL を使った暗号化されたコネクションを受け付�
 TLS サーバの設定に依存しますが、認証されていないコネクションも受け入れられることがあります。
 <code>cleartextStream.npnProtocol</code> は、選択された NPN プロトコルを持つ文字列です。
 <code>cleartextStream.servername</code> は、SNI でリクエストされたサーバ名を持つ
-文字列です。</p>
+文字列です。
 
-<h4 id="event_clientError_">Event: 'clientError' <span><a class="top" href="#">↑</a><a class="mark" href="#event_clientError_">#</a></span></h4>
+</p>
+<h3>Event: &apos;clientError&apos;<span><a class="mark" href="#tls_event_clienterror" id="tls_event_clienterror">#</a></span></h3>
+<p><code>function (exception) { }</code>
 
-<p><code>function (exception) { }</code></p>
+</p>
+<!--
+When a client connection emits an 'error' event before secure connection is
+established - it will be forwarded here.
+-->
 
 <p>セキュアコネクションが確立される前にクライアントコネクションが
-<code>'error'</code> イベントを発した場合 － ここに転送されます。</p>
+<code>&apos;error&apos;</code> イベントを発した場合 － ここに転送されます。
 
-<h4 id="server.listen">server.listen(port, [host], [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#server.listen">#</a></span></h4>
+
+</p>
+<h3>server.listen(port, [host], [callback])<span><a class="mark" href="#tls_server_listen_port_host_callback" id="tls_server_listen_port_host_callback">#</a></span></h3>
+<!--
+Begin accepting connections on the specified `port` and `host`.  If the
+`host` is omitted, the server will accept connections directed to any
+IPv4 address (`INADDR_ANY`).
+-->
 
 <p>指定の <code>port</code> と <code>host</code> で接続の受け入れを開始します。
-<code>host</code> が省略されると、サーバはどんな IPv4 アドレスからのコネクションも受け入れます (<code>INADDR_ANY</code>)。</p>
+<code>host</code> が省略されると、サーバはどんな IPv4 アドレスからのコネクションも受け入れます (<code>INADDR_ANY</code>)。
+
+</p>
+<!--
+This function is asynchronous. The last parameter `callback` will be called
+when the server has been bound.
+-->
 
 <p>この関数は非同期です。
-最後の引数 <code>callback</code> はサーバがバインドされると呼び出されます。</p>
+最後の引数 <code>callback</code> はサーバがバインドされると呼び出されます。
 
-<p>より詳細は <code>net.Server</code> を参照してください。</p>
+</p>
+<!--
+See `net.Server` for more information.
+-->
 
-<h4 id="server.close">server.close() <span><a class="top" href="#">↑</a><a class="mark" href="#server.close">#</a></span></h4>
+<p>より詳細は <code>net.Server</code> を参照してください。
+
+
+</p>
+<h3>server.close()<span><a class="mark" href="#tls_server_close" id="tls_server_close">#</a></span></h3>
+<!--
+Stops the server from accepting new connections. This function is
+asynchronous, the server is finally closed when the server emits a `'close'`
+event.
+-->
 
 <p>サーバが新しい接続を受け入れることを終了します。
-この関数は非同期で、サーバが最終的にクローズされるとサーバは <code>'close'</code> イベントを生成します。</p>
+この関数は非同期で、サーバが最終的にクローズされるとサーバは <code>&apos;close&apos;</code> イベントを生成します。
 
-<h4 id="server.address">server.address() <span><a class="top" href="#">↑</a><a class="mark" href="#server.address">#</a></span></h4>
+</p>
+<h3>server.address()<span><a class="mark" href="#tls_server_address" id="tls_server_address">#</a></span></h3>
+<!--
+Returns the bound address and port of the server as reported by the operating
+system.
+See [net.Server.address()](net.html#server.address) for more information.
+-->
 
 <p>オペレーティングシステムから報告された、
 サーバにバインドされたアドレスとポートを返します。 
 より詳しくは <a href="net.html#server.address">net.Server.address()</a>
-を参照してください。</p>
+を参照してください。
 
-<h4 id="server.addContext">server.addContext(hostname, credentials) <span><a class="top" href="#">↑</a><a class="mark" href="#server.addContext">#</a></span></h4>
+</p>
+<h3>server.addContext(hostname, credentials)<span><a class="mark" href="#tls_server_addcontext_hostname_credentials" id="tls_server_addcontext_hostname_credentials">#</a></span></h3>
+<!--
+Add secure context that will be used if client request's SNI hostname is
+matching passed `hostname` (wildcards can be used). `credentials` can contain
+`key`, `cert` and `ca`.
+-->
 
 <p>クライアントが要求してきた SNI ホスト名と <code>hostname</code> (ワイルドカードを使用可能)
 がマッチした場合のセキュリティコンテキストを追加します。
-<code>credentials</code> は <code>key</code>、<code>cert</code>、そして <code>ca</code> を含むことができます。</p>
+<code>credentials</code> は <code>key</code>、<code>cert</code>、そして <code>ca</code> を含むことができます。
 
-<h4 id="server.maxConnections">server.maxConnections <span><a class="top" href="#">↑</a><a class="mark" href="#server.maxConnections">#</a></span></h4>
+</p>
+<h3>server.maxConnections<span><a class="mark" href="#tls_server_maxconnections" id="tls_server_maxconnections">#</a></span></h3>
+<!--
+Set this property to reject connections when the server's connection count
+gets high.
+-->
 
-<p>このプロパティを設定すると、サーバの接続数がこれを越えた場合に接続を破棄します。</p>
+<p>このプロパティを設定すると、サーバの接続数がこれを越えた場合に接続を破棄します。
 
-<h4 id="server.connections">server.connections <span><a class="top" href="#">↑</a><a class="mark" href="#server.connections">#</a></span></h4>
+</p>
+<h3>server.connections<span><a class="mark" href="#tls_server_connections" id="tls_server_connections">#</a></span></h3>
+<!--
+The number of concurrent connections on the server.
+-->
 
-<p>サーバの並行コネクションの数です。</p>
+<p>サーバの並行コネクションの数です。
 
-<h3 id="tls.CleartextStream">tls.CleartextStream <span><a class="top" href="#">↑</a><a class="mark" href="#tls.CleartextStream">#</a></span></h3>
+</p>
+<h2>Class: tls.CleartextStream<span><a class="mark" href="#tls_class_tls_cleartextstream" id="tls_class_tls_cleartextstream">#</a></span></h2>
+<!--
+This is a stream on top of the *Encrypted* stream that makes it possible to
+read/write an encrypted data as a cleartext data.
+
+This instance implements a duplex [Stream](stream.html) interfaces.
+It has all the common stream methods and events.
+
+A ClearTextStream is the `clear` member of a SecurePair object.
+-->
 
 <p>暗号化されたストリーム上で、暗号化されたデータを平文のデータとして
-読み書きすることができるストリームです。</p>
+読み書きすることができるストリームです。
 
-<p>このインスタンスは双方向の <a href="streams.html#streams">Stream</a> インタフェースを
+</p>
+<p>このインスタンスは双方向の <a href="stream.html#streams">Stream</a> インタフェースを
 実装します。
-ストリームに共通な全てのメソッドとイベントを持ちます。</p>
+ストリームに共通な全てのメソッドとイベントを持ちます。
 
-<h4 id="event_secureConnect_">Event: 'secureConnect' <span><a class="top" href="#">↑</a><a class="mark" href="#event_secureConnect_">#</a></span></h4>
+</p>
+<p>ClearText ストリームは SecurePair オブジェクトの <code>clear</code> メンバです。
 
-<p><code>function () {}</code></p>
+</p>
+<h3>Event: &apos;secureConnect&apos;<span><a class="mark" href="#tls_event_secureconnect" id="tls_event_secureconnect">#</a></span></h3>
+<!--
+This event is emitted after a new connection has been successfully handshaked. 
+The listener will be called no matter if the server's certificate was
+authorized or not. It is up to the user to test `cleartextStream.authorized`
+to see if the server certificate was signed by one of the specified CAs.
+If `cleartextStream.authorized === false` then the error can be found in
+`cleartextStream.authorizationError`. Also if NPN was used - you can check
+`cleartextStream.npnProtocol` for negotiated protocol.
+-->
 
 <p>新しいコネクションの TLS/SSL ハンドシェークが成功すると生成されます。
 リスナはサーバの証明書が認証されたかどうかに関わらず呼び出されます。
@@ -334,63 +790,107 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
 <code>cleartextStream.authorized === false</code>の場合、
 <code>cleartextStream.authorizationError</code> からエラーを見つけることができます。
 同様に NPN が使われている場合は <code>cleartextStream.npnProtocol</code>
-から合意されたプロトコルをチェックすることが出来ます。</p>
+から合意されたプロトコルをチェックすることが出来ます。
 
-<h4 id="cleartextStream.authorized">cleartextStream.authorized <span><a class="top" href="#">↑</a><a class="mark" href="#cleartextStream.authorized">#</a></span></h4>
+
+</p>
+<h3>cleartextStream.authorized<span><a class="mark" href="#tls_cleartextstream_authorized" id="tls_cleartextstream_authorized">#</a></span></h3>
+<!--
+A boolean that is `true` if the peer certificate was signed by one of the
+specified CAs, otherwise `false`
+-->
 
 <p>接続相手の証明書が CA の一つによって署名されていれば <code>true</code>、
-そうでなければ <code>false</code> です。</p>
+そうでなければ <code>false</code> です。
 
-<h4 id="cleartextStream.authorizationError">cleartextStream.authorizationError <span><a class="top" href="#">↑</a><a class="mark" href="#cleartextStream.authorizationError">#</a></span></h4>
+</p>
+<h3>cleartextStream.authorizationError<span><a class="mark" href="#tls_cleartextstream_authorizationerror" id="tls_cleartextstream_authorizationerror">#</a></span></h3>
+<!--
+The reason why the peer's certificate has not been verified. This property
+becomes available only when `cleartextStream.authorized === false`.
+-->
 
 <p>接続相手の証明書が認証されなかった理由です。
 このプロパティは <code>cleartextStream.authorized === false</code>
-の場合だけ利用可能になります。</p>
+の場合だけ利用可能になります。
 
-<h4 id="cleartextStream.getPeerCertificate">cleartextStream.getPeerCertificate() <span><a class="top" href="#">↑</a><a class="mark" href="#cleartextStream.getPeerCertificate">#</a></span></h4>
+</p>
+<h3>cleartextStream.getPeerCertificate()<span><a class="mark" href="#tls_cleartextstream_getpeercertificate" id="tls_cleartextstream_getpeercertificate">#</a></span></h3>
+<!--
+Returns an object representing the peer's certificate. The returned object has
+some properties corresponding to the field of the certificate.
+-->
 
 <p>接続相手の証明書を表現するオブジェクトを返します。
-返されるオブジェクトは証明書のフィールドに対応するプロパティを持ちます。</p>
+返されるオブジェクトは証明書のフィールドに対応するプロパティを持ちます。
 
-<p>例:</p>
+</p>
+<!--
+Example:
+-->
 
+<p>例:
+
+</p>
 <pre><code>{ subject: 
-   { C: 'UK',
-     ST: 'Acknack Ltd',
-     L: 'Rhys Jones',
-     O: 'node.js',
-     OU: 'Test TLS Certificate',
-     CN: 'localhost' },
+   { C: &apos;UK&apos;,
+     ST: &apos;Acknack Ltd&apos;,
+     L: &apos;Rhys Jones&apos;,
+     O: &apos;node.js&apos;,
+     OU: &apos;Test TLS Certificate&apos;,
+     CN: &apos;localhost&apos; },
   issuer: 
-   { C: 'UK',
-     ST: 'Acknack Ltd',
-     L: 'Rhys Jones',
-     O: 'node.js',
-     OU: 'Test TLS Certificate',
-     CN: 'localhost' },
-  valid_from: 'Nov 11 09:52:22 2009 GMT',
-  valid_to: 'Nov  6 09:52:22 2029 GMT',
-  fingerprint: '2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF' }</code></pre>
+   { C: &apos;UK&apos;,
+     ST: &apos;Acknack Ltd&apos;,
+     L: &apos;Rhys Jones&apos;,
+     O: &apos;node.js&apos;,
+     OU: &apos;Test TLS Certificate&apos;,
+     CN: &apos;localhost&apos; },
+  valid_from: &apos;Nov 11 09:52:22 2009 GMT&apos;,
+  valid_to: &apos;Nov  6 09:52:22 2029 GMT&apos;,
+  fingerprint: &apos;2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF&apos; }</code></pre>
+<!--
+If the peer does not provide a certificate, it returns `null` or an empty
+object.
+-->
 
 <p>接続相手が証明書を提供しなかった場合は、
-<code>null</code> または空のオブジェクトを返します。</p>
+<code>null</code> または空のオブジェクトを返します。
 
-<h4 id="cleartextStream.address">cleartextStream.address() <span><a class="top" href="#">↑</a><a class="mark" href="#cleartextStream.address">#</a></span></h4>
+</p>
+<h3>cleartextStream.address()<span><a class="mark" href="#tls_cleartextstream_address" id="tls_cleartextstream_address">#</a></span></h3>
+<!--
+Returns the bound address and port of the underlying socket as reported by the
+operating system. Returns an object with two properties, e.g.
+`{"address":"192.168.57.1", "port":62053}`
+-->
 
 <p>オペレーティングシステムから報告された、
 ソケットにバインドされたアドレスとポートを返します。
 返されるオブジェクトは二つのプロパティを持ちます。
-例えば、<code>{"address":"192.168.57.1", "port":62053}</code></p>
+例えば、<code>{&quot;address&quot;:&quot;192.168.57.1&quot;, &quot;port&quot;:62053}</code>
 
-<h4 id="cleartextStream.remoteAddress">cleartextStream.remoteAddress <span><a class="top" href="#">↑</a><a class="mark" href="#cleartextStream.remoteAddress">#</a></span></h4>
+</p>
+<h3>cleartextStream.remoteAddress<span><a class="mark" href="#tls_cleartextstream_remoteaddress" id="tls_cleartextstream_remoteaddress">#</a></span></h3>
+<!--
+The string representation of the remote IP address. For example,
+`'74.125.127.100'` or `'2001:4860:a005::68'`.
+-->
 
 <p>リモートの IP アドレスを表現する文字列です。
-例えば、<code>'74.125.127.100'</code> あるいは <code>'2001:4860:a005::68'</code>。</p>
+例えば、<code>&apos;74.125.127.100&apos;</code> あるいは <code>&apos;2001:4860:a005::68&apos;</code>。
 
-<h4 id="cleartextStream.remotePort">cleartextStream.remotePort <span><a class="top" href="#">↑</a><a class="mark" href="#cleartextStream.remotePort">#</a></span></h4>
+</p>
+<h3>cleartextStream.remotePort<span><a class="mark" href="#tls_cleartextstream_remoteport" id="tls_cleartextstream_remoteport">#</a></span></h3>
+<!--
+The numeric representation of the remote port. For example, `443`.
+-->
 
 <p>リモートポートの数値表現です。
-例えば、<code>443</code>。</p>
+例えば、<code>443</code>。
+</p>
+
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -417,9 +917,9 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.11/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.12/LICENSE">license</a>.</p>
     </div>
-    
+
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
@@ -435,3 +935,4 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
       } catch(err) {}</script>
 </body>
 </html>
+

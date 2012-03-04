@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>events - Node.js v0.6.11 Manual &amp; Documentation</title>
+  <title>Events Node.js v0.6.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/events.html">
+  <link rel="canonical" href="http://nodejs.org/api/events.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-events">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
-            <img id="logo" src="assets/logo-light.png" alt="node.js">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
         </a>
     </div>
     <div id="content" class="clearfix">
@@ -40,104 +40,206 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <!--
-          <h1>Node.js v0.6.11 Manual &amp; Documentation</h1>
-          -->
-          <h1>Node.js v0.6.11 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          <header>
+            <!--
+            <h1>Node.js v0.6.12 Manual &amp; Documentation</h1>
+            -->
+            <h1>Node.js v0.6.12 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#events_events">Events</a><ul>
+<li><a href="#events_class_events_eventemitter">Class: events.EventEmitter</a><ul>
+<li><a href="#events_emitter_addlistener_event_listener">emitter.addListener(event, listener)</a></li>
+<li><a href="#events_emitter_on_event_listener">emitter.on(event, listener)</a></li>
+<li><a href="#events_emitter_once_event_listener">emitter.once(event, listener)</a></li>
+<li><a href="#events_emitter_removelistener_event_listener">emitter.removeListener(event, listener)</a></li>
+<li><a href="#events_emitter_removealllisteners_event">emitter.removeAllListeners([event])</a></li>
+<li><a href="#events_emitter_setmaxlisteners_n">emitter.setMaxListeners(n)</a></li>
+<li><a href="#events_emitter_listeners_event">emitter.listeners(event)</a></li>
+<li><a href="#events_emitter_emit_event_arg1_arg2">emitter.emit(event, [arg1], [arg2], [...])</a></li>
+<li><a href="#events_event_newlistener">Event: &apos;newListener&apos;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
           </div>
-          <hr>
-        </header>
-        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#events">Events</a><ul><li><a href="#events.EventEmitter">events.EventEmitter</a><ul><li><a href="#emitter.addListener">emitter.addListener(event, listener)</a></li><li><a href="#emitter.on">emitter.on(event, listener)</a></li><li><a href="#emitter.once">emitter.once(event, listener)</a></li><li><a href="#emitter.removeListener">emitter.removeListener(event, listener)</a></li><li><a href="#emitter.removeAllListeners">emitter.removeAllListeners([event])</a></li><li><a href="#emitter.setMaxListeners">emitter.setMaxListeners(n)</a></li><li><a href="#emitter.listeners">emitter.listeners(event)</a></li><li><a href="#emitter.emit">emitter.emit(event, [arg1], [arg2], [...])</a></li><li><a href="#event_newListener_">Event: 'newListener'</a></li></ul></li></ul></li></ul><hr></div>
-<h2 id="events">Events <span><a class="top" href="#">↑</a><a class="mark" href="#events">#</a></span></h2>
+
+          <div id="apicontent">
+            <h1>Events<span><a class="mark" href="#events_events" id="events_events">#</a></span></h1>
+<!--type=module-->
+
+<!--
+Many objects in Node emit events: a `net.Server` emits an event each time
+a peer connects to it, a `fs.readStream` emits an event when the file is
+opened. All objects which emit events are instances of `events.EventEmitter`.
+You can access this module by doing: `require("events");`
+-->
 
 <p>Node のオブジェクトの多くはイベントを生成します:
 <code>net.Server</code>は相手から接続するたびにイベントを生成し、
 <code>fs.readStream</code>はファイルがオープンされるたびにイベントを生成します。
 イベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。
-次のようにすることでこのモジュールにアクセスできます: <code>require("events");</code></p>
+次のようにすることでこのモジュールにアクセスできます: <code>require(&quot;events&quot;);</code>
+
+</p>
+<!--
+Typically, event names are represented by a camel-cased string, however,
+there aren't any strict restrictions on that, as any string will be accepted.
+-->
 
 <p>通常、イベント名はキャメル記法による文字列で表現されますが、
-厳格な制限ではなく、どんな文字列でも受け入れられます。</p>
+厳格な制限ではなく、どんな文字列でも受け入れられます。
+
+</p>
+<!--
+Functions can then be attached to objects, to be executed when an event
+is emitted. These functions are called _listeners_.
+-->
 
 <p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。
-これらの関数は<em>リスナー</em>と呼ばれます。</p>
+これらの関数は<em>リスナー</em>と呼ばれます。
 
-<h3 id="events.EventEmitter">events.EventEmitter <span><a class="top" href="#">↑</a><a class="mark" href="#events.EventEmitter">#</a></span></h3>
 
-<p>EventEmitterクラスにアクセスするには、<code>require('events').EventEmitter</code> を使います。</p>
+</p>
+<h2>Class: events.EventEmitter<span><a class="mark" href="#events_class_events_eventemitter" id="events_class_events_eventemitter">#</a></span></h2>
+<!--
+To access the EventEmitter class, `require('events').EventEmitter`.
+-->
+
+<p>EventEmitterクラスにアクセスするには、<code>require(&apos;events&apos;).EventEmitter</code> を使います。
+
+</p>
+<!--
+When an `EventEmitter` instance experiences an error, the typical action is
+to emit an `'error'` event.  Error events are treated as a special case in node.
+If there is no listener for it, then the default action is to print a stack
+trace and exit the program.
+-->
 
 <p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、
-典型的な動作は <code>'error'</code> イベントを生成することです。
+典型的な動作は <code>&apos;error&apos;</code> イベントを生成することです。
 node ではエラーイベントは特別に扱われます．
-もしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。</p>
+もしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。
 
-<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>'newListener'</code> を生成します。</p>
+</p>
+<!--
+All EventEmitters emit the event `'newListener'` when new listeners are
+added.
+-->
 
-<h4 id="emitter.addListener">emitter.addListener(event, listener) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.addListener">#</a></span></h4>
+<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&apos;newListener&apos;</code> を生成します。
 
-<h4 id="emitter.on">emitter.on(event, listener) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.on">#</a></span></h4>
+</p>
+<h3>emitter.addListener(event, listener)<span><a class="mark" href="#events_emitter_addlistener_event_listener" id="events_emitter_addlistener_event_listener">#</a></span></h3>
+<h3>emitter.on(event, listener)<span><a class="mark" href="#events_emitter_on_event_listener" id="events_emitter_on_event_listener">#</a></span></h3>
+<!--
+Adds a listener to the end of the listeners array for the specified event.
+-->
 
-<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。</p>
+<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。
 
-<pre><code>server.on('connection', function (stream) {
-  console.log('someone connected!');
+</p>
+<pre><code>server.on(&apos;connection&apos;, function (stream) {
+  console.log(&apos;someone connected!&apos;);
 });</code></pre>
-
-<h4 id="emitter.once">emitter.once(event, listener) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.once">#</a></span></h4>
+<h3>emitter.once(event, listener)<span><a class="mark" href="#events_emitter_once_event_listener" id="events_emitter_once_event_listener">#</a></span></h3>
+<!--
+Adds a **one time** listener for the event. This listener is
+invoked only the next time the event is fired, after which
+it is removed.
+-->
 
 <p><strong>一回限り</strong>のリスナーをイベントに追加します。
-このリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。</p>
+このリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。
 
-<pre><code>server.once('connection', function (stream) {
-  console.log('Ah, we have our first user!');
+</p>
+<pre><code>server.once(&apos;connection&apos;, function (stream) {
+  console.log(&apos;Ah, we have our first user!&apos;);
 });</code></pre>
-
-<h4 id="emitter.removeListener">emitter.removeListener(event, listener) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.removeListener">#</a></span></h4>
+<h3>emitter.removeListener(event, listener)<span><a class="mark" href="#events_emitter_removelistener_event_listener" id="events_emitter_removelistener_event_listener">#</a></span></h3>
+<!--
+Remove a listener from the listener array for the specified event.
+**Caution**: changes array indices in the listener array behind the listener.
+-->
 
 <p>指定されたイベントに対するリスナー配列からリスナーを削除します。
-<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。</p>
+<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。
 
+</p>
 <pre><code>var callback = function(stream) {
-  console.log('someone connected!');
+  console.log(&apos;someone connected!&apos;);
 };
-server.on('connection', callback);
+server.on(&apos;connection&apos;, callback);
 // ...
-server.removeListener('connection', callback);</code></pre>
+server.removeListener(&apos;connection&apos;, callback);</code></pre>
+<h3>emitter.removeAllListeners([event])<span><a class="mark" href="#events_emitter_removealllisteners_event" id="events_emitter_removealllisteners_event">#</a></span></h3>
+<!--
+Removes all listeners, or those of the specified event.
+-->
 
-<h4 id="emitter.removeAllListeners">emitter.removeAllListeners([event]) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.removeAllListeners">#</a></span></h4>
+<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。
 
-<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。</p>
 
-<h4 id="emitter.setMaxListeners">emitter.setMaxListeners(n) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.setMaxListeners">#</a></span></h4>
+</p>
+<h3>emitter.setMaxListeners(n)<span><a class="mark" href="#events_emitter_setmaxlisteners_n" id="events_emitter_setmaxlisteners_n">#</a></span></h3>
+<!--
+By default EventEmitters will print a warning if more than 10 listeners are
+added for a particular event. This is a useful default which helps finding memory leaks.
+Obviously not all Emitters should be limited to 10. This function allows
+that to be increased. Set to zero for unlimited.
+-->
 
 <p>デフォルトでは、EventEmitter は 10 を越えるリスナが特定のイベントに追加されると警告を出力します。
 これはメモリリークを見つけるために役に立つデフォルト値です。
 全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。
 この関数は制限を増やすことを許可します。
-0 を設定すると無制限になります。</p>
+0 を設定すると無制限になります。
 
-<h4 id="emitter.listeners">emitter.listeners(event) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.listeners">#</a></span></h4>
+</p>
+<h3>emitter.listeners(event)<span><a class="mark" href="#events_emitter_listeners_event" id="events_emitter_listeners_event">#</a></span></h3>
+<!--
+Returns an array of listeners for the specified event. This array can be
+manipulated, e.g. to remove listeners.
+-->
 
 <p>指定されたイベントに対するリスナー配列を返します。
-この配列は変更することができます、例えばリスナーを削除するなど。</p>
+この配列は変更することができます、例えばリスナーを削除するなど。
 
-<pre><code>server.on('connection', function (stream) {
-  console.log('someone connected!');
+</p>
+<pre><code>server.on(&apos;connection&apos;, function (stream) {
+  console.log(&apos;someone connected!&apos;);
 });
-console.log(util.inspect(server.listeners('connection'))); // [ [Function] ]</code></pre>
+console.log(util.inspect(server.listeners(&apos;connection&apos;))); // [ [Function] ]</code></pre>
+<h3>emitter.emit(event, [arg1], [arg2], [...])<span><a class="mark" href="#events_emitter_emit_event_arg1_arg2" id="events_emitter_emit_event_arg1_arg2">#</a></span></h3>
+<!--
+Execute each of the listeners in order with the supplied arguments.
+-->
 
-<h4 id="emitter.emit">emitter.emit(event, [arg1], [arg2], [...]) <span><a class="top" href="#">↑</a><a class="mark" href="#emitter.emit">#</a></span></h4>
+<p>提供された引数の並びでそれぞれのリスナーを実行します。
 
-<p>提供された引数の並びでそれぞれのリスナーを実行します。</p>
+</p>
+<h3>Event: &apos;newListener&apos;<span><a class="mark" href="#events_event_newlistener" id="events_event_newlistener">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>event</code> <span class="type">String</span> The event name</li>
+<li><code>listener</code> <span class="type">Function</span> The event handler function</li>
+</div></ul>
+<!--
+This event is emitted any time someone adds a new listener.
+-->
 
-<h4 id="event_newListener_">Event: 'newListener' <span><a class="top" href="#">↑</a><a class="mark" href="#event_newListener_">#</a></span></h4>
+<p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。
+</p>
 
-<p><code>function (event, listener) { }</code></p>
-
-<p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。</p>
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -164,9 +266,9 @@ console.log(util.inspect(server.listeners('connection'))); // [ [Function] ]</co
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.11/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.12/LICENSE">license</a>.</p>
     </div>
-    
+
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
@@ -182,3 +284,4 @@ console.log(util.inspect(server.listeners('connection'))); // [ [Function] ]</co
       } catch(err) {}</script>
 </body>
 </html>
+
