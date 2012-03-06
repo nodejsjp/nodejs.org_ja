@@ -1,0 +1,207 @@
+{
+  "source": "doc/api/child_process.markdown",
+  "modules": [
+    {
+      "textRaw": "Child Process",
+      "name": "child_process",
+      "desc": "<!--\nNode provides a tri-directional `popen(3)` facility through the\n`child_process` module.\n-->\n\n<p>Nodeは <code>child_process</code> モジュールを通じて、3 方向の <code>popen(3)</code>\n機能を提供します。\n\n</p>\n<!--\nIt is possible to stream data through a child's `stdin`, `stdout`, and\n`stderr` in a fully non-blocking way.\n-->\n\n<p>これは完全にノンブロッキングな方法で子プロセスの <code>stdin</code>、<code>stdout</code>、\nそして <code>stderr</code> を通じたデータストリームを実現します。\n\n</p>\n<!--\nTo create a child process use `require('child_process').spawn()`.\nTo create a child process use `require('child_process').spawn()` or\n`require('child_process').fork()`.  The semantics of each are slightly\ndifferent, and explained below.\n-->\n\n<p>子プロセスの生成は <code>require(&apos;child_process&apos;).spawn()</code> または\n<code>require(&apos;child_process&apos;).fork()</code> を使います。\nそれぞれの意味論は以下で説明するようにわずかに異なります。\n\n</p>\n",
+      "classes": [
+        {
+          "textRaw": "Class: ChildProcess",
+          "type": "class",
+          "name": "ChildProcess",
+          "desc": "<!--\n`ChildProcess` is an `EventEmitter`.\n-->\n\n<p><code>ChildProcess</code> は <code>EventEmitter</code> です。\n\n</p>\n<!--\nChild processes always have three streams associated with them. `child.stdin`,\n`child.stdout`, and `child.stderr`.  These may be shared with the stdio\nstreams of the parent process, or they may be separate stream objects\nwhich can be piped to and from.\n\nThe ChildProcess class is not intended to be used directly.  Use the\n`spawn()` or `fork()` methods to create a Child Process instance.\n-->\n\n<p>子プロセスは常に 3 本のストリームと関連づけられています。\n<code>child.stdin</code>、<code>child.stdout</code>、そして <code>child.stderr</code> です。\nそれらは親プロセスの標準入出力ストリームを共有するかもしれませんし、\n独立したストリームオブジェクトにパイプでつながれているかもしれません。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event:  'exit'",
+              "type": "event",
+              "name": "exit",
+              "desc": "<!--\n* `code` {Number} the exit code, if it exited normally.\n* `signal` {String} the signal passed to kill the child process, if it\n  was killed by the parent.\n-->\n\n<ul>\n<li><code>code</code> {Number} 通常に終了した場合は終了コード。</li>\n<li><code>signal</code> {String} 親プロセスによって終了させられた場合は、\n子プロセスを終了するために送られたシグナル。</li>\n</ul>\n<!--\nThis event is emitted after the child process ends. If the process terminated\nnormally, `code` is the final exit code of the process, otherwise `null`. If\nthe process terminated due to receipt of a signal, `signal` is the string name\nof the signal, otherwise `null`.\n-->\n\n<p>このイベントは子プロセスが終了した後で生成されます。\nプロセスが普通に終了した場合、<code>code</code> はプロセスの終了コードです。\nそれ以外の場合は <code>null</code> です。\nプロセスがシグナルを受け取って終了した場合、<code>signal</code> は文字列によるシグナルの名前です。\nそれ以外の場合は <code>null</code> です。\n\n</p>\n<!--\nSee `waitpid(2)`.\n-->\n\n<p><code>waitpid(2)</code> を参照してください。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "`stdin` {Stream object} ",
+              "name": "stdin",
+              "desc": "<!--\nA `Writable Stream` that represents the child process's `stdin`.\nClosing this stream via `end()` often causes the child process to terminate.\n\nIf the child stdio streams are shared with the parent, then this will\nnot be set.\n-->\n\n<p>子プロセスの <code>stdin</code> を表現する <code>Writable Stream</code> です。\n多くの場合、<code>end()</code> を通じてこのストリームを閉じると子プロセスが終了する原因となります。\n\n</p>\n<p>子プロセスの標準入出力が親プロセスと共有されている場合は設定されません。\n\n</p>\n"
+            },
+            {
+              "textRaw": "`stdout` {Stream object} ",
+              "name": "stdout",
+              "desc": "<!--\nA `Readable Stream` that represents the child process's `stdout`.\n\nIf the child stdio streams are shared with the parent, then this will\nnot be set.\n-->\n\n<p>子プロセスの <code>stdout</code> を表現する <code>Readable Stream</code> です。\n\n</p>\n<p>子プロセスの標準入出力が親プロセスと共有されている場合は設定されません。\n\n</p>\n"
+            },
+            {
+              "textRaw": "`stderr` {Stream object} ",
+              "name": "stderr",
+              "desc": "<!--\nA `Readable Stream` that represents the child process's `stderr`.\n\nIf the child stdio streams are shared with the parent, then this will\nnot be set.\n-->\n\n<p>子プロセスの <code>stderr</code> を表現する <code>Readable Stream</code> です。\n\n</p>\n<p>子プロセスの標準入出力が親プロセスと共有されている場合は設定されません。\n\n</p>\n"
+            },
+            {
+              "textRaw": "`pid` {Integer} ",
+              "name": "pid",
+              "desc": "<!--\nThe PID of the child process.\n-->\n\n<p>子プロセスの PID です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var spawn = require(&apos;child_process&apos;).spawn,\n    grep  = spawn(&apos;grep&apos;, [&apos;ssh&apos;]);\n\nconsole.log(&apos;Spawned child pid: &apos; + grep.pid);\ngrep.stdin.end();</code></pre>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "child.kill([signal])",
+              "type": "method",
+              "name": "kill",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`signal` {String} ",
+                      "name": "signal",
+                      "type": "String",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "signal",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nSend a signal to the child process. If no argument is given, the process will\nbe sent `'SIGTERM'`. See `signal(7)` for a list of available signals.\n-->\n\n<p>子プロセスにシグナルを送ります。\n引数が与えられない場合、子プロセスには <code>&apos;SIGTERM&apos;</code> が送られます。\n利用可能なシグナルの一覧は <code>signal(7)</code> を参照してください。\n\n\n</p>\n<pre><code>var spawn = require(&apos;child_process&apos;).spawn,\n    grep  = spawn(&apos;grep&apos;, [&apos;ssh&apos;]);\n\ngrep.on(&apos;exit&apos;, function (code, signal) {\n  console.log(&apos;child process terminated due to receipt of signal &apos;+signal);\n});\n\n// send SIGHUP to process\ngrep.kill(&apos;SIGHUP&apos;);</code></pre>\n<!--\nNote that while the function is called `kill`, the signal delivered to the child\nprocess may not actually kill it.  `kill` really just sends a signal to a process.\n-->\n\n<p>この関数は <code>kill</code> と呼ばれるものの、\n子プロセスに届けられるシグナルが実際には子プロセスを殺さないかもしれないことに注意してください。\n<code>kill</code> はただプロセスにシグナルを送るだけです。\n\n</p>\n<!--\nSee `kill(2)`\n-->\n\n<p><code>kill(2)</code> を参照してください。\n\n</p>\n"
+            },
+            {
+              "textRaw": "child.send(message, [sendHandle])",
+              "type": "method",
+              "name": "send",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`message` {Object} ",
+                      "name": "message",
+                      "type": "Object"
+                    },
+                    {
+                      "textRaw": "`sendHandle` {Handle object} ",
+                      "name": "sendHandle",
+                      "type": "Handle object",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "message"
+                    },
+                    {
+                      "name": "sendHandle",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nSend a message (and, optionally, a handle object) to a child process.\n\nSee `child_process.fork()` for details.\n-->\n\n<p>子プロセスにメッセージ (もしあれば、オプションのハンドルオブジェクト)\nを送ります。詳細は <code>child_process.fork()</code> を参照してください。\n\n</p>\n"
+            }
+          ]
+        }
+      ],
+      "methods": [
+        {
+          "textRaw": "child_process.spawn(command, [args], [options])",
+          "type": "method",
+          "name": "spawn",
+          "desc": "<!--\n* `command` {String} The command to run\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See below)\n  * `env` {Object} Environment key-value pairs\n  * `setsid` {Boolean}\n* return: {ChildProcess object}\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (後述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>setsid</code> {Boolean}</li>\n</ul>\n</li>\n<li>return: {ChildProcess object}</li>\n</ul>\n<!--\nLaunches a new process with the given `command`, with  command line arguments in `args`.\nIf omitted, `args` defaults to an empty Array.\n-->\n\n<p><code>args</code> をコマンドライン引数として、与えられた <code>command</code> で新しいプロセスを起動します。\n<code>args</code> が省略された場合、空の配列がデフォルトとなります。\n\n</p>\n<!--\nThe third argument is used to specify additional options, which defaults to:\n-->\n\n<p>第 3 引数は追加のオプションを指定するために使われ、そのデフォルトは:\n\n</p>\n<pre><code>{ cwd: undefined,\n  env: process.env\n}</code></pre>\n<!--\n`cwd` allows you to specify the working directory from which the process is spawned.\nUse `env` to specify environment variables that will be visible to the new process.\n-->\n\n<p><code>cwd</code> で起動されたプロセスのワーキングディレクトリを指定することができます。\n<code>env</code> は新しいプロセスに見える環境変数を指定するために使います。\n\n</p>\n<!--\nExample of running `ls -lh /usr`, capturing `stdout`, `stderr`, and the exit code:\n-->\n\n<p>ls -lh /usr<code> を実行して </code>stdout<code>、</code>stderr`、および終了コードを取得する例:\n\n</p>\n<pre><code>var util  = require(&apos;util&apos;),\n    spawn = require(&apos;child_process&apos;).spawn,\n    ls    = spawn(&apos;ls&apos;, [&apos;-lh&apos;, &apos;/usr&apos;]);\n\nls.stdout.on(&apos;data&apos;, function (data) {\n  console.log(&apos;stdout: &apos; + data);\n});\n\nls.stderr.on(&apos;data&apos;, function (data) {\n  console.log(&apos;stderr: &apos; + data);\n});\n\nls.on(&apos;exit&apos;, function (code) {\n  console.log(&apos;child process exited with code &apos; + code);\n});</code></pre>\n<!--\nExample: A very elaborate way to run 'ps ax | grep ssh'\n-->\n\n<p>とても手の込んだ方法で実行する &apos;ps ax | grep ssh&apos; の例:\n\n</p>\n<pre><code>var util  = require(&apos;util&apos;),\n    spawn = require(&apos;child_process&apos;).spawn,\n    ps    = spawn(&apos;ps&apos;, [&apos;ax&apos;]),\n    grep  = spawn(&apos;grep&apos;, [&apos;ssh&apos;]);\n\nps.stdout.on(&apos;data&apos;, function (data) {\n  grep.stdin.write(data);\n});\n\nps.stderr.on(&apos;data&apos;, function (data) {\n  console.log(&apos;ps stderr: &apos; + data);\n});\n\nps.on(&apos;exit&apos;, function (code) {\n  if (code !== 0) {\n    console.log(&apos;ps process exited with code &apos; + code);\n  }\n  grep.stdin.end();\n});\n\ngrep.stdout.on(&apos;data&apos;, function (data) {\n  console.log(data);\n});\n\ngrep.stderr.on(&apos;data&apos;, function (data) {\n  console.log(&apos;grep stderr: &apos; + data);\n});\n\ngrep.on(&apos;exit&apos;, function (code) {\n  if (code !== 0) {\n    console.log(&apos;grep process exited with code &apos; + code);\n  }\n});</code></pre>\n<!--\nExample of checking for failed exec:\n-->\n\n<p>exec の失敗をチェックする例:\n\n</p>\n<pre><code>var spawn = require(&apos;child_process&apos;).spawn,\n    child = spawn(&apos;bad_command&apos;);\n\nchild.stderr.setEncoding(&apos;utf8&apos;);\nchild.stderr.on(&apos;data&apos;, function (data) {\n  if (/^execvp\\(\\)/.test(data)) {\n    console.log(&apos;Failed to start child process.&apos;);\n  }\n});</code></pre>\n<!--\nNote that if spawn receives an empty options object, it will result in\nspawning the process with an empty environment rather than using\n`process.env`. This due to backwards compatibility issues with a deprecated\nAPI.\n-->\n\n<p><code>spawn()</code> は空の <code>options</code> オブジェクトを受け取ると、\n<code>process.env</code> を使うのではなく，空の環境変数で子プロセスを起動します。\nこれは廃止された API との互換性のためです。\n\n</p>\n<!--\nThere is a deprecated option called `customFds` which allows one to specify\nspecific file descriptors for the stdio of the child process. This API was\nnot portable to all platforms and therefore removed.\nWith `customFds` it was possible to hook up the new process' `[stdin, stdout,\nstderr]` to existing streams; `-1` meant that a new stream should be created.\nUse at your own risk.\n\nThere are several internal options. In particular `stdinStream`,\n`stdoutStream`, `stderrStream`. They are for INTERNAL USE ONLY. As with all\nundocumented APIs in Node, they should not be used.\n\nSee also: `child_process.exec()` and `child_process.fork()`\n-->\n\n<p>指定のファイル記述子を子プロセスの標準入出力に指定することを可能にする、\n<code>customFds</code> と呼ばれる廃止されたオプションがありました。\nこの API は全てのプラットフォームに移植可能ではないために削除されました。\n<code>customFds</code> は新しいプロセスの <code>[stdin, stdout, stderr]</code> を既存のストリームに接続することを可能にしました;\n<code>-1</code> は新しいストリームが作られなければならないことを意味していました。\n使用する場合は自己責任で。\n\n</p>\n<p>よく似た内部的なオプションがあります。\n具体的には <code>stdinStream</code>、<code>stdoutStream</code>、<code>stderrStream</code> です。\nこれらは <strong>内部用途</strong>です。\nNode のドキュメント化されていない API と同様に、\nこれらを使用すべきではありません。\n\n</p>\n<p>関連項目: <code>child_process.exec()</code> および <code>child_process.fork()</code>\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "command"
+                },
+                {
+                  "name": "args",
+                  "optional": true
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "child_process.exec(command, [options], callback)",
+          "type": "method",
+          "name": "exec",
+          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See below)\n  * `env` {Object} Environment key-value pairs\n  * `setsid` {Boolean}\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `code` {Integer} Exit code\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (後述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>setsid</code> {Boolean}</li>\n<li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &apos;SIGTERM&apos;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>code</code> {Integer} 終了コード</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;),\n    exec = require(&apos;child_process&apos;).exec,\n    child;\n\nchild = exec(&apos;cat *.js bad_file | wc -l&apos;,\n  function (error, stdout, stderr) {\n    console.log(&apos;stdout: &apos; + stdout);\n    console.log(&apos;stderr: &apos; + stderr);\n    if (error !== null) {\n      console.log(&apos;exec error: &apos; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `err.code`\nwill be the exit code of the child process, and `err.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>err.code</code> は子プロセスの終了コード、\n<code>err.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &apos;utf8&apos;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &apos;SIGTERM&apos;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&apos;SIGTERM&apos;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "command"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "child_process.execFile(file, args, options, callback)",
+          "type": "method",
+          "name": "execFile",
+          "desc": "<!--\n* `file` {String} The filename of the program to run\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See below)\n  * `env` {Object} Environment key-value pairs\n  * `setsid` {Boolean}\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `code` {Integer} Exit code\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>file</code> {String} 実行するプログラムのファイル名</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (後述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>setsid</code> {Boolean}</li>\n<li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &apos;SIGTERM&apos;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>code</code> {Integer} 終了コード</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nThis is similar to `child_process.exec()` except it does not execute a\nsubshell but rather the specified file directly. This makes it slightly\nleaner than `child_process.exec`. It has the same options.\n-->\n\n<p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて\n<code>child_process.exec()</code> と同様です。\nこれは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "file"
+                },
+                {
+                  "name": "args"
+                },
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "child_process.fork(modulePath, [args], [options])",
+          "type": "method",
+          "name": "fork",
+          "desc": "<!--\n* `modulePath` {String} The module to run in the child\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See below)\n  * `env` {Object} Environment key-value pairs\n  * `setsid` {Boolean}\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n* `callback` {Function} called with the output when process terminates\n  * `code` {Integer} Exit code\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>modulePath</code> {String} 子プロセスで実行するモジュール</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (後述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>setsid</code> {Boolean}</li>\n<li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>code</code> {Integer} 終了コード</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nThis is a special case of the `spawn()` functionality for spawning Node\nprocesses. In addition to having all the methods in a normal ChildProcess\ninstance, the returned object has a communication channel built-in. The\nchannel is written to with `child.send(message, [sendHandle])` and messages\nare received by a `'message'` event on the child.\n-->\n\n<p>これは <code>spawn()</code> の特別版で、Node プロセスを起動します。\n返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、\n組み込みの通信チャネルを持ちます。\nチャネルは <code>child.send(message, [sendHandle])</code> によって書き込まれ、\nメッセージを受信すると <code>child</code> 上で <code>&apos;message&apos;</code> イベントが生成されます。\n\n</p>\n<!--\nFor example:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var cp = require(&apos;child_process&apos;);\n\nvar n = cp.fork(__dirname + &apos;/sub.js&apos;);\n\nn.on(&apos;message&apos;, function(m) {\n  console.log(&apos;PARENT got message:&apos;, m);\n});\n\nn.send({ hello: &apos;world&apos; });</code></pre>\n<!--\nAnd then the child script, `'sub.js'` might look like this:\n-->\n\n<p>そして子スクリプトの <code>&apos;sub.js&apos;</code> は次のようになります:\n\n</p>\n<pre><code>process.on(&apos;message&apos;, function(m) {\n  console.log(&apos;CHILD got message:&apos;, m);\n});\n\nprocess.send({ foo: &apos;bar&apos; });</code></pre>\n<!--\nIn the child the `process` object will have a `send()` method, and `process`\nwill emit objects each time it receives a message on its channel.\n-->\n\n<p>子供の <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、\n<code>process</code> はチャネルでメッセージを受信するたびにイベントを生成します。\n\n</p>\n<!--\nBy default the spawned Node process will have the stdin, stdout, stderr\nassociated with the parent's.\n-->\n\n<p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準入力、\n標準出力、標準エラー出力を持ちます。\n\n</p>\n<!--\nThese child Nodes are still whole new instances of V8. Assume at least 30ms\nstartup and 10mb memory for each new Node. That is, you cannot create many\nthousands of them.\n-->\n\n<p>これらの子 Node は、やはり V8 の新しいインスタンスです。\n新しい Node ごとに少なくとも 30 ミリ秒の起動時間と \n10MB のメモリを前提としてください。\nつまり、数千の子プロセスを作ることは出来ません。\n\n</p>\n<!--\nThe `sendHandle` option to `child.send()` is for sending a handle object to\nanother process. Child will receive the handle as as second argument to the\n`message` event. Here is an example of sending a handle:\n-->\n\n<p><code>child.send()</code> の <code>sendHandle</code> オプションはハンドルオブジェクトを別プロセスに\n送ります。\n子プロセスはそのハンドルを <code>message</code> イベントの第2引数として受け取ります。\nこれはハンドルを送信するサンプルです。\n\n\n</p>\n<pre><code>var server = require(&apos;net&apos;).createServer();\nvar child = require(&apos;child_process&apos;).fork(__dirname + &apos;/child.js&apos;);\n// Open up the server object and send the handle.\nserver.listen(1337, function() {\n  child.send({ server: true }, server._handle);\n});</code></pre>\n<!--\nHere is an example of receiving the server handle and sharing it between\nprocesses:\n-->\n\n<p>これはサーバのハンドルを受信してプロセス間で共有するサンプルです。\n\n\n</p>\n<pre><code>process.on(&apos;message&apos;, function(m, serverHandle) {\n  if (serverHandle) {\n    var server = require(&apos;net&apos;).createServer();\n    server.listen(serverHandle);\n  }\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "modulePath"
+                },
+                {
+                  "name": "args",
+                  "optional": true
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Child Process"
+    }
+  ]
+}

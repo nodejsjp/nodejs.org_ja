@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>tty - Node.js v0.6.11 Manual &amp; Documentation</title>
+  <title>TTY Node.js v0.6.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/tty.html">
+  <link rel="canonical" href="http://nodejs.org/api/tty.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-tty">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
-            <img id="logo" src="assets/logo-light.png" alt="node.js">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
         </a>
     </div>
     <div id="content" class="clearfix">
@@ -40,50 +40,96 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <!--
-          <h1>Node.js v0.6.11 Manual &amp; Documentation</h1>
-          -->
-          <h1>Node.js v0.6.11 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          <header>
+            <!--
+            <h1>Node.js v0.6.12 Manual &amp; Documentation</h1>
+            -->
+            <h1>Node.js v0.6.12 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#tty_tty">TTY</a><ul>
+<li><a href="#tty_tty_isatty_fd">tty.isatty(fd)</a></li>
+<li><a href="#tty_tty_setrawmode_mode">tty.setRawMode(mode)</a></li>
+<li><a href="#tty_tty_setwindowsize_fd_row_col">tty.setWindowSize(fd, row, col)</a></li>
+<li><a href="#tty_tty_getwindowsize_fd">tty.getWindowSize(fd)</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
-          <hr>
-        </header>
-        <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#tTY">TTY</a><ul><li><a href="#tty.isatty">tty.isatty(fd)</a></li><li><a href="#tty.setRawMode">tty.setRawMode(mode)</a></li><li><a href="#tty.setWindowSize">tty.setWindowSize(fd, row, col)</a></li><li><a href="#tty.getWindowSize">tty.getWindowSize(fd)</a></li></ul></li></ul><hr></div>
-<h2 id="tTY">TTY <span><a class="top" href="#">↑</a><a class="mark" href="#tTY">#</a></span></h2>
 
-<p><code>require('tty')</code> でこのモジュールにアクセスします。</p>
+          <div id="apicontent">
+            <h1>TTY<span><a class="mark" href="#tty_tty" id="tty_tty">#</a></span></h1>
+<!--
+Use `require('tty')` to access this module.
+-->
 
-<p>例:</p>
+<p><code>require(&apos;tty&apos;)</code> でこのモジュールにアクセスします。
 
-<pre><code>var tty = require('tty');
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var tty = require(&apos;tty&apos;);
 process.stdin.resume();
 tty.setRawMode(true);
-process.stdin.on('keypress', function(char, key) {
-  if (key &amp;&amp; key.ctrl &amp;&amp; key.name == 'c') {
-    console.log('graceful exit');
+process.stdin.on(&apos;keypress&apos;, function(char, key) {
+  if (key &amp;&amp; key.ctrl &amp;&amp; key.name == &apos;c&apos;) {
+    console.log(&apos;graceful exit&apos;);
     process.exit()
   }
 });</code></pre>
+<h2>tty.isatty(fd)<span><a class="mark" href="#tty_tty_isatty_fd" id="tty_tty_isatty_fd">#</a></span></h2>
+<!--
+Returns `true` or `false` depending on if the `fd` is associated with a
+terminal.
+-->
 
-<h3 id="tty.isatty">tty.isatty(fd) <span><a class="top" href="#">↑</a><a class="mark" href="#tty.isatty">#</a></span></h3>
+<p><code>fd</code> が端末に関連づけられているかどうかを <code>true</code> または <code>false</code> で返します。
 
-<p><code>fd</code> が端末に関連づけられているかどうかを <code>true</code> または <code>false</code> で返します。</p>
 
-<h3 id="tty.setRawMode">tty.setRawMode(mode) <span><a class="top" href="#">↑</a><a class="mark" href="#tty.setRawMode">#</a></span></h3>
+</p>
+<h2>tty.setRawMode(mode)<span><a class="mark" href="#tty_tty_setrawmode_mode" id="tty_tty_setrawmode_mode">#</a></span></h2>
+<!--
+`mode` should be `true` or `false`. This sets the properties of the current
+process's stdin fd to act either as a raw device or default.
+-->
 
 <p><code>mode</code> は <code>true</code> または <code>false</code> です。
-これは現在のプロセスの標準入力ファイル記述子をローデバイスまたはデフォルトに振る舞うよう設定します。</p>
+これは現在のプロセスの標準入力ファイル記述子をローデバイスまたはデフォルトに振る舞うよう設定します。
 
-<h3 id="tty.setWindowSize">tty.setWindowSize(fd, row, col) <span><a class="top" href="#">↑</a><a class="mark" href="#tty.setWindowSize">#</a></span></h3>
 
-<p>この関数は v0.6.0 で削除されました。</p>
-
-<h3 id="tty.getWindowSize">tty.getWindowSize(fd) <span><a class="top" href="#">↑</a><a class="mark" href="#tty.getWindowSize">#</a></span></h3>
+</p>
+<h2>tty.setWindowSize(fd, row, col)<span><a class="mark" href="#tty_tty_setwindowsize_fd_row_col" id="tty_tty_setwindowsize_fd_row_col">#</a></span></h2>
+<!--
+This function was removed in v0.6.0.
+-->
 
 <p>この関数は v0.6.0 で削除されました。
-代わりに <code>process.stdout.getWindowSize()</code> を使用してください。</p>
+
+</p>
+<h2>tty.getWindowSize(fd)<span><a class="mark" href="#tty_tty_getwindowsize_fd" id="tty_tty_getwindowsize_fd">#</a></span></h2>
+<!--
+This function was removed in v0.6.0. Use `process.stdout.getWindowSize()`
+instead.
+-->
+
+<p>この関数は v0.6.0 で削除されました。
+代わりに <code>process.stdout.getWindowSize()</code> を使用してください。
+</p>
+
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -110,9 +156,9 @@ process.stdin.on('keypress', function(char, key) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.11/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.12/LICENSE">license</a>.</p>
     </div>
-    
+
   <script src="assets/sh_main.js"></script>
   <script src="assets/sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
@@ -128,3 +174,4 @@ process.stdin.on('keypress', function(char, key) {
       } catch(err) {}</script>
 </body>
 </html>
+

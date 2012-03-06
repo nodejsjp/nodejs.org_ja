@@ -1,0 +1,664 @@
+{
+  "source": "doc/api/crypto.markdown",
+  "modules": [
+    {
+      "textRaw": "Crypto",
+      "name": "crypto",
+      "desc": "<!--\nUse `require('crypto')` to access this module.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&apos;crypto&apos;)</code> を使用します。\n\n</p>\n<!--\nThe crypto module requires OpenSSL to be available on the underlying platform.\nIt offers a way of encapsulating secure credentials to be used as part\nof a secure HTTPS net or http connection.\n-->\n\n<p>暗号化モジュールは下層のプラットフォームで OpenSSL が有効であることを必要とします。\nそれは安全な HTTPS ネットワークや http コネクションの一部として使われる、\n安全な認証情報をカプセル化する方法を提供します。\n\n</p>\n<!--\nIt also offers a set of wrappers for OpenSSL's hash, hmac, cipher, decipher, sign and verify methods.\n-->\n\n<p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "crypto.createCredentials(details)",
+          "type": "method",
+          "name": "createCredentials",
+          "desc": "<!--\nCreates a credentials object, with the optional details being a dictionary with keys:\n-->\n\n<p>認証情報オブジェクトを作成します。オプションの <code>details</code> は以下のキーを持つ辞書です:\n\n</p>\n<!--\n* `key` : a string holding the PEM encoded private key\n* `cert` : a string holding the PEM encoded certificate\n* `ca` : either a string or list of strings of PEM encoded CA certificates to trust.\n* `ciphers`: a string describing the ciphers to use or exclude. Consult\n  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for details\n  on the format.\n-->\n\n<ul>\n<li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列</li>\n<li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列</li>\n<li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または文字列の配列</li>\n<li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。</li>\n</ul>\n<!--\nIf no 'ca' details are given, then node.js will use the default publicly trusted list of CAs as given in\n<http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt>.\n-->\n\n<p>&apos;ca&apos; の詳細が与えられなかった場合、node.js はデフォルトとして\n</p>\n<p><a href=\"http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt\">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a>\nで与えられる、信頼できる認証局の公開されたリストを使用します。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "details"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createHash(algorithm)",
+          "type": "method",
+          "name": "createHash",
+          "desc": "<!--\nCreates and returns a hash object, a cryptographic hash with the given algorithm\nwhich can be used to generate hash digests.\n-->\n\n<p>ハッシュオブジェクトを生成して返します。\n与えられたアルゴリズムによる暗号ハッシュ関数はダイジェストの生成に使われます。\n\n</p>\n<!--\n`algorithm` is dependent on the available algorithms supported by the version\nof OpenSSL on the platform. Examples are `'sha1'`, `'md5'`, `'sha256'`, `'sha512'`, etc.\nOn recent releases, `openssl list-message-digest-algorithms` will display the available digest algorithms.\n-->\n\n<p><code>algorithm</code> は、プラットフォーム上の OpenSSL \nのバージョンでサポートされている利用可能なアルゴリズムに依存します。\n例えば <code>&apos;sha1&apos;</code>、<code>&apos;md5&apos;</code>、<code>&apos;sha256&apos;</code>、<code>&apos;sha512&apos;</code>、などです。\n最近のリリースでは、<code>openssl list-message-digest-algorithms</code>\nで利用可能なダイジェストアルゴリズムが表示されます。\n\n</p>\n<!--\nExample: this program that takes the sha1 sum of a file\n-->\n\n<p>例: このプログラムはファイルのsha1ハッシュ値を求めます。\n\n</p>\n<pre><code>var filename = process.argv[2];\nvar crypto = require(&apos;crypto&apos;);\nvar fs = require(&apos;fs&apos;);\n\nvar shasum = crypto.createHash(&apos;sha1&apos;);\n\nvar s = fs.ReadStream(filename);\ns.on(&apos;data&apos;, function(d) {\n  shasum.update(d);\n});\n\ns.on(&apos;end&apos;, function() {\n  var d = shasum.digest(&apos;hex&apos;);\n  console.log(d + &apos;  &apos; + filename);\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createHmac(algorithm, key)",
+          "type": "method",
+          "name": "createHmac",
+          "desc": "<!--\nCreates and returns a hmac object, a cryptographic hmac with the given algorithm and key.\n-->\n\n<p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。\n\n</p>\n<!--\n`algorithm` is dependent on the available algorithms supported by OpenSSL - see createHash above.\n`key` is the hmac key to be used.\n-->\n\n<p><code>algorithm</code> は OpenSSL でサポートされているアルゴリズムに依存します － \n前述の <code>createHash</code> を参照してください。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                },
+                {
+                  "name": "key"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createCipher(algorithm, password)",
+          "type": "method",
+          "name": "createCipher",
+          "desc": "<!--\nCreates and returns a cipher object, with the given algorithm and password.\n\n`algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.\nOn recent releases, `openssl list-cipher-algorithms` will display the\navailable cipher algorithms.\n`password` is used to derive key and IV, which must be `'binary'` encoded\nstring (See the [Buffer section](buffer.html) for more information).\n-->\n\n<p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。\n<code>algorithm</code> は、OpenSSL に依存します。例えば <code>&apos;aes192&apos;</code> などです。\n最近のリリースでは、<code>openssl list-cipher-algorithms</code>\nで利用可能な暗号アルゴリズムが表示されます。\n<code>password</code> はキーと IV の生成に使用されます。\nこれは <code>&apos;binary&apos;</code> でエンコードされた文字列でなければなりません\n(より詳細は <a href=\"buffers.html\">Buffers</a> を参照してください)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                },
+                {
+                  "name": "password"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createCipheriv(algorithm, key, iv)",
+          "type": "method",
+          "name": "createCipheriv",
+          "desc": "<!--\nCreates and returns a cipher object, with the given algorithm, key and iv.\n\n`algorithm` is the same as the `createCipher()`. `key` is a raw key used in\nalgorithm. `iv` is an Initialization vector. `key` and `iv` must be `'binary'`\nencoded string (See the [Buffer section](buffer.html) for more information).\n-->\n\n<p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して返します。\n<code>algorithm</code> は <code>createCSipher()</code> と同じです。\n<code>key</code> はアルゴリズムで使用される生のキーです。 <code>iv</code> は初期化ベクトルです。\n<code>key</code> と <code>iv</code> は <code>&apos;binary&apos;</code> でエンコードされた文字列でなければなりません\n(より詳細は <a href=\"buffers.html\">Buffers</a> を参照してください)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                },
+                {
+                  "name": "key"
+                },
+                {
+                  "name": "iv"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createDecipher(algorithm, password)",
+          "type": "method",
+          "name": "createDecipher",
+          "desc": "<!--\nCreates and returns a decipher object, with the given algorithm and key.\nThis is the mirror of the [createCipher()](#crypto.createCipher) above.\n-->\n\n<p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。\nこれは前述の <a href=\"#crypto.createCipher\">createCipher()</a> の鏡写しです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                },
+                {
+                  "name": "password"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createDecipheriv(algorithm, key, iv)",
+          "type": "method",
+          "name": "createDecipheriv",
+          "desc": "<!--\nCreates and returns a decipher object, with the given algorithm, key and iv.\nThis is the mirror of the [createCipheriv()](#crypto.createCipheriv) above.\n-->\n\n<p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。\nこれは前述の <a href=\"#crypto.createCipheriv\">createCipheriv()</a> の鏡写しです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                },
+                {
+                  "name": "key"
+                },
+                {
+                  "name": "iv"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createSign(algorithm)",
+          "type": "method",
+          "name": "createSign",
+          "desc": "<!--\nCreates and returns a signing object, with the given algorithm.\nOn recent OpenSSL releases, `openssl list-public-key-algorithms` will display\nthe available signing algorithms. Examples are `'RSA-SHA256'`.\n-->\n\n<p>与えられたアルゴリズムで署名オブジェクトを作成して返します。\n最近のOpenSSLのリリースでは、<code>openssl list-public-key-algorithms</code>\nで利用可能な署名アルゴリズムの一覧が表示されます。例えば &apos;RSA-SHA256&apos;。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createVerify(algorithm)",
+          "type": "method",
+          "name": "createVerify",
+          "desc": "<!--\nCreates and returns a verification object, with the given algorithm.\nThis is the mirror of the signing object above.\n-->\n\n<p>与えられたアルゴリズムで検証オブジェクトを作成して返します。これは前述の署名オブジェクトと鏡写しです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "algorithm"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createDiffieHellman(prime_length)",
+          "type": "method",
+          "name": "createDiffieHellman",
+          "desc": "<!--\nCreates a Diffie-Hellman key exchange object and generates a prime of the\ngiven bit length. The generator used is `2`.\n-->\n\n<p>ディフィー・ヘルマン鍵共有オブジェクトを作成し、\n与えられた長さの素数を生成します。生成元は <code>2</code> です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "prime_length"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.createDiffieHellman(prime, [encoding])",
+          "type": "method",
+          "name": "createDiffieHellman",
+          "desc": "<!--\nCreates a Diffie-Hellman key exchange object using the supplied prime. The\ngenerator used is `2`. Encoding can be `'binary'`, `'hex'`, or `'base64'`.\nDefaults to `'binary'`.\n-->\n\n<p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。\n生成元は <code>2</code> です。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "prime"
+                },
+                {
+                  "name": "encoding",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.pbkdf2(password, salt, iterations, keylen, callback)",
+          "type": "method",
+          "name": "pbkdf2",
+          "desc": "<!--\nAsynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive\na key of given length from the given password, salt and iterations.\nThe callback gets two arguments `(err, derivedKey)`.\n-->\n\n<p>疑似乱数を HMAC-SHA1 関数に適用して、与えられたパスワードと salt \n(ランダムなバイト値)、および繰り返しから、指定された長さの鍵を生成する、\n非同期の PBKDF2 です。\nコールバック関数は二つの引数を受け取る <code>(err, derivedKey)</code> です。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "password"
+                },
+                {
+                  "name": "salt"
+                },
+                {
+                  "name": "iterations"
+                },
+                {
+                  "name": "keylen"
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.randomBytes(size, [callback])",
+          "type": "method",
+          "name": "randomBytes",
+          "desc": "<!--\nGenerates cryptographically strong pseudo-random data. Usage:\n-->\n\n<p>暗号学的に強い疑似乱数データを生成します。使用法:\n\n</p>\n<pre><code>// async\ncrypto.randomBytes(256, function(ex, buf) {\n  if (ex) throw ex;\n  console.log(&apos;Have %d bytes of random data: %s&apos;, buf.length, buf);\n});\n\n// sync\ntry {\n  var buf = crypto.randomBytes(256);\n  console.log(&apos;Have %d bytes of random data: %s&apos;, buf.length, buf);\n} catch (ex) {\n  // handle error\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "size"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: Hash",
+          "type": "class",
+          "name": "Hash",
+          "desc": "<!--\nThe class for creating hash digests of data.\n\nReturned by `crypto.createHash`.\n-->\n\n<p>データのハッシュダイジェストを生成するクラスです。\n\n</p>\n<p><code>crypto.createHash()</code> によって返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "hash.update(data, [input_encoding])",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the hash content with the given `data`, the encoding of which is given\nin `input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.\nDefaults to `'binary'`.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> でハッシュの内容を更新します。\nそのエンコーディングは <code>input_encoding</code> で与えられ、<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、\nまたは <code>&apos;binary&apos;</code> を指定することができます。\nデフォルトは <code>&apos;binary&apos;</code> です。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "hash.digest([encoding])",
+              "type": "method",
+              "name": "digest",
+              "desc": "<!--\nCalculates the digest of all of the passed data to be hashed.\nThe `encoding` can be `'hex'`, `'binary'` or `'base64'`.\nDefaults to `'binary'`.\n\nNote: `hash` object can not be used after `digest()` method been called.\n-->\n\n<p>渡された全てのデータがハッシュ化されたダイジェストを計算します。\n<code>encoding</code> は <code>&apos;hex&apos;</code>、<code>&apos;binary&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Hmac",
+          "type": "class",
+          "name": "Hmac",
+          "desc": "<!--\nClass for creating cryptographic hmac content.\n\nReturned by `crypto.createHmac`.\n-->\n\n<p>暗号化された HMAC コンテントを生成するためのクラスです。\n\n</p>\n<p><code>crypto.createHmac()</code> によって返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "hmac.update(data)",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdate the hmac content with the given `data`.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> で HMAC の内容を更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "hmac.digest([encoding])",
+              "type": "method",
+              "name": "digest",
+              "desc": "<!--\nCalculates the digest of all of the passed data to the hmac.\nThe `encoding` can be `'hex'`, `'binary'` or `'base64'`.\nDefaults to `'binary'`.\n\nNote: `hmac` object can not be used after `digest()` method been called.\n-->\n\n<p>渡された全てのデータが HMAC 化されたダイジェストを計算します。\n<code>encoding</code> は <code>&apos;hex&apos;</code>、<code>&apos;binary&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Cipher",
+          "type": "class",
+          "name": "Cipher",
+          "desc": "<!--\nClass for encrypting data.\n\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "cipher.update(data, [input_encoding], [output_encoding])",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the cipher with `data`, the encoding of which is given in\n`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.\nDefaults to `'binary'`.\n\nThe `output_encoding` specifies the output format of the enciphered data,\nand can be `'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.\n-->\n\n<p><code>data</code> で暗号を更新します。\n<code>input_encoding</code> で与えられるエンコーディングは <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、<code>&apos;binary&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、\n<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code> または <code>&apos;binary&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<!--\nReturns the enciphered contents, and can be called many times with new data as it is streamed.\n-->\n\n<p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "cipher.final([output_encoding])",
+              "type": "method",
+              "name": "final",
+              "desc": "<!--\nReturns any remaining enciphered contents, with `output_encoding` being one of:\n`'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.\n\nNote: `cipher` object can not be used after `final()` method been called.\n-->\n\n<p>暗号化されたコンテンツの残りを返します。\n<code>output_encoding</code> は次のいずれかです: <code>&apos;binary&apos;</code>、<code>&apos;base64&apos;</code> または <code>&apos;hex&apos;</code>。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Decipher",
+          "type": "class",
+          "name": "Decipher",
+          "desc": "<!--\nClass for decrypting data.\n\nReturned by `crypto.createDecipher` and `crypto.createDecipheriv`.\n-->\n\n<p>データを復号化するためのクラスです。\n\n</p>\n<p><code>crypto.createDecipher</code> または <code>crypto.createDecipheriv</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "decipher.update(data, [input_encoding], [output_encoding])",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the decipher with `data`, which is encoded in `'binary'`, `'base64'`\nor `'hex'`. Defaults to `'binary'`.\n\nThe `output_decoding` specifies in what format to return the deciphered\nplaintext: `'binary'`, `'ascii'` or `'utf8'`. Defaults to `'binary'`.\n-->\n\n<p><code>&apos;binary&apos;</code>、<code>&apos;base64&apos;</code> または <code>&apos;hex&apos;</code> のいずれかでエンコードされた復号を\n<code>data</code> で更新します。デフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、\n<code>&apos;binary&apos;</code>、<code>&apos;ascii&apos;</code> あるいは <code>&apos;utf8&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "decipher.final([output_encoding])",
+              "type": "method",
+              "name": "final",
+              "desc": "<!--\nReturns any remaining plaintext which is deciphered,\nwith `output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.\nDefaults to `'binary'`.\n\nNote: `decipher` object can not be used after `final()` method been called.\n-->\n\n<p>復号化されたプレーンテキストの残りを返します。\n<code>output_decoding</code> は <code>&apos;binary&apos;</code>、<code>&apos;ascii&apos;</code> あるいは <code>&apos;utf8&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Signer",
+          "type": "class",
+          "name": "Signer",
+          "desc": "<!--\nClass for generating signatures.\n\nReturned by `crypto.createSign`.\n-->\n\n<p>署名を生成するためのクラスです。\n\n</p>\n<p><code>crypto.createSign()</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "signer.update(data)",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the signer object with data.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>署名オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "signer.sign(private_key, [output_format])",
+              "type": "method",
+              "name": "sign",
+              "desc": "<!--\nCalculates the signature on all the updated data passed through the signer.\n`private_key` is a string containing the PEM encoded private key for signing.\n-->\n\n<p>署名オブジェクトに渡された全ての更新データで署名を計算します。\n<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。\n\n</p>\n<!--\nReturns the signature in `output_format` which can be `'binary'`, `'hex'` or\n`'base64'`. Defaults to `'binary'`.\n\nNote: `signer` object can not be used after `sign()` method been called.\n-->\n\n<p><code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、あるいは <code>&apos;base64&apos;</code> のいずれかを指定した <code>output_format</code>\nによる署名を返します。デフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "private_key"
+                    },
+                    {
+                      "name": "output_format",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Verify",
+          "type": "class",
+          "name": "Verify",
+          "desc": "<!--\nClass for verifying signatures.\n\nReturned by `crypto.createVerify`.\n-->\n\n<p>署名を検証するクラスです。\n\n</p>\n<p><code>crypto.createVerify()</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "verifier.update(data)",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the verifier object with data.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>検証オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "verifier.verify(object, signature, [signature_format])",
+              "type": "method",
+              "name": "verify",
+              "desc": "<!--\nVerifies the signed data by using the `object` and `signature`. `object` is  a\nstring containing a PEM encoded object, which can be one of RSA public key,\nDSA public key, or X.509 certificate. `signature` is the previously calculated\nsignature for the data, in the `signature_format` which can be `'binary'`,\n`'hex'` or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。\n<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを\nPEM でエンコードしたオブジェクトです。\n<code>signature</code> は先に計算したデータの署名で、\nその <code>signature_format</code> は <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code>\nのいずれかです。デフォルトは <code>&apos;binary&apos;</code> です。\n\n</p>\n<!--\nReturns true or false depending on the validity of the signature for the data and public key.\n\nNote: `verifier` object can not be used after `verify()` method been called.\n-->\n\n<p>署名されたデータと公開鍵による検証の結果によって true または false を返します。\n\n</p>\n<p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "object"
+                    },
+                    {
+                      "name": "signature"
+                    },
+                    {
+                      "name": "signature_format",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: DiffieHellman",
+          "type": "class",
+          "name": "DiffieHellman",
+          "desc": "<!--\nThe class for creating Diffie-Hellman key exchanges.\n\nReturned by `crypto.createDiffieHellman`.\n-->\n\n<p>ディフィー・ヘルマン鍵交換を生成するためのクラスです。\n\n</p>\n<p><code>crypto.createDiffieHellman()</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "diffieHellman.generateKeys([encoding])",
+              "type": "method",
+              "name": "generateKeys",
+              "desc": "<!--\nGenerates private and public Diffie-Hellman key values, and returns the\npublic key in the specified encoding. This key should be transferred to the\nother party. Encoding can be `'binary'`, `'hex'`, or `'base64'`.\nDefaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、\n指定の方法でエンコーディングされた公開鍵を返します。\nこの鍵は相手側に渡されるものです。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.computeSecret(other_public_key, [input_encoding], [output_encoding])",
+              "type": "method",
+              "name": "computeSecret",
+              "desc": "<!--\nComputes the shared secret using `other_public_key` as the other party's\npublic key and returns the computed shared secret. Supplied key is\ninterpreted using specified `input_encoding`, and secret is encoded using\nspecified `output_encoding`. Encodings can be `'binary'`, `'hex'`, or\n`'base64'`. The input encoding defaults to `'binary'`.\nIf no output encoding is given, the input encoding is used as output encoding.\n-->\n\n<p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。\n与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、\n秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\n入力エンコーディングのデフォルトは <code>&apos;binary&apos;</code> です。\n出力のエンコーディングが与えられなかった場合は、入力のエンコーディングが\n出力エンコーディングとして使われます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "other_public_key"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.getPrime([encoding])",
+              "type": "method",
+              "name": "getPrime",
+              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can be\n`'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.getGenerator([encoding])",
+              "type": "method",
+              "name": "getGenerator",
+              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can be\n`'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.getPublicKey([encoding])",
+              "type": "method",
+              "name": "getPublicKey",
+              "desc": "<!--\nReturns the Diffie-Hellman public key in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.getPrivateKey([encoding])",
+              "type": "method",
+              "name": "getPrivateKey",
+              "desc": "<!--\nReturns the Diffie-Hellman private key in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。\nエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.setPublicKey(public_key, [encoding])",
+              "type": "method",
+              "name": "setPublicKey",
+              "desc": "<!--\nSets the Diffie-Hellman public key. Key encoding can be `'binary'`, `'hex'`,\nor `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による公開鍵を設定します。\n鍵のエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "public_key"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "diffieHellman.setPrivateKey(public_key, [encoding])",
+              "type": "method",
+              "name": "setPrivateKey",
+              "desc": "<!--\nSets the Diffie-Hellman private key. Key encoding can be `'binary'`, `'hex'`,\nor `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による秘密鍵を設定します。\n鍵のエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>&apos;binary&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "public_key"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Crypto"
+    }
+  ]
+}
