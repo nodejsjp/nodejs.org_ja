@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>stdio - Node.js v0.7.5 Manual &amp; Documentation</title>
+  <title>console Node.js v0.7.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/stdio.html">
+  <link rel="canonical" href="http://nodejs.org/api/stdio.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-stdio">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
             <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -40,76 +40,142 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <h1>Node.js v0.7.5 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          <header>
+            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="stdio.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#stdio_console">console</a><ul>
+<li><a href="#stdio_console_log">console.log()</a></li>
+<li><a href="#stdio_console_info">console.info()</a></li>
+<li><a href="#stdio_console_warn">console.warn()</a></li>
+<li><a href="#stdio_console_error">console.error()</a></li>
+<li><a href="#stdio_console_dir_obj">console.dir(obj)</a></li>
+<li><a href="#stdio_console_time_label">console.time(label)</a></li>
+<li><a href="#stdio_console_timeend_label">console.timeEnd(label)</a></li>
+<li><a href="#stdio_console_trace">console.trace()</a></li>
+<li><a href="#stdio_console_assert">console.assert()</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
-          <hr>
-        </header>
-        <div id="apicontent">
-          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#console">console</a><ul><li><a href="#console.log">console.log()</a></li><li><a href="#console.info">console.info()</a></li><li><a href="#console.warn">console.warn()</a></li><li><a href="#console.error">console.error()</a></li><li><a href="#console.dir">console.dir(obj)</a></li><li><a href="#console.time">console.time(label)</a></li><li><a href="#console.timeEnd">console.timeEnd(label)</a></li><li><a href="#console.trace">console.trace()</a></li><li><a href="#console.assert">console.assert()</a></li></ul></li></ul><hr></div>
-<h2 id="console">console <span><a class="top" href="#">↑</a><a class="mark" href="#console">#</a></span></h2>
+
+          <div id="apicontent">
+            <h1>console<span><a class="mark" href="#stdio_console" id="stdio_console">#</a></span></h1>
+<pre><code>Stability: 4 - API Frozen</code></pre>
+<ul>
+<li>{Object}</li>
+</ul>
+<!--type=global-->
+
+<!--
+For printing to stdout and stderr.  Similar to the console object functions
+provided by most web browsers, here the output is sent to stdout or stderr.
+-->
 
 <p>標準出力と標準エラーに出力するためのものです。
 ほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、
-出力は標準出力か標準エラー出力に送られます。</p>
+出力は標準出力か標準エラー出力に送られます。
 
-<h3 id="console.log">console.log() <span><a class="top" href="#">↑</a><a class="mark" href="#console.log">#</a></span></h3>
+
+</p>
+<h2>console.log()<span><a class="mark" href="#stdio_console_log" id="stdio_console_log">#</a></span></h2>
+<!--
+Prints to stdout with newline. This function can take multiple arguments in a
+`printf()`-like way. Example:
+-->
 
 <p>改行を伴って標準出力へプリントします。
-この関数は <code>printf()</code> のように複数の引数を受け付けます。</p>
+この関数は <code>printf()</code> のように複数の引数を受け付けます。
 
-<pre><code>console.log('count: %d', count);</code></pre>
-
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
+</p>
+<pre><code>console.log(&apos;count: %d&apos;, count);</code></pre>
+<!--
+If formatting elements are not found in the first string then `util.inspect`
+is used on each argument.
+See [util.format()](util.html#util.format) for more information.
+-->
 
 <p>最初の引数文字列からフォーマット要素が見つからなかった場合は、
 <code>util.inspect</code> が各引数に使われます。
 より詳細は <a href="util.html#util.format">util.format()</a> を参照してください。
-=======
-If formatting elements are not found in the first string then <code>util.inspect</code>
-is used on each argument.
-See <a href="util.html#util.format">util.format()</a> for more information.</p>
 
-<blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><p>master</p></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote>
+</p>
+<h2>console.info()<span><a class="mark" href="#stdio_console_info" id="stdio_console_info">#</a></span></h2>
+<!--
+Same as `console.log`.
+-->
 
-<h3 id="console.info">console.info() <span><a class="top" href="#">↑</a><a class="mark" href="#console.info">#</a></span></h3>
+<p><code>console.log</code> と同じです。
 
-<p><code>console.log</code> と同じです。</p>
+</p>
+<h2>console.warn()<span><a class="mark" href="#stdio_console_warn" id="stdio_console_warn">#</a></span></h2>
+<h2>console.error()<span><a class="mark" href="#stdio_console_error" id="stdio_console_error">#</a></span></h2>
+<!--
+Same as `console.log` but prints to stderr.
+-->
 
-<h3 id="console.warn">console.warn() <span><a class="top" href="#">↑</a><a class="mark" href="#console.warn">#</a></span></h3>
+<p><code>console.log</code> と同様ですが、標準エラー出力にプリントします。
 
-<h3 id="console.error">console.error() <span><a class="top" href="#">↑</a><a class="mark" href="#console.error">#</a></span></h3>
+</p>
+<h2>console.dir(obj)<span><a class="mark" href="#stdio_console_dir_obj" id="stdio_console_dir_obj">#</a></span></h2>
+<!--
+Uses `util.inspect` on `obj` and prints resulting string to stdout.
+-->
 
-<p><code>console.log</code> と同様ですが、標準エラー出力にプリントします。</p>
+<p><code>util.inspect</code> を使って <code>obj</code> を文字列化した結果を標準出力にプリントします。
 
-<h3 id="console.dir">console.dir(obj) <span><a class="top" href="#">↑</a><a class="mark" href="#console.dir">#</a></span></h3>
+</p>
+<h2>console.time(label)<span><a class="mark" href="#stdio_console_time_label" id="stdio_console_time_label">#</a></span></h2>
+<!--
+Mark a time.
+-->
 
-<p><code>util.inspect</code> を使って <code>obj</code> を文字列化した結果を標準エラー出力にプリントします。</p>
+<p>タイマを作成します。
 
-<h3 id="console.time">console.time(label) <span><a class="top" href="#">↑</a><a class="mark" href="#console.time">#</a></span></h3>
 
-<p>タイマを作成します。</p>
+</p>
+<h2>console.timeEnd(label)<span><a class="mark" href="#stdio_console_timeend_label" id="stdio_console_timeend_label">#</a></span></h2>
+<!--
+Finish timer, record output. Example
+-->
 
-<h3 id="console.timeEnd">console.timeEnd(label) <span><a class="top" href="#">↑</a><a class="mark" href="#console.timeEnd">#</a></span></h3>
+<p>タイマを終了し、結果を出力します。例
 
-<p>タイマを終了し、結果を出力します。例</p>
-
-<pre><code>console.time('100-elements');
+</p>
+<pre><code>console.time(&apos;100-elements&apos;);
 for (var i = 0; i &lt; 100; i++) {
   ;
 }
-console.timeEnd('100-elements');</code></pre>
+console.timeEnd(&apos;100-elements&apos;);</code></pre>
+<h2>console.trace()<span><a class="mark" href="#stdio_console_trace" id="stdio_console_trace">#</a></span></h2>
+<!--
+Print a stack trace to stderr of the current position.
+-->
 
-<h3 id="console.trace">console.trace() <span><a class="top" href="#">↑</a><a class="mark" href="#console.trace">#</a></span></h3>
+<p>現在のスタックトレースを標準エラー出力にプリントします。
 
-<p>現在のスタックトレースを標準エラー出力にプリントします。</p>
+</p>
+<h2>console.assert()<span><a class="mark" href="#stdio_console_assert" id="stdio_console_assert">#</a></span></h2>
+<!--
+Same as `assert.ok()`.
+-->
 
-<h3 id="console.assert">console.assert() <span><a class="top" href="#">↑</a><a class="mark" href="#console.assert">#</a></span></h3>
+<p><code>assert.ok()</code> と同じです。
+</p>
 
-<p><code>assert.ok()</code> と同じです。</p>
-        </div>
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -119,7 +185,7 @@ console.timeEnd('100-elements');</code></pre>
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -136,11 +202,11 @@ console.timeEnd('100-elements');</code></pre>
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.5/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
     </div>
-    
-  <script src="assets/sh_main.js"></script>
-  <script src="assets/sh_javascript.min.js"></script>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
     var gaJsHost = (("https:" == document.location.protocol) ?
@@ -154,3 +220,4 @@ console.timeEnd('100-elements');</code></pre>
       } catch(err) {}</script>
 </body>
 </html>
+

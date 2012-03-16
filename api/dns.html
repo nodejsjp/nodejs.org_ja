@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>dns - Node.js v0.7.5 Manual &amp; Documentation</title>
+  <title>DNS Node.js v0.7.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/dns.html">
+  <link rel="canonical" href="http://nodejs.org/api/dns.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-dns">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
             <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -40,134 +40,296 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <h1>Node.js v0.7.5 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
-          </div>
-          <hr>
-        </header>
-        <div id="apicontent">
-          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#dNS">DNS</a><ul><li><a href="#dns.lookup">dns.lookup(domain, [family], callback)</a></li><li><a href="#dns.resolve">dns.resolve(domain, [rrtype], callback)</a></li><li><a href="#dns.resolve4">dns.resolve4(domain, callback)</a></li><li><a href="#dns.resolve6">dns.resolve6(domain, callback)</a></li><li><a href="#dns.resolveMx">dns.resolveMx(domain, callback)</a></li><li><a href="#dns.resolveTxt">dns.resolveTxt(domain, callback)</a></li><li><a href="#dns.resolveSrv">dns.resolveSrv(domain, callback)</a></li><li><a href="#dns.reverse">dns.reverse(ip, callback)</a></li><li><a href="#dns.resolveNs">dns.resolveNs(domain, callback)</a></li><li><a href="#dns.resolveCname">dns.resolveCname(domain, callback)</a></li></ul></li></ul><hr></div>
-<h2 id="dNS">DNS <span><a class="top" href="#">↑</a><a class="mark" href="#dNS">#</a></span></h2>
+          <header>
+            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="dns.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
 
-<p>このモジュールにアクセスするには <code>require('dns')</code> を使用します。
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#dns_dns">DNS</a><ul>
+<li><a href="#dns_dns_lookup_domain_family_callback">dns.lookup(domain, [family], callback)</a></li>
+<li><a href="#dns_dns_resolve_domain_rrtype_callback">dns.resolve(domain, [rrtype], callback)</a></li>
+<li><a href="#dns_dns_resolve4_domain_callback">dns.resolve4(domain, callback)</a></li>
+<li><a href="#dns_dns_resolve6_domain_callback">dns.resolve6(domain, callback)</a></li>
+<li><a href="#dns_dns_resolvemx_domain_callback">dns.resolveMx(domain, callback)</a></li>
+<li><a href="#dns_dns_resolvetxt_domain_callback">dns.resolveTxt(domain, callback)</a></li>
+<li><a href="#dns_dns_resolvesrv_domain_callback">dns.resolveSrv(domain, callback)</a></li>
+<li><a href="#dns_dns_reverse_ip_callback">dns.reverse(ip, callback)</a></li>
+<li><a href="#dns_dns_resolvens_domain_callback">dns.resolveNs(domain, callback)</a></li>
+<li><a href="#dns_dns_resolvecname_domain_callback">dns.resolveCname(domain, callback)</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>DNS<span><a class="mark" href="#dns_dns" id="dns_dns">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!--
+Use `require('dns')` to access this module. All methods in the dns module
+use C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread
+pool. C-Ares is much faster than `getaddrinfo` but the system resolver is
+more constant with how other programs operate. When a user does
+`net.connect(80, 'google.com')` or `http.get({ host: 'google.com' })` the
+`dns.lookup` method is used. Users who need to do a large number of look ups
+quickly should use the methods that go through C-Ares.
+-->
+
+<p>このモジュールにアクセスするには <code>require(&apos;dns&apos;)</code> を使用します。
 dns モジュールの全てのメソッドは C-Ares を使用します。
 ただし、<code>dns.lookup</code> はスレッドプール上で <code>getaddrinfo(3)</code> を使用します。
 C-Ares は <code>getaddrinfo</code> よりずっと速いものの、
 他のシステムと連携するにはシステムリゾルバの方が安定しています。
-ユーザが <code>net.connect(80, 'google.com')</code> または
-<code>http.get({ host: 'google.com' })</code> を行った時、<code>dns.lookup</code>
+ユーザが <code>net.connect(80, &apos;google.com&apos;)</code> または
+<code>http.get({ host: &apos;google.com&apos; })</code> を行った時、<code>dns.lookup</code>
 メソッドが使われます。
 多数のルックアップを素早く実行したいユーザは、
-C-Ares を呼び出すメソッドを使用すべきです。</p>
+C-Ares を呼び出すメソッドを使用すべきです。
 
-<p>これは <code>'www.google.com'</code> を解決して、返された IP アドレスを逆引きで解決する例です。</p>
+</p>
+<!--
+Here is an example which resolves `'www.google.com'` then reverse
+resolves the IP addresses which are returned.
+-->
 
-<pre><code>var dns = require('dns');
+<p>これは <code>&apos;www.google.com&apos;</code> を解決して、返された IP アドレスを逆引きで解決する例です。
 
-dns.resolve4('www.google.com', function (err, addresses) {
+</p>
+<pre><code>var dns = require(&apos;dns&apos;);
+
+dns.resolve4(&apos;www.google.com&apos;, function (err, addresses) {
   if (err) throw err;
 
-  console.log('addresses: ' + JSON.stringify(addresses));
+  console.log(&apos;addresses: &apos; + JSON.stringify(addresses));
 
   addresses.forEach(function (a) {
     dns.reverse(a, function (err, domains) {
       if (err) {
-        console.log('reverse for ' + a + ' failed: ' +
+        console.log(&apos;reverse for &apos; + a + &apos; failed: &apos; +
           err.message);
       } else {
-        console.log('reverse for ' + a + ': ' +
+        console.log(&apos;reverse for &apos; + a + &apos;: &apos; +
           JSON.stringify(domains));
       }
     });
   });
 });</code></pre>
+<h2>dns.lookup(domain, [family], callback)<span><a class="mark" href="#dns_dns_lookup_domain_family_callback" id="dns_dns_lookup_domain_family_callback">#</a></span></h2>
+<!--
+Resolves a domain (e.g. `'google.com'`) into the first found A (IPv4) or
+AAAA (IPv6) record.
+The `family` can be the integer `4` or `6`. Defaults to `null` that indicates
+both Ip v4 and v6 address family.
+-->
 
-<h3 id="dns.lookup">dns.lookup(domain, [family], callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.lookup">#</a></span></h3>
-
-<p>ドメイン (例 <code>'google.com'</code>) を解決して最初に見つかった
+<p>ドメイン (例 <code>&apos;google.com&apos;</code>) を解決して最初に見つかった
 A (IPv4) または AAAA (IPv6) レコードにします。
 <code>family</code> は整数の <code>4</code> または <code>6</code> を指定することができます。
-デフォルトは <code>null</code> で、IP v4 と v6 の両方をアドレスファミリーを意味します。</p>
+デフォルトは <code>null</code> で、IP v4 と v6 の両方をアドレスファミリーを意味します。
+
+</p>
+<!--
+The callback has arguments `(err, address, family)`.  The `address` argument
+is a string representation of a IP v4 or v6 address. The `family` argument
+is either the integer 4 or 6 and denotes the family of `address` (not
+necessarily the value initially passed to `lookup`).
+-->
 
 <p>コールバックは引数 <code>(err, address, family)</code> を持ちます。
 <code>address</code> 引数は IP v4 または v6 アドレスを表現する文字列です。
 <code>family</code> 引数は整数の 4 または 6 で、<code>address</code> のファミリーを意味します
-(この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。</p>
+(この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。
 
-<h3 id="dns.resolve">dns.resolve(domain, [rrtype], callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolve">#</a></span></h3>
 
-<p>ドメイン (例 <code>'google.com'</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
-妥当な <code>rrtype</code> は <code>'A'</code> (IPV4アドレス)、<code>'AAAA'</code> (IPV6アドレス)、
-<code>'MX'</code> (mail exchangeレコード), <code>'TXT'</code> (テキストレコード)、
-<code>'SRV'</code> (SRVレコード)、<code>'PTR'</code> (IP を逆引きでルックアップするために使われる)、
-<code>'NS'</code> (ネームサーバレコード)、そして <code>'CNAME'</code> (別名レコード) です。</p>
+</p>
+<h2>dns.resolve(domain, [rrtype], callback)<span><a class="mark" href="#dns_dns_resolve_domain_rrtype_callback" id="dns_dns_resolve_domain_rrtype_callback">#</a></span></h2>
+<!--
+Resolves a domain (e.g. `'google.com'`) into an array of the record types
+specified by rrtype. Valid rrtypes are `'A'` (IPV4 addresses, default),
+`'AAAA'` (IPV6 addresses), `'MX'` (mail exchange records), `'TXT'` (text
+records), `'SRV'` (SRV records), `'PTR'` (used for reverse IP lookups),
+`'NS'` (name server records) and `'CNAME'` (canonical name records).
+-->
+
+<p>ドメイン (例 <code>&apos;google.com&apos;</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
+妥当な <code>rrtype</code> は <code>&apos;A&apos;</code> (IPV4アドレス)、<code>&apos;AAAA&apos;</code> (IPV6アドレス)、
+<code>&apos;MX&apos;</code> (mail exchangeレコード), <code>&apos;TXT&apos;</code> (テキストレコード)、
+<code>&apos;SRV&apos;</code> (SRVレコード)、<code>&apos;PTR&apos;</code> (IP を逆引きでルックアップするために使われる)、
+<code>&apos;NS&apos;</code> (ネームサーバレコード)、そして <code>&apos;CNAME&apos;</code> (別名レコード) です。
+
+</p>
+<!--
+The callback has arguments `(err, addresses)`.  The type of each item
+in `addresses` is determined by the record type, and described in the
+documentation for the corresponding lookup methods below.
+-->
 
 <p>コールバックは引数 <code>(err, addresses)</code> を持ちます。
 <code>addresses</code> の各要素の種類はレコードの種類によって決まり、
-対応する後述のルックアップメソッドで記述されます。</p>
+対応する後述のルックアップメソッドで記述されます。
+
+</p>
+<!--
+On error, `err` would be an instanceof `Error` object, where `err.errno` is
+one of the error codes listed below and `err.message` is a string describing
+the error in English.
+-->
 
 <p>エラー発生時、<code>err</code> は <code>Error</code> オブジェクトのインスタンスであり、
 <code>err.errno</code> は後述するエラーコードのいずれか、
-<code>err.message</code> はエラーを英語で説明する文字列となります。</p>
+<code>err.message</code> はエラーを英語で説明する文字列となります。
 
-<h3 id="dns.resolve4">dns.resolve4(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolve4">#</a></span></h3>
+
+</p>
+<h2>dns.resolve4(domain, callback)<span><a class="mark" href="#dns_dns_resolve4_domain_callback" id="dns_dns_resolve4_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for IPv4 queries (`A` records).
+`addresses` is an array of IPv4 addresses (e.g.
+`['74.125.79.104', '74.125.79.105', '74.125.79.106']`).
+-->
 
 <p><code>dns.resolve()</code> と同じですが、IPv4 アドレス (<code>A</code> レコード) だけを問い合わせます。
-<code>addresses</code> は IPv4 アドレスの配列です (例&lt;br /&gt;
-<code>['74.125.79.104', '74.125.79.105', '74.125.79.106']</code>)</p>
+<code>addresses</code> は IPv4 アドレスの配列です (例<br />
+<code>[&apos;74.125.79.104&apos;, &apos;74.125.79.105&apos;, &apos;74.125.79.106&apos;]</code>)
 
-<h3 id="dns.resolve6">dns.resolve6(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolve6">#</a></span></h3>
+</p>
+<h2>dns.resolve6(domain, callback)<span><a class="mark" href="#dns_dns_resolve6_domain_callback" id="dns_dns_resolve6_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve4()` except for IPv6 queries (an `AAAA` query).
+-->
 
-<p>IPv6 (<code>AAAA</code> レコード) を問い合わせることを除いて <code>dns.resolve4()</code> と同じです。</p>
+<p>IPv6 (<code>AAAA</code> レコード) を問い合わせることを除いて <code>dns.resolve4()</code> と同じです。
 
-<h3 id="dns.resolveMx">dns.resolveMx(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolveMx">#</a></span></h3>
 
-<p><code>dns.resolve()</code> と同じですが、mail exchange (<code>MX</code> レコード) だけを問い合わせます。</p>
+</p>
+<h2>dns.resolveMx(domain, callback)<span><a class="mark" href="#dns_dns_resolvemx_domain_callback" id="dns_dns_resolvemx_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for mail exchange queries (`MX` records).
+-->
 
-<p><code>addresses</code>は MX レコードの配列で、それぞれは priority と exchange の属性を持ちます
-(例 <code>[{'priority': 10, 'exchange': 'mx.example.com'},...]</code>)。</p>
+<p><code>dns.resolve()</code> と同じですが、mail exchange (<code>MX</code> レコード) だけを問い合わせます。
 
-<h3 id="dns.resolveTxt">dns.resolveTxt(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolveTxt">#</a></span></h3>
+</p>
+<!--
+`addresses` is an array of MX records, each with a priority and an exchange
+attribute (e.g. `[{'priority': 10, 'exchange': 'mx.example.com'},...]`).
+-->
+
+<p><code>addresses</code> は MX レコードの配列で、それぞれは priority と exchange の属性を持ちます
+(例 <code>[{&apos;priority&apos;: 10, &apos;exchange&apos;: &apos;mx.example.com&apos;},...]</code>)。
+
+</p>
+<h2>dns.resolveTxt(domain, callback)<span><a class="mark" href="#dns_dns_resolvetxt_domain_callback" id="dns_dns_resolvetxt_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for text queries (`TXT` records).
+`addresses` is an array of the text records available for `domain` (e.g.,
+`['v=spf1 ip4:0.0.0.0 ~all']`).
+-->
 
 <p><code>dns.resolve()</code> と同じですが、テキスト (<code>TXT</code> レコード) だけを問い合わせます。
 <code>addresses</code> は <code>domain</code> で利用可能なテキストレコードの配列です。
-(例、<code>['v=spf1 ip4:0.0.0.0 ~all']</code>)</p>
+(例、<code>[&apos;v=spf1 ip4:0.0.0.0 ~all&apos;]</code>)
 
-<h3 id="dns.resolveSrv">dns.resolveSrv(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolveSrv">#</a></span></h3>
+</p>
+<h2>dns.resolveSrv(domain, callback)<span><a class="mark" href="#dns_dns_resolvesrv_domain_callback" id="dns_dns_resolvesrv_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for service records (`SRV` records).
+`addresses` is an array of the SRV records available for `domain`. Properties
+of SRV records are priority, weight, port, and name (e.g.,
+`[{'priority': 10, {'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]`).
+-->
 
 <p><code>dns.resolve()</code> と同じですが、サービスレコード (<code>SRV</code> レコード) だけを問い合わせます。
 <code>addresses</code> は <code>domain</code> で利用可能な SRV レコードの配列です。
 SRV レコードのプロパティは priority、weight、port、そして name です
-(例 <code>[{'priority': 10, {'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]</code>)。</p>
+(例 <code>[{&apos;priority&apos;: 10, {&apos;weight&apos;: 5, &apos;port&apos;: 21223, &apos;name&apos;: &apos;service.example.com&apos;}, ...]</code>)。
 
-<h3 id="dns.reverse">dns.reverse(ip, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.reverse">#</a></span></h3>
+</p>
+<h2>dns.reverse(ip, callback)<span><a class="mark" href="#dns_dns_reverse_ip_callback" id="dns_dns_reverse_ip_callback">#</a></span></h2>
+<!--
+Reverse resolves an ip address to an array of domain names.
+-->
 
-<p>IP アドレスからドメイン名の配列へ逆引きで解決します。</p>
+<p>IP アドレスからドメイン名の配列へ逆引きで解決します。
 
-<p>コールバックは引数 <code>(err, domains)</code> を持ちます。</p>
+</p>
+<!--
+The callback has arguments `(err, domains)`.
+-->
 
-<h3 id="dns.resolveNs">dns.resolveNs(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolveNs">#</a></span></h3>
+<p>コールバックは引数 <code>(err, domains)</code> を持ちます。
+
+</p>
+<h2>dns.resolveNs(domain, callback)<span><a class="mark" href="#dns_dns_resolvens_domain_callback" id="dns_dns_resolvens_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for name server records (`NS` records).
+`addresses` is an array of the name server records available for `domain`
+(e.g., `['ns1.example.com', 'ns2.example.com']`).
+-->
 
 <p><code>dns.resolve()</code> と同じですが、ネームサーバレコード (<code>NS</code> レコード) 
 だけを問い合わせます。
 <code>address</code> は <code>domain</code> で利用可能なネームサーバレコードの配列です
-(例 <code>['ns1.example.com', 'ns2.example.com']</code>)。</p>
+(例 <code>[&apos;ns1.example.com&apos;, &apos;ns2.example.com&apos;]</code>)。
 
-<h3 id="dns.resolveCname">dns.resolveCname(domain, callback) <span><a class="top" href="#">↑</a><a class="mark" href="#dns.resolveCname">#</a></span></h3>
+</p>
+<h2>dns.resolveCname(domain, callback)<span><a class="mark" href="#dns_dns_resolvecname_domain_callback" id="dns_dns_resolvecname_domain_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for canonical name records (`CNAME`
+records). `addresses` is an array of the canonical name records available for
+`domain` (e.g., `['bar.example.com']`).
+-->
 
 <p><code>dns.resolve()</code> と同じですが、別名レコード (<code>CNAME</code> レコード) 
 だけを問い合わせます。
 <code>address</code> は <code>domain</code> で利用可能な別名レコードの配列です
-<code>domain</code> (e.g., <code>['bar.example.com']</code>)。</p>
+<code>domain</code> (e.g., <code>[&apos;bar.example.com&apos;]</code>)。
 
-<p>エラーがあった場合、<code>err</code> は非 null で Error オブジェクトのインスタンスとなります。</p>
+</p>
+<!--
+If there an an error, `err` will be non-null and an instanceof the Error
+object.
+-->
 
-<p>どの DNS 問い合わせもエラーコードを返せます。</p>
+<p>エラーがあった場合、<code>err</code> は非 null で Error オブジェクトのインスタンスとなります。
 
-<ul><li><code>dns.TEMPFAIL</code>: タイムアウト、SERVFAIL あるいは同様のもの。</li><li><code>dns.PROTOCOL</code>: 応答が不正。</li><li><code>dns.NXDOMAIN</code>: ドメインが存在しない。</li><li><code>dns.NODATA</code>: ドメインは存在するが、要求された種類のデータがない。</li><li><code>dns.NOMEM</code>: 処理中にメモリが不足。</li><li><code>dns.BADQUERY</code>: 問い合わせが不正な形式。</li></ul>
-        </div>
+</p>
+<!--
+Each DNS query can return an error code.
+-->
+
+<p>どの DNS 問い合わせもエラーコードを返せます。
+
+</p>
+<!--
+- `dns.TEMPFAIL`: timeout, SERVFAIL or similar.
+- `dns.PROTOCOL`: got garbled reply.
+- `dns.NXDOMAIN`: domain does not exists.
+- `dns.NODATA`: domain exists but no data of reqd type.
+- `dns.NOMEM`: out of memory while processing.
+- `dns.BADQUERY`: the query is malformed.
+-->
+
+<ul>
+<li><code>dns.TEMPFAIL</code>: タイムアウト、SERVFAIL あるいは同様のもの。</li>
+<li><code>dns.PROTOCOL</code>: 応答が不正。</li>
+<li><code>dns.NXDOMAIN</code>: ドメインが存在しない。</li>
+<li><code>dns.NODATA</code>: ドメインは存在するが、要求された種類のデータがない。</li>
+<li><code>dns.NOMEM</code>: 処理中にメモリが不足。</li>
+<li><code>dns.BADQUERY</code>: 問い合わせが不正な形式。</li>
+</ul>
+
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -177,7 +339,7 @@ SRV レコードのプロパティは priority、weight、port、そして name 
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -194,11 +356,11 @@ SRV レコードのプロパティは priority、weight、port、そして name 
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.5/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
     </div>
-    
-  <script src="assets/sh_main.js"></script>
-  <script src="assets/sh_javascript.min.js"></script>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
     var gaJsHost = (("https:" == document.location.protocol) ?
@@ -212,3 +374,4 @@ SRV レコードのプロパティは priority、weight、port、そして name 
       } catch(err) {}</script>
 </body>
 </html>
+

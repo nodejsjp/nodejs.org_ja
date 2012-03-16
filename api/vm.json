@@ -1,0 +1,152 @@
+{
+  "source": "doc/api/vm.markdown",
+  "modules": [
+    {
+      "textRaw": "Executing JavaScript",
+      "name": "vm",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nYou can access this module with:\n-->\n\n<p>次のようにすることで、このモジュールにアクセスすることができます:\n\n</p>\n<pre><code>var vm = require(&apos;vm&apos;);</code></pre>\n<!--\nJavaScript code can be compiled and run immediately or compiled, saved, and run later.\n-->\n\n<p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。\n\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "vm.runInThisContext(code, [filename])",
+          "type": "method",
+          "name": "runInThisContext",
+          "desc": "<!--\n`vm.runInThisContext()` compiles `code`, runs it and returns the result. Running\ncode does not have access to local scope. `filename` is optional, it's used only\nin stack traces.\n-->\n\n<p><code>vm.runInThisContext()</code> は <code>code</code> をコンパイルして実行し、結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n\n</p>\n<!--\nExample of using `vm.runInThisContext` and `eval` to run the same code:\n-->\n\n<p><code>vm.runInThisContext</code> と <code>eval</code> で同じコードを実行する例:\n\n</p>\n<pre><code>var localVar = 123,\n    usingscript, evaled,\n    vm = require(&apos;vm&apos;);\n\nusingscript = vm.runInThisContext(&apos;localVar = 1;&apos;,\n  &apos;myfile.vm&apos;);\nconsole.log(&apos;localVar: &apos; + localVar + &apos;, usingscript: &apos; +\n  usingscript);\nevaled = eval(&apos;localVar = 1;&apos;);\nconsole.log(&apos;localVar: &apos; + localVar + &apos;, evaled: &apos; +\n  evaled);\n\n// localVar: 123, usingscript: 1\n// localVar: 1, evaled: 1</code></pre>\n<!--\n`vm.runInThisContext` does not have access to the local scope, so `localVar` is unchanged.\n`eval` does have access to the local scope, so `localVar` is changed.\n-->\n\n<p><code>vm.runInThisContext</code> はローカルスコープにアクセスしないので、<code>localVar</code> は変更されません。\n<code>eval</code> はローカルスコープにアクセスするので、<code>localVar</code> は変更されます。\n\n</p>\n<!--\nIn case of syntax error in `code`, `vm.runInThisContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>code</code> が文法エラーとなるケースでは、<code>vm.runInThisContext</code> は標準エラーに文法エラーを出力し、\n例外をスローします。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "filename",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "vm.runInNewContext(code, [sandbox], [filename])",
+          "type": "method",
+          "name": "runInNewContext",
+          "desc": "<!--\n`vm.runInNewContext` compiles `code`, then runs it in `sandbox` and returns the\nresult. Running code does not have access to local scope. The object `sandbox`\nwill be used as the global object for `code`.\n`sandbox` and `filename` are optional, `filename` is only used in stack traces.\n-->\n\n<p><code>vm.runInNewContext</code> は <code>code</code> をコンパイルし、それを <code>sandbox</code> の中で実行して\n結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>sandbox</code> および <code>filename</code> はオプションで、<code>filename</code> \nスタックトレースでのみ使用されます。\n\n</p>\n<!--\nExample: compile and execute code that increments a global variable and sets a new one.\nThese globals are contained in the sandbox.\n-->\n\n<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。\nこれらのグローバル変数はサンドボックスに含まれます。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;),\n    vm = require(&apos;vm&apos;),\n    sandbox = {\n      animal: &apos;cat&apos;,\n      count: 2\n    };\n\nvm.runInNewContext(&apos;count += 1; name = &quot;kitty&quot;&apos;, sandbox, &apos;myfile.vm&apos;);\nconsole.log(util.inspect(sandbox));\n\n// { animal: &apos;cat&apos;, count: 3, name: &apos;kitty&apos; }</code></pre>\n<!--\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInNewContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n-->\n\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInNewContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n</p>\n<!--\nIn case of syntax error in `code`, `vm.runInNewContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>code</code> が文法エラーとなるケースでは、\n<code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "sandbox",
+                  "optional": true
+                },
+                {
+                  "name": "filename",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "vm.runInContext(code, context, [filename])",
+          "type": "method",
+          "name": "runInContext",
+          "desc": "<!--\n`vm.runInContext` compiles `code`, then runs it in `context` and returns the\nresult. A (V8) context comprises a global object, together with a set of\nbuilt-in objects and functions. Running code does not have access to local scope\nand the global object held within `context` will be used as the global object\nfor `code`.\n`filename` is optional, it's used only in stack traces.\n\nExample: compile and execute code in a existing context.\n-->\n\n<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、\n<code>context</code> をコンテキストとして実行し、その結果を返します。\n(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、\nグローバルオブジェクトを含みます。\n実行されるコードはローカルスコープにアクセスせず、\n<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n\n</p>\n<p>例: コードをコンパイルして既存のコンテキストで実行します。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;),\n    vm = require(&apos;vm&apos;),\n    initSandbox = {\n      animal: &apos;cat&apos;,\n      count: 2\n    },\n    context = vm.createContext(initSandbox);\n\nvm.runInContext(&apos;count += 1; name = &quot;CATT&quot;&apos;, context, &apos;myfile.vm&apos;);\nconsole.log(util.inspect(context));\n\n// { animal: &apos;cat&apos;, count: 3, name: &apos;CATT&apos; }</code></pre>\n<!--\nNote that `createContext` will perform a shallow clone of the supplied sandbox object in order to\ninitialise the global object of the freshly constructed context.\n\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n\nIn case of syntax error in `code`, `vm.runInContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを\n初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを\n作成することに注意してください。\n\n</p>\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "context"
+                },
+                {
+                  "name": "filename",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "vm.createContext([initSandbox])",
+          "type": "method",
+          "name": "createContext",
+          "desc": "<!--\n`vm.createContext` creates a new context which is suitable for use as the 2nd argument of a subsequent\ncall to `vm.runInContext`. A (V8) context comprises a global object together with a set of\nbuild-in objects and functions. The optional argument `initSandbox` will be shallow-copied\nto seed the initial contents of the global object used by the context.\n-->\n\n<p><code>vm.createContext</code> は、続けて呼び出される <code>vm.runInContext</code> の第 2 引数として\n使用するのに適した新しいコンテキストを作成します。\n(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、\nグローバルオブジェクトを含みます。\nオプションの引数 <code>initSandbox</code> は、このコンテキストで使用される\nグローバルオブジェクトの初期値としてシャローコピーされます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "initSandbox",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "vm.createScript(code, [filename])",
+          "type": "method",
+          "name": "createScript",
+          "desc": "<!--\n`createScript` compiles `code` but does not run it. Instead, it returns a\n`vm.Script` object representing this compiled code. This script can be run\nlater many times using methods below. The returned script is not bound to any\nglobal object. It is bound before each run, just for that run. `filename` is\noptional, it's only used in stack traces.\n-->\n\n<p><code>createScript</code> は <code>code</code> をコンパイルしますが、実行はしません。\n代わりに、コンパイルされたコードを表現する <code>vm.Script</code> オブジェクトを返します。\nこのスクリプトは後述のメソッドを使って後から何度でも実行することができます。\n返されるスクリプトはどのグローバルオブジェクトとも結びつけられていません。\nそれぞれの実行前に結びつけることで、そのとおりに実行されます。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n\n</p>\n<!--\nIn case of syntax error in `code`, `createScript` prints the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>code</code> が文法エラーとなるケースでは、\n<code>createScript</code> は標準エラーに文法エラーを出力して例外をスローします。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "filename",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: Script",
+          "type": "class",
+          "name": "Script",
+          "desc": "<!--\nA class for running scripts.  Returned by vm.createScript.\n-->\n\n<p>スクリプトを実行するクラスです。<code>vm.createScript()</code> によって返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "script.runInThisContext()",
+              "type": "method",
+              "name": "runInThisContext",
+              "desc": "<!--\nSimilar to `vm.runInThisContext` but a method of a precompiled `Script` object.\n`script.runInThisContext` runs the code of `script` and returns the result.\nRunning code does not have access to local scope, but does have access to the `global` object\n(v8: in actual context).\n-->\n\n<p><code>vm.runInThisContext</code> と同様ですが、\nこちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。\n<code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。\n実行されるコードはローカルスコープにアクセスしませんが、\n<code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。\n\n</p>\n<!--\nExample of using `script.runInThisContext` to compile code once and run it multiple times:\n-->\n\n<p><code>script.runInThisContext</code> を使ってコードを一度だけコンパイルし、複数回実行する例:\n\n</p>\n<pre><code>var vm = require(&apos;vm&apos;);\n\nglobalVar = 0;\n\nvar script = vm.createScript(&apos;globalVar += 1&apos;, &apos;myfile.vm&apos;);\n\nfor (var i = 0; i &lt; 1000 ; i += 1) {\n  script.runInThisContext();\n}\n\nconsole.log(globalVar);\n\n// 1000</code></pre>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "script.runInNewContext([sandbox])",
+              "type": "method",
+              "name": "runInNewContext",
+              "desc": "<!--\nSimilar to `vm.runInNewContext` a method of a precompiled `Script` object.\n`script.runInNewContext` runs the code of `script` with `sandbox` as the global object and returns the result.\nRunning code does not have access to local scope. `sandbox` is optional.\n-->\n\n<p><code>vm.runInNewContext</code> と同様ですが、\nこちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。\n<code>script.runInNewContext</code> は <code>sandbox</code> がグローバルオブジェクトであるかのように\n<code>script</code> のコードを実行してその結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>sandbox</code> はオプションです。\n\n</p>\n<!--\nExample: compile code that increments a global variable and sets one, then execute this code multiple times.\nThese globals are contained in the sandbox.\n-->\n\n<p>例: グローバル変数をインクリメントしてセットするコードをコンパイルして、このコードを複数回実行します。\nこれらのグローバル変数はサンドボックスに含まれます。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;),\n    vm = require(&apos;vm&apos;),\n    sandbox = {\n      animal: &apos;cat&apos;,\n      count: 2\n    };\n\nvar script = vm.createScript(&apos;count += 1; name = &quot;kitty&quot;&apos;, &apos;myfile.vm&apos;);\n\nfor (var i = 0; i &lt; 10 ; i += 1) {\n  script.runInNewContext(sandbox);\n}\n\nconsole.log(util.inspect(sandbox));\n\n// { animal: &apos;cat&apos;, count: 12, name: &apos;kitty&apos; }</code></pre>\n<!--\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `script.runInNewContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n-->\n\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>script.runInNewContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "sandbox",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "vm"
+    }
+  ]
+}
