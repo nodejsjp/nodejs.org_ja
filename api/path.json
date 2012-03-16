@@ -1,0 +1,141 @@
+{
+  "source": "doc/api/path.markdown",
+  "modules": [
+    {
+      "textRaw": "Path",
+      "name": "path",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nThis module contains utilities for handling and transforming file\npaths.  Almost all these methods perform only string transformations.\nThe file system is not consulted to check whether paths are valid.\n\nUse `require('path')` to use this module.  The following methods are provided:\n-->\n\n<p>このモジュールはファイルのパスに対する処理や変換を行うユーティリティを含みます。\nほとんどのメソッドは文字列の変換だけを行います。\nパスが正しいか検証するためにファイルシステムに尋ねることはありません。\n\n</p>\n<p>このモジュールを利用するには<code>require(&apos;path&apos;)</code>を呼び出してください。\nこのモジュールは以下のメソッドを提供します。\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "path.normalize(p)",
+          "type": "method",
+          "name": "normalize",
+          "desc": "<!--\nNormalize a string path, taking care of `'..'` and `'.'` parts.\n->\n\n文字列によるパスを正規化します。`'..'` と `'.'` の要素には注意してください。\n\n<!--\nWhen multiple slashes are found, they're replaced by a single one;\nwhen the path contains a trailing slash, it is preserved.\nOn windows backslashes are used. \n-->\n\n<p>複数のスラッシュが見つかると、それらは一つに置換されます;\nパスの最後にスラッシュが含まれていると、それは維持されます。\nWindows ではバックスラッシュが使われます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.normalize(&apos;/foo/bar//baz/asdf/quux/..&apos;)\n// returns\n&apos;/foo/bar/baz/asdf&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "p"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.join([path1], [path2], [...])",
+          "type": "method",
+          "name": "join",
+          "desc": "<!--\nJoin all arguments together and normalize the resulting path.\nNon-string arguments are ignored.\n-->\n\n<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。\n文字列でない引数は無視されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.join(&apos;/foo&apos;, &apos;bar&apos;, &apos;baz/asdf&apos;, &apos;quux&apos;, &apos;..&apos;)\n// returns\n&apos;/foo/bar/baz/asdf&apos;\n\npath.join(&apos;foo&apos;, {}, &apos;bar&apos;)\n// returns\n&apos;foo/bar&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path1",
+                  "optional": true
+                },
+                {
+                  "name": "path2",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.resolve([from ...], to)",
+          "type": "method",
+          "name": "resolve",
+          "desc": "<!--\nResolves `to` to an absolute path.\n-->\n\n<p><code>to</code> の絶対パスを解決します。\n\n</p>\n<!--\nIf `to` isn't already absolute `from` arguments are prepended in right to left\norder, until an absolute path is found. If after using all `from` paths still\nno absolute path is found, the current working directory is used as well. The\nresulting path is normalized, and trailing slashes are removed unless the path \ngets resolved to the root directory. Non-string arguments are ignored.\n-->\n\n<p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。\n全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。\n結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。\n文字列でない引数は無視されます。\n\n</p>\n<!--\nAnother way to think of it is as a sequence of `cd` commands in a shell.\n-->\n\n<p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。\n\n</p>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.resolve(&apos;foo/bar&apos;, &apos;/tmp/file/&apos;, &apos;..&apos;, &apos;a/../subfile&apos;)</code></pre>\n<!--\nIs similar to:\n-->\n\n<p>これは以下と同様です。\n\n</p>\n<pre><code>cd foo/bar\ncd /tmp/file/\ncd ..\ncd a/../subfile\npwd</code></pre>\n<!--\nThe difference is that the different paths don't need to exist and may also be\nfiles.\n-->\n\n<p>いは、それぞれのパスが必ずしも存在する必要がないことと、ファイルでも構わないことです。\n\n</p>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.resolve(&apos;/foo/bar&apos;, &apos;./baz&apos;)\n// returns\n&apos;/foo/bar/baz&apos;\n\npath.resolve(&apos;/foo/bar&apos;, &apos;/tmp/file/&apos;)\n// returns\n&apos;/tmp/file&apos;\n\npath.resolve(&apos;wwwroot&apos;, &apos;static_files/png/&apos;, &apos;../gif/image.gif&apos;)\n// if currently in /home/myself/node, it returns\n&apos;/home/myself/node/wwwroot/static_files/gif/image.gif&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "from ...",
+                  "optional": true
+                },
+                {
+                  "name": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.relative(from, to)",
+          "type": "method",
+          "name": "relative",
+          "desc": "<!--\nSolve the relative path from `from` to `to`.\n-->\n\n<p><code>from</code> から <code>to</code> への相対パスを解決します。\n\n</p>\n<!--\nAt times we have two absolute paths, and we need to derive the relative\npath from one to the other.  This is actually the reverse transform of\n`path.resolve`, which means we see that:\n-->\n\n<p>二つの絶対パスがあり、一方から他方への相対パスを得なければならない場合があります。\nこれは実際のところ、<code>path.resolve()</code> とは逆の変換です。\nそれは以下を意味します:\n\n</p>\n<pre><code>path.resolve(from, path.relative(from, to)) == path.resolve(to)</code></pre>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.relative(&apos;C:\\\\orandea\\\\test\\\\aaa&apos;, &apos;C:\\\\orandea\\\\impl\\\\bbb&apos;)\n// returns\n&apos;..\\\\..\\\\impl\\\\bbb&apos;\n\npath.relative(&apos;/data/orandea/test/aaa&apos;, &apos;/data/orandea/impl/bbb&apos;)\n// returns\n&apos;../../impl/bbb&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "from"
+                },
+                {
+                  "name": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.dirname(p)",
+          "type": "method",
+          "name": "dirname",
+          "desc": "<!--\nReturn the directory name of a path.  Similar to the Unix `dirname` command.\n-->\n\n<p>パスに含まれるディレクトリ名を返します。Unixの <code>dirname</code> コマンドと同様です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.dirname(&apos;/foo/bar/baz/asdf/quux&apos;)\n// returns\n&apos;/foo/bar/baz/asdf&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "p"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.basename(p, [ext])",
+          "type": "method",
+          "name": "basename",
+          "desc": "<!--\nReturn the last portion of a path.  Similar to the Unix `basename` command.\n-->\n\n<p>パスの最後の要素を返します。Unixの <code>basename</code> コマンドと同様です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.basename(&apos;/foo/bar/baz/asdf/quux.html&apos;)\n// returns\n&apos;quux.html&apos;\n\npath.basename(&apos;/foo/bar/baz/asdf/quux.html&apos;, &apos;.html&apos;)\n// returns\n&apos;quux&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "p"
+                },
+                {
+                  "name": "ext",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.extname(p)",
+          "type": "method",
+          "name": "extname",
+          "desc": "<!--\nReturn the extension of the path, from the last '.' to end of string\nin the last portion of the path.  If there is no '.' in the last portion\nof the path or the first character of it is '.', then it returns\nan empty string.  Examples:\n-->\n\n<p>パスの最後の要素について、最後の &apos;.&apos; から文字列の最後までのパスの拡張子を返します。\n最後の要素に &apos;.&apos; が含まれていなかった場合、もしくは &apos;.&apos; が最初の文字だった場合は、空の文字列を返します。\n例:\n\n</p>\n<pre><code>path.extname(&apos;index.html&apos;)\n// returns\n&apos;.html&apos;\n\npath.extname(&apos;index.&apos;)\n// returns\n&apos;.&apos;\n\npath.extname(&apos;index&apos;)\n// returns\n&apos;&apos;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "p"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Path"
+    }
+  ]
+}

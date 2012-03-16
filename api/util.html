@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>util - Node.js v0.7.5 Manual &amp; Documentation</title>
+  <title>util Node.js v0.7.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/util.html">
+  <link rel="canonical" href="http://nodejs.org/api/util.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-util">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
             <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -40,87 +40,200 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <h1>Node.js v0.7.5 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          <header>
+            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="util.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#util_util">util</a><ul>
+<li><a href="#util_util_format">util.format()</a></li>
+<li><a href="#util_util_debug_string">util.debug(string)</a></li>
+<li><a href="#util_util_log_string">util.log(string)</a></li>
+<li><a href="#util_util_inspect_object_showhidden_depth_colors">util.inspect(object, [showHidden], [depth], [colors])</a></li>
+<li><a href="#util_util_isarray_object">util.isArray(object)</a></li>
+<li><a href="#util_util_isregexp_object">util.isRegExp(object)</a></li>
+<li><a href="#util_util_isdate_object">util.isDate(object)</a></li>
+<li><a href="#util_util_iserror_object">util.isError(object)</a></li>
+<li><a href="#util_util_pump_readablestream_writablestream_callback">util.pump(readableStream, writableStream, [callback])</a></li>
+<li><a href="#util_util_inherits_constructor_superconstructor">util.inherits(constructor, superConstructor)</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
-          <hr>
-        </header>
-        <div id="apicontent">
-          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#util">util</a><ul><li><a href="#util.format">util.format()</a></li><li><a href="#util.debug">util.debug(string)</a></li><li><a href="#util.log">util.log(string)</a></li><li><a href="#util.inspect">util.inspect(object, [showHidden], [depth], [colors])</a></li><li><a href="#util.isArray">util.isArray(object)</a></li><li><a href="#util.isRegExp">util.isRegExp(object)</a></li><li><a href="#util.isDate">util.isDate(object)</a></li><li><a href="#util.isError">util.isError(object)</a></li><li><a href="#util.pump">util.pump(readableStream, writableStream, [callback])</a></li><li><a href="#util.inherits">util.inherits(constructor, superConstructor)</a></li></ul></li></ul><hr></div>
-<h2 id="util">util <span><a class="top" href="#">↑</a><a class="mark" href="#util">#</a></span></h2>
 
-<p>これらの関数はモジュール <code>'util'</code> 内にあります。
-<code>require('util')</code> を使うことでこれらにアクセスします。</p>
+          <div id="apicontent">
+            <h1>util<span><a class="mark" href="#util_util" id="util_util">#</a></span></h1>
+<pre><code>Stability: 5 - Locked</code></pre>
+<!--
+These functions are in the module `'util'`. Use `require('util')` to access
+them.
+-->
 
-<h3 id="util.format">util.format() <span><a class="top" href="#">↑</a><a class="mark" href="#util.format">#</a></span></h3>
+<p>これらの関数はモジュール <code>&apos;util&apos;</code> 内にあります。
+<code>require(&apos;util&apos;)</code> を使うことでこれらにアクセスします。
+
+
+</p>
+<h2>util.format()<span><a class="mark" href="#util_util_format" id="util_util_format">#</a></span></h2>
+<!--
+Returns a formatted string using the first argument as a `printf`-like format.
+-->
 
 <p>最初の引数を <code>printf</code> のようなフォーマットとして使用して、フォーマット化された
-文字列を返します。</p>
+文字列を返します。
+
+</p>
+<!--
+The first argument is a string that contains zero or more *placeholders*.
+Each placeholder is replaced with the converted value from its corresponding
+argument. Supported placeholders are:
+-->
 
 <p>第一引数は文字列で、0 個以上の <em>プレースホルダ</em> を含みます。
 それぞれのプレースホルダは対応する引数を変換した値で置換されます。
-サポートするプレースホルダは:</p>
+サポートするプレースホルダは:
 
-<ul><li><code>%s</code> - 文字列。</li><li><code>%d</code> - 数値 (整数と浮動小数点数の両方)。</li><li><code>%j</code> - JSON。</li><li><code>%%</code> - 一つのパーセント記号 (<code>'%'</code>)。これは引数を消費しません。</li></ul>
+</p>
+<!--
+* `%s` - String.
+* `%d` - Number (both integer and float).
+* `%j` - JSON.
+* `%` - single percent sign (`'%'`). This does not consume an argument.
+-->
 
-<p>プレースホルダに対応する引数が無い場合、そのプレースホルダは置換されません。</p>
+<ul>
+<li><code>%s</code> - 文字列。</li>
+<li><code>%d</code> - 数値 (整数と浮動小数点数の両方)。</li>
+<li><code>%j</code> - JSON。</li>
+<li><code>%</code> - 一つのパーセント記号 (<code>&apos;%&apos;</code>)。これは引数を消費しません。</li>
+</ul>
+<!--
+If the placeholder does not have a corresponding argument, the placeholder is
+not replaced.
+-->
 
-<pre><code>util.format('%s:%s', 'foo'); // 'foo:%s'</code></pre>
+<p>プレースホルダに対応する引数が無い場合、そのプレースホルダは置換されません。
+
+</p>
+<pre><code>util.format(&apos;%s:%s&apos;, &apos;foo&apos;); // &apos;foo:%s&apos;</code></pre>
+<!--
+If there are more arguments than placeholders, the extra arguments are
+converted to strings with `util.inspect()` and these strings are concatenated,
+delimited by a space.
+-->
 
 <p>プレースホルダより多くの引数がある場合、余った引数は <code>util.inspect()</code> によって
-文字列化され、それらはスペース区切りで連結されます。</p>
+文字列化され、それらはスペース区切りで連結されます。
 
-<pre><code>util.format('%s:%s', 'foo', 'bar', 'baz'); // 'foo:bar baz'</code></pre>
+</p>
+<pre><code>util.format(&apos;%s:%s&apos;, &apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;); // &apos;foo:bar baz&apos;</code></pre>
+<!--
+If the first argument is not a format string then `util.format()` returns
+a string that is the concatenation of all its arguments separated by spaces.
+Each argument is converted to a string with `util.inspect()`.
+-->
 
 <p>第一引数がフォーマット文字列ではない場合、<code>util.format()</code> は全ての引数を
 スペース区切りで連結して返します。
-ここの引数は <code>util.inspect()</code> で文字列に変換されます。</p>
+ここの引数は <code>util.inspect()</code> で文字列に変換されます。
 
-<pre><code>util.format(1, 2, 3); // '1 2 3'</code></pre>
+</p>
+<pre><code>util.format(1, 2, 3); // &apos;1 2 3&apos;</code></pre>
+<h2>util.debug(string)<span><a class="mark" href="#util_util_debug_string" id="util_util_debug_string">#</a></span></h2>
+<!--
+A synchronous output function. Will block the process and
+output `string` immediately to `stderr`.
+-->
 
-<h3 id="util.debug">util.debug(string) <span><a class="top" href="#">↑</a><a class="mark" href="#util.debug">#</a></span></h3>
+<p>同期的な出力関数です。プロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。
 
-<p>同期的な出力関数です。プロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。</p>
+</p>
+<pre><code>require(&apos;util&apos;).debug(&apos;message on stderr&apos;);</code></pre>
+<h2>util.log(string)<span><a class="mark" href="#util_util_log_string" id="util_util_log_string">#</a></span></h2>
+<!--
+Output with timestamp on `stdout`.
+-->
 
-<pre><code>require('util').debug('message on stderr');</code></pre>
+<p>タイムスタンプとともに <code>stdout</code> へ出力します。
 
-<h3 id="util.log">util.log(string) <span><a class="top" href="#">↑</a><a class="mark" href="#util.log">#</a></span></h3>
+</p>
+<pre><code>require(&apos;util&apos;).log(&apos;Timestamped message.&apos;);</code></pre>
+<h2>util.inspect(object, [showHidden], [depth], [colors])<span><a class="mark" href="#util_util_inspect_object_showhidden_depth_colors" id="util_util_inspect_object_showhidden_depth_colors">#</a></span></h2>
+<!--
+Return a string representation of `object`, which is useful for debugging.
+-->
 
-<p>タイムスタンプとともに <code>stdout</code> へ出力します。</p>
+<p>デバッグで有用な、<code>object</code> の文字列表現を返します。
 
-<pre><code>require('util').log('Timestamped message.');</code></pre>
-
-<h3 id="util.inspect">util.inspect(object, [showHidden], [depth], [colors]) <span><a class="top" href="#">↑</a><a class="mark" href="#util.inspect">#</a></span></h3>
-
-<p>デバッグで有用な、<code>object</code> の文字列表現を返します。</p>
+</p>
+<!--
+If `showHidden` is `true`, then the object's non-enumerable properties will be
+shown too. Defaults to `false`.
+-->
 
 <p><code>showHidden</code> が <code>true</code> の場合、
 オブジェクトの Enumerable でないプロパティも表示されます。
-デフォルトは <code>false</code> です。</p>
+デフォルトは <code>false</code> です。
+
+</p>
+<!--
+If `depth` is provided, it tells `inspect` how many times to recurse while
+formatting the object. This is useful for inspecting large complicated objects.
+-->
 
 <p><code>depth</code> が与えられた場合、
 オブジェクトをフォーマットするために何回再帰するかを <code>inspect</code> に伝えます。
-これは巨大で複雑なオブジェクトを調査する場合に便利です。</p>
+これは巨大で複雑なオブジェクトを調査する場合に便利です。
+
+</p>
+<!--
+The default is to only recurse twice.  To make it recurse indefinitely, pass
+in `null` for `depth`.
+-->
 
 <p>デフォルトでは 2 回だけ再帰します。
-無限に再帰するには、<code>depth</code> に <code>null</code> を渡します。</p>
+無限に再帰するには、<code>depth</code> に <code>null</code> を渡します。
+
+</p>
+<!--
+If `colors` is `true`, the output will be styled with ANSI color codes.
+Defaults to `false`.
+-->
 
 <p><code>colors</code> が <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。
-デフォルトは <code>false</code> です。</p>
+デフォルトは <code>false</code> です。
 
-<p><code>util</code> オブジェクトの全てのプロパティを調査する例:</p>
+</p>
+<!--
+Example of inspecting all properties of the `util` object:
+-->
 
-<pre><code>var util = require('util');
+<p><code>util</code> オブジェクトの全てのプロパティを調査する例:
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
 
 console.log(util.inspect(util, true, null));</code></pre>
+<h2>util.isArray(object)<span><a class="mark" href="#util_util_isarray_object" id="util_util_isarray_object">#</a></span></h2>
+<!--
+Returns `true` if the given "object" is an `Array`. `false` otherwise.
+-->
 
-<h3 id="util.isArray">util.isArray(object) <span><a class="top" href="#">↑</a><a class="mark" href="#util.isArray">#</a></span></h3>
+<p><code>object</code> が配列なら <code>true</code> を、それ以外は <code>false</code> を返します。
 
-<p><code>object</code> が配列なら <code>true</code> を、それ以外は <code>false</code> を返します。</p>
-
-<pre><code>var util = require('util');
+</p>
+<pre><code>var util = require(&apos;util&apos;);
 
 util.isArray([])
   // true
@@ -128,68 +241,103 @@ util.isArray(new Array)
   // true
 util.isArray({})
   // false</code></pre>
+<h2>util.isRegExp(object)<span><a class="mark" href="#util_util_isregexp_object" id="util_util_isregexp_object">#</a></span></h2>
+<!--
+Returns `true` if the given "object" is a `RegExp`. `false` otherwise.
+-->
 
-<h3 id="util.isRegExp">util.isRegExp(object) <span><a class="top" href="#">↑</a><a class="mark" href="#util.isRegExp">#</a></span></h3>
+<p><code>object</code> が <code>RegExp</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。
 
-<p><code>object</code> が <code>RegExp</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。</p>
-
-<pre><code>var util = require('util');
+</p>
+<pre><code>var util = require(&apos;util&apos;);
 
 util.isRegExp(/some regexp/)
   // true
-util.isRegExp(new RegExp('another regexp'))
+util.isRegExp(new RegExp(&apos;another regexp&apos;))
   // true
 util.isRegExp({})
   // false</code></pre>
+<h2>util.isDate(object)<span><a class="mark" href="#util_util_isdate_object" id="util_util_isdate_object">#</a></span></h2>
+<!--
+Returns `true` if the given "object" is a `Date`. `false` otherwise.
+-->
 
-<h3 id="util.isDate">util.isDate(object) <span><a class="top" href="#">↑</a><a class="mark" href="#util.isDate">#</a></span></h3>
+<p><code>object</code> が <code>Date</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。
 
-<p><code>object</code> が <code>Date</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。</p>
-
-<pre><code>var util = require('util');
+</p>
+<pre><code>var util = require(&apos;util&apos;);
 
 util.isDate(new Date())
   // true
 util.isDate(Date())
-  // false (without 'new' returns a String)
+  // false (without &apos;new&apos; returns a String)
 util.isDate({})
   // false</code></pre>
+<h2>util.isError(object)<span><a class="mark" href="#util_util_iserror_object" id="util_util_iserror_object">#</a></span></h2>
+<!--
+Returns `true` if the given "object" is an `Error`. `false` otherwise.
+-->
 
-<h3 id="util.isError">util.isError(object) <span><a class="top" href="#">↑</a><a class="mark" href="#util.isError">#</a></span></h3>
+<p><code>object</code> が <code>Error</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。
 
-<p><code>object</code> が <code>Error</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。</p>
-
-<pre><code>var util = require('util');
+</p>
+<pre><code>var util = require(&apos;util&apos;);
 
 util.isError(new Error())
   // true
 util.isError(new TypeError())
   // true
-util.isError({ name: 'Error', message: 'an error occurred' })
+util.isError({ name: &apos;Error&apos;, message: &apos;an error occurred&apos; })
   // false</code></pre>
+<h2>util.pump(readableStream, writableStream, [callback])<span><a class="mark" href="#util_util_pump_readablestream_writablestream_callback" id="util_util_pump_readablestream_writablestream_callback">#</a></span></h2>
+<!--
+Experimental
+-->
 
-<h3 id="util.pump">util.pump(readableStream, writableStream, [callback]) <span><a class="top" href="#">↑</a><a class="mark" href="#util.pump">#</a></span></h3>
+<p>実験的
 
-<p>実験的</p>
+</p>
+<!--
+Read the data from `readableStream` and send it to the `writableStream`.
+When `writableStream.write(data)` returns `false` `readableStream` will be
+paused until the `drain` event occurs on the `writableStream`. `callback` gets
+an error as its only argument and is called when `writableStream` is closed or
+when an error occurs.
+-->
 
 <p><code>readableStream</code> からデータを読み、それ を<code>writableStream</code> に送ります。
 <code>writableStream.write(data)</code> が <code>false</code> を返す場合、
 <code>writableStream</code> が <code>drain</code> イベントを生成するまで、
 <code>readableStream</code> は中断します。
-<code>writableStream</code> がクローズされるかエラーが発生すると、<code>callback</code> は error を唯一の引数として呼び出されます。</p>
+<code>writableStream</code> がクローズされるかエラーが発生すると、<code>callback</code> は error を唯一の引数として呼び出されます。
 
-<h3 id="util.inherits">util.inherits(constructor, superConstructor) <span><a class="top" href="#">↑</a><a class="mark" href="#util.inherits">#</a></span></h3>
+
+</p>
+<h2>util.inherits(constructor, superConstructor)<span><a class="mark" href="#util_util_inherits_constructor_superconstructor" id="util_util_inherits_constructor_superconstructor">#</a></span></h2>
+<!--
+Inherit the prototype methods from one
+[constructor](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor)
+into another.  The prototype of `constructor` will be set to a new
+object created from `superConstructor`.
+-->
 
 <p>ある
 <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor">コンストラクタ</a>
 からプロトタイプメソッドを継承します。
-<code>constructor</code> のプロトタイプは <code>superConstructor</code> から作られたオブジェクトに設定されます。</p>
+<code>constructor</code> のプロトタイプは <code>superConstructor</code> から作られたオブジェクトに設定されます。
+
+</p>
+<!--
+As an additional convenience, `superConstructor` will be accessible
+through the `constructor.super_` property.
+-->
 
 <p>さらなる利便性のために、<code>superConstructor</code> は <code>constructor.super_</code>
-プロパティを通じてアクセスすることができるようになります。</p>
+プロパティを通じてアクセスすることができるようになります。
 
-<pre><code>var util = require("util");
-var events = require("events");
+</p>
+<pre><code>var util = require(&quot;util&quot;);
+var events = require(&quot;events&quot;);
 
 function MyStream() {
     events.EventEmitter.call(this);
@@ -198,7 +346,7 @@ function MyStream() {
 util.inherits(MyStream, events.EventEmitter);
 
 MyStream.prototype.write = function(data) {
-    this.emit("data", data);
+    this.emit(&quot;data&quot;, data);
 }
 
 var stream = new MyStream();
@@ -206,11 +354,12 @@ var stream = new MyStream();
 console.log(stream instanceof events.EventEmitter); // true
 console.log(MyStream.super_ === events.EventEmitter); // true
 
-stream.on("data", function(data) {
-    console.log('Received data: "' + data + '"');
+stream.on(&quot;data&quot;, function(data) {
+    console.log(&apos;Received data: &quot;&apos; + data + &apos;&quot;&apos;);
 })
-stream.write("It works!"); // Received data: "It works!"</code></pre>
-        </div>
+stream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;</code></pre>
+
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -220,7 +369,7 @@ stream.write("It works!"); // Received data: "It works!"</code></pre>
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -237,11 +386,11 @@ stream.write("It works!"); // Received data: "It works!"</code></pre>
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.5/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
     </div>
-    
-  <script src="assets/sh_main.js"></script>
-  <script src="assets/sh_javascript.min.js"></script>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
     var gaJsHost = (("https:" == document.location.protocol) ?
@@ -255,3 +404,4 @@ stream.write("It works!"); // Received data: "It works!"</code></pre>
       } catch(err) {}</script>
 </body>
 </html>
+

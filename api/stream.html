@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Stream Node.js v0.7.6 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/stream.html">
+</head>
+<body class="alt apidoc" id="api-section-stream">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="stream.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#stream_stream">Stream</a><ul>
+<li><a href="#stream_readable_stream">Readable Stream</a><ul>
+<li><a href="#stream_event_data">Event: &apos;data&apos;</a></li>
+<li><a href="#stream_event_end">Event: &apos;end&apos;</a></li>
+<li><a href="#stream_event_error">Event: &apos;error&apos;</a></li>
+<li><a href="#stream_event_close">Event: &apos;close&apos;</a></li>
+<li><a href="#stream_stream_readable">stream.readable</a></li>
+<li><a href="#stream_stream_setencoding_encoding">stream.setEncoding(encoding)</a></li>
+<li><a href="#stream_stream_pause">stream.pause()</a></li>
+<li><a href="#stream_stream_resume">stream.resume()</a></li>
+<li><a href="#stream_stream_destroy">stream.destroy()</a></li>
+<li><a href="#stream_stream_destroysoon">stream.destroySoon()</a></li>
+<li><a href="#stream_stream_pipe_destination_options">stream.pipe(destination, [options])</a></li>
+</ul>
+</li>
+<li><a href="#stream_writable_stream">Writable Stream</a><ul>
+<li><a href="#stream_event_drain">Event: &apos;drain&apos;</a></li>
+<li><a href="#stream_event_error_1">Event: &apos;error&apos;</a></li>
+<li><a href="#stream_event_close_1">Event: &apos;close&apos;</a></li>
+<li><a href="#stream_event_pipe">Event: &apos;pipe&apos;</a></li>
+<li><a href="#stream_stream_writable">stream.writable</a></li>
+<li><a href="#stream_stream_write_string_encoding_fd">stream.write(string, [encoding], [fd])</a></li>
+<li><a href="#stream_stream_write_buffer">stream.write(buffer)</a></li>
+<li><a href="#stream_stream_end">stream.end()</a></li>
+<li><a href="#stream_stream_end_string_encoding">stream.end(string, encoding)</a></li>
+<li><a href="#stream_stream_end_buffer">stream.end(buffer)</a></li>
+<li><a href="#stream_stream_destroy_1">stream.destroy()</a></li>
+<li><a href="#stream_stream_destroysoon_1">stream.destroySoon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Stream<span><a class="mark" href="#stream_stream" id="stream_stream">#</a></span></h1>
+<pre><code>Stability: 2 - Unstable</code></pre>
+<!--
+A stream is an abstract interface implemented by various objects in Node.
+For example a request to an HTTP server is a stream, as is stdout. Streams
+are readable, writable, or both. All streams are instances of `EventEmitter`.
+
+You can load up the Stream base class by doing `require('stream')`.
+-->
+
+<p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。
+例えば HTTP サーバへのリクエストは標準出力と同様にストリームです。
+ストリームは読み込み可能、書き込み可能、またはその両方です。
+全てのストリームは <code>EventEmitter</code> のインスタンスです。
+
+</p>
+<p>Stream のベースクラスは <code>require(&apos;stream&apos;)</code> でロードすることができます。
+
+</p>
+<h2>Readable Stream<span><a class="mark" href="#stream_readable_stream" id="stream_readable_stream">#</a></span></h2>
+<!--type=class-->
+
+<!--
+A `Readable Stream` has the following methods, members, and events.
+-->
+
+<p><code>Readable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。
+
+</p>
+<h3>Event: &apos;data&apos;<span><a class="mark" href="#stream_event_data" id="stream_event_data">#</a></span></h3>
+<p><code>function (data) { }</code>
+
+</p>
+<!--
+The `'data'` event emits either a `Buffer` (by default) or a string if
+`setEncoding()` was used.
+
+Note that the __data will be lost__ if there is no listener when a
+`Readable Stream` emits a `'data'` event.
+-->
+
+<p><code>&apos;data&apos;</code> イベントは <code>Buffer</code> (デフォルト) または、
+<code>setEncoding()</code> された場合は文字列のどちらかを生成します
+
+</p>
+<p><code>Readable Stream</code> が <code>&apos;data&apos;</code> イベントを生成した時にリスナが存在しなければ、
+<strong>データは失われる</strong>ことに注意してください。
+
+</p>
+<h3>Event: &apos;end&apos;<span><a class="mark" href="#stream_event_end" id="stream_event_end">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<!--
+Emitted when the stream has received an EOF (FIN in TCP terminology).
+Indicates that no more `'data'` events will happen. If the stream is also
+writable, it may be possible to continue writing.
+-->
+
+<p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。
+<code>&apos;data&apos;</code> イベントがもう発生しないことを示します。
+ストリームがもし書き込み可能でもあるなら、書き込みを続けることは可能かもしれません。
+
+</p>
+<h3>Event: &apos;error&apos;<span><a class="mark" href="#stream_event_error" id="stream_event_error">#</a></span></h3>
+<p><code>function (exception) { }</code>
+
+</p>
+<!--
+Emitted if there was an error receiving data.
+-->
+
+<p>データ受信でエラーがあると生成されます。
+
+</p>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#stream_event_close" id="stream_event_close">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<!--
+Emitted when the underlying file descriptor has been closed. Not all streams
+will emit this.  (For example, an incoming HTTP request will not emit
+`'close'`.)
+-->
+
+<p>下層でファイル記述子がクローズされた時に生成されます。
+全てのストリームがこのイベントを発生するわけではありません。
+(例えば、インカミングの HTTP リクエストは <code>&apos;close&apos;</code> イベントを生成しません。)
+
+</p>
+<h3>stream.readable<span><a class="mark" href="#stream_stream_readable" id="stream_stream_readable">#</a></span></h3>
+<!--
+A boolean that is `true` by default, but turns `false` after an `'error'`
+occurred, the stream came to an `'end'`, or `destroy()` was called.
+-->
+
+<p>デフォルトでは <code>true</code> ですが、<code>&apos;error&apos;</code> が発生した後、
+ストリームが <code>&apos;end&apos;</code> に達した後、または <code>destroy()</code> が呼ばれた後で、
+<code>false</code> に設定される boolean です。
+
+</p>
+<h3>stream.setEncoding(encoding)<span><a class="mark" href="#stream_stream_setencoding_encoding" id="stream_stream_setencoding_encoding">#</a></span></h3>
+<!--
+Makes the data event emit a string instead of a `Buffer`. `encoding` can be
+`'utf8'`, `'ascii'`, or `'base64'`.
+-->
+
+<p><code>&apos;data&apos;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
+<code>encoding</code> には <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、
+または <code>&apos;base64&apos;</code> を指定することができます。
+
+</p>
+<h3>stream.pause()<span><a class="mark" href="#stream_stream_pause" id="stream_stream_pause">#</a></span></h3>
+<!--
+Pauses the incoming `'data'` events.
+-->
+
+<p><code>&apos;data&apos;</code> イベントの到着を中断します。
+
+</p>
+<h3>stream.resume()<span><a class="mark" href="#stream_stream_resume" id="stream_stream_resume">#</a></span></h3>
+<!--
+Resumes the incoming `'data'` events after a `pause()`.
+-->
+
+<p><code>pause()</code> の後で <code>&apos;data&apos;</code> イベントの到着を再開します。
+
+</p>
+<h3>stream.destroy()<span><a class="mark" href="#stream_stream_destroy" id="stream_stream_destroy">#</a></span></h3>
+<!--
+Closes the underlying file descriptor. Stream will not emit any more events.
+-->
+
+<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+
+</p>
+<h3>stream.destroySoon()<span><a class="mark" href="#stream_stream_destroysoon" id="stream_stream_destroysoon">#</a></span></h3>
+<!--
+After the write queue is drained, close the file descriptor.
+-->
+
+<p>書き込みキューが空になった後、ファイル記述子をクローズします。
+
+</p>
+<h3>stream.pipe(destination, [options])<span><a class="mark" href="#stream_stream_pipe_destination_options" id="stream_stream_pipe_destination_options">#</a></span></h3>
+<!--
+This is a `Stream.prototype` method available on all `Stream`s.
+-->
+
+<p>これは全ての <code>Stream</code> で利用可能な <code>Stream.prototype</code> メソッドです。
+
+</p>
+<!--
+Connects this read stream to `destination` WriteStream. Incoming
+data on this stream gets written to `destination`. The destination and source
+streams are kept in sync by pausing and resuming as necessary.
+-->
+
+<p>読み込みストリームを <code>destination</code> の書き込みストリームに接続します。
+このストリームに入ってきたデータは <code>destination</code> に書き込まれます。
+接続先と接続元のストリームは、必要に応じて中断と再開することで同期を保ちます。
+
+</p>
+<!--
+This function returns the `destination` stream.
+-->
+
+<p>この関数は <code>destination</code> ストリームを返します。
+
+</p>
+<!--
+Emulating the Unix `cat` command:
+-->
+
+<p>Unix の <code>cat</code> コマンドのエミュレート:
+
+</p>
+<pre><code>process.stdin.resume();
+process.stdin.pipe(process.stdout);</code></pre>
+<!--
+By default `end()` is called on the destination when the source stream emits
+`end`, so that `destination` is no longer writable. Pass `{ end: false }` as
+`options` to keep the destination stream open.
+-->
+
+<p>デフォルトでは接続元ストリームで <code>end</code> イベントが生成されると、
+接続先の <code>end()</code> が呼ばれるので、もう書き込みはできません。
+<code>option</code> に <code>{ end: false }</code> を渡すと接続先はストリームはオープンされたままとなります。
+
+</p>
+<!--
+This keeps `process.stdout` open so that "Goodbye" can be written at the end.
+-->
+
+<p>これは <code>process.stdout</code> をオープンしたままにして最後に &quot;Goodbye&quot; と出力します。
+
+</p>
+<pre><code>process.stdin.resume();
+
+process.stdin.pipe(process.stdout, { end: false });
+
+process.stdin.on(&quot;end&quot;, function() {
+  process.stdout.write(&quot;Goodbye\n&quot;);
+});</code></pre>
+<h2>Writable Stream<span><a class="mark" href="#stream_writable_stream" id="stream_writable_stream">#</a></span></h2>
+<!--type=class-->
+
+<!--
+A `Writable Stream` has the following methods, members, and events.
+-->
+
+<p><code>Writable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。
+
+</p>
+<h3>Event: &apos;drain&apos;<span><a class="mark" href="#stream_event_drain" id="stream_event_drain">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<!--
+After a `write()` method returned `false`, this event is emitted to
+indicate that it is safe to write again.
+-->
+
+<p><code>write()</code> メソッドが <code>false</code> でリターンした後、
+再び安全に書き込むことができるようになったことを示すために、
+このイベントは生成されます。
+
+</p>
+<h3>Event: &apos;error&apos;<span><a class="mark" href="#stream_event_error_1" id="stream_event_error_1">#</a></span></h3>
+<p><code>function (exception) { }</code>
+
+</p>
+<!--
+Emitted on error with the exception `exception`.
+-->
+
+<p><code>exception</code> 例外によるエラーについて生成されます。
+
+</p>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#stream_event_close_1" id="stream_event_close_1">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<!--
+Emitted when the underlying file descriptor has been closed.
+-->
+
+<p>下層でファイル記述子がクローズされた時に生成されます。
+
+</p>
+<h3>Event: &apos;pipe&apos;<span><a class="mark" href="#stream_event_pipe" id="stream_event_pipe">#</a></span></h3>
+<p><code>function (src) { }</code>
+
+</p>
+<!--
+Emitted when the stream is passed to a readable stream's pipe method.
+-->
+
+<p>このストリームが読み込み可能ストリームの pipe メソッドに渡された時に生成されます。
+
+</p>
+<h3>stream.writable<span><a class="mark" href="#stream_stream_writable" id="stream_stream_writable">#</a></span></h3>
+<!--
+A boolean that is `true` by default, but turns `false` after an `'error'`
+occurred or `end()` / `destroy()` was called.
+-->
+
+<p>デフォルトでは <code>true</code> ですが、<code>&apos;error&apos;</code> が発生した後、
+<code>end()</code> / <code>destroy()</code> が呼ばれた後で <code>false</code> に設定される boolean です。
+
+</p>
+<h3>stream.write(string, [encoding], [fd])<span><a class="mark" href="#stream_stream_write_string_encoding_fd" id="stream_stream_write_string_encoding_fd">#</a></span></h3>
+<!--
+Writes `string` with the given `encoding` to the stream.  Returns `true` if
+the string has been flushed to the kernel buffer.  Returns `false` to
+indicate that the kernel buffer is full, and the data will be sent out in
+the future. The `'drain'` event will indicate when the kernel buffer is
+empty again. The `encoding` defaults to `'utf8'`.
+-->
+
+<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。
+文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。
+カーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、
+<code>false</code> が返ります。
+<code>&apos;drain&apos;</code> イベントがカーネルバッファが再び空いたことを示します。
+<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。
+
+</p>
+<!--
+If the optional `fd` parameter is specified, it is interpreted as an integral
+file descriptor to be sent over the stream. This is only supported for UNIX
+streams, and is silently ignored otherwise. When writing a file descriptor in
+this manner, closing the descriptor before the stream drains risks sending an
+invalid (closed) FD.
+-->
+
+<p>オプションの <code>fd</code> 引数が指定されると、
+ストリームに送信するための基礎となるファイル記述子として解釈されます。
+これは UNIX ストリームでのみサポートされており、その他では黙って無視されます。
+このようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、
+データが不正な (クローズされた) ファイル記述子に送られるリスクがあります。
+
+</p>
+<h3>stream.write(buffer)<span><a class="mark" href="#stream_stream_write_buffer" id="stream_stream_write_buffer">#</a></span></h3>
+<!--
+Same as the above except with a raw buffer.
+-->
+
+<p>生のバッファを使うこと以外は上記と同じです。
+
+</p>
+<h3>stream.end()<span><a class="mark" href="#stream_stream_end" id="stream_stream_end">#</a></span></h3>
+<!--
+Terminates the stream with EOF or FIN.
+This call will allow queued write data to be sent before closing the stream.
+-->
+
+<p>ストリームを EOF または FIN で終了します。
+この呼び出しは、ストリームがクローズされる前にキューイングされたデータが
+送信されることを許します。
+
+</p>
+<h3>stream.end(string, encoding)<span><a class="mark" href="#stream_stream_end_string_encoding" id="stream_stream_end_string_encoding">#</a></span></h3>
+<!--
+Sends `string` with the given `encoding` and terminates the stream with EOF
+or FIN. This is useful to reduce the number of packets sent.
+-->
+
+<p>与えられた <code>encoding</code> で <code>string</code> を送信してからEOFまたはFINでストリームを終了します。
+これは送信するパケットの数を減らすために便利です。
+
+</p>
+<h3>stream.end(buffer)<span><a class="mark" href="#stream_stream_end_buffer" id="stream_stream_end_buffer">#</a></span></h3>
+<!--
+Same as above but with a `buffer`.
+-->
+
+<p><code>buffer</code> であること以外は上記と同じです。
+
+</p>
+<h3>stream.destroy()<span><a class="mark" href="#stream_stream_destroy_1" id="stream_stream_destroy_1">#</a></span></h3>
+<!--
+Closes the underlying file descriptor. Stream will not emit any more events.
+Any queued write data will not be sent.
+-->
+
+<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+キューイングされたデータは送信されません。
+
+</p>
+<h3>stream.destroySoon()<span><a class="mark" href="#stream_stream_destroysoon_1" id="stream_stream_destroysoon_1">#</a></span></h3>
+<!--
+After the write queue is drained, close the file descriptor. `destroySoon()`
+can still destroy straight away, as long as there is no data left in the queue
+for writes.
+-->
+
+<p>出力キューが空になった後、ファイル記述子をクローズします。
+出力キューにデータが存在しない場合、<code>destroySoon()</code> はすぐに破棄します。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    var gaJsHost = (("https:" == document.location.protocol) ?
+    "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script>
+    try {
+      var pageTracker = _gat._getTracker("UA-10874194-2");
+      pageTracker._trackPageview();
+      } catch(err) {}</script>
+</body>
+</html>
+

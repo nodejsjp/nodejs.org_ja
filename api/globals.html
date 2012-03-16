@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>globals - Node.js v0.7.5 Manual &amp; Documentation</title>
+  <title>Global Objects Node.js v0.7.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
-  <link rel="canonical" href="http://nodejs.org/docs/latest/api/globals.html">
+  <link rel="canonical" href="http://nodejs.org/api/globals.html">
 </head>
-<body class="alt apidoc">
+<body class="alt apidoc" id="api-section-globals">
     <div id="intro" class="interior">
         <a href="/" title="Go back to the home page">
             <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -40,112 +40,288 @@
         </div>
 
         <div id="column1" class="interior">
-        <header>
-          <h1>Node.js v0.7.5 マニュアル &amp; ドキュメンテーション</h1>
-          <div id="gtoc">
-            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          <header>
+            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="globals.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#globals_global_objects">Global Objects</a><ul>
+<li><a href="#globals_global">global</a></li>
+<li><a href="#globals_process">process</a></li>
+<li><a href="#globals_console">console</a></li>
+<li><a href="#globals_class_buffer">Class: Buffer</a></li>
+<li><a href="#globals_require">require()</a><ul>
+<li><a href="#globals_require_resolve">require.resolve()</a></li>
+<li><a href="#globals_require_cache">require.cache</a></li>
+</ul>
+</li>
+<li><a href="#globals_filename">__filename</a></li>
+<li><a href="#globals_dirname">__dirname</a></li>
+<li><a href="#globals_module">module</a></li>
+<li><a href="#globals_exports">exports</a></li>
+<li><a href="#globals_settimeout_cb_ms">setTimeout(cb, ms)</a></li>
+<li><a href="#globals_cleartimeout_t">clearTimeout(t)</a></li>
+<li><a href="#globals_setinterval_cb_ms">setInterval(cb, ms)</a></li>
+<li><a href="#globals_clearinterval_t">clearInterval(t)</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
-          <hr>
-        </header>
-        <div id="apicontent">
-          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#global_Objects">Global Objects</a><ul><li><a href="#global">global</a></li><li><a href="#process">process</a></li><li><a href="#console">console</a></li><li><a href="#buffer">Buffer</a></li><li><a href="#require">require()</a></li><li><a href="#require.resolve">require.resolve()</a></li><li><a href="#require.cache">require.cache</a></li><li><a href="#__filename">__filename</a></li><li><a href="#__dirname">__dirname</a></li><li><a href="#module">module</a></li><li><a href="#exports">exports</a></li><li><a href="#setTimeout">setTimeout(cb, ms)</a></li><li><a href="#clearTimeout">clearTimeout(t)</a></li><li><a href="#setInterval">setInterval(cb, ms)</a></li><li><a href="#clearInterval">clearInterval(t)</a></li></ul></li></ul><hr></div>
-<h2 id="global_Objects">Global Objects <span><a class="top" href="#">↑</a><a class="mark" href="#global_Objects">#</a></span></h2>
+
+          <div id="apicontent">
+            <h1>Global Objects<span><a class="mark" href="#globals_global_objects" id="globals_global_objects">#</a></span></h1>
+<!-- type=misc -->
+
+<!--
+These objects are available in all modules. Some of these objects aren't
+actually in the global scope but in the module scope - this will be noted.
+-->
 
 <p>これらのオブジェクトは全てのモジュールで有効です。
-これらのオブジェクトのいくつかは実際はグローバルスコープではなくモジュールスコープです - 注意してください。</p>
+これらのオブジェクトのいくつかは実際はグローバルスコープではなくモジュールスコープです - 注意してください。
 
-<h3 id="global">global <span><a class="top" href="#">↑</a><a class="mark" href="#global">#</a></span></h3>
+</p>
+<h2>global<span><a class="mark" href="#globals_global" id="globals_global">#</a></span></h2>
+<!-- type=global -->
 
-<p>グローバルなネームスペースのオブジェクトです。</p>
+<!--
+* {Object} The global namespace object.
+-->
+
+<ul>
+<li>{Object} グローバルなネームスペースのオブジェクト</li>
+</ul>
+<!--
+In browsers, the top-level scope is the global scope. That means that in
+browsers if you're in the global scope `var something` will define a global
+variable. In Node this is different. The top-level scope is not the global
+scope; `var something` inside a Node module will be local to that module.
+-->
 
 <p>ブラウザでは、トップレベルのスコープはグローバルスコープです。
 これは、ブラウザではグローバルスコープで <code>var something</code> と定義するとグローバル変数になることを意味します。
 Node では異なります。
 トップレベルのスコープはグローバルスコープではありません;
-Node のモジュール内での <code>var something</code> はそのモジュールでローカルになります。</p>
+Node のモジュール内での <code>var something</code> はそのモジュールでローカルになります。
 
-<h3 id="process">process <span><a class="top" href="#">↑</a><a class="mark" href="#process">#</a></span></h3>
+</p>
+<h2>process<span><a class="mark" href="#globals_process" id="globals_process">#</a></span></h2>
+<!-- type=global -->
 
-<p>プロセスオブジェクトです。<a href="process.html#process">process object</a> の節を参照してください。</p>
+<ul>
+<li>{Object}</li>
+</ul>
+<!--
+The process object. See the [process object](process.html#process) section.
+-->
 
-<h3 id="console">console <span><a class="top" href="#">↑</a><a class="mark" href="#console">#</a></span></h3>
+<p>プロセスオブジェクトです。<a href="process.html#process">process object</a> の節を参照してください。
+
+</p>
+<h2>console<span><a class="mark" href="#globals_console" id="globals_console">#</a></span></h2>
+<!-- type=global -->
+
+<ul>
+<li>{Object}</li>
+</ul>
+<!--
+Used to print to stdout and stderr. See the [stdio](stdio.html) section.
+-->
 
 <p>標準出力および標準エラー出力へのプリントに使われます。
-<a href="stdio.html">標準入出力</a> を参照してください。</p>
+<a href="stdio.html">標準入出力</a> を参照してください。
 
-<h3 id="buffer">Buffer <span><a class="top" href="#">↑</a><a class="mark" href="#buffer">#</a></span></h3>
+</p>
+<h2>Class: Buffer<span><a class="mark" href="#globals_class_buffer" id="globals_class_buffer">#</a></span></h2>
+<!-- type=global -->
+
+<ul>
+<li>{Function}</li>
+</ul>
+<!--
+Used to handle binary data. See the [buffer section](buffer.html).
+-->
 
 <p>バイナリデータを扱うために使われます。
-<a href="buffers.html">buffers</a> を参照してください。</p>
+<a href="buffers.html">buffer セクション</a> を参照してください。
 
-<h3 id="require">require() <span><a class="top" href="#">↑</a><a class="mark" href="#require">#</a></span></h3>
+</p>
+<h2>require()<span><a class="mark" href="#globals_require" id="globals_require">#</a></span></h2>
+<!-- type=var -->
+
+<ul>
+<li>{Function}</li>
+</ul>
+<!--
+To require modules. See the [Modules](modules.html#modules) section.
+`require` isn't actually a global but rather local to each module.
+-->
 
 <p>require モジュールを指します。<a href="modules.html#modules">モジュール</a> の節を参照してください。
-<code>require</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+<code>require</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
-<h3 id="require.resolve">require.resolve() <span><a class="top" href="#">↑</a><a class="mark" href="#require.resolve">#</a></span></h3>
+</p>
+<h3>require.resolve()<span><a class="mark" href="#globals_require_resolve" id="globals_require_resolve">#</a></span></h3>
+<!--
+Use the internal `require()` machinery to look up the location of a module,
+but rather than loading the module, just return the resolved filename.
+-->
 
 <p><code>require()</code> の内部でモジュールの位置を検索するために使われます。
-モジュールのロードは行わず、ファイル名を解決して返すだけです。</p>
+モジュールのロードは行わず、ファイル名を解決して返すだけです。
 
-<h3 id="require.cache">require.cache <span><a class="top" href="#">↑</a><a class="mark" href="#require.cache">#</a></span></h3>
+</p>
+<h3>require.cache<span><a class="mark" href="#globals_require_cache" id="globals_require_cache">#</a></span></h3>
+<div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
+<!--
+Modules are cached in this object when they are required. By deleting a key
+value from this object, the next `require` will reload the module.
+-->
 
 <p>モジュールが要求されると、このオブジェクトの中にキャッシュされます。
 このオブジェクトからキーと値を削除すると、次にそのモジュールが
-<code>require</code> されたときにリロードされます。</p>
+<code>require</code> されたときにリロードされます。
 
-<h3 id="__filename">__filename <span><a class="top" href="#">↑</a><a class="mark" href="#__filename">#</a></span></h3>
+</p>
+<h2>__filename<span><a class="mark" href="#globals_filename" id="globals_filename">#</a></span></h2>
+<!-- type=var -->
+
+<ul>
+<li>{String}</li>
+</ul>
+<!--
+The filename of the code being executed.  This is the resolved absolute path
+of this code file.  For a main program this is not necessarily the same
+filename used in the command line.  The value inside a module is the path
+to that module file.
+-->
 
 <p>実行されているコードのファイル名です。これは解決された絶対パスです。
 メインプログラムでは、必ずしもコマンドライン引数で使われたファイル名と
 同じではありません。
-モジュールの中では、この値はそのモジュールファイルのパスとなります。</p>
+モジュールの中では、この値はそのモジュールファイルのパスとなります。
 
-<p>例: <code>node example.js</code> を <code>/Users/mjr</code> で実行する</p>
+</p>
+<!--
+Example: running `node example.js` from `/Users/mjr`
+-->
 
+<p>例: <code>node example.js</code> を <code>/Users/mjr</code> で実行する
+
+</p>
 <pre><code>console.log(__filename);
 // /Users/mjr/example.js</code></pre>
+<!--
+`__filename` isn't actually a global but rather local to each module.
+-->
 
-<p><code>__filename</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+<p><code>__filename</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
-<h3 id="__dirname">__dirname <span><a class="top" href="#">↑</a><a class="mark" href="#__dirname">#</a></span></h3>
+</p>
+<h2>__dirname<span><a class="mark" href="#globals_dirname" id="globals_dirname">#</a></span></h2>
+<!-- type=var -->
 
-<p>現在実行されているスクリプトが存在するディレクトリの名前です。</p>
+<ul>
+<li>{String}</li>
+</ul>
+<!--
+The name of the directory that the currently executing script resides in.
+-->
 
-<p>例: <code>node example.js</code> を <code>/Users/mjr</code> で実行する</p>
+<p>現在実行されているスクリプトが存在するディレクトリの名前です。
 
+</p>
+<!--
+Example: running `node example.js` from `/Users/mjr`
+-->
+
+<p>例: <code>node example.js</code> を <code>/Users/mjr</code> で実行する
+
+</p>
 <pre><code>console.log(__dirname);
 // /Users/mjr</code></pre>
+<!--
+`__dirname` isn't actually a global but rather local to each module.
+-->
 
-<p><code>__dirname</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+<p><code>__dirname</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
-<h3 id="module">module <span><a class="top" href="#">↑</a><a class="mark" href="#module">#</a></span></h3>
+
+</p>
+<h2>module<span><a class="mark" href="#globals_module" id="globals_module">#</a></span></h2>
+<!-- type=var -->
+
+<ul>
+<li>{Object}</li>
+</ul>
+<!--
+A reference to the current module. In particular
+`module.exports` is the same as the `exports` object.
+`module` isn't actually a global but rather local to each module.
+
+See the [module system documentation](modules.html) for more
+information.
+-->
 
 <p>現在のモジュールへの参照です。
 特に <code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
-<code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+<code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
-<p>より詳しくは <a href="modules.html">module system documentation</a> を参照してください。</p>
+</p>
+<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a>
+を参照してください。
 
-<h3 id="exports">exports <span><a class="top" href="#">↑</a><a class="mark" href="#exports">#</a></span></h3>
+</p>
+<h2>exports<span><a class="mark" href="#globals_exports" id="globals_exports">#</a></span></h2>
+<!-- type=var -->
+
+<!--
+An object which is shared between all instances of the current module and
+made accessible through `require()`.
+`exports` is the same as the `module.exports` object.
+`exports` isn't actually a global but rather local to each module.
+
+See the [module system documentation](modules.html) for more
+information.
+-->
 
 <p>現在のモジュールの全てのインスタンス間で共有されるオブジェクトで、
 <code>require</code> を通じてアクセス可能になります。
 <code>exports</code> は <code>module.exports</code> と同じオブジェクトです。
-<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。</p>
+<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
-<p>より詳しくは <a href="modules.html">module system documentation</a> を参照してください。</p>
+</p>
+<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a>
+を参照してください。
 
-<h3 id="setTimeout">setTimeout(cb, ms) <span><a class="top" href="#">↑</a><a class="mark" href="#setTimeout">#</a></span></h3>
+</p>
+<h2>setTimeout(cb, ms)<span><a class="mark" href="#globals_settimeout_cb_ms" id="globals_settimeout_cb_ms">#</a></span></h2>
+<h2>clearTimeout(t)<span><a class="mark" href="#globals_cleartimeout_t" id="globals_cleartimeout_t">#</a></span></h2>
+<h2>setInterval(cb, ms)<span><a class="mark" href="#globals_setinterval_cb_ms" id="globals_setinterval_cb_ms">#</a></span></h2>
+<h2>clearInterval(t)<span><a class="mark" href="#globals_clearinterval_t" id="globals_clearinterval_t">#</a></span></h2>
+<!--type=global-->
 
-<h3 id="clearTimeout">clearTimeout(t) <span><a class="top" href="#">↑</a><a class="mark" href="#clearTimeout">#</a></span></h3>
+<!--
+The timer functions are global variables. See the [timers](timers.html) section.
+-->
 
-<h3 id="setInterval">setInterval(cb, ms) <span><a class="top" href="#">↑</a><a class="mark" href="#setInterval">#</a></span></h3>
+<p>タイマー関数はグローバル変数です。<a href="timers.html">タイマー</a> を参照してください。
+</p>
 
-<h3 id="clearInterval">clearInterval(t) <span><a class="top" href="#">↑</a><a class="mark" href="#clearInterval">#</a></span></h3>
-
-<p>タイマー関数はグローバル変数です。<a href="timers.html">タイマー</a> を参照してください。</p>
-        </div>
+          </div>
         </div>
     </div>
     <div id="footer">
@@ -155,7 +331,7 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -172,11 +348,11 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.5/LICENSE">license</a>.</p>
+        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
     </div>
-    
-  <script src="assets/sh_main.js"></script>
-  <script src="assets/sh_javascript.min.js"></script>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
     var gaJsHost = (("https:" == document.location.protocol) ?
@@ -190,3 +366,4 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
       } catch(err) {}</script>
 </body>
 </html>
+

@@ -1,0 +1,171 @@
+{
+  "source": "doc/api/readline.markdown",
+  "modules": [
+    {
+      "textRaw": "Readline",
+      "name": "readline",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as STDIN) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've paused the interface. Here's how to allow your\nprogram to gracefully pause:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースを\n中断するまで node プログラムは終了しないことに注意してください。\nプログラムをスムーズに中断する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface(process.stdin, process.stdout, null);\ni.question(&quot;What do you think of node.js?&quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback.&quot;);\n\n  i.pause();\n});</code></pre>\n",
+      "methods": [
+        {
+          "textRaw": "rl.createInterface(input, output, completer)",
+          "type": "method",
+          "name": "createInterface",
+          "desc": "<!--\nTakes two streams and creates a readline interface. The `completer` function\nis used for autocompletion. When given a substring, it returns `[[substr1,\nsubstr2, ...], originalsubstring]`.\n-->\n\n<p>二つのストリームを受け取り、readline のインタフェースを作成します。\n<code>completer</code> 関数は補完のために使われます。\nそれは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>\nを返します。\n\n</p>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<p>  function completer(linePartial, callback) {\n    callback(null, [[&apos;123&apos;], linePartial]);\n  }\n\n</p>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&apos;readline&apos;),\n  rl = readline.createInterface(process.stdin, process.stdout);</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "input"
+                },
+                {
+                  "name": "output"
+                },
+                {
+                  "name": "completer"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: Interface",
+          "type": "class",
+          "name": "Interface",
+          "desc": "<!--\nThe class that represents a readline interface with a stdin and stdout\nstream.\n-->\n\n<p>標準入力と標準出力を持つ readline インタフェースを表現するクラスです。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "rl.setPrompt(prompt, length)",
+              "type": "method",
+              "name": "setPrompt",
+              "desc": "<!--\nSets the prompt, for example when you run `node` on the command line, you see\n`> `, which is node's prompt.\n-->\n\n<p>プロンプトを設定します。\nたとえば、コマンドプロンプトで <code>node</code> コマンドを実行すると、\n<code>&gt; </code> を見ることができます。これが Node のプロンプトです。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "prompt"
+                    },
+                    {
+                      "name": "length"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "rl.prompt()",
+              "type": "method",
+              "name": "prompt",
+              "desc": "<!--\nReadies readline for input from the user, putting the current `setPrompt`\noptions on a new line, giving the user a new spot to write.\n\nThis will also resume the `in` stream used with `createInterface` if it has\nbeen paused.\n-->\n\n<p>ユーザからの入力を 1 行読み込みます。\n現在の <code>setPrompt()</code> の値を新しい行に出力し、\nユーザに新しい入力エリアを与えます。\n\n</p>\n<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが\n中断されていれば再開します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "rl.question(query, callback)",
+              "type": "method",
+              "name": "question",
+              "desc": "<!--\nPrepends the prompt with `query` and invokes `callback` with the user's\nresponse. Displays the query to the user, and then invokes `callback` with the\nuser's response after it has been typed.\n\nThis will also resume the `in` stream used with `createInterface` if it has\nbeen paused.\n-->\n\n<p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。\nユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。\n\n</p>\n<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが\n中断されていれば再開します。\n\n</p>\n<!--\nExample usage:\n-->\n\n<p>使用例:\n\n</p>\n<pre><code>interface.question(&apos;What is your favorite food?&apos;, function(answer) {\n  console.log(&apos;Oh, so your favorite food is &apos; + answer);\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "query"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "rl.pause()",
+              "type": "method",
+              "name": "pause",
+              "desc": "<!--\nPauses the readline `in` stream, allowing it to be resumed later if needed.\n-->\n\n<p><code>in</code> ストリームからの入力を中断します。\n必要なら後で再開することができます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "rl.resume()",
+              "type": "method",
+              "name": "resume",
+              "desc": "<!--\nResumes the readline `in` stream.\n-->\n\n<p><code>in</code> ストリームからの入力を再開します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "rl.write()",
+              "type": "method",
+              "name": "write",
+              "desc": "<!--\nWrites to tty.\n\nThis will also resume the `in` stream used with `createInterface` if it has\nbeen paused.\n-->\n\n<p>tty へ出力します。\n\n</p>\n<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが\n中断されていれば再開します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'line'",
+              "type": "event",
+              "name": "line",
+              "desc": "<p><code>function (line) {}</code>\n\n</p>\n<!--\nEmitted whenever the `in` stream receives a `\\n`, usually received when the\nuser hits enter, or return. This is a good hook to listen for user input.\n-->\n\n<p><code>in</code> ストリームから <code>\\n</code> を読み込むごとに生成されます。\n通常、ユーザがエンターまたはリターンを打つごとに受信します。\nこれはユーザ入浴のよいフックとなります。\n\n</p>\n<!--\nExample of listening for `line`:\n-->\n\n<p><code>line</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;line&apos;, function (cmd) {\n  console.log(&apos;You just typed: &apos;+cmd);\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'pause'",
+              "type": "event",
+              "name": "pause",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted whenever the `in` stream is paused or receives `^D`, respectively known\nas `EOT`. This event is also called if there is no `SIGINT` event listener\npresent when the `in` stream receives a `^C`, respectively known as `SIGINT`.\n\nAlso emitted whenever the `in` stream is not paused and receives the `SIGCONT`\nevent. (See events `SIGTSTP` and `SIGCONT`)\n\nExample of listening for `pause`:\n-->\n\n<p><code>in</code> ストリームが中断された時、または <code>EOT</code> として知られる <code>^D</code> \nを受信すると生成されます。\nこのイベントは、<code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した際に、\n<code>SIGINT</code> イベントのリスナが存在しない場合にも生成されます。\n\n</p>\n<p><code>in</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも\n生成されます (<code>SIGTSTP</code> および <code>SIGCONT</code> も参照してください)。\n\n</p>\n<p><code>&apos;pause&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;pause&apos;, function() {\n  console.log(&apos;Readline paused.&apos;);\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'resume'",
+              "type": "event",
+              "name": "resume",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted whenever the `in` stream is resumed.\n\nExample of listening for `resume`:\n-->\n\n<p><code>in</code> ストリームが再開された時に生成されます。\n\n</p>\n<p><code>&apos;resume&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;resume&apos;, function() {\n  console.log(&apos;Readline resumed.&apos;);\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'SIGINT'",
+              "type": "event",
+              "name": "SIGINT",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted whenever the `in` stream receives a `^C`, respectively known as\n`SIGINT`. If there is no `SIGINT` event listener present when the `in` stream\nreceives a `SIGINT`, `pause` will be triggered.\n\nExample of listening for `SIGINT`:\n-->\n\n<p><code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に生成されます。\nもし <code>in</code> ストリームが <code>SIGINT</code> を受信した時に <code>&apos;SIGINT&apos;</code> イベントの\nリスナが存在しなければ、<code>&apos;pause&apos;</code> イベントがトリガされます。\n\n</p>\n<p><code>&apos;SIGINT&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;SIGINT&apos;, function() {\n  rl.question(&apos;Are you sure you want to exit?&apos;, function(answer) {\n    if (answer.match(/^y(es)?$/i)) rl.pause();\n  });\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'SIGTSTP'",
+              "type": "event",
+              "name": "SIGTSTP",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\n**This does not work on Windows.**\n\nEmitted whenever the `in` stream receives a `^Z`, respectively known as\n`SIGTSTP`. If there is no `SIGTSTP` event listener present when the `in` stream\nreceives a `SIGTSTP`, the program will be sent to the background.\n\nWhen the program is resumed with `fg`, the `pause` and `SIGCONT` events will be\nemitted. You can use either to resume the stream.\n\nThe `pause` and `SIGCONT` events will not be triggered if the stream was paused\nbefore the program was sent to the background.\n\nExample of listening for `SIGTSTP`:\n-->\n\n<p><strong>これは Windows では動作しません。</strong>\n\n</p>\n<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に生成されます。\nもし <code>in</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>&apos;SIGTSTP&apos;</code> イベントの\nリスナが存在しなければ、プログラムはバックグラウンドに送られます。\n\n</p>\n<p>プログラムが <code>fg</code> により再開されると、<code>&apos;pause&apos;</code> および <code>&apos;SIGCONT&apos;</code> イベントが\n生成されます。どちらもストリームを再開するために使うことができます。\n\n</p>\n<p>プログラムがバックグラウンドに送られる前にストリームが中断されていると、\n<code>&apos;pause&apos;</code> および <code>&apos;SIGCONT&apos;</code> イベントは生成されません。\n\n</p>\n<p><code>&apos;SIGTSTP&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;SIGTSTP&apos;, function() {\n  // This will override SIGTSTP and prevent the program from going to the\n  // background.\n  console.log(&apos;Caught SIGTSTP.&apos;);\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'SIGCONT'",
+              "type": "event",
+              "name": "SIGCONT",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\n**This does not work on Windows.**\n\nEmitted whenever the `in` stream is sent to the background with `^Z`,\nrespectively known as `SIGTSTP`, and then continued with `fg`. This event only\nemits if the stream was not paused before sending the program to the\nbackground.\n\nExample of listening for `SIGCONT`:\n-->\n\n<p><strong>これは Windows では動作しません。</strong>\n\n</p>\n<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに\n送られた後で、<code>fg</code> によって再開されるた場合に生成されます。\nこのイベントはプログラムがバックグラウンドに送られる前にストリームが中断されていなかった場合にのみ生成されます。\n\n</p>\n<p><code>&apos;SIGCONT&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;SIGCONT&apos;, function() {\n  // `prompt` will automatically resume the stream\n  rl.prompt();\n});</code></pre>\n<!--\nHere's an example of how to use all these together to craft a tiny command\nline interface:\n-->\n\n<p>全てを一緒に使う、小さなコマンドラインインタフェースの例:\n\n</p>\n<pre><code>var readline = require(&apos;readline&apos;),\n    rl = readline.createInterface(process.stdin, process.stdout);\n\nrl.setPrompt(&apos;OHAI&gt; &apos;);\nrl.prompt();\n\nrl.on(&apos;line&apos;, function(line) {\n  switch(line.trim()) {\n    case &apos;hello&apos;:\n      console.log(&apos;world!&apos;);\n      break;\n    default:\n      console.log(&apos;Say what? I might have heard `&apos; + line.trim() + &apos;`&apos;);\n      break;\n  }\n  rl.prompt();\n}).on(&apos;pause&apos;, function() {\n  console.log(&apos;Have a great day!&apos;);\n  process.exit(0);\n});</code></pre>\n",
+              "params": []
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Readline"
+    }
+  ]
+}

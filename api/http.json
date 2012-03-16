@@ -1,0 +1,730 @@
+{
+  "source": "doc/api/http.markdown",
+  "modules": [
+    {
+      "textRaw": "HTTP",
+      "name": "http",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nTo use the HTTP server and client one must `require('http')`.\n-->\n\n<p>HTTP サーバおよびクライアントを使用するにはいずれも <code>require(&apos;http&apos;)</code> が必要です。\n\n</p>\n<!--\nThe HTTP interfaces in Node are designed to support many features\nof the protocol which have been traditionally difficult to use.\nIn particular, large, possibly chunk-encoded, messages. The interface is\ncareful to never buffer entire requests or responses--the\nuser is able to stream data.\n-->\n\n<p>Node の HTTP インタフェースは、\n伝統的に扱いが難しかったプロトコルの多くの機能をサポートするように設計されています。\nとりわけ大きくて、場合によってはチャンク化されたメッセージです。\nインタフェースは決してリクエストまたはレスポンス全体をバッファリングしないように気をつけています\n－ 利用者はストリームデータを使うことができます。\n\n</p>\n<!--\nHTTP message headers are represented by an object like this:\n-->\n\n<p>HTTP メッセージヘッダはこのようなオブジェクトとして表現されます:\n\n</p>\n<pre><code>{ &apos;content-length&apos;: &apos;123&apos;,\n  &apos;content-type&apos;: &apos;text/plain&apos;,\n  &apos;connection&apos;: &apos;keep-alive&apos;,\n  &apos;accept&apos;: &apos;*/*&apos; }</code></pre>\n<!--\nKeys are lowercased. Values are not modified.\n-->\n\n<p>キーは小文字化されます。値は変更されません。\n\n</p>\n<!--\nIn order to support the full spectrum of possible HTTP applications, Node's\nHTTP API is very low-level. It deals with stream handling and message\nparsing only. It parses a message into headers and body but it does not\nparse the actual headers or the body.\n-->\n\n<p>考えられる HTTP アプリケーションを完全にサポートするために、\nNode の HTTP API はとても低水準です。それはストリームのハンドリングとメッセージの解析だけに対処します。\n解析はメッセージをヘッダとボディに分けますが、実際のヘッダとボディは解析しません。\n\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "http.createServer([requestListener])",
+          "type": "method",
+          "name": "createServer",
+          "desc": "<!--\nReturns a new web server object.\n-->\n\n<p>新しい Web サーバオブジェクトを返します。\n\n</p>\n<!--\nThe `requestListener` is a function which is automatically\nadded to the `'request'` event.\n-->\n\n<p><code>requestListener</code> は自動的に <code>&apos;request&apos;</code> イベントに加えられる関数です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "requestListener",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "http.request(options, callback)",
+          "type": "method",
+          "name": "request",
+          "desc": "<!--\nNode maintains several connections per server to make HTTP requests.\nThis function allows one to transparently issue requests.  `options` align\nwith [url.parse()](url.html#url.parse).\n-->\n\n<p>Node は HTTP リクエストを行うために、サーバごとにいくつかのコネクションを保持します。\nこの関数はその一つを使って透過的にリクエストを発行できるようにします。\n\n</p>\n<!--\nOptions:\n-->\n\n<p>オプション:\n\n</p>\n<!--\n- `host`: A domain name or IP address of the server to issue the request to.\n  Defaults to `'localhost'`.\n- `hostname`: To support `url.parse()` `hostname` is preferred over `host`\n- `port`: Port of remote server. Defaults to 80.\n- `localAddress`: Local interface to bind for network connections.\n- `socketPath`: Unix Domain Socket (use one of host:port or socketPath)\n- `method`: A string specifying the HTTP request method. Defaults to `'GET'`.\n- `path`: Request path. Defaults to `'/'`. Should include query string if any.\n  E.G. `'/index.html?page=12'`\n- `headers`: An object containing request headers.\n- `auth`: Basic authentication i.e. `'user:password'` to compute an\n  Authorization header.\n- `agent`: Controls [Agent](#http.Agent) behavior. When an Agent is used\n  request will default to `Connection: keep-alive`. Possible values:\n - `undefined` (default): use [global Agent](#http.globalAgent) for this host\n   and port.\n - `Agent` object: explicitly use the passed in `Agent`.\n - `false`: opts out of connection pooling with an Agent, defaults request to\n   `Connection: close`.\n-->\n\n<ul>\n<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li>\n<li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li>\n<li><code>port</code>: リモートサーバのポート。デフォルトは 80 です。</li>\n<li><code>localAddress</code>: ネットワーク接続をバインドするローカルインタフェースです。</li>\n<li><code>socketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li>\n<li><code>method</code>: HTTP リクエストのメソッドの文字列。デフォルトは <code>&apos;GET&apos;</code> です。</li>\n<li><code>path</code>: リクエストのパス。デフォルトは <code>&apos;/&apos;</code> です。\n必要なら問い合わせ文字列を含めるべきです．\n例 <code>&apos;/index.html?page=12&apos;</code></li>\n<li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>\n<li><code>auth</code>: ベーシック認証すなわち Authorization ヘッダのための\n<code>&apos;user:password&apos;</code>。</li>\n<li><code>agent</code>: <code>Agent</code> の振る舞いを制御します。\nエージェントが使われる場合、Connection:keep-alive がデフォルトになります。\n可能な値は:<ul>\n<li><code>undefined</code> (デフォルト): ホストとポートで\n<a href=\"#http.globalAgent\">グローバル Agent</a> を使用します。</li>\n<li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>\n<li><code>false</code>: Agent によるコネクションプーリングを使用しません。\n Connection:close の場合のデフォルトです。</li>\n</ul>\n</li>\n</ul>\n<!--\n`http.request()` returns an instance of the `http.ClientRequest`\nclass. The `ClientRequest` instance is a writable stream. If one needs to\nupload a file with a POST request, then write to the `ClientRequest` object.\n-->\n\n<p><code>http.request()</code> は <code>http.ClientRequest</code> クラスのインスタンスを返します。\n<code>http.ClientRequest</code> のインスタンスは書き込み可能なストリームです。\nもし POST リクエストでファイルのアップロードがしたければ、\n<code>http.ClientRequest</code> オブジェクトに出力してください。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var options = {\n  host: &apos;www.google.com&apos;,\n  port: 80,\n  path: &apos;/upload&apos;,\n  method: &apos;POST&apos;\n};\n\nvar req = http.request(options, function(res) {\n  console.log(&apos;STATUS: &apos; + res.statusCode);\n  console.log(&apos;HEADERS: &apos; + JSON.stringify(res.headers));\n  res.setEncoding(&apos;utf8&apos;);\n  res.on(&apos;data&apos;, function (chunk) {\n    console.log(&apos;BODY: &apos; + chunk);\n  });\n});\n\nreq.on(&apos;error&apos;, function(e) {\n  console.log(&apos;problem with request: &apos; + e.message);\n});\n\n// write data to request body\nreq.write(&apos;data\\n&apos;);\nreq.write(&apos;data\\n&apos;);\nreq.end();</code></pre>\n<!--\nNote that in the example `req.end()` was called. With `http.request()` one\nmust always call `req.end()` to signify that you're done with the request -\neven if there is no data being written to the request body.\n-->\n\n<p>この例で <code>req.end()</code> が呼ばれていることに注意してください。\n<code>http.request()</code> では、リクエストが終了したことを示すために、\n常に <code>req.end()</code> を呼び出さなければなりません\n- リクエストのボディに出力するデータがなかったとしても。\n\n</p>\n<!--\nIf any error is encountered during the request (be that with DNS resolution,\nTCP level errors, or actual HTTP parse errors) an `'error'` event is emitted\non the returned request object.\n-->\n\n<p>リクエスト中に何らかのエラー (DNS 解決、TCP レベルのエラー、HTTP パースエラーなど) が発生すると、戻り値のリクエストオブジェクトで <code>&apos;error&apos;</code> イベントが生成されます。\n\n\n</p>\n<!--\nThere are a few special headers that should be noted.\n-->\n\n<p>いくつかの特別なヘッダに注意が必要です。\n\n</p>\n<!--\n* Sending a 'Connection: keep-alive' will notify Node that the connection to\n  the server should be persisted until the next request.\n\n* Sending a 'Content-length' header will disable the default chunked encoding.\n\n* Sending an 'Expect' header will immediately send the request headers.\n  Usually, when sending 'Expect: 100-continue', you should both set a timeout\n  and listen for the `continue` event. See RFC2616 Section 8.2.3 for more\n  information.\n\n* Sending an Authorization header will override using the `auth` option\n  to compute basic authentication.\n-->\n\n<ul>\n<li><p>&apos;Connection: keep-alive&apos; の送信は、サーバへのコネクションを次のリクエストまで持続することを Node に通知します。</p>\n</li>\n<li><p>&apos;Content-length&apos; ヘッダの送信は、デフォルトのチャンクエンコーディングを無効にします。</p>\n</li>\n<li><p>&apos;Expect&apos; ヘッダの送信は、リクエストヘッダを即時に送信します。\n通常、&apos;Expect: 100-continue&apos; を送信すると、タイムアウトと <code>continue</code> イベントを待ち受けます。詳細は RFC2616 の 8.2.3 節を参照してください。</p>\n</li>\n<li><p>Authorization ヘッダの送信は、<code>auth</code> オプションによるベーシック認証を\n上書きします。</p>\n</li>\n</ul>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "http.get(options, callback)",
+          "type": "method",
+          "name": "get",
+          "desc": "<!--\nSince most requests are GET requests without bodies, Node provides this\nconvenience method. The only difference between this method and `http.request()` is\nthat it sets the method to GET and calls `req.end()` automatically.\n-->\n\n<p>ほとんどのリクエストは本文のない GET リクエストであるため、\nNode は便利なメソッドを提供します。\nこのメソッドと <code>http.request()</code> の間の違いは、メソッドを GET に設定して <code>req.end()</code> を自動的に呼び出すことだけです。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var options = {\n  host: &apos;www.google.com&apos;,\n  port: 80,\n  path: &apos;/index.html&apos;\n};\n\nhttp.get(options, function(res) {\n  console.log(&quot;Got response: &quot; + res.statusCode);\n}).on(&apos;error&apos;, function(e) {\n  console.log(&quot;Got error: &quot; + e.message);\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: http.Server",
+          "type": "class",
+          "name": "http.Server",
+          "desc": "<!--\nThis is an `EventEmitter` with the following events:\n-->\n\n<p>これは以下のイベントを持つ <code>EventEmitter</code> です:\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'request'",
+              "type": "event",
+              "name": "request",
+              "desc": "<p><code>function (request, response) { }</code>\n\n</p>\n<!--\nEmitted each time there is a request. Note that there may be multiple requests\nper connection (in the case of keep-alive connections).\n-->\n\n<p>リクエストの度に生成されます。\nコネクションごとに複数のリクエストがあるかもしれないことに注意してください\n(Keep Alive なコネクションの場合)。\n\n</p>\n<!--\n `request` is an instance of `http.ServerRequest` and `response` is\n an instance of `http.ServerResponse`\n-->\n\n<p><code>request</code> は <code>http.ServerRequest</code> のインスタンス、\n<code>response</code> は <code>http.ServerResponse</code> のインスタンスです。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'connection'",
+              "type": "event",
+              "name": "connection",
+              "desc": "<p><code>function (socket) { }</code>\n\n</p>\n<!--\n When a new TCP stream is established. `socket` is an object of type\n `net.Socket`. Usually users will not want to access this event. The\n `socket` can also be accessed at `request.connection`.\n-->\n\n<p>新しい TCP ストリームが確立した時。\n<code>socket</code> は <code>net.Socket</code> 型のオブジェクトです。\n通常の利用者がこのイベントにアクセスしたくなることはないでしょう。\n<code>socket</code> は <code>request.connection</code> からアクセスすることもできます。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\n Emitted when the server closes.\n-->\n\n<p>サーバがクローズした時に生成されます。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'checkContinue'",
+              "type": "event",
+              "name": "checkContinue",
+              "desc": "<p><code>function (request, response) { }</code>\n\n</p>\n<!--\nEmitted each time a request with an http Expect: 100-continue is received.\nIf this event isn't listened for, the server will automatically respond\nwith a 100 Continue as appropriate.\n-->\n\n<p>httpの Expect: 100-continue リクエストを受信する度に生成されます。\nこのイベントが監視されない場合、サーバは自動的に 100 Continue を応答します。\n\n</p>\n<!--\nHandling this event involves calling `response.writeContinue` if the client\nshould continue to send the request body, or generating an appropriate HTTP\nresponse (e.g., 400 Bad Request) if the client should not continue to send the\nrequest body.\n-->\n\n<p>このイベントを処理する場合、クライアントがリクエストボディを送信し続けるべきなら\n<code>response.writeContinue</code> を呼び出す必要があります。\nあるいは、クライアントがリクエストボディを送信し続けるべきでないなら、\n適切な HTTP レスポンス (例えば 400 Bad Request) を生成します。\n\n</p>\n<!--\nNote that when this event is emitted and handled, the `request` event will\nnot be emitted.\n-->\n\n<p>このイベントが生成されて処理された場合、<code>request</code>イベントは生成されないことに注意してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'connect'",
+              "type": "event",
+              "name": "connect",
+              "desc": "<p><code>function (request, socket, head) { }</code>\n\n</p>\n<!--\nEmitted each time a client requests a http CONNECT method. If this event isn't\nlistened for, then clients requesting a CONNECT method will have their\nconnections closed.\n-->\n\n<p>クライアントが HTTP の CONNECT メソッドを要求する度に生成されます。\nこのイベントが監視されない場合、CONNECT メソッドを要求したクライアントのコネクションはクローズされます。\n\n</p>\n<!--\n* `request` is the arguments for the http request, as it is in the request\n  event.\n* `socket` is the network socket between the server and client.\n* `head` is an instance of Buffer, the first packet of the tunneling stream,\n  this may be empty.\n-->\n\n<ul>\n<li><code>request</code> はリクエストイベントの引数と同様に HTTP リクエストです。</li>\n<li><code>socket</code> はサーバとクライアントの間のネットワークソケットです。</li>\n<li><code>head</code> はトンネリングストリームの最初のパケットを持つ Buffer のインスタンスです。\n空の場合もあります。</li>\n</ul>\n<!--\nAfter this event is emitted, the request's socket will not have a `data`\nevent listener, meaning you will need to bind to it in order to handle data\nsent to the server on that socket.\n-->\n\n<p>このイベントが生成された後、リクエスト元のソケットはもう <code>data</code> イベントリスナーを持ちません。\nこのソケットでサーバへ送られたデータを扱うためにそれをバインドしなければならないことを意味します。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'upgrade'",
+              "type": "event",
+              "name": "upgrade",
+              "desc": "<p><code>function (request, socket, head) { }</code>\n\n</p>\n<!--\nEmitted each time a client requests a http upgrade. If this event isn't\nlistened for, then clients requesting an upgrade will have their connections\nclosed.\n-->\n\n<p>クライアントが HTTP のアップグレードを要求する度に生成されます。\nこのイベントが監視されない場合、アップグレードを要求したクライアントのコネクションはクローズされます。\n\n</p>\n<!--\n* `request` is the arguments for the http request, as it is in the request\n  event.\n* `socket` is the network socket between the server and client.\n* `head` is an instance of Buffer, the first packet of the upgraded stream,\n  this may be empty.\n-->\n\n<ul>\n<li><code>request</code> はリクエストイベントの引数と同様に HTTP リクエストです。</li>\n<li><code>socket</code> はサーバとクライアントの間のネットワークソケットです。</li>\n<li><code>head</code> はアップグレードストリームの最初のパケットを持つ Buffer のインスタンスです。\n空の場合もあります。</li>\n</ul>\n<!--\nAfter this event is emitted, the request's socket will not have a `data`\nevent listener, meaning you will need to bind to it in order to handle data\nsent to the server on that socket.\n-->\n\n<p>このイベントが生成された後、リクエスト元のソケットはもう <code>data</code> イベントリスナーを持ちません。\nこのソケットでサーバへ送られたデータを扱うためにそれをバインドしなければならないことを意味します。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'clientError'",
+              "type": "event",
+              "name": "clientError",
+              "desc": "<p><code>function (exception) { }</code>\n\n</p>\n<!--\nIf a client connection emits an 'error' event - it will forwarded here.\n-->\n\n<p>クライアントコネクションが &apos;error&apos; イベントを発した場合 － ここに転送されます。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "server.listen(port, [hostname], [callback])",
+              "type": "method",
+              "name": "listen",
+              "desc": "<!--\nBegin accepting connections on the specified port and hostname.  If the\nhostname is omitted, the server will accept connections directed to any\nIPv4 address (`INADDR_ANY`).\n-->\n\n<p>指定されたポートとホスト名でコネクションの受け入れを開始します。\nホスト名が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます (<code>INADDR_ANY</code>)。\n\n</p>\n<!--\nTo listen to a unix socket, supply a filename instead of port and hostname.\n-->\n\n<p>UNIX ドメインソケットを待ち受ける場合、ポートとホスト名ではなくファイル名を提供します。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#server.listen).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n<a href=\"net.html#event_listening_\">&apos;listening&apos;</a> イベントのリスナとして加えられます。\n詳細は <a href=\"net.html#server.listen\">net.Server.listen()</a> を参照してください。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "port"
+                    },
+                    {
+                      "name": "hostname",
+                      "optional": true
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "server.listen(path, [callback])",
+              "type": "method",
+              "name": "listen",
+              "desc": "<!--\nStart a UNIX socket server listening for connections on the given `path`.\n-->\n\n<p><code>path</code> で与えられたコネクションを待ち受ける UNIX ドメインソケットのサーバを開始します。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#server.listen).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n<a href=\"net.html#event_listening_\">&apos;listening&apos;</a> イベントのリスナとして加えられます。\n詳細は <a href=\"net.html#server.listen\">net.Server.listen()</a> を参照してください。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "path"
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "server.close([cb])",
+              "type": "method",
+              "name": "close",
+              "desc": "<!--\nStops the server from accepting new connections.\nSee [net.Server.close()](net.html#server.close).\n-->\n\n<p>サーバが新しいコネクションを受け付けるのを終了します。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "cb",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "server.maxHeadersCount",
+              "name": "maxHeadersCount",
+              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: http.ServerRequest",
+          "type": "class",
+          "name": "http.ServerRequest",
+          "desc": "<!--\nThis object is created internally by a HTTP server -- not by\nthe user -- and passed as the first argument to a `'request'` listener.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成され、\n<code>&apos;request&apos;</code> リスナーの第1引数として渡されます。\n\n</p>\n<!--\nThe request implements the [Readable Stream](stream.html#readable_stream)\ninterface. This is an `EventEmitter` with the following events:\n-->\n\n<p>リクエストは <a href=\"stream.html#readable_stream\">Readable Stream</a>\nインタフェースを実装します。\nこれは以下のイベントを持つ <code>EventEmitter</code> です:\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'data'",
+              "type": "event",
+              "name": "data",
+              "desc": "<p><code>function (chunk) { }</code>\n\n</p>\n<!--\nEmitted when a piece of the message body is received. The chunk is a string if\nan encoding has been set with `request.setEncoding()`, otherwise it's a\n[Buffer](buffer.html).\n-->\n\n<p>メッセージボディの断片を受信した場合に生成されます。\n<code>request.setEncoding()</code> によってエンコーディングが設定された場合、\n<code>chunk</code> は文字列です。それ以外の場合は <a href=\"buffer.html\">Buffer</a> です。\n\n</p>\n<!--\nExample: A chunk of the body is given as the single\nargument. The transfer-encoding has been decoded.  The\nbody chunk is a string.  The body encoding is set with\n`request.setEncoding()`.\n\nNote that the __data will be lost__ if there is no listener when a\n`ServerRequest` emits a `'data'` event.\n-->\n\n<p>例: 一つの引数としてボディのチャンクが与えられます。\n転送エンコーディングでデコードされます。\nボディのチャンクは文字列です。\nボディのエンコーディングは <code>request.setBodyEncoding()</code> で設定されます。\n\n</p>\n<p><code>ServerRequest</code> が <code>&apos;data&apos;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'end'",
+              "type": "event",
+              "name": "end",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each request. After that, no more `'data'` events\nwill be emitted on the request.\n-->\n\n<p>リクエストごとに厳密に一回生成されます。\nその後、このリクエストで <code>&apos;data&apos;</code> イベントが生成されることはありません。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼び出されたりフラッシュされる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per request, and no more `'data'`\nevents will fire afterwards.\n-->\n\n<p><code>&apos;end&apos;</code> と同様、このイベントはリクエスト上で一度だけ発生し、その後ではもう\n<code>&apos;data&apos;</code> イベントが発生することはありません。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&apos;close&apos;</code> は <code>&apos;end&apos;</code> の後で発生することがあります。\nその逆もあります。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "request.method",
+              "name": "method",
+              "desc": "<!--\nThe request method as a string. Read only. Example:\n`'GET'`, `'DELETE'`.\n-->\n\n<p>リクエストメソッドを表す文字列です。参照のみ可能です。\n例: <code>&apos;GET&apos;</code>、<code>&apos;DELETE&apos;</code>\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "request.url",
+              "name": "url",
+              "desc": "<!--\nRequest URL string. This contains only the URL that is\npresent in the actual HTTP request. If the request is:\n-->\n\n<p>リクエスト URL を表す文字列です。\nこれは実際の HTTP リクエストに存在する URL だけを含みます。\nリクエストがこうなら:\n\n</p>\n<pre><code>GET /status?name=ryan HTTP/1.1\\r\\n\nAccept: text/plain\\r\\n\n\\r\\n</code></pre>\n<!--\nThen `request.url` will be:\n-->\n\n<p>この場合の <code>request.url</code> はこうなります:\n\n</p>\n<pre><code>&apos;/status?name=ryan&apos;</code></pre>\n<!--\nIf you would like to parse the URL into its parts, you can use\n`require('url').parse(request.url)`.  Example:\n-->\n\n<p>URL の要素を解析したい場合は、\n<code>require(&apos;url&apos;).parse(request.url)</code> を参照してください。例:\n\n</p>\n<pre><code>node&gt; require(&apos;url&apos;).parse(&apos;/status?name=ryan&apos;)\n{ href: &apos;/status?name=ryan&apos;,\n  search: &apos;?name=ryan&apos;,\n  query: &apos;name=ryan&apos;,\n  pathname: &apos;/status&apos; }</code></pre>\n<!--\nIf you would like to extract the params from the query string,\nyou can use the `require('querystring').parse` function, or pass\n`true` as the second argument to `require('url').parse`.  Example:\n-->\n\n<p>問い合わせ文字列からパラメータを取り出したい場合は、\n<code>require(&apos;querystring&apos;).parse</code> 関数を参照するか、\n<code>require(&apos;url&apos;).parse</code> の第 2 引数に <code>true</code> を渡してください。例:\n\n</p>\n<pre><code>node&gt; require(&apos;url&apos;).parse(&apos;/status?name=ryan&apos;, true)\n{ href: &apos;/status?name=ryan&apos;,\n  search: &apos;?name=ryan&apos;,\n  query: { name: &apos;ryan&apos; },\n  pathname: &apos;/status&apos; }</code></pre>\n"
+            },
+            {
+              "textRaw": "request.headers",
+              "name": "headers",
+              "desc": "<!--\nRead only.\n-->\n\n<p>参照のみ可能です。\n\n</p>\n"
+            },
+            {
+              "textRaw": "request.trailers",
+              "name": "trailers",
+              "desc": "<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&apos;end&apos; イベントの後にだけ発生します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "request.httpVersion",
+              "name": "httpVersion",
+              "desc": "<!--\nThe HTTP protocol version as a string. Read only. Examples:\n`'1.1'`, `'1.0'`.\nAlso `request.httpVersionMajor` is the first integer and\n`request.httpVersionMinor` is the second.\n-->\n\n<p>HTTP プロトコルのバージョンを表す文字列です。参照のみ可能です。例:\n<code>&apos;1.1&apos;</code>、<code>&apos;1.0&apos;</code>。\n同様に <code>request.httpVersionMajor</code> は最初の整数、\n<code>request.httpVersionMinor</code> は 2 番目の整数です。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "request.connection",
+              "name": "connection",
+              "desc": "<!--\nThe `net.Socket` object associated with the connection.\n-->\n\n<p>コネクションに関連づけられた <code>net.Socket</code> オブジェクトです。\n\n\n</p>\n<!--\nWith HTTPS support, use request.connection.verifyPeer() and\nrequest.connection.getPeerCertificate() to obtain the client's\nauthentication details.\n-->\n\n<p>HTTPS では <code>request.connection.verifyPeer()</code> と\n<code>request.connection.getPeerCertificate()</code> で\nクライアントの認証の詳細を取得できます。\n\n\n\n</p>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "request.setEncoding([encoding])",
+              "type": "method",
+              "name": "setEncoding",
+              "desc": "<!--\nSet the encoding for the request body. Either `'utf8'` or `'binary'`. Defaults\nto `null`, which means that the `'data'` event will emit a `Buffer` object..\n-->\n\n<p>リクエストボディのエンコーディングを設定します。\n<code>&apos;utf8&apos;</code> または <code>&apos;binary&apos;</code> のいずれかです。\nデフォルトは <code>null</code> で、<code>&apos;data&apos;</code> イベントが\n<code>Buffer</code> を生成することを意味します。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "request.pause()",
+              "type": "method",
+              "name": "pause",
+              "desc": "<!--\nPauses request from emitting events.  Useful to throttle back an upload.\n-->\n\n<p>リクエストによるイベントの生成を中断します。アップロード速度を落とすのに便利です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "request.resume()",
+              "type": "method",
+              "name": "resume",
+              "desc": "<!--\nResumes a paused request.\n-->\n\n<p>中断されたリクエストを再開します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: http.ServerResponse",
+          "type": "class",
+          "name": "http.ServerResponse",
+          "desc": "<!--\nThis object is created internally by a HTTP server--not by the user. It is\npassed as the second parameter to the `'request'` event.\n\nThe response implements the [Writable  Stream](stream.html#writable_stream)\ninterface. This is an `EventEmitter` with the following events:\n-->\n\n<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。\n<code>&apos;request&apos;</code> リスナーの第 2 引数として渡されます。\n\n</p>\n<p>レスポンスは <a href=\"stream.html#writable_stream\">Writable  Stream</a>\nインタフェースを実装します。\nこれは以下のイベントを持つ <code>EventEmitter</code> です:\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼び出されたりフラッシュされる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "response.writeContinue()",
+              "type": "method",
+              "name": "writeContinue",
+              "desc": "<!--\nSends a HTTP/1.1 100 Continue message to the client, indicating that\nthe request body should be sent. See the [checkContinue](#event_checkContinue_) event on\n`Server`.\n-->\n\n<p>HTTP/1.1 の 100 Continue メッセージをクライアントに送信し、\nリクエストボディを送信してもよいことを示します。\n<code>Server</code>の <a href=\"#event_checkContinue_\">checkContinue</a> イベントを参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "response.writeHead(statusCode, [reasonPhrase], [headers])",
+              "type": "method",
+              "name": "writeHead",
+              "desc": "<!--\nSends a response header to the request. The status code is a 3-digit HTTP\nstatus code, like `404`. The last argument, `headers`, are the response headers.\nOptionally one can give a human-readable `reasonPhrase` as the second\nargument.\n-->\n\n<p>レスポンスヘッダを送信します。\nステータスコードは <code>404</code> のような 3 桁の数字による HTTP ステータスコードです。\n最後の引数 <code>headers</code> は、レスポンスヘッダです。\nオプションとして人に読める形式の <code>reasonPhrase</code> を第 2 引数で与えることができます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var body = &apos;hello world&apos;;\nresponse.writeHead(200, {\n  &apos;Content-Length&apos;: body.length,\n  &apos;Content-Type&apos;: &apos;text/plain&apos; });</code></pre>\n<!--\nThis method must only be called once on a message and it must\nbe called before `response.end()` is called.\n\nIf you call `response.write()` or `response.end()` before calling this, the\nimplicit/mutable headers will be calculated and call this function for you.\n-->\n\n<p>このメソッドはメッセージごとに 1 回だけ呼び出されなくてはならず、\n<code>response.end()</code> の前に呼び出されなければなりません。\n\n</p>\n<p>もしこのメソッドが呼び出される前に <code>response.write()</code> または <code>response.end()</code> が呼ばれると、暗黙的で可変のヘッダが算出されてこの関数が呼び出されます。\n\n</p>\n<!--\nNote: that Content-Length is given in bytes not characters. The above example\nworks because the string `'hello world'` contains only single byte characters.\nIf the body contains higher coded characters then `Buffer.byteLength()`\nshould be used to determine the number of bytes in a given encoding.\nAnd Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n-->\n\n<p>注意: <code>Content-Length</code> は文字数ではなくバイト数で与えられます。\n上の例が動作するのは <code>&apos;hello world&apos;</code> という文字列が単一バイト文字だけを含むためです。\nもしボディがより上位にコード化された文字を含む場合は、\n指定したエンコーディングによるバイト数を得るために <code>Buffer.byteLength()</code> を使うべきです。\nNode は、Content-Length と実際に送信されたレスポンスボディの長さが等しいかどうかチェックしません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "statusCode"
+                    },
+                    {
+                      "name": "reasonPhrase",
+                      "optional": true
+                    },
+                    {
+                      "name": "headers",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.setHeader(name, value)",
+              "type": "method",
+              "name": "setHeader",
+              "desc": "<!--\nSets a single header value for implicit headers.  If this header already exists\nin the to-be-sent headers, its value will be replaced.  Use an array of strings\nhere if you need to send multiple headers with the same name.\n-->\n\n<p>暗黙的ヘッダのヘッダ値を設定します。\n送信されようとしているレスポンスヘッダにこのヘッダが既に含まれている場合、\nその値は置き換えられます。\n同じ名前で複数のヘッダを送信したい場合は文字列の配列を使ってください。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>response.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);</code></pre>\n<!--\nor\n-->\n\n<p>または\n\n</p>\n<pre><code>response.setHeader(&quot;Set-Cookie&quot;, [&quot;type=ninja&quot;, &quot;language=javascript&quot;]);</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "name"
+                    },
+                    {
+                      "name": "value"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.getHeader(name)",
+              "type": "method",
+              "name": "getHeader",
+              "desc": "<!--\nReads out a header that's already been queued but not sent to the client.  Note\nthat the name is case insensitive.  This can only be called before headers get\nimplicitly flushed.\n-->\n\n<p>すでにキューに入れられているが未送信のヘッダを読み上げます．\n名前は大文字小文字を区別しないことに注意してください。\nこれはヘッダが暗黙的にフラッシュされる前だけ呼び出すことができます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var contentType = response.getHeader(&apos;content-type&apos;);</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "name"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.removeHeader(name)",
+              "type": "method",
+              "name": "removeHeader",
+              "desc": "<!--\nRemoves a header that's queued for implicit sending.\n-->\n\n<p>暗黙的に送信するためキューに入れられたヘッダを削除します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>response.removeHeader(&quot;Content-Encoding&quot;);</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "name"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.write(chunk, [encoding])",
+              "type": "method",
+              "name": "write",
+              "desc": "<!--\nIf this method is called and `response.writeHead()` has not been called, it will\nswitch to implicit header mode and flush the implicit headers.\n\nThis sends a chunk of the response body. This method may\nbe called multiple times to provide successive parts of the body.\n-->\n\n<p>このメソッドが呼び出され、<code>response.writeHead()</code> が呼び出されなければ、\n暗黙的ヘッダモードに切り替わり、暗黙的ヘッダはフラッシュされます。\n\n</p>\n<p>これはレスポンスボディのチャンクを送信します。\nこのメソッドはボディの連続した部分を提供するために複数回呼び出されるかもしれません。\n\n</p>\n<!--\n`chunk` can be a string or a buffer. If `chunk` is a string,\nthe second parameter specifies how to encode it into a byte stream.\nBy default the `encoding` is `'utf8'`.\n-->\n\n<p><code>chunk</code> は文字列またはバッファにすることができます。\n<code>chunk</code> が文字列の場合、どのエンコードでバイトストリームにするかを第 2 引数で指定します。\nデフォルトの <code>encoding</code> は <code>&apos;utf8&apos;</code> です。\n\n</p>\n<!--\n**Note**: This is the raw HTTP body and has nothing to do with\nhigher-level multi-part body encodings that may be used.\n-->\n\n<p><strong>注意</strong>: これは生の HTTP ボディで、\n高水準のマルチパートボディエンコーディングで使われるものとは無関係です。\n\n</p>\n<!--\nThe first time `response.write()` is called, it will send the buffered\nheader information and the first body to the client. The second time\n`response.write()` is called, Node assumes you're going to be streaming\ndata, and sends that separately. That is, the response is buffered up to the\nfirst chunk of body.\n-->\n\n<p>初めて <code>response.write()</code> が呼び出されると、\nバッファリングされていたヘッダ情報と最初のボディがクライアントに送信されます。\n2 回目に <code>response.write()</code> が呼ばれると、\nNode はストリーミングデータを分割して送信しようとしていると仮定します。\nすなわち、レスポンスはボディの最初のチャンクまでバッファリングされます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.addTrailers(headers)",
+              "type": "method",
+              "name": "addTrailers",
+              "desc": "<!--\nThis method adds HTTP trailing headers (a header but at the end of the\nmessage) to the response.\n-->\n\n<p>このメソッドは HTTP トレーラヘッダ (メッセージの最後に置かれるヘッダ) をレスポンスに追加します。\n\n</p>\n<!--\nTrailers will **only** be emitted if chunked encoding is used for the\nresponse; if it is not (e.g., if the request was HTTP/1.0), they will\nbe silently discarded.\n-->\n\n<p>トレーラはレスポンスがチャンク化されたエンコーディングで<strong>のみ</strong>生成されます;\nそうでなければ (例えばリクエストが HTTP/1.0)、黙って破棄されます。\n\n</p>\n<!--\nNote that HTTP requires the `Trailer` header to be sent if you intend to\nemit trailers, with a list of the header fields in its value. E.g.,\n-->\n\n<p>HTTP は、トレーラを生成するならそのヘッダフィールドのリストを値として\n<code>Trailer</code> ヘッダを送信することを要求していることに注意してください。\n\n</p>\n<pre><code>response.writeHead(200, { &apos;Content-Type&apos;: &apos;text/plain&apos;,\n                          &apos;Trailer&apos;: &apos;Content-MD5&apos; });\nresponse.write(fileData);\nresponse.addTrailers({&apos;Content-MD5&apos;: &quot;7895bf4b8828b55ceaf47747b4bca667&quot;});\nresponse.end();</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "headers"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.end([data], [encoding])",
+              "type": "method",
+              "name": "end",
+              "desc": "<!--\nThis method signals to the server that all of the response headers and body\nhas been sent; that server should consider this message complete.\nThe method, `response.end()`, MUST be called on each\nresponse.\n-->\n\n<p>このメソッドはレスポンスの全てのヘッダとボディを送信したことをサーバに伝えます;\nサーバはメッセージが終了したと考えるべきです。\nこの <code>response.end()</code> メソッドは各レスポンスごとに呼び出さなければ<em>なりません</em>。\n\n</p>\n<!--\nIf `data` is specified, it is equivalent to calling `response.write(data, encoding)`\nfollowed by `response.end()`.\n-->\n\n<p><code>data</code> が指定された場合、\n<code>response.write(data, encoding)</code> に続けて <code>response.end()</code> を呼び出すのと等価です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data",
+                      "optional": true
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "response.statusCode",
+              "name": "statusCode",
+              "desc": "<!--\nWhen using implicit headers (not calling `response.writeHead()` explicitly), this property\ncontrols the status code that will be send to the client when the headers get\nflushed.\n-->\n\n<p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>response.statusCode = 404;</code></pre>\n<!--\nAfter response header was sent to the client, this property indicates the\nstatus code which was sent out.\n-->\n\n<p>レスポンスヘッダがクライアントに送信された後、\nこのプロパティは送信されたステータスコードを示します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "response.sendDate",
+              "name": "sendDate",
+              "desc": "<!--\nWhen true, the Date header will be automatically generated and sent in \nthe response if it is not already present in the headers. Defaults to true.\n\nThis should only be disabled for testing; HTTP requires the Date header\nin responses.\n-->\n\n<p><code>true</code> の場合、Date ヘッダが自動的に生成され、レスポンスとして送信されます\n(<code>headers</code> にすでに与えられていない場合)。\nデフォルトは <code>true</code> です。\n\n</p>\n<p>これを無効にするのはテストでのみにすべきです。\nHTTP はレスポンスに Date ヘッダを要求します。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: http.Agent",
+          "type": "class",
+          "name": "http.Agent",
+          "desc": "<!--\nIn node 0.5.3+ there is a new implementation of the HTTP Agent which is used\nfor pooling sockets used in HTTP client requests.\n\nPreviously, a single agent instance help the pool for single host+port. The\ncurrent implementation now holds sockets for any number of hosts.\n\nThe current HTTP Agent also defaults client requests to using\nConnection:keep-alive. If no pending HTTP requests are waiting on a socket\nto become free the socket is closed. This means that node's pool has the\nbenefit of keep-alive when under load but still does not require developers\nto manually close the HTTP clients using keep-alive.\n\nSockets are removed from the agent's pool when the socket emits either a\n\"close\" event or a special \"agentRemove\" event. This means that if you intend\nto keep one HTTP request open for a long time and don't want it to stay in the\npool you can do something along the lines of:\n-->\n\n<p>Node 0.5.3 以降には、HTTP クライアントリクエストのソケットを\nプーリングするために新しい HTTP Agent の実装が存在します。\n\n</p>\n<p>以前は、エージェントの一つのインスタンスが一つのホスト + ポートのプールを\n助けていましたが、現在の実装では任意の数のホストに対するソケットを\n保持できるようになりました。\n\n</p>\n<p>現在の HTTP Agent では、クライアントリクエストはデフォルトで\nConnection:keep-alive を使うようにもなりました。\nソケットを待ってペンディングになっている HTTP リクエストがなければ、\nソケットはクローズされます。\nこれは、node のプールは高負荷時に keep-alive のメリットを持ちながら、\nkeep-alive を使用する HTTP クライアントを開発者が手動でクローズする\n必要がないことを意味します。\n\n</p>\n<p>ソケットは <code>&apos;close&apos;</code> イベントまたは特別な <code>&apos;agentRemove&apos;</code> イベントが\n生成された時にエージェントのプールから削除されます。\nこれは、一つの HTTP リクエストを長時間オープンしたままにするために、\nプールにソケットがとどまらないことを意図するなら、\n以下のようにすることができることを意味します:\n\n</p>\n<pre><code>http.get(options, function(res) {\n  // Do stuff\n}).on(&quot;socket&quot;, function (socket) {\n  socket.emit(&quot;agentRemove&quot;);\n});</code></pre>\n<!--\nAlternatively, you could just opt out of pooling entirely using `agent:false`:\n-->\n\n<p>別の方法として、 <code>agent: false</code> を指定することで、\nプーリングを使用しないこともできます:\n\n</p>\n<pre><code>http.get({host:&apos;localhost&apos;, port:80, path:&apos;/&apos;, agent:false}, function (res) {\n  // Do stuff\n})</code></pre>\n",
+          "properties": [
+            {
+              "textRaw": "agent.maxSockets",
+              "name": "maxSockets",
+              "desc": "<!--\nBy default set to 5. Determines how many concurrent sockets the agent can have \nopen per host.\n-->\n\n<p>デフォルトでは 5 に設定されます。\nエージェントがいくつのソケットを並行にオープンするかを決定します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "agent.sockets",
+              "name": "sockets",
+              "desc": "<!--\nAn object which contains arrays of sockets currently in use by the Agent. Do not \nmodify.\n-->\n\n<p>エージェントが現在使っているソケットの配列です。\n変更しないでください。\n\n</p>\n"
+            },
+            {
+              "textRaw": "agent.requests",
+              "name": "requests",
+              "desc": "<!--\nAn object which contains queues of requests that have not yet been assigned to \nsockets. Do not modify.\n-->\n\n<p>まだソケットが割り当てられていないリクエストのキューを含むオブジェクトです。\n変更しないでください。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: http.ClientRequest",
+          "type": "class",
+          "name": "http.ClientRequest",
+          "desc": "<!--\nThis object is created internally and returned from `http.request()`.  It\nrepresents an _in-progress_ request whose header has already been queued.  The\nheader is still mutable using the `setHeader(name, value)`, `getHeader(name)`,\n`removeHeader(name)` API.  The actual header will be sent along with the first\ndata chunk or when closing the connection.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部で作成され、<code>http.request()</code> から返されます。\nそれはヘッダがキューに入れられた <em>進行中</em> のリクエストを表現します。\nヘッダは <code>setHeader(name, value)</code>, <code>getHeader(name)</code>, <code>removeHeader(name)</code> API によってまだ可変のままです。\n実際にヘッダが送信されるのは、最初のデータチャンクが送信される時またはコネクションがクローズされる時です。\n\n</p>\n<!--\nTo get the response, add a listener for `'response'` to the request object.\n`'response'` will be emitted from the request object when the response\nheaders have been received.  The `'response'` event is executed with one\nargument which is an instance of `http.ClientResponse`.\n-->\n\n<p>レスポンスを取得するには、<code>&apos;response&apos;</code> 用のリスナーをリクエストオブジェクトに加えます。\n<code>&apos;response&apos;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。\n<code>&apos;response&apos;</code> イベントは <code>http.ClientResponse</code> のインスタンスを唯一の引数として実行されます。\n\n</p>\n<!--\nDuring the `'response'` event, one can add listeners to the\nresponse object; particularly to listen for the `'data'` event. Note that\nthe `'response'` event is called before any part of the response body is received,\nso there is no need to worry about racing to catch the first part of the\nbody. As long as a listener for `'data'` is added during the `'response'`\nevent, the entire body will be caught.\n-->\n\n<p><code>&apos;response&apos;</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;\nとりわけ <code>&apos;data&apos;</code> イベントのリスナーです。\n<code>&apos;response&apos;</code> イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。\nそのため、ボディの最初の部分の受信と競合することを心配する必要はありません。\n<code>&apos;response&apos;</code> イベントの間に <code>&apos;data&apos;</code> イベントのリスナーが加えられる限り、\nボディ全体を受信することができます。\n\n\n</p>\n<pre><code>// Good\nrequest.on(&apos;response&apos;, function (response) {\n  response.on(&apos;data&apos;, function (chunk) {\n    console.log(&apos;BODY: &apos; + chunk);\n  });\n});\n\n// Bad - misses all or part of the body\nrequest.on(&apos;response&apos;, function (response) {\n  setTimeout(function () {\n    response.on(&apos;data&apos;, function (chunk) {\n      console.log(&apos;BODY: &apos; + chunk);\n    });\n  }, 10);\n});</code></pre>\n<!--\nThis is a `Writable Stream`.\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n-->\n\n<p>これは <code>Writable Stream</code> です。\n注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。\n\n</p>\n<p><code>ServerRequest</code> が <code>&apos;data&apos;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n<!--\nThe request implements the [Writable  Stream](stream.html#writable_stream)\ninterface. This is an `EventEmitter` with the following events:\n-->\n\n<p>リクエストは <a href=\"stream.html#writable_stream\">Writable  Stream</a>\nインタフェースを実装します。\nこれは以下のイベントを持つ <code>EventEmitter</code> です。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event 'response'",
+              "type": "event",
+              "name": "response",
+              "desc": "<p><code>function (response) { }</code>\n\n</p>\n<!--\nEmitted when a response is received to this request. This event is emitted only once. The\n`response` argument will be an instance of `http.ClientResponse`.\n-->\n\n<p>このリクエストに対するレスポンスを受信した時に生成されます。\nこのイベントは一回だけ生成されます。\n<code>response</code> 引数は <code>http.ClientResponse</code> のインスタンスです。\n\n</p>\n<!--\nOptions:\n-->\n\n<p>オプション:\n\n</p>\n<!--\n- `host`: A domain name or IP address of the server to issue the request to.\n- `port`: Port of remote server.\n- `socketPath`: Unix Domain Socket (use one of host:port or socketPath)\n-->\n\n<ul>\n<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li>\n<li><code>port</code>: リモートサーバのポート。</li>\n<li><code>soocketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li>\n</ul>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'socket'",
+              "type": "event",
+              "name": "socket",
+              "desc": "<p><code>function (socket) { }</code>\n\n</p>\n<!--\nEmitted after a socket is assigned to this request.\n-->\n\n<p>このリクエストにソケットが割り当てられた後に生成されます。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'connect'",
+              "type": "event",
+              "name": "connect",
+              "desc": "<p><code>function (response, socket, head) { }</code>\n\n</p>\n<!--\nEmitted each time a server responds to a request with a CONNECT method. If this\nevent isn't being listened for, clients receiving a CONNECT method will have\ntheir connections closed.\n-->\n\n<p>サーバが CONNECT メソッドの要求に応答する度に生成されます。\nこのイベントが監視されていない場合、クライアントが CONNECT メソッドへの\nレスポンスを受信すると、そのコネクションはクローズされます。\n\n</p>\n<!--\nA client server pair that show you how to listen for the `connect` event.\n-->\n\n<p>どのように <code>connect</code> イベントを監視するかを示すクライアントとサーバのペア:\n\n\n</p>\n<pre><code>var http = require(&apos;http&apos;);\nvar net = require(&apos;net&apos;);\nvar url = require(&apos;url&apos;);\n\n// Create an HTTP tunneling proxy\nvar proxy = http.createServer(function (req, res) {\n  res.writeHead(200, {&apos;Content-Type&apos;: &apos;text/plain&apos;});\n  res.end(&apos;okay&apos;);\n});\nproxy.on(&apos;connect&apos;, function(req, cltSocket, head) {\n  // connect to an origin server\n  var srvUrl = url.parse(&apos;http://&apos; + req.url);\n  var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, function() {\n    cltSocket.write(&apos;HTTP/1.1 200 Connection Established\\r\\n&apos; +\n                    &apos;Proxy-agent: Node-Proxy\\r\\n&apos; +\n                    &apos;\\r\\n&apos;);\n    srvSocket.write(head);\n    srvSocket.pipe(cltSocket);\n    cltSocket.pipe(srvSocket);\n  });\n});\n\n// now that proxy is running\nproxy.listen(1337, &apos;127.0.0.1&apos;, function() {\n\n  // make a request to a tunneling proxy\n  var options = {\n    port: 1337,\n    host: &apos;127.0.0.1&apos;,\n    method: &apos;CONNECT&apos;,\n    path: &apos;www.google.com:80&apos;\n  };\n\n  var req = http.request(options);\n  req.end();\n\n  req.on(&apos;connect&apos;, function(res, socket, head) {\n    console.log(&apos;got connected!&apos;);\n\n    // make a request over an HTTP tunnel\n    socket.write(&apos;GET / HTTP/1.1\\r\\n&apos; +\n                 &apos;Host: www.google.com:80\\r\\n&apos; +\n                 &apos;Connection: close\\r\\n&apos; +\n                 &apos;\\r\\n&apos;);\n    socket.on(&apos;data&apos;, function(chunk) {\n      console.log(chunk.toString());\n    });\n    socket.on(&apos;end&apos;, function() {\n      proxy.close();\n    });\n  });\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'upgrade'",
+              "type": "event",
+              "name": "upgrade",
+              "desc": "<p><code>function (response, socket, head) { }</code>\n\n</p>\n<!--\nEmitted each time a server responds to a request with an upgrade. If this\nevent isn't being listened for, clients receiving an upgrade header will have\ntheir connections closed.\n-->\n\n<p>サーバがアップグレード要求に応答する度に生成されます。\nこのイベントが監視されていない場合、クライアントがアップグレードヘッダを受信するとそのコネクションはクローズされます。\n\n</p>\n<!--\nA client server pair that show you how to listen for the `upgrade` event.\n-->\n\n<p>どのように <code>upgrade</code> イベントを監視するかを示すクライアントとサーバのペア:\n\n</p>\n<pre><code>var http = require(&apos;http&apos;);\n\n// Create an HTTP server\nvar srv = http.createServer(function (req, res) {\n  res.writeHead(200, {&apos;Content-Type&apos;: &apos;text/plain&apos;});\n  res.end(&apos;okay&apos;);\n});\nsrv.on(&apos;upgrade&apos;, function(req, socket, head) {\n  socket.write(&apos;HTTP/1.1 101 Web Socket Protocol Handshake\\r\\n&apos; +\n               &apos;Upgrade: WebSocket\\r\\n&apos; +\n               &apos;Connection: Upgrade\\r\\n&apos; +\n               &apos;\\r\\n&apos;);\n\n  socket.pipe(socket); // echo back\n});\n\n// now that server is running\nsrv.listen(1337, &apos;127.0.0.1&apos;, function() {\n\n  // make a request\n  var options = {\n    port: 1337,\n    host: &apos;127.0.0.1&apos;,\n    headers: {\n      &apos;Connection&apos;: &apos;Upgrade&apos;,\n      &apos;Upgrade&apos;: &apos;websocket&apos;\n    }\n  };\n\n  var req = http.request(options);\n  req.end();\n\n  req.on(&apos;upgrade&apos;, function(res, socket, upgradeHead) {\n    console.log(&apos;got upgraded!&apos;);\n    socket.end();\n    process.exit(0);\n  });\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'continue'",
+              "type": "event",
+              "name": "continue",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the server sends a '100 Continue' HTTP response, usually because\nthe request contained 'Expect: 100-continue'. This is an instruction that\nthe client should send the request body.\n-->\n\n<p>通常、リクエストが &apos;Expect: 100-continue&apos; を含んでいたことにより、\nサーバが &apos;100 Continue&apos; HTTP レスポンスを送信することで生成されます。\nこれはクライアントがリクエストボディを送信すべき事を示します。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "request.write(chunk, [encoding])",
+              "type": "method",
+              "name": "write",
+              "desc": "<!--\nSends a chunk of the body.  By calling this method\nmany times, the user can stream a request body to a\nserver--in that case it is suggested to use the\n`['Transfer-Encoding', 'chunked']` header line when\ncreating the request.\n-->\n\n<p>ボディのチャンクを送信します。\nこのメソッドを何回も呼び出すと、サーバへのリクエストボディをストリーム化できます － \nこのケースは <code>[&apos;Transfer-Encoding&apos;, &apos;chunked&apos;]</code> ヘッダでリクエストを生成したことを意味します。\n\n</p>\n<!--\nThe `chunk` argument should be a [buffer](buffer.html) or a string.\n-->\n\n<p><code>chunk</code> 引数は<a href=\"buffer.html\">buffer</a> または文字列です。\n\n</p>\n<!--\nThe `encoding` argument is optional and only applies when `chunk` is a string.\nDefaults to `'utf8'`.\n-->\n\n<p><code>encoding</code> 引数はオプションで、<code>chunk</code> が文字列の場合だけ適用されます。\nデフォルトは <code>&apos;utf8&apos;</code> です。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "request.end([data], [encoding])",
+              "type": "method",
+              "name": "end",
+              "desc": "<!--\nFinishes sending the request. If any parts of the body are\nunsent, it will flush them to the stream. If the request is\nchunked, this will send the terminating `'0\\r\\n\\r\\n'`.\n-->\n\n<p>リクエストの送信を終了します。\nボディのいくつかの部分がまだ送信されていない場合、それはストリームにフラッシュされます。\nリクエストがチャンク化されている場合、これは終端の <code>&apos;0\\r\\n\\r\\n&apos;</code> を送信します。\n\n</p>\n<!--\nIf `data` is specified, it is equivalent to calling\n`request.write(data, encoding)` followed by `request.end()`.\n-->\n\n<p><code>data</code> が指定された場合は、\n<code>request.write(data, encoding)</code> に続けて <code>request.end()</code> を呼び出すのと等価です。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data",
+                      "optional": true
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "request.abort()",
+              "type": "method",
+              "name": "abort",
+              "desc": "<!--\nAborts a request.  (New since v0.3.8.)\n-->\n\n<p>リクエストをアボートします (v0.3.8 からの新機能)\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "request.setTimeout(timeout, [callback])",
+              "type": "method",
+              "name": "setTimeout",
+              "desc": "<!--\nOnce a socket is assigned to this request and is connected \n[socket.setTimeout(timeout, [callback])](net.html#socket.setTimeout)\nwill be called.\n-->\n\n<p>このリクエストにソケットが割り当てられて接続した際に、\n<a href=\"net.html#socket.setTimeout\">socket.setTimeout(timeout, [callback])</a>\nが呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "timeout"
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "request.setNoDelay([noDelay])",
+              "type": "method",
+              "name": "setNoDelay",
+              "desc": "<!--\nOnce a socket is assigned to this request and is connected \n[socket.setNoDelay(noDelay)](net.html#socket.setNoDelay)\nwill be called.\n-->\n\n<p>このリクエストにソケットが割り当てられて接続した際に、\n<a href=\"net.html#socket.setNoDelay\">socket.setNoDelay(noDelay)</a>\nが呼び出されます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "noDelay",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "request.setSocketKeepAlive([enable], [initialDelay])",
+              "type": "method",
+              "name": "setSocketKeepAlive",
+              "desc": "<!--\nOnce a socket is assigned to this request and is connected \n[socket.setKeepAlive(enable, [initialDelay])](net.html#socket.setKeepAlive)\nwill be called.\n-->\n\n<p>このリクエストにソケットが割り当てられて接続した際に、\n<a href=\"net.html#socket.setKeepAlive\">socket.setKeepAlive(enable, [initialDelay])</a>\nが呼び出されます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "enable",
+                      "optional": true
+                    },
+                    {
+                      "name": "initialDelay",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "http.globalAgent",
+          "name": "globalAgent",
+          "desc": "<!--\nGlobal instance of Agent which is used as the default for all http client\nrequests.\n-->\n\n<p>全ての HTTP クライアントリクエストで使用される、デフォルトの Agent のインスタンスです。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "http.ClientResponse",
+          "name": "ClientResponse",
+          "desc": "<!--\nThis object is created when making a request with `http.request()`. It is\npassed to the `'response'` event of the request object.\n-->\n\n<p>このオブジェクトは <code>http.request()</code> によってリクエストと一緒に作成されます。\nこれはリクエストオブジェクトの <code>&apos;response&apos;</code> イベントに渡されます。\n\n</p>\n<!--\nThe response implements the [Readable Stream](stream.html#readable_stream)\ninterface. This is an `EventEmitter` with the following events:\n-->\n\n<p>レスポンスは <a href=\"stream.html#readable_stream\">Readable Stream</a>\nインタフェースを実装します。\nこれは以下のイベントを持つ <code>EventEmitter</code> です:\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'data'",
+              "type": "event",
+              "name": "data",
+              "desc": "<p><code>function (chunk) { }</code>\n\n</p>\n<!--\nEmitted when a piece of the message body is received.\n\nNote that the __data will be lost__ if there is no listener when a\n`ClientResponse` emits a `'data'` event.\n-->\n\n<p>メッセージボディの断片を受信した場合に生成されます。\n\n</p>\n<p><code>ServerRequest</code> が <code>&apos;data&apos;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'end'",
+              "type": "event",
+              "name": "end",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each message. No arguments. After\nemitted no other events will be emitted on the response.\n-->\n\n<p>メッセージごとに厳密に一回だけ生成されます。\nこのイベントが生成された後、このレスポンスはどんなイベントも生成しません。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<p><code>function (err) { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`end` event was emitted.\nSee [http.ServerRequest](#http.ServerRequest)'s `'close'` event for more\ninformation.\n-->\n\n<p><code>&apos;end&apos;</code> イベントが生成される前に下層の接続が切断されたことを示します。\n<a href=\"#http.ServerRequest\">http.ServerRequest</a> の <code>&apos;close&apos;</code>\nイベントにより多くの情報があります。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "response.statusCode",
+              "name": "statusCode",
+              "desc": "<!--\nThe 3-digit HTTP response status code. E.G. `404`.\n-->\n\n<p>3 桁の数字によるレスポンスのステータスコードです。例えば <code>404</code>。\n\n</p>\n"
+            },
+            {
+              "textRaw": "response.httpVersion",
+              "name": "httpVersion",
+              "desc": "<!--\nThe HTTP version of the connected-to server. Probably either\n`'1.1'` or `'1.0'`.\nAlso `response.httpVersionMajor` is the first integer and\n`response.httpVersionMinor` is the second.\n-->\n\n<p>接続しているサーバとの HTTP のバージョンです。\nおそらく <code>&apos;1.1&apos;</code> または <code>&apos;1.0&apos;</code> のどちらかです。\n同様に <code>response.httpVersionMajor</code> は最初の整数、\n<code>response.httpVersionMinor</code> は 2 番目の整数です。\n\n</p>\n"
+            },
+            {
+              "textRaw": "response.headers",
+              "name": "headers",
+              "desc": "<!--\nThe response headers object.\n-->\n\n<p>レスポンスヘッダオブジェクトです。\n\n</p>\n"
+            },
+            {
+              "textRaw": "response.trailers",
+              "name": "trailers",
+              "desc": "<!--\nThe response trailers object. Only populated after the 'end' event.\n-->\n\n<p>レスポンスのトレーラオブジェクトです。\n&apos;end&apos; イベントの後にだけ発生します。\n\n</p>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "response.setEncoding([encoding])",
+              "type": "method",
+              "name": "setEncoding",
+              "desc": "<!--\nSet the encoding for the response body. Either `'utf8'`, `'ascii'`, or\n`'base64'`. Defaults to `null`, which means that the `'data'` event will emit\na `Buffer` object.\n-->\n\n<p>レスポンスボディのエンコーディングを設定します。\n<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、あるいは <code>&apos;base64&apos;</code> のいずれかです。\nデフォルトは <code>null</code> で、\n<code>&apos;data&apos;</code> イベントが <code>Buffer</code> を生成することを意味します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "response.pause()",
+              "type": "method",
+              "name": "pause",
+              "desc": "<!--\nPauses response from emitting events.  Useful to throttle back a download.\n-->\n\n<p>イベントの生成によるレスポンスを中断します。ダウンロード速度を落とすのに便利です。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "response.resume()",
+              "type": "method",
+              "name": "resume",
+              "desc": "<!--\nResumes a paused response.\n-->\n\n<p>中断されていたレスポンスを再開します。\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "HTTP"
+    }
+  ]
+}
