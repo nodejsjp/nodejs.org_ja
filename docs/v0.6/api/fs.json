@@ -3,7 +3,9 @@
   "modules": [
     {
       "textRaw": "File System",
-      "name": "file_system",
+      "name": "fs",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nFile I/O is provided by simple wrappers around standard POSIX functions.  To\nuse this module do `require('fs')`. All the methods have asynchronous and\nsynchronous forms.\n-->\n\n<p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。\nこのモジュールを使用するには <code>require(&apos;fs&apos;)</code> してください。\n全てのメソッドは非同期と同期の形式があります。\n\n</p>\n<!--\nThe asynchronous form always take a completion callback as its last argument.\nThe arguments passed to the completion callback depend on the method, but the\nfirst argument is always reserved for an exception. If the operation was\ncompleted successfully, then the first argument will be `null` or `undefined`.\n\nWhen using the synchronous form any exceptions are immediately thrown.\nYou can use try/catch to handle exceptions or allow them to bubble up.\n-->\n\n<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。\n引数として渡される完了コールバックはメソッドに依存しますが、\n最初の引数は常に例外のために予約されています。\n操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります\n\n</p>\n<p>同期の形式では、全ての例外はすぐにスローされます。\n例外は try/catch で捕まえることも、そのまま通過させることもできます。\n\n</p>\n<!--\nHere is an example of the asynchronous version:\n-->\n\n<p>非同期バージョンの例です:\n\n</p>\n<pre><code>var fs = require(&apos;fs&apos;);\n\nfs.unlink(&apos;/tmp/hello&apos;, function (err) {\n  if (err) throw err;\n  console.log(&apos;successfully deleted /tmp/hello&apos;);\n});</code></pre>\n<!--\nHere is the synchronous version:\n-->\n\n<p>同期バージョンです:\n\n</p>\n<pre><code>var fs = require(&apos;fs&apos;);\n\nfs.unlinkSync(&apos;/tmp/hello&apos;)\nconsole.log(&apos;successfully deleted /tmp/hello&apos;);</code></pre>\n<!--\nWith the asynchronous methods there is no guaranteed ordering. So the\nfollowing is prone to error:\n-->\n\n<p>非同期メソッドでは順序の保証はありません。\n以下のような傾向のエラーがあります。\n\n</p>\n<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {\n  if (err) throw err;\n  console.log(&apos;renamed complete&apos;);\n});\nfs.stat(&apos;/tmp/world&apos;, function (err, stats) {\n  if (err) throw err;\n  console.log(&apos;stats: &apos; + JSON.stringify(stats));\n});</code></pre>\n<!--\nIt could be that `fs.stat` is executed before `fs.rename`.\nThe correct way to do this is to chain the callbacks.\n-->\n\n<p><code>fs.stat</code> は <code>fs.rename</code> より先に実行される可能性がありrます。\n正しい方法はコールバックをチェーンすることです。\n\n</p>\n<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {\n  if (err) throw err;\n  fs.stat(&apos;/tmp/world&apos;, function (err, stats) {\n    if (err) throw err;\n    console.log(&apos;stats: &apos; + JSON.stringify(stats));\n  });\n});</code></pre>\n<!--\nIn busy processes, the programmer is _strongly encouraged_ to use the\nasynchronous versions of these calls. The synchronous versions will block\nthe entire process until they complete--halting all connections.\n\nRelative path to filename can be used, remember however that this path will be relative\nto `process.cwd()`.\n-->\n\n<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。\n同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。\n\n</p>\n<p>ファイル名には相対パスを使うことが出来ます。しかし、このパスは\n<code>process.cwd()</code> からの相対パスであることを思い出してください。\n\n</p>\n",
       "methods": [
         {
@@ -1239,6 +1241,8 @@
           "textRaw": "fs.watchFile(filename, [options], listener)",
           "type": "method",
           "name": "watchFile",
+          "stability": 2,
+          "stabilityText": "Unstable.  Use fs.watch instead, if available.",
           "desc": "<!--\nWatch for changes on `filename`. The callback `listener` will be called each\ntime the file is accessed.\n-->\n\n<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。\n\n</p>\n<!--\nThe second argument is optional. The `options` if provided should be an object\ncontaining two members a boolean, `persistent`, and `interval`. `persistent`\nindicates whether the process should continue to run as long as files are\nbeing watched. `interval` indicates how often the target should be polled,\nin milliseconds. (On Linux systems with inotify, `interval` is ignored.) The\ndefault is `{ persistent: true, interval: 0 }`.\n-->\n\n<p>第 2 引数はオプションです．\n<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と <code>interval</code>\nの二つのメンバを含むオブジェクトです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\n<code>interval</code> は対象をポーリングする間隔をミリ秒で示します\n(inotify を備えた Linux システムでは <code>interval</code> は無視されます)。\nデフォルトは <code>{ persistent: true, interval: 0}</code> です。\n\n</p>\n<!--\nThe `listener` gets two arguments the current stat object and the previous\nstat object:\n-->\n\n<p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:\n\n</p>\n<pre><code>fs.watchFile(&apos;message.text&apos;, function (curr, prev) {\n  console.log(&apos;the current mtime is: &apos; + curr.mtime);\n  console.log(&apos;the previous mtime was: &apos; + prev.mtime);\n});</code></pre>\n<!--\nThese stat objects are instances of `fs.Stat`.\n\nIf you want to be notified when the file was modified, not just accessed\nyou need to compare `curr.mtime` and `prev.mtime`.\n-->\n\n<p>これらの状態オブジェクトは <code>fs.Stat</code> のインスタンスです。\n\n</p>\n<p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。\n\n</p>\n",
           "signatures": [
             {
@@ -1261,6 +1265,8 @@
           "textRaw": "fs.unwatchFile(filename)",
           "type": "method",
           "name": "unwatchFile",
+          "stability": 2,
+          "stabilityText": "Unstable.  Use fs.watch instead, if available.",
           "desc": "<!--\nStop watching for changes on `filename`.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n\n</p>\n",
           "signatures": [
             {
@@ -1276,7 +1282,31 @@
           "textRaw": "fs.watch(filename, [options], listener)",
           "type": "method",
           "name": "watch",
-          "desc": "<!--\nWatch for changes on `filename`, where `filename` is either a file or a\ndirectory.  The returned object is [fs.FSWatcher](#fs.FSWatcher).\n\nThe second argument is optional. The `options` if provided should be an object\ncontaining a boolean member `persistent`, which indicates whether the process\nshould continue to run as long as files are being watched. The default is\n`{ persistent: true }`.\n\nThe listener callback gets two arguments `(event, filename)`.  `event` is either\n'rename' or 'change', and `filename` is the name of the file which triggered\nthe event.\n\n***Warning:***\nProviding `filename` argument in the callback is not supported\non every platform (currently it's only supported on Linux and Windows).  Even\non supported platforms `filename` is not always guaranteed to be provided.\nTherefore, don't assume that `filename` argument is always provided in the\ncallback, and have some fallback logic if it is null.\n-->\n\n<p><code>filename</code> の変更を監視します。\n<code>filename</code> はファイルまたはディレクトリのどちらかです。\n戻り値のオブジェクトは <a href=\"#fs.FSWatcher\">fs.FSWatcher</a> です。\n\n</p>\n<p>第 2 引数はオプションです。\nもし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを\n持つオブジェクトであるべきです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\nデフォルトは <code>{ persistent: true }</code> です。\n\n</p>\n<p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。\n<code>event</code> は <code>&apos;rename&apos;</code> または <code>&apos;change&apos;</code>、そして <code>filename</code> はイベントを\n引き起こしたファイルの名前です。\n\n</p>\n<p><strong><em>警告:</em></strong>\nコールバックに提供される <code>filename</code> 引数は、\n全てのプラットフォームでサポートされるわけではありません\n(現時点では Linux と Windows でのみサポートされます)。\nサポートされるプラットフォームであっても、<code>filename</code> が常に提供されることが\n保証されているわけではありません。\nそのため、コールバックは <code>filename</code> 引数が常に提供されると仮定せず、\nそれが <code>null</code> だったときの代替手段を持つべきです。\n\n</p>\n<pre><code>fs.watch(&apos;somedir&apos;, function (event, filename) {\n  console.log(&apos;event is: &apos; + event);\n  if (filename) {\n    console.log(&apos;filename provided: &apos; + filename);\n  } else {\n    console.log(&apos;filename not provided&apos;);\n  }\n});</code></pre>\n",
+          "stability": 2,
+          "stabilityText": "Unstable.  Not available on all platforms.",
+          "desc": "<!--\nWatch for changes on `filename`, where `filename` is either a file or a\ndirectory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).\n\nThe second argument is optional. The `options` if provided should be an object\ncontaining a boolean member `persistent`, which indicates whether the process\nshould continue to run as long as files are being watched. The default is\n`{ persistent: true }`.\n\nThe listener callback gets two arguments `(event, filename)`.  `event` is either\n'rename' or 'change', and `filename` is the name of the file which triggered\nthe event.\n-->\n\n<p><code>filename</code> の変更を監視します。\n<code>filename</code> はファイルまたはディレクトリのどちらかです。\n戻り値のオブジェクトは <a href=\"#fs.FSWatcher\">fs.FSWatcher</a> です。\n\n</p>\n<p>第 2 引数はオプションです。\nもし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを\n持つオブジェクトであるべきです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\nデフォルトは <code>{ persistent: true }</code> です。\n\n</p>\n<p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。\n<code>event</code> は <code>&apos;rename&apos;</code> または <code>&apos;change&apos;</code>、そして <code>filename</code> はイベントを\n引き起こしたファイルの名前です。\n\n</p>\n",
+          "miscs": [
+            {
+              "textRaw": "Caveats",
+              "name": "Caveats",
+              "type": "misc",
+              "desc": "<!--\nThe `fs.watch` API is not 100% consistent across platforms, and is\nunavailable in some situations.\n-->\n\n<p><code>fs.watch</code> API はプラットフォーム間で 100% 完全ではありmせんし、\nいくつかのシチュエーションで利用不可能です。\n\n</p>\n",
+              "miscs": [
+                {
+                  "textRaw": "Availability",
+                  "name": "Availability",
+                  "type": "misc",
+                  "desc": "<!--\nThis feature depends on the underlying operating system providing a way\nto be notified of filesystem changes.\n\n* On Linux systems, this uses `inotify`.\n* On BSD systems (including OS X), this uses `kqueue`.\n* On SunOS systems (including Solaris and SmartOS), this uses `event ports`.\n* On Windows systems, this feature depends on `ReadDirectoryChangesW`.\n\nIf the underlying functionality is not available for some reason, then\n`fs.watch` will not be able to function.  You can still use\n`fs.watchFile`, which uses stat polling, but it is slower and less\nreliable.\n-->\n\n<p>この機能は下層のオペレーティングシステムが提供するファイルシステム変更の\n通知に依存します。\n\n</p>\n<ul>\n<li>Linux システムでは <code>inotify</code> が使われます。</li>\n<li>BSD システム (OS X を含みます) では <code>kqueue</code> が使われます。</li>\n<li>SunOS システム (Solaris および SmartOS を含みます) では <code>event ports</code>\nが使われます。</li>\n<li>Windows システムでは、この機能は <code>ReadDirectoryChangesW</code> に依存します。</li>\n</ul>\n<p>何らかの理由で下層の機能が使えない場合、<code>fs.watch</code> は使えません。\nstat をポーリングする <code>fs.watchFile</code> を使うことはできますが、\nそれは遅くて信頼性はより低くなります。\n\n</p>\n"
+                },
+                {
+                  "textRaw": "Filename Argument",
+                  "name": "Filename Argument",
+                  "type": "misc",
+                  "desc": "<p>Providing <code>filename</code> argument in the callback is not supported\non every platform (currently it&apos;s only supported on Linux and Windows).  Even\non supported platforms <code>filename</code> is not always guaranteed to be provided.\nTherefore, don&apos;t assume that <code>filename</code> argument is always provided in the\ncallback, and have some fallback logic if it is null.\n--&gt;\n\n</p>\n<p>コールバックに提供される <code>filename</code> 引数は、\n全てのプラットフォームでサポートされるわけではありません\n(現時点では Linux と Windows でのみサポートされます)。\nサポートされるプラットフォームであっても、<code>filename</code> が常に提供されることが\n保証されているわけではありません。\nそのため、コールバックは <code>filename</code> 引数が常に提供されると仮定せず、\nそれが <code>null</code> だったときの代替手段を持つべきです。\n\n</p>\n<pre><code>fs.watch(&apos;somedir&apos;, function (event, filename) {\n  console.log(&apos;event is: &apos; + event);\n  if (filename) {\n    console.log(&apos;filename provided: &apos; + filename);\n  } else {\n    console.log(&apos;filename not provided&apos;);\n  }\n});</code></pre>\n"
+                }
+              ]
+            }
+          ],
           "signatures": [
             {
               "params": [
@@ -1350,14 +1380,7 @@
               "textRaw": "Event: 'open'",
               "type": "event",
               "name": "open",
-              "desc": "<p><code>function (fd) { }</code>\n\n</p>\n<!--\n `fd` is the file descriptor used by the ReadStream.\n-->\n\n<p><code>fd</code> は ReadStream に使われているファイル記述子です。\n\n</p>\n",
-              "params": []
-            },
-            {
-              "textRaw": "Event: 'open'",
-              "type": "event",
-              "name": "open",
-              "desc": "<p><code>function (fd) { }</code>\n\n</p>\n",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the ReadStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} ReadStream で使われる ファイル記述子。</li>\n</ul>\n<p>ReadStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
               "params": []
             }
           ]
@@ -1392,8 +1415,8 @@
               "textRaw": "Event: 'error'",
               "type": "event",
               "name": "error",
-              "desc": "<p><code>function (exception) {}</code>\n\n</p>\n<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n</p>\n",
-              "params": []
+              "params": [],
+              "desc": "<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n</p>\n"
             }
           ]
         }
@@ -1408,7 +1431,7 @@
               "textRaw": "Event: 'open'",
               "type": "event",
               "name": "open",
-              "desc": "<p><code>function (fd) { }</code>\n\n</p>\n<!--\n `fd` is the file descriptor used by the WriteStream.\n-->\n\n<p><code>fd</code> は WriteStream に使われているファイル記述子です。\n\n</p>\n",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
               "params": []
             }
           ],
@@ -1422,7 +1445,7 @@
         }
       ],
       "type": "module",
-      "displayName": "File System"
+      "displayName": "fs"
     }
   ]
 }

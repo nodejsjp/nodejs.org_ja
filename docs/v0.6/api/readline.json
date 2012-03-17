@@ -4,6 +4,8 @@
     {
       "textRaw": "Readline",
       "name": "readline",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as STDIN) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've closed the interface, and the STDIN stream. Here's how\nto allow your program to gracefully terminate:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースと \n(標準入力などの) ストリームをクローズするまで node\nプログラムは終了しないことに注意してください。\nきれいに終了する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface(process.stdin, process.stdout, null);\ni.question(&quot;What do you think of node.js?&quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback.&quot;);\n\n  // These two lines together allow the program to terminate. Without\n  // them, it would run forever.\n  i.close();\n  process.stdin.destroy();\n});</code></pre>\n",
       "methods": [
         {

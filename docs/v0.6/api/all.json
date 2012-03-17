@@ -12,6 +12,15 @@
           "name": "Stability Index",
           "type": "misc",
           "desc": "<!--\nThroughout the documentation, you will see indications of a section's\nstability.  The Node.js API is still somewhat changing, and as it\nmatures, certain parts are more reliable than others.  Some are so\nproven, and so relied upon, that they are unlikely to ever change at\nall.  Others are brand new and experimental, or known to be hazardous\nand in the process of being redesigned.\n\nThe notices look like this:\n-->\n\n<p>ドキュメント全体を通して、セクションの安定度に関する目安を見ることが\nできるでしょう。\nNode.js の API はまだ少し変更されます。\nそれが成熟することにより、ある部分は他よりも信頼できるようになります。\nいくつかはそのように証明され、したがって信頼され、それらはおそらく\n変更されそうもありません。\nその他は新しくて実験的か、危険が知られていたり、再実装が始まっていたりします。\n\n</p>\n<p>通知は次のようです:\n\n</p>\n<pre><code>Stability: 1 Experimental</code></pre>\n<!--\nThe stability indices are as follows:\n-->\n\n<p>安定度は以下を示します:\n\n</p>\n<!--\n* **0 - Deprecated**  This feature is known to be problematic, and changes are\nplanned.  Do not rely on it.  Use of the feature may cause warnings.  Backwards\ncompatibility should not be expected.\n\n* **1 - Experimental**  This feature was introduced recently, and may change\nor be removed in future versions.  Please try it out and provide feedback.\nIf it addresses a use-case that is important to you, tell the node core team.\n\n* **2 - Unstable**  The API is in the process of settling, but has not yet had\nsufficient real-world testing to be considered stable. Backwards-compatibility\nwill be maintained if reasonable.\n\n* **3 - Stable**  The API has proven satisfactory, but cleanup in the underlying\ncode may cause minor changes.  Backwards-compatibility is guaranteed.\n\n* **4 - API Frozen**  This API has been tested extensively in production and is\nunlikely to ever have to change.\n\n* **5 - Locked**  Unless serious bugs are found, this code will not ever\nchange.  Please do not suggest changes in this area; they will be refused.\n-->\n\n<ul>\n<li><strong>0 - 廃止予定</strong>  この機能には問題があることが知られていて、\n変更が計画されています。これに依存しないでください。\nこの機能を使用すると警告が出されるでしょう。\n後方互換性を期待すべきではありません。</li>\n</ul>\n<ul>\n<li><strong>1 - 実験的 </strong>  この機能は最近導入され、将来のバージョンで変更されるか\n削除されるかもしれません。それを試してフィードバックをしてください。\n重要なユースケースで使われるなら、node コアチームに教えてください。</li>\n</ul>\n<ul>\n<li><strong>2 - 不安定</strong>  API は安定化の途中ですが、まだ安定していると考えられるほどには\n現実世界でテストされていません。\nもし合理的なら後方互換性が維持されるでしょう。</li>\n</ul>\n<ul>\n<li><strong>3 - 安定</strong>  API は要求を満たすことがわかりましたが、実装コードを\nクリーンナップするために小さな変更が行われるかもしれません。\n後方互換性は保証されます。</li>\n</ul>\n<ul>\n<li><strong>4 - API 凍結</strong>  API は実運用で広範囲にテストされており、\nおそらく変更されることはありません。</li>\n</ul>\n<ul>\n<li><strong>5 - 固定 </strong>  深刻なバグが見つからない限り、コードは変更されません。\nこのエリアの変更を提案しないでください; そえは拒否されます。</li>\n</ul>\n"
+        },
+        {
+          "textRaw": "JSON Output",
+          "name": "json_output",
+          "stability": 1,
+          "stabilityText": "Experimental",
+          "desc": "<!--\nEvery HTML file in the markdown has a corresponding JSON file with the\nsame data.\n\nThis feature is new as of node v0.6.12.  It is experimental.\n-->\n\n<p>markdown から作られる全ての HTML ファイルは、対応する JSON ファイルを持ちます。\n\n</p>\n<p>これは v0.6.12 からの新機能で、実験的です。\n\n</p>\n",
+          "type": "misc",
+          "displayName": "JSON Output"
         }
       ]
     },
@@ -60,6 +69,8 @@
         {
           "textRaw": "console",
           "name": "console",
+          "stability": 4,
+          "stabilityText": "API Frozen",
           "type": "global",
           "desc": "<!--\nFor printing to stdout and stderr.  Similar to the console object functions\nprovided by most web browsers, here the output is sent to stdout or stderr.\n-->\n\n<p>標準出力と標準エラーに出力するためのものです。\nほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、\n出力は標準出力か標準エラー出力に送られます。\n\n\n</p>\n",
           "methods": [
@@ -520,6 +531,8 @@
     {
       "textRaw": "Debugger",
       "name": "Debugger",
+      "stability": 3,
+      "stabilityText": "Stable",
       "type": "misc",
       "desc": "<!--\nV8 comes with an extensive debugger which is accessible out-of-process via a\nsimple [TCP protocol](http://code.google.com/p/v8/wiki/DebuggerProtocol).\nNode has a built-in client for this debugger. To use this, start Node with the\n`debug` argument; a prompt will appear:\n-->\n\n<p>V8は外部プロセスから <a href=\"http://code.google.com/p/v8/wiki/DebuggerProtocol\">TCP プロトコル</a>経由で接続可能なデバッガを備えています。\nNode にはこのデバッガへのクライアントが組み込まれています。\nこれを使うには、 <code>debug</code> 引数を指定して Node を起動します。\n次のようになります:\n\n</p>\n<pre><code>% node debug myscript.js\n&lt; debugger listening on port 5858\nconnecting... ok\nbreak in /home/indutny/Code/git/indutny/myscript.js:1\n  1 x = 5;\n  2 setTimeout(function () {\n  3   debugger;\ndebug&gt;</code></pre>\n<!--\nNode's debugger client doesn't support the full range of commands, but\nsimple step and inspection is possible. By putting the statement `debugger;`\ninto the source code of your script, you will enable a breakpoint.\n-->\n\n<p>Node のデバッガクライアントはあらゆるコマンドを完全にサポートしているわけではありませんが、\n単純なステップ実行やインスペクションが可能です。\nスクリプトのソースコードに <code>debugger;</code> 文を挿入すると、\nブレークポイントが有効になります。\n\n</p>\n<!--\nFor example, suppose `myscript.js` looked like this:\n-->\n\n<p>例えば、<code>myscript.js</code> が次のようだとします:\n\n</p>\n<pre><code>// myscript.js\nx = 5;\nsetTimeout(function () {\n  debugger;\n  console.log(&quot;world&quot;);\n}, 1000);\nconsole.log(&quot;hello&quot;);</code></pre>\n<!--\nThen once the debugger is run, it will break on line 4.\n-->\n\n<p>ひとたびデバッガを実行すると、4行目で中断します。\n\n</p>\n<pre><code>% node debug myscript.js\n&lt; debugger listening on port 5858\nconnecting... ok\nbreak in /home/indutny/Code/git/indutny/myscript.js:1\n  1 x = 5;\n  2 setTimeout(function () {\n  3   debugger;\ndebug&gt; cont\n&lt; hello\nbreak in /home/indutny/Code/git/indutny/myscript.js:3\n  1 x = 5;\n  2 setTimeout(function () {\n  3   debugger;\n  4   console.log(&quot;world&quot;);\n  5 }, 1000);\ndebug&gt; next\nbreak in /home/indutny/Code/git/indutny/myscript.js:4\n  2 setTimeout(function () {\n  3   debugger;\n  4   console.log(&quot;world&quot;);\n  5 }, 1000);\n  6 console.log(&quot;hello&quot;);\ndebug&gt; repl\nPress Ctrl + C to leave debug repl\n&gt; x\n5\n&gt; 2+2\n4\ndebug&gt; next\n&lt; world\nbreak in /home/indutny/Code/git/indutny/myscript.js:5\n  3   debugger;\n  4   console.log(&quot;world&quot;);\n  5 }, 1000);\n  6 console.log(&quot;hello&quot;);\n  7\ndebug&gt; quit\n%</code></pre>\n<!--\nThe `repl` command allows you to evaluate code remotely. The `next` command\nsteps over to the next line. There are a few other commands available and more\nto come. Type `help` to see others.\n-->\n\n<p><code>repl</code> コマンドはコードをリモートで評価します。\n<code>next</code> コマンドは次の行にステップオーバーします。\n他にもいくつかのコマンドを利用することができます。\nその他については <code>help</code> をタイプしてください。\n\n</p>\n",
       "miscs": [
@@ -617,6 +630,8 @@
     {
       "textRaw": "console",
       "name": "console",
+      "stability": 4,
+      "stabilityText": "API Frozen",
       "type": "global",
       "desc": "<!--\nFor printing to stdout and stderr.  Similar to the console object functions\nprovided by most web browsers, here the output is sent to stdout or stderr.\n-->\n\n<p>標準出力と標準エラーに出力するためのものです。\nほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、\n出力は標準出力か標準エラー出力に送られます。\n\n\n</p>\n",
       "methods": [
@@ -1077,6 +1092,8 @@
     {
       "textRaw": "Timers",
       "name": "timers",
+      "stability": 5,
+      "stabilityText": "Locked",
       "desc": "<!--\nAll of the timer functions are globals.  You do not need to `require()`\nthis module in order to use them.\n-->\n\n<p>全てのタイマ関数はグローバルです。\nこのモジュールを使うために <code>require()</code> をする必要はありません。\n\n</p>\n",
       "methods": [
         {
@@ -1168,6 +1185,8 @@
     {
       "textRaw": "Modules",
       "name": "module",
+      "stability": 5,
+      "stabilityText": "Locked",
       "desc": "<!--\nNode has a simple module loading system.  In Node, files and modules are in\none-to-one correspondence.  As an example, `foo.js` loads the module\n`circle.js` in the same directory.\n-->\n\n<p>Node はシンプルなモジュールローディングシステムを持ちます。\nNode では、ファイルとモジュールは１対１に対応します。\n例として、 <code>foo.js</code> は、同じディレクトリにある <code>circle.js</code> をロードしています。\n\n</p>\n<!--\nThe contents of `foo.js`:\n-->\n\n<p><code>foo.js</code> の内容:\n\n</p>\n<pre><code>var circle = require(&apos;./circle.js&apos;);\nconsole.log( &apos;The area of a circle of radius 4 is &apos;\n           + circle.area(4));</code></pre>\n<!--\nThe contents of `circle.js`:\n-->\n\n<p><code>circle.js</code> の内容:\n\n</p>\n<pre><code>var PI = Math.PI;\n\nexports.area = function (r) {\n  return PI * r * r;\n};\n\nexports.circumference = function (r) {\n  return 2 * PI * r;\n};</code></pre>\n<!--\nThe module `circle.js` has exported the functions `area()` and\n`circumference()`.  To export an object, add to the special `exports`\nobject.\n\nVariables\nlocal to the module will be private. In this example the variable `PI` is\nprivate to `circle.js`.\n\nThe module system is implemented in the `require(\"module\")` module.\n-->\n\n<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。\nオブジェクトをエクスポートするには、 <code>exports</code> という特別なオブジェクトに加えます。\n\n</p>\n<p>モジュールのローカル変数はプライベートです。\nこの例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。\n\n</p>\n<p>モジュールシステムは <code>require(&quot;module&quot;)</code> モジュールによって実装されます。\n\n</p>\n",
       "miscs": [
         {
@@ -1376,6 +1395,8 @@
     {
       "textRaw": "util",
       "name": "util",
+      "stability": 5,
+      "stabilityText": "Locked",
       "desc": "<!--\nThese functions are in the module `'util'`. Use `require('util')` to access\nthem.\n-->\n\n<p>これらの関数はモジュール <code>&apos;util&apos;</code> 内にあります。\n<code>require(&apos;util&apos;)</code> を使うことでこれらにアクセスします。\n\n\n</p>\n",
       "methods": [
         {
@@ -1553,6 +1574,8 @@
     {
       "textRaw": "Events",
       "name": "Events",
+      "stability": 4,
+      "stabilityText": "API Frozen",
       "type": "module",
       "desc": "<!--\nMany objects in Node emit events: a `net.Server` emits an event each time\na peer connects to it, a `fs.readStream` emits an event when the file is\nopened. All objects which emit events are instances of `events.EventEmitter`.\nYou can access this module by doing: `require(\"events\");`\n-->\n\n<p>Node のオブジェクトの多くはイベントを生成します:\n<code>net.Server</code>は相手から接続するたびにイベントを生成し、\n<code>fs.readStream</code>はファイルがオープンされるたびにイベントを生成します。\nイベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。\n次のようにすることでこのモジュールにアクセスできます: <code>require(&quot;events&quot;);</code>\n\n</p>\n<!--\nTypically, event names are represented by a camel-cased string, however,\nthere aren't any strict restrictions on that, as any string will be accepted.\n-->\n\n<p>通常、イベント名はキャメル記法による文字列で表現されますが、\n厳格な制限ではなく、どんな文字列でも受け入れられます。\n\n</p>\n<!--\nFunctions can then be attached to objects, to be executed when an event\nis emitted. These functions are called _listeners_.\n-->\n\n<p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。\nこれらの関数は<em>リスナー</em>と呼ばれます。\n\n\n</p>\n",
       "classes": [
@@ -3362,6 +3385,8 @@
     {
       "textRaw": "Stream",
       "name": "stream",
+      "stability": 2,
+      "stabilityText": "Unstable",
       "desc": "<!--\nA stream is an abstract interface implemented by various objects in Node.\nFor example a request to an HTTP server is a stream, as is stdout. Streams\nare readable, writable, or both. All streams are instances of `EventEmitter`.\n\nYou can load up the Stream base class by doing `require('stream')`.\n-->\n\n<p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。\n例えば HTTP サーバへのリクエストは標準出力と同様にストリームです。\nストリームは読み込み可能、書き込み可能、またはその両方です。\n全てのストリームは <code>EventEmitter</code> のインスタンスです。\n\n</p>\n<p>Stream のベースクラスは <code>require(&apos;stream&apos;)</code> でロードすることができます。\n\n</p>\n",
       "classes": [
         {
@@ -3643,6 +3668,8 @@
     {
       "textRaw": "Crypto",
       "name": "crypto",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nUse `require('crypto')` to access this module.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&apos;crypto&apos;)</code> を使用します。\n\n</p>\n<!--\nThe crypto module requires OpenSSL to be available on the underlying platform.\nIt offers a way of encapsulating secure credentials to be used as part\nof a secure HTTPS net or http connection.\n-->\n\n<p>暗号化モジュールは下層のプラットフォームで OpenSSL が有効であることを必要とします。\nそれは安全な HTTPS ネットワークや http コネクションの一部として使われる、\n安全な認証情報をカプセル化する方法を提供します。\n\n</p>\n<!--\nIt also offers a set of wrappers for OpenSSL's hash, hmac, cipher, decipher, sign and verify methods.\n-->\n\n<p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。\n\n</p>\n",
       "methods": [
         {
@@ -4302,6 +4329,8 @@
     {
       "textRaw": "TLS (SSL)",
       "name": "tls_(ssl)",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nUse `require('tls')` to access this module.\n-->\n\n<p><code>require(&apos;tls&apos;)</code> でこのモジュールにアクセスします。\n\n</p>\n<!--\nThe `tls` module uses OpenSSL to provide Transport Layer Security and/or\nSecure Socket Layer: encrypted stream communication.\n-->\n\n<p><code>tls</code> モジュールは OpenSSL を使用することで Transport Layer Security および\nSecure Socket Layer: 暗号化されたストリーム通信を提供します。\n\n</p>\n<!--\nTLS/SSL is a public/private key infrastructure. Each client and each\nserver must have a private key. A private key is created like this\n-->\n\n<p>TLS/SSL は公開／秘密鍵を基礎とします。\nどのクライアントとサーバも秘密鍵が必要です。\n秘密鍵は次のように作成します\n\n</p>\n<pre><code>openssl genrsa -out ryans-key.pem 1024</code></pre>\n<!--\nAll severs and some clients need to have a certificate. Certificates are public\nkeys signed by a Certificate Authority or self-signed. The first step to\ngetting a certificate is to create a \"Certificate Signing Request\" (CSR)\nfile. This is done with:\n-->\n\n<p>全てのサーバと一部のクライアントは証明書を必要とします。\n証明書は認証局の公開鍵または自身によって署名されます。\n証明書を作成する最初のステップは「証明書署名要求 (CSR)」ファイルです。\n次のようにします:\n\n</p>\n<pre><code>openssl req -new -key ryans-key.pem -out ryans-csr.pem</code></pre>\n<!--\nTo create a self-signed certificate with the CSR, do this:\n-->\n\n<p>CSR から自己署名証明書を作成するには次のようにします:\n\n</p>\n<pre><code>openssl x509 -req -in ryans-csr.pem -signkey ryans-key.pem -out ryans-cert.pem</code></pre>\n<!--\nAlternatively you can send the CSR to a Certificate Authority for signing.\n-->\n\n<p>他に CSR を認証局に送って署名してもらうこともできます。\n\n</p>\n<!--\n(TODO: docs on creating a CA, for now interested users should just look at\n`test/fixtures/keys/Makefile` in the Node source code)\n-->\n\n<p>(TODO: CA を作るドキュメント、現在は興味あるユーザは Node のソースコードから\n<code>test/fixtures/keys/Makefile</code> を見る必要がある)\n\n</p>\n",
       "miscs": [
         {
@@ -4576,7 +4605,9 @@
     },
     {
       "textRaw": "File System",
-      "name": "file_system",
+      "name": "fs",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nFile I/O is provided by simple wrappers around standard POSIX functions.  To\nuse this module do `require('fs')`. All the methods have asynchronous and\nsynchronous forms.\n-->\n\n<p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。\nこのモジュールを使用するには <code>require(&apos;fs&apos;)</code> してください。\n全てのメソッドは非同期と同期の形式があります。\n\n</p>\n<!--\nThe asynchronous form always take a completion callback as its last argument.\nThe arguments passed to the completion callback depend on the method, but the\nfirst argument is always reserved for an exception. If the operation was\ncompleted successfully, then the first argument will be `null` or `undefined`.\n\nWhen using the synchronous form any exceptions are immediately thrown.\nYou can use try/catch to handle exceptions or allow them to bubble up.\n-->\n\n<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。\n引数として渡される完了コールバックはメソッドに依存しますが、\n最初の引数は常に例外のために予約されています。\n操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります\n\n</p>\n<p>同期の形式では、全ての例外はすぐにスローされます。\n例外は try/catch で捕まえることも、そのまま通過させることもできます。\n\n</p>\n<!--\nHere is an example of the asynchronous version:\n-->\n\n<p>非同期バージョンの例です:\n\n</p>\n<pre><code>var fs = require(&apos;fs&apos;);\n\nfs.unlink(&apos;/tmp/hello&apos;, function (err) {\n  if (err) throw err;\n  console.log(&apos;successfully deleted /tmp/hello&apos;);\n});</code></pre>\n<!--\nHere is the synchronous version:\n-->\n\n<p>同期バージョンです:\n\n</p>\n<pre><code>var fs = require(&apos;fs&apos;);\n\nfs.unlinkSync(&apos;/tmp/hello&apos;)\nconsole.log(&apos;successfully deleted /tmp/hello&apos;);</code></pre>\n<!--\nWith the asynchronous methods there is no guaranteed ordering. So the\nfollowing is prone to error:\n-->\n\n<p>非同期メソッドでは順序の保証はありません。\n以下のような傾向のエラーがあります。\n\n</p>\n<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {\n  if (err) throw err;\n  console.log(&apos;renamed complete&apos;);\n});\nfs.stat(&apos;/tmp/world&apos;, function (err, stats) {\n  if (err) throw err;\n  console.log(&apos;stats: &apos; + JSON.stringify(stats));\n});</code></pre>\n<!--\nIt could be that `fs.stat` is executed before `fs.rename`.\nThe correct way to do this is to chain the callbacks.\n-->\n\n<p><code>fs.stat</code> は <code>fs.rename</code> より先に実行される可能性がありrます。\n正しい方法はコールバックをチェーンすることです。\n\n</p>\n<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {\n  if (err) throw err;\n  fs.stat(&apos;/tmp/world&apos;, function (err, stats) {\n    if (err) throw err;\n    console.log(&apos;stats: &apos; + JSON.stringify(stats));\n  });\n});</code></pre>\n<!--\nIn busy processes, the programmer is _strongly encouraged_ to use the\nasynchronous versions of these calls. The synchronous versions will block\nthe entire process until they complete--halting all connections.\n\nRelative path to filename can be used, remember however that this path will be relative\nto `process.cwd()`.\n-->\n\n<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。\n同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。\n\n</p>\n<p>ファイル名には相対パスを使うことが出来ます。しかし、このパスは\n<code>process.cwd()</code> からの相対パスであることを思い出してください。\n\n</p>\n",
       "methods": [
         {
@@ -5812,6 +5843,8 @@
           "textRaw": "fs.watchFile(filename, [options], listener)",
           "type": "method",
           "name": "watchFile",
+          "stability": 2,
+          "stabilityText": "Unstable.  Use fs.watch instead, if available.",
           "desc": "<!--\nWatch for changes on `filename`. The callback `listener` will be called each\ntime the file is accessed.\n-->\n\n<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。\n\n</p>\n<!--\nThe second argument is optional. The `options` if provided should be an object\ncontaining two members a boolean, `persistent`, and `interval`. `persistent`\nindicates whether the process should continue to run as long as files are\nbeing watched. `interval` indicates how often the target should be polled,\nin milliseconds. (On Linux systems with inotify, `interval` is ignored.) The\ndefault is `{ persistent: true, interval: 0 }`.\n-->\n\n<p>第 2 引数はオプションです．\n<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と <code>interval</code>\nの二つのメンバを含むオブジェクトです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\n<code>interval</code> は対象をポーリングする間隔をミリ秒で示します\n(inotify を備えた Linux システムでは <code>interval</code> は無視されます)。\nデフォルトは <code>{ persistent: true, interval: 0}</code> です。\n\n</p>\n<!--\nThe `listener` gets two arguments the current stat object and the previous\nstat object:\n-->\n\n<p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:\n\n</p>\n<pre><code>fs.watchFile(&apos;message.text&apos;, function (curr, prev) {\n  console.log(&apos;the current mtime is: &apos; + curr.mtime);\n  console.log(&apos;the previous mtime was: &apos; + prev.mtime);\n});</code></pre>\n<!--\nThese stat objects are instances of `fs.Stat`.\n\nIf you want to be notified when the file was modified, not just accessed\nyou need to compare `curr.mtime` and `prev.mtime`.\n-->\n\n<p>これらの状態オブジェクトは <code>fs.Stat</code> のインスタンスです。\n\n</p>\n<p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。\n\n</p>\n",
           "signatures": [
             {
@@ -5834,6 +5867,8 @@
           "textRaw": "fs.unwatchFile(filename)",
           "type": "method",
           "name": "unwatchFile",
+          "stability": 2,
+          "stabilityText": "Unstable.  Use fs.watch instead, if available.",
           "desc": "<!--\nStop watching for changes on `filename`.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n\n</p>\n",
           "signatures": [
             {
@@ -5849,7 +5884,31 @@
           "textRaw": "fs.watch(filename, [options], listener)",
           "type": "method",
           "name": "watch",
-          "desc": "<!--\nWatch for changes on `filename`, where `filename` is either a file or a\ndirectory.  The returned object is [fs.FSWatcher](#fs.FSWatcher).\n\nThe second argument is optional. The `options` if provided should be an object\ncontaining a boolean member `persistent`, which indicates whether the process\nshould continue to run as long as files are being watched. The default is\n`{ persistent: true }`.\n\nThe listener callback gets two arguments `(event, filename)`.  `event` is either\n'rename' or 'change', and `filename` is the name of the file which triggered\nthe event.\n\n***Warning:***\nProviding `filename` argument in the callback is not supported\non every platform (currently it's only supported on Linux and Windows).  Even\non supported platforms `filename` is not always guaranteed to be provided.\nTherefore, don't assume that `filename` argument is always provided in the\ncallback, and have some fallback logic if it is null.\n-->\n\n<p><code>filename</code> の変更を監視します。\n<code>filename</code> はファイルまたはディレクトリのどちらかです。\n戻り値のオブジェクトは <a href=\"#fs.FSWatcher\">fs.FSWatcher</a> です。\n\n</p>\n<p>第 2 引数はオプションです。\nもし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを\n持つオブジェクトであるべきです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\nデフォルトは <code>{ persistent: true }</code> です。\n\n</p>\n<p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。\n<code>event</code> は <code>&apos;rename&apos;</code> または <code>&apos;change&apos;</code>、そして <code>filename</code> はイベントを\n引き起こしたファイルの名前です。\n\n</p>\n<p><strong><em>警告:</em></strong>\nコールバックに提供される <code>filename</code> 引数は、\n全てのプラットフォームでサポートされるわけではありません\n(現時点では Linux と Windows でのみサポートされます)。\nサポートされるプラットフォームであっても、<code>filename</code> が常に提供されることが\n保証されているわけではありません。\nそのため、コールバックは <code>filename</code> 引数が常に提供されると仮定せず、\nそれが <code>null</code> だったときの代替手段を持つべきです。\n\n</p>\n<pre><code>fs.watch(&apos;somedir&apos;, function (event, filename) {\n  console.log(&apos;event is: &apos; + event);\n  if (filename) {\n    console.log(&apos;filename provided: &apos; + filename);\n  } else {\n    console.log(&apos;filename not provided&apos;);\n  }\n});</code></pre>\n",
+          "stability": 2,
+          "stabilityText": "Unstable.  Not available on all platforms.",
+          "desc": "<!--\nWatch for changes on `filename`, where `filename` is either a file or a\ndirectory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).\n\nThe second argument is optional. The `options` if provided should be an object\ncontaining a boolean member `persistent`, which indicates whether the process\nshould continue to run as long as files are being watched. The default is\n`{ persistent: true }`.\n\nThe listener callback gets two arguments `(event, filename)`.  `event` is either\n'rename' or 'change', and `filename` is the name of the file which triggered\nthe event.\n-->\n\n<p><code>filename</code> の変更を監視します。\n<code>filename</code> はファイルまたはディレクトリのどちらかです。\n戻り値のオブジェクトは <a href=\"#fs.FSWatcher\">fs.FSWatcher</a> です。\n\n</p>\n<p>第 2 引数はオプションです。\nもし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを\n持つオブジェクトであるべきです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\nデフォルトは <code>{ persistent: true }</code> です。\n\n</p>\n<p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。\n<code>event</code> は <code>&apos;rename&apos;</code> または <code>&apos;change&apos;</code>、そして <code>filename</code> はイベントを\n引き起こしたファイルの名前です。\n\n</p>\n",
+          "miscs": [
+            {
+              "textRaw": "Caveats",
+              "name": "Caveats",
+              "type": "misc",
+              "desc": "<!--\nThe `fs.watch` API is not 100% consistent across platforms, and is\nunavailable in some situations.\n-->\n\n<p><code>fs.watch</code> API はプラットフォーム間で 100% 完全ではありmせんし、\nいくつかのシチュエーションで利用不可能です。\n\n</p>\n",
+              "miscs": [
+                {
+                  "textRaw": "Availability",
+                  "name": "Availability",
+                  "type": "misc",
+                  "desc": "<!--\nThis feature depends on the underlying operating system providing a way\nto be notified of filesystem changes.\n\n* On Linux systems, this uses `inotify`.\n* On BSD systems (including OS X), this uses `kqueue`.\n* On SunOS systems (including Solaris and SmartOS), this uses `event ports`.\n* On Windows systems, this feature depends on `ReadDirectoryChangesW`.\n\nIf the underlying functionality is not available for some reason, then\n`fs.watch` will not be able to function.  You can still use\n`fs.watchFile`, which uses stat polling, but it is slower and less\nreliable.\n-->\n\n<p>この機能は下層のオペレーティングシステムが提供するファイルシステム変更の\n通知に依存します。\n\n</p>\n<ul>\n<li>Linux システムでは <code>inotify</code> が使われます。</li>\n<li>BSD システム (OS X を含みます) では <code>kqueue</code> が使われます。</li>\n<li>SunOS システム (Solaris および SmartOS を含みます) では <code>event ports</code>\nが使われます。</li>\n<li>Windows システムでは、この機能は <code>ReadDirectoryChangesW</code> に依存します。</li>\n</ul>\n<p>何らかの理由で下層の機能が使えない場合、<code>fs.watch</code> は使えません。\nstat をポーリングする <code>fs.watchFile</code> を使うことはできますが、\nそれは遅くて信頼性はより低くなります。\n\n</p>\n"
+                },
+                {
+                  "textRaw": "Filename Argument",
+                  "name": "Filename Argument",
+                  "type": "misc",
+                  "desc": "<p>Providing <code>filename</code> argument in the callback is not supported\non every platform (currently it&apos;s only supported on Linux and Windows).  Even\non supported platforms <code>filename</code> is not always guaranteed to be provided.\nTherefore, don&apos;t assume that <code>filename</code> argument is always provided in the\ncallback, and have some fallback logic if it is null.\n--&gt;\n\n</p>\n<p>コールバックに提供される <code>filename</code> 引数は、\n全てのプラットフォームでサポートされるわけではありません\n(現時点では Linux と Windows でのみサポートされます)。\nサポートされるプラットフォームであっても、<code>filename</code> が常に提供されることが\n保証されているわけではありません。\nそのため、コールバックは <code>filename</code> 引数が常に提供されると仮定せず、\nそれが <code>null</code> だったときの代替手段を持つべきです。\n\n</p>\n<pre><code>fs.watch(&apos;somedir&apos;, function (event, filename) {\n  console.log(&apos;event is: &apos; + event);\n  if (filename) {\n    console.log(&apos;filename provided: &apos; + filename);\n  } else {\n    console.log(&apos;filename not provided&apos;);\n  }\n});</code></pre>\n"
+                }
+              ]
+            }
+          ],
           "signatures": [
             {
               "params": [
@@ -5923,14 +5982,7 @@
               "textRaw": "Event: 'open'",
               "type": "event",
               "name": "open",
-              "desc": "<p><code>function (fd) { }</code>\n\n</p>\n<!--\n `fd` is the file descriptor used by the ReadStream.\n-->\n\n<p><code>fd</code> は ReadStream に使われているファイル記述子です。\n\n</p>\n",
-              "params": []
-            },
-            {
-              "textRaw": "Event: 'open'",
-              "type": "event",
-              "name": "open",
-              "desc": "<p><code>function (fd) { }</code>\n\n</p>\n",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the ReadStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} ReadStream で使われる ファイル記述子。</li>\n</ul>\n<p>ReadStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
               "params": []
             }
           ]
@@ -5965,8 +6017,8 @@
               "textRaw": "Event: 'error'",
               "type": "event",
               "name": "error",
-              "desc": "<p><code>function (exception) {}</code>\n\n</p>\n<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n\n</p>\n",
-              "params": []
+              "params": [],
+              "desc": "<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n\n</p>\n"
             }
           ]
         }
@@ -5981,7 +6033,7 @@
               "textRaw": "Event: 'open'",
               "type": "event",
               "name": "open",
-              "desc": "<p><code>function (fd) { }</code>\n\n</p>\n<!--\n `fd` is the file descriptor used by the WriteStream.\n-->\n\n<p><code>fd</code> は WriteStream に使われているファイル記述子です。\n\n</p>\n",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
               "params": []
             }
           ],
@@ -5995,11 +6047,13 @@
         }
       ],
       "type": "module",
-      "displayName": "File System"
+      "displayName": "fs"
     },
     {
       "textRaw": "Path",
       "name": "path",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nThis module contains utilities for handling and transforming file\npaths.  Almost all these methods perform only string transformations.\nThe file system is not consulted to check whether paths are valid.\n\n`path.exists` and `path.existsSync` are the exceptions, and should\nlogically be found in the fs module as they do access the file system.\n\nUse `require('path')` to use this module.  The following methods are provided:\n-->\n\n<p>このモジュールはファイルのパスに対する処理や変換を行うユーティリティを含みます。\nほとんどのメソッドは文字列の変換だけを行います。\nパスが正しいか検証するためにファイルシステムに尋ねることはありません。\n\n</p>\n<p>例外は <code>path.exists</code> および <code>path.existsSync</code> で、\nこれらはファイルシステムにアクセスするため、\n論理的には fs モジュールにあるべきです。\n\n</p>\n<p>このモジュールを利用するには<code>require(&apos;path&apos;)</code>を呼び出してください。\nこのモジュールは以下のメソッドを提供します。\n\n</p>\n",
       "methods": [
         {
@@ -6117,42 +6171,40 @@
           "type": "method",
           "name": "extname",
           "desc": "<!--\nReturn the extension of the path, from the last '.' to end of string\nin the last portion of the path.  If there is no '.' in the last portion\nof the path or the first character of it is '.', then it returns\nan empty string.  Examples:\n-->\n\n<p>パスの最後の要素について、最後の &apos;.&apos; から文字列の最後までのパスの拡張子を返します。\n最後の要素に &apos;.&apos; が含まれていなかった場合、もしくは &apos;.&apos; が最初の文字だった場合は、空の文字列を返します。\n例:\n\n</p>\n<pre><code>path.extname(&apos;index.html&apos;)\n// returns\n&apos;.html&apos;\n\npath.extname(&apos;index.&apos;)\n// returns\n&apos;.&apos;\n\npath.extname(&apos;index&apos;)\n// returns\n&apos;&apos;</code></pre>\n",
-          "methods": [
+          "signatures": [
             {
-              "textRaw": "path.exists(p, [callback])",
-              "type": "method",
-              "name": "exists",
-              "desc": "<!--\nTest whether or not the given path exists by checking with the file system.\nThen call the `callback` argument with either true or false.  Example:\n-->\n\n<p>与えられたパスがファイルシステム上に存在するかどうか検査します。\nそして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。\n例:\n\n</p>\n<pre><code>path.exists(&apos;/etc/passwd&apos;, function (exists) {\n  util.debug(exists ? &quot;it&apos;s there&quot; : &quot;no passwd!&quot;);\n});</code></pre>\n",
-              "signatures": [
+              "params": [
                 {
-                  "params": [
-                    {
-                      "name": "p"
-                    },
-                    {
-                      "name": "callback",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "path.existsSync(p)",
-              "type": "method",
-              "name": "existsSync",
-              "desc": "<!--\nSynchronous version of `path.exists`.\n-->\n\n<p>同期版の <code>path.exists</code> です。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "p"
-                    }
-                  ]
+                  "name": "p"
                 }
               ]
             }
-          ],
+          ]
+        },
+        {
+          "textRaw": "path.exists(p, [callback])",
+          "type": "method",
+          "name": "exists",
+          "desc": "<!--\nTest whether or not the given path exists by checking with the file system.\nThen call the `callback` argument with either true or false.  Example:\n-->\n\n<p>与えられたパスがファイルシステム上に存在するかどうか検査します。\nそして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。\n例:\n\n</p>\n<pre><code>path.exists(&apos;/etc/passwd&apos;, function (exists) {\n  util.debug(exists ? &quot;it&apos;s there&quot; : &quot;no passwd!&quot;);\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "p"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "path.existsSync(p)",
+          "type": "method",
+          "name": "existsSync",
+          "desc": "<!--\nSynchronous version of `path.exists`.\n-->\n\n<p>同期版の <code>path.exists</code> です。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -6170,6 +6222,8 @@
     {
       "textRaw": "net",
       "name": "net",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nThe `net` module provides you with an asynchronous network wrapper. It contains\nmethods for creating both servers and clients (called streams). You can include\nthis module with `require('net');`\n-->\n\n<p><code>net</code> モジュールは非同期なネットワークのラッパーを提供します。\nそれはサーバとクライアントの両方 (ストリームと呼ばれます) を作成するための方法を含みます。\nこのモジュールは<code>require(&quot;net&quot;);</code>によって取り込むことができます。\n\n</p>\n",
       "methods": [
         {
@@ -6745,6 +6799,8 @@
     {
       "textRaw": "UDP / Datagram Sockets",
       "name": "dgram",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nDatagram sockets are available through `require('dgram')`.\n-->\n\n<p>データグラムソケットは <code>require(&apos;dgram&apos;)</code> で利用可能になります。\n\n</p>\n",
       "methods": [
         {
@@ -7064,6 +7120,8 @@
     {
       "textRaw": "DNS",
       "name": "dns",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nUse `require('dns')` to access this module. All methods in the dns module\nuse C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread\npool. C-Ares is much faster than `getaddrinfo` but the system resolver is\nmore constant with how other programs operate. When a user does\n`net.connect(80, 'google.com')` or `http.get({ host: 'google.com' })` the\n`dns.lookup` method is used. Users who need to do a large number of look ups\nquickly should use the methods that go through C-Ares.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&apos;dns&apos;)</code> を使用します。\ndns モジュールの全てのメソッドは C-Ares を使用します。\nただし、<code>dns.lookup</code> はスレッドプール上で <code>getaddrinfo(3)</code> を使用します。\nC-Ares は <code>getaddrinfo</code> よりずっと速いものの、\n他のシステムと連携するにはシステムリゾルバの方が安定しています。\nユーザが <code>net.connect(80, &apos;google.com&apos;)</code> または\n<code>http.get({ host: &apos;google.com&apos; })</code> を行った時、<code>dns.lookup</code>\nメソッドが使われます。\n多数のルックアップを素早く実行したいユーザは、\nC-Ares を呼び出すメソッドを使用すべきです。\n\n</p>\n<!--\nHere is an example which resolves `'www.google.com'` then reverse\nresolves the IP addresses which are returned.\n-->\n\n<p>これは <code>&apos;www.google.com&apos;</code> を解決して、返された IP アドレスを逆引きで解決する例です。\n\n</p>\n<pre><code>var dns = require(&apos;dns&apos;);\n\ndns.resolve4(&apos;www.google.com&apos;, function (err, addresses) {\n  if (err) throw err;\n\n  console.log(&apos;addresses: &apos; + JSON.stringify(addresses));\n\n  addresses.forEach(function (a) {\n    dns.reverse(a, function (err, domains) {\n      if (err) {\n        console.log(&apos;reverse for &apos; + a + &apos; failed: &apos; +\n          err.message);\n      } else {\n        console.log(&apos;reverse for &apos; + a + &apos;: &apos; +\n          JSON.stringify(domains));\n      }\n    });\n  });\n});</code></pre>\n",
       "methods": [
         {
@@ -7262,6 +7320,8 @@
     {
       "textRaw": "HTTP",
       "name": "http",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nTo use the HTTP server and client one must `require('http')`.\n-->\n\n<p>HTTP サーバおよびクライアントを使用するにはいずれも <code>require(&apos;http&apos;)</code> が必要です。\n\n</p>\n<!--\nThe HTTP interfaces in Node are designed to support many features\nof the protocol which have been traditionally difficult to use.\nIn particular, large, possibly chunk-encoded, messages. The interface is\ncareful to never buffer entire requests or responses--the\nuser is able to stream data.\n-->\n\n<p>Node の HTTP インタフェースは、\n伝統的に扱いが難しかったプロトコルの多くの機能をサポートするように設計されています。\nとりわけ大きくて、場合によってはチャンク化されたメッセージです。\nインタフェースは決してリクエストまたはレスポンス全体をバッファリングしないように気をつけています\n－ 利用者はストリームデータを使うことができます。\n\n</p>\n<!--\nHTTP message headers are represented by an object like this:\n-->\n\n<p>HTTP メッセージヘッダはこのようなオブジェクトとして表現されます:\n\n</p>\n<pre><code>{ &apos;content-length&apos;: &apos;123&apos;,\n  &apos;content-type&apos;: &apos;text/plain&apos;,\n  &apos;connection&apos;: &apos;keep-alive&apos;,\n  &apos;accept&apos;: &apos;*/*&apos; }</code></pre>\n<!--\nKeys are lowercased. Values are not modified.\n-->\n\n<p>キーは小文字化されます。値は変更されません。\n\n</p>\n<!--\nIn order to support the full spectrum of possible HTTP applications, Node's\nHTTP API is very low-level. It deals with stream handling and message\nparsing only. It parses a message into headers and body but it does not\nparse the actual headers or the body.\n-->\n\n<p>考えられる HTTP アプリケーションを完全にサポートするために、\nNode の HTTP API はとても低水準です。それはストリームのハンドリングとメッセージの解析だけに対処します。\n解析はメッセージをヘッダとボディに分けますが、実際のヘッダとボディは解析しません。\n\n\n</p>\n",
       "methods": [
         {
@@ -7954,6 +8014,8 @@
     {
       "textRaw": "HTTPS",
       "name": "https",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nHTTPS is the HTTP protocol over TLS/SSL. In Node this is implemented as a\nseparate module.\n-->\n\n<p>HTTPS は TLS/SSL 上の HTTP プロトコルです。\nNode ではこれらは別のモジュールとして実装されています。\n\n</p>\n",
       "classes": [
         {
@@ -8039,6 +8101,8 @@
     {
       "textRaw": "URL",
       "name": "url",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nThis module has utilities for URL resolution and parsing.\nCall `require('url')` to use it.\n-->\n\n<p>このモジュールはURLの解決や解析の為のユーティリティを持ちます。\n利用するには <code>require(&apos;url&apos;)</code> を呼び出してください。\n\n</p>\n<!--\nParsed URL objects have some or all of the following fields, depending on\nwhether or not they exist in the URL string. Any parts that are not in the URL\nstring will not be in the parsed object. Examples are shown for the URL\n-->\n\n<p>解析されたURLオブジェクトは、URL文字列の中に存在するかどうかに応じて\n次に示すフィールドをいくつかもしくは全てを持ちます。\nURL文字列に含まれないフィールドは解析結果のオブジェクトに含まれません。\n次のURLで例を示します。\n\n</p>\n<p><code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code>\n\n</p>\n<!--\n* `href`: The full URL that was originally parsed. Both the protocol and host are lowercased.\n\n  Example: `'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'`\n* `protocol`: The request protocol, lowercased.\n\n  Example: `'http:'`\n* `host`: The full lowercased host portion of the URL, including port and authentication information.\n\n  Example: `'user:pass@host.com:8080'`\n* `auth`: The authentication information portion of a URL.\n\n  Example: `'user:pass'`\n* `hostname`: Just the lowercased hostname portion of the host.\n\n  Example: `'host.com'`\n* `port`: The port number portion of the host.\n\n  Example: `'8080'`\n* `pathname`: The path section of the URL, that comes after the host and before the query, including the initial slash if present.\n\n  Example: `'/p/a/t/h'`\n* `search`: The 'query string' portion of the URL, including the leading question mark.\n\n  Example: `'?query=string'`\n* `path`: Concatenation of `pathname` and `search`.\n\n  Example: `'/p/a/t/h?query=string'`\n* `query`: Either the 'params' portion of the query string, or a querystring-parsed object.\n\n  Example: `'query=string'` or `{'query':'string'}`\n* `hash`: The 'fragment' portion of the URL including the pound-sign.\n\n  Example: `'#hash'`\n-->\n\n<ul>\n<li><p><code>href</code>: 解析する前の完全な URL。protocol と host はどちらも小文字化されます。</p>\n<p>例: <code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code></p>\n</li>\n<li><p><code>protocol</code>: リクエストのプロトコル。小文字化されます。</p>\n<p>例: <code>&apos;http:&apos;</code></p>\n</li>\n<li><p><code>host</code>: URL の完全で小文字化されたホスト情報。認証情報を含みます。 </p>\n<p>例: <code>&apos;user:pass@host.com:8080&apos;</code></p>\n</li>\n<li><p><code>auth</code>: URL の認証情報。</p>\n<p>例: <code>&apos;user:pass&apos;</code></p>\n</li>\n<li><p><code>hostname</code>: ホスト情報の中の小文字化されたホスト名。</p>\n<p>例: <code>&apos;host.com&apos;</code></p>\n</li>\n<li><p><code>port</code>: ホスト情報の中のポート番号。</p>\n<p>例: <code>&apos;8080&apos;</code></p>\n</li>\n<li><p><code>pathname</code>: URL のパス部分。ホスト情報からクエリまでの間に位置し、最初にスラッシュが存在する場合はそれも含みます。</p>\n<p>例: <code>&apos;/p/a/t/h&apos;</code></p>\n</li>\n<li><p><code>search</code>: URL のクエリ文字列。先頭の ? マークも含みます。</p>\n<p>例: <code>&apos;?query=string&apos;</code></p>\n</li>\n<li><p><code>path</code>: <code>pathname</code> と <code>search</code> を連結した文字列。</p>\n<p>例: <code>&apos;/p/a/t/h?query=string&apos;</code></p>\n</li>\n<li><p><code>query</code>: クエリの変数部分の文字列、もしくはクエリ文字列を解析したオブジェクト。</p>\n<p>例: <code>&apos;query=string&apos;</code> or <code>{&apos;query&apos;:&apos;string&apos;}</code></p>\n</li>\n<li><p><code>hash</code>: URL の # マークを含む部分。</p>\n<p>例: <code>&apos;#hash&apos;</code></p>\n</li>\n</ul>\n<!--\nThe following methods are provided by the URL module:\n-->\n\n<p>以下のメソッドはURLモジュールにより提供されます:\n\n</p>\n",
       "methods": [
         {
@@ -8104,6 +8168,8 @@
     {
       "textRaw": "Query String",
       "name": "querystring",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nThis module provides utilities for dealing with query strings.\nIt provides the following methods:\n-->\n\n<p>このモジュールはクエリ文字列を処理するユーティリティを提供します。 以下のメソッドから成ります:\n\n</p>\n",
       "methods": [
         {
@@ -8173,6 +8239,8 @@
     {
       "textRaw": "Readline",
       "name": "readline",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as STDIN) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've closed the interface, and the STDIN stream. Here's how\nto allow your program to gracefully terminate:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースと \n(標準入力などの) ストリームをクローズするまで node\nプログラムは終了しないことに注意してください。\nきれいに終了する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface(process.stdin, process.stdout, null);\ni.question(&quot;What do you think of node.js?&quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback.&quot;);\n\n  // These two lines together allow the program to terminate. Without\n  // them, it would run forever.\n  i.close();\n  process.stdin.destroy();\n});</code></pre>\n",
       "methods": [
         {
@@ -8370,6 +8438,8 @@
     {
       "textRaw": "Executing JavaScript",
       "name": "vm",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nYou can access this module with:\n-->\n\n<p>次のようにすることで、このモジュールにアクセスすることができます:\n\n</p>\n<pre><code>var vm = require(&apos;vm&apos;);</code></pre>\n<!--\nJavaScript code can be compiled and run immediately or compiled, saved, and run later.\n-->\n\n<p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。\n\n\n</p>\n",
       "methods": [
         {
@@ -8515,6 +8585,8 @@
     {
       "textRaw": "Child Process",
       "name": "child_process",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nNode provides a tri-directional `popen(3)` facility through the\n`child_process` module.\n-->\n\n<p>Nodeは <code>child_process</code> モジュールを通じて、3 方向の <code>popen(3)</code>\n機能を提供します。\n\n</p>\n<!--\nIt is possible to stream data through a child's `stdin`, `stdout`, and\n`stderr` in a fully non-blocking way.\n-->\n\n<p>これは完全にノンブロッキングな方法で子プロセスの <code>stdin</code>、<code>stdout</code>、\nそして <code>stderr</code> を通じたデータストリームを実現します。\n\n</p>\n<!--\nTo create a child process use `require('child_process').spawn()`.\nTo create a child process use `require('child_process').spawn()` or\n`require('child_process').fork()`.  The semantics of each are slightly\ndifferent, and explained below.\n-->\n\n<p>子プロセスの生成は <code>require(&apos;child_process&apos;).spawn()</code> または\n<code>require(&apos;child_process&apos;).fork()</code> を使います。\nそれぞれの意味論は以下で説明するようにわずかに異なります。\n\n</p>\n",
       "classes": [
         {
@@ -8717,6 +8789,8 @@
     {
       "textRaw": "Assert",
       "name": "assert",
+      "stability": 5,
+      "stabilityText": "Locked",
       "desc": "<!--\nThis module is used for writing unit tests for your applications, you can\naccess it with `require('assert')`.\n-->\n\n<p>このモジュールはアプリケーションの単体テストを記述するために使用され、\n<code>require(&apos;assert&apos;)</code> でアクセスできます。\n\n</p>\n",
       "methods": [
         {
@@ -8972,6 +9046,8 @@
     {
       "textRaw": "TTY",
       "name": "tty",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nUse `require('tty')` to access this module.\n-->\n\n<p><code>require(&apos;tty&apos;)</code> でこのモジュールにアクセスします。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var tty = require(&apos;tty&apos;);\nprocess.stdin.resume();\ntty.setRawMode(true);\nprocess.stdin.on(&apos;keypress&apos;, function(char, key) {\n  if (key &amp;&amp; key.ctrl &amp;&amp; key.name == &apos;c&apos;) {\n    console.log(&apos;graceful exit&apos;);\n    process.exit()\n  }\n});</code></pre>\n",
       "methods": [
         {
@@ -9003,42 +9079,6 @@
               ]
             }
           ]
-        },
-        {
-          "textRaw": "tty.setWindowSize(fd, row, col)",
-          "type": "method",
-          "name": "setWindowSize",
-          "desc": "<!--\nThis function was removed in v0.6.0.\n-->\n\n<p>この関数は v0.6.0 で削除されました。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "fd"
-                },
-                {
-                  "name": "row"
-                },
-                {
-                  "name": "col"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "tty.getWindowSize(fd)",
-          "type": "method",
-          "name": "getWindowSize",
-          "desc": "<!--\nThis function was removed in v0.6.0. Use `process.stdout.getWindowSize()`\ninstead.\n-->\n\n<p>この関数は v0.6.0 で削除されました。\n代わりに <code>process.stdout.getWindowSize()</code> を使用してください。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "fd"
-                }
-              ]
-            }
-          ]
         }
       ],
       "type": "module",
@@ -9047,6 +9087,8 @@
     {
       "textRaw": "Zlib",
       "name": "zlib",
+      "stability": 3,
+      "stabilityText": "Stable",
       "desc": "<!--\nYou can access this module with:\n-->\n\n<p>このモジュールは次のようにアクセスできます。\n\n</p>\n<pre><code>var zlib = require(&apos;zlib&apos;);</code></pre>\n<!--\nThis provides bindings to Gzip/Gunzip, Deflate/Inflate, and\nDeflateRaw/InflateRaw classes.  Each class takes the same options, and\nis a readable/writable Stream.\n-->\n\n<p>これは Gzip/Gunzip、Deflate/Inflate、そして DeflateRaw/InflateRaw\nへバインディングするクラスを提供します。\nどのクラスも同じオプションを持つ、読み込みと書き込みが可能なストリームです。\n\n</p>\n<h2>Examples</h2>\n<!--\nCompressing or decompressing a file can be done by piping an\nfs.ReadStream into a zlib stream, then into an fs.WriteStream.\n-->\n\n<p>ファイルを圧縮および解凍するには、fs.ReadStream から zlib へ、\nそして fs.WriteStream へパイプをつなぐだけです。\n\n</p>\n<pre><code>var gzip = zlib.createGzip();\nvar fs = require(&apos;fs&apos;);\nvar inp = fs.createReadStream(&apos;input.txt&apos;);\nvar out = fs.createWriteStream(&apos;input.txt.gz&apos;);\n\ninp.pipe(gzip).pipe(out);</code></pre>\n<!--\nCompressing or decompressing data in one step can be done by using\nthe convenience methods.\n-->\n\n<p>データの圧縮または解凍は <a href=\"#convenience_Methods\">簡易メソッド</a>\nを使うことにより、ワンステップで行うことができます。\n\n</p>\n<pre><code>var input = &apos;.................................&apos;;\nzlib.deflate(input, function(err, buffer) {\n  if (!err) {\n    console.log(buffer.toString(&apos;base64&apos;));\n  }\n});\n\nvar buffer = new Buffer(&apos;eJzT0yMAAGTvBe8=&apos;, &apos;base64&apos;);\nzlib.unzip(buffer, function(err, buffer) {\n  if (!err) {\n    console.log(buffer.toString());\n  }\n});</code></pre>\n<!--\nTo use this module in an HTTP client or server, use the\n[accept-encoding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3)\non requests, and the\n[content-encoding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.11)\nheader on responses.\n\n**Note: these examples are drastically simplified to show\nthe basic concept.**  Zlib encoding can be expensive, and the results\nought to be cached.  See [Memory Usage Tuning](#memory_Usage_Tuning)\nbelow for more information on the speed/memory/compression\ntradeoffs involved in zlib usage.\n-->\n\n<p>このモジュールを HTTP クライアントとサーバで使うには、リクエストに\n<a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3\">accept-encoding</a>\nヘッダを、レスポンスに\n<a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.11\">content-encoding</a>\nヘッダを使用します。\n\n</p>\n<p><strong>注意:\nこれらのサンプルは基本コンセプトを見せるためにとても単純化されています。</strong>\nZlib エンコーディングは高価なので、結果はキャッシュされるべきです。\nzlibの使い方に関する速度／メモリ／圧縮率のトレードオフについてより詳しくは、\n後述の <a href=\"#memory_Usage_Tuning\">Memory Usage Tuning</a> を参照してください。\n\n</p>\n<pre><code>// client request example\nvar zlib = require(&apos;zlib&apos;);\nvar http = require(&apos;http&apos;);\nvar fs = require(&apos;fs&apos;);\nvar request = http.get({ host: &apos;izs.me&apos;,\n                         path: &apos;/&apos;,\n                         port: 80,\n                         headers: { &apos;accept-encoding&apos;: &apos;gzip,deflate&apos; } });\nrequest.on(&apos;response&apos;, function(response) {\n  var output = fs.createWriteStream(&apos;izs.me_index.html&apos;);\n\n  switch (response.headers[&apos;content-encoding&apos;]) {\n    // or, just use zlib.createUnzip() to handle both cases\n    case &apos;gzip&apos;:\n      response.pipe(zlib.createGunzip()).pipe(output);\n      break;\n    case &apos;deflate&apos;:\n      response.pipe(zlib.createInflate()).pipe(output);\n      break;\n    default:\n      response.pipe(output);\n      break;\n  }\n});\n\n// server example\n// Running a gzip operation on every request is quite expensive.\n// It would be much more efficient to cache the compressed buffer.\nvar zlib = require(&apos;zlib&apos;);\nvar http = require(&apos;http&apos;);\nvar fs = require(&apos;fs&apos;);\nhttp.createServer(function(request, response) {\n  var raw = fs.createReadStream(&apos;index.html&apos;);\n  var acceptEncoding = request.headers[&apos;accept-encoding&apos;];\n  if (!acceptEncoding) {\n    acceptEncoding = &apos;&apos;;\n  }\n\n  // Note: this is not a conformant accept-encoding parser.\n  // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3\n  if (acceptEncoding.match(/\\bdeflate\\b/)) {\n    response.writeHead(200, { &apos;content-encoding&apos;: &apos;deflate&apos; });\n    raw.pipe(zlib.createDeflate()).pipe(response);\n  } else if (acceptEncoding.match(/\\bgzip\\b/)) {\n    response.writeHead(200, { &apos;content-encoding&apos;: &apos;gzip&apos; });\n    raw.pipe(zlib.createGzip()).pipe(response);\n  } else {\n    response.writeHead(200, {});\n    raw.pipe(response);\n  }\n}).listen(1337);</code></pre>\n",
       "miscs": [
         {
@@ -9368,6 +9410,8 @@
     {
       "textRaw": "os",
       "name": "os",
+      "stability": 4,
+      "stabilityText": "API Frozen",
       "desc": "<p>Provides a few basic operating-system related utility functions.\n\n</p>\n<!--\nUse `require('os')` to access this module.\n-->\n\n<p><code>require(&apos;os&apos;)</code> によってこのモジュールにアクセスします。\n\n</p>\n",
       "methods": [
         {
@@ -9498,6 +9542,8 @@
     {
       "textRaw": "Cluster",
       "name": "cluster",
+      "stability": 1,
+      "stabilityText": "Experimental - Drastic changes in future versions",
       "desc": "<!--\nA single instance of Node runs in a single thread. To take advantage of\nmulti-core systems the user will sometimes want to launch a cluster of Node\nprocesses to handle the load.\n-->\n\n<p>一つの Node インスタンスは一つのスレッドで実行されます。\nマルチコアシステムのメリットを生かすために、\nユーザは時々 Node プロセスのクラスを起動して負荷を分散したくなります。\n\n</p>\n<!--\nThe cluster module allows you to easily create a network of processes that\nall share server ports.\n-->\n\n<p>クラスタモジュールは、サーバポートを共有するプロセスのネットワークを\n簡単に構築することを可能にします。\n\n</p>\n<pre><code>var cluster = require(&apos;cluster&apos;);\nvar http = require(&apos;http&apos;);\nvar numCPUs = require(&apos;os&apos;).cpus().length;\n\nif (cluster.isMaster) {\n  // Fork workers.\n  for (var i = 0; i &lt; numCPUs; i++) {\n    cluster.fork();\n  }\n\n  cluster.on(&apos;death&apos;, function(worker) {\n    console.log(&apos;worker &apos; + worker.pid + &apos; died&apos;);\n  });\n} else {\n  // Worker processes have a http server.\n  http.Server(function(req, res) {\n    res.writeHead(200);\n    res.end(&quot;hello world\\n&quot;);\n  }).listen(8000);\n}</code></pre>\n<!--\nRunning node will now share port 8000 between the workers:\n-->\n\n<p>Node は 8000 番ポートをワーカ間で共有します。\n\n</p>\n<pre><code>% node server.js\nWorker 2438 online\nWorker 2437 online</code></pre>\n<!--\nThe difference between `cluster.fork()` and `child_process.fork()` is simply\nthat cluster allows TCP servers to be shared between workers. `cluster.fork`\nis implemented on top of `child_process.fork`. The message passing API that\nis available with `child_process.fork` is available with `cluster` as well.\nAs an example, here is a cluster which keeps count of the number of requests\nin the master process via message passing:\n-->\n\n<p><code>cluster.fork()</code> と <code>child_process.fork()</code> の違いは単純で、\nクラスタはワーカ間で共有する TCP サーバを実現できることです。\n<code>cluster.fork()</code> は <code>child_process.fork()</code> 上に実装されています。\n<code>child_process.fork()</code> によって実現されるメッセージパッシング API は\n<code>cluseter</code> でも同様に利用できます。\n以下のクラスタの例は、メッセージパッシングを通じてマスタプロセスで\nリクエスト数をカウントします。\n\n</p>\n<pre><code>var cluster = require(&apos;cluster&apos;);\nvar http = require(&apos;http&apos;);\nvar numReqs = 0;\n\nif (cluster.isMaster) {\n  // Fork workers.\n  for (var i = 0; i &lt; 2; i++) {\n    var worker = cluster.fork();\n\n    worker.on(&apos;message&apos;, function(msg) {\n      if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {\n        numReqs++;\n      }\n    });\n  }\n\n  setInterval(function() {\n    console.log(&quot;numReqs =&quot;, numReqs);\n  }, 1000);\n} else {\n  // Worker processes have a http server.\n  http.Server(function(req, res) {\n    res.writeHead(200);\n    res.end(&quot;hello world\\n&quot;);\n    // Send message to master process\n    process.send({ cmd: &apos;notifyRequest&apos; });\n  }).listen(8000);\n}</code></pre>\n",
       "methods": [
         {
@@ -9543,5 +9589,7 @@
       "type": "module",
       "displayName": "Appendix 1 - Third Party Modules"
     }
-  ]
+  ],
+  "stability": 3,
+  "stabilityText": "Stable"
 }
