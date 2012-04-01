@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.7.6 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.7.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -30,7 +30,7 @@
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
                <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
-               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
                <li><a href="../logos/" class="logos">ロゴ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -82,6 +82,7 @@
 <li><a href="#tls_cleartextstream_authorized">cleartextStream.authorized</a></li>
 <li><a href="#tls_cleartextstream_authorizationerror">cleartextStream.authorizationError</a></li>
 <li><a href="#tls_cleartextstream_getpeercertificate">cleartextStream.getPeerCertificate()</a></li>
+<li><a href="#tls_cleartextstream_getcipher">cleartextStream.getCipher()</a></li>
 <li><a href="#tls_cleartextstream_address">cleartextStream.address()</a></li>
 <li><a href="#tls_cleartextstream_remoteaddress">cleartextStream.remoteAddress</a></li>
 <li><a href="#tls_cleartextstream_remoteport">cleartextStream.remotePort</a></li>
@@ -275,7 +276,7 @@ The `options` object has these possibilities:
     it is recommended that you use this option in conjunction with the
     `honorCipherOrder` option described below to prioritize the RC4 algorithm,
     since it is a non-CBC cipher. A recommended cipher list follows:
-    `ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`
+    `ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`
 
   - `honorCipherOrder` :
     When choosing a cipher, use the server's preferences instead of the client
@@ -333,7 +334,7 @@ The `options` object has these possibilities:
 を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
 を共に使って、非 CBC 暗号である RC4 アルゴリズムを優先することを推奨します。
 推奨する暗号リストはこの通りです:
-<code>ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>
+<code>ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>
 </li>
 <li><p><code>honorCipherOrder</code> :
 暗号を選択する際に、クライアントではなくサーバの設定を使用します。
@@ -912,6 +913,36 @@ object.
 <code>null</code> または空のオブジェクトを返します。
 
 </p>
+<h3>cleartextStream.getCipher()<span><a class="mark" href="#tls_cleartextstream_getcipher" id="tls_cleartextstream_getcipher">#</a></span></h3>
+<!--
+Returns an object representing the cipher name and the SSL/TLS
+protocol version of the current connection.
+-->
+
+<p>現在の接続における暗号と SSL/TLS プロトコルのバージョンを表現する
+オブジェクトを返します。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>{ name: &apos;AES256-SHA&apos;, version: &apos;TLSv1/SSLv3&apos; }</code></pre>
+<!--
+See SSL_CIPHER_get_name() and SSL_CIPHER_get_version() in
+http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS for more
+information.
+-->
+
+<p>詳細は
+<a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS">http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS</a>
+で <code>SSL_CIPHER_get_name()</code> および <code>SSL_CIPHER_get_version()</code> を
+参照してください。
+
+</p>
 <h3>cleartextStream.address()<span><a class="mark" href="#tls_cleartextstream_address" id="tls_cleartextstream_address">#</a></span></h3>
 <!--
 Returns the bound address and port of the underlying socket as reported by the
@@ -954,7 +985,7 @@ The numeric representation of the remote port. For example, `443`.
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -963,7 +994,7 @@ The numeric representation of the remote port. For example, `443`.
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
-            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
             <li><a href="../logos/">ロゴ</a></li>
@@ -971,7 +1002,7 @@ The numeric representation of the remote port. For example, `443`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

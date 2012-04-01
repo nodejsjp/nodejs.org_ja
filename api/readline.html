@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Readline Node.js v0.7.6 Manual &amp; Documentation</title>
+  <title>Readline Node.js v0.7.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/readline.html">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -30,7 +30,7 @@
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
                <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
-               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
                <li><a href="../logos/" class="logos">ロゴ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,7 +56,7 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#readline_readline">Readline</a><ul>
-<li><a href="#readline_rl_createinterface_input_output_completer">rl.createInterface(input, output, completer)</a></li>
+<li><a href="#readline_rl_createinterface_options">rl.createInterface(options)</a></li>
 <li><a href="#readline_class_interface">Class: Interface</a><ul>
 <li><a href="#readline_rl_setprompt_prompt_length">rl.setPrompt(prompt, length)</a></li>
 <li><a href="#readline_rl_prompt">rl.prompt()</a></li>
@@ -67,6 +67,7 @@
 <li><a href="#readline_event_line">Event: &apos;line&apos;</a></li>
 <li><a href="#readline_event_pause">Event: &apos;pause&apos;</a></li>
 <li><a href="#readline_event_resume">Event: &apos;resume&apos;</a></li>
+<li><a href="#readline_event_end">Event: &apos;end&apos;</a></li>
 <li><a href="#readline_event_sigint">Event: &apos;SIGINT&apos;</a></li>
 <li><a href="#readline_event_sigtstp">Event: &apos;SIGTSTP&apos;</a></li>
 <li><a href="#readline_event_sigcont">Event: &apos;SIGCONT&apos;</a></li>
@@ -80,14 +81,15 @@
 
           <div id="apicontent">
             <h1>Readline<span><a class="mark" href="#readline_readline" id="readline_readline">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
+<pre><code>Stability: 2 - Unstable</code></pre>
 <!--
 To use this module, do `require('readline')`. Readline allows reading of a
-stream (such as STDIN) on a line-by-line basis.
+stream (such as `process.stdin`) on a line-by-line basis.
 -->
 
 <p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。
-Readline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。
+Readline はストリーム (たとえば <code>process.stdin</code>)
+を行ごとに読み込むことを可能にします。
 
 </p>
 <!--
@@ -103,24 +105,82 @@ program to gracefully pause:
 </p>
 <pre><code>var rl = require(&apos;readline&apos;);
 
-var i = rl.createInterface(process.stdin, process.stdout, null);
-i.question(&quot;What do you think of node.js?&quot;, function(answer) {
+var i = rl.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+i.question(&quot;What do you think of node.js? &quot;, function(answer) {
   // TODO: Log the answer in a database
-  console.log(&quot;Thank you for your valuable feedback.&quot;);
+  console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
 
   i.pause();
 });</code></pre>
-<h2>rl.createInterface(input, output, completer)<span><a class="mark" href="#readline_rl_createinterface_input_output_completer" id="readline_rl_createinterface_input_output_completer">#</a></span></h2>
+<h2>rl.createInterface(options)<span><a class="mark" href="#readline_rl_createinterface_options" id="readline_rl_createinterface_options">#</a></span></h2>
 <!--
-Takes two streams and creates a readline interface. The `completer` function
-is used for autocompletion. When given a substring, it returns `[[substr1,
-substr2, ...], originalsubstring]`.
+Creates a readline `Interface` instance. Accepts an "options" Object that takes
+the following values:
 -->
 
-<p>二つのストリームを受け取り、readline のインタフェースを作成します。
-<code>completer</code> 関数は補完のために使われます。
-それは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>
-を返します。
+<p>行を読み込む <code>Interface</code> のインスタンスを作成します。
+以下の値を含む <code>options</code> オブジェクトを受け取ります。
+
+</p>
+<!--
+ - `input` - the readable stream to listen to (Required).
+
+ - `output` - the writable stream to write readline data to (Required).
+
+ - `completer` - an optional function that is used for Tab autocompletion. See
+   below for an example of using this.
+
+ - `terminal` - pass `true` if the `input` and `output` streams should be treated
+   like a TTY, and have ANSI/VT100 escape codes written to it. Defaults to
+   checking `isTTY` on the `output` stream upon instantiation.
+-->
+
+<ul>
+<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>
+</li>
+<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>
+</li>
+<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。
+後述の例を参照してください。</p>
+</li>
+<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、
+ANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。
+デフォルトはインスタンス生成時に <code>output</code> に対して
+<code>isTTY</code> でチェックします。</p>
+</li>
+</ul>
+<!--
+The `completer` function is given a the current line entered by the user, and
+is supposed to return an Array with 2 entries:
+-->
+
+<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、
+2 つのエントリを含む配列を返すことが期待されます:
+
+</p>
+<!--
+ 1. An Array with matching entries for the completion.
+
+ 2. The substring that was used for the matching.
+-->
+
+<ol>
+<li><p>補完によってマッチするエントリの配列。</p>
+</li>
+<li><p>マッチングに使用された部分文字列。</p>
+</li>
+</ol>
+<!--
+Which ends up looking something like:
+`[[substr1, substr2, ...], originalsubstring]`.
+-->
+
+<p>それは次のようになります:
+<code>[[substr1, substr2, ...], originalsubstring]</code>。
 
 </p>
 <!--
@@ -130,11 +190,9 @@ Also `completer` can be run in async mode if it accepts two arguments:
 <p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。
 
 </p>
-<p>  function completer(linePartial, callback) {
-    callback(null, [[&apos;123&apos;], linePartial]);
-  }
-
-</p>
+<pre><code>function completer(linePartial, callback) {
+  callback(null, [[&apos;123&apos;], linePartial]);
+}</code></pre>
 <!--
 `createInterface` is commonly used with `process.stdin` and
 `process.stdout` in order to accept user input:
@@ -144,15 +202,40 @@ Also `completer` can be run in async mode if it accepts two arguments:
 <code>process.stdout</code> が使用されます。
 
 </p>
-<pre><code>var readline = require(&apos;readline&apos;),
-  rl = readline.createInterface(process.stdin, process.stdout);</code></pre>
+<pre><code>var readline = require(&apos;readline&apos;);
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});</code></pre>
+<!--
+Once you have a readline instance, you most commonly listen for the `"line"` event.
+-->
+
+<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを
+監視することになります。
+
+</p>
+<!--
+If `terminal` is `true` for this instance then the `output` stream will get the
+best compatability if it defines an `output.columns` property, and fires
+a `"resize"` event on the `output` if/when the columns ever change
+(`process.stdout` does this automatically when it is a TTY).
+-->
+
+<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、
+<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば
+それに適合し、カラム幅が変更されると <code>output</code> 上で
+<code>&apos;resize&apos;</code> イベントが生成されます
+(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。
+
+</p>
 <h2>Class: Interface<span><a class="mark" href="#readline_class_interface" id="readline_class_interface">#</a></span></h2>
 <!--
-The class that represents a readline interface with a stdin and stdout
+The class that represents a readline interface with an input and output
 stream.
 -->
 
-<p>標準入力と標準出力を持つ readline インタフェースを表現するクラスです。
+<p>入力と出力を持つ readline インタフェースを表現するクラスです。
 
 </p>
 <h3>rl.setPrompt(prompt, length)<span><a class="mark" href="#readline_rl_setprompt_prompt_length" id="readline_rl_setprompt_prompt_length">#</a></span></h3>
@@ -215,33 +298,32 @@ Example usage:
 <h3>rl.pause()<span><a class="mark" href="#readline_rl_pause" id="readline_rl_pause">#</a></span></h3>
 <!--
 Pauses the readline `in` stream, allowing it to be resumed later if needed.
+Pauses the readline `input` stream, allowing it to be resumed later if needed.
 -->
 
-<p><code>in</code> ストリームからの入力を中断します。
+<p><code>input</code> ストリームからの入力を中断します。
 必要なら後で再開することができます。
 
 </p>
 <h3>rl.resume()<span><a class="mark" href="#readline_rl_resume" id="readline_rl_resume">#</a></span></h3>
 <!--
-Resumes the readline `in` stream.
+Resumes the readline `input` stream.
 -->
 
-<p><code>in</code> ストリームからの入力を再開します。
+<p><code>input</code> ストリームからの入力を再開します。
 
 </p>
 <h3>rl.write()<span><a class="mark" href="#readline_rl_write" id="readline_rl_write">#</a></span></h3>
 <!--
-Writes to tty.
+Writes to `output` stream.
 
-This will also resume the `in` stream used with `createInterface` if it has
-been paused.
+This will also resume the `input` stream if it has been paused.
 -->
 
-<p>tty へ出力します。
+<p><code>output</code> へ出力します。
 
 </p>
-<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
-中断されていれば再開します。
+<p>これは、<code>input</code> ストリームが中断されていれば再開します。
 
 </p>
 <h3>Event: &apos;line&apos;<span><a class="mark" href="#readline_event_line" id="readline_event_line">#</a></span></h3>
@@ -318,6 +400,21 @@ Example of listening for `resume`:
 <pre><code>rl.on(&apos;resume&apos;, function() {
   console.log(&apos;Readline resumed.&apos;);
 });</code></pre>
+<h3>Event: &apos;end&apos;<span><a class="mark" href="#readline_event_end" id="readline_event_end">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted when the `input` stream receives its "end" event, or when `^D` is
+pressed by the user. It's generally a good idea to consider this `Interface`
+instance as completed after this is emitted.
+-->
+
+<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合、
+またはユーザが <code>^D</code> を推した場合に生成されます。
+通常、これが生成された後で <code>Interface</code> インスタンスは完了すると考えられます。
+
+</p>
 <h3>Event: &apos;SIGINT&apos;<span><a class="mark" href="#readline_event_sigint" id="readline_event_sigint">#</a></span></h3>
 <p><code>function () {}</code>
 
@@ -456,7 +553,7 @@ rl.on(&apos;line&apos;, function(line) {
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -465,7 +562,7 @@ rl.on(&apos;line&apos;, function(line) {
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
-            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
             <li><a href="../logos/">ロゴ</a></li>
@@ -473,7 +570,7 @@ rl.on(&apos;line&apos;, function(line) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

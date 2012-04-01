@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Child Process Node.js v0.7.6 Manual &amp; Documentation</title>
+  <title>Child Process Node.js v0.7.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/child_process.html">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -30,7 +30,7 @@
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
                <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
-               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
                <li><a href="../logos/" class="logos">ロゴ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -58,6 +58,7 @@
 <li><a href="#child_process_child_process">Child Process</a><ul>
 <li><a href="#child_process_class_childprocess">Class: ChildProcess</a><ul>
 <li><a href="#child_process_event_exit">Event:  &apos;exit&apos;</a></li>
+<li><a href="#child_process_event_close">Event: &apos;close&apos;</a></li>
 <li><a href="#child_process_event_disconnect">Event: &apos;disconnect&apos;</a></li>
 <li><a href="#child_process_child_stdin">child.stdin</a></li>
 <li><a href="#child_process_child_stdout">child.stdout</a></li>
@@ -161,10 +162,31 @@ of the signal, otherwise `null`.
 
 </p>
 <!--
+Note that the child process stdio streams might still be open.
+-->
+
+<p>子プロセスの標準入出力ストリームはオープンしたままになっているかも
+しれないことに注意してください。
+
+</p>
+<!--
 See `waitpid(2)`.
 -->
 
 <p><code>waitpid(2)</code> を参照してください。
+
+</p>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#child_process_event_close" id="child_process_event_close">#</a></span></h3>
+<!--
+This event is emitted when the stdio streams of a child process have all
+terminated.  This is distinct from 'exit', since multiple processes
+might share the same stdio streams.
+-->
+
+<p>このイベントは、子プロセスの標準入出力ストリームが全て終了した場合に
+生成されます。
+複数のプロセスが同じ標準入出力ストリームを共有するかもしれないので、
+これは <code>&apos;exit&apos;</code> とは明確に異なります。
 
 </p>
 <h3>Event: &apos;disconnect&apos;<span><a class="mark" href="#child_process_event_disconnect" id="child_process_event_disconnect">#</a></span></h3>
@@ -843,7 +865,7 @@ there is no IPC channel keeping it alive. When calling this method the
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -852,7 +874,7 @@ there is no IPC channel keeping it alive. When calling this method the
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
-            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
             <li><a href="../logos/">ロゴ</a></li>
@@ -860,7 +882,7 @@ there is no IPC channel keeping it alive. When calling this method the
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
