@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.7.6 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.7.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -30,7 +30,7 @@
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
                <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
-               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
                <li><a href="../logos/" class="logos">ロゴ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -398,13 +398,13 @@ Synchronous lchmod(2).
 <h2>fs.stat(path, [callback])<span><a class="mark" href="#fs_fs_stat_path_callback" id="fs_fs_stat_path_callback">#</a></span></h2>
 <!--
 Asynchronous stat(2). The callback gets two arguments `(err, stats)` where
-`stats` is a [fs.Stats](#fs.Stats) object.  See the [fs.Stats](#fs.Stats)
+`stats` is a [fs.Stats](#fs_class_fs_stats) object.  See the [fs.Stats](#fs_class_fs_stats)
 section below for more information.
 -->
 
 <p>非同期の stat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、
-<code>stats</code> は <a href="#fs.Stats">fs.Stats</a> オブジェクトです。
-詳細は <a href="#fs.Stats">fs.Stats</a> の節を参照してください。
+<code>stats</code> は <a href="#fs_class_fs_stats">fs.Stats</a> オブジェクトです。
+詳細は <a href="#fs_class_fs_stats">fs.Stats</a> の節を参照してください。
 
 </p>
 <!--
@@ -1283,12 +1283,13 @@ Returns a new ReadStream object (See `Readable Stream`).
 <!--
 `options` can include `start` and `end` values to read a range of bytes from
 the file instead of the entire file.  Both `start` and `end` are inclusive and
-start at 0.
+start at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.
 -->
 
 <p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、
 <code>options</code> に <code>start</code> および <code>end</code> を含めることができます。
 <code>start</code> と <code>end</code> はどちらも包含的で0から始まります。
+<code>encoding</code> は <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、または <code>&apos;base64&apos;</code> です。
 
 </p>
 <!--
@@ -1301,10 +1302,10 @@ An example to read the last 10 bytes of a file which is 100 bytes long:
 <pre><code>fs.createReadStream(&apos;sample.txt&apos;, {start: 90, end: 99});</code></pre>
 <h2>Class: fs.ReadStream<span><a class="mark" href="#fs_class_fs_readstream" id="fs_class_fs_readstream">#</a></span></h2>
 <!--
-`ReadStream` is a [Readable Stream](stream.html#readable_stream).
+`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).
 -->
 
-<p><code>ReadStream</code> は <a href="stream.html#readable_Stream">Readable Stream</a> です。
+<p><code>ReadStream</code> は <a href="stream.html#stream_readable_stream">Readable Stream</a> です。
 
 </p>
 <h3>Event: &apos;open&apos;<span><a class="mark" href="#fs_event_open" id="fs_event_open">#</a></span></h3>
@@ -1354,10 +1355,10 @@ default mode `w`.
 </p>
 <h2>fs.WriteStream<span><a class="mark" href="#fs_fs_writestream" id="fs_fs_writestream">#</a></span></h2>
 <!--
-`WriteStream` is a [Writable Stream](stream.html#writable_stream).
+`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).
 -->
 
-<p><code>WriteStream</code> は <a href="stream.html#writable_Stream">Writable Stream</a> です。
+<p><code>WriteStream</code> は <a href="stream.html#stream_writable_stream">Writable Stream</a> です。
 
 </p>
 <h3>Event: &apos;open&apos;<span><a class="mark" href="#fs_event_open_1" id="fs_event_open_1">#</a></span></h3>
@@ -1409,11 +1410,12 @@ Stop watching for changes on the given `fs.FSWatcher`.
 </ul>
 <!--
 Emitted when something changes in a watched directory or file.
-See more details in [fs.watch](#fs.watch).
+See more details in [fs.watch](#fs_fs_watch_filename_options_listener).
 -->
 
 <p>監視しているファイルまたはディレクトリに変更があると生成されます。
-詳しくは <a href="#fs.watch">fs.watch</a> を参照してください。
+詳しくは <a href="#fs_fs_watch_filename_options_listener">fs.watch</a>
+を参照してください。
 
 </p>
 <h3>Event: &apos;error&apos;<span><a class="mark" href="#fs_event_error" id="fs_event_error">#</a></span></h3>
@@ -1437,7 +1439,7 @@ Emitted when an error occurs.
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -1446,7 +1448,7 @@ Emitted when an error occurs.
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
-            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
             <li><a href="../logos/">ロゴ</a></li>
@@ -1454,7 +1456,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

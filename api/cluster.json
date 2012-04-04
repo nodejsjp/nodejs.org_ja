@@ -99,6 +99,13 @@
           "desc": "<!--\nWhen calling `listen()` from a worker, a 'listening' event is automatically assigned\nto the server instance. When the server is listening a message is send to the master\nwhere the 'listening' event is emitted.\n-->\n\n<p>ワーカが <code>net.Server.listen()</code> を呼び出すと、<code>&apos;listening&apos;</code> イベントは自動的に\n<code>net.Server</code> インスタンスに割り当てられます。\n<code>net.Server</code> が <code>&apos;listening&apos;</code> メッセージをマスタに送信すると、\n<code>&apos;listening&apos;</code> イベントが生成されます。\n\n</p>\n<pre><code>cluster.on(&apos;listening&apos;, function (worker) {\n  console.log(&quot;We are now connected&quot;);\n});</code></pre>\n"
         },
         {
+          "textRaw": "Event: 'disconnect'",
+          "type": "event",
+          "name": "disconnect",
+          "params": [],
+          "desc": "<!--\nWhen a workers IPC channel has disconnected this event is emitted. This will happen\nwhen the worker dies, usually after calling `.destroy()`.\n-->\n\n<p>ワーカの IPC チャネルが切断された場合に生成されます。\nそれはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。\n\n</p>\n<!--\nWhen calling `.disconnect()`, there may be a delay between the\n`disconnect` and `death` events.  This event can be used to detect if\nthe process is stuck in a cleanup or if there are long-living\nconnections.\n-->\n\n<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;death&apos;</code> の間には\n遅延があるかもしれません。このイベントはプロセスがクリーンナップで\n行き詰まったり、長時間生きている接続がないかを検出することに\n使用できます。\n\n</p>\n<pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {\n  console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);\n});</code></pre>\n"
+        },
+        {
           "textRaw": "Event: 'death'",
           "type": "event",
           "name": "death",
@@ -111,13 +118,6 @@
           "name": "setup",
           "params": [],
           "desc": "<!--\nWhen the `.setupMaster()` function has been executed this event emits.\nIf `.setupMaster()` was not executed before `fork()` this function will\ncall `.setupMaster()` with no arguments.\n-->\n\n<p><code>setupMaster()</code> が実行された時、このイベントが生成されます。\n<code>fork()</code> の前に<code>setupMaster()</code> が呼ばれなかった場合、\nこの関数は引数無しで <code>setupMaster()</code> を呼び出します。\n\n</p>\n"
-        },
-        {
-          "textRaw": "Event: 'death'",
-          "type": "event",
-          "name": "death",
-          "params": [],
-          "desc": "<!--\nSame as the `cluster.on('death')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;death&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;death&apos;, function (worker) {\n  // Worker has died\n};</code></pre>\n"
         }
       ],
       "methods": [
@@ -183,6 +183,63 @@
               ]
             }
           ]
+        },
+        {
+          "textRaw": "cluster.disconnect([callback])",
+          "type": "method",
+          "name": "disconnect",
+          "desc": "<!--\n* `callback` {Function} called when all workers are disconnected and handlers are closed\n-->\n\n<ul>\n<li><code>callback</code> {Function} 全てのワーカが切断し、ハンドルがクローズされると\n呼び出されます。</li>\n</ul>\n<!--\nWhen calling this method, all workers will commit a graceful suicide. When they are\ndisconnected all internal handlers will be closed, allowing the master process to\ndie graceful if no other event is waiting.\n-->\n\n<p>このメソッドを呼び出すと、全てのワーカは強制的でない終了に向かいます。\nそれらの内部的なハンドルが全てクローズされると、\n他に待機しているイベントがなければ、\nマスタプロセスを非強制的に終了することができます。\n\n</p>\n<!--\nThe method takes an optional callback argument which will be called when finished.\n-->\n\n<p>このメソッドはオプションの引数としてコールバックを受け取ります。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Worker.disconnect()",
+          "type": "method",
+          "name": "disconnect",
+          "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `death` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&apos;disconnect&apos;</code> イベントが生成され、\nその後ワーカが終了すると <code>&apos;death&apos;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative wound be to execute `worker.destroy()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.destroy()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluser.fork();\n  var timeout;\n\n  worker.on(&apos;listening&apos;, function () {\n    worker.disconnect();\n    timeout = setTimeout(function () {\n      worker.send(&apos;force kill&apos;);\n    }, 2000);\n  });\n\n  worker.on(&apos;disconnect&apos;, function () {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&apos;net&apos;);\n  var server = net.createServer(function (socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&apos;close&apos;, function () {\n    // cleanup\n  });\n\n  process.on(&apos;message&apos;, function (msg) {\n    if (msg === &apos;force kill&apos;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'message'",
+              "type": "event",
+              "name": "message",
+              "params": [],
+              "desc": "<!--\nThis event is the same as the one provided by `child_process.fork()`.\nIn the master you should use this event, however in a worker you can also use\n`process.on('message')`\n\nAs an example, here is a cluster that keeps count of the number of requests\nin the master process using the message system:\n-->\n\n<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。\nマスタではこのイベントを使うべきですが、ワーカでは <code>process.on(&apos;message&apos;)</code>\nを使うこともできます。\n\n</p>\n<p>メッセージシステムを使用してクラスタ全体のリクエスト数を\nマスタプロセスで保持する例です:\n\n</p>\n<pre><code>var cluster = require(&apos;cluster&apos;);\nvar http = require(&apos;http&apos;);\n\nif (cluster.isMaster) {\n\n  // Keep track of http requests\n  var numReqs = 0;\n  setInterval(function() {\n    console.log(&quot;numReqs =&quot;, numReqs);\n  }, 1000);\n\n  // Count requestes\n  var messageHandler = function (msg) {\n    if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {\n      numReqs += 1;\n    }\n  };\n\n  // Start workers and listen for messages containing notifyRequest\n  cluster.autoFork();\n  Object.keys(cluster.workers).forEach(function (uniqueID) {\n    cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);\n  });\n\n} else {\n\n  // Worker processes have a http server.\n  http.Server(function(req, res) {\n    res.writeHead(200);\n    res.end(&quot;hello world\\n&quot;);\n\n    // notify master about the request\n    process.send({ cmd: &apos;notifyRequest&apos; });\n  }).listen(8000);\n}</code></pre>\n"
+            },
+            {
+              "textRaw": "Event: 'online'",
+              "type": "event",
+              "name": "online",
+              "params": [],
+              "desc": "<!--\nSame as the `cluster.on('online')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;online&apos;)</code> と同様ですが，特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;online&apos;, function (worker) {\n  // Worker is online\n};</code></pre>\n"
+            },
+            {
+              "textRaw": "Event: 'listening'",
+              "type": "event",
+              "name": "listening",
+              "params": [],
+              "desc": "<!--\nSame as the `cluster.on('listening')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;listening&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {\n  // Worker is listening\n};</code></pre>\n"
+            },
+            {
+              "textRaw": "Event: 'disconnect'",
+              "type": "event",
+              "name": "disconnect",
+              "params": [],
+              "desc": "<!--\nSame as the `cluster.on('disconnect')` event, but emits only when the state change\non the specified worker.\n-->\n<code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が\n変更された場合のみ生成されます。\n\n    cluster.fork().on(&apos;disconnect&apos;, function (worker) {\n      // Worker has disconnected\n    };\n\n### Event: &apos;death&apos;\n\n* <code>worker</code> {Worker object}\n\n<!--\nSame as the `cluster.on('death')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;death&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;death&apos;, function (worker) {\n  // Worker has died\n};</code></pre>\n"
+            }
+          ],
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
         }
       ],
       "classes": [
@@ -205,7 +262,7 @@
             {
               "textRaw": "`suicide` {Boolean} ",
               "name": "suicide",
-              "desc": "<!--\nThis property is a boolean. It is set when a worker dies, until then it is\n`undefined`.  It is true if the worker was killed using the `.destroy()`\nmethod, and false otherwise.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが終了すると設定されます。それまでは <code>undefined</code> です。\nワーカが <code>.destroy()</code> メソッドで終了した場合は <code>true</code> に、その他の場合は\n<code>false</code> に設定されます。\n\n</p>\n"
+              "desc": "<!--\nThis property is a boolean. It is set when a worker dies after calling `.destroy()`\nor immediately after calling the `.disconnect()` method. Until then it is `undefined`.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが <code>.destroy()</code> を呼び出して終了するか、\n<code>.disconnect()</code> メソッドを呼び出した後に設定されます。\nそれまでは <code>undefined</code> です。\n\n</p>\n"
             }
           ],
           "methods": [
@@ -253,29 +310,6 @@
                   "params": []
                 }
               ]
-            }
-          ],
-          "events": [
-            {
-              "textRaw": "Event: message",
-              "type": "event",
-              "name": "message",
-              "params": [],
-              "desc": "<!--\nThis event is the same as the one provided by `child_process.fork()`.\nIn the master you should use this event, however in a worker you can also use\n`process.on('message')`\n\nAs an example, here is a cluster that keeps count of the number of requests\nin the master process using the message system:\n-->\n\n<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。\nマスタではこのイベントを使うべきですが、ワーカでは <code>process.on(&apos;message&apos;)</code>\nを使うこともできます。\n\n</p>\n<p>メッセージシステムを使用してクラスタ全体のリクエスト数を\nマスタプロセスで保持する例です:\n\n</p>\n<pre><code>var cluster = require(&apos;cluster&apos;);\nvar http = require(&apos;http&apos;);\n\nif (cluster.isMaster) {\n\n  // Keep track of http requests\n  var numReqs = 0;\n  setInterval(function() {\n    console.log(&quot;numReqs =&quot;, numReqs);\n  }, 1000);\n\n  // Count requestes\n  var messageHandler = function (msg) {\n    if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {\n      numReqs += 1;\n    }\n  };\n\n  // Start workers and listen for messages containing notifyRequest\n  cluster.autoFork();\n  Object.keys(cluster.workers).forEach(function (uniqueID) {\n    cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);\n  });\n\n} else {\n\n  // Worker processes have a http server.\n  http.Server(function(req, res) {\n    res.writeHead(200);\n    res.end(&quot;hello world\\n&quot;);\n\n    // notify master about the request\n    process.send({ cmd: &apos;notifyRequest&apos; });\n  }).listen(8000);\n}</code></pre>\n"
-            },
-            {
-              "textRaw": "Event: 'online'",
-              "type": "event",
-              "name": "online",
-              "params": [],
-              "desc": "<!--\nSame as the `cluster.on('online')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;online&apos;)</code> と同様ですが，特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;online&apos;, function (worker) {\n  // Worker is online\n};</code></pre>\n"
-            },
-            {
-              "textRaw": "Event: 'listening'",
-              "type": "event",
-              "name": "listening",
-              "params": [],
-              "desc": "<!--\nSame as the `cluster.on('listening')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;listening&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {\n  // Worker is listening\n};</code></pre>\n"
             }
           ]
         }

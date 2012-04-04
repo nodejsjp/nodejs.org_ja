@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TTY Node.js v0.7.6 Manual &amp; Documentation</title>
+  <title>TTY Node.js v0.7.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tty.html">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -30,7 +30,7 @@
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
                <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
-               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
                <li><a href="../logos/" class="logos">ロゴ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -58,8 +58,17 @@
 <li><a href="#tty_tty">TTY</a><ul>
 <li><a href="#tty_tty_isatty_fd">tty.isatty(fd)</a></li>
 <li><a href="#tty_tty_setrawmode_mode">tty.setRawMode(mode)</a></li>
-<li><a href="#tty_tty_setwindowsize_fd_row_col">tty.setWindowSize(fd, row, col)</a></li>
-<li><a href="#tty_tty_getwindowsize_fd">tty.getWindowSize(fd)</a></li>
+<li><a href="#tty_class_readstream">Class: ReadStream</a><ul>
+<li><a href="#tty_rs_israw">rs.isRaw</a></li>
+<li><a href="#tty_rs_setrawmode_mode">rs.setRawMode(mode)</a></li>
+</ul>
+</li>
+<li><a href="#tty_class_writestream">Class WriteStream</a><ul>
+<li><a href="#tty_ws_columns">ws.columns</a></li>
+<li><a href="#tty_ws_rows">ws.rows</a></li>
+<li><a href="#tty_event_resize">Event: &apos;resize&apos;</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -68,29 +77,34 @@
 
           <div id="apicontent">
             <h1>TTY<span><a class="mark" href="#tty_tty" id="tty_tty">#</a></span></h1>
+<pre><code>Stability: 2 - Unstable</code></pre>
 <!--
-Use `require('tty')` to access this module.
+The `tty` module houses the `tty.ReadStream` and `tty.WriteStream` classes. In
+most cases, you will not need to use this module directly.
 -->
 
-<p><code>require(&apos;tty&apos;)</code> でこのモジュールにアクセスします。
+<p><code>tty</code> モジュールは <code>tty.ReadStream</code> と <code>tty.WriteStream</code> クラスを持ちます。
+多くのケースでは、これらを直接使う必要はありません。
 
 </p>
 <!--
-Example:
+When node detects that it is being run inside a TTY context, then `process.stdin`
+will be a `tty.ReadStream` instance and `process.stdout` will be
+a `tty.WriteStream` instance. The preferred way to check if node is being run in
+a TTY context is to check `process.stdout.isTTY`:
 -->
 
-<p>例:
+<p>node は TTY コンテキストの中にいるかどうかを検出し、
+<code>process.stdin</code> は <code>tty.ReadStream</code> のインスタンスに、
+<code>process.stdout</code> は <code>tty.WriteStream</code> のインスタンスになります。
+もし node が TTY のコンテキストで実行されているかどうかをチェックしたければ、
+<code>process.stdout.isTTY</code> を使うことができます:
 
 </p>
-<pre><code>var tty = require(&apos;tty&apos;);
-process.stdin.resume();
-tty.setRawMode(true);
-process.stdin.on(&apos;keypress&apos;, function(char, key) {
-  if (key &amp;&amp; key.ctrl &amp;&amp; key.name == &apos;c&apos;) {
-    console.log(&apos;graceful exit&apos;);
-    process.exit()
-  }
-});</code></pre>
+<pre><code>$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot;
+true
+$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot; | cat
+false</code></pre>
 <h2>tty.isatty(fd)<span><a class="mark" href="#tty_tty_isatty_fd" id="tty_tty_isatty_fd">#</a></span></h2>
 <!--
 Returns `true` or `false` depending on if the `fd` is associated with a
@@ -103,32 +117,100 @@ terminal.
 </p>
 <h2>tty.setRawMode(mode)<span><a class="mark" href="#tty_tty_setrawmode_mode" id="tty_tty_setrawmode_mode">#</a></span></h2>
 <!--
-`mode` should be `true` or `false`. This sets the properties of the current
-process's stdin fd to act either as a raw device or default.
+Deprecated. Use `tty.ReadStream#setRawMode()`
+(i.e. `process.stdin.setRawMode()`) instead.
 -->
 
-<p><code>mode</code> は <code>true</code> または <code>false</code> です。
-これは現在のプロセスの標準入力ファイル記述子をローデバイスまたはデフォルトに振る舞うよう設定します。
-
+<p>Deprecated.
+代わりに <code>tty.ReadStream#setRawMode()</code> (すなわち、<code>process.stdin.setRawMode()</code>)
+を使用してください。
 
 </p>
-<h2>tty.setWindowSize(fd, row, col)<span><a class="mark" href="#tty_tty_setwindowsize_fd_row_col" id="tty_tty_setwindowsize_fd_row_col">#</a></span></h2>
+<h2>Class: ReadStream<span><a class="mark" href="#tty_class_readstream" id="tty_class_readstream">#</a></span></h2>
 <!--
-This function was removed in v0.6.0.
+A `net.Socket` subclass that represents the readable portion of a tty. In normal
+circumstances, `process.stdin` will be the only `tty.ReadStream` instance in any
+node program (only when `isatty(0)` is true).
 -->
 
-<p>この関数は v0.6.0 で削除されました。
+<p><code>net.Socket</code> のサブクラスで、tty の入力側を表現します。
+一般的な状況では、どんなプログラムでも (<code>isatty(0)</code> が true の場合に限り)
+<code>process.stdin</code> が唯一の <code>tty.ReadStream</code> のインスタンスとなります。
 
 </p>
-<h2>tty.getWindowSize(fd)<span><a class="mark" href="#tty_tty_getwindowsize_fd" id="tty_tty_getwindowsize_fd">#</a></span></h2>
+<h3>rs.isRaw<span><a class="mark" href="#tty_rs_israw" id="tty_rs_israw">#</a></span></h3>
 <!--
-This function was removed in v0.6.0. Use `process.stdout.getWindowSize()`
-instead.
+A `Boolean` that is initialized to `false`. It represents the current "raw" state
+of the `tty.ReadStream` instance.
 -->
 
-<p>この関数は v0.6.0 で削除されました。
-代わりに <code>process.stdout.getWindowSize()</code> を使用してください。
+<p><code>Boolean</code> 値で <code>false</code> に初期化されます。
+<code>tty.ReadStream</code> インスタンスの現在の &quot;raw&quot; 状態を表現します。
+
 </p>
+<h3>rs.setRawMode(mode)<span><a class="mark" href="#tty_rs_setrawmode_mode" id="tty_rs_setrawmode_mode">#</a></span></h3>
+<!--
+`mode` should be `true` or `false`. This sets the properties of the
+`tty.ReadStream` to act either as a raw device or default. `isRaw` will be set
+to the resulting mode.
+-->
+
+<p><code>mode</code> は <code>true</code> または <code>false</code> のどちらかです。
+これは <code>tty.ReadStream</code> がローデバイスかデフォルトのどちらで振る舞うかを
+設定します。
+結果のモードは <code>isRaw</code> に設定されます。
+
+
+</p>
+<h2>Class WriteStream<span><a class="mark" href="#tty_class_writestream" id="tty_class_writestream">#</a></span></h2>
+<!--
+A `net.Socket` subclass that represents the writable portion of a tty. In normal
+circumstances, `process.stdout` will be the only `tty.WriteStream` instance
+ever created (and only when `isatty(1)` is true).
+-->
+
+<p><code>net.Socket</code> のサブクラスで、tty の出力側を表現します。
+一般的な状況では、どんなプログラムでも (<code>isatty(1)</code> が true の場合に限り)
+<code>process.stdout</code> が唯一の <code>tty.WriteStream</code> のインスタンスとなります。
+
+</p>
+<h3>ws.columns<span><a class="mark" href="#tty_ws_columns" id="tty_ws_columns">#</a></span></h3>
+<!--
+A `Number` that gives the number of columns the TTY currently has. This property
+gets updated on "resize" events.
+-->
+
+<p>TTY の現在のカラム数を保持する <code>Number</code> 値です。
+このプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。
+
+</p>
+<h3>ws.rows<span><a class="mark" href="#tty_ws_rows" id="tty_ws_rows">#</a></span></h3>
+<!--
+A `Number` that gives the number of rows the TTY currently has. This property
+gets updated on "resize" events.
+-->
+
+<p>TTY の現在の行数を保持する <code>Number</code> 値です。
+このプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。
+
+</p>
+<h3>Event: &apos;resize&apos;<span><a class="mark" href="#tty_event_resize" id="tty_event_resize">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted by `refreshSize()` when either of the `columns` or `rows` properties
+has changed.
+-->
+
+<p><code>columns</code> または <code>rows</code> プロパティが変更された場合に
+<code>refreshSize()</code> によって生成されます。
+
+</p>
+<pre><code>process.stdout.on(&apos;resize&apos;, function() {
+  console.log(&apos;screen size has changed!&apos;);
+  console.log(process.stdout.columns + &apos;x&apos; + process.stdout.rows);
+});</code></pre>
 
           </div>
         </div>
@@ -140,7 +222,7 @@ instead.
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -149,7 +231,7 @@ instead.
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
-            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
             <li><a href="../logos/">ロゴ</a></li>
@@ -157,7 +239,7 @@ instead.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

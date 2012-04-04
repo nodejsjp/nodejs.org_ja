@@ -260,6 +260,11 @@
               "desc": "<!--\nA property exposing version strings of node and its dependencies.\n-->\n\n<p>node と依存ライブラリのバージョン文字列を提示します。\n\n</p>\n<pre><code>console.log(process.versions);</code></pre>\n<!--\nWill output:\n-->\n\n<p>は以下を出力します。\n\n</p>\n<pre><code>{ node: &apos;0.4.12&apos;,\n  v8: &apos;3.1.8.26&apos;,\n  ares: &apos;1.7.4&apos;,\n  ev: &apos;4.4&apos;,\n  openssl: &apos;1.0.0e-fips&apos; }</code></pre>\n"
             },
             {
+              "textRaw": "process.config",
+              "name": "config",
+              "desc": "<!--\nAn Object containing the JavaScript representation of the configure options\nthat were used to compile the current node executable. This is the same as\nthe \"config.gypi\" file that was produced when running the `./configure` script.\n\nAn example of the possible output looks like:\n-->\n\n<p>現在のnode実行ファイルをコンパイルした際に使われた configure のオプションを\nJavaScript で表現したオブジェクトを保持します。\nこれは <code>./configure</code> スクリプトを実行した際に生成された &quot;cofnig.gypi&quot;\nファイルと同じです。\n\n</p>\n<p>実際の出力の例です:\n\n</p>\n<pre><code>{ target_defaults:\n   { cflags: [],\n     default_configuration: &apos;Release&apos;,\n     defines: [],\n     include_dirs: [],\n     libraries: [] },\n  variables:\n   { host_arch: &apos;x64&apos;,\n     node_install_npm: &apos;true&apos;,\n     node_install_waf: &apos;true&apos;,\n     node_prefix: &apos;&apos;,\n     node_shared_v8: &apos;false&apos;,\n     node_shared_zlib: &apos;false&apos;,\n     node_use_dtrace: &apos;false&apos;,\n     node_use_openssl: &apos;true&apos;,\n     node_use_system_openssl: &apos;false&apos;,\n     strict_aliasing: &apos;true&apos;,\n     target_arch: &apos;x64&apos;,\n     v8_use_snapshot: &apos;true&apos; } }</code></pre>\n"
+            },
+            {
               "textRaw": "process.installPrefix",
               "name": "installPrefix",
               "desc": "<!--\nA compiled-in property that exposes `NODE_PREFIX`.\n-->\n\n<p><code>NODE_PREFIX</code> を提示するコンパイル済みプロパティです。\n\n</p>\n<pre><code>console.log(&apos;Prefix: &apos; + process.installPrefix);</code></pre>\n"
@@ -841,6 +846,11 @@
           "textRaw": "process.versions",
           "name": "versions",
           "desc": "<!--\nA property exposing version strings of node and its dependencies.\n-->\n\n<p>node と依存ライブラリのバージョン文字列を提示します。\n\n</p>\n<pre><code>console.log(process.versions);</code></pre>\n<!--\nWill output:\n-->\n\n<p>は以下を出力します。\n\n</p>\n<pre><code>{ node: &apos;0.4.12&apos;,\n  v8: &apos;3.1.8.26&apos;,\n  ares: &apos;1.7.4&apos;,\n  ev: &apos;4.4&apos;,\n  openssl: &apos;1.0.0e-fips&apos; }</code></pre>\n"
+        },
+        {
+          "textRaw": "process.config",
+          "name": "config",
+          "desc": "<!--\nAn Object containing the JavaScript representation of the configure options\nthat were used to compile the current node executable. This is the same as\nthe \"config.gypi\" file that was produced when running the `./configure` script.\n\nAn example of the possible output looks like:\n-->\n\n<p>現在のnode実行ファイルをコンパイルした際に使われた configure のオプションを\nJavaScript で表現したオブジェクトを保持します。\nこれは <code>./configure</code> スクリプトを実行した際に生成された &quot;cofnig.gypi&quot;\nファイルと同じです。\n\n</p>\n<p>実際の出力の例です:\n\n</p>\n<pre><code>{ target_defaults:\n   { cflags: [],\n     default_configuration: &apos;Release&apos;,\n     defines: [],\n     include_dirs: [],\n     libraries: [] },\n  variables:\n   { host_arch: &apos;x64&apos;,\n     node_install_npm: &apos;true&apos;,\n     node_install_waf: &apos;true&apos;,\n     node_prefix: &apos;&apos;,\n     node_shared_v8: &apos;false&apos;,\n     node_shared_zlib: &apos;false&apos;,\n     node_use_dtrace: &apos;false&apos;,\n     node_use_openssl: &apos;true&apos;,\n     node_use_system_openssl: &apos;false&apos;,\n     strict_aliasing: &apos;true&apos;,\n     target_arch: &apos;x64&apos;,\n     v8_use_snapshot: &apos;true&apos; } }</code></pre>\n"
         },
         {
           "textRaw": "process.installPrefix",
@@ -4442,7 +4452,7 @@
           "textRaw": "tls.createServer(options, [secureConnectionListener])",
           "type": "method",
           "name": "createServer",
-          "desc": "<!--\nCreates a new [tls.Server](#tls.Server).\nThe `connectionListener` argument is automatically set as a listener for the\n[secureConnection](#event_secureConnection_) event.\nThe `options` object has these possibilities:\n-->\n\n<p>新しい <a href=\"#tls.Server\">tls.Server</a> を作成します。\n<code>connectionListener</code> は <a href=\"#event_secureConnection_\">secureConnection</a>\nイベントのリスナとして自動的に登録されます。\n<code>options</code> は以下を持つことができます:\n\n\n</p>\n<!--\n  - `key`: A string or `Buffer` containing the private key of the server in\n    PEM format. (Required)\n\n  - `passphrase`: A string of passphrase for the private key.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the server in\n    PEM format. (Required)\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate\n    Revocation List)\n\n  - `ciphers`: A string describing the ciphers to use or exclude. Consult\n    <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for\n    details on the format.\n    To mitigate [BEAST attacks]\n    (http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html),\n    it is recommended that you use this option in conjunction with the\n    `honorCipherOrder` option described below to prioritize the RC4 algorithm,\n    since it is a non-CBC cipher. A recommended cipher list follows:\n    `ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`\n\n  - `honorCipherOrder` :\n    When choosing a cipher, use the server's preferences instead of the client\n    preferences.\n    Note that if SSLv2 is used, the server will send its list of preferences\n    to the client, and the client chooses the cipher.\n    Although, this option is disabled by default, it is *recommended* that you\n    use this option in conjunction with the `ciphers` option to mitigate\n    BEAST attacks.\n\n  - `requestCert`: If `true` the server will request a certificate from\n    clients that connect and attempt to verify that certificate. Default:\n    `false`.\n\n  - `rejectUnauthorized`: If `true` the server will reject any connection\n    which is not authorized with the list of supplied CAs. This option only\n    has an effect if `requestCert` is `true`. Default: `false`.\n\n  - `NPNProtocols`: An array or `Buffer` of possible NPN protocols. (Protocols\n    should be ordered by their priority).\n\n  - `SNICallback`: A function that will be called if client supports SNI TLS\n    extension. Only one argument will be passed to it: `servername`. And\n    `SNICallback` should return SecureContext instance.\n    (You can use `crypto.createCredentials(...).context` to get proper\n    SecureContext). If `SNICallback` wasn't provided - default callback with\n    high-level API will be used (see below).\n\n  - `sessionIdContext`: A string containing a opaque identifier for session\n    resumption. If `requestCert` is `true`, the default is MD5 hash value\n    generated from command-line. Otherwise, the default is not provided.\n\n-->\n\n<ul>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です\n(必須)。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です\n(必須)。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>crl</code> : PEM でエンコードされた CRL (Certificate Revocation List、\n失効した証明書の一覧) の文字列または文字列の配列。</p>\n</li>\n<li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。\n<a href=\"http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html\">BEAST 攻撃</a>\nを抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>\nを共に使って、非 CBC 暗号である RC4 アルゴリズムを優先することを推奨します。\n推奨する暗号リストはこの通りです:\n<code>ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>\n</li>\n<li><p><code>honorCipherOrder</code> :\n暗号を選択する際に、クライアントではなくサーバの設定を使用します。\nSSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、\nクライアントが暗号を選択することに注意してください。\nこのオプションはデフォルトで無効にですが、BEAST 攻撃を抑制するために\n<code>ciphers</code> オプションと共に使用することを <em>推奨</em> します。</p>\n</li>\n<li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの\n証明書を要求します。デフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバは提供された認証局の\nリストによって認証されていないコネクションを破棄します．\nこのオプションは <code>requestCert</code> が <code>true</code> の場合だけ効果があります。\nデフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列\n(プロトコルはその優先度に応じて並んでいる必要があります)。</p>\n</li>\n<li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に\n呼び出される関数です。\n<code>servername</code> が唯一の引数として渡されます。\n<code>SNICallback</code> は SecureContext のインスタンスを返す必要があります\n(SecureContext を取得するために <code>crypto.createCredentials(...).context</code>\nを使用することができます)。\n<code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして\n後述する高水準 API が使用されます。</p>\n</li>\n<li><p><code>sessionIdContext</code>: セッション再開のための識別子となる文字列です。\n<code>requestCedrt</code> が <code>true</code> の場合、デフォルトはコマンドライン引数から\n生成された MD5 ハッシュ値となります。\nそうでない場合はデフォルトは提供されません。</p>\n</li>\n</ul>\n<!--\nHere is a simple example echo server:\n\n    var tls = require('tls');\n    var fs = require('fs');\n\n    var options = {\n      key: fs.readFileSync('server-key.pem'),\n      cert: fs.readFileSync('server-cert.pem'),\n\n      // This is necessary only if using the client certificate authentication.\n      requestCert: true,\n\n      // This is necessary only if the client uses the self-signed certificate.\n      ca: [ fs.readFileSync('client-cert.pem') ]\n    };\n\n    var server = tls.createServer(options, function(cleartextStream) {\n      console.log('server connected',\n                  cleartextStream.authorized ? 'authorized' : 'unauthorized');\n      cleartextStream.write(\"welcome!\\n\");\n      cleartextStream.setEncoding('utf8');\n      cleartextStream.pipe(cleartextStream);\n    });\n    server.listen(8000, function() {\n      console.log('server bound');\n    });\n\n-->\n\n<p>これはシンプルはエコーサーバの例です:\n\n</p>\n<pre><code>var tls = require(&apos;tls&apos;);\nvar fs = require(&apos;fs&apos;);\n\nvar options = {\n  key: fs.readFileSync(&apos;server-key.pem&apos;),\n  cert: fs.readFileSync(&apos;server-cert.pem&apos;),\n\n  // これはクライアント証明書を用いた認証を行う場合だけ必要です\n  requestCert: true,\n\n  // これは自己署名のクライアント証明書を認証する場合だけ必要です\n  ca: [ fs.readFileSync(&apos;client-cert.pem&apos;) ]\n};\n\nvar server = tls.createServer(options, function(cleartextStream) {\n  console.log(&apos;server connected&apos;,\n              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);\n  cleartextStream.write(&quot;welcome!\\n&quot;);\n  cleartextStream.setEncoding(&apos;utf8&apos;);\n  cleartextStream.pipe(cleartextStream);\n});\nserver.listen(8000, function() {\n  console.log(&apos;server bound&apos;);\n});</code></pre>\n<!--\nYou can test this server by connecting to it with `openssl s_client`:\n-->\n\n<p><code>openssl s_client</code> を使用してこのサーバに接続するテストを行うことができます。\n\n</p>\n<pre><code>openssl s_client -connect 127.0.0.1:8000</code></pre>\n",
+          "desc": "<!--\nCreates a new [tls.Server](#tls.Server).\nThe `connectionListener` argument is automatically set as a listener for the\n[secureConnection](#event_secureConnection_) event.\nThe `options` object has these possibilities:\n-->\n\n<p>新しい <a href=\"#tls.Server\">tls.Server</a> を作成します。\n<code>connectionListener</code> は <a href=\"#event_secureConnection_\">secureConnection</a>\nイベントのリスナとして自動的に登録されます。\n<code>options</code> は以下を持つことができます:\n\n\n</p>\n<!--\n  - `key`: A string or `Buffer` containing the private key of the server in\n    PEM format. (Required)\n\n  - `passphrase`: A string of passphrase for the private key.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the server in\n    PEM format. (Required)\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate\n    Revocation List)\n\n  - `ciphers`: A string describing the ciphers to use or exclude. Consult\n    <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for\n    details on the format.\n    To mitigate [BEAST attacks]\n    (http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html),\n    it is recommended that you use this option in conjunction with the\n    `honorCipherOrder` option described below to prioritize the RC4 algorithm,\n    since it is a non-CBC cipher. A recommended cipher list follows:\n    `ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`\n\n  - `honorCipherOrder` :\n    When choosing a cipher, use the server's preferences instead of the client\n    preferences.\n    Note that if SSLv2 is used, the server will send its list of preferences\n    to the client, and the client chooses the cipher.\n    Although, this option is disabled by default, it is *recommended* that you\n    use this option in conjunction with the `ciphers` option to mitigate\n    BEAST attacks.\n\n  - `requestCert`: If `true` the server will request a certificate from\n    clients that connect and attempt to verify that certificate. Default:\n    `false`.\n\n  - `rejectUnauthorized`: If `true` the server will reject any connection\n    which is not authorized with the list of supplied CAs. This option only\n    has an effect if `requestCert` is `true`. Default: `false`.\n\n  - `NPNProtocols`: An array or `Buffer` of possible NPN protocols. (Protocols\n    should be ordered by their priority).\n\n  - `SNICallback`: A function that will be called if client supports SNI TLS\n    extension. Only one argument will be passed to it: `servername`. And\n    `SNICallback` should return SecureContext instance.\n    (You can use `crypto.createCredentials(...).context` to get proper\n    SecureContext). If `SNICallback` wasn't provided - default callback with\n    high-level API will be used (see below).\n\n  - `sessionIdContext`: A string containing a opaque identifier for session\n    resumption. If `requestCert` is `true`, the default is MD5 hash value\n    generated from command-line. Otherwise, the default is not provided.\n\n-->\n\n<ul>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です\n(必須)。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です\n(必須)。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>crl</code> : PEM でエンコードされた CRL (Certificate Revocation List、\n失効した証明書の一覧) の文字列または文字列の配列。</p>\n</li>\n<li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。\n<a href=\"http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html\">BEAST 攻撃</a>\nを抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>\nを共に使って、非 CBC 暗号である RC4 アルゴリズムを優先することを推奨します。\n推奨する暗号リストはこの通りです:\n<code>ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>\n</li>\n<li><p><code>honorCipherOrder</code> :\n暗号を選択する際に、クライアントではなくサーバの設定を使用します。\nSSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、\nクライアントが暗号を選択することに注意してください。\nこのオプションはデフォルトで無効にですが、BEAST 攻撃を抑制するために\n<code>ciphers</code> オプションと共に使用することを <em>推奨</em> します。</p>\n</li>\n<li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの\n証明書を要求します。デフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバは提供された認証局の\nリストによって認証されていないコネクションを破棄します．\nこのオプションは <code>requestCert</code> が <code>true</code> の場合だけ効果があります。\nデフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列\n(プロトコルはその優先度に応じて並んでいる必要があります)。</p>\n</li>\n<li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に\n呼び出される関数です。\n<code>servername</code> が唯一の引数として渡されます。\n<code>SNICallback</code> は SecureContext のインスタンスを返す必要があります\n(SecureContext を取得するために <code>crypto.createCredentials(...).context</code>\nを使用することができます)。\n<code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして\n後述する高水準 API が使用されます。</p>\n</li>\n<li><p><code>sessionIdContext</code>: セッション再開のための識別子となる文字列です。\n<code>requestCedrt</code> が <code>true</code> の場合、デフォルトはコマンドライン引数から\n生成された MD5 ハッシュ値となります。\nそうでない場合はデフォルトは提供されません。</p>\n</li>\n</ul>\n<!--\nHere is a simple example echo server:\n\n    var tls = require('tls');\n    var fs = require('fs');\n\n    var options = {\n      key: fs.readFileSync('server-key.pem'),\n      cert: fs.readFileSync('server-cert.pem'),\n\n      // This is necessary only if using the client certificate authentication.\n      requestCert: true,\n\n      // This is necessary only if the client uses the self-signed certificate.\n      ca: [ fs.readFileSync('client-cert.pem') ]\n    };\n\n    var server = tls.createServer(options, function(cleartextStream) {\n      console.log('server connected',\n                  cleartextStream.authorized ? 'authorized' : 'unauthorized');\n      cleartextStream.write(\"welcome!\\n\");\n      cleartextStream.setEncoding('utf8');\n      cleartextStream.pipe(cleartextStream);\n    });\n    server.listen(8000, function() {\n      console.log('server bound');\n    });\n\n-->\n\n<p>これはシンプルはエコーサーバの例です:\n\n</p>\n<pre><code>var tls = require(&apos;tls&apos;);\nvar fs = require(&apos;fs&apos;);\n\nvar options = {\n  key: fs.readFileSync(&apos;server-key.pem&apos;),\n  cert: fs.readFileSync(&apos;server-cert.pem&apos;),\n\n  // これはクライアント証明書を用いた認証を行う場合だけ必要です\n  requestCert: true,\n\n  // これは自己署名のクライアント証明書を認証する場合だけ必要です\n  ca: [ fs.readFileSync(&apos;client-cert.pem&apos;) ]\n};\n\nvar server = tls.createServer(options, function(cleartextStream) {\n  console.log(&apos;server connected&apos;,\n              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);\n  cleartextStream.write(&quot;welcome!\\n&quot;);\n  cleartextStream.setEncoding(&apos;utf8&apos;);\n  cleartextStream.pipe(cleartextStream);\n});\nserver.listen(8000, function() {\n  console.log(&apos;server bound&apos;);\n});</code></pre>\n<!--\nYou can test this server by connecting to it with `openssl s_client`:\n-->\n\n<p><code>openssl s_client</code> を使用してこのサーバに接続するテストを行うことができます。\n\n</p>\n<pre><code>openssl s_client -connect 127.0.0.1:8000</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -4709,6 +4719,17 @@
               "type": "method",
               "name": "getPeerCertificate",
               "desc": "<!--\nReturns an object representing the peer's certificate. The returned object has\nsome properties corresponding to the field of the certificate.\n-->\n\n<p>接続相手の証明書を表現するオブジェクトを返します。\n返されるオブジェクトは証明書のフィールドに対応するプロパティを持ちます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>{ subject: \n   { C: &apos;UK&apos;,\n     ST: &apos;Acknack Ltd&apos;,\n     L: &apos;Rhys Jones&apos;,\n     O: &apos;node.js&apos;,\n     OU: &apos;Test TLS Certificate&apos;,\n     CN: &apos;localhost&apos; },\n  issuer: \n   { C: &apos;UK&apos;,\n     ST: &apos;Acknack Ltd&apos;,\n     L: &apos;Rhys Jones&apos;,\n     O: &apos;node.js&apos;,\n     OU: &apos;Test TLS Certificate&apos;,\n     CN: &apos;localhost&apos; },\n  valid_from: &apos;Nov 11 09:52:22 2009 GMT&apos;,\n  valid_to: &apos;Nov  6 09:52:22 2029 GMT&apos;,\n  fingerprint: &apos;2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF&apos; }</code></pre>\n<!--\nIf the peer does not provide a certificate, it returns `null` or an empty\nobject.\n-->\n\n<p>接続相手が証明書を提供しなかった場合は、\n<code>null</code> または空のオブジェクトを返します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "cleartextStream.getCipher()",
+              "type": "method",
+              "name": "getCipher",
+              "desc": "<!--\nReturns an object representing the cipher name and the SSL/TLS\nprotocol version of the current connection.\n-->\n\n<p>現在の接続における暗号と SSL/TLS プロトコルのバージョンを表現する\nオブジェクトを返します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>{ name: &apos;AES256-SHA&apos;, version: &apos;TLSv1/SSLv3&apos; }</code></pre>\n<!--\nSee SSL_CIPHER_get_name() and SSL_CIPHER_get_version() in\nhttp://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS for more\ninformation.\n-->\n\n<p>詳細は\n<a href=\"http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS\">http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS</a>\nで <code>SSL_CIPHER_get_name()</code> および <code>SSL_CIPHER_get_version()</code> を\n参照してください。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -5081,7 +5102,7 @@
           "textRaw": "fs.stat(path, [callback])",
           "type": "method",
           "name": "stat",
-          "desc": "<!--\nAsynchronous stat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a [fs.Stats](#fs.Stats) object.  See the [fs.Stats](#fs.Stats)\nsection below for more information.\n-->\n\n<p>非同期の stat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、\n<code>stats</code> は <a href=\"#fs.Stats\">fs.Stats</a> オブジェクトです。\n詳細は <a href=\"#fs.Stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n<!--\nSee the [fs.Stats](#fs.Stats) section below for more information.\n-->\n\n<p>より詳しくは後述の <a href=\"#fs.Stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n",
+          "desc": "<!--\nAsynchronous stat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a [fs.Stats](#fs_class_fs_stats) object.  See the [fs.Stats](#fs_class_fs_stats)\nsection below for more information.\n-->\n\n<p>非同期の stat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、\n<code>stats</code> は <a href=\"#fs_class_fs_stats\">fs.Stats</a> オブジェクトです。\n詳細は <a href=\"#fs_class_fs_stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n<!--\nSee the [fs.Stats](#fs.Stats) section below for more information.\n-->\n\n<p>より詳しくは後述の <a href=\"#fs.Stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -6116,7 +6137,7 @@
           "textRaw": "fs.createReadStream(path, [options])",
           "type": "method",
           "name": "createReadStream",
-          "desc": "<!--\nReturns a new ReadStream object (See `Readable Stream`).\n-->\n\n<p>新しい ReadStream オブジェクトを返します (<code>Readable Stream</code> を参照してください)。\n\n</p>\n<!--\n`options` is an object with the following defaults:\n-->\n\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ flags: &apos;r&apos;,\n  encoding: null,\n  fd: null,\n  mode: 0666,\n  bufferSize: 64 * 1024\n}</code></pre>\n<!--\n`options` can include `start` and `end` values to read a range of bytes from\nthe file instead of the entire file.  Both `start` and `end` are inclusive and\nstart at 0.\n-->\n\n<p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、\n<code>options</code> に <code>start</code> および <code>end</code> を含めることができます。\n<code>start</code> と <code>end</code> はどちらも包含的で0から始まります。\n\n</p>\n<!--\nAn example to read the last 10 bytes of a file which is 100 bytes long:\n-->\n\n<p>100 バイトの長さを持つファイルの最後の 10 バイトを読み込む例:\n\n</p>\n<pre><code>fs.createReadStream(&apos;sample.txt&apos;, {start: 90, end: 99});</code></pre>\n",
+          "desc": "<!--\nReturns a new ReadStream object (See `Readable Stream`).\n-->\n\n<p>新しい ReadStream オブジェクトを返します (<code>Readable Stream</code> を参照してください)。\n\n</p>\n<!--\n`options` is an object with the following defaults:\n-->\n\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ flags: &apos;r&apos;,\n  encoding: null,\n  fd: null,\n  mode: 0666,\n  bufferSize: 64 * 1024\n}</code></pre>\n<!--\n`options` can include `start` and `end` values to read a range of bytes from\nthe file instead of the entire file.  Both `start` and `end` are inclusive and\nstart at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.\n-->\n\n<p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、\n<code>options</code> に <code>start</code> および <code>end</code> を含めることができます。\n<code>start</code> と <code>end</code> はどちらも包含的で0から始まります。\n<code>encoding</code> は <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、または <code>&apos;base64&apos;</code> です。\n\n</p>\n<!--\nAn example to read the last 10 bytes of a file which is 100 bytes long:\n-->\n\n<p>100 バイトの長さを持つファイルの最後の 10 バイトを読み込む例:\n\n</p>\n<pre><code>fs.createReadStream(&apos;sample.txt&apos;, {start: 90, end: 99});</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -6162,7 +6183,7 @@
           "textRaw": "Class: fs.ReadStream",
           "type": "class",
           "name": "fs.ReadStream",
-          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#readable_stream).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#readable_Stream\">Readable Stream</a> です。\n\n</p>\n",
+          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#stream_readable_stream\">Readable Stream</a> です。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event: 'open'",
@@ -6177,7 +6198,7 @@
           "textRaw": "Class: fs.FSWatcher",
           "type": "class",
           "name": "fs.FSWatcher",
-          "desc": "<!--\nObjects returned from `fs.watch()` are of this type.\n-->\n<code>fs.watch()</code> が返すオブジェクトはこの型です。\n\n### watcher.close()\n\n<!--\nStop watching for changes on the given `fs.FSWatcher`.\n-->\n<code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。\n\n### Event: &apos;change&apos;\n\n<!--\n* `event` {String} The type of fs change\n* `filename` {String} The filename that changed (if relevant/available)\n-->\n\n<ul>\n<li><code>event</code> {String} ファイルシステム変更の種類です。</li>\n<li><code>filename</code> {String} 変更されたファイル名です (もし利用可能であれば)。</li>\n</ul>\n<!--\nEmitted when something changes in a watched directory or file.\nSee more details in [fs.watch](#fs.watch).\n-->\n\n<p>監視しているファイルまたはディレクトリに変更があると生成されます。\n詳しくは <a href=\"#fs.watch\">fs.watch</a> を参照してください。\n\n</p>\n",
+          "desc": "<!--\nObjects returned from `fs.watch()` are of this type.\n-->\n<code>fs.watch()</code> が返すオブジェクトはこの型です。\n\n### watcher.close()\n\n<!--\nStop watching for changes on the given `fs.FSWatcher`.\n-->\n<code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。\n\n### Event: &apos;change&apos;\n\n<!--\n* `event` {String} The type of fs change\n* `filename` {String} The filename that changed (if relevant/available)\n-->\n\n<ul>\n<li><code>event</code> {String} ファイルシステム変更の種類です。</li>\n<li><code>filename</code> {String} 変更されたファイル名です (もし利用可能であれば)。</li>\n</ul>\n<!--\nEmitted when something changes in a watched directory or file.\nSee more details in [fs.watch](#fs_fs_watch_filename_options_listener).\n-->\n\n<p>監視しているファイルまたはディレクトリに変更があると生成されます。\n詳しくは <a href=\"#fs_fs_watch_filename_options_listener\">fs.watch</a>\nを参照してください。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event: 'error'",
@@ -6193,7 +6214,7 @@
         {
           "textRaw": "fs.WriteStream",
           "name": "WriteStream",
-          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#writable_stream).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#writable_Stream\">Writable Stream</a> です。\n\n</p>\n",
+          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#stream_writable_stream\">Writable Stream</a> です。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event: 'open'",
@@ -6636,7 +6657,7 @@
               "textRaw": "server.close([cb])",
               "type": "method",
               "name": "close",
-              "desc": "<!--\nStops the server from accepting new connections. This function is\nasynchronous, the server is finally closed when the server emits a `'close'`\nevent. Optionally, you can pass a callback to listen for the `'close'` event.\n-->\n\n<p>サーバが新しいコネクションを受け付けるのを終了します。\nこの関数は非同期で、サーバは最終的に <code>&apos;close&apos;</code> イベントを生成した時にクローズされます。\nオプションとして、<code>&apos;close&apos;</code> イベントに対するリスナを渡すことができます。\n\n</p>\n",
+              "desc": "<!--\nStops the server from accepting new connections and keeps existing\nconnections. This function is asynchronous, the server is finally\nclosed when all connections are ended and the server emits a `'close'`\nevent. Optionally, you can pass a callback to listen for the `'close'`\nevent.\n-->\n\n<p>サーバが新しい接続を受け付けるのを終了しますが、既存の接続は維持します。\nこの関数は非同期で、サーバは最終的に全ての接続が閉じられると\n<code>&apos;close&apos;</code> イベントを生成してクローズされます。\nオプションとして、<code>&apos;close&apos;</code> イベントに対するリスナを渡すことができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -6691,7 +6712,7 @@
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<!--\nEmitted when the server closes.\n-->\n\n<p>サーバがクローズした時に生成されます。\n\n</p>\n",
+              "desc": "<!--\nEmitted when the server closes. Note that if connections exist, this\nevent is not emitted until all connections are ended.\n-->\n\n<p>サーバがクローズした時に生成されます。\nもし接続が存在すると、このイベントは全ての接続が閉じられるまで\n生成されないことに注意してください。\n\n</p>\n",
               "params": []
             },
             {
@@ -7242,7 +7263,7 @@
                   ]
                 }
               ],
-              "desc": "<!--\nSets the `IP_MULTICAST_TTL` socket option.  TTL stands for \"Time to Live,\" but in this\ncontext it specifies the number of IP hops that a packet is allowed to go through,\nspecifically for multicast traffic.  Each router or gateway that forwards a packet\ndecrements the TTL. If the TTL is decremented to 0 by a router, it will not be forwarded.\n\nThe argument to `setMulticastTTL()` is a number of hops between 0 and 255.  The default on most\nsystems is 64.\n-->\n\n<p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。\nTTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。\nそれぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。\nTTL がルーターによって 0 までデクリメントされると、それは転送されません。\n<code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。\nほとんどのシステムでデフォルトは 64 です。\n\n</p>\n"
+              "desc": "<!--\nSets the `IP_MULTICAST_TTL` socket option.  TTL stands for \"Time to Live,\" but in this\ncontext it specifies the number of IP hops that a packet is allowed to go through,\nspecifically for multicast traffic.  Each router or gateway that forwards a packet\ndecrements the TTL. If the TTL is decremented to 0 by a router, it will not be forwarded.\n\nThe argument to `setMulticastTTL()` is a number of hops between 0 and 255.  The default on most\nsystems is 1.\n-->\n\n<p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。\nTTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。\nそれぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。\nTTL がルーターによって 0 までデクリメントされると、それは転送されません。\n<code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。\nほとんどのシステムでデフォルトは 1 です。\n\n</p>\n"
             },
             {
               "textRaw": "dgram.setMulticastLoopback(flag)",
@@ -8499,26 +8520,20 @@
     {
       "textRaw": "Readline",
       "name": "readline",
-      "stability": 3,
-      "stabilityText": "Stable",
-      "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as STDIN) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've paused the interface. Here's how to allow your\nprogram to gracefully pause:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースを\n中断するまで node プログラムは終了しないことに注意してください。\nプログラムをスムーズに中断する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface(process.stdin, process.stdout, null);\ni.question(&quot;What do you think of node.js?&quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback.&quot;);\n\n  i.pause();\n});</code></pre>\n",
+      "stability": 2,
+      "stabilityText": "Unstable",
+      "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as `process.stdin`) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば <code>process.stdin</code>)\nを行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've paused the interface. Here's how to allow your\nprogram to gracefully pause:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースを\n中断するまで node プログラムは終了しないことに注意してください。\nプログラムをスムーズに中断する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\ni.question(&quot;What do you think of node.js? &quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback:&quot;, answer);\n\n  i.pause();\n});</code></pre>\n",
       "methods": [
         {
-          "textRaw": "rl.createInterface(input, output, completer)",
+          "textRaw": "rl.createInterface(options)",
           "type": "method",
           "name": "createInterface",
-          "desc": "<!--\nTakes two streams and creates a readline interface. The `completer` function\nis used for autocompletion. When given a substring, it returns `[[substr1,\nsubstr2, ...], originalsubstring]`.\n-->\n\n<p>二つのストリームを受け取り、readline のインタフェースを作成します。\n<code>completer</code> 関数は補完のために使われます。\nそれは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>\nを返します。\n\n</p>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<p>  function completer(linePartial, callback) {\n    callback(null, [[&apos;123&apos;], linePartial]);\n  }\n\n</p>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&apos;readline&apos;),\n  rl = readline.createInterface(process.stdin, process.stdout);</code></pre>\n",
+          "desc": "<!--\nCreates a readline `Interface` instance. Accepts an \"options\" Object that takes\nthe following values:\n-->\n\n<p>行を読み込む <code>Interface</code> のインスタンスを作成します。\n以下の値を含む <code>options</code> オブジェクトを受け取ります。\n\n</p>\n<!--\n - `input` - the readable stream to listen to (Required).\n\n - `output` - the writable stream to write readline data to (Required).\n\n - `completer` - an optional function that is used for Tab autocompletion. See\n   below for an example of using this.\n\n - `terminal` - pass `true` if the `input` and `output` streams should be treated\n   like a TTY, and have ANSI/VT100 escape codes written to it. Defaults to\n   checking `isTTY` on the `output` stream upon instantiation.\n-->\n\n<ul>\n<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>\n</li>\n<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>\n</li>\n<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。\n後述の例を参照してください。</p>\n</li>\n<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、\nANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。\nデフォルトはインスタンス生成時に <code>output</code> に対して\n<code>isTTY</code> でチェックします。</p>\n</li>\n</ul>\n<!--\nThe `completer` function is given a the current line entered by the user, and\nis supposed to return an Array with 2 entries:\n-->\n\n<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、\n2 つのエントリを含む配列を返すことが期待されます:\n\n</p>\n<!--\n 1. An Array with matching entries for the completion.\n\n 2. The substring that was used for the matching.\n-->\n\n<ol>\n<li><p>補完によってマッチするエントリの配列。</p>\n</li>\n<li><p>マッチングに使用された部分文字列。</p>\n</li>\n</ol>\n<!--\nWhich ends up looking something like:\n`[[substr1, substr2, ...], originalsubstring]`.\n-->\n\n<p>それは次のようになります:\n<code>[[substr1, substr2, ...], originalsubstring]</code>。\n\n</p>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<pre><code>function completer(linePartial, callback) {\n  callback(null, [[&apos;123&apos;], linePartial]);\n}</code></pre>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&apos;readline&apos;);\nvar rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});</code></pre>\n<!--\nOnce you have a readline instance, you most commonly listen for the `\"line\"` event.\n-->\n\n<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを\n監視することになります。\n\n</p>\n<!--\nIf `terminal` is `true` for this instance then the `output` stream will get the\nbest compatability if it defines an `output.columns` property, and fires\na `\"resize\"` event on the `output` if/when the columns ever change\n(`process.stdout` does this automatically when it is a TTY).\n-->\n\n<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、\n<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば\nそれに適合し、カラム幅が変更されると <code>output</code> 上で\n<code>&apos;resize&apos;</code> イベントが生成されます\n(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。\n\n</p>\n",
           "signatures": [
             {
               "params": [
                 {
-                  "name": "input"
-                },
-                {
-                  "name": "output"
-                },
-                {
-                  "name": "completer"
+                  "name": "options"
                 }
               ]
             }
@@ -8530,7 +8545,7 @@
           "textRaw": "Class: Interface",
           "type": "class",
           "name": "Interface",
-          "desc": "<!--\nThe class that represents a readline interface with a stdin and stdout\nstream.\n-->\n\n<p>標準入力と標準出力を持つ readline インタフェースを表現するクラスです。\n\n</p>\n",
+          "desc": "<!--\nThe class that represents a readline interface with an input and output\nstream.\n-->\n\n<p>入力と出力を持つ readline インタフェースを表現するクラスです。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "rl.setPrompt(prompt, length)",
@@ -8583,7 +8598,7 @@
               "textRaw": "rl.pause()",
               "type": "method",
               "name": "pause",
-              "desc": "<!--\nPauses the readline `in` stream, allowing it to be resumed later if needed.\n-->\n\n<p><code>in</code> ストリームからの入力を中断します。\n必要なら後で再開することができます。\n\n</p>\n",
+              "desc": "<!--\nPauses the readline `in` stream, allowing it to be resumed later if needed.\nPauses the readline `input` stream, allowing it to be resumed later if needed.\n-->\n\n<p><code>input</code> ストリームからの入力を中断します。\n必要なら後で再開することができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -8594,7 +8609,7 @@
               "textRaw": "rl.resume()",
               "type": "method",
               "name": "resume",
-              "desc": "<!--\nResumes the readline `in` stream.\n-->\n\n<p><code>in</code> ストリームからの入力を再開します。\n\n</p>\n",
+              "desc": "<!--\nResumes the readline `input` stream.\n-->\n\n<p><code>input</code> ストリームからの入力を再開します。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -8605,7 +8620,7 @@
               "textRaw": "rl.write()",
               "type": "method",
               "name": "write",
-              "desc": "<!--\nWrites to tty.\n\nThis will also resume the `in` stream used with `createInterface` if it has\nbeen paused.\n-->\n\n<p>tty へ出力します。\n\n</p>\n<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが\n中断されていれば再開します。\n\n</p>\n",
+              "desc": "<!--\nWrites to `output` stream.\n\nThis will also resume the `input` stream if it has been paused.\n-->\n\n<p><code>output</code> へ出力します。\n\n</p>\n<p>これは、<code>input</code> ストリームが中断されていれば再開します。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -8633,6 +8648,13 @@
               "type": "event",
               "name": "resume",
               "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted whenever the `in` stream is resumed.\n\nExample of listening for `resume`:\n-->\n\n<p><code>in</code> ストリームが再開された時に生成されます。\n\n</p>\n<p><code>&apos;resume&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;resume&apos;, function() {\n  console.log(&apos;Readline resumed.&apos;);\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'end'",
+              "type": "event",
+              "name": "end",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted when the `input` stream receives its \"end\" event, or when `^D` is\npressed by the user. It's generally a good idea to consider this `Interface`\ninstance as completed after this is emitted.\n-->\n\n<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合、\nまたはユーザが <code>^D</code> を推した場合に生成されます。\n通常、これが生成された後で <code>Interface</code> インスタンスは完了すると考えられます。\n\n</p>\n",
               "params": []
             },
             {
@@ -8665,36 +8687,28 @@
     {
       "textRaw": "REPL",
       "name": "repl",
-      "desc": "<!--\nA Read-Eval-Print-Loop (REPL) is available both as a standalone program and easily\nincludable in other programs.  REPL provides a way to interactively run\nJavaScript and see the results.  It can be used for debugging, testing, or\njust trying things out.\n-->\n\n<p>Read-Eval-Print-Loop (REPL) は単独のプログラムとしても他のプログラムに手軽に取り込む形でも利用することができます。\nREPL は対話的に JavaScript を実行して結果を確認する手段を提供します。 \nデバッグやテストやその他の様々なことを試す用途で利用されます。\n\n</p>\n<!--\nBy executing `node` without any arguments from the command-line you will be\ndropped into the REPL. It has simplistic emacs line-editing.\n-->\n\n<p>コマンドラインから <code>node</code> を引数無しで実行することで、REPL プログラムに入ります。\nREPL は Emacs 風の簡易な行編集機能を備えています。\n\n</p>\n<pre><code>mjr:~$ node\nType &apos;.help&apos; for options.\n&gt; a = [ 1, 2, 3];\n[ 1, 2, 3 ]\n&gt; a.forEach(function (v) {\n...   console.log(v);\n...   });\n1\n2\n3</code></pre>\n<p>より進んだ行編集を行うには、環境変数に <code>NODE_NO_READLINE=1</code> を設定してnodeを起動してください。\nこれによって正規の端末設定で REPL を起動し、<code>rlwrap</code> を有効にした状態でREPLを利用することができます。\n\n</p>\n<!--\nFor example, you could add this to your bashrc file:\n-->\n\n<p>例として、bashrc ファイルに以下のように設定を追加します:\n\n</p>\n<pre><code>alias node=&quot;env NODE_NO_READLINE=1 rlwrap node&quot;</code></pre>\n",
-      "For advanced line-editors, start node with the environmental variable `NODE_NO_READLINE": "1`.\nThis will start the REPL in canonical terminal settings which will allow you to use with `rlwrap`.",
+      "desc": "<!--\nA Read-Eval-Print-Loop (REPL) is available both as a standalone program and\neasily includable in other programs. The REPL provides a way to interactively\nrun JavaScript and see the results.  It can be used for debugging, testing, or\njust trying things out.\n-->\n\n<p>Read-Eval-Print-Loop (REPL) は単独のプログラムとしても他のプログラムに手軽に取り込む形でも利用することができます。\nREPL は対話的に JavaScript を実行して結果を確認する手段を提供します。 \nデバッグやテストやその他の様々なことを試す用途で利用されます。\n\n</p>\n<!--\nBy executing `node` without any arguments from the command-line you will be\ndropped into the REPL. It has simplistic emacs line-editing.\n-->\n\n<p>コマンドラインから <code>node</code> を引数無しで実行することで、REPL プログラムに入ります。\nREPL は Emacs 風の簡易な行編集機能を備えています。\n\n</p>\n<pre><code>mjr:~$ node\nType &apos;.help&apos; for options.\n&gt; a = [ 1, 2, 3];\n[ 1, 2, 3 ]\n&gt; a.forEach(function (v) {\n...   console.log(v);\n...   });\n1\n2\n3</code></pre>\n<p>より進んだ行編集を行うには、環境変数に <code>NODE_NO_READLINE=1</code>\nを設定してnodeを起動してください。\nこれによって main とデバッガ REPL を正規の端末設定で起動し、\n<code>rlwrap</code> を利用することができます。\n\n</p>\n<!--\nFor example, you could add this to your bashrc file:\n-->\n\n<p>例として、bashrc ファイルに以下のように設定を追加します:\n\n</p>\n<pre><code>alias node=&quot;env NODE_NO_READLINE=1 rlwrap node&quot;</code></pre>\n",
+      "For advanced line-editors, start node with the environmental variable\n`NODE_NO_READLINE": "1`. This will start the main and debugger REPL in canonical\nterminal settings which will allow you to use with `rlwrap`.",
       "methods": [
         {
-          "textRaw": "repl.start([prompt], [stream], [eval], [useGlobal], [ignoreUndefined])",
+          "textRaw": "repl.start(options)",
           "type": "method",
           "name": "start",
-          "desc": "<!--\nStarts a REPL with `prompt` as the prompt and `stream` for all I/O.  `prompt`\nis optional and defaults to `> `.  `stream` is optional and defaults to\n`process.stdin`. `eval` is optional too and defaults to async wrapper for\n`eval()`.\n\nIf `useGlobal` is set to true, then the repl will use the global object,\ninstead of running scripts in a separate context. Defaults to `false`.\n\nIf `ignoreUndefined` is set to true, then the repl will not output return value\nof command if it's `undefined`. Defaults to `false`.\n\nYou can use your own `eval` function if it has following signature:\n-->\n\n<p><code>prompt</code> でプロンプト記号を、 <code>stream</code> で I/O を引数に取って REPL を起動します。\n<code>prompt</code> は省略可能で、 デフォルトは <code>&gt; </code> です。\n<code>stream</code> は省略可能で、 デフォルトは <code>process.stdin</code> です。\n<code>eval</code> も省略可能で、デフォルトは <code>eval()</code> の非同期ラッパーです。\n\n</p>\n<p><code>useGlobal</code> を <code>true</code> に指定した場合、REPL は別のコンテキストでスクリプトを\n実行するのではなく、グローバルオブジェクトを使用します。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>ignoreUndefined</code> を <code>true</code> に指定した場合、REPL はコマンドの戻り値が <code>undefined</code> だった場合にそれを出力しません。デフォルトは <code>false</code> です。\n\n</p>\n<p>独自の <code>eval()</code> 関数は以下のシグネチャを持ちます。\n\n</p>\n<pre><code>function eval(cmd, context, filename, callback) {\n  callback(null, result);\n}</code></pre>\n<!--\nMultiple REPLs may be started against the same running instance of node.  Each\nwill share the same global object but will have unique I/O.\n-->\n\n<p>複数の REPL を起動した場合、同一の node インスタンスが実行されないことがあります。\nそれぞれの REPL はグローバルオブジェクトを共有しますが、I/O は固有のものを持ちます。\n\n</p>\n<!--\nHere is an example that starts a REPL on stdin, a Unix socket, and a TCP socket:\n-->\n\n<p>REPL を標準入力、Unix ドメインソケット、TCP ソケットのもとで起動する例を示します:\n\n</p>\n<pre><code>var net = require(&quot;net&quot;),\n    repl = require(&quot;repl&quot;);\n\nconnections = 0;\n\nrepl.start(&quot;node via stdin&gt; &quot;);\n\nnet.createServer(function (socket) {\n  connections += 1;\n  repl.start(&quot;node via Unix socket&gt; &quot;, socket);\n}).listen(&quot;/tmp/node-repl-sock&quot;);\n\nnet.createServer(function (socket) {\n  connections += 1;\n  repl.start(&quot;node via TCP socket&gt; &quot;, socket);\n}).listen(5001);</code></pre>\n<!--\nRunning this program from the command line will start a REPL on stdin.  Other\nREPL clients may connect through the Unix socket or TCP socket. `telnet` is useful\nfor connecting to TCP sockets, and `socat` can be used to connect to both Unix and\nTCP sockets.\n-->\n\n<p>このプログラムをコマンドラインから実行すると、標準入力のもとで REPL が起動します。\n他の REPL クライアントは Unix ドメインソケットか TCP ソケットを介して接続することができます。\n<code>telnet</code> が TCP ソケットへの接続に便利です。\n<code>socat</code> は Unix ドメイン /TCP 両方のソケットへの接続に利用できます。\n\n</p>\n<!--\nBy starting a REPL from a Unix socket-based server instead of stdin, you can\nconnect to a long-running node process without restarting it.\n-->\n\n<p>標準入力の代わりに Unix ドメインソケットをベースとしたサーバから REPL を起動することによって、\n再起動することなく node の常駐プロセスへ接続することができます。\n\n\n</p>\n",
+          "desc": "<!--\nReturns and starts a `REPLServer` instance. Accepts an \"options\" Object that\ntakes the following values:\n-->\n<code>REPLServer</code> インスタンスを作成して返します。\n以下の値を含む &quot;options&quot; オブジェクトを受け取ります。\n\n<!--\n - `prompt` - the prompt and `stream` for all I/O. Defaults to `> `.\n\n - `input` - the readable stream to listen to. Defaults to `process.stdin`.\n\n - `output` - the writable stream to write readline data to. Defaults to\n   `process.stdout`.\n\n - `terminal` - pass `true` if the `stream` should be treated like a TTY, and\n   have ANSI/VT100 escape codes written to it. Defaults to checking `isTTY`\n   on the `output` stream upon instantiation.\n\n - `eval` - function that will be used to eval each given line. Defaults to\n   an async wrapper for `eval()`. See below for an example of a custom `eval`.\n\n - `useColors` - a boolean which specifies whether or not the `writer` function\n   should output colors. If a different `writer` function is set then this does\n   nothing. Defaults to the repl's `terminal` value.\n\n - `useGlobal` - if set to `true`, then the repl will use the `global` object,\n   instead of running scripts in a separate context. Defaults to `false`.\n\n - `ignoreUndefined` - if set to `true`, then the repl will not output the\n   return value of command if it's `undefined`. Defaults to `false`.\n\n - `writer` - the function to invoke for each command that gets evaluated which\n   returns the formatting (including coloring) to display. Defaults to\n   `util.inspect`.\n-->\n\n<ul>\n<li><p><code>prompt</code> - プロンプト。デフォルトは <code>&gt; </code> です。</p>\n</li>\n<li><p><code>input</code> - 監視する入力ストリーム。デフォルトは <code>process.stdin</code> です。</p>\n</li>\n<li><p><code>output</code> - 読み込んだデータを書き込む出力ストリーム。\nデフォルトは <code>process.stdout</code> です。</p>\n</li>\n<li><p><code>terminal</code> - もし <code>stream</code> が TTY で、ANSI/VT100 エスケープコードを\n出力するなら <code>true</code>。デフォルトはインスタンス作成時に <code>output</code>\nストリームを <code>isTTY</code> でチェックします。</p>\n</li>\n<li><p><code>eval</code> - 各行を評価するために使われる関数。デフォルトは <code>eval()</code> を\n非同期にラップした関数です。\n<code>eval</code> をカスタマイズする例は下記を参照してください。</p>\n</li>\n<li><p><code>useColors</code> - <code>write</code> 関数が色を付けるかどうかを指定するブーリアン値。\n<code>writer</code> に異なる関数が設定された場合、これは何もしません。\nデフォルトは repl の <code>terminal</code> の値です。</p>\n</li>\n<li><p><code>useGlobal</code> - もし <code>true</code> に設定されると、repl は独立したコンテキストを\n使う代わりに <code>global</code> オブジェクトを使用します。デフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>ignoreUndefined</code> - もし <code>true</code> に設定されると、repl はコマンドの戻り値が\n<code>undefined</code> だった場合にそれを出力しません。デフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>writer</code> - コマンドが評価されるごとに実行される関数で、表示するために\nフォーマット (色づけも含みます) して返します。\nデフォルトは <code>util.inspect</code> です。</p>\n</li>\n</ul>\n<!--\nYou can use your own `eval` function if it has following signature:\n-->\n\n<p>以下のシグネチャを持つ独自の <code>eval()</code> 関数を使うことができます。\n\n</p>\n<pre><code>function eval(cmd, context, filename, callback) {\n  callback(null, result);\n}</code></pre>\n<!--\nMultiple REPLs may be started against the same running instance of node.  Each\nwill share the same global object but will have unique I/O.\n-->\n\n<p>複数の REPL を起動した場合、同一の node インスタンスが実行されないことがあります。\nそれぞれの REPL はグローバルオブジェクトを共有しますが、I/O は固有のものを持ちます。\n\n</p>\n<!--\nHere is an example that starts a REPL on stdin, a Unix socket, and a TCP socket:\n-->\n\n<p>REPL を標準入力、Unix ドメインソケット、TCP ソケットのもとで起動する例を示します:\n\n</p>\n<pre><code>var net = require(&quot;net&quot;),\n    repl = require(&quot;repl&quot;);\n\nconnections = 0;\n\nrepl.start({\n  prompt: &quot;node via stdin&gt; &quot;,\n  input: process.stdin,\n  output: process.stdout\n});\n\nnet.createServer(function (socket) {\n  connections += 1;\n  repl.start({\n    prompt: &quot;node via Unix socket&gt; &quot;,\n    input: socket,\n    output: socket\n  }).on(&apos;exit&apos;, function() {\n    socket.end();\n  })\n}).listen(&quot;/tmp/node-repl-sock&quot;);\n\nnet.createServer(function (socket) {\n  connections += 1;\n  repl.start({\n    prompt: &quot;node via TCP socket&gt; &quot;,\n    input: socket,\n    output: socket\n  }).on(&apos;exit&apos;, function() {\n    socket.end();\n  });\n}).listen(5001);</code></pre>\n<!--\nRunning this program from the command line will start a REPL on stdin.  Other\nREPL clients may connect through the Unix socket or TCP socket. `telnet` is useful\nfor connecting to TCP sockets, and `socat` can be used to connect to both Unix and\nTCP sockets.\n-->\n\n<p>このプログラムをコマンドラインから実行すると、標準入力のもとで REPL が起動します。\n他の REPL クライアントは Unix ドメインソケットか TCP ソケットを介して接続することができます。\n<code>telnet</code> が TCP ソケットへの接続に便利です。\n<code>socat</code> は Unix ドメイン /TCP 両方のソケットへの接続に利用できます。\n\n</p>\n<!--\nBy starting a REPL from a Unix socket-based server instead of stdin, you can\nconnect to a long-running node process without restarting it.\n\nFor an example of running a \"full-featured\" (`terminal`) REPL over\na `net.Server` and `net.Socket` instance, see: https://gist.github.com/2209310\n\nFor an example of running a REPL instance over `curl(1)`,\nsee: https://gist.github.com/2053342\n-->\n\n<p>標準入力の代わりに Unix ドメインソケットをベースとしたサーバから REPL を起動することによって、\n再起動することなく node の常駐プロセスへ接続することができます。\n\n</p>\n<p><code>net.Server</code> および <code>net.Socket</code> インスタンス上の &quot;フル機能の&quot; (<code>terminal</code>)\nREPL を実行する例は、<a href=\"https://gist.github.com/2209310\">https://gist.github.com/2209310</a> を参照してください。\n\n</p>\n<p><code>curl(1)</code> 上で REPL インスタンスを実行する例は、\n<a href=\"https://gist.github.com/2053342\">https://gist.github.com/2053342</a> を参照してください。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'exit'",
+              "type": "event",
+              "name": "exit",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted when the user exits the REPL in any of the defined ways. Namely, typing\n`.exit` at the repl, pressing Ctrl+C twice to signal SIGINT, or pressing Ctrl+D\nto signal \"end\" on the `input` stream.\n-->\n\n<p>何らかの方法でユーザが REPL を終了した場合に生成されます。\nすなわち、repl で <code>.exit</code> をタイプする、Ctrl+C を 2 回推して\nSIGINT を生成する、あるいは Ctrl+D を推して <code>input</code> ストリームで <code>&apos;end&apos;</code> を\n知らせるなどです。\n\n</p>\n<!--\nExample of listening for `exit`:\n-->\n\n<p><code>&apos;exit&apos;</code> を監視する例:\n\n</p>\n<pre><code>r.on(&apos;exit&apos;, function () {\n  console.log(&apos;Got &quot;exit&quot; event from repl!&apos;);\n  process.exit();\n});</code></pre>\n",
+              "params": []
+            }
+          ],
           "signatures": [
             {
               "params": [
                 {
-                  "name": "prompt",
-                  "optional": true
-                },
-                {
-                  "name": "stream",
-                  "optional": true
-                },
-                {
-                  "name": "eval",
-                  "optional": true
-                },
-                {
-                  "name": "useGlobal",
-                  "optional": true
-                },
-                {
-                  "name": "ignoreUndefined",
-                  "optional": true
+                  "name": "options"
                 }
               ]
             }
@@ -8876,7 +8890,14 @@
               "textRaw": "Event:  'exit'",
               "type": "event",
               "name": "exit",
-              "desc": "<!--\n* `code` {Number} the exit code, if it exited normally.\n* `signal` {String} the signal passed to kill the child process, if it\n  was killed by the parent.\n-->\n\n<ul>\n<li><code>code</code> {Number} 通常に終了した場合は終了コード。</li>\n<li><code>signal</code> {String} 親プロセスによって終了させられた場合は、\n子プロセスを終了するために送られたシグナル。</li>\n</ul>\n<!--\nThis event is emitted after the child process ends. If the process terminated\nnormally, `code` is the final exit code of the process, otherwise `null`. If\nthe process terminated due to receipt of a signal, `signal` is the string name\nof the signal, otherwise `null`.\n-->\n\n<p>このイベントは子プロセスが終了した後で生成されます。\nプロセスが普通に終了した場合、<code>code</code> はプロセスの終了コードです。\nそれ以外の場合は <code>null</code> です。\nプロセスがシグナルを受け取って終了した場合、<code>signal</code> は文字列によるシグナルの名前です。\nそれ以外の場合は <code>null</code> です。\n\n</p>\n<!--\nSee `waitpid(2)`.\n-->\n\n<p><code>waitpid(2)</code> を参照してください。\n\n</p>\n",
+              "desc": "<!--\n* `code` {Number} the exit code, if it exited normally.\n* `signal` {String} the signal passed to kill the child process, if it\n  was killed by the parent.\n-->\n\n<ul>\n<li><code>code</code> {Number} 通常に終了した場合は終了コード。</li>\n<li><code>signal</code> {String} 親プロセスによって終了させられた場合は、\n子プロセスを終了するために送られたシグナル。</li>\n</ul>\n<!--\nThis event is emitted after the child process ends. If the process terminated\nnormally, `code` is the final exit code of the process, otherwise `null`. If\nthe process terminated due to receipt of a signal, `signal` is the string name\nof the signal, otherwise `null`.\n-->\n\n<p>このイベントは子プロセスが終了した後で生成されます。\nプロセスが普通に終了した場合、<code>code</code> はプロセスの終了コードです。\nそれ以外の場合は <code>null</code> です。\nプロセスがシグナルを受け取って終了した場合、<code>signal</code> は文字列によるシグナルの名前です。\nそれ以外の場合は <code>null</code> です。\n\n</p>\n<!--\nNote that the child process stdio streams might still be open.\n-->\n\n<p>子プロセスの標準入出力ストリームはオープンしたままになっているかも\nしれないことに注意してください。\n\n</p>\n<!--\nSee `waitpid(2)`.\n-->\n\n<p><code>waitpid(2)</code> を参照してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<!--\nThis event is emitted when the stdio streams of a child process have all\nterminated.  This is distinct from 'exit', since multiple processes\nmight share the same stdio streams.\n-->\n\n<p>このイベントは、子プロセスの標準入出力ストリームが全て終了した場合に\n生成されます。\n複数のプロセスが同じ標準入出力ストリームを共有するかもしれないので、\nこれは <code>&apos;exit&apos;</code> とは明確に異なります。\n\n</p>\n",
               "params": []
             },
             {
@@ -9330,7 +9351,9 @@
     {
       "textRaw": "TTY",
       "name": "tty",
-      "desc": "<!--\nUse `require('tty')` to access this module.\n-->\n\n<p><code>require(&apos;tty&apos;)</code> でこのモジュールにアクセスします。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var tty = require(&apos;tty&apos;);\nprocess.stdin.resume();\ntty.setRawMode(true);\nprocess.stdin.on(&apos;keypress&apos;, function(char, key) {\n  if (key &amp;&amp; key.ctrl &amp;&amp; key.name == &apos;c&apos;) {\n    console.log(&apos;graceful exit&apos;);\n    process.exit()\n  }\n});</code></pre>\n",
+      "stability": 2,
+      "stabilityText": "Unstable",
+      "desc": "<!--\nThe `tty` module houses the `tty.ReadStream` and `tty.WriteStream` classes. In\nmost cases, you will not need to use this module directly.\n-->\n\n<p><code>tty</code> モジュールは <code>tty.ReadStream</code> と <code>tty.WriteStream</code> クラスを持ちます。\n多くのケースでは、これらを直接使う必要はありません。\n\n</p>\n<!--\nWhen node detects that it is being run inside a TTY context, then `process.stdin`\nwill be a `tty.ReadStream` instance and `process.stdout` will be\na `tty.WriteStream` instance. The preferred way to check if node is being run in\na TTY context is to check `process.stdout.isTTY`:\n-->\n\n<p>node は TTY コンテキストの中にいるかどうかを検出し、\n<code>process.stdin</code> は <code>tty.ReadStream</code> のインスタンスに、\n<code>process.stdout</code> は <code>tty.WriteStream</code> のインスタンスになります。\nもし node が TTY のコンテキストで実行されているかどうかをチェックしたければ、\n<code>process.stdout.isTTY</code> を使うことができます:\n\n</p>\n<pre><code>$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot;\ntrue\n$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot; | cat\nfalse</code></pre>\n",
       "methods": [
         {
           "textRaw": "tty.isatty(fd)",
@@ -9351,7 +9374,7 @@
           "textRaw": "tty.setRawMode(mode)",
           "type": "method",
           "name": "setRawMode",
-          "desc": "<!--\n`mode` should be `true` or `false`. This sets the properties of the current\nprocess's stdin fd to act either as a raw device or default.\n-->\n\n<p><code>mode</code> は <code>true</code> または <code>false</code> です。\nこれは現在のプロセスの標準入力ファイル記述子をローデバイスまたはデフォルトに振る舞うよう設定します。\n\n\n</p>\n",
+          "desc": "<!--\nDeprecated. Use `tty.ReadStream#setRawMode()`\n(i.e. `process.stdin.setRawMode()`) instead.\n-->\n\n<p>Deprecated.\n代わりに <code>tty.ReadStream#setRawMode()</code> (すなわち、<code>process.stdin.setRawMode()</code>)\nを使用してください。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -9361,42 +9384,68 @@
               ]
             }
           ]
-        },
+        }
+      ],
+      "classes": [
         {
-          "textRaw": "tty.setWindowSize(fd, row, col)",
-          "type": "method",
-          "name": "setWindowSize",
-          "desc": "<!--\nThis function was removed in v0.6.0.\n-->\n\n<p>この関数は v0.6.0 で削除されました。\n\n</p>\n",
-          "signatures": [
+          "textRaw": "Class: ReadStream",
+          "type": "class",
+          "name": "ReadStream",
+          "desc": "<!--\nA `net.Socket` subclass that represents the readable portion of a tty. In normal\ncircumstances, `process.stdin` will be the only `tty.ReadStream` instance in any\nnode program (only when `isatty(0)` is true).\n-->\n\n<p><code>net.Socket</code> のサブクラスで、tty の入力側を表現します。\n一般的な状況では、どんなプログラムでも (<code>isatty(0)</code> が true の場合に限り)\n<code>process.stdin</code> が唯一の <code>tty.ReadStream</code> のインスタンスとなります。\n\n</p>\n",
+          "properties": [
             {
-              "params": [
+              "textRaw": "rs.isRaw",
+              "name": "isRaw",
+              "desc": "<!--\nA `Boolean` that is initialized to `false`. It represents the current \"raw\" state\nof the `tty.ReadStream` instance.\n-->\n\n<p><code>Boolean</code> 値で <code>false</code> に初期化されます。\n<code>tty.ReadStream</code> インスタンスの現在の &quot;raw&quot; 状態を表現します。\n\n</p>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "rs.setRawMode(mode)",
+              "type": "method",
+              "name": "setRawMode",
+              "desc": "<!--\n`mode` should be `true` or `false`. This sets the properties of the\n`tty.ReadStream` to act either as a raw device or default. `isRaw` will be set\nto the resulting mode.\n-->\n\n<p><code>mode</code> は <code>true</code> または <code>false</code> のどちらかです。\nこれは <code>tty.ReadStream</code> がローデバイスかデフォルトのどちらで振る舞うかを\n設定します。\n結果のモードは <code>isRaw</code> に設定されます。\n\n\n</p>\n",
+              "signatures": [
                 {
-                  "name": "fd"
-                },
-                {
-                  "name": "row"
-                },
-                {
-                  "name": "col"
+                  "params": [
+                    {
+                      "name": "mode"
+                    }
+                  ]
                 }
               ]
             }
           ]
-        },
+        }
+      ],
+      "modules": [
         {
-          "textRaw": "tty.getWindowSize(fd)",
-          "type": "method",
-          "name": "getWindowSize",
-          "desc": "<!--\nThis function was removed in v0.6.0. Use `process.stdout.getWindowSize()`\ninstead.\n-->\n\n<p>この関数は v0.6.0 で削除されました。\n代わりに <code>process.stdout.getWindowSize()</code> を使用してください。\n\n</p>\n",
-          "signatures": [
+          "textRaw": "Class WriteStream",
+          "name": "class_writestream",
+          "desc": "<!--\nA `net.Socket` subclass that represents the writable portion of a tty. In normal\ncircumstances, `process.stdout` will be the only `tty.WriteStream` instance\never created (and only when `isatty(1)` is true).\n-->\n\n<p><code>net.Socket</code> のサブクラスで、tty の出力側を表現します。\n一般的な状況では、どんなプログラムでも (<code>isatty(1)</code> が true の場合に限り)\n<code>process.stdout</code> が唯一の <code>tty.WriteStream</code> のインスタンスとなります。\n\n</p>\n",
+          "properties": [
             {
-              "params": [
-                {
-                  "name": "fd"
-                }
-              ]
+              "textRaw": "ws.columns",
+              "name": "columns",
+              "desc": "<!--\nA `Number` that gives the number of columns the TTY currently has. This property\ngets updated on \"resize\" events.\n-->\n\n<p>TTY の現在のカラム数を保持する <code>Number</code> 値です。\nこのプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。\n\n</p>\n"
+            },
+            {
+              "textRaw": "ws.rows",
+              "name": "rows",
+              "desc": "<!--\nA `Number` that gives the number of rows the TTY currently has. This property\ngets updated on \"resize\" events.\n-->\n\n<p>TTY の現在の行数を保持する <code>Number</code> 値です。\nこのプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。\n\n</p>\n"
             }
-          ]
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'resize'",
+              "type": "event",
+              "name": "resize",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted by `refreshSize()` when either of the `columns` or `rows` properties\nhas changed.\n-->\n\n<p><code>columns</code> または <code>rows</code> プロパティが変更された場合に\n<code>refreshSize()</code> によって生成されます。\n\n</p>\n<pre><code>process.stdout.on(&apos;resize&apos;, function() {\n  console.log(&apos;screen size has changed!&apos;);\n  console.log(process.stdout.columns + &apos;x&apos; + process.stdout.rows);\n});</code></pre>\n",
+              "params": []
+            }
+          ],
+          "type": "module",
+          "displayName": "Class WriteStream"
         }
       ],
       "type": "module",
@@ -9955,6 +10004,13 @@
           "desc": "<!--\nWhen calling `listen()` from a worker, a 'listening' event is automatically assigned\nto the server instance. When the server is listening a message is send to the master\nwhere the 'listening' event is emitted.\n-->\n\n<p>ワーカが <code>net.Server.listen()</code> を呼び出すと、<code>&apos;listening&apos;</code> イベントは自動的に\n<code>net.Server</code> インスタンスに割り当てられます。\n<code>net.Server</code> が <code>&apos;listening&apos;</code> メッセージをマスタに送信すると、\n<code>&apos;listening&apos;</code> イベントが生成されます。\n\n</p>\n<pre><code>cluster.on(&apos;listening&apos;, function (worker) {\n  console.log(&quot;We are now connected&quot;);\n});</code></pre>\n"
         },
         {
+          "textRaw": "Event: 'disconnect'",
+          "type": "event",
+          "name": "disconnect",
+          "params": [],
+          "desc": "<!--\nWhen a workers IPC channel has disconnected this event is emitted. This will happen\nwhen the worker dies, usually after calling `.destroy()`.\n-->\n\n<p>ワーカの IPC チャネルが切断された場合に生成されます。\nそれはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。\n\n</p>\n<!--\nWhen calling `.disconnect()`, there may be a delay between the\n`disconnect` and `death` events.  This event can be used to detect if\nthe process is stuck in a cleanup or if there are long-living\nconnections.\n-->\n\n<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;death&apos;</code> の間には\n遅延があるかもしれません。このイベントはプロセスがクリーンナップで\n行き詰まったり、長時間生きている接続がないかを検出することに\n使用できます。\n\n</p>\n<pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {\n  console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);\n});</code></pre>\n"
+        },
+        {
           "textRaw": "Event: 'death'",
           "type": "event",
           "name": "death",
@@ -9967,13 +10023,6 @@
           "name": "setup",
           "params": [],
           "desc": "<!--\nWhen the `.setupMaster()` function has been executed this event emits.\nIf `.setupMaster()` was not executed before `fork()` this function will\ncall `.setupMaster()` with no arguments.\n-->\n\n<p><code>setupMaster()</code> が実行された時、このイベントが生成されます。\n<code>fork()</code> の前に<code>setupMaster()</code> が呼ばれなかった場合、\nこの関数は引数無しで <code>setupMaster()</code> を呼び出します。\n\n</p>\n"
-        },
-        {
-          "textRaw": "Event: 'death'",
-          "type": "event",
-          "name": "death",
-          "params": [],
-          "desc": "<!--\nSame as the `cluster.on('death')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;death&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;death&apos;, function (worker) {\n  // Worker has died\n};</code></pre>\n"
         }
       ],
       "methods": [
@@ -10039,6 +10088,63 @@
               ]
             }
           ]
+        },
+        {
+          "textRaw": "cluster.disconnect([callback])",
+          "type": "method",
+          "name": "disconnect",
+          "desc": "<!--\n* `callback` {Function} called when all workers are disconnected and handlers are closed\n-->\n\n<ul>\n<li><code>callback</code> {Function} 全てのワーカが切断し、ハンドルがクローズされると\n呼び出されます。</li>\n</ul>\n<!--\nWhen calling this method, all workers will commit a graceful suicide. When they are\ndisconnected all internal handlers will be closed, allowing the master process to\ndie graceful if no other event is waiting.\n-->\n\n<p>このメソッドを呼び出すと、全てのワーカは強制的でない終了に向かいます。\nそれらの内部的なハンドルが全てクローズされると、\n他に待機しているイベントがなければ、\nマスタプロセスを非強制的に終了することができます。\n\n</p>\n<!--\nThe method takes an optional callback argument which will be called when finished.\n-->\n\n<p>このメソッドはオプションの引数としてコールバックを受け取ります。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Worker.disconnect()",
+          "type": "method",
+          "name": "disconnect",
+          "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `death` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&apos;disconnect&apos;</code> イベントが生成され、\nその後ワーカが終了すると <code>&apos;death&apos;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative wound be to execute `worker.destroy()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.destroy()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluser.fork();\n  var timeout;\n\n  worker.on(&apos;listening&apos;, function () {\n    worker.disconnect();\n    timeout = setTimeout(function () {\n      worker.send(&apos;force kill&apos;);\n    }, 2000);\n  });\n\n  worker.on(&apos;disconnect&apos;, function () {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&apos;net&apos;);\n  var server = net.createServer(function (socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&apos;close&apos;, function () {\n    // cleanup\n  });\n\n  process.on(&apos;message&apos;, function (msg) {\n    if (msg === &apos;force kill&apos;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'message'",
+              "type": "event",
+              "name": "message",
+              "params": [],
+              "desc": "<!--\nThis event is the same as the one provided by `child_process.fork()`.\nIn the master you should use this event, however in a worker you can also use\n`process.on('message')`\n\nAs an example, here is a cluster that keeps count of the number of requests\nin the master process using the message system:\n-->\n\n<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。\nマスタではこのイベントを使うべきですが、ワーカでは <code>process.on(&apos;message&apos;)</code>\nを使うこともできます。\n\n</p>\n<p>メッセージシステムを使用してクラスタ全体のリクエスト数を\nマスタプロセスで保持する例です:\n\n</p>\n<pre><code>var cluster = require(&apos;cluster&apos;);\nvar http = require(&apos;http&apos;);\n\nif (cluster.isMaster) {\n\n  // Keep track of http requests\n  var numReqs = 0;\n  setInterval(function() {\n    console.log(&quot;numReqs =&quot;, numReqs);\n  }, 1000);\n\n  // Count requestes\n  var messageHandler = function (msg) {\n    if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {\n      numReqs += 1;\n    }\n  };\n\n  // Start workers and listen for messages containing notifyRequest\n  cluster.autoFork();\n  Object.keys(cluster.workers).forEach(function (uniqueID) {\n    cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);\n  });\n\n} else {\n\n  // Worker processes have a http server.\n  http.Server(function(req, res) {\n    res.writeHead(200);\n    res.end(&quot;hello world\\n&quot;);\n\n    // notify master about the request\n    process.send({ cmd: &apos;notifyRequest&apos; });\n  }).listen(8000);\n}</code></pre>\n"
+            },
+            {
+              "textRaw": "Event: 'online'",
+              "type": "event",
+              "name": "online",
+              "params": [],
+              "desc": "<!--\nSame as the `cluster.on('online')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;online&apos;)</code> と同様ですが，特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;online&apos;, function (worker) {\n  // Worker is online\n};</code></pre>\n"
+            },
+            {
+              "textRaw": "Event: 'listening'",
+              "type": "event",
+              "name": "listening",
+              "params": [],
+              "desc": "<!--\nSame as the `cluster.on('listening')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;listening&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {\n  // Worker is listening\n};</code></pre>\n"
+            },
+            {
+              "textRaw": "Event: 'disconnect'",
+              "type": "event",
+              "name": "disconnect",
+              "params": [],
+              "desc": "<!--\nSame as the `cluster.on('disconnect')` event, but emits only when the state change\non the specified worker.\n-->\n<code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が\n変更された場合のみ生成されます。\n\n    cluster.fork().on(&apos;disconnect&apos;, function (worker) {\n      // Worker has disconnected\n    };\n\n### Event: &apos;death&apos;\n\n* <code>worker</code> {Worker object}\n\n<!--\nSame as the `cluster.on('death')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;death&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;death&apos;, function (worker) {\n  // Worker has died\n};</code></pre>\n"
+            }
+          ],
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
         }
       ],
       "classes": [
@@ -10061,7 +10167,7 @@
             {
               "textRaw": "`suicide` {Boolean} ",
               "name": "suicide",
-              "desc": "<!--\nThis property is a boolean. It is set when a worker dies, until then it is\n`undefined`.  It is true if the worker was killed using the `.destroy()`\nmethod, and false otherwise.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが終了すると設定されます。それまでは <code>undefined</code> です。\nワーカが <code>.destroy()</code> メソッドで終了した場合は <code>true</code> に、その他の場合は\n<code>false</code> に設定されます。\n\n</p>\n"
+              "desc": "<!--\nThis property is a boolean. It is set when a worker dies after calling `.destroy()`\nor immediately after calling the `.disconnect()` method. Until then it is `undefined`.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが <code>.destroy()</code> を呼び出して終了するか、\n<code>.disconnect()</code> メソッドを呼び出した後に設定されます。\nそれまでは <code>undefined</code> です。\n\n</p>\n"
             }
           ],
           "methods": [
@@ -10109,29 +10215,6 @@
                   "params": []
                 }
               ]
-            }
-          ],
-          "events": [
-            {
-              "textRaw": "Event: message",
-              "type": "event",
-              "name": "message",
-              "params": [],
-              "desc": "<!--\nThis event is the same as the one provided by `child_process.fork()`.\nIn the master you should use this event, however in a worker you can also use\n`process.on('message')`\n\nAs an example, here is a cluster that keeps count of the number of requests\nin the master process using the message system:\n-->\n\n<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。\nマスタではこのイベントを使うべきですが、ワーカでは <code>process.on(&apos;message&apos;)</code>\nを使うこともできます。\n\n</p>\n<p>メッセージシステムを使用してクラスタ全体のリクエスト数を\nマスタプロセスで保持する例です:\n\n</p>\n<pre><code>var cluster = require(&apos;cluster&apos;);\nvar http = require(&apos;http&apos;);\n\nif (cluster.isMaster) {\n\n  // Keep track of http requests\n  var numReqs = 0;\n  setInterval(function() {\n    console.log(&quot;numReqs =&quot;, numReqs);\n  }, 1000);\n\n  // Count requestes\n  var messageHandler = function (msg) {\n    if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {\n      numReqs += 1;\n    }\n  };\n\n  // Start workers and listen for messages containing notifyRequest\n  cluster.autoFork();\n  Object.keys(cluster.workers).forEach(function (uniqueID) {\n    cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);\n  });\n\n} else {\n\n  // Worker processes have a http server.\n  http.Server(function(req, res) {\n    res.writeHead(200);\n    res.end(&quot;hello world\\n&quot;);\n\n    // notify master about the request\n    process.send({ cmd: &apos;notifyRequest&apos; });\n  }).listen(8000);\n}</code></pre>\n"
-            },
-            {
-              "textRaw": "Event: 'online'",
-              "type": "event",
-              "name": "online",
-              "params": [],
-              "desc": "<!--\nSame as the `cluster.on('online')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;online&apos;)</code> と同様ですが，特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;online&apos;, function (worker) {\n  // Worker is online\n};</code></pre>\n"
-            },
-            {
-              "textRaw": "Event: 'listening'",
-              "type": "event",
-              "name": "listening",
-              "params": [],
-              "desc": "<!--\nSame as the `cluster.on('listening')` event, but emits only when the state change\non the specified worker.\n-->\n\n<p><code>cluster.on(&apos;listening&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ\nイベントを生成します。\n\n</p>\n<pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {\n  // Worker is listening\n};</code></pre>\n"
             }
           ]
         }

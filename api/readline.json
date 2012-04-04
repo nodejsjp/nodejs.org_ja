@@ -4,26 +4,20 @@
     {
       "textRaw": "Readline",
       "name": "readline",
-      "stability": 3,
-      "stabilityText": "Stable",
-      "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as STDIN) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've paused the interface. Here's how to allow your\nprogram to gracefully pause:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースを\n中断するまで node プログラムは終了しないことに注意してください。\nプログラムをスムーズに中断する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface(process.stdin, process.stdout, null);\ni.question(&quot;What do you think of node.js?&quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback.&quot;);\n\n  i.pause();\n});</code></pre>\n",
+      "stability": 2,
+      "stabilityText": "Unstable",
+      "desc": "<!--\nTo use this module, do `require('readline')`. Readline allows reading of a\nstream (such as `process.stdin`) on a line-by-line basis.\n-->\n\n<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。\nReadline はストリーム (たとえば <code>process.stdin</code>)\nを行ごとに読み込むことを可能にします。\n\n</p>\n<!--\nNote that once you've invoked this module, your node program will not\nterminate until you've paused the interface. Here's how to allow your\nprogram to gracefully pause:\n-->\n\n<p>このモジュールを一度起動すると、このインタフェースを\n中断するまで node プログラムは終了しないことに注意してください。\nプログラムをスムーズに中断する方法を以下に示します:\n\n</p>\n<pre><code>var rl = require(&apos;readline&apos;);\n\nvar i = rl.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\ni.question(&quot;What do you think of node.js? &quot;, function(answer) {\n  // TODO: Log the answer in a database\n  console.log(&quot;Thank you for your valuable feedback:&quot;, answer);\n\n  i.pause();\n});</code></pre>\n",
       "methods": [
         {
-          "textRaw": "rl.createInterface(input, output, completer)",
+          "textRaw": "rl.createInterface(options)",
           "type": "method",
           "name": "createInterface",
-          "desc": "<!--\nTakes two streams and creates a readline interface. The `completer` function\nis used for autocompletion. When given a substring, it returns `[[substr1,\nsubstr2, ...], originalsubstring]`.\n-->\n\n<p>二つのストリームを受け取り、readline のインタフェースを作成します。\n<code>completer</code> 関数は補完のために使われます。\nそれは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>\nを返します。\n\n</p>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<p>  function completer(linePartial, callback) {\n    callback(null, [[&apos;123&apos;], linePartial]);\n  }\n\n</p>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&apos;readline&apos;),\n  rl = readline.createInterface(process.stdin, process.stdout);</code></pre>\n",
+          "desc": "<!--\nCreates a readline `Interface` instance. Accepts an \"options\" Object that takes\nthe following values:\n-->\n\n<p>行を読み込む <code>Interface</code> のインスタンスを作成します。\n以下の値を含む <code>options</code> オブジェクトを受け取ります。\n\n</p>\n<!--\n - `input` - the readable stream to listen to (Required).\n\n - `output` - the writable stream to write readline data to (Required).\n\n - `completer` - an optional function that is used for Tab autocompletion. See\n   below for an example of using this.\n\n - `terminal` - pass `true` if the `input` and `output` streams should be treated\n   like a TTY, and have ANSI/VT100 escape codes written to it. Defaults to\n   checking `isTTY` on the `output` stream upon instantiation.\n-->\n\n<ul>\n<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>\n</li>\n<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>\n</li>\n<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。\n後述の例を参照してください。</p>\n</li>\n<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、\nANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。\nデフォルトはインスタンス生成時に <code>output</code> に対して\n<code>isTTY</code> でチェックします。</p>\n</li>\n</ul>\n<!--\nThe `completer` function is given a the current line entered by the user, and\nis supposed to return an Array with 2 entries:\n-->\n\n<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、\n2 つのエントリを含む配列を返すことが期待されます:\n\n</p>\n<!--\n 1. An Array with matching entries for the completion.\n\n 2. The substring that was used for the matching.\n-->\n\n<ol>\n<li><p>補完によってマッチするエントリの配列。</p>\n</li>\n<li><p>マッチングに使用された部分文字列。</p>\n</li>\n</ol>\n<!--\nWhich ends up looking something like:\n`[[substr1, substr2, ...], originalsubstring]`.\n-->\n\n<p>それは次のようになります:\n<code>[[substr1, substr2, ...], originalsubstring]</code>。\n\n</p>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<pre><code>function completer(linePartial, callback) {\n  callback(null, [[&apos;123&apos;], linePartial]);\n}</code></pre>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&apos;readline&apos;);\nvar rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});</code></pre>\n<!--\nOnce you have a readline instance, you most commonly listen for the `\"line\"` event.\n-->\n\n<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを\n監視することになります。\n\n</p>\n<!--\nIf `terminal` is `true` for this instance then the `output` stream will get the\nbest compatability if it defines an `output.columns` property, and fires\na `\"resize\"` event on the `output` if/when the columns ever change\n(`process.stdout` does this automatically when it is a TTY).\n-->\n\n<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、\n<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば\nそれに適合し、カラム幅が変更されると <code>output</code> 上で\n<code>&apos;resize&apos;</code> イベントが生成されます\n(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。\n\n</p>\n",
           "signatures": [
             {
               "params": [
                 {
-                  "name": "input"
-                },
-                {
-                  "name": "output"
-                },
-                {
-                  "name": "completer"
+                  "name": "options"
                 }
               ]
             }
@@ -35,7 +29,7 @@
           "textRaw": "Class: Interface",
           "type": "class",
           "name": "Interface",
-          "desc": "<!--\nThe class that represents a readline interface with a stdin and stdout\nstream.\n-->\n\n<p>標準入力と標準出力を持つ readline インタフェースを表現するクラスです。\n\n</p>\n",
+          "desc": "<!--\nThe class that represents a readline interface with an input and output\nstream.\n-->\n\n<p>入力と出力を持つ readline インタフェースを表現するクラスです。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "rl.setPrompt(prompt, length)",
@@ -88,7 +82,7 @@
               "textRaw": "rl.pause()",
               "type": "method",
               "name": "pause",
-              "desc": "<!--\nPauses the readline `in` stream, allowing it to be resumed later if needed.\n-->\n\n<p><code>in</code> ストリームからの入力を中断します。\n必要なら後で再開することができます。\n\n</p>\n",
+              "desc": "<!--\nPauses the readline `in` stream, allowing it to be resumed later if needed.\nPauses the readline `input` stream, allowing it to be resumed later if needed.\n-->\n\n<p><code>input</code> ストリームからの入力を中断します。\n必要なら後で再開することができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -99,7 +93,7 @@
               "textRaw": "rl.resume()",
               "type": "method",
               "name": "resume",
-              "desc": "<!--\nResumes the readline `in` stream.\n-->\n\n<p><code>in</code> ストリームからの入力を再開します。\n\n</p>\n",
+              "desc": "<!--\nResumes the readline `input` stream.\n-->\n\n<p><code>input</code> ストリームからの入力を再開します。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -110,7 +104,7 @@
               "textRaw": "rl.write()",
               "type": "method",
               "name": "write",
-              "desc": "<!--\nWrites to tty.\n\nThis will also resume the `in` stream used with `createInterface` if it has\nbeen paused.\n-->\n\n<p>tty へ出力します。\n\n</p>\n<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが\n中断されていれば再開します。\n\n</p>\n",
+              "desc": "<!--\nWrites to `output` stream.\n\nThis will also resume the `input` stream if it has been paused.\n-->\n\n<p><code>output</code> へ出力します。\n\n</p>\n<p>これは、<code>input</code> ストリームが中断されていれば再開します。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -138,6 +132,13 @@
               "type": "event",
               "name": "resume",
               "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted whenever the `in` stream is resumed.\n\nExample of listening for `resume`:\n-->\n\n<p><code>in</code> ストリームが再開された時に生成されます。\n\n</p>\n<p><code>&apos;resume&apos;</code> を監視する例:\n\n</p>\n<pre><code>rl.on(&apos;resume&apos;, function() {\n  console.log(&apos;Readline resumed.&apos;);\n});</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'end'",
+              "type": "event",
+              "name": "end",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted when the `input` stream receives its \"end\" event, or when `^D` is\npressed by the user. It's generally a good idea to consider this `Interface`\ninstance as completed after this is emitted.\n-->\n\n<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合、\nまたはユーザが <code>^D</code> を推した場合に生成されます。\n通常、これが生成された後で <code>Interface</code> インスタンスは完了すると考えられます。\n\n</p>\n",
               "params": []
             },
             {

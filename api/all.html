@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.7.6 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.7.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -21,7 +21,7 @@
                 <li><a href="/#download" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
-                <li><a href="http://nodejs.org/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
                 <li><a href="/logos/" class="logos">Logos</a></li>
@@ -30,7 +30,7 @@
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
                <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
-               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
                <li><a href="../logos/" class="logos">ロゴ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -160,6 +160,7 @@
 <li><a href="#all_process_setuid_id">process.setuid(id)</a></li>
 <li><a href="#all_process_version">process.version</a></li>
 <li><a href="#all_process_versions">process.versions</a></li>
+<li><a href="#all_process_config">process.config</a></li>
 <li><a href="#all_process_installprefix">process.installPrefix</a></li>
 <li><a href="#all_process_kill_pid_signal">process.kill(pid, [signal])</a></li>
 <li><a href="#all_process_pid">process.pid</a></li>
@@ -368,6 +369,7 @@
 <li><a href="#all_cleartextstream_authorized">cleartextStream.authorized</a></li>
 <li><a href="#all_cleartextstream_authorizationerror">cleartextStream.authorizationError</a></li>
 <li><a href="#all_cleartextstream_getpeercertificate">cleartextStream.getPeerCertificate()</a></li>
+<li><a href="#all_cleartextstream_getcipher">cleartextStream.getCipher()</a></li>
 <li><a href="#all_cleartextstream_address">cleartextStream.address()</a></li>
 <li><a href="#all_cleartextstream_remoteaddress">cleartextStream.remoteAddress</a></li>
 <li><a href="#all_cleartextstream_remoteport">cleartextStream.remotePort</a></li>
@@ -669,7 +671,7 @@
 </ul>
 </li>
 <li><a href="#all_readline">Readline</a><ul>
-<li><a href="#all_rl_createinterface_input_output_completer">rl.createInterface(input, output, completer)</a></li>
+<li><a href="#all_rl_createinterface_options">rl.createInterface(options)</a></li>
 <li><a href="#all_class_interface">Class: Interface</a><ul>
 <li><a href="#all_rl_setprompt_prompt_length">rl.setPrompt(prompt, length)</a></li>
 <li><a href="#all_rl_prompt">rl.prompt()</a></li>
@@ -680,6 +682,7 @@
 <li><a href="#all_event_line">Event: &apos;line&apos;</a></li>
 <li><a href="#all_event_pause">Event: &apos;pause&apos;</a></li>
 <li><a href="#all_event_resume">Event: &apos;resume&apos;</a></li>
+<li><a href="#all_event_end_4">Event: &apos;end&apos;</a></li>
 <li><a href="#all_event_sigint">Event: &apos;SIGINT&apos;</a></li>
 <li><a href="#all_event_sigtstp">Event: &apos;SIGTSTP&apos;</a></li>
 <li><a href="#all_event_sigcont">Event: &apos;SIGCONT&apos;</a></li>
@@ -688,7 +691,10 @@
 </ul>
 </li>
 <li><a href="#all_repl">REPL</a><ul>
-<li><a href="#all_repl_start_prompt_stream_eval_useglobal_ignoreundefined">repl.start([prompt], [stream], [eval], [useGlobal], [ignoreUndefined])</a></li>
+<li><a href="#all_repl_start_options">repl.start(options)</a><ul>
+<li><a href="#all_event_exit_1">Event: &apos;exit&apos;</a></li>
+</ul>
+</li>
 <li><a href="#all_repl_features">REPL Features</a></li>
 </ul>
 </li>
@@ -707,7 +713,8 @@
 </li>
 <li><a href="#all_child_process">Child Process</a><ul>
 <li><a href="#all_class_childprocess">Class: ChildProcess</a><ul>
-<li><a href="#all_event_exit_1">Event:  &apos;exit&apos;</a></li>
+<li><a href="#all_event_exit_2">Event:  &apos;exit&apos;</a></li>
+<li><a href="#all_event_close_9">Event: &apos;close&apos;</a></li>
 <li><a href="#all_event_disconnect">Event: &apos;disconnect&apos;</a></li>
 <li><a href="#all_child_stdin">child.stdin</a></li>
 <li><a href="#all_child_stdout">child.stdout</a></li>
@@ -740,8 +747,17 @@
 <li><a href="#all_tty">TTY</a><ul>
 <li><a href="#all_tty_isatty_fd">tty.isatty(fd)</a></li>
 <li><a href="#all_tty_setrawmode_mode">tty.setRawMode(mode)</a></li>
-<li><a href="#all_tty_setwindowsize_fd_row_col">tty.setWindowSize(fd, row, col)</a></li>
-<li><a href="#all_tty_getwindowsize_fd">tty.getWindowSize(fd)</a></li>
+<li><a href="#all_class_readstream">Class: ReadStream</a><ul>
+<li><a href="#all_rs_israw">rs.isRaw</a></li>
+<li><a href="#all_rs_setrawmode_mode">rs.setRawMode(mode)</a></li>
+</ul>
+</li>
+<li><a href="#all_class_writestream">Class WriteStream</a><ul>
+<li><a href="#all_ws_columns">ws.columns</a></li>
+<li><a href="#all_ws_rows">ws.rows</a></li>
+<li><a href="#all_event_resize">Event: &apos;resize&apos;</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#all_zlib">Zlib</a><ul>
@@ -807,11 +823,13 @@
 <li><a href="#all_event_fork">Event: &apos;fork&apos;</a></li>
 <li><a href="#all_event_online">Event: &apos;online&apos;</a></li>
 <li><a href="#all_event_listening_2">Event: &apos;listening&apos;</a></li>
+<li><a href="#all_event_disconnect_1">Event: &apos;disconnect&apos;</a></li>
 <li><a href="#all_event_death">Event: &apos;death&apos;</a></li>
 <li><a href="#all_event_setup">Event: &apos;setup&apos;</a></li>
 <li><a href="#all_cluster_setupmaster_settings">cluster.setupMaster([settings])</a></li>
 <li><a href="#all_cluster_fork_env">cluster.fork([env])</a></li>
 <li><a href="#all_cluster_settings_1">cluster.settings</a></li>
+<li><a href="#all_cluster_disconnect_callback">cluster.disconnect([callback])</a></li>
 <li><a href="#all_cluster_workers">cluster.workers</a></li>
 <li><a href="#all_class_worker">Class: Worker</a><ul>
 <li><a href="#all_worker_uniqueid">worker.uniqueID</a></li>
@@ -819,12 +837,15 @@
 <li><a href="#all_worker_suicide">worker.suicide</a></li>
 <li><a href="#all_worker_send_message_sendhandle">worker.send(message, [sendHandle])</a></li>
 <li><a href="#all_worker_destroy">worker.destroy()</a></li>
-<li><a href="#all_event_message_1">Event: message</a></li>
-<li><a href="#all_event_online_1">Event: &apos;online&apos;</a></li>
-<li><a href="#all_event_listening_3">Event: &apos;listening&apos;</a></li>
 </ul>
 </li>
-<li><a href="#all_event_death_1">Event: &apos;death&apos;</a></li>
+<li><a href="#all_worker_disconnect">Worker.disconnect()</a><ul>
+<li><a href="#all_event_message_1">Event: &apos;message&apos;</a></li>
+<li><a href="#all_event_online_1">Event: &apos;online&apos;</a></li>
+<li><a href="#all_event_listening_3">Event: &apos;listening&apos;</a></li>
+<li><a href="#all_event_disconnect_2">Event: &apos;disconnect&apos;</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#all_appendix_1_third_party_modules">Appendix 1 - Third Party Modules</a></li>
@@ -3437,6 +3458,43 @@ Will output:
   ares: &apos;1.7.4&apos;,
   ev: &apos;4.4&apos;,
   openssl: &apos;1.0.0e-fips&apos; }</code></pre>
+<h2>process.config<span><a class="mark" href="#all_process_config" id="all_process_config">#</a></span></h2>
+<!--
+An Object containing the JavaScript representation of the configure options
+that were used to compile the current node executable. This is the same as
+the "config.gypi" file that was produced when running the `./configure` script.
+
+An example of the possible output looks like:
+-->
+
+<p>現在のnode実行ファイルをコンパイルした際に使われた configure のオプションを
+JavaScript で表現したオブジェクトを保持します。
+これは <code>./configure</code> スクリプトを実行した際に生成された &quot;cofnig.gypi&quot;
+ファイルと同じです。
+
+</p>
+<p>実際の出力の例です:
+
+</p>
+<pre><code>{ target_defaults:
+   { cflags: [],
+     default_configuration: &apos;Release&apos;,
+     defines: [],
+     include_dirs: [],
+     libraries: [] },
+  variables:
+   { host_arch: &apos;x64&apos;,
+     node_install_npm: &apos;true&apos;,
+     node_install_waf: &apos;true&apos;,
+     node_prefix: &apos;&apos;,
+     node_shared_v8: &apos;false&apos;,
+     node_shared_zlib: &apos;false&apos;,
+     node_use_dtrace: &apos;false&apos;,
+     node_use_openssl: &apos;true&apos;,
+     node_use_system_openssl: &apos;false&apos;,
+     strict_aliasing: &apos;true&apos;,
+     target_arch: &apos;x64&apos;,
+     v8_use_snapshot: &apos;true&apos; } }</code></pre>
 <h2>process.installPrefix<span><a class="mark" href="#all_process_installprefix" id="all_process_installprefix">#</a></span></h2>
 <!--
 A compiled-in property that exposes `NODE_PREFIX`.
@@ -6493,7 +6551,7 @@ The `options` object has these possibilities:
     it is recommended that you use this option in conjunction with the
     `honorCipherOrder` option described below to prioritize the RC4 algorithm,
     since it is a non-CBC cipher. A recommended cipher list follows:
-    `ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`
+    `ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`
 
   - `honorCipherOrder` :
     When choosing a cipher, use the server's preferences instead of the client
@@ -6551,7 +6609,7 @@ The `options` object has these possibilities:
 を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
 を共に使って、非 CBC 暗号である RC4 アルゴリズムを優先することを推奨します。
 推奨する暗号リストはこの通りです:
-<code>ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>
+<code>ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>
 </li>
 <li><p><code>honorCipherOrder</code> :
 暗号を選択する際に、クライアントではなくサーバの設定を使用します。
@@ -7130,6 +7188,36 @@ object.
 <code>null</code> または空のオブジェクトを返します。
 
 </p>
+<h3>cleartextStream.getCipher()<span><a class="mark" href="#all_cleartextstream_getcipher" id="all_cleartextstream_getcipher">#</a></span></h3>
+<!--
+Returns an object representing the cipher name and the SSL/TLS
+protocol version of the current connection.
+-->
+
+<p>現在の接続における暗号と SSL/TLS プロトコルのバージョンを表現する
+オブジェクトを返します。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>{ name: &apos;AES256-SHA&apos;, version: &apos;TLSv1/SSLv3&apos; }</code></pre>
+<!--
+See SSL_CIPHER_get_name() and SSL_CIPHER_get_version() in
+http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS for more
+information.
+-->
+
+<p>詳細は
+<a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS">http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS</a>
+で <code>SSL_CIPHER_get_name()</code> および <code>SSL_CIPHER_get_version()</code> を
+参照してください。
+
+</p>
 <h3>cleartextStream.address()<span><a class="mark" href="#all_cleartextstream_address" id="all_cleartextstream_address">#</a></span></h3>
 <!--
 Returns the bound address and port of the underlying socket as reported by the
@@ -7411,13 +7499,13 @@ Synchronous lchmod(2).
 <h2>fs.stat(path, [callback])<span><a class="mark" href="#all_fs_stat_path_callback" id="all_fs_stat_path_callback">#</a></span></h2>
 <!--
 Asynchronous stat(2). The callback gets two arguments `(err, stats)` where
-`stats` is a [fs.Stats](#fs.Stats) object.  See the [fs.Stats](#fs.Stats)
+`stats` is a [fs.Stats](#fs_class_fs_stats) object.  See the [fs.Stats](#fs_class_fs_stats)
 section below for more information.
 -->
 
 <p>非同期の stat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、
-<code>stats</code> は <a href="#fs.Stats">fs.Stats</a> オブジェクトです。
-詳細は <a href="#fs.Stats">fs.Stats</a> の節を参照してください。
+<code>stats</code> は <a href="#fs_class_fs_stats">fs.Stats</a> オブジェクトです。
+詳細は <a href="#fs_class_fs_stats">fs.Stats</a> の節を参照してください。
 
 </p>
 <!--
@@ -8296,12 +8384,13 @@ Returns a new ReadStream object (See `Readable Stream`).
 <!--
 `options` can include `start` and `end` values to read a range of bytes from
 the file instead of the entire file.  Both `start` and `end` are inclusive and
-start at 0.
+start at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.
 -->
 
 <p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、
 <code>options</code> に <code>start</code> および <code>end</code> を含めることができます。
 <code>start</code> と <code>end</code> はどちらも包含的で0から始まります。
+<code>encoding</code> は <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、または <code>&apos;base64&apos;</code> です。
 
 </p>
 <!--
@@ -8314,10 +8403,10 @@ An example to read the last 10 bytes of a file which is 100 bytes long:
 <pre><code>fs.createReadStream(&apos;sample.txt&apos;, {start: 90, end: 99});</code></pre>
 <h2>Class: fs.ReadStream<span><a class="mark" href="#all_class_fs_readstream" id="all_class_fs_readstream">#</a></span></h2>
 <!--
-`ReadStream` is a [Readable Stream](stream.html#readable_stream).
+`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).
 -->
 
-<p><code>ReadStream</code> は <a href="stream.html#readable_Stream">Readable Stream</a> です。
+<p><code>ReadStream</code> は <a href="stream.html#stream_readable_stream">Readable Stream</a> です。
 
 </p>
 <h3>Event: &apos;open&apos;<span><a class="mark" href="#all_event_open" id="all_event_open">#</a></span></h3>
@@ -8367,10 +8456,10 @@ default mode `w`.
 </p>
 <h2>fs.WriteStream<span><a class="mark" href="#all_fs_writestream" id="all_fs_writestream">#</a></span></h2>
 <!--
-`WriteStream` is a [Writable Stream](stream.html#writable_stream).
+`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).
 -->
 
-<p><code>WriteStream</code> は <a href="stream.html#writable_Stream">Writable Stream</a> です。
+<p><code>WriteStream</code> は <a href="stream.html#stream_writable_stream">Writable Stream</a> です。
 
 </p>
 <h3>Event: &apos;open&apos;<span><a class="mark" href="#all_event_open_1" id="all_event_open_1">#</a></span></h3>
@@ -8422,11 +8511,12 @@ Stop watching for changes on the given `fs.FSWatcher`.
 </ul>
 <!--
 Emitted when something changes in a watched directory or file.
-See more details in [fs.watch](#fs.watch).
+See more details in [fs.watch](#fs_fs_watch_filename_options_listener).
 -->
 
 <p>監視しているファイルまたはディレクトリに変更があると生成されます。
-詳しくは <a href="#fs.watch">fs.watch</a> を参照してください。
+詳しくは <a href="#fs_fs_watch_filename_options_listener">fs.watch</a>
+を参照してください。
 
 </p>
 <h3>Event: &apos;error&apos;<span><a class="mark" href="#all_event_error_2" id="all_event_error_2">#</a></span></h3>
@@ -8998,13 +9088,16 @@ the last parameter `listeningListener` will be added as an listener for the
 </p>
 <h3>server.close([cb])<span><a class="mark" href="#all_server_close_cb" id="all_server_close_cb">#</a></span></h3>
 <!--
-Stops the server from accepting new connections. This function is
-asynchronous, the server is finally closed when the server emits a `'close'`
-event. Optionally, you can pass a callback to listen for the `'close'` event.
+Stops the server from accepting new connections and keeps existing
+connections. This function is asynchronous, the server is finally
+closed when all connections are ended and the server emits a `'close'`
+event. Optionally, you can pass a callback to listen for the `'close'`
+event.
 -->
 
-<p>サーバが新しいコネクションを受け付けるのを終了します。
-この関数は非同期で、サーバは最終的に <code>&apos;close&apos;</code> イベントを生成した時にクローズされます。
+<p>サーバが新しい接続を受け付けるのを終了しますが、既存の接続は維持します。
+この関数は非同期で、サーバは最終的に全ての接続が閉じられると
+<code>&apos;close&apos;</code> イベントを生成してクローズされます。
 オプションとして、<code>&apos;close&apos;</code> イベントに対するリスナを渡すことができます。
 
 </p>
@@ -9091,10 +9184,13 @@ Emitted when a new connection is made. `socket` is an instance of
 </p>
 <h3>Event: &apos;close&apos;<span><a class="mark" href="#all_event_close_2" id="all_event_close_2">#</a></span></h3>
 <!--
-Emitted when the server closes.
+Emitted when the server closes. Note that if connections exist, this
+event is not emitted until all connections are ended.
 -->
 
 <p>サーバがクローズした時に生成されます。
+もし接続が存在すると、このイベントは全ての接続が閉じられるまで
+生成されないことに注意してください。
 
 </p>
 <h3>Event: &apos;error&apos;<span><a class="mark" href="#all_event_error_3" id="all_event_error_3">#</a></span></h3>
@@ -9944,7 +10040,7 @@ specifically for multicast traffic.  Each router or gateway that forwards a pack
 decrements the TTL. If the TTL is decremented to 0 by a router, it will not be forwarded.
 
 The argument to `setMulticastTTL()` is a number of hops between 0 and 255.  The default on most
-systems is 64.
+systems is 1.
 -->
 
 <p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。
@@ -9952,7 +10048,7 @@ TTL は「生存期間」を表しますが、この文脈では特にマルチ�
 それぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。
 TTL がルーターによって 0 までデクリメントされると、それは転送されません。
 <code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。
-ほとんどのシステムでデフォルトは 64 です。
+ほとんどのシステムでデフォルトは 1 です。
 
 </p>
 <h3>dgram.setMulticastLoopback(flag)<span><a class="mark" href="#all_dgram_setmulticastloopback_flag" id="all_dgram_setmulticastloopback_flag">#</a></span></h3>
@@ -12497,14 +12593,15 @@ provided so that it could be overridden if necessary.
 
 </p>
 <h1>Readline<span><a class="mark" href="#all_readline" id="all_readline">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
+<pre><code>Stability: 2 - Unstable</code></pre>
 <!--
 To use this module, do `require('readline')`. Readline allows reading of a
-stream (such as STDIN) on a line-by-line basis.
+stream (such as `process.stdin`) on a line-by-line basis.
 -->
 
 <p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。
-Readline はストリーム (たとえば標準入力) を行ごとに読み込むことを可能にします。
+Readline はストリーム (たとえば <code>process.stdin</code>)
+を行ごとに読み込むことを可能にします。
 
 </p>
 <!--
@@ -12520,24 +12617,82 @@ program to gracefully pause:
 </p>
 <pre><code>var rl = require(&apos;readline&apos;);
 
-var i = rl.createInterface(process.stdin, process.stdout, null);
-i.question(&quot;What do you think of node.js?&quot;, function(answer) {
+var i = rl.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+i.question(&quot;What do you think of node.js? &quot;, function(answer) {
   // TODO: Log the answer in a database
-  console.log(&quot;Thank you for your valuable feedback.&quot;);
+  console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
 
   i.pause();
 });</code></pre>
-<h2>rl.createInterface(input, output, completer)<span><a class="mark" href="#all_rl_createinterface_input_output_completer" id="all_rl_createinterface_input_output_completer">#</a></span></h2>
+<h2>rl.createInterface(options)<span><a class="mark" href="#all_rl_createinterface_options" id="all_rl_createinterface_options">#</a></span></h2>
 <!--
-Takes two streams and creates a readline interface. The `completer` function
-is used for autocompletion. When given a substring, it returns `[[substr1,
-substr2, ...], originalsubstring]`.
+Creates a readline `Interface` instance. Accepts an "options" Object that takes
+the following values:
 -->
 
-<p>二つのストリームを受け取り、readline のインタフェースを作成します。
-<code>completer</code> 関数は補完のために使われます。
-それは部分文字列を与えられると、<code>[[substr1, substr2, ...], originalsubstring]</code>
-を返します。
+<p>行を読み込む <code>Interface</code> のインスタンスを作成します。
+以下の値を含む <code>options</code> オブジェクトを受け取ります。
+
+</p>
+<!--
+ - `input` - the readable stream to listen to (Required).
+
+ - `output` - the writable stream to write readline data to (Required).
+
+ - `completer` - an optional function that is used for Tab autocompletion. See
+   below for an example of using this.
+
+ - `terminal` - pass `true` if the `input` and `output` streams should be treated
+   like a TTY, and have ANSI/VT100 escape codes written to it. Defaults to
+   checking `isTTY` on the `output` stream upon instantiation.
+-->
+
+<ul>
+<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>
+</li>
+<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>
+</li>
+<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。
+後述の例を参照してください。</p>
+</li>
+<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、
+ANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。
+デフォルトはインスタンス生成時に <code>output</code> に対して
+<code>isTTY</code> でチェックします。</p>
+</li>
+</ul>
+<!--
+The `completer` function is given a the current line entered by the user, and
+is supposed to return an Array with 2 entries:
+-->
+
+<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、
+2 つのエントリを含む配列を返すことが期待されます:
+
+</p>
+<!--
+ 1. An Array with matching entries for the completion.
+
+ 2. The substring that was used for the matching.
+-->
+
+<ol>
+<li><p>補完によってマッチするエントリの配列。</p>
+</li>
+<li><p>マッチングに使用された部分文字列。</p>
+</li>
+</ol>
+<!--
+Which ends up looking something like:
+`[[substr1, substr2, ...], originalsubstring]`.
+-->
+
+<p>それは次のようになります:
+<code>[[substr1, substr2, ...], originalsubstring]</code>。
 
 </p>
 <!--
@@ -12547,11 +12702,9 @@ Also `completer` can be run in async mode if it accepts two arguments:
 <p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。
 
 </p>
-<p>  function completer(linePartial, callback) {
-    callback(null, [[&apos;123&apos;], linePartial]);
-  }
-
-</p>
+<pre><code>function completer(linePartial, callback) {
+  callback(null, [[&apos;123&apos;], linePartial]);
+}</code></pre>
 <!--
 `createInterface` is commonly used with `process.stdin` and
 `process.stdout` in order to accept user input:
@@ -12561,15 +12714,40 @@ Also `completer` can be run in async mode if it accepts two arguments:
 <code>process.stdout</code> が使用されます。
 
 </p>
-<pre><code>var readline = require(&apos;readline&apos;),
-  rl = readline.createInterface(process.stdin, process.stdout);</code></pre>
+<pre><code>var readline = require(&apos;readline&apos;);
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});</code></pre>
+<!--
+Once you have a readline instance, you most commonly listen for the `"line"` event.
+-->
+
+<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを
+監視することになります。
+
+</p>
+<!--
+If `terminal` is `true` for this instance then the `output` stream will get the
+best compatability if it defines an `output.columns` property, and fires
+a `"resize"` event on the `output` if/when the columns ever change
+(`process.stdout` does this automatically when it is a TTY).
+-->
+
+<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、
+<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば
+それに適合し、カラム幅が変更されると <code>output</code> 上で
+<code>&apos;resize&apos;</code> イベントが生成されます
+(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。
+
+</p>
 <h2>Class: Interface<span><a class="mark" href="#all_class_interface" id="all_class_interface">#</a></span></h2>
 <!--
-The class that represents a readline interface with a stdin and stdout
+The class that represents a readline interface with an input and output
 stream.
 -->
 
-<p>標準入力と標準出力を持つ readline インタフェースを表現するクラスです。
+<p>入力と出力を持つ readline インタフェースを表現するクラスです。
 
 </p>
 <h3>rl.setPrompt(prompt, length)<span><a class="mark" href="#all_rl_setprompt_prompt_length" id="all_rl_setprompt_prompt_length">#</a></span></h3>
@@ -12632,33 +12810,32 @@ Example usage:
 <h3>rl.pause()<span><a class="mark" href="#all_rl_pause" id="all_rl_pause">#</a></span></h3>
 <!--
 Pauses the readline `in` stream, allowing it to be resumed later if needed.
+Pauses the readline `input` stream, allowing it to be resumed later if needed.
 -->
 
-<p><code>in</code> ストリームからの入力を中断します。
+<p><code>input</code> ストリームからの入力を中断します。
 必要なら後で再開することができます。
 
 </p>
 <h3>rl.resume()<span><a class="mark" href="#all_rl_resume" id="all_rl_resume">#</a></span></h3>
 <!--
-Resumes the readline `in` stream.
+Resumes the readline `input` stream.
 -->
 
-<p><code>in</code> ストリームからの入力を再開します。
+<p><code>input</code> ストリームからの入力を再開します。
 
 </p>
 <h3>rl.write()<span><a class="mark" href="#all_rl_write" id="all_rl_write">#</a></span></h3>
 <!--
-Writes to tty.
+Writes to `output` stream.
 
-This will also resume the `in` stream used with `createInterface` if it has
-been paused.
+This will also resume the `input` stream if it has been paused.
 -->
 
-<p>tty へ出力します。
+<p><code>output</code> へ出力します。
 
 </p>
-<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
-中断されていれば再開します。
+<p>これは、<code>input</code> ストリームが中断されていれば再開します。
 
 </p>
 <h3>Event: &apos;line&apos;<span><a class="mark" href="#all_event_line" id="all_event_line">#</a></span></h3>
@@ -12735,6 +12912,21 @@ Example of listening for `resume`:
 <pre><code>rl.on(&apos;resume&apos;, function() {
   console.log(&apos;Readline resumed.&apos;);
 });</code></pre>
+<h3>Event: &apos;end&apos;<span><a class="mark" href="#all_event_end_4" id="all_event_end_4">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted when the `input` stream receives its "end" event, or when `^D` is
+pressed by the user. It's generally a good idea to consider this `Interface`
+instance as completed after this is emitted.
+-->
+
+<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合、
+またはユーザが <code>^D</code> を推した場合に生成されます。
+通常、これが生成された後で <code>Interface</code> インスタンスは完了すると考えられます。
+
+</p>
 <h3>Event: &apos;SIGINT&apos;<span><a class="mark" href="#all_event_sigint" id="all_event_sigint">#</a></span></h3>
 <p><code>function () {}</code>
 
@@ -12864,9 +13056,9 @@ rl.on(&apos;line&apos;, function(line) {
 });</code></pre>
 <h1>REPL<span><a class="mark" href="#all_repl" id="all_repl">#</a></span></h1>
 <!--
-A Read-Eval-Print-Loop (REPL) is available both as a standalone program and easily
-includable in other programs.  REPL provides a way to interactively run
-JavaScript and see the results.  It can be used for debugging, testing, or
+A Read-Eval-Print-Loop (REPL) is available both as a standalone program and
+easily includable in other programs. The REPL provides a way to interactively
+run JavaScript and see the results.  It can be used for debugging, testing, or
 just trying things out.
 -->
 
@@ -12895,12 +13087,15 @@ Type &apos;.help&apos; for options.
 2
 3</code></pre>
 <!--
-For advanced line-editors, start node with the environmental variable `NODE_NO_READLINE=1`.
-This will start the REPL in canonical terminal settings which will allow you to use with `rlwrap`.
+For advanced line-editors, start node with the environmental variable
+`NODE_NO_READLINE=1`. This will start the main and debugger REPL in canonical
+terminal settings which will allow you to use with `rlwrap`.
 -->
 
-<p>より進んだ行編集を行うには、環境変数に <code>NODE_NO_READLINE=1</code> を設定してnodeを起動してください。
-これによって正規の端末設定で REPL を起動し、<code>rlwrap</code> を有効にした状態でREPLを利用することができます。
+<p>より進んだ行編集を行うには、環境変数に <code>NODE_NO_READLINE=1</code>
+を設定してnodeを起動してください。
+これによって main とデバッガ REPL を正規の端末設定で起動し、
+<code>rlwrap</code> を利用することができます。
 
 </p>
 <!--
@@ -12911,37 +13106,80 @@ For example, you could add this to your bashrc file:
 
 </p>
 <pre><code>alias node=&quot;env NODE_NO_READLINE=1 rlwrap node&quot;</code></pre>
-<h2>repl.start([prompt], [stream], [eval], [useGlobal], [ignoreUndefined])<span><a class="mark" href="#all_repl_start_prompt_stream_eval_useglobal_ignoreundefined" id="all_repl_start_prompt_stream_eval_useglobal_ignoreundefined">#</a></span></h2>
+<h2>repl.start(options)<span><a class="mark" href="#all_repl_start_options" id="all_repl_start_options">#</a></span></h2>
 <!--
-Starts a REPL with `prompt` as the prompt and `stream` for all I/O.  `prompt`
-is optional and defaults to `> `.  `stream` is optional and defaults to
-`process.stdin`. `eval` is optional too and defaults to async wrapper for
-`eval()`.
+Returns and starts a `REPLServer` instance. Accepts an "options" Object that
+takes the following values:
+-->
+<code>REPLServer</code> インスタンスを作成して返します。
+以下の値を含む &quot;options&quot; オブジェクトを受け取ります。
 
-If `useGlobal` is set to true, then the repl will use the global object,
-instead of running scripts in a separate context. Defaults to `false`.
+<!--
+ - `prompt` - the prompt and `stream` for all I/O. Defaults to `> `.
 
-If `ignoreUndefined` is set to true, then the repl will not output return value
-of command if it's `undefined`. Defaults to `false`.
+ - `input` - the readable stream to listen to. Defaults to `process.stdin`.
 
+ - `output` - the writable stream to write readline data to. Defaults to
+   `process.stdout`.
+
+ - `terminal` - pass `true` if the `stream` should be treated like a TTY, and
+   have ANSI/VT100 escape codes written to it. Defaults to checking `isTTY`
+   on the `output` stream upon instantiation.
+
+ - `eval` - function that will be used to eval each given line. Defaults to
+   an async wrapper for `eval()`. See below for an example of a custom `eval`.
+
+ - `useColors` - a boolean which specifies whether or not the `writer` function
+   should output colors. If a different `writer` function is set then this does
+   nothing. Defaults to the repl's `terminal` value.
+
+ - `useGlobal` - if set to `true`, then the repl will use the `global` object,
+   instead of running scripts in a separate context. Defaults to `false`.
+
+ - `ignoreUndefined` - if set to `true`, then the repl will not output the
+   return value of command if it's `undefined`. Defaults to `false`.
+
+ - `writer` - the function to invoke for each command that gets evaluated which
+   returns the formatting (including coloring) to display. Defaults to
+   `util.inspect`.
+-->
+
+<ul>
+<li><p><code>prompt</code> - プロンプト。デフォルトは <code>&gt; </code> です。</p>
+</li>
+<li><p><code>input</code> - 監視する入力ストリーム。デフォルトは <code>process.stdin</code> です。</p>
+</li>
+<li><p><code>output</code> - 読み込んだデータを書き込む出力ストリーム。
+デフォルトは <code>process.stdout</code> です。</p>
+</li>
+<li><p><code>terminal</code> - もし <code>stream</code> が TTY で、ANSI/VT100 エスケープコードを
+出力するなら <code>true</code>。デフォルトはインスタンス作成時に <code>output</code>
+ストリームを <code>isTTY</code> でチェックします。</p>
+</li>
+<li><p><code>eval</code> - 各行を評価するために使われる関数。デフォルトは <code>eval()</code> を
+非同期にラップした関数です。
+<code>eval</code> をカスタマイズする例は下記を参照してください。</p>
+</li>
+<li><p><code>useColors</code> - <code>write</code> 関数が色を付けるかどうかを指定するブーリアン値。
+<code>writer</code> に異なる関数が設定された場合、これは何もしません。
+デフォルトは repl の <code>terminal</code> の値です。</p>
+</li>
+<li><p><code>useGlobal</code> - もし <code>true</code> に設定されると、repl は独立したコンテキストを
+使う代わりに <code>global</code> オブジェクトを使用します。デフォルトは <code>false</code> です。</p>
+</li>
+<li><p><code>ignoreUndefined</code> - もし <code>true</code> に設定されると、repl はコマンドの戻り値が
+<code>undefined</code> だった場合にそれを出力しません。デフォルトは <code>false</code> です。</p>
+</li>
+<li><p><code>writer</code> - コマンドが評価されるごとに実行される関数で、表示するために
+フォーマット (色づけも含みます) して返します。
+デフォルトは <code>util.inspect</code> です。</p>
+</li>
+</ul>
+<!--
 You can use your own `eval` function if it has following signature:
 -->
 
-<p><code>prompt</code> でプロンプト記号を、 <code>stream</code> で I/O を引数に取って REPL を起動します。
-<code>prompt</code> は省略可能で、 デフォルトは <code>&gt; </code> です。
-<code>stream</code> は省略可能で、 デフォルトは <code>process.stdin</code> です。
-<code>eval</code> も省略可能で、デフォルトは <code>eval()</code> の非同期ラッパーです。
-
-</p>
-<p><code>useGlobal</code> を <code>true</code> に指定した場合、REPL は別のコンテキストでスクリプトを
-実行するのではなく、グローバルオブジェクトを使用します。
-デフォルトは <code>false</code> です。
-
-</p>
-<p><code>ignoreUndefined</code> を <code>true</code> に指定した場合、REPL はコマンドの戻り値が <code>undefined</code> だった場合にそれを出力しません。デフォルトは <code>false</code> です。
-
-</p>
-<p>独自の <code>eval()</code> 関数は以下のシグネチャを持ちます。
+<p>以下のシグネチャを持つ独自の <code>eval()</code> 関数を使うことができます。
 
 </p>
 <pre><code>function eval(cmd, context, filename, callback) {
@@ -12968,16 +13206,32 @@ Here is an example that starts a REPL on stdin, a Unix socket, and a TCP socket:
 
 connections = 0;
 
-repl.start(&quot;node via stdin&gt; &quot;);
+repl.start({
+  prompt: &quot;node via stdin&gt; &quot;,
+  input: process.stdin,
+  output: process.stdout
+});
 
 net.createServer(function (socket) {
   connections += 1;
-  repl.start(&quot;node via Unix socket&gt; &quot;, socket);
+  repl.start({
+    prompt: &quot;node via Unix socket&gt; &quot;,
+    input: socket,
+    output: socket
+  }).on(&apos;exit&apos;, function() {
+    socket.end();
+  })
 }).listen(&quot;/tmp/node-repl-sock&quot;);
 
 net.createServer(function (socket) {
   connections += 1;
-  repl.start(&quot;node via TCP socket&gt; &quot;, socket);
+  repl.start({
+    prompt: &quot;node via TCP socket&gt; &quot;,
+    input: socket,
+    output: socket
+  }).on(&apos;exit&apos;, function() {
+    socket.end();
+  });
 }).listen(5001);</code></pre>
 <!--
 Running this program from the command line will start a REPL on stdin.  Other
@@ -12995,13 +13249,53 @@ TCP sockets.
 <!--
 By starting a REPL from a Unix socket-based server instead of stdin, you can
 connect to a long-running node process without restarting it.
+
+For an example of running a "full-featured" (`terminal`) REPL over
+a `net.Server` and `net.Socket` instance, see: https://gist.github.com/2209310
+
+For an example of running a REPL instance over `curl(1)`,
+see: https://gist.github.com/2053342
 -->
 
 <p>標準入力の代わりに Unix ドメインソケットをベースとしたサーバから REPL を起動することによって、
 再起動することなく node の常駐プロセスへ接続することができます。
 
+</p>
+<p><code>net.Server</code> および <code>net.Socket</code> インスタンス上の &quot;フル機能の&quot; (<code>terminal</code>)
+REPL を実行する例は、<a href="https://gist.github.com/2209310">https://gist.github.com/2209310</a> を参照してください。
 
 </p>
+<p><code>curl(1)</code> 上で REPL インスタンスを実行する例は、
+<a href="https://gist.github.com/2053342">https://gist.github.com/2053342</a> を参照してください。
+
+</p>
+<h3>Event: &apos;exit&apos;<span><a class="mark" href="#all_event_exit_1" id="all_event_exit_1">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted when the user exits the REPL in any of the defined ways. Namely, typing
+`.exit` at the repl, pressing Ctrl+C twice to signal SIGINT, or pressing Ctrl+D
+to signal "end" on the `input` stream.
+-->
+
+<p>何らかの方法でユーザが REPL を終了した場合に生成されます。
+すなわち、repl で <code>.exit</code> をタイプする、Ctrl+C を 2 回推して
+SIGINT を生成する、あるいは Ctrl+D を推して <code>input</code> ストリームで <code>&apos;end&apos;</code> を
+知らせるなどです。
+
+</p>
+<!--
+Example of listening for `exit`:
+-->
+
+<p><code>&apos;exit&apos;</code> を監視する例:
+
+</p>
+<pre><code>r.on(&apos;exit&apos;, function () {
+  console.log(&apos;Got &quot;exit&quot; event from repl!&apos;);
+  process.exit();
+});</code></pre>
 <h2>REPL Features<span><a class="mark" href="#all_repl_features" id="all_repl_features">#</a></span></h2>
 <!-- type=misc -->
 
@@ -13485,7 +13779,7 @@ The ChildProcess class is not intended to be used directly.  Use the
 独立したストリームオブジェクトにパイプでつながれているかもしれません。
 
 </p>
-<h3>Event:  &apos;exit&apos;<span><a class="mark" href="#all_event_exit_1" id="all_event_exit_1">#</a></span></h3>
+<h3>Event:  &apos;exit&apos;<span><a class="mark" href="#all_event_exit_2" id="all_event_exit_2">#</a></span></h3>
 <!--
 * `code` {Number} the exit code, if it exited normally.
 * `signal` {String} the signal passed to kill the child process, if it
@@ -13512,10 +13806,31 @@ of the signal, otherwise `null`.
 
 </p>
 <!--
+Note that the child process stdio streams might still be open.
+-->
+
+<p>子プロセスの標準入出力ストリームはオープンしたままになっているかも
+しれないことに注意してください。
+
+</p>
+<!--
 See `waitpid(2)`.
 -->
 
 <p><code>waitpid(2)</code> を参照してください。
+
+</p>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#all_event_close_9" id="all_event_close_9">#</a></span></h3>
+<!--
+This event is emitted when the stdio streams of a child process have all
+terminated.  This is distinct from 'exit', since multiple processes
+might share the same stdio streams.
+-->
+
+<p>このイベントは、子プロセスの標準入出力ストリームが全て終了した場合に
+生成されます。
+複数のプロセスが同じ標準入出力ストリームを共有するかもしれないので、
+これは <code>&apos;exit&apos;</code> とは明確に異なります。
 
 </p>
 <h3>Event: &apos;disconnect&apos;<span><a class="mark" href="#all_event_disconnect" id="all_event_disconnect">#</a></span></h3>
@@ -14335,29 +14650,34 @@ testing the first argument, `error` in callbacks.
 
 </p>
 <h1>TTY<span><a class="mark" href="#all_tty" id="all_tty">#</a></span></h1>
+<pre><code>Stability: 2 - Unstable</code></pre>
 <!--
-Use `require('tty')` to access this module.
+The `tty` module houses the `tty.ReadStream` and `tty.WriteStream` classes. In
+most cases, you will not need to use this module directly.
 -->
 
-<p><code>require(&apos;tty&apos;)</code> でこのモジュールにアクセスします。
+<p><code>tty</code> モジュールは <code>tty.ReadStream</code> と <code>tty.WriteStream</code> クラスを持ちます。
+多くのケースでは、これらを直接使う必要はありません。
 
 </p>
 <!--
-Example:
+When node detects that it is being run inside a TTY context, then `process.stdin`
+will be a `tty.ReadStream` instance and `process.stdout` will be
+a `tty.WriteStream` instance. The preferred way to check if node is being run in
+a TTY context is to check `process.stdout.isTTY`:
 -->
 
-<p>例:
+<p>node は TTY コンテキストの中にいるかどうかを検出し、
+<code>process.stdin</code> は <code>tty.ReadStream</code> のインスタンスに、
+<code>process.stdout</code> は <code>tty.WriteStream</code> のインスタンスになります。
+もし node が TTY のコンテキストで実行されているかどうかをチェックしたければ、
+<code>process.stdout.isTTY</code> を使うことができます:
 
 </p>
-<pre><code>var tty = require(&apos;tty&apos;);
-process.stdin.resume();
-tty.setRawMode(true);
-process.stdin.on(&apos;keypress&apos;, function(char, key) {
-  if (key &amp;&amp; key.ctrl &amp;&amp; key.name == &apos;c&apos;) {
-    console.log(&apos;graceful exit&apos;);
-    process.exit()
-  }
-});</code></pre>
+<pre><code>$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot;
+true
+$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot; | cat
+false</code></pre>
 <h2>tty.isatty(fd)<span><a class="mark" href="#all_tty_isatty_fd" id="all_tty_isatty_fd">#</a></span></h2>
 <!--
 Returns `true` or `false` depending on if the `fd` is associated with a
@@ -14370,33 +14690,100 @@ terminal.
 </p>
 <h2>tty.setRawMode(mode)<span><a class="mark" href="#all_tty_setrawmode_mode" id="all_tty_setrawmode_mode">#</a></span></h2>
 <!--
-`mode` should be `true` or `false`. This sets the properties of the current
-process's stdin fd to act either as a raw device or default.
+Deprecated. Use `tty.ReadStream#setRawMode()`
+(i.e. `process.stdin.setRawMode()`) instead.
 -->
 
-<p><code>mode</code> は <code>true</code> または <code>false</code> です。
-これは現在のプロセスの標準入力ファイル記述子をローデバイスまたはデフォルトに振る舞うよう設定します。
-
+<p>Deprecated.
+代わりに <code>tty.ReadStream#setRawMode()</code> (すなわち、<code>process.stdin.setRawMode()</code>)
+を使用してください。
 
 </p>
-<h2>tty.setWindowSize(fd, row, col)<span><a class="mark" href="#all_tty_setwindowsize_fd_row_col" id="all_tty_setwindowsize_fd_row_col">#</a></span></h2>
+<h2>Class: ReadStream<span><a class="mark" href="#all_class_readstream" id="all_class_readstream">#</a></span></h2>
 <!--
-This function was removed in v0.6.0.
+A `net.Socket` subclass that represents the readable portion of a tty. In normal
+circumstances, `process.stdin` will be the only `tty.ReadStream` instance in any
+node program (only when `isatty(0)` is true).
 -->
 
-<p>この関数は v0.6.0 で削除されました。
+<p><code>net.Socket</code> のサブクラスで、tty の入力側を表現します。
+一般的な状況では、どんなプログラムでも (<code>isatty(0)</code> が true の場合に限り)
+<code>process.stdin</code> が唯一の <code>tty.ReadStream</code> のインスタンスとなります。
 
 </p>
-<h2>tty.getWindowSize(fd)<span><a class="mark" href="#all_tty_getwindowsize_fd" id="all_tty_getwindowsize_fd">#</a></span></h2>
+<h3>rs.isRaw<span><a class="mark" href="#all_rs_israw" id="all_rs_israw">#</a></span></h3>
 <!--
-This function was removed in v0.6.0. Use `process.stdout.getWindowSize()`
-instead.
+A `Boolean` that is initialized to `false`. It represents the current "raw" state
+of the `tty.ReadStream` instance.
 -->
 
-<p>この関数は v0.6.0 で削除されました。
-代わりに <code>process.stdout.getWindowSize()</code> を使用してください。
+<p><code>Boolean</code> 値で <code>false</code> に初期化されます。
+<code>tty.ReadStream</code> インスタンスの現在の &quot;raw&quot; 状態を表現します。
 
 </p>
+<h3>rs.setRawMode(mode)<span><a class="mark" href="#all_rs_setrawmode_mode" id="all_rs_setrawmode_mode">#</a></span></h3>
+<!--
+`mode` should be `true` or `false`. This sets the properties of the
+`tty.ReadStream` to act either as a raw device or default. `isRaw` will be set
+to the resulting mode.
+-->
+
+<p><code>mode</code> は <code>true</code> または <code>false</code> のどちらかです。
+これは <code>tty.ReadStream</code> がローデバイスかデフォルトのどちらで振る舞うかを
+設定します。
+結果のモードは <code>isRaw</code> に設定されます。
+
+
+</p>
+<h2>Class WriteStream<span><a class="mark" href="#all_class_writestream" id="all_class_writestream">#</a></span></h2>
+<!--
+A `net.Socket` subclass that represents the writable portion of a tty. In normal
+circumstances, `process.stdout` will be the only `tty.WriteStream` instance
+ever created (and only when `isatty(1)` is true).
+-->
+
+<p><code>net.Socket</code> のサブクラスで、tty の出力側を表現します。
+一般的な状況では、どんなプログラムでも (<code>isatty(1)</code> が true の場合に限り)
+<code>process.stdout</code> が唯一の <code>tty.WriteStream</code> のインスタンスとなります。
+
+</p>
+<h3>ws.columns<span><a class="mark" href="#all_ws_columns" id="all_ws_columns">#</a></span></h3>
+<!--
+A `Number` that gives the number of columns the TTY currently has. This property
+gets updated on "resize" events.
+-->
+
+<p>TTY の現在のカラム数を保持する <code>Number</code> 値です。
+このプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。
+
+</p>
+<h3>ws.rows<span><a class="mark" href="#all_ws_rows" id="all_ws_rows">#</a></span></h3>
+<!--
+A `Number` that gives the number of rows the TTY currently has. This property
+gets updated on "resize" events.
+-->
+
+<p>TTY の現在の行数を保持する <code>Number</code> 値です。
+このプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。
+
+</p>
+<h3>Event: &apos;resize&apos;<span><a class="mark" href="#all_event_resize" id="all_event_resize">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted by `refreshSize()` when either of the `columns` or `rows` properties
+has changed.
+-->
+
+<p><code>columns</code> または <code>rows</code> プロパティが変更された場合に
+<code>refreshSize()</code> によって生成されます。
+
+</p>
+<pre><code>process.stdout.on(&apos;resize&apos;, function() {
+  console.log(&apos;screen size has changed!&apos;);
+  console.log(process.stdout.columns + &apos;x&apos; + process.stdout.rows);
+});</code></pre>
 <h1>Zlib<span><a class="mark" href="#all_zlib" id="all_zlib">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!--
@@ -15465,6 +15852,35 @@ where the 'listening' event is emitted.
 <pre><code>cluster.on(&apos;listening&apos;, function (worker) {
   console.log(&quot;We are now connected&quot;);
 });</code></pre>
+<h2>Event: &apos;disconnect&apos;<span><a class="mark" href="#all_event_disconnect_1" id="all_event_disconnect_1">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>worker</code> <span class="type">Worker object</span></li>
+</div></ul>
+<!--
+When a workers IPC channel has disconnected this event is emitted. This will happen
+when the worker dies, usually after calling `.destroy()`.
+-->
+
+<p>ワーカの IPC チャネルが切断された場合に生成されます。
+それはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。
+
+</p>
+<!--
+When calling `.disconnect()`, there may be a delay between the
+`disconnect` and `death` events.  This event can be used to detect if
+the process is stuck in a cleanup or if there are long-living
+connections.
+-->
+
+<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;death&apos;</code> の間には
+遅延があるかもしれません。このイベントはプロセスがクリーンナップで
+行き詰まったり、長時間生きている接続がないかを検出することに
+使用できます。
+
+</p>
+<pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {
+  console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);
+});</code></pre>
 <h2>Event: &apos;death&apos;<span><a class="mark" href="#all_event_death" id="all_event_death">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
@@ -15588,6 +16004,34 @@ This object is not supposed to be change or set manually.
 このオブジェクトは変更されることを想定していません。
 
 </p>
+<h2>cluster.disconnect([callback])<span><a class="mark" href="#all_cluster_disconnect_callback" id="all_cluster_disconnect_callback">#</a></span></h2>
+<!--
+* `callback` {Function} called when all workers are disconnected and handlers are closed
+-->
+
+<ul>
+<li><code>callback</code> {Function} 全てのワーカが切断し、ハンドルがクローズされると
+呼び出されます。</li>
+</ul>
+<!--
+When calling this method, all workers will commit a graceful suicide. When they are
+disconnected all internal handlers will be closed, allowing the master process to
+die graceful if no other event is waiting.
+-->
+
+<p>このメソッドを呼び出すと、全てのワーカは強制的でない終了に向かいます。
+それらの内部的なハンドルが全てクローズされると、
+他に待機しているイベントがなければ、
+マスタプロセスを非強制的に終了することができます。
+
+</p>
+<!--
+The method takes an optional callback argument which will be called when finished.
+-->
+
+<p>このメソッドはオプションの引数としてコールバックを受け取ります。
+
+</p>
 <h2>cluster.workers<span><a class="mark" href="#all_cluster_workers" id="all_cluster_workers">#</a></span></h2>
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
@@ -15677,15 +16121,14 @@ See: [Child Process module](child_process.html)
 <li><span class="type">Boolean</span></li>
 </div></ul>
 <!--
-This property is a boolean. It is set when a worker dies, until then it is
-`undefined`.  It is true if the worker was killed using the `.destroy()`
-method, and false otherwise.
+This property is a boolean. It is set when a worker dies after calling `.destroy()`
+or immediately after calling the `.disconnect()` method. Until then it is `undefined`.
 -->
 
 <p>このプロパティは論理値型です。
-これはワーカが終了すると設定されます。それまでは <code>undefined</code> です。
-ワーカが <code>.destroy()</code> メソッドで終了した場合は <code>true</code> に、その他の場合は
-<code>false</code> に設定されます。
+これはワーカが <code>.destroy()</code> を呼び出して終了するか、
+<code>.disconnect()</code> メソッドを呼び出した後に設定されます。
+それまでは <code>undefined</code> です。
 
 </p>
 <h3>worker.send(message, [sendHandle])<span><a class="mark" href="#all_worker_send_message_sendhandle" id="all_worker_send_message_sendhandle">#</a></span></h3>
@@ -15741,7 +16184,74 @@ a suicide boolean is set to true.
 
 // destroy worker
 worker.destroy();</code></pre>
-<h3>Event: message<span><a class="mark" href="#all_event_message_1" id="all_event_message_1">#</a></span></h3>
+<h2>Worker.disconnect()<span><a class="mark" href="#all_worker_disconnect" id="all_worker_disconnect">#</a></span></h2>
+<!--
+When calling this function the worker will no longer accept new connections, but
+they will be handled by any other listening worker. Existing connection will be
+allowed to exit as usual. When no more connections exist, the IPC channel to the worker
+will close allowing it to die graceful. When the IPC channel is closed the `disconnect`
+event will emit, this is then followed by the `death` event, there is emitted when
+the worker finally die.
+-->
+
+<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続
+(それらは他のワーカによって扱われます) を受け付けなくなります。
+既存の接続は通常通りに
+コネクションが無くなると、ワーカを正常に終了するために IPC チャネルは
+閉じられます。
+IPC チャネルが閉じられると <code>&apos;disconnect&apos;</code> イベントが生成され、
+その後ワーカが終了すると <code>&apos;death&apos;</code> イベントが生成されます。
+
+</p>
+<!--
+Because there might be long living connections, it is useful to implement a timeout.
+This example ask the worker to disconnect and after 2 seconds it will destroy the
+server. An alternative wound be to execute `worker.destroy()` after 2 seconds, but
+that would normally not allow the worker to do any cleanup if needed.
+-->
+
+<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために
+有益です。
+この例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。
+他の方法として <code>worker.destroy()</code> を呼び出してから
+2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを
+行えないかもしれません。
+
+</p>
+<pre><code>if (cluster.isMaster) {
+  var worker = cluser.fork();
+  var timeout;
+
+  worker.on(&apos;listening&apos;, function () {
+    worker.disconnect();
+    timeout = setTimeout(function () {
+      worker.send(&apos;force kill&apos;);
+    }, 2000);
+  });
+
+  worker.on(&apos;disconnect&apos;, function () {
+    clearTimeout(timeout);
+  });
+
+} else if (cluster.isWorker) {
+  var net = require(&apos;net&apos;);
+  var server = net.createServer(function (socket) {
+    // connection never end
+  });
+
+  server.listen(8000);
+
+  server.on(&apos;close&apos;, function () {
+    // cleanup
+  });
+
+  process.on(&apos;message&apos;, function (msg) {
+    if (msg === &apos;force kill&apos;) {
+      server.destroy();
+    }
+  });
+}</code></pre>
+<h3>Event: &apos;message&apos;<span><a class="mark" href="#all_event_message_1" id="all_event_message_1">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>message</code> <span class="type">Object</span></li>
 </div></ul>
@@ -15830,10 +16340,25 @@ on the specified worker.
 <pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {
   // Worker is listening
 };</code></pre>
-<h2>Event: &apos;death&apos;<span><a class="mark" href="#all_event_death_1" id="all_event_death_1">#</a></span></h2>
+<h3>Event: &apos;disconnect&apos;<span><a class="mark" href="#all_event_disconnect_2" id="all_event_disconnect_2">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
+<!--
+Same as the `cluster.on('disconnect')` event, but emits only when the state change
+on the specified worker.
+-->
+<code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が
+変更された場合のみ生成されます。
+
+    cluster.fork().on(&apos;disconnect&apos;, function (worker) {
+      // Worker has disconnected
+    };
+
+### Event: &apos;death&apos;
+
+* <code>worker</code> {Worker object}
+
 <!--
 Same as the `cluster.on('death')` event, but emits only when the state change
 on the specified worker.
@@ -15922,7 +16447,7 @@ Patches to this list are welcome.
             <li><a href="/#download">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
-            <li><a href="http://nodejs.org/api/index.html">Docs</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
             <li><a href="/logos/">Logos</a></li>
@@ -15931,7 +16456,7 @@ Patches to this list are welcome.
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
-            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
             <li><a href="../logos/">ロゴ</a></li>
@@ -15939,7 +16464,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright 2010 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
