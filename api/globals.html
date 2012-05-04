@@ -63,6 +63,7 @@
 <li><a href="#globals_require">require()</a><ul>
 <li><a href="#globals_require_resolve">require.resolve()</a></li>
 <li><a href="#globals_require_cache">require.cache</a></li>
+<li><a href="#globals_require_extensions">require.extensions</a></li>
 </ul>
 </li>
 <li><a href="#globals_filename">__filename</a></li>
@@ -196,6 +197,35 @@ value from this object, the next `require` will reload the module.
 <code>require</code> されたときにリロードされます。
 
 </p>
+<h3>require.extensions<span><a class="mark" href="#globals_require_extensions" id="globals_require_extensions">#</a></span></h3>
+<div class="signature"><ul>
+<li><span class="type">Array</span></li>
+</div></ul>
+<!--
+Instruct `require` on how to handle certain file extensions.
+
+Process files with the extension `.sjs` as `.js`:
+-->
+
+<p><code>require</code> にファイル拡張子を扱う方法を教えます。
+
+</p>
+<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:
+
+</p>
+<pre><code>require.extensions[&apos;.sjs&apos;] = require.extensions[&apos;.js&apos;];</code></pre>
+<!--
+Write your own extension handler:
+-->
+
+<p>独自の拡張子ハンドラを記述するには:
+
+</p>
+<pre><code>require.extensions[&apos;.sjs&apos;] = function(module, filename) {
+  var content = fs.readFileSync(filename, &apos;utf8&apos;);
+  // Parse the file content and give to module.exports
+  module.exports = content;
+};</code></pre>
 <h2>__filename<span><a class="mark" href="#globals_filename" id="globals_filename">#</a></span></h2>
 <!-- type=var -->
 

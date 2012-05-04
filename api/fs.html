@@ -56,8 +56,8 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#fs_file_system">File System</a><ul>
-<li><a href="#fs_fs_rename_path1_path2_callback">fs.rename(path1, path2, [callback])</a></li>
-<li><a href="#fs_fs_renamesync_path1_path2">fs.renameSync(path1, path2)</a></li>
+<li><a href="#fs_fs_rename_oldpath_newpath_callback">fs.rename(oldPath, newPath, [callback])</a></li>
+<li><a href="#fs_fs_renamesync_oldpath_newpath">fs.renameSync(oldPath, newPath)</a></li>
 <li><a href="#fs_fs_truncate_fd_len_callback">fs.truncate(fd, len, [callback])</a></li>
 <li><a href="#fs_fs_truncatesync_fd_len">fs.truncateSync(fd, len)</a></li>
 <li><a href="#fs_fs_chown_path_uid_gid_callback">fs.chown(path, uid, gid, [callback])</a></li>
@@ -80,12 +80,12 @@
 <li><a href="#fs_fs_fstatsync_fd">fs.fstatSync(fd)</a></li>
 <li><a href="#fs_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, [callback])</a></li>
 <li><a href="#fs_fs_linksync_srcpath_dstpath">fs.linkSync(srcpath, dstpath)</a></li>
-<li><a href="#fs_fs_symlink_linkdata_path_type_callback">fs.symlink(linkdata, path, [type], [callback])</a></li>
-<li><a href="#fs_fs_symlinksync_linkdata_path_type">fs.symlinkSync(linkdata, path, [type])</a></li>
+<li><a href="#fs_fs_symlink_destination_path_type_callback">fs.symlink(destination, path, [type], [callback])</a></li>
+<li><a href="#fs_fs_symlinksync_destination_path_type">fs.symlinkSync(destination, path, [type])</a></li>
 <li><a href="#fs_fs_readlink_path_callback">fs.readlink(path, [callback])</a></li>
 <li><a href="#fs_fs_readlinksync_path">fs.readlinkSync(path)</a></li>
-<li><a href="#fs_fs_realpath_path_callback">fs.realpath(path, [callback])</a></li>
-<li><a href="#fs_fs_realpathsync_path">fs.realpathSync(path)</a></li>
+<li><a href="#fs_fs_realpath_path_cache_callback">fs.realpath(path, [cache], callback)</a></li>
+<li><a href="#fs_fs_realpathsync_path_cache">fs.realpathSync(path, [cache])</a></li>
 <li><a href="#fs_fs_unlink_path_callback">fs.unlink(path, [callback])</a></li>
 <li><a href="#fs_fs_unlinksync_path">fs.unlinkSync(path)</a></li>
 <li><a href="#fs_fs_rmdir_path_callback">fs.rmdir(path, [callback])</a></li>
@@ -125,8 +125,8 @@
 </li>
 </ul>
 </li>
-<li><a href="#fs_fs_exists_p_callback">fs.exists(p, [callback])</a></li>
-<li><a href="#fs_fs_existssync_p">fs.existsSync(p)</a></li>
+<li><a href="#fs_fs_exists_path_callback">fs.exists(path, [callback])</a></li>
+<li><a href="#fs_fs_existssync_path">fs.existsSync(path)</a></li>
 <li><a href="#fs_class_fs_stats">Class: fs.Stats</a></li>
 <li><a href="#fs_fs_createreadstream_path_options">fs.createReadStream(path, [options])</a></li>
 <li><a href="#fs_class_fs_readstream">Class: fs.ReadStream</a><ul>
@@ -140,6 +140,8 @@
 </ul>
 </li>
 <li><a href="#fs_class_fs_fswatcher">Class: fs.FSWatcher</a><ul>
+<li><a href="#fs_watcher_close">watcher.close()</a></li>
+<li><a href="#fs_event_change">Event: &apos;change&apos;</a></li>
 <li><a href="#fs_event_error">Event: &apos;error&apos;</a></li>
 </ul>
 </li>
@@ -259,7 +261,7 @@ to `process.cwd()`.
 <code>process.cwd()</code> からの相対パスであることを思い出してください。
 
 </p>
-<h2>fs.rename(path1, path2, [callback])<span><a class="mark" href="#fs_fs_rename_path1_path2_callback" id="fs_fs_rename_path1_path2_callback">#</a></span></h2>
+<h2>fs.rename(oldPath, newPath, [callback])<span><a class="mark" href="#fs_fs_rename_oldpath_newpath_callback" id="fs_fs_rename_oldpath_newpath_callback">#</a></span></h2>
 <!--
 Asynchronous rename(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -268,7 +270,7 @@ to the completion callback.
 <p>非同期の rename(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。
 
 </p>
-<h2>fs.renameSync(path1, path2)<span><a class="mark" href="#fs_fs_renamesync_path1_path2" id="fs_fs_renamesync_path1_path2">#</a></span></h2>
+<h2>fs.renameSync(oldPath, newPath)<span><a class="mark" href="#fs_fs_renamesync_oldpath_newpath" id="fs_fs_renamesync_oldpath_newpath">#</a></span></h2>
 <!--
 Synchronous rename(2).
 -->
@@ -482,7 +484,7 @@ Synchronous link(2).
 <p>同期の link(2)。
 
 </p>
-<h2>fs.symlink(linkdata, path, [type], [callback])<span><a class="mark" href="#fs_fs_symlink_linkdata_path_type_callback" id="fs_fs_symlink_linkdata_path_type_callback">#</a></span></h2>
+<h2>fs.symlink(destination, path, [type], [callback])<span><a class="mark" href="#fs_fs_symlink_destination_path_type_callback" id="fs_fs_symlink_destination_path_type_callback">#</a></span></h2>
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -495,7 +497,7 @@ used on Windows (ignored on other platforms).
 これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
 
 </p>
-<h2>fs.symlinkSync(linkdata, path, [type])<span><a class="mark" href="#fs_fs_symlinksync_linkdata_path_type" id="fs_fs_symlinksync_linkdata_path_type">#</a></span></h2>
+<h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#fs_fs_symlinksync_destination_path_type" id="fs_fs_symlinksync_destination_path_type">#</a></span></h2>
 <!--
 Synchronous symlink(2).
 -->
@@ -520,17 +522,34 @@ Synchronous readlink(2). Returns the symbolic link's string value.
 <p>同期の readlink(2)。シンボリックリンクの持つ文字列値を返します。
 
 </p>
-<h2>fs.realpath(path, [callback])<span><a class="mark" href="#fs_fs_realpath_path_callback" id="fs_fs_realpath_path_callback">#</a></span></h2>
+<h2>fs.realpath(path, [cache], callback)<span><a class="mark" href="#fs_fs_realpath_path_cache_callback" id="fs_fs_realpath_path_cache_callback">#</a></span></h2>
 <!--
-Asynchronous realpath(2).  The callback gets two arguments `(err,
-resolvedPath)`.  May use `process.cwd` to resolve relative paths.
+Asynchronous realpath(2). The `callback` gets two arguments `(err,
+resolvedPath)`. May use `process.cwd` to resolve relative paths. `cache` is an
+object literal of mapped paths that can be used to force a specific path
+resolution or avoid additional `fs.stat` calls for known real paths.
 -->
 
 <p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。
 相対パスを解決するために <code>process.cwd</code> を使用することができます。
+<code>cache</code> はオブジェクトで、パスがキーとして含まれていればその値が
+強制的に解決されたパスとして扱われ、<code>fs.stat</code> によってパスが実在するかどうかの
+確認が省かれます。
 
 </p>
-<h2>fs.realpathSync(path)<span><a class="mark" href="#fs_fs_realpathsync_path" id="fs_fs_realpathsync_path">#</a></span></h2>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var cache = {&apos;/etc&apos;:&apos;/private/etc&apos;};
+fs.realpath(&apos;/etc/passwd&apos;, cache, function (err, resolvedPath) {
+  if (err) throw err;
+  console.log(resolvedPath);
+});</code></pre>
+<h2>fs.realpathSync(path, [cache])<span><a class="mark" href="#fs_fs_realpathsync_path_cache" id="fs_fs_realpathsync_path_cache">#</a></span></h2>
 <!--
 Synchronous realpath(2). Returns the resolved path.
 -->
@@ -1167,7 +1186,7 @@ callback, and have some fallback logic if it is null.
     console.log(&apos;filename not provided&apos;);
   }
 });</code></pre>
-<h2>fs.exists(p, [callback])<span><a class="mark" href="#fs_fs_exists_p_callback" id="fs_fs_exists_p_callback">#</a></span></h2>
+<h2>fs.exists(path, [callback])<span><a class="mark" href="#fs_fs_exists_path_callback" id="fs_fs_exists_path_callback">#</a></span></h2>
 <!--
 Test whether or not the given path exists by checking with the file system.
 Then call the `callback` argument with either true or false.  Example:
@@ -1181,7 +1200,7 @@ Then call the `callback` argument with either true or false.  Example:
 <pre><code>fs.exists(&apos;/etc/passwd&apos;, function (exists) {
   util.debug(exists ? &quot;it&apos;s there&quot; : &quot;no passwd!&quot;);
 });</code></pre>
-<h2>fs.existsSync(p)<span><a class="mark" href="#fs_fs_existssync_p" id="fs_fs_existssync_p">#</a></span></h2>
+<h2>fs.existsSync(path)<span><a class="mark" href="#fs_fs_existssync_path" id="fs_fs_existssync_path">#</a></span></h2>
 <!--
 Synchronous version of `fs.exists`.
 -->
@@ -1388,17 +1407,19 @@ for writing.
 <!--
 Objects returned from `fs.watch()` are of this type.
 -->
-<code>fs.watch()</code> が返すオブジェクトはこの型です。
 
-### watcher.close()
+<p><code>fs.watch()</code> が返すオブジェクトはこの型です。
 
+</p>
+<h3>watcher.close()<span><a class="mark" href="#fs_watcher_close" id="fs_watcher_close">#</a></span></h3>
 <!--
 Stop watching for changes on the given `fs.FSWatcher`.
 -->
-<code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。
 
-### Event: &apos;change&apos;
+<p><code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。
 
+</p>
+<h3>Event: &apos;change&apos;<span><a class="mark" href="#fs_event_change" id="fs_event_change">#</a></span></h3>
 <!--
 * `event` {String} The type of fs change
 * `filename` {String} The filename that changed (if relevant/available)

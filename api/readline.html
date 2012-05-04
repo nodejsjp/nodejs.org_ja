@@ -63,16 +63,21 @@
 <li><a href="#readline_rl_question_query_callback">rl.question(query, callback)</a></li>
 <li><a href="#readline_rl_pause">rl.pause()</a></li>
 <li><a href="#readline_rl_resume">rl.resume()</a></li>
+<li><a href="#readline_rl_close">rl.close()</a></li>
 <li><a href="#readline_rl_write">rl.write()</a></li>
+</ul>
+</li>
+<li><a href="#readline_events">Events</a><ul>
 <li><a href="#readline_event_line">Event: &apos;line&apos;</a></li>
 <li><a href="#readline_event_pause">Event: &apos;pause&apos;</a></li>
 <li><a href="#readline_event_resume">Event: &apos;resume&apos;</a></li>
-<li><a href="#readline_event_end">Event: &apos;end&apos;</a></li>
+<li><a href="#readline_event_close">Event: &apos;close&apos;</a></li>
 <li><a href="#readline_event_sigint">Event: &apos;SIGINT&apos;</a></li>
 <li><a href="#readline_event_sigtstp">Event: &apos;SIGTSTP&apos;</a></li>
 <li><a href="#readline_event_sigcont">Event: &apos;SIGCONT&apos;</a></li>
 </ul>
 </li>
+<li><a href="#readline_example_tiny_cli">Example: Tiny CLI</a></li>
 </ul>
 </li>
 </ul>
@@ -94,13 +99,13 @@ Readline はストリーム (たとえば <code>process.stdin</code>)
 </p>
 <!--
 Note that once you've invoked this module, your node program will not
-terminate until you've paused the interface. Here's how to allow your
-program to gracefully pause:
+terminate until you've closed the interface. Here's how to allow your
+program to gracefully exit:
 -->
 
 <p>このモジュールを一度起動すると、このインタフェースを
-中断するまで node プログラムは終了しないことに注意してください。
-プログラムをスムーズに中断する方法を以下に示します:
+クローズするまで node プログラムは終了しないことに注意してください。
+プログラムをスムーズに終了する方法を以下に示します:
 
 </p>
 <pre><code>var rl = require(&apos;readline&apos;);
@@ -114,7 +119,7 @@ i.question(&quot;What do you think of node.js? &quot;, function(answer) {
   // TODO: Log the answer in a database
   console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
 
-  i.pause();
+  i.close();
 });</code></pre>
 <h2>rl.createInterface(options)<span><a class="mark" href="#readline_rl_createinterface_options" id="readline_rl_createinterface_options">#</a></span></h2>
 <!--
@@ -134,9 +139,9 @@ the following values:
  - `completer` - an optional function that is used for Tab autocompletion. See
    below for an example of using this.
 
- - `terminal` - pass `true` if the `input` and `output` streams should be treated
-   like a TTY, and have ANSI/VT100 escape codes written to it. Defaults to
-   checking `isTTY` on the `output` stream upon instantiation.
+ - `terminal` - pass `true` if the `input` and `output` streams should be
+   treated like a TTY, and have ANSI/VT100 escape codes written to it.
+   Defaults to checking `isTTY` on the `output` stream upon instantiation.
 -->
 
 <ul>
@@ -184,6 +189,19 @@ Which ends up looking something like:
 
 </p>
 <!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>function completer(line) {
+  var completions = &apos;.help .error .exit .quit .q&apos;.split(&apos; &apos;)
+  var hits = completions.filter(function(c) { return c.indexOf(line) == 0 })
+  // show all completions if none found
+  return [hits.length ? hits : completions, line]
+}</code></pre>
+<!--
 Also `completer` can be run in async mode if it accepts two arguments:
 -->
 
@@ -208,7 +226,8 @@ var rl = readline.createInterface({
   output: process.stdout
 });</code></pre>
 <!--
-Once you have a readline instance, you most commonly listen for the `"line"` event.
+Once you have a readline instance, you most commonly listen for the
+`"line"` event.
 -->
 
 <p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを
@@ -216,8 +235,8 @@ Once you have a readline instance, you most commonly listen for the `"line"` eve
 
 </p>
 <!--
-If `terminal` is `true` for this instance then the `output` stream will get the
-best compatability if it defines an `output.columns` property, and fires
+If `terminal` is `true` for this instance then the `output` stream will get
+the best compatability if it defines an `output.columns` property, and fires
 a `"resize"` event on the `output` if/when the columns ever change
 (`process.stdout` does this automatically when it is a TTY).
 -->
@@ -254,7 +273,7 @@ Sets the prompt, for example when you run `node` on the command line, you see
 Readies readline for input from the user, putting the current `setPrompt`
 options on a new line, giving the user a new spot to write.
 
-This will also resume the `in` stream used with `createInterface` if it has
+This will also resume the `input` stream used with `createInterface` if it has
 been paused.
 -->
 
@@ -263,25 +282,25 @@ been paused.
 ユーザに新しい入力エリアを与えます。
 
 </p>
-<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+<p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
 中断されていれば再開します。
 
 </p>
 <h3>rl.question(query, callback)<span><a class="mark" href="#readline_rl_question_query_callback" id="readline_rl_question_query_callback">#</a></span></h3>
 <!--
 Prepends the prompt with `query` and invokes `callback` with the user's
-response. Displays the query to the user, and then invokes `callback` with the
-user's response after it has been typed.
+response. Displays the query to the user, and then invokes `callback`
+with the user's response after it has been typed.
 
-This will also resume the `in` stream used with `createInterface` if it has
-been paused.
+This will also resume the `input` stream used with `createInterface` if
+it has been paused.
 -->
 
 <p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。
 ユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。
 
 </p>
-<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+<p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
 中断されていれば再開します。
 
 </p>
@@ -313,6 +332,16 @@ Resumes the readline `input` stream.
 <p><code>input</code> ストリームからの入力を再開します。
 
 </p>
+<h3>rl.close()<span><a class="mark" href="#readline_rl_close" id="readline_rl_close">#</a></span></h3>
+<!--
+Closes the `Interface` instance, relinquishing control on the `input` and
+`output` streams. The "close" event will also be emitted.
+-->
+
+<p><code>Interface</code> のインスタンスをクローズし、<code>input</code> および <code>output</code> ストリームの
+制御を解放します。<code>&apos;close&apos;</code> イベントも生成されます。
+
+</p>
 <h3>rl.write()<span><a class="mark" href="#readline_rl_write" id="readline_rl_write">#</a></span></h3>
 <!--
 Writes to `output` stream.
@@ -326,16 +355,17 @@ This will also resume the `input` stream if it has been paused.
 <p>これは、<code>input</code> ストリームが中断されていれば再開します。
 
 </p>
+<h2>Events<span><a class="mark" href="#readline_events" id="readline_events">#</a></span></h2>
 <h3>Event: &apos;line&apos;<span><a class="mark" href="#readline_event_line" id="readline_event_line">#</a></span></h3>
 <p><code>function (line) {}</code>
 
 </p>
 <!--
-Emitted whenever the `in` stream receives a `\n`, usually received when the
+Emitted whenever the `input` stream receives a `\n`, usually received when the
 user hits enter, or return. This is a good hook to listen for user input.
 -->
 
-<p><code>in</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
+<p><code>input</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
 通常、ユーザがエンターまたはリターンを打つごとに受信します。
 これはユーザ入浴のよいフックとなります。
 
@@ -355,26 +385,25 @@ Example of listening for `line`:
 
 </p>
 <!--
-Emitted whenever the `in` stream is paused or receives `^D`, respectively known
-as `EOT`. This event is also called if there is no `SIGINT` event listener
-present when the `in` stream receives a `^C`, respectively known as `SIGINT`.
-
-Also emitted whenever the `in` stream is not paused and receives the `SIGCONT`
-event. (See events `SIGTSTP` and `SIGCONT`)
-
-Example of listening for `pause`:
+Emitted whenever the `input` stream is paused.
 -->
 
-<p><code>in</code> ストリームが中断された時、または <code>EOT</code> として知られる <code>^D</code> 
-を受信すると生成されます。
-このイベントは、<code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した際に、
-<code>SIGINT</code> イベントのリスナが存在しない場合にも生成されます。
+<p><code>input</code> ストリームが中断されたときに生成されます。
 
 </p>
-<p><code>in</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも
+<!--
+Also emitted whenever the `input` stream is not paused and receives the
+`SIGCONT` event. (See events `SIGTSTP` and `SIGCONT`)
+-->
+
+<p><code>input</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも
 生成されます (<code>SIGTSTP</code> および <code>SIGCONT</code> も参照してください)。
 
 </p>
+<!--
+Example of listening for `pause`:
+-->
+
 <p><code>&apos;pause&apos;</code> を監視する例:
 
 </p>
@@ -386,12 +415,12 @@ Example of listening for `pause`:
 
 </p>
 <!--
-Emitted whenever the `in` stream is resumed.
+Emitted whenever the `input` stream is resumed.
 
 Example of listening for `resume`:
 -->
 
-<p><code>in</code> ストリームが再開された時に生成されます。
+<p><code>input</code> ストリームが再開された時に生成されます。
 
 </p>
 <p><code>&apos;resume&apos;</code> を監視する例:
@@ -400,19 +429,36 @@ Example of listening for `resume`:
 <pre><code>rl.on(&apos;resume&apos;, function() {
   console.log(&apos;Readline resumed.&apos;);
 });</code></pre>
-<h3>Event: &apos;end&apos;<span><a class="mark" href="#readline_event_end" id="readline_event_end">#</a></span></h3>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#readline_event_close" id="readline_event_close">#</a></span></h3>
 <p><code>function () {}</code>
 
 </p>
 <!--
-Emitted when the `input` stream receives its "end" event, or when `^D` is
-pressed by the user. It's generally a good idea to consider this `Interface`
-instance as completed after this is emitted.
+Emitted when `close()` is called.
 -->
 
-<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合、
-またはユーザが <code>^D</code> を推した場合に生成されます。
-通常、これが生成された後で <code>Interface</code> インスタンスは完了すると考えられます。
+<p><code>close()</code> が呼ばれた場合に生成されます。
+
+</p>
+<!--
+Also emitted when the `input` stream receives its "end" event. The `Interface`
+instance should be considered "finished" once this is emitted. For example, when
+the `input` stream receives `^D`, respectively known as `EOT`.
+-->
+
+<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合にも生成されます。
+これが生成された後、<code>Interface</code> インスタンスは完了したと考えられるべきです。
+例えば、<code>input</code> ストリームが <code>EOT</code> として知られる <code>^D</code> を受け取った場合。
+
+</p>
+<!--
+This event is also called if there is no `SIGINT` event listener present when
+the `input` stream receives a `^C`, respectively known as `SIGINT`.
+-->
+
+<p>このイベントは <code>SIGINT</code> イベントリスナが与えられていない場合に、
+<code>input</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受け取った場合にも
+生成されます。
 
 </p>
 <h3>Event: &apos;SIGINT&apos;<span><a class="mark" href="#readline_event_sigint" id="readline_event_sigint">#</a></span></h3>
@@ -420,15 +466,16 @@ instance as completed after this is emitted.
 
 </p>
 <!--
-Emitted whenever the `in` stream receives a `^C`, respectively known as
-`SIGINT`. If there is no `SIGINT` event listener present when the `in` stream
-receives a `SIGINT`, `pause` will be triggered.
+Emitted whenever the `input` stream receives a `^C`, respectively known as
+`SIGINT`. If there is no `SIGINT` event listener present when the `input`
+stream receives a `SIGINT`, `pause` will be triggered.
 
 Example of listening for `SIGINT`:
 -->
 
-<p><code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に生成されます。
-もし <code>in</code> ストリームが <code>SIGINT</code> を受信した時に <code>&apos;SIGINT&apos;</code> イベントの
+<p><code>input</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に
+生成されます。
+もし <code>input</code> ストリームが <code>SIGINT</code> を受信した時に <code>&apos;SIGINT&apos;</code> イベントの
 リスナが存在しなければ、<code>&apos;pause&apos;</code> イベントがトリガされます。
 
 </p>
@@ -447,9 +494,9 @@ Example of listening for `SIGINT`:
 <!--
 **This does not work on Windows.**
 
-Emitted whenever the `in` stream receives a `^Z`, respectively known as
-`SIGTSTP`. If there is no `SIGTSTP` event listener present when the `in` stream
-receives a `SIGTSTP`, the program will be sent to the background.
+Emitted whenever the `input` stream receives a `^Z`, respectively known as
+`SIGTSTP`. If there is no `SIGTSTP` event listener present when the `input`
+stream receives a `SIGTSTP`, the program will be sent to the background.
 
 When the program is resumed with `fg`, the `pause` and `SIGCONT` events will be
 emitted. You can use either to resume the stream.
@@ -463,8 +510,9 @@ Example of listening for `SIGTSTP`:
 <p><strong>これは Windows では動作しません。</strong>
 
 </p>
-<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に生成されます。
-もし <code>in</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>&apos;SIGTSTP&apos;</code> イベントの
+<p><code>input</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に
+生成されます。
+もし <code>input</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>&apos;SIGTSTP&apos;</code> イベントの
 リスナが存在しなければ、プログラムはバックグラウンドに送られます。
 
 </p>
@@ -491,9 +539,9 @@ Example of listening for `SIGTSTP`:
 <!--
 **This does not work on Windows.**
 
-Emitted whenever the `in` stream is sent to the background with `^Z`,
-respectively known as `SIGTSTP`, and then continued with `fg`. This event only
-emits if the stream was not paused before sending the program to the
+Emitted whenever the `input` stream is sent to the background with `^Z`,
+respectively known as `SIGTSTP`, and then continued with `fg(1)`. This event
+only emits if the stream was not paused before sending the program to the
 background.
 
 Example of listening for `SIGCONT`:
@@ -502,8 +550,8 @@ Example of listening for `SIGCONT`:
 <p><strong>これは Windows では動作しません。</strong>
 
 </p>
-<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに
-送られた後で、<code>fg</code> によって再開されるた場合に生成されます。
+<p><code>input</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに
+送られた後で、<code>fg(1)</code> によって再開されるた場合に生成されます。
 このイベントはプログラムがバックグラウンドに送られる前にストリームが中断されていなかった場合にのみ生成されます。
 
 </p>
@@ -514,6 +562,7 @@ Example of listening for `SIGCONT`:
   // `prompt` will automatically resume the stream
   rl.prompt();
 });</code></pre>
+<h2>Example: Tiny CLI<span><a class="mark" href="#readline_example_tiny_cli" id="readline_example_tiny_cli">#</a></span></h2>
 <!--
 Here's an example of how to use all these together to craft a tiny command
 line interface:
@@ -538,7 +587,7 @@ rl.on(&apos;line&apos;, function(line) {
       break;
   }
   rl.prompt();
-}).on(&apos;pause&apos;, function() {
+}).on(&apos;close&apos;, function() {
   console.log(&apos;Have a great day!&apos;);
   process.exit(0);
 });</code></pre>

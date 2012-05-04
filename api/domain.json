@@ -1,0 +1,137 @@
+{
+  "source": "doc/api/domain.markdown",
+  "modules": [
+    {
+      "textRaw": "Domain",
+      "name": "domain",
+      "stability": 1,
+      "stabilityText": "Experimental",
+      "desc": "<!--\nDomains provide a way to handle multiple different IO operations as a\nsingle group.  If any of the event emitters or callbacks registered to a\ndomain emit an `error` event, or throw an error, then the domain object\nwill be notified, rather than losing the context of the error in the\n`process.on('uncaughtException')` handler, or causing the program to\nexit with an error code.\n-->\n\n<p>ドメインは複数の異なる I/O 操作を一つのグループとして扱う方法を\n提供します。\nもし EventEmitter またはコールバックがドメインに登録されると、\n<code>&apos;error&apos;</code> がイベントが発生したり例外がスローされた場合、\n<code>process.on(&apos;uncaughtException&apos;)</code> ハンドラでエラーのコンテキストが失われたり、\nプログラムがエラーコードと共に終了する代わりに、\nドメインオブジェクトが通知します\n\n</p>\n<!--\nThis feature is new in Node version 0.8.  It is a first pass, and is\nexpected to change significantly in future versions.  Please use it and\nprovide feedback.\n-->\n\n<p>この機能は Node バージョン 0.8 からの新しいものです。\nこれはファーストパスであり、将来のバージョンで大きく変更されると予想されます。\n是非これを使ってフィードバックをしてください。\n\n</p>\n<!--\nDue to their experimental nature, the Domains features are disabled unless\nthe `domain` module is loaded at least once.  No domains are created or\nregistered by default.  This is by design, to prevent adverse effects on\ncurrent programs.  It is expected to be enabled by default in future\nNode.js versions.\n-->\n\n<p>これらは実験的であるため、ドメインの機能は <code>domain</code> モジュールが少なくとも\n一回はロードされるまで無効になっています。\nデフォルトではドメインは作成されず、デフォルトで登録もされません。\nそれは既存のプログラムに悪影響を与えることを防ぐために設計されています。\n将来の Node.js バージョンではデフォルトで有効になることが期待されます。\n\n</p>\n",
+      "miscs": [
+        {
+          "textRaw": "Additions to Error objects",
+          "name": "Additions to Error objects",
+          "type": "misc",
+          "desc": "<!--\nAny time an Error object is routed through a domain, a few extra fields\nare added to it.\n-->\n\n<p>どんな場合でも、ドメインに送られた Error オブジェクトは\nいくつかのフィールドが加えられます。\n\n</p>\n<!--\n* `error.domain` The domain that first handled the error.\n* `error.domain_emitter` The event emitter that emitted an 'error' event\n  with the error object.\n* `error.domain_bound` The callback function which was bound to the\n  domain, and passed an error as its first argument.\n* `error.domain_thrown` A boolean indicating whether the error was\n  thrown, emitted, or passed to a bound callback function.\n-->\n\n<ul>\n<li><code>error.domain</code> このエラーを最初に捕まえたドメイン。</li>\n<li><code>error.domain_emitter</code> このエラーオブジェクトと共に <code>error</code> イベントを\n生成した EventEmitter。</li>\n<li><code>error.domain_bound</code> ドメインに束縛されたコールバック関数で、\nその第 1 引数にエラーが渡されたもの。</li>\n<li><code>error.domain_throw</code> エラーがスローされたか、EventEmitter から生成されたか、\nそれとも束縛されたコールバック関数に渡されたかを示す boolean 値。</li>\n</ul>\n"
+        },
+        {
+          "textRaw": "Implicit Binding",
+          "name": "Implicit Binding",
+          "type": "misc",
+          "desc": "<!--\nIf domains are in use, then all new EventEmitter objects (including\nStream objects, requests, responses, etc.) will be implicitly bound to\nthe active domain at the time of their creation.\n-->\n\n<p>一度ドメインが作成されると、全ての新しい EventEmitter オブジェクト\n(ストリームオブジェクトやリクエスト、レスポンス、その他を含む) は、\nそれが作成された時点でアクティブなドメインに暗黙的に束縛されます。\n\n</p>\n<!--\nAdditionally, callbacks passed to lowlevel event loop requests (such as\nto fs.open, or other callback-taking methods) will automatically be\nbound to the active domain.  If they throw, then the domain will catch\nthe error.\n-->\n\n<p>加えて、コールバックが低水準のイベントループ要求 (例えば <code>fs.open()</code>、\nあるいは他のコールバックを受け取るメソッド) もアクティブなドメインに\n束縛されます。\nもしそれらが例外をスローすると、ドメインはそれを捕まえます。\n\n</p>\n<!--\nIn order to prevent excessive memory usage, Domain objects themselves\nare not implicitly added as children of the active domain.  If they\nwere, then it would be too easy to prevent request and response objects\nfrom being properly garbage collected.\n-->\n\n<p>必要以上にメモリを消費するのを防ぐため、ドメインオブジェクトそれ自身は\n暗黙的にアクティブドメインの子として暗黙的には追加されません。\nそれをすれば、リクエストやレスポンスオブジェクトがきちんと GC されることを\nあまりにも簡単に妨害してしまうでしょう。\n\n</p>\n<!--\nIf you *want* to nest Domain objects as children of a parent Domain,\nthen you must explicitly add them, and then dispose of them later.\n-->\n\n<p>もしネストしたドメインを子として他のドメインに <em>加えたければ</em>\n明示的にそれを加えなければならず、後で破棄しなければなりません。\n\n</p>\n<!--\nImplicit binding routes thrown errors and `'error'` events to the\nDomain's `error` event, but does not register the EventEmitter on the\nDomain, so `domain.dispose()` will not shut down the EventEmitter.\nImplicit binding only takes care of thrown errors and `'error'` events.\n-->\n\n<p>暗黙的なドメインはスローされたエラーや <code>&apos;error&apos;</code> イベントを、\nドメインの <code>&apos;error&apos;</code> イベントにルーティングしますが、\nその EventEmitter をドメインに登録しないので、<code>domain.dispose()</code> は\nEventEmitter をシャットダウンしません。\n暗黙的なバインディングはスローされた例外と <code>&apos;error&apos;</code> イベントにだけ\n注意を払います。\n\n</p>\n"
+        }
+      ],
+      "methods": [
+        {
+          "textRaw": "domain.create()",
+          "type": "method",
+          "name": "create",
+          "signatures": [
+            {
+              "return": {
+                "textRaw": "return: {Domain} ",
+                "name": "return",
+                "type": "Domain"
+              },
+              "params": []
+            },
+            {
+              "params": []
+            }
+          ],
+          "desc": "<!--\nReturns a new Domain object.\n-->\n\n<p>新しいドメインオブジェクトを返します。\n\n</p>\n"
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: Domain",
+          "type": "class",
+          "name": "Domain",
+          "desc": "<!--\nThe Domain class encapsulates the functionality of routing errors and\nuncaught exceptions to the active Domain object.\n-->\n\n<p>ドメインクラスはエラーのルーティングや捕まえられなかった例外をアクティブな\nドメインにルーティングする機能をカプセル化します。\n\n</p>\n<!--\nDomain is a child class of EventEmitter.  To handle the errors that it\ncatches, listen to its `error` event.\n-->\n\n<p>ドメインは EventEmitter の子クラスです。これが捕まえたエラーを扱いたければ、\n<code>&apos;error&apos;</code> イベントを監視してください。\n\n</p>\n",
+          "properties": [
+            {
+              "textRaw": "`members` {Array} ",
+              "name": "members",
+              "desc": "<!--\nAn array of timers and event emitters that have been explicitly added\nto the domain.\n-->\n\n<p>このドメインに明示的に加えられたタイマまたは EventEmitter の配列です。\n\n</p>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "domain.add(emitter)",
+              "type": "method",
+              "name": "add",
+              "desc": "<!--\n* `emitter` {EventEmitter | Timer} emitter or timer to be added to the domain\n-->\n\n<ul>\n<li><code>emitter</code> {EventEmitter | Timer} ドメインに加えられる EventEmitter\nまたはタイマ</li>\n</ul>\n<!--\nExplicitly adds an emitter to the domain.  If any event handlers called by\nthe emitter throw an error, or if the emitter emits an `error` event, it\nwill be routed to the domain's `error` event, just like with implicit\nbinding.\n-->\n\n<p>明示的に EventEmitter をドメインに追加します。\nこの EventEmitter から呼ばれたどのイベントハンドラがエラーをスローしても、\nあるいはこの EventEmitter が <code>&apos;error&apos;</code> イベントを発生しても、\n暗黙的にバインディングされたのと同様、それはこのドメインの <code>&apos;error</code>&apos;\nイベントにルーティングされます。\n\n</p>\n<!--\nThis also works with timers that are returned from `setInterval` and\n`setTimeout`.  If their callback function throws, it will be caught by\nthe domain 'error' handler.\n-->\n\n<p>これは同様に <code>setIntervalu</code> および <code>setTimeout</code> から返されるタイマでも\n働きます。それらのコールバック関数がエラーをスローすると、それは\nドメインの <code>&apos;error&apos;</code> ハンドに捕まえられます。\n\n</p>\n<!--\nIf the Timer or EventEmitter was already bound to a domain, it is removed\nfrom that one, and bound to this one instead.\n-->\n\n<p>もしタイマまたは EventEmitter が既に他のドメインに束縛されていた場合、\nそれは元のドメインから削除され、代わりにこのドメインに束縛されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "emitter"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "domain.remove(emitter)",
+              "type": "method",
+              "name": "remove",
+              "desc": "<!--\n* `emitter` {EventEmitter | Timer} emitter or timer to be removed from the domain\n-->\n\n<ul>\n<li><code>emitter</code> {EventEmitter | Timer} このドメインから削除される EventEmitter\nまたはタイマ</li>\n</ul>\n<!--\nThe opposite of `domain.add(emitter)`.  Removes domain handling from the\nspecified emitter.\n-->\n\n<p>これは <code>domain.add(emitter)</code> と対照的です。指定された EventEmitter を\nドメインから削除します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "emitter"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "domain.bind(cb)",
+              "type": "method",
+              "name": "bind",
+              "desc": "<!--\n* `cb` {Function} The callback function\n* return: {Function} The bound function\n-->\n\n<ul>\n<li><code>cb</code> {Function} コールバック関数</li>\n<li>return: {Function} 束縛された関数</li>\n</ul>\n<!--\nThe returned function will be a wrapper around the supplied callback\nfunction.  When the returned function is called, any errors that are\nthrown will be routed to the domain's `error` event.\n-->\n\n<p>返される関数は与えられたコールバック関数のラッパーです。\n返された関数が呼び出されると、スローされたエラーはドメインの <code>&apos;error&apos;</code>\nイベントにルーティングされます。\n\n</p>\n<h4>Example</h4>\n<pre><code>var d = domain.create();\n\nfunction readSomeFile(filename, cb) {\n  fs.readFile(filename, d.bind(function(er, data) {\n    // if this throws, it will also be passed to the domain\n    return cb(er, JSON.parse(data));\n  }));\n}\n\nd.on(&apos;error&apos;, function(er) {\n  // an error occurred somewhere.\n  // if we throw it now, it will crash the program\n  // with the normal line number and stack message.\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "cb"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "domain.intercept(cb)",
+              "type": "method",
+              "name": "intercept",
+              "desc": "<!--\n* `cb` {Function} The callback function\n* return: {Function} The intercepted function\n-->\n\n<ul>\n<li><code>cb</code> {Function} コールバック関数</li>\n<li>return: {Function} インターセプトされた関数</li>\n</ul>\n<!--\nThis method is almost identical to `domain.bind(cb)`.  However, in\naddition to catching thrown errors, it will also intercept `Error`\nobjects sent as the first argument to the function.\n-->\n\n<p>このメソッドはほとんど <code>domain.bind(cb)</code> と同じです。\nただし、スローされたエラーを捕まえることに加えて、関数に渡される最初の引数が\n<code>Error</code> オブジェクトの場合もインターセプトします。\n\n</p>\n<!--\nIn this way, the common `if (er) return cb(er);` pattern can be replaced\nwith a single error handler in a single place.\n-->\n\n<p>これは、一般的な <code>if (er) return cb(er);</code> パターンを一カ所で単一の\nエラーハンドラに置き換えることができます。\n\n</p>\n<h4>Example</h4>\n<pre><code>var d = domain.create();\n\nfunction readSomeFile(filename, cb) {\n  fs.readFile(filename, d.intercept(function(er, data) {\n    // if this throws, it will also be passed to the domain\n    // additionally, we know that &apos;er&apos; will always be null,\n    // so the error-handling logic can be moved to the &apos;error&apos;\n    // event on the domain instead of being repeated throughout\n    // the program.\n    return cb(er, JSON.parse(data));\n  }));\n}\n\nd.on(&apos;error&apos;, function(er) {\n  // an error occurred somewhere.\n  // if we throw it now, it will crash the program\n  // with the normal line number and stack message.\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "cb"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "domain.dispose()",
+              "type": "method",
+              "name": "dispose",
+              "desc": "<!--\nThe dispose method destroys a domain, and makes a best effort attempt to\nclean up any and all IO that is associated with the domain.  Streams are\naborted, ended, closed, and/or destroyed.  Timers are cleared.\nExplicitly bound callbacks are no longer called.  Any error events that\nare raised as a result of this are ignored.\n-->\n\n<p><code>dispose()</code> メソッドはドメインを破棄し、ドメインに関連づけられた全ての\nI/O を可能な限りクリーンナップしようと試みます。\nストリームはアボートされ、終了され、クローズされ、そして／または破棄されます。\nタイマはクリアされます。明示的に束縛されたコールバックはもう呼び出されません。\n結果として発生するどんなエラーイベントも無視されます。\n\n</p>\n<!--\nThe intention of calling `dispose` is generally to prevent cascading\nerrors when a critical part of the Domain context is found to be in an\nerror state.\n-->\n\n<p><code>dispose()</code> を呼び出す意図は通常、エラー状態の中でドメインコンテキストの\nクリティカルな部分が見つかった場合に、カスケードしたエラーを防ぐことです。\n\n</p>\n<!--\nNote that IO might still be performed.  However, to the highest degree\npossible, once a domain is disposed, further errors from the emitters in\nthat set will be ignored.  So, even if some remaining actions are still\nin flight, Node.js will not communicate further about them.\n-->\n\n<p>I/O がまだ行われているかもしれないことに注意してください。\nしかしながら、可能な限り高い視点から見ると、一度ドメインが破棄されれば、\nその集合の中の EventEmitter からのさらなるエラーは無視されます。\nそのため、たとえ残りのアクションがまだ実行中だとしても、\nNode.js はそれらとコミュニケートしません。\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Domain"
+    }
+  ]
+}

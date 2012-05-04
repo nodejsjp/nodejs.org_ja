@@ -9,7 +9,7 @@
       "desc": "<!--\nFile I/O is provided by simple wrappers around standard POSIX functions.  To\nuse this module do `require('fs')`. All the methods have asynchronous and\nsynchronous forms.\n-->\n\n<p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。\nこのモジュールを使用するには <code>require(&apos;fs&apos;)</code> してください。\n全てのメソッドは非同期と同期の形式があります。\n\n</p>\n<!--\nThe asynchronous form always take a completion callback as its last argument.\nThe arguments passed to the completion callback depend on the method, but the\nfirst argument is always reserved for an exception. If the operation was\ncompleted successfully, then the first argument will be `null` or `undefined`.\n\nWhen using the synchronous form any exceptions are immediately thrown.\nYou can use try/catch to handle exceptions or allow them to bubble up.\n-->\n\n<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。\n引数として渡される完了コールバックはメソッドに依存しますが、\n最初の引数は常に例外のために予約されています。\n操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります\n\n</p>\n<p>同期の形式では、全ての例外はすぐにスローされます。\n例外は try/catch で捕まえることも、そのまま通過させることもできます。\n\n</p>\n<!--\nHere is an example of the asynchronous version:\n-->\n\n<p>非同期バージョンの例です:\n\n</p>\n<pre><code>var fs = require(&apos;fs&apos;);\n\nfs.unlink(&apos;/tmp/hello&apos;, function (err) {\n  if (err) throw err;\n  console.log(&apos;successfully deleted /tmp/hello&apos;);\n});</code></pre>\n<!--\nHere is the synchronous version:\n-->\n\n<p>同期バージョンです:\n\n</p>\n<pre><code>var fs = require(&apos;fs&apos;);\n\nfs.unlinkSync(&apos;/tmp/hello&apos;)\nconsole.log(&apos;successfully deleted /tmp/hello&apos;);</code></pre>\n<!--\nWith the asynchronous methods there is no guaranteed ordering. So the\nfollowing is prone to error:\n-->\n\n<p>非同期メソッドでは順序の保証はありません。\n以下のような傾向のエラーがあります。\n\n</p>\n<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {\n  if (err) throw err;\n  console.log(&apos;renamed complete&apos;);\n});\nfs.stat(&apos;/tmp/world&apos;, function (err, stats) {\n  if (err) throw err;\n  console.log(&apos;stats: &apos; + JSON.stringify(stats));\n});</code></pre>\n<!--\nIt could be that `fs.stat` is executed before `fs.rename`.\nThe correct way to do this is to chain the callbacks.\n-->\n\n<p><code>fs.stat</code> は <code>fs.rename</code> より先に実行される可能性がありrます。\n正しい方法はコールバックをチェーンすることです。\n\n</p>\n<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {\n  if (err) throw err;\n  fs.stat(&apos;/tmp/world&apos;, function (err, stats) {\n    if (err) throw err;\n    console.log(&apos;stats: &apos; + JSON.stringify(stats));\n  });\n});</code></pre>\n<!--\nIn busy processes, the programmer is _strongly encouraged_ to use the\nasynchronous versions of these calls. The synchronous versions will block\nthe entire process until they complete--halting all connections.\n\nRelative path to filename can be used, remember however that this path will be relative\nto `process.cwd()`.\n-->\n\n<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。\n同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。\n\n</p>\n<p>ファイル名には相対パスを使うことが出来ます。しかし、このパスは\n<code>process.cwd()</code> からの相対パスであることを思い出してください。\n\n</p>\n",
       "methods": [
         {
-          "textRaw": "fs.rename(path1, path2, [callback])",
+          "textRaw": "fs.rename(oldPath, newPath, [callback])",
           "type": "method",
           "name": "rename",
           "desc": "<!--\nAsynchronous rename(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の rename(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -17,10 +17,10 @@
             {
               "params": [
                 {
-                  "name": "path1"
+                  "name": "oldPath"
                 },
                 {
-                  "name": "path2"
+                  "name": "newPath"
                 },
                 {
                   "name": "callback",
@@ -31,7 +31,7 @@
           ]
         },
         {
-          "textRaw": "fs.renameSync(path1, path2)",
+          "textRaw": "fs.renameSync(oldPath, newPath)",
           "type": "method",
           "name": "renameSync",
           "desc": "<!--\nSynchronous rename(2).\n-->\n\n<p>同期の rename(2)。\n\n</p>\n",
@@ -39,10 +39,10 @@
             {
               "params": [
                 {
-                  "name": "path1"
+                  "name": "oldPath"
                 },
                 {
-                  "name": "path2"
+                  "name": "newPath"
                 }
               ]
             }
@@ -489,7 +489,7 @@
           ]
         },
         {
-          "textRaw": "fs.symlink(linkdata, path, [type], [callback])",
+          "textRaw": "fs.symlink(destination, path, [type], [callback])",
           "type": "method",
           "name": "symlink",
           "desc": "<!--\nAsynchronous symlink(2). No arguments other than a possible exception are given\nto the completion callback.\n`type` argument can be either `'dir'` or `'file'` (default is `'file'`).  It is only \nused on Windows (ignored on other platforms).\n-->\n\n<p>非同期の symlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n<code>type</code> 引数は <code>&apos;dir&apos;</code> または <code>&apos;file&apos;</code> (デフォルトは <code>&apos;file&apos;</code>) です。\nこれは Windows でのみ使われます (他のプラットフォームでは無視されます)。\n\n</p>\n",
@@ -497,7 +497,7 @@
             {
               "params": [
                 {
-                  "name": "linkdata"
+                  "name": "destination"
                 },
                 {
                   "name": "path"
@@ -515,7 +515,7 @@
           ]
         },
         {
-          "textRaw": "fs.symlinkSync(linkdata, path, [type])",
+          "textRaw": "fs.symlinkSync(destination, path, [type])",
           "type": "method",
           "name": "symlinkSync",
           "desc": "<!--\nSynchronous symlink(2).\n-->\n\n<p>同期の symlink(2)。\n\n</p>\n",
@@ -523,7 +523,7 @@
             {
               "params": [
                 {
-                  "name": "linkdata"
+                  "name": "destination"
                 },
                 {
                   "name": "path"
@@ -571,10 +571,10 @@
           ]
         },
         {
-          "textRaw": "fs.realpath(path, [callback])",
+          "textRaw": "fs.realpath(path, [cache], callback)",
           "type": "method",
           "name": "realpath",
-          "desc": "<!--\nAsynchronous realpath(2).  The callback gets two arguments `(err,\nresolvedPath)`.  May use `process.cwd` to resolve relative paths.\n-->\n\n<p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。\n相対パスを解決するために <code>process.cwd</code> を使用することができます。\n\n</p>\n",
+          "desc": "<!--\nAsynchronous realpath(2). The `callback` gets two arguments `(err,\nresolvedPath)`. May use `process.cwd` to resolve relative paths. `cache` is an\nobject literal of mapped paths that can be used to force a specific path\nresolution or avoid additional `fs.stat` calls for known real paths.\n-->\n\n<p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。\n相対パスを解決するために <code>process.cwd</code> を使用することができます。\n<code>cache</code> はオブジェクトで、パスがキーとして含まれていればその値が\n強制的に解決されたパスとして扱われ、<code>fs.stat</code> によってパスが実在するかどうかの\n確認が省かれます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var cache = {&apos;/etc&apos;:&apos;/private/etc&apos;};\nfs.realpath(&apos;/etc/passwd&apos;, cache, function (err, resolvedPath) {\n  if (err) throw err;\n  console.log(resolvedPath);\n});</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -582,15 +582,18 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
+                  "name": "cache",
                   "optional": true
+                },
+                {
+                  "name": "callback"
                 }
               ]
             }
           ]
         },
         {
-          "textRaw": "fs.realpathSync(path)",
+          "textRaw": "fs.realpathSync(path, [cache])",
           "type": "method",
           "name": "realpathSync",
           "desc": "<!--\nSynchronous realpath(2). Returns the resolved path.\n-->\n\n<p>同期の realpath(2)。解決されたパスを返します。\n\n</p>\n",
@@ -599,6 +602,10 @@
               "params": [
                 {
                   "name": "path"
+                },
+                {
+                  "name": "cache",
+                  "optional": true
                 }
               ]
             }
@@ -1348,7 +1355,7 @@
           ]
         },
         {
-          "textRaw": "fs.exists(p, [callback])",
+          "textRaw": "fs.exists(path, [callback])",
           "type": "method",
           "name": "exists",
           "desc": "<!--\nTest whether or not the given path exists by checking with the file system.\nThen call the `callback` argument with either true or false.  Example:\n-->\n\n<p>与えられたパスがファイルシステム上に存在するかどうか検査します。\nそして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。\n例:\n\n</p>\n<pre><code>fs.exists(&apos;/etc/passwd&apos;, function (exists) {\n  util.debug(exists ? &quot;it&apos;s there&quot; : &quot;no passwd!&quot;);\n});</code></pre>\n",
@@ -1356,7 +1363,7 @@
             {
               "params": [
                 {
-                  "name": "p"
+                  "name": "path"
                 },
                 {
                   "name": "callback",
@@ -1367,7 +1374,7 @@
           ]
         },
         {
-          "textRaw": "fs.existsSync(p)",
+          "textRaw": "fs.existsSync(path)",
           "type": "method",
           "name": "existsSync",
           "desc": "<!--\nSynchronous version of `fs.exists`.\n-->\n\n<p>同期版の <code>fs.exists</code> です。\n\n</p>\n",
@@ -1375,7 +1382,7 @@
             {
               "params": [
                 {
-                  "name": "p"
+                  "name": "path"
                 }
               ]
             }
@@ -1446,8 +1453,28 @@
           "textRaw": "Class: fs.FSWatcher",
           "type": "class",
           "name": "fs.FSWatcher",
-          "desc": "<!--\nObjects returned from `fs.watch()` are of this type.\n-->\n<code>fs.watch()</code> が返すオブジェクトはこの型です。\n\n### watcher.close()\n\n<!--\nStop watching for changes on the given `fs.FSWatcher`.\n-->\n<code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。\n\n### Event: &apos;change&apos;\n\n<!--\n* `event` {String} The type of fs change\n* `filename` {String} The filename that changed (if relevant/available)\n-->\n\n<ul>\n<li><code>event</code> {String} ファイルシステム変更の種類です。</li>\n<li><code>filename</code> {String} 変更されたファイル名です (もし利用可能であれば)。</li>\n</ul>\n<!--\nEmitted when something changes in a watched directory or file.\nSee more details in [fs.watch](#fs_fs_watch_filename_options_listener).\n-->\n\n<p>監視しているファイルまたはディレクトリに変更があると生成されます。\n詳しくは <a href=\"#fs_fs_watch_filename_options_listener\">fs.watch</a>\nを参照してください。\n\n</p>\n",
+          "desc": "<!--\nObjects returned from `fs.watch()` are of this type.\n-->\n\n<p><code>fs.watch()</code> が返すオブジェクトはこの型です。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "watcher.close()",
+              "type": "method",
+              "name": "close",
+              "desc": "<!--\nStop watching for changes on the given `fs.FSWatcher`.\n-->\n\n<p><code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ],
           "events": [
+            {
+              "textRaw": "Event: 'change'",
+              "type": "event",
+              "name": "change",
+              "desc": "<!--\n* `event` {String} The type of fs change\n* `filename` {String} The filename that changed (if relevant/available)\n-->\n\n<ul>\n<li><code>event</code> {String} ファイルシステム変更の種類です。</li>\n<li><code>filename</code> {String} 変更されたファイル名です (もし利用可能であれば)。</li>\n</ul>\n<!--\nEmitted when something changes in a watched directory or file.\nSee more details in [fs.watch](#fs_fs_watch_filename_options_listener).\n-->\n\n<p>監視しているファイルまたはディレクトリに変更があると生成されます。\n詳しくは <a href=\"#fs_fs_watch_filename_options_listener\">fs.watch</a>\nを参照してください。\n\n</p>\n",
+              "params": []
+            },
             {
               "textRaw": "Event: 'error'",
               "type": "event",
