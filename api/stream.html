@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.7.7 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.7.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -206,10 +206,25 @@ Makes the data event emit a string instead of a `Buffer`. `encoding` can be
 </p>
 <h3>stream.pause()<span><a class="mark" href="#stream_stream_pause" id="stream_stream_pause">#</a></span></h3>
 <!--
-Pauses the incoming `'data'` events.
+Issues an advisory signal to the underlying communication layer, requesting
+that no further data be sent until `resume()` is called.
 -->
 
-<p><code>&apos;data&apos;</code> イベントの到着を中断します。
+<p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
+データが送られないように要求します。
+
+</p>
+<!--
+Note that, due to the advisory nature, certain streams will not be paused
+immediately, and so `'data'` events may be emitted for some indeterminate
+period of time even after `pause()` is called. You may wish to buffer such
+`'data'` events.
+-->
+
+<p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
+および <code>pause()</code> を呼び出してから不特定の時間 <code>&apos;data&apos;</code> イベントが
+生成されるかもしれないことに注意してください。
+<code>&apos;data&apos;</code> イベントをバッファリングするのもいいでしょう。
 
 </p>
 <h3>stream.resume()<span><a class="mark" href="#stream_stream_resume" id="stream_stream_resume">#</a></span></h3>
@@ -480,7 +495,7 @@ for writes.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

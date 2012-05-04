@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Global Objects Node.js v0.7.7 Manual &amp; Documentation</title>
+  <title>Global Objects Node.js v0.7.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/globals.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -63,6 +63,7 @@
 <li><a href="#globals_require">require()</a><ul>
 <li><a href="#globals_require_resolve">require.resolve()</a></li>
 <li><a href="#globals_require_cache">require.cache</a></li>
+<li><a href="#globals_require_extensions">require.extensions</a></li>
 </ul>
 </li>
 <li><a href="#globals_filename">__filename</a></li>
@@ -196,6 +197,35 @@ value from this object, the next `require` will reload the module.
 <code>require</code> されたときにリロードされます。
 
 </p>
+<h3>require.extensions<span><a class="mark" href="#globals_require_extensions" id="globals_require_extensions">#</a></span></h3>
+<div class="signature"><ul>
+<li><span class="type">Array</span></li>
+</div></ul>
+<!--
+Instruct `require` on how to handle certain file extensions.
+
+Process files with the extension `.sjs` as `.js`:
+-->
+
+<p><code>require</code> にファイル拡張子を扱う方法を教えます。
+
+</p>
+<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:
+
+</p>
+<pre><code>require.extensions[&apos;.sjs&apos;] = require.extensions[&apos;.js&apos;];</code></pre>
+<!--
+Write your own extension handler:
+-->
+
+<p>独自の拡張子ハンドラを記述するには:
+
+</p>
+<pre><code>require.extensions[&apos;.sjs&apos;] = function(module, filename) {
+  var content = fs.readFileSync(filename, &apos;utf8&apos;);
+  // Parse the file content and give to module.exports
+  module.exports = content;
+};</code></pre>
 <h2>__filename<span><a class="mark" href="#globals_filename" id="globals_filename">#</a></span></h2>
 <!-- type=var -->
 
@@ -348,7 +378,7 @@ The timer functions are global variables. See the [timers](timers.html) section.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

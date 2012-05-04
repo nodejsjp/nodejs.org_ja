@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Addons Node.js v0.7.7 Manual &amp; Documentation</title>
+  <title>Addons Node.js v0.7.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/addons.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -193,8 +193,9 @@ The `module_name` needs to match the filename of the final binary (minus the
 .node suffix).
 
 The source code needs to be built into `hello.node`, the binary Addon. To
-do this we create a file called `wscript` which is python code and looks
-like this:
+do this we create a file called `binding.gyp` which describes the configuration
+to build your module in a JSON-like format. This file gets compiled by
+[node-gyp](https://github.com/TooTallNate/node-gyp).
 -->
 
 <p><code>NODE_MODULE</code> は関数ではないので、その後にセミコロンを付けてはいけません
@@ -206,47 +207,56 @@ like this:
 
 </p>
 <p>このソースコードは、<code>hello.node</code> というバイナリアドオンとしてビルドされる必要が有ります。
-そのために <code>wscript</code> と呼ばれる以下のようなコードを Python で書きました:
+そのために <code>binding.gyp</code> と呼ばれる、あなたのモジュールをビルドするための
+構成を JSON 的なフォーマットで記述したファイルを作成します。
+このファイルは <a href="https://github.com/TooTallNate/node-gyp">node-gyp</a>
+によってコンパイルされます。
 
 </p>
-<pre><code>srcdir = &apos;.&apos;
-blddir = &apos;build&apos;
-VERSION = &apos;0.0.1&apos;
-
-def set_options(opt):
-  opt.tool_options(&apos;compiler_cxx&apos;)
-
-def configure(conf):
-  conf.check_tool(&apos;compiler_cxx&apos;)
-  conf.check_tool(&apos;node_addon&apos;)
-
-def build(bld):
-  obj = bld.new_task_gen(&apos;cxx&apos;, &apos;shlib&apos;, &apos;node_addon&apos;)
-  obj.target = &apos;hello&apos;
-  obj.source = &apos;hello.cc&apos;</code></pre>
+<pre><code>{
+  &quot;targets&quot;: [
+    {
+      &quot;target_name&quot;: &quot;hello&quot;,
+      &quot;sources&quot;: [ &quot;hello.cc&quot; ]
+    }
+  ]
+}</code></pre>
 <!--
-Running `node-waf configure build` will create a file
-`build/default/hello.node` which is our Addon.
+The next step is to generate the appropriate project build files for the
+current platform. Use `node-gyp configure` for that.
 -->
 
-<p><code>node-waf configure build</code> を実行すると、<code>build/default/hello.node</code> が作成されます。これが作成したアドオンです。
+<p>次のステップは現在のプラットフォームに適したプロジェクトビルドファイルを
+生成することです。
+<code>node-gyp configure</code> を使います。
 
 </p>
 <!--
-`node-waf` is just [WAF](http://code.google.com/p/waf), the python-based build system. `node-waf` is
-provided for the ease of users.
+Now you will have either a `Makefile` (on Unix platforms) or a `vcxproj` file
+(on Windows) in the `build/` directory. Next invoke the `node-gyp build`
+command.
 -->
 
-<p><code>node-waf</code> 単に <a href="http://code.google.com/p/waf">WAF</a> は Python ベースのビルドシステムです。
-<code>node-waf</code> は、ユーザの負担を減らすために提供されています。
+<p>これで、<code>Makefile</code> (Unix プラットフォームの場合)、または <code>vcxproj</code> ファイル
+(Windows の場合) が <code>build/</code> ディレクトリに作られます。
+次に <code>node-gyp build</code> コマンドを起動します。
+
+</p>
+<!--
+Now you have your compiled `.node` bindings file! The compiled bindings end up
+in `build/Release/`.
+-->
+
+<p>これでコンパイルされた <code>.node</code> バインディングファイルが作成されます！
+コンパイルされたバインディングファイルは <code>build/Release/</code> にあります。
 
 </p>
 <!--
 You can now use the binary addon in a Node project `hello.js` by pointing `require` to
-the recently built module:
+the recently built `hello.node` module:
 -->
 
-<p>ビルドされたモジュールを <code>require</code> で指定することにより、
+<p>ビルドされた <code>hello.node</code> モジュールを <code>require</code> で指定することにより、
 このバイナリアドオンを Node プロジェクトの <code>hello.js</code> から利用することが
 可能になります。
 
@@ -256,12 +266,12 @@ the recently built module:
 console.log(addon.hello()); // &apos;world&apos;</code></pre>
 <!--
 Please see patterns below for further information or
-<https://github.com/pietern/hiredis-node> for an example in production.
+<https://github.com/arturadib/node-qt> for an example in production.
 -->
 
 <p>さらに詳しい情報については下記のパターンか、
 </p>
-<p><a href="https://github.com/pietern/hiredis-node">https://github.com/pietern/hiredis-node</a> を実際のプロダクトにおける
+<p><a href="https://github.com/arturadib/node-qt">https://github.com/arturadib/node-qt</a> を実際のプロダクトにおける
 例として参照してください。
 
 </p>
@@ -272,9 +282,6 @@ Below are some addon patterns to help you get started. Consult the online
 calls, and v8's [Embedder's Guide](http://code.google.com/apis/v8/embed.html)
 for an explanation of several concepts used such as handles, scopes,
 function templates, etc.
-
-To compile these examples, create the `wscript` file below and run
-`node-waf configure build`:
 -->
 
 <p>以下は初心者に役立つアドオンのパターンです。
@@ -285,31 +292,44 @@ v8 の <a href="http://code.google.com/apis/v8/embed.html">Embedder&apos;s Guide
 役に立つでしょう。
 
 </p>
-<pre><code>srcdir = &apos;.&apos;
-blddir = &apos;build&apos;
-VERSION = &apos;0.0.1&apos;
-
-def set_options(opt):
-  opt.tool_options(&apos;compiler_cxx&apos;)
-
-def configure(conf):
-  conf.check_tool(&apos;compiler_cxx&apos;)
-  conf.check_tool(&apos;node_addon&apos;)
-
-def build(bld):
-  obj = bld.new_task_gen(&apos;cxx&apos;, &apos;shlib&apos;, &apos;node_addon&apos;)
-  obj.target = &apos;addon&apos;
-  obj.source = [&apos;addon.cc&apos;]</code></pre>
 <!--
-In cases where there is more than one `.cc` file, simply add the file name to the
-`obj.source` array, e.g.:
+In order to use these examples you need to compile them using `node-gyp`.
+Create the following `binding.gyp` file:
 -->
 
-<p>一つ以上の <code>.cc</code> ファイルがある場合は、単純に <code>obj.source</code> 配列にファイル名を
+<p>このサンプルを利用できるようにするには、<code>node-gyp</code> を使用して
+コンパイルする必要があります。
+以下の <code>binding.gyp</code> ファイルを作成します。
+
+</p>
+<pre><code>{
+  &quot;targets&quot;: [
+    {
+      &quot;target_name&quot;: &quot;addon&quot;,
+      &quot;sources&quot;: [ &quot;addon.cc&quot; ]
+    }
+  ]
+}</code></pre>
+<!--
+In cases where there is more than one `.cc` file, simply add the file name to the
+`sources` array, e.g.:
+-->
+
+<p>一つ以上の <code>.cc</code> ファイルがある場合は、単純に <code>sources</code> 配列にファイル名を
 加えるだけです。例:
 
 </p>
-<pre><code>obj.source = [&apos;addon.cc&apos;, &apos;myexample.cc&apos;]</code></pre>
+<pre><code>&quot;sources&quot;: [&quot;addon.cc&quot;, &quot;myexample.cc&quot;]</code></pre>
+<!--
+Now that you have your `binding.gyp` ready, you can configure and build the
+addon:
+-->
+
+<p>これで <code>binding.gyp</code> の準備ができました。
+アドオンをコンフィギュアおよびビルドするには:
+
+</p>
+<pre><code>$ node-gyp configure build</code></pre>
 <h3>Function arguments<span><a class="mark" href="#addons_function_arguments" id="addons_function_arguments">#</a></span></h3>
 <!--
 The following pattern illustrates how to read arguments from JavaScript
@@ -922,7 +942,7 @@ console.log(result); // 30</code></pre>
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

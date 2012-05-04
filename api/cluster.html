@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Cluster Node.js v0.7.7 Manual &amp; Documentation</title>
+  <title>Cluster Node.js v0.7.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/cluster.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -63,7 +63,7 @@
 <li><a href="#cluster_event_online">Event: &apos;online&apos;</a></li>
 <li><a href="#cluster_event_listening">Event: &apos;listening&apos;</a></li>
 <li><a href="#cluster_event_disconnect">Event: &apos;disconnect&apos;</a></li>
-<li><a href="#cluster_event_death">Event: &apos;death&apos;</a></li>
+<li><a href="#cluster_event_exit">Event: &apos;exit&apos;</a></li>
 <li><a href="#cluster_event_setup">Event: &apos;setup&apos;</a></li>
 <li><a href="#cluster_cluster_setupmaster_settings">cluster.setupMaster([settings])</a></li>
 <li><a href="#cluster_cluster_fork_env">cluster.fork([env])</a></li>
@@ -124,7 +124,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on(&apos;death&apos;, function(worker) {
+  cluster.on(&apos;exit&apos;, function(worker) {
     console.log(&apos;worker &apos; + worker.pid + &apos; died&apos;);
   });
 } else {
@@ -242,7 +242,7 @@ cluster.on(&apos;fork&apos;, function (worker) {
 cluster.on(&apos;listening&apos;, function (worker) {
   clearTimeout(timeouts[worker.uniqueID]);
 });
-cluster.on(&apos;death&apos;, function (worker) {
+cluster.on(&apos;exit&apos;, function (worker) {
   clearTimeout(timeouts[worker.uniqueID]);
   errorMsg();
 });</code></pre>
@@ -302,12 +302,12 @@ when the worker dies, usually after calling `.destroy()`.
 </p>
 <!--
 When calling `.disconnect()`, there may be a delay between the
-`disconnect` and `death` events.  This event can be used to detect if
+`disconnect` and `exit` events.  This event can be used to detect if
 the process is stuck in a cleanup or if there are long-living
 connections.
 -->
 
-<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;death&apos;</code> の間には
+<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;exit&apos;</code> の間には
 遅延があるかもしれません。このイベントはプロセスがクリーンナップで
 行き詰まったり、長時間生きている接続がないかを検出することに
 使用できます。
@@ -316,21 +316,21 @@ connections.
 <pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {
   console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);
 });</code></pre>
-<h2>Event: &apos;death&apos;<span><a class="mark" href="#cluster_event_death" id="cluster_event_death">#</a></span></h2>
+<h2>Event: &apos;exit&apos;<span><a class="mark" href="#cluster_event_exit" id="cluster_event_exit">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
 <!--
-When any of the workers die the cluster module will emit the 'death' event.
+When any of the workers die the cluster module will emit the 'exit' event.
 This can be used to restart the worker by calling `fork()` again.
 -->
 
-<p>どのワーカが死んだ場合でも、クラスタモジュールは <code>&apos;death&apos;</code> イベントを
+<p>どのワーカが死んだ場合でも、クラスタモジュールは <code>&apos;exit&apos;</code> イベントを
 生成します。
 これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。
 
 </p>
-<pre><code>cluster.on(&apos;death&apos;, function(worker) {
+<pre><code>cluster.on(&apos;exit&apos;, function(worker) {
   console.log(&apos;worker &apos; + worker.pid + &apos; died. restart...&apos;);
   cluster.fork();
 });</code></pre>
@@ -602,16 +602,15 @@ This example will echo back all messages from the master:
 <h3>worker.destroy()<span><a class="mark" href="#cluster_worker_destroy" id="cluster_worker_destroy">#</a></span></h3>
 <!--
 This function will kill the worker, and inform the master to not spawn a
-new worker.  To know the difference between suicide and accidentally death
-a suicide boolean is set to true.
+new worker.  The boolean `suicide` lets you distinguish between voluntary
+and accidental exit.
 -->
 
 <p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。
-意図しない終了と区別するために <code>suicide</code> プロパティに <code>true</code>
-が設定されることを知っておいてください。
+boolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。
 
 </p>
-<pre><code>cluster.on(&apos;death&apos;, function (worker) {
+<pre><code>cluster.on(&apos;exit&apos;, function (worker) {
   if (worker.suicide === true) {
     console.log(&apos;Oh, it was just suicide\&apos; – no need to worry&apos;).
   }
@@ -625,7 +624,7 @@ When calling this function the worker will no longer accept new connections, but
 they will be handled by any other listening worker. Existing connection will be
 allowed to exit as usual. When no more connections exist, the IPC channel to the worker
 will close allowing it to die graceful. When the IPC channel is closed the `disconnect`
-event will emit, this is then followed by the `death` event, there is emitted when
+event will emit, this is then followed by the `exit` event, there is emitted when
 the worker finally die.
 -->
 
@@ -635,7 +634,7 @@ the worker finally die.
 コネクションが無くなると、ワーカを正常に終了するために IPC チャネルは
 閉じられます。
 IPC チャネルが閉じられると <code>&apos;disconnect&apos;</code> イベントが生成され、
-その後ワーカが終了すると <code>&apos;death&apos;</code> イベントが生成されます。
+その後ワーカが終了すると <code>&apos;exit&apos;</code> イベントが生成されます。
 
 </p>
 <!--
@@ -790,20 +789,20 @@ on the specified worker.
       // Worker has disconnected
     };
 
-### Event: &apos;death&apos;
+### Event: &apos;exit&apos;
 
 * <code>worker</code> {Worker object}
 
 <!--
-Same as the `cluster.on('death')` event, but emits only when the state change
+Same as the `cluster.on('exit')` event, but emits only when the state change
 on the specified worker.
 -->
 
-<p><code>cluster.on(&apos;death&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
+<p><code>cluster.on(&apos;exit&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
 イベントを生成します。
 
 </p>
-<pre><code>cluster.fork().on(&apos;death&apos;, function (worker) {
+<pre><code>cluster.fork().on(&apos;exit&apos;, function (worker) {
   // Worker has died
 };</code></pre>
 
@@ -834,7 +833,7 @@ on the specified worker.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
