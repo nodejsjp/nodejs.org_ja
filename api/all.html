@@ -69,6 +69,7 @@
 <li><a href="#all_require">require()</a><ul>
 <li><a href="#all_require_resolve">require.resolve()</a></li>
 <li><a href="#all_require_cache">require.cache</a></li>
+<li><a href="#all_require_extensions">require.extensions</a></li>
 </ul>
 </li>
 <li><a href="#all_filename">__filename</a></li>
@@ -198,6 +199,27 @@
 <li><a href="#all_emitter_listeners_event">emitter.listeners(event)</a></li>
 <li><a href="#all_emitter_emit_event_arg1_arg2">emitter.emit(event, [arg1], [arg2], [...])</a></li>
 <li><a href="#all_event_newlistener">Event: &apos;newListener&apos;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#all_domain">Domain</a><ul>
+<li><a href="#all_additions_to_error_objects">Additions to Error objects</a></li>
+<li><a href="#all_implicit_binding">Implicit Binding</a></li>
+<li><a href="#all_domain_create">domain.create()</a></li>
+<li><a href="#all_class_domain">Class: Domain</a><ul>
+<li><a href="#all_domain_members">domain.members</a></li>
+<li><a href="#all_domain_add_emitter">domain.add(emitter)</a></li>
+<li><a href="#all_domain_remove_emitter">domain.remove(emitter)</a></li>
+<li><a href="#all_domain_bind_cb">domain.bind(cb)</a><ul>
+<li><a href="#all_example">Example</a></li>
+</ul>
+</li>
+<li><a href="#all_domain_intercept_cb">domain.intercept(cb)</a><ul>
+<li><a href="#all_example_1">Example</a></li>
+</ul>
+</li>
+<li><a href="#all_domain_dispose">domain.dispose()</a></li>
 </ul>
 </li>
 </ul>
@@ -378,8 +400,8 @@
 </ul>
 </li>
 <li><a href="#all_file_system">File System</a><ul>
-<li><a href="#all_fs_rename_path1_path2_callback">fs.rename(path1, path2, [callback])</a></li>
-<li><a href="#all_fs_renamesync_path1_path2">fs.renameSync(path1, path2)</a></li>
+<li><a href="#all_fs_rename_oldpath_newpath_callback">fs.rename(oldPath, newPath, [callback])</a></li>
+<li><a href="#all_fs_renamesync_oldpath_newpath">fs.renameSync(oldPath, newPath)</a></li>
 <li><a href="#all_fs_truncate_fd_len_callback">fs.truncate(fd, len, [callback])</a></li>
 <li><a href="#all_fs_truncatesync_fd_len">fs.truncateSync(fd, len)</a></li>
 <li><a href="#all_fs_chown_path_uid_gid_callback">fs.chown(path, uid, gid, [callback])</a></li>
@@ -402,12 +424,12 @@
 <li><a href="#all_fs_fstatsync_fd">fs.fstatSync(fd)</a></li>
 <li><a href="#all_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, [callback])</a></li>
 <li><a href="#all_fs_linksync_srcpath_dstpath">fs.linkSync(srcpath, dstpath)</a></li>
-<li><a href="#all_fs_symlink_linkdata_path_type_callback">fs.symlink(linkdata, path, [type], [callback])</a></li>
-<li><a href="#all_fs_symlinksync_linkdata_path_type">fs.symlinkSync(linkdata, path, [type])</a></li>
+<li><a href="#all_fs_symlink_destination_path_type_callback">fs.symlink(destination, path, [type], [callback])</a></li>
+<li><a href="#all_fs_symlinksync_destination_path_type">fs.symlinkSync(destination, path, [type])</a></li>
 <li><a href="#all_fs_readlink_path_callback">fs.readlink(path, [callback])</a></li>
 <li><a href="#all_fs_readlinksync_path">fs.readlinkSync(path)</a></li>
-<li><a href="#all_fs_realpath_path_callback">fs.realpath(path, [callback])</a></li>
-<li><a href="#all_fs_realpathsync_path">fs.realpathSync(path)</a></li>
+<li><a href="#all_fs_realpath_path_cache_callback">fs.realpath(path, [cache], callback)</a></li>
+<li><a href="#all_fs_realpathsync_path_cache">fs.realpathSync(path, [cache])</a></li>
 <li><a href="#all_fs_unlink_path_callback">fs.unlink(path, [callback])</a></li>
 <li><a href="#all_fs_unlinksync_path">fs.unlinkSync(path)</a></li>
 <li><a href="#all_fs_rmdir_path_callback">fs.rmdir(path, [callback])</a></li>
@@ -447,8 +469,8 @@
 </li>
 </ul>
 </li>
-<li><a href="#all_fs_exists_p_callback">fs.exists(p, [callback])</a></li>
-<li><a href="#all_fs_existssync_p">fs.existsSync(p)</a></li>
+<li><a href="#all_fs_exists_path_callback">fs.exists(path, [callback])</a></li>
+<li><a href="#all_fs_existssync_path">fs.existsSync(path)</a></li>
 <li><a href="#all_class_fs_stats">Class: fs.Stats</a></li>
 <li><a href="#all_fs_createreadstream_path_options">fs.createReadStream(path, [options])</a></li>
 <li><a href="#all_class_fs_readstream">Class: fs.ReadStream</a><ul>
@@ -462,6 +484,8 @@
 </ul>
 </li>
 <li><a href="#all_class_fs_fswatcher">Class: fs.FSWatcher</a><ul>
+<li><a href="#all_watcher_close">watcher.close()</a></li>
+<li><a href="#all_event_change">Event: &apos;change&apos;</a></li>
 <li><a href="#all_event_error_2">Event: &apos;error&apos;</a></li>
 </ul>
 </li>
@@ -678,16 +702,21 @@
 <li><a href="#all_rl_question_query_callback">rl.question(query, callback)</a></li>
 <li><a href="#all_rl_pause">rl.pause()</a></li>
 <li><a href="#all_rl_resume">rl.resume()</a></li>
+<li><a href="#all_rl_close">rl.close()</a></li>
 <li><a href="#all_rl_write">rl.write()</a></li>
+</ul>
+</li>
+<li><a href="#all_events_1">Events</a><ul>
 <li><a href="#all_event_line">Event: &apos;line&apos;</a></li>
 <li><a href="#all_event_pause">Event: &apos;pause&apos;</a></li>
 <li><a href="#all_event_resume">Event: &apos;resume&apos;</a></li>
-<li><a href="#all_event_end_4">Event: &apos;end&apos;</a></li>
+<li><a href="#all_event_close_9">Event: &apos;close&apos;</a></li>
 <li><a href="#all_event_sigint">Event: &apos;SIGINT&apos;</a></li>
 <li><a href="#all_event_sigtstp">Event: &apos;SIGTSTP&apos;</a></li>
 <li><a href="#all_event_sigcont">Event: &apos;SIGCONT&apos;</a></li>
 </ul>
 </li>
+<li><a href="#all_example_tiny_cli">Example: Tiny CLI</a></li>
 </ul>
 </li>
 <li><a href="#all_repl">REPL</a><ul>
@@ -714,7 +743,7 @@
 <li><a href="#all_child_process">Child Process</a><ul>
 <li><a href="#all_class_childprocess">Class: ChildProcess</a><ul>
 <li><a href="#all_event_exit_2">Event:  &apos;exit&apos;</a></li>
-<li><a href="#all_event_close_9">Event: &apos;close&apos;</a></li>
+<li><a href="#all_event_close_10">Event: &apos;close&apos;</a></li>
 <li><a href="#all_event_disconnect">Event: &apos;disconnect&apos;</a></li>
 <li><a href="#all_child_stdin">child.stdin</a></li>
 <li><a href="#all_child_stdout">child.stdout</a></li>
@@ -801,6 +830,7 @@
 <li><a href="#all_os_freemem">os.freemem()</a></li>
 <li><a href="#all_os_cpus">os.cpus()</a></li>
 <li><a href="#all_os_networkinterfaces">os.networkInterfaces()</a></li>
+<li><a href="#all_os_eol">os.EOL</a></li>
 </ul>
 </li>
 <li><a href="#all_debugger">Debugger</a><ul>
@@ -824,7 +854,7 @@
 <li><a href="#all_event_online">Event: &apos;online&apos;</a></li>
 <li><a href="#all_event_listening_2">Event: &apos;listening&apos;</a></li>
 <li><a href="#all_event_disconnect_1">Event: &apos;disconnect&apos;</a></li>
-<li><a href="#all_event_death">Event: &apos;death&apos;</a></li>
+<li><a href="#all_event_exit_3">Event: &apos;exit&apos;</a></li>
 <li><a href="#all_event_setup">Event: &apos;setup&apos;</a></li>
 <li><a href="#all_cluster_setupmaster_settings">cluster.setupMaster([settings])</a></li>
 <li><a href="#all_cluster_fork_env">cluster.fork([env])</a></li>
@@ -1152,6 +1182,35 @@ value from this object, the next `require` will reload the module.
 <code>require</code> されたときにリロードされます。
 
 </p>
+<h3>require.extensions<span><a class="mark" href="#all_require_extensions" id="all_require_extensions">#</a></span></h3>
+<div class="signature"><ul>
+<li><span class="type">Array</span></li>
+</div></ul>
+<!--
+Instruct `require` on how to handle certain file extensions.
+
+Process files with the extension `.sjs` as `.js`:
+-->
+
+<p><code>require</code> にファイル拡張子を扱う方法を教えます。
+
+</p>
+<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:
+
+</p>
+<pre><code>require.extensions[&apos;.sjs&apos;] = require.extensions[&apos;.js&apos;];</code></pre>
+<!--
+Write your own extension handler:
+-->
+
+<p>独自の拡張子ハンドラを記述するには:
+
+</p>
+<pre><code>require.extensions[&apos;.sjs&apos;] = function(module, filename) {
+  var content = fs.readFileSync(filename, &apos;utf8&apos;);
+  // Parse the file content and give to module.exports
+  module.exports = content;
+};</code></pre>
 <h2>__filename<span><a class="mark" href="#all_filename" id="all_filename">#</a></span></h2>
 <!-- type=var -->
 
@@ -2348,8 +2407,9 @@ The `module_name` needs to match the filename of the final binary (minus the
 .node suffix).
 
 The source code needs to be built into `hello.node`, the binary Addon. To
-do this we create a file called `wscript` which is python code and looks
-like this:
+do this we create a file called `binding.gyp` which describes the configuration
+to build your module in a JSON-like format. This file gets compiled by
+[node-gyp](https://github.com/TooTallNate/node-gyp).
 -->
 
 <p><code>NODE_MODULE</code> は関数ではないので、その後にセミコロンを付けてはいけません
@@ -2361,47 +2421,56 @@ like this:
 
 </p>
 <p>このソースコードは、<code>hello.node</code> というバイナリアドオンとしてビルドされる必要が有ります。
-そのために <code>wscript</code> と呼ばれる以下のようなコードを Python で書きました:
+そのために <code>binding.gyp</code> と呼ばれる、あなたのモジュールをビルドするための
+構成を JSON 的なフォーマットで記述したファイルを作成します。
+このファイルは <a href="https://github.com/TooTallNate/node-gyp">node-gyp</a>
+によってコンパイルされます。
 
 </p>
-<pre><code>srcdir = &apos;.&apos;
-blddir = &apos;build&apos;
-VERSION = &apos;0.0.1&apos;
-
-def set_options(opt):
-  opt.tool_options(&apos;compiler_cxx&apos;)
-
-def configure(conf):
-  conf.check_tool(&apos;compiler_cxx&apos;)
-  conf.check_tool(&apos;node_addon&apos;)
-
-def build(bld):
-  obj = bld.new_task_gen(&apos;cxx&apos;, &apos;shlib&apos;, &apos;node_addon&apos;)
-  obj.target = &apos;hello&apos;
-  obj.source = &apos;hello.cc&apos;</code></pre>
+<pre><code>{
+  &quot;targets&quot;: [
+    {
+      &quot;target_name&quot;: &quot;hello&quot;,
+      &quot;sources&quot;: [ &quot;hello.cc&quot; ]
+    }
+  ]
+}</code></pre>
 <!--
-Running `node-waf configure build` will create a file
-`build/default/hello.node` which is our Addon.
+The next step is to generate the appropriate project build files for the
+current platform. Use `node-gyp configure` for that.
 -->
 
-<p><code>node-waf configure build</code> を実行すると、<code>build/default/hello.node</code> が作成されます。これが作成したアドオンです。
+<p>次のステップは現在のプラットフォームに適したプロジェクトビルドファイルを
+生成することです。
+<code>node-gyp configure</code> を使います。
 
 </p>
 <!--
-`node-waf` is just [WAF](http://code.google.com/p/waf), the python-based build system. `node-waf` is
-provided for the ease of users.
+Now you will have either a `Makefile` (on Unix platforms) or a `vcxproj` file
+(on Windows) in the `build/` directory. Next invoke the `node-gyp build`
+command.
 -->
 
-<p><code>node-waf</code> 単に <a href="http://code.google.com/p/waf">WAF</a> は Python ベースのビルドシステムです。
-<code>node-waf</code> は、ユーザの負担を減らすために提供されています。
+<p>これで、<code>Makefile</code> (Unix プラットフォームの場合)、または <code>vcxproj</code> ファイル
+(Windows の場合) が <code>build/</code> ディレクトリに作られます。
+次に <code>node-gyp build</code> コマンドを起動します。
+
+</p>
+<!--
+Now you have your compiled `.node` bindings file! The compiled bindings end up
+in `build/Release/`.
+-->
+
+<p>これでコンパイルされた <code>.node</code> バインディングファイルが作成されます！
+コンパイルされたバインディングファイルは <code>build/Release/</code> にあります。
 
 </p>
 <!--
 You can now use the binary addon in a Node project `hello.js` by pointing `require` to
-the recently built module:
+the recently built `hello.node` module:
 -->
 
-<p>ビルドされたモジュールを <code>require</code> で指定することにより、
+<p>ビルドされた <code>hello.node</code> モジュールを <code>require</code> で指定することにより、
 このバイナリアドオンを Node プロジェクトの <code>hello.js</code> から利用することが
 可能になります。
 
@@ -2411,12 +2480,12 @@ the recently built module:
 console.log(addon.hello()); // &apos;world&apos;</code></pre>
 <!--
 Please see patterns below for further information or
-<https://github.com/pietern/hiredis-node> for an example in production.
+<https://github.com/arturadib/node-qt> for an example in production.
 -->
 
 <p>さらに詳しい情報については下記のパターンか、
 </p>
-<p><a href="https://github.com/pietern/hiredis-node">https://github.com/pietern/hiredis-node</a> を実際のプロダクトにおける
+<p><a href="https://github.com/arturadib/node-qt">https://github.com/arturadib/node-qt</a> を実際のプロダクトにおける
 例として参照してください。
 
 </p>
@@ -2427,9 +2496,6 @@ Below are some addon patterns to help you get started. Consult the online
 calls, and v8's [Embedder's Guide](http://code.google.com/apis/v8/embed.html)
 for an explanation of several concepts used such as handles, scopes,
 function templates, etc.
-
-To compile these examples, create the `wscript` file below and run
-`node-waf configure build`:
 -->
 
 <p>以下は初心者に役立つアドオンのパターンです。
@@ -2440,31 +2506,44 @@ v8 の <a href="http://code.google.com/apis/v8/embed.html">Embedder&apos;s Guide
 役に立つでしょう。
 
 </p>
-<pre><code>srcdir = &apos;.&apos;
-blddir = &apos;build&apos;
-VERSION = &apos;0.0.1&apos;
-
-def set_options(opt):
-  opt.tool_options(&apos;compiler_cxx&apos;)
-
-def configure(conf):
-  conf.check_tool(&apos;compiler_cxx&apos;)
-  conf.check_tool(&apos;node_addon&apos;)
-
-def build(bld):
-  obj = bld.new_task_gen(&apos;cxx&apos;, &apos;shlib&apos;, &apos;node_addon&apos;)
-  obj.target = &apos;addon&apos;
-  obj.source = [&apos;addon.cc&apos;]</code></pre>
 <!--
-In cases where there is more than one `.cc` file, simply add the file name to the
-`obj.source` array, e.g.:
+In order to use these examples you need to compile them using `node-gyp`.
+Create the following `binding.gyp` file:
 -->
 
-<p>一つ以上の <code>.cc</code> ファイルがある場合は、単純に <code>obj.source</code> 配列にファイル名を
+<p>このサンプルを利用できるようにするには、<code>node-gyp</code> を使用して
+コンパイルする必要があります。
+以下の <code>binding.gyp</code> ファイルを作成します。
+
+</p>
+<pre><code>{
+  &quot;targets&quot;: [
+    {
+      &quot;target_name&quot;: &quot;addon&quot;,
+      &quot;sources&quot;: [ &quot;addon.cc&quot; ]
+    }
+  ]
+}</code></pre>
+<!--
+In cases where there is more than one `.cc` file, simply add the file name to the
+`sources` array, e.g.:
+-->
+
+<p>一つ以上の <code>.cc</code> ファイルがある場合は、単純に <code>sources</code> 配列にファイル名を
 加えるだけです。例:
 
 </p>
-<pre><code>obj.source = [&apos;addon.cc&apos;, &apos;myexample.cc&apos;]</code></pre>
+<pre><code>&quot;sources&quot;: [&quot;addon.cc&quot;, &quot;myexample.cc&quot;]</code></pre>
+<!--
+Now that you have your `binding.gyp` ready, you can configure and build the
+addon:
+-->
+
+<p>これで <code>binding.gyp</code> の準備ができました。
+アドオンをコンフィギュアおよびビルドするには:
+
+</p>
+<pre><code>$ node-gyp configure build</code></pre>
 <h3>Function arguments<span><a class="mark" href="#all_function_arguments" id="all_function_arguments">#</a></span></h3>
 <!--
 The following pattern illustrates how to read arguments from JavaScript
@@ -4137,6 +4216,375 @@ This event is emitted any time someone adds a new listener.
 <p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。
 
 </p>
+<h1>Domain<span><a class="mark" href="#all_domain" id="all_domain">#</a></span></h1>
+<pre><code>Stability: 1 - Experimental</code></pre>
+<!--
+Domains provide a way to handle multiple different IO operations as a
+single group.  If any of the event emitters or callbacks registered to a
+domain emit an `error` event, or throw an error, then the domain object
+will be notified, rather than losing the context of the error in the
+`process.on('uncaughtException')` handler, or causing the program to
+exit with an error code.
+-->
+
+<p>ドメインは複数の異なる I/O 操作を一つのグループとして扱う方法を
+提供します。
+もし EventEmitter またはコールバックがドメインに登録されると、
+<code>&apos;error&apos;</code> がイベントが発生したり例外がスローされた場合、
+<code>process.on(&apos;uncaughtException&apos;)</code> ハンドラでエラーのコンテキストが失われたり、
+プログラムがエラーコードと共に終了する代わりに、
+ドメインオブジェクトが通知します
+
+</p>
+<!--
+This feature is new in Node version 0.8.  It is a first pass, and is
+expected to change significantly in future versions.  Please use it and
+provide feedback.
+-->
+
+<p>この機能は Node バージョン 0.8 からの新しいものです。
+これはファーストパスであり、将来のバージョンで大きく変更されると予想されます。
+是非これを使ってフィードバックをしてください。
+
+</p>
+<!--
+Due to their experimental nature, the Domains features are disabled unless
+the `domain` module is loaded at least once.  No domains are created or
+registered by default.  This is by design, to prevent adverse effects on
+current programs.  It is expected to be enabled by default in future
+Node.js versions.
+-->
+
+<p>これらは実験的であるため、ドメインの機能は <code>domain</code> モジュールが少なくとも
+一回はロードされるまで無効になっています。
+デフォルトではドメインは作成されず、デフォルトで登録もされません。
+それは既存のプログラムに悪影響を与えることを防ぐために設計されています。
+将来の Node.js バージョンではデフォルトで有効になることが期待されます。
+
+</p>
+<h2>Additions to Error objects<span><a class="mark" href="#all_additions_to_error_objects" id="all_additions_to_error_objects">#</a></span></h2>
+<!-- type=misc -->
+
+<!--
+Any time an Error object is routed through a domain, a few extra fields
+are added to it.
+-->
+
+<p>どんな場合でも、ドメインに送られた Error オブジェクトは
+いくつかのフィールドが加えられます。
+
+</p>
+<!--
+* `error.domain` The domain that first handled the error.
+* `error.domain_emitter` The event emitter that emitted an 'error' event
+  with the error object.
+* `error.domain_bound` The callback function which was bound to the
+  domain, and passed an error as its first argument.
+* `error.domain_thrown` A boolean indicating whether the error was
+  thrown, emitted, or passed to a bound callback function.
+-->
+
+<ul>
+<li><code>error.domain</code> このエラーを最初に捕まえたドメイン。</li>
+<li><code>error.domain_emitter</code> このエラーオブジェクトと共に <code>error</code> イベントを
+生成した EventEmitter。</li>
+<li><code>error.domain_bound</code> ドメインに束縛されたコールバック関数で、
+その第 1 引数にエラーが渡されたもの。</li>
+<li><code>error.domain_throw</code> エラーがスローされたか、EventEmitter から生成されたか、
+それとも束縛されたコールバック関数に渡されたかを示す boolean 値。</li>
+</ul>
+<h2>Implicit Binding<span><a class="mark" href="#all_implicit_binding" id="all_implicit_binding">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+If domains are in use, then all new EventEmitter objects (including
+Stream objects, requests, responses, etc.) will be implicitly bound to
+the active domain at the time of their creation.
+-->
+
+<p>一度ドメインが作成されると、全ての新しい EventEmitter オブジェクト
+(ストリームオブジェクトやリクエスト、レスポンス、その他を含む) は、
+それが作成された時点でアクティブなドメインに暗黙的に束縛されます。
+
+</p>
+<!--
+Additionally, callbacks passed to lowlevel event loop requests (such as
+to fs.open, or other callback-taking methods) will automatically be
+bound to the active domain.  If they throw, then the domain will catch
+the error.
+-->
+
+<p>加えて、コールバックが低水準のイベントループ要求 (例えば <code>fs.open()</code>、
+あるいは他のコールバックを受け取るメソッド) もアクティブなドメインに
+束縛されます。
+もしそれらが例外をスローすると、ドメインはそれを捕まえます。
+
+</p>
+<!--
+In order to prevent excessive memory usage, Domain objects themselves
+are not implicitly added as children of the active domain.  If they
+were, then it would be too easy to prevent request and response objects
+from being properly garbage collected.
+-->
+
+<p>必要以上にメモリを消費するのを防ぐため、ドメインオブジェクトそれ自身は
+暗黙的にアクティブドメインの子として暗黙的には追加されません。
+それをすれば、リクエストやレスポンスオブジェクトがきちんと GC されることを
+あまりにも簡単に妨害してしまうでしょう。
+
+</p>
+<!--
+If you *want* to nest Domain objects as children of a parent Domain,
+then you must explicitly add them, and then dispose of them later.
+-->
+
+<p>もしネストしたドメインを子として他のドメインに <em>加えたければ</em>
+明示的にそれを加えなければならず、後で破棄しなければなりません。
+
+</p>
+<!--
+Implicit binding routes thrown errors and `'error'` events to the
+Domain's `error` event, but does not register the EventEmitter on the
+Domain, so `domain.dispose()` will not shut down the EventEmitter.
+Implicit binding only takes care of thrown errors and `'error'` events.
+-->
+
+<p>暗黙的なドメインはスローされたエラーや <code>&apos;error&apos;</code> イベントを、
+ドメインの <code>&apos;error&apos;</code> イベントにルーティングしますが、
+その EventEmitter をドメインに登録しないので、<code>domain.dispose()</code> は
+EventEmitter をシャットダウンしません。
+暗黙的なバインディングはスローされた例外と <code>&apos;error&apos;</code> イベントにだけ
+注意を払います。
+
+</p>
+<h2>domain.create()<span><a class="mark" href="#all_domain_create" id="all_domain_create">#</a></span></h2>
+<div class="signature"><ul>
+<li>return: <span class="type">Domain</span></li>
+</div></ul>
+<!--
+Returns a new Domain object.
+-->
+
+<p>新しいドメインオブジェクトを返します。
+
+</p>
+<h2>Class: Domain<span><a class="mark" href="#all_class_domain" id="all_class_domain">#</a></span></h2>
+<!--
+The Domain class encapsulates the functionality of routing errors and
+uncaught exceptions to the active Domain object.
+-->
+
+<p>ドメインクラスはエラーのルーティングや捕まえられなかった例外をアクティブな
+ドメインにルーティングする機能をカプセル化します。
+
+</p>
+<!--
+Domain is a child class of EventEmitter.  To handle the errors that it
+catches, listen to its `error` event.
+-->
+
+<p>ドメインは EventEmitter の子クラスです。これが捕まえたエラーを扱いたければ、
+<code>&apos;error&apos;</code> イベントを監視してください。
+
+</p>
+<h3>domain.members<span><a class="mark" href="#all_domain_members" id="all_domain_members">#</a></span></h3>
+<div class="signature"><ul>
+<li><span class="type">Array</span></li>
+</div></ul>
+<!--
+An array of timers and event emitters that have been explicitly added
+to the domain.
+-->
+
+<p>このドメインに明示的に加えられたタイマまたは EventEmitter の配列です。
+
+</p>
+<h3>domain.add(emitter)<span><a class="mark" href="#all_domain_add_emitter" id="all_domain_add_emitter">#</a></span></h3>
+<!--
+* `emitter` {EventEmitter | Timer} emitter or timer to be added to the domain
+-->
+
+<ul>
+<li><code>emitter</code> {EventEmitter | Timer} ドメインに加えられる EventEmitter
+またはタイマ</li>
+</ul>
+<!--
+Explicitly adds an emitter to the domain.  If any event handlers called by
+the emitter throw an error, or if the emitter emits an `error` event, it
+will be routed to the domain's `error` event, just like with implicit
+binding.
+-->
+
+<p>明示的に EventEmitter をドメインに追加します。
+この EventEmitter から呼ばれたどのイベントハンドラがエラーをスローしても、
+あるいはこの EventEmitter が <code>&apos;error&apos;</code> イベントを発生しても、
+暗黙的にバインディングされたのと同様、それはこのドメインの <code>&apos;error</code>&apos;
+イベントにルーティングされます。
+
+</p>
+<!--
+This also works with timers that are returned from `setInterval` and
+`setTimeout`.  If their callback function throws, it will be caught by
+the domain 'error' handler.
+-->
+
+<p>これは同様に <code>setIntervalu</code> および <code>setTimeout</code> から返されるタイマでも
+働きます。それらのコールバック関数がエラーをスローすると、それは
+ドメインの <code>&apos;error&apos;</code> ハンドに捕まえられます。
+
+</p>
+<!--
+If the Timer or EventEmitter was already bound to a domain, it is removed
+from that one, and bound to this one instead.
+-->
+
+<p>もしタイマまたは EventEmitter が既に他のドメインに束縛されていた場合、
+それは元のドメインから削除され、代わりにこのドメインに束縛されます。
+
+</p>
+<h3>domain.remove(emitter)<span><a class="mark" href="#all_domain_remove_emitter" id="all_domain_remove_emitter">#</a></span></h3>
+<!--
+* `emitter` {EventEmitter | Timer} emitter or timer to be removed from the domain
+-->
+
+<ul>
+<li><code>emitter</code> {EventEmitter | Timer} このドメインから削除される EventEmitter
+またはタイマ</li>
+</ul>
+<!--
+The opposite of `domain.add(emitter)`.  Removes domain handling from the
+specified emitter.
+-->
+
+<p>これは <code>domain.add(emitter)</code> と対照的です。指定された EventEmitter を
+ドメインから削除します。
+
+</p>
+<h3>domain.bind(cb)<span><a class="mark" href="#all_domain_bind_cb" id="all_domain_bind_cb">#</a></span></h3>
+<!--
+* `cb` {Function} The callback function
+* return: {Function} The bound function
+-->
+
+<ul>
+<li><code>cb</code> {Function} コールバック関数</li>
+<li>return: {Function} 束縛された関数</li>
+</ul>
+<!--
+The returned function will be a wrapper around the supplied callback
+function.  When the returned function is called, any errors that are
+thrown will be routed to the domain's `error` event.
+-->
+
+<p>返される関数は与えられたコールバック関数のラッパーです。
+返された関数が呼び出されると、スローされたエラーはドメインの <code>&apos;error&apos;</code>
+イベントにルーティングされます。
+
+</p>
+<h4>Example<span><a class="mark" href="#all_example" id="all_example">#</a></span></h4>
+<pre><code>var d = domain.create();
+
+function readSomeFile(filename, cb) {
+  fs.readFile(filename, d.bind(function(er, data) {
+    // if this throws, it will also be passed to the domain
+    return cb(er, JSON.parse(data));
+  }));
+}
+
+d.on(&apos;error&apos;, function(er) {
+  // an error occurred somewhere.
+  // if we throw it now, it will crash the program
+  // with the normal line number and stack message.
+});</code></pre>
+<h3>domain.intercept(cb)<span><a class="mark" href="#all_domain_intercept_cb" id="all_domain_intercept_cb">#</a></span></h3>
+<!--
+* `cb` {Function} The callback function
+* return: {Function} The intercepted function
+-->
+
+<ul>
+<li><code>cb</code> {Function} コールバック関数</li>
+<li>return: {Function} インターセプトされた関数</li>
+</ul>
+<!--
+This method is almost identical to `domain.bind(cb)`.  However, in
+addition to catching thrown errors, it will also intercept `Error`
+objects sent as the first argument to the function.
+-->
+
+<p>このメソッドはほとんど <code>domain.bind(cb)</code> と同じです。
+ただし、スローされたエラーを捕まえることに加えて、関数に渡される最初の引数が
+<code>Error</code> オブジェクトの場合もインターセプトします。
+
+</p>
+<!--
+In this way, the common `if (er) return cb(er);` pattern can be replaced
+with a single error handler in a single place.
+-->
+
+<p>これは、一般的な <code>if (er) return cb(er);</code> パターンを一カ所で単一の
+エラーハンドラに置き換えることができます。
+
+</p>
+<h4>Example<span><a class="mark" href="#all_example_1" id="all_example_1">#</a></span></h4>
+<pre><code>var d = domain.create();
+
+function readSomeFile(filename, cb) {
+  fs.readFile(filename, d.intercept(function(er, data) {
+    // if this throws, it will also be passed to the domain
+    // additionally, we know that &apos;er&apos; will always be null,
+    // so the error-handling logic can be moved to the &apos;error&apos;
+    // event on the domain instead of being repeated throughout
+    // the program.
+    return cb(er, JSON.parse(data));
+  }));
+}
+
+d.on(&apos;error&apos;, function(er) {
+  // an error occurred somewhere.
+  // if we throw it now, it will crash the program
+  // with the normal line number and stack message.
+});</code></pre>
+<h3>domain.dispose()<span><a class="mark" href="#all_domain_dispose" id="all_domain_dispose">#</a></span></h3>
+<!--
+The dispose method destroys a domain, and makes a best effort attempt to
+clean up any and all IO that is associated with the domain.  Streams are
+aborted, ended, closed, and/or destroyed.  Timers are cleared.
+Explicitly bound callbacks are no longer called.  Any error events that
+are raised as a result of this are ignored.
+-->
+
+<p><code>dispose()</code> メソッドはドメインを破棄し、ドメインに関連づけられた全ての
+I/O を可能な限りクリーンナップしようと試みます。
+ストリームはアボートされ、終了され、クローズされ、そして／または破棄されます。
+タイマはクリアされます。明示的に束縛されたコールバックはもう呼び出されません。
+結果として発生するどんなエラーイベントも無視されます。
+
+</p>
+<!--
+The intention of calling `dispose` is generally to prevent cascading
+errors when a critical part of the Domain context is found to be in an
+error state.
+-->
+
+<p><code>dispose()</code> を呼び出す意図は通常、エラー状態の中でドメインコンテキストの
+クリティカルな部分が見つかった場合に、カスケードしたエラーを防ぐことです。
+
+</p>
+<!--
+Note that IO might still be performed.  However, to the highest degree
+possible, once a domain is disposed, further errors from the emitters in
+that set will be ignored.  So, even if some remaining actions are still
+in flight, Node.js will not communicate further about them.
+-->
+
+<p>I/O がまだ行われているかもしれないことに注意してください。
+しかしながら、可能な限り高い視点から見ると、一度ドメインが破棄されれば、
+その集合の中の EventEmitter からのさらなるエラーは無視されます。
+そのため、たとえ残りのアクションがまだ実行中だとしても、
+Node.js はそれらとコミュニケートしません。
+
+</p>
 <h1>Buffer<span><a class="mark" href="#all_buffer" id="all_buffer">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!--
@@ -5360,10 +5808,25 @@ Makes the data event emit a string instead of a `Buffer`. `encoding` can be
 </p>
 <h3>stream.pause()<span><a class="mark" href="#all_stream_pause" id="all_stream_pause">#</a></span></h3>
 <!--
-Pauses the incoming `'data'` events.
+Issues an advisory signal to the underlying communication layer, requesting
+that no further data be sent until `resume()` is called.
 -->
 
-<p><code>&apos;data&apos;</code> イベントの到着を中断します。
+<p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
+データが送られないように要求します。
+
+</p>
+<!--
+Note that, due to the advisory nature, certain streams will not be paused
+immediately, and so `'data'` events may be emitted for some indeterminate
+period of time even after `pause()` is called. You may wish to buffer such
+`'data'` events.
+-->
+
+<p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
+および <code>pause()</code> を呼び出してから不特定の時間 <code>&apos;data&apos;</code> イベントが
+生成されるかもしれないことに注意してください。
+<code>&apos;data&apos;</code> イベントをバッファリングするのもいいでしょう。
 
 </p>
 <h3>stream.resume()<span><a class="mark" href="#all_stream_resume" id="all_stream_resume">#</a></span></h3>
@@ -7043,13 +7506,13 @@ event.
 </p>
 <h3>server.address()<span><a class="mark" href="#all_server_address" id="all_server_address">#</a></span></h3>
 <!--
-Returns the bound address and port of the server as reported by the operating
-system.
+Returns the bound address, the address family name and port of the
+server as reported by the operating system.
 See [net.Server.address()](net.html#server.address) for more information.
 -->
 
-<p>オペレーティングシステムから報告された、
-サーバにバインドされたアドレスとポートを返します。 
+<p>オペレーティングシステムから報告された、サーバにバインドされたアドレスと
+アドレスファミリ名、ポートを返します。 
 より詳しくは <a href="net.html#server.address">net.Server.address()</a>
 を参照してください。
 
@@ -7220,15 +7683,16 @@ information.
 </p>
 <h3>cleartextStream.address()<span><a class="mark" href="#all_cleartextstream_address" id="all_cleartextstream_address">#</a></span></h3>
 <!--
-Returns the bound address and port of the underlying socket as reported by the
-operating system. Returns an object with two properties, e.g.
-`{"address":"192.168.57.1", "port":62053}`
+Returns the bound address, the address family name and port of the
+underlying socket as reported by the operating system. Returns an
+object with three properties, e.g.
+`{ port: 12346, family: 'IPv4', address: '127.0.0.1' }`
 -->
 
-<p>オペレーティングシステムから報告された、
-ソケットにバインドされたアドレスとポートを返します。
-返されるオブジェクトは二つのプロパティを持ちます。
-例えば、<code>{&quot;address&quot;:&quot;192.168.57.1&quot;, &quot;port&quot;:62053}</code>
+<p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスと
+アドレスファミリ名、ポートを返します。
+返されるオブジェクトは二つのプロパティを持ちます。例:
+<code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
 
 </p>
 <h3>cleartextStream.remoteAddress<span><a class="mark" href="#all_cleartextstream_remoteaddress" id="all_cleartextstream_remoteaddress">#</a></span></h3>
@@ -7360,7 +7824,7 @@ to `process.cwd()`.
 <code>process.cwd()</code> からの相対パスであることを思い出してください。
 
 </p>
-<h2>fs.rename(path1, path2, [callback])<span><a class="mark" href="#all_fs_rename_path1_path2_callback" id="all_fs_rename_path1_path2_callback">#</a></span></h2>
+<h2>fs.rename(oldPath, newPath, [callback])<span><a class="mark" href="#all_fs_rename_oldpath_newpath_callback" id="all_fs_rename_oldpath_newpath_callback">#</a></span></h2>
 <!--
 Asynchronous rename(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -7369,7 +7833,7 @@ to the completion callback.
 <p>非同期の rename(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。
 
 </p>
-<h2>fs.renameSync(path1, path2)<span><a class="mark" href="#all_fs_renamesync_path1_path2" id="all_fs_renamesync_path1_path2">#</a></span></h2>
+<h2>fs.renameSync(oldPath, newPath)<span><a class="mark" href="#all_fs_renamesync_oldpath_newpath" id="all_fs_renamesync_oldpath_newpath">#</a></span></h2>
 <!--
 Synchronous rename(2).
 -->
@@ -7583,7 +8047,7 @@ Synchronous link(2).
 <p>同期の link(2)。
 
 </p>
-<h2>fs.symlink(linkdata, path, [type], [callback])<span><a class="mark" href="#all_fs_symlink_linkdata_path_type_callback" id="all_fs_symlink_linkdata_path_type_callback">#</a></span></h2>
+<h2>fs.symlink(destination, path, [type], [callback])<span><a class="mark" href="#all_fs_symlink_destination_path_type_callback" id="all_fs_symlink_destination_path_type_callback">#</a></span></h2>
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -7596,7 +8060,7 @@ used on Windows (ignored on other platforms).
 これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
 
 </p>
-<h2>fs.symlinkSync(linkdata, path, [type])<span><a class="mark" href="#all_fs_symlinksync_linkdata_path_type" id="all_fs_symlinksync_linkdata_path_type">#</a></span></h2>
+<h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#all_fs_symlinksync_destination_path_type" id="all_fs_symlinksync_destination_path_type">#</a></span></h2>
 <!--
 Synchronous symlink(2).
 -->
@@ -7621,17 +8085,34 @@ Synchronous readlink(2). Returns the symbolic link's string value.
 <p>同期の readlink(2)。シンボリックリンクの持つ文字列値を返します。
 
 </p>
-<h2>fs.realpath(path, [callback])<span><a class="mark" href="#all_fs_realpath_path_callback" id="all_fs_realpath_path_callback">#</a></span></h2>
+<h2>fs.realpath(path, [cache], callback)<span><a class="mark" href="#all_fs_realpath_path_cache_callback" id="all_fs_realpath_path_cache_callback">#</a></span></h2>
 <!--
-Asynchronous realpath(2).  The callback gets two arguments `(err,
-resolvedPath)`.  May use `process.cwd` to resolve relative paths.
+Asynchronous realpath(2). The `callback` gets two arguments `(err,
+resolvedPath)`. May use `process.cwd` to resolve relative paths. `cache` is an
+object literal of mapped paths that can be used to force a specific path
+resolution or avoid additional `fs.stat` calls for known real paths.
 -->
 
 <p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。
 相対パスを解決するために <code>process.cwd</code> を使用することができます。
+<code>cache</code> はオブジェクトで、パスがキーとして含まれていればその値が
+強制的に解決されたパスとして扱われ、<code>fs.stat</code> によってパスが実在するかどうかの
+確認が省かれます。
 
 </p>
-<h2>fs.realpathSync(path)<span><a class="mark" href="#all_fs_realpathsync_path" id="all_fs_realpathsync_path">#</a></span></h2>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var cache = {&apos;/etc&apos;:&apos;/private/etc&apos;};
+fs.realpath(&apos;/etc/passwd&apos;, cache, function (err, resolvedPath) {
+  if (err) throw err;
+  console.log(resolvedPath);
+});</code></pre>
+<h2>fs.realpathSync(path, [cache])<span><a class="mark" href="#all_fs_realpathsync_path_cache" id="all_fs_realpathsync_path_cache">#</a></span></h2>
 <!--
 Synchronous realpath(2). Returns the resolved path.
 -->
@@ -8268,7 +8749,7 @@ callback, and have some fallback logic if it is null.
     console.log(&apos;filename not provided&apos;);
   }
 });</code></pre>
-<h2>fs.exists(p, [callback])<span><a class="mark" href="#all_fs_exists_p_callback" id="all_fs_exists_p_callback">#</a></span></h2>
+<h2>fs.exists(path, [callback])<span><a class="mark" href="#all_fs_exists_path_callback" id="all_fs_exists_path_callback">#</a></span></h2>
 <!--
 Test whether or not the given path exists by checking with the file system.
 Then call the `callback` argument with either true or false.  Example:
@@ -8282,7 +8763,7 @@ Then call the `callback` argument with either true or false.  Example:
 <pre><code>fs.exists(&apos;/etc/passwd&apos;, function (exists) {
   util.debug(exists ? &quot;it&apos;s there&quot; : &quot;no passwd!&quot;);
 });</code></pre>
-<h2>fs.existsSync(p)<span><a class="mark" href="#all_fs_existssync_p" id="all_fs_existssync_p">#</a></span></h2>
+<h2>fs.existsSync(path)<span><a class="mark" href="#all_fs_existssync_path" id="all_fs_existssync_path">#</a></span></h2>
 <!--
 Synchronous version of `fs.exists`.
 -->
@@ -8489,17 +8970,19 @@ for writing.
 <!--
 Objects returned from `fs.watch()` are of this type.
 -->
-<code>fs.watch()</code> が返すオブジェクトはこの型です。
 
-### watcher.close()
+<p><code>fs.watch()</code> が返すオブジェクトはこの型です。
 
+</p>
+<h3>watcher.close()<span><a class="mark" href="#all_watcher_close" id="all_watcher_close">#</a></span></h3>
 <!--
 Stop watching for changes on the given `fs.FSWatcher`.
 -->
-<code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。
 
-### Event: &apos;change&apos;
+<p><code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。
 
+</p>
+<h3>Event: &apos;change&apos;<span><a class="mark" href="#all_event_change" id="all_event_change">#</a></span></h3>
 <!--
 * `event` {String} The type of fs change
 * `filename` {String} The filename that changed (if relevant/available)
@@ -9103,15 +9586,18 @@ event.
 </p>
 <h3>server.address()<span><a class="mark" href="#all_server_address_1" id="all_server_address_1">#</a></span></h3>
 <!--
-Returns the bound address and port of the server as reported by the operating system.
+Returns the bound address, the address family name and port of the server
+as reported by the operating system.
 Useful to find which port was assigned when giving getting an OS-assigned address.
-Returns an object with two properties, e.g. `{"address":"127.0.0.1", "port":2121}`
+Returns an object with three properties, e.g.
+`{ port: 12346, family: 'IPv4', address: '127.0.0.1' }`
 -->
 
-<p>オペレーティングシステムから報告された、サーバにバインドされたアドレスとポートを返します。
+<p>オペレーティングシステムから報告された、サーバにバインドされたアドレスと
+アドレスファミリ名、ポートを返します。
 OSによって割り当てられたアドレスが渡された時に、どのポートに割り当てられたものかを調べるのに便利です。
-返されるオブジェクトは二つのプロパティを持ちます。
-例えば <code>{&quot;address&quot;:&quot;127.0.0.1&quot;, &quot;port&quot;:2121}</code>
+返されるオブジェクトは 3 つのプロパティを持ちます。例:
+<code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
 
 </p>
 <!--
@@ -9499,14 +9985,16 @@ initialDelay will leave the value unchanged from the default
 </p>
 <h3>socket.address()<span><a class="mark" href="#all_socket_address" id="all_socket_address">#</a></span></h3>
 <!--
-Returns the bound address and port of the socket as reported by the operating
-system. Returns an object with two properties, e.g.
-`{"address":"192.168.57.1", "port":62053}`
+Returns the bound address, the address family name and port of the
+socket as reported by the operating system. Returns an object with
+three properties, e.g.
+`{ port: 12346, family: 'IPv4', address: '127.0.0.1' }`
 -->
 
-<p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスとポートを返します。
-返されるオブジェクトは二つのプロパティを持ちます。
-例えば <code>{&quot;address&quot;:&quot;192.168.57.1&quot;, &quot;port&quot;:62053}</code>
+<p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスと
+アドレスファミリ名、ポートを返します。
+返されるオブジェクトは 3 つのプロパティを持ちます。例:
+<code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
 
 </p>
 <h3>socket.remoteAddress<span><a class="mark" href="#all_socket_remoteaddress" id="all_socket_remoteaddress">#</a></span></h3>
@@ -12359,9 +12847,9 @@ URL文字列に含まれないフィールドは解析結果のオブジェク�
 * `protocol`: The request protocol, lowercased.
 
   Example: `'http:'`
-* `host`: The full lowercased host portion of the URL, including port and authentication information.
+* `host`: The full lowercased host portion of the URL, including the port.
 
-  Example: `'user:pass@host.com:8080'`
+  Example: `'host.com:8080'`
 * `auth`: The authentication information portion of a URL.
 
   Example: `'user:pass'`
@@ -12395,8 +12883,8 @@ URL文字列に含まれないフィールドは解析結果のオブジェク�
 <li><p><code>protocol</code>: リクエストのプロトコル。小文字化されます。</p>
 <p>例: <code>&apos;http:&apos;</code></p>
 </li>
-<li><p><code>host</code>: URL の完全で小文字化されたホスト情報。認証情報を含みます。 </p>
-<p>例: <code>&apos;user:pass@host.com:8080&apos;</code></p>
+<li><p><code>host</code>: URL の完全で小文字化されたホスト情報。ポート番号を含みます。</p>
+<p>Example: <code>&apos;host.com:8080&apos;</code></p>
 </li>
 <li><p><code>auth</code>: URL の認証情報。</p>
 <p>例: <code>&apos;user:pass&apos;</code></p>
@@ -12473,7 +12961,7 @@ Take a parsed URL object, and return a formatted URL string.
 * `auth` will only be used if `host` is absent.
 * `hostname` will only be used if `host` is absent.
 * `port` will only be used if `host` is absent.
-* `host` will be used in place of `auth`, `hostname`, and `port`
+* `host` will be used in place of `hostname` and `port`
 * `pathname` is treated the same with or without the leading `/` (slash)
 * `search` will be used in place of `query`
 * `query` (object; see `querystring`) will only be used if `search` is absent.
@@ -12491,7 +12979,7 @@ Take a parsed URL object, and return a formatted URL string.
 <li><code>auth</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
 <li><code>hostname</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
 <li><code>port</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
-<li><code>host</code> は <code>auth</code>、<code>hostname</code>、<code>port</code> の位置で使われます。</li>
+<li><code>host</code> は <code>hostname</code>、<code>port</code> の位置で使われます。</li>
 <li><code>pathname</code> の先頭に <code>/</code> (スラッシュ) があってもなくても同じように扱われます。</li>
 <li><code>search</code> は <code>query</code> の位置で使われます。</li>
 <li><code>query</code> (文字列ではなくオブジェクトです; <code>querystring</code> を参照してください) は <code>search</code> が与えられなかった場合だけ使われます。</li>
@@ -12606,13 +13094,13 @@ Readline はストリーム (たとえば <code>process.stdin</code>)
 </p>
 <!--
 Note that once you've invoked this module, your node program will not
-terminate until you've paused the interface. Here's how to allow your
-program to gracefully pause:
+terminate until you've closed the interface. Here's how to allow your
+program to gracefully exit:
 -->
 
 <p>このモジュールを一度起動すると、このインタフェースを
-中断するまで node プログラムは終了しないことに注意してください。
-プログラムをスムーズに中断する方法を以下に示します:
+クローズするまで node プログラムは終了しないことに注意してください。
+プログラムをスムーズに終了する方法を以下に示します:
 
 </p>
 <pre><code>var rl = require(&apos;readline&apos;);
@@ -12626,7 +13114,7 @@ i.question(&quot;What do you think of node.js? &quot;, function(answer) {
   // TODO: Log the answer in a database
   console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
 
-  i.pause();
+  i.close();
 });</code></pre>
 <h2>rl.createInterface(options)<span><a class="mark" href="#all_rl_createinterface_options" id="all_rl_createinterface_options">#</a></span></h2>
 <!--
@@ -12646,9 +13134,9 @@ the following values:
  - `completer` - an optional function that is used for Tab autocompletion. See
    below for an example of using this.
 
- - `terminal` - pass `true` if the `input` and `output` streams should be treated
-   like a TTY, and have ANSI/VT100 escape codes written to it. Defaults to
-   checking `isTTY` on the `output` stream upon instantiation.
+ - `terminal` - pass `true` if the `input` and `output` streams should be
+   treated like a TTY, and have ANSI/VT100 escape codes written to it.
+   Defaults to checking `isTTY` on the `output` stream upon instantiation.
 -->
 
 <ul>
@@ -12696,6 +13184,19 @@ Which ends up looking something like:
 
 </p>
 <!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>function completer(line) {
+  var completions = &apos;.help .error .exit .quit .q&apos;.split(&apos; &apos;)
+  var hits = completions.filter(function(c) { return c.indexOf(line) == 0 })
+  // show all completions if none found
+  return [hits.length ? hits : completions, line]
+}</code></pre>
+<!--
 Also `completer` can be run in async mode if it accepts two arguments:
 -->
 
@@ -12720,7 +13221,8 @@ var rl = readline.createInterface({
   output: process.stdout
 });</code></pre>
 <!--
-Once you have a readline instance, you most commonly listen for the `"line"` event.
+Once you have a readline instance, you most commonly listen for the
+`"line"` event.
 -->
 
 <p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを
@@ -12728,8 +13230,8 @@ Once you have a readline instance, you most commonly listen for the `"line"` eve
 
 </p>
 <!--
-If `terminal` is `true` for this instance then the `output` stream will get the
-best compatability if it defines an `output.columns` property, and fires
+If `terminal` is `true` for this instance then the `output` stream will get
+the best compatability if it defines an `output.columns` property, and fires
 a `"resize"` event on the `output` if/when the columns ever change
 (`process.stdout` does this automatically when it is a TTY).
 -->
@@ -12766,7 +13268,7 @@ Sets the prompt, for example when you run `node` on the command line, you see
 Readies readline for input from the user, putting the current `setPrompt`
 options on a new line, giving the user a new spot to write.
 
-This will also resume the `in` stream used with `createInterface` if it has
+This will also resume the `input` stream used with `createInterface` if it has
 been paused.
 -->
 
@@ -12775,25 +13277,25 @@ been paused.
 ユーザに新しい入力エリアを与えます。
 
 </p>
-<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+<p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
 中断されていれば再開します。
 
 </p>
 <h3>rl.question(query, callback)<span><a class="mark" href="#all_rl_question_query_callback" id="all_rl_question_query_callback">#</a></span></h3>
 <!--
 Prepends the prompt with `query` and invokes `callback` with the user's
-response. Displays the query to the user, and then invokes `callback` with the
-user's response after it has been typed.
+response. Displays the query to the user, and then invokes `callback`
+with the user's response after it has been typed.
 
-This will also resume the `in` stream used with `createInterface` if it has
-been paused.
+This will also resume the `input` stream used with `createInterface` if
+it has been paused.
 -->
 
 <p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。
 ユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。
 
 </p>
-<p>これは、 <code>createInterface()</code> によって使われる <code>in</code> ストリームが
+<p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
 中断されていれば再開します。
 
 </p>
@@ -12825,6 +13327,16 @@ Resumes the readline `input` stream.
 <p><code>input</code> ストリームからの入力を再開します。
 
 </p>
+<h3>rl.close()<span><a class="mark" href="#all_rl_close" id="all_rl_close">#</a></span></h3>
+<!--
+Closes the `Interface` instance, relinquishing control on the `input` and
+`output` streams. The "close" event will also be emitted.
+-->
+
+<p><code>Interface</code> のインスタンスをクローズし、<code>input</code> および <code>output</code> ストリームの
+制御を解放します。<code>&apos;close&apos;</code> イベントも生成されます。
+
+</p>
 <h3>rl.write()<span><a class="mark" href="#all_rl_write" id="all_rl_write">#</a></span></h3>
 <!--
 Writes to `output` stream.
@@ -12838,16 +13350,17 @@ This will also resume the `input` stream if it has been paused.
 <p>これは、<code>input</code> ストリームが中断されていれば再開します。
 
 </p>
+<h2>Events<span><a class="mark" href="#all_events_1" id="all_events_1">#</a></span></h2>
 <h3>Event: &apos;line&apos;<span><a class="mark" href="#all_event_line" id="all_event_line">#</a></span></h3>
 <p><code>function (line) {}</code>
 
 </p>
 <!--
-Emitted whenever the `in` stream receives a `\n`, usually received when the
+Emitted whenever the `input` stream receives a `\n`, usually received when the
 user hits enter, or return. This is a good hook to listen for user input.
 -->
 
-<p><code>in</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
+<p><code>input</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
 通常、ユーザがエンターまたはリターンを打つごとに受信します。
 これはユーザ入浴のよいフックとなります。
 
@@ -12867,26 +13380,25 @@ Example of listening for `line`:
 
 </p>
 <!--
-Emitted whenever the `in` stream is paused or receives `^D`, respectively known
-as `EOT`. This event is also called if there is no `SIGINT` event listener
-present when the `in` stream receives a `^C`, respectively known as `SIGINT`.
-
-Also emitted whenever the `in` stream is not paused and receives the `SIGCONT`
-event. (See events `SIGTSTP` and `SIGCONT`)
-
-Example of listening for `pause`:
+Emitted whenever the `input` stream is paused.
 -->
 
-<p><code>in</code> ストリームが中断された時、または <code>EOT</code> として知られる <code>^D</code> 
-を受信すると生成されます。
-このイベントは、<code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した際に、
-<code>SIGINT</code> イベントのリスナが存在しない場合にも生成されます。
+<p><code>input</code> ストリームが中断されたときに生成されます。
 
 </p>
-<p><code>in</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも
+<!--
+Also emitted whenever the `input` stream is not paused and receives the
+`SIGCONT` event. (See events `SIGTSTP` and `SIGCONT`)
+-->
+
+<p><code>input</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも
 生成されます (<code>SIGTSTP</code> および <code>SIGCONT</code> も参照してください)。
 
 </p>
+<!--
+Example of listening for `pause`:
+-->
+
 <p><code>&apos;pause&apos;</code> を監視する例:
 
 </p>
@@ -12898,12 +13410,12 @@ Example of listening for `pause`:
 
 </p>
 <!--
-Emitted whenever the `in` stream is resumed.
+Emitted whenever the `input` stream is resumed.
 
 Example of listening for `resume`:
 -->
 
-<p><code>in</code> ストリームが再開された時に生成されます。
+<p><code>input</code> ストリームが再開された時に生成されます。
 
 </p>
 <p><code>&apos;resume&apos;</code> を監視する例:
@@ -12912,19 +13424,36 @@ Example of listening for `resume`:
 <pre><code>rl.on(&apos;resume&apos;, function() {
   console.log(&apos;Readline resumed.&apos;);
 });</code></pre>
-<h3>Event: &apos;end&apos;<span><a class="mark" href="#all_event_end_4" id="all_event_end_4">#</a></span></h3>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#all_event_close_9" id="all_event_close_9">#</a></span></h3>
 <p><code>function () {}</code>
 
 </p>
 <!--
-Emitted when the `input` stream receives its "end" event, or when `^D` is
-pressed by the user. It's generally a good idea to consider this `Interface`
-instance as completed after this is emitted.
+Emitted when `close()` is called.
 -->
 
-<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合、
-またはユーザが <code>^D</code> を推した場合に生成されます。
-通常、これが生成された後で <code>Interface</code> インスタンスは完了すると考えられます。
+<p><code>close()</code> が呼ばれた場合に生成されます。
+
+</p>
+<!--
+Also emitted when the `input` stream receives its "end" event. The `Interface`
+instance should be considered "finished" once this is emitted. For example, when
+the `input` stream receives `^D`, respectively known as `EOT`.
+-->
+
+<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合にも生成されます。
+これが生成された後、<code>Interface</code> インスタンスは完了したと考えられるべきです。
+例えば、<code>input</code> ストリームが <code>EOT</code> として知られる <code>^D</code> を受け取った場合。
+
+</p>
+<!--
+This event is also called if there is no `SIGINT` event listener present when
+the `input` stream receives a `^C`, respectively known as `SIGINT`.
+-->
+
+<p>このイベントは <code>SIGINT</code> イベントリスナが与えられていない場合に、
+<code>input</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受け取った場合にも
+生成されます。
 
 </p>
 <h3>Event: &apos;SIGINT&apos;<span><a class="mark" href="#all_event_sigint" id="all_event_sigint">#</a></span></h3>
@@ -12932,15 +13461,16 @@ instance as completed after this is emitted.
 
 </p>
 <!--
-Emitted whenever the `in` stream receives a `^C`, respectively known as
-`SIGINT`. If there is no `SIGINT` event listener present when the `in` stream
-receives a `SIGINT`, `pause` will be triggered.
+Emitted whenever the `input` stream receives a `^C`, respectively known as
+`SIGINT`. If there is no `SIGINT` event listener present when the `input`
+stream receives a `SIGINT`, `pause` will be triggered.
 
 Example of listening for `SIGINT`:
 -->
 
-<p><code>in</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に生成されます。
-もし <code>in</code> ストリームが <code>SIGINT</code> を受信した時に <code>&apos;SIGINT&apos;</code> イベントの
+<p><code>input</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に
+生成されます。
+もし <code>input</code> ストリームが <code>SIGINT</code> を受信した時に <code>&apos;SIGINT&apos;</code> イベントの
 リスナが存在しなければ、<code>&apos;pause&apos;</code> イベントがトリガされます。
 
 </p>
@@ -12959,9 +13489,9 @@ Example of listening for `SIGINT`:
 <!--
 **This does not work on Windows.**
 
-Emitted whenever the `in` stream receives a `^Z`, respectively known as
-`SIGTSTP`. If there is no `SIGTSTP` event listener present when the `in` stream
-receives a `SIGTSTP`, the program will be sent to the background.
+Emitted whenever the `input` stream receives a `^Z`, respectively known as
+`SIGTSTP`. If there is no `SIGTSTP` event listener present when the `input`
+stream receives a `SIGTSTP`, the program will be sent to the background.
 
 When the program is resumed with `fg`, the `pause` and `SIGCONT` events will be
 emitted. You can use either to resume the stream.
@@ -12975,8 +13505,9 @@ Example of listening for `SIGTSTP`:
 <p><strong>これは Windows では動作しません。</strong>
 
 </p>
-<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に生成されます。
-もし <code>in</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>&apos;SIGTSTP&apos;</code> イベントの
+<p><code>input</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に
+生成されます。
+もし <code>input</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>&apos;SIGTSTP&apos;</code> イベントの
 リスナが存在しなければ、プログラムはバックグラウンドに送られます。
 
 </p>
@@ -13003,9 +13534,9 @@ Example of listening for `SIGTSTP`:
 <!--
 **This does not work on Windows.**
 
-Emitted whenever the `in` stream is sent to the background with `^Z`,
-respectively known as `SIGTSTP`, and then continued with `fg`. This event only
-emits if the stream was not paused before sending the program to the
+Emitted whenever the `input` stream is sent to the background with `^Z`,
+respectively known as `SIGTSTP`, and then continued with `fg(1)`. This event
+only emits if the stream was not paused before sending the program to the
 background.
 
 Example of listening for `SIGCONT`:
@@ -13014,8 +13545,8 @@ Example of listening for `SIGCONT`:
 <p><strong>これは Windows では動作しません。</strong>
 
 </p>
-<p><code>in</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに
-送られた後で、<code>fg</code> によって再開されるた場合に生成されます。
+<p><code>input</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに
+送られた後で、<code>fg(1)</code> によって再開されるた場合に生成されます。
 このイベントはプログラムがバックグラウンドに送られる前にストリームが中断されていなかった場合にのみ生成されます。
 
 </p>
@@ -13026,6 +13557,7 @@ Example of listening for `SIGCONT`:
   // `prompt` will automatically resume the stream
   rl.prompt();
 });</code></pre>
+<h2>Example: Tiny CLI<span><a class="mark" href="#all_example_tiny_cli" id="all_example_tiny_cli">#</a></span></h2>
 <!--
 Here's an example of how to use all these together to craft a tiny command
 line interface:
@@ -13050,7 +13582,7 @@ rl.on(&apos;line&apos;, function(line) {
       break;
   }
   rl.prompt();
-}).on(&apos;pause&apos;, function() {
+}).on(&apos;close&apos;, function() {
   console.log(&apos;Have a great day!&apos;);
   process.exit(0);
 });</code></pre>
@@ -13820,7 +14352,7 @@ See `waitpid(2)`.
 <p><code>waitpid(2)</code> を参照してください。
 
 </p>
-<h3>Event: &apos;close&apos;<span><a class="mark" href="#all_event_close_9" id="all_event_close_9">#</a></span></h3>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#all_event_close_10" id="all_event_close_10">#</a></span></h3>
 <!--
 This event is emitted when the stdio streams of a child process have all
 terminated.  This is distinct from 'exit', since multiple processes
@@ -14852,7 +15384,7 @@ header on responses.
 
 **Note: these examples are drastically simplified to show
 the basic concept.**  Zlib encoding can be expensive, and the results
-ought to be cached.  See [Memory Usage Tuning](#memory_Usage_Tuning)
+ought to be cached.  See [Memory Usage Tuning](#zlib_memory_usage_tuning)
 below for more information on the speed/memory/compression
 tradeoffs involved in zlib usage.
 -->
@@ -14868,7 +15400,7 @@ tradeoffs involved in zlib usage.
 これらのサンプルは基本コンセプトを見せるためにとても単純化されています。</strong>
 Zlib エンコーディングは高価なので、結果はキャッシュされるべきです。
 zlibの使い方に関する速度／メモリ／圧縮率のトレードオフについてより詳しくは、
-後述の <a href="#memory_Usage_Tuning">Memory Usage Tuning</a> を参照してください。
+後述の <a href="#zlib_memory_usage_tuning">Memory Usage Tuning</a> を参照してください。
 
 </p>
 <pre><code>// client request example
@@ -14939,65 +15471,74 @@ for more details.
 </p>
 <h2>zlib.createGzip([options])<span><a class="mark" href="#all_zlib_creategzip_options" id="all_zlib_creategzip_options">#</a></span></h2>
 <!--
-Returns a new [Gzip](#zlib.Gzip) object with an [options](#options).
+Returns a new [Gzip](#zlib_class_zlib_gzip) object with an
+[options](#zlib_options).
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.Gzip">Gzip</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_gzip">Gzip</a> オブジェクトを返します。
 
 </p>
 <h2>zlib.createGunzip([options])<span><a class="mark" href="#all_zlib_creategunzip_options" id="all_zlib_creategunzip_options">#</a></span></h2>
 <!--
-Returns a new [Gunzip](#zlib.Gunzip) object with an [options](#options).
+Returns a new [Gunzip](#zlib_class_zlib_gunzip) object with an
+[options](#zlib_options).
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.Gunzip">Gunzip</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_gunzip">Gunzip</a> オブジェクトを返します。
 
 </p>
 <h2>zlib.createDeflate([options])<span><a class="mark" href="#all_zlib_createdeflate_options" id="all_zlib_createdeflate_options">#</a></span></h2>
 <!--
-Returns a new [Deflate](#zlib.Deflate) object with an [options](#options).
+Returns a new [Deflate](#zlib_class_zlib_deflate) object with an
+[options](#zlib_options).
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.Deflate">Deflate</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_deflate">Deflate</a> オブジェクトを返します。
 
 </p>
 <h2>zlib.createInflate([options])<span><a class="mark" href="#all_zlib_createinflate_options" id="all_zlib_createinflate_options">#</a></span></h2>
 <!--
-Returns a new [Inflate](#zlib.Inflate) object with an [options](#options).
+Returns a new [Inflate](#zlib_class_zlib_inflate) object with an
+[options](#zlib_options).
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.Inflate">Inflate</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_inflate">Inflate</a> オブジェクトを返します。
 
 </p>
 <h2>zlib.createDeflateRaw([options])<span><a class="mark" href="#all_zlib_createdeflateraw_options" id="all_zlib_createdeflateraw_options">#</a></span></h2>
 <!--
-Returns a new [DeflateRaw](#zlib.DeflateRaw) object with an [options](#options).
+Returns a new [DeflateRaw](#zlib_class_zlib_deflateraw) object with an
+[options](#zlib_options).
+
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.DeflateRaw">DeflateRaw</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_deflateraw">DeflateRaw</a> オブジェクトを返します。
 
 </p>
 <h2>zlib.createInflateRaw([options])<span><a class="mark" href="#all_zlib_createinflateraw_options" id="all_zlib_createinflateraw_options">#</a></span></h2>
 <!--
-Returns a new [InflateRaw](#zlib.InflateRaw) object with an [options](#options).
+Returns a new [InflateRaw](#zlib_class_zlib_inflateraw) object with an
+[options](#zlib_options).
+
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.InflateRaw">InflateRaw</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_inflateraw">InflateRaw</a> オブジェクトを返します。
 
 </p>
 <h2>zlib.createUnzip([options])<span><a class="mark" href="#all_zlib_createunzip_options" id="all_zlib_createunzip_options">#</a></span></h2>
 <!--
-Returns a new [Unzip](#zlib.Unzip) object with an [options](#options).
+Returns a new [Unzip](#zlib_class_zlib_unzip) object with an
+[options](#zlib_options).
 -->
 
-<p><a href="#options">options</a> によって作られた新しい <a href="#zlib.Unzip">Unzip</a>
-オブジェクトを返します。
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_unzip">Unzip</a> オブジェクトを返します。
 
 
 </p>
@@ -15436,6 +15977,14 @@ Get a list of network interfaces:
   vmnet1: [ { address: &apos;10.99.99.254&apos;, family: &apos;IPv4&apos;, internal: false } ],
   vmnet8: [ { address: &apos;10.88.88.1&apos;, family: &apos;IPv4&apos;, internal: false } ],
   ppp0: [ { address: &apos;10.2.0.231&apos;, family: &apos;IPv4&apos;, internal: false } ] }</code></pre>
+<h2>os.EOL<span><a class="mark" href="#all_os_eol" id="all_os_eol">#</a></span></h2>
+<!--
+A constant defining the appropriate End-of-line marker for the operating system.
+-->
+
+<p>オペレーティングシステムに適した行区切り文字を定義した定数です。
+
+</p>
 <h1>Debugger<span><a class="mark" href="#all_debugger" id="all_debugger">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!-- type=misc -->
@@ -15689,7 +16238,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on(&apos;death&apos;, function(worker) {
+  cluster.on(&apos;exit&apos;, function(worker) {
     console.log(&apos;worker &apos; + worker.pid + &apos; died&apos;);
   });
 } else {
@@ -15807,7 +16356,7 @@ cluster.on(&apos;fork&apos;, function (worker) {
 cluster.on(&apos;listening&apos;, function (worker) {
   clearTimeout(timeouts[worker.uniqueID]);
 });
-cluster.on(&apos;death&apos;, function (worker) {
+cluster.on(&apos;exit&apos;, function (worker) {
   clearTimeout(timeouts[worker.uniqueID]);
   errorMsg();
 });</code></pre>
@@ -15867,12 +16416,12 @@ when the worker dies, usually after calling `.destroy()`.
 </p>
 <!--
 When calling `.disconnect()`, there may be a delay between the
-`disconnect` and `death` events.  This event can be used to detect if
+`disconnect` and `exit` events.  This event can be used to detect if
 the process is stuck in a cleanup or if there are long-living
 connections.
 -->
 
-<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;death&apos;</code> の間には
+<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;exit&apos;</code> の間には
 遅延があるかもしれません。このイベントはプロセスがクリーンナップで
 行き詰まったり、長時間生きている接続がないかを検出することに
 使用できます。
@@ -15881,21 +16430,21 @@ connections.
 <pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {
   console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);
 });</code></pre>
-<h2>Event: &apos;death&apos;<span><a class="mark" href="#all_event_death" id="all_event_death">#</a></span></h2>
+<h2>Event: &apos;exit&apos;<span><a class="mark" href="#all_event_exit_3" id="all_event_exit_3">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
 <!--
-When any of the workers die the cluster module will emit the 'death' event.
+When any of the workers die the cluster module will emit the 'exit' event.
 This can be used to restart the worker by calling `fork()` again.
 -->
 
-<p>どのワーカが死んだ場合でも、クラスタモジュールは <code>&apos;death&apos;</code> イベントを
+<p>どのワーカが死んだ場合でも、クラスタモジュールは <code>&apos;exit&apos;</code> イベントを
 生成します。
 これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。
 
 </p>
-<pre><code>cluster.on(&apos;death&apos;, function(worker) {
+<pre><code>cluster.on(&apos;exit&apos;, function(worker) {
   console.log(&apos;worker &apos; + worker.pid + &apos; died. restart...&apos;);
   cluster.fork();
 });</code></pre>
@@ -16167,16 +16716,15 @@ This example will echo back all messages from the master:
 <h3>worker.destroy()<span><a class="mark" href="#all_worker_destroy" id="all_worker_destroy">#</a></span></h3>
 <!--
 This function will kill the worker, and inform the master to not spawn a
-new worker.  To know the difference between suicide and accidentally death
-a suicide boolean is set to true.
+new worker.  The boolean `suicide` lets you distinguish between voluntary
+and accidental exit.
 -->
 
 <p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。
-意図しない終了と区別するために <code>suicide</code> プロパティに <code>true</code>
-が設定されることを知っておいてください。
+boolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。
 
 </p>
-<pre><code>cluster.on(&apos;death&apos;, function (worker) {
+<pre><code>cluster.on(&apos;exit&apos;, function (worker) {
   if (worker.suicide === true) {
     console.log(&apos;Oh, it was just suicide\&apos; – no need to worry&apos;).
   }
@@ -16190,7 +16738,7 @@ When calling this function the worker will no longer accept new connections, but
 they will be handled by any other listening worker. Existing connection will be
 allowed to exit as usual. When no more connections exist, the IPC channel to the worker
 will close allowing it to die graceful. When the IPC channel is closed the `disconnect`
-event will emit, this is then followed by the `death` event, there is emitted when
+event will emit, this is then followed by the `exit` event, there is emitted when
 the worker finally die.
 -->
 
@@ -16200,7 +16748,7 @@ the worker finally die.
 コネクションが無くなると、ワーカを正常に終了するために IPC チャネルは
 閉じられます。
 IPC チャネルが閉じられると <code>&apos;disconnect&apos;</code> イベントが生成され、
-その後ワーカが終了すると <code>&apos;death&apos;</code> イベントが生成されます。
+その後ワーカが終了すると <code>&apos;exit&apos;</code> イベントが生成されます。
 
 </p>
 <!--
@@ -16355,20 +16903,20 @@ on the specified worker.
       // Worker has disconnected
     };
 
-### Event: &apos;death&apos;
+### Event: &apos;exit&apos;
 
 * <code>worker</code> {Worker object}
 
 <!--
-Same as the `cluster.on('death')` event, but emits only when the state change
+Same as the `cluster.on('exit')` event, but emits only when the state change
 on the specified worker.
 -->
 
-<p><code>cluster.on(&apos;death&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
+<p><code>cluster.on(&apos;exit&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
 イベントを生成します。
 
 </p>
-<pre><code>cluster.fork().on(&apos;death&apos;, function (worker) {
+<pre><code>cluster.fork().on(&apos;exit&apos;, function (worker) {
   // Worker has died
 };</code></pre>
 <h1>Appendix 1 - Third Party Modules<span><a class="mark" href="#all_appendix_1_third_party_modules" id="all_appendix_1_third_party_modules">#</a></span></h1>

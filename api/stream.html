@@ -206,10 +206,25 @@ Makes the data event emit a string instead of a `Buffer`. `encoding` can be
 </p>
 <h3>stream.pause()<span><a class="mark" href="#stream_stream_pause" id="stream_stream_pause">#</a></span></h3>
 <!--
-Pauses the incoming `'data'` events.
+Issues an advisory signal to the underlying communication layer, requesting
+that no further data be sent until `resume()` is called.
 -->
 
-<p><code>&apos;data&apos;</code> イベントの到着を中断します。
+<p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
+データが送られないように要求します。
+
+</p>
+<!--
+Note that, due to the advisory nature, certain streams will not be paused
+immediately, and so `'data'` events may be emitted for some indeterminate
+period of time even after `pause()` is called. You may wish to buffer such
+`'data'` events.
+-->
+
+<p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
+および <code>pause()</code> を呼び出してから不特定の時間 <code>&apos;data&apos;</code> イベントが
+生成されるかもしれないことに注意してください。
+<code>&apos;data&apos;</code> イベントをバッファリングするのもいいでしょう。
 
 </p>
 <h3>stream.resume()<span><a class="mark" href="#stream_stream_resume" id="stream_stream_resume">#</a></span></h3>
