@@ -18,7 +18,7 @@
               "textRaw": "buf.write(string, [offset], [length], [encoding])",
               "type": "method",
               "name": "write",
-              "desc": "<!--\n* `string` String - data to be written to buffer\n* `offset` Number, Optional, Default: 0\n* `length` Number, Optional\n* `encoding` String, Optional, Default: 'utf8'\n-->\n\n<ul>\n<li><code>string</code> String - バッファに書き込まれるデータ</li>\n<li><code>offset</code> Number, Optional, Default: 0</li>\n<li><code>length</code> Number, Optional</li>\n<li><code>encoding</code> String, Optional, Default: &apos;utf8&apos;</li>\n</ul>\n<!--\nWrites `string` to the buffer at `offset` using the given encoding.\n`offset` defaults to `0`, `encoding` defaults to `'utf8'`. `length` is\nthe number of bytes to write. Returns number of octets written. If `buffer` did\nnot contain enough space to fit the entire string, it will write a partial\namount of the string. `length` defaults to `buffer.length - offset`.\nThe method will not write partial characters.\n-->\n\n<p>与えられたエンコーディングを使用して、<code>string</code> をバッファの <code>offset</code> から書き込みます。\n<code>offset</code> のデフォルトは <code>0</code>、<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。\n<code>length</code> は書き込むバイト数です。書き込まれたオクテット数を返します。\nもし <code>buffer</code> が文字列全体を挿入するのに十分なスペースを含んでいなければ、文字列の一部だけを書き込みます。\n<code>length</code> のデフォルトは <code>buffer.length - offset</code> です。\nこのメソッドは文字の一部だけを書き込むことはありません。\n\n</p>\n<!--\nExample: write a utf8 string into a buffer, then print it\n-->\n\n<p>例: utf8 の文字列をバッファに書き込み、それをプリントします\n\n</p>\n<pre><code>buf = new Buffer(256);\nlen = buf.write(&apos;\\u00bd + \\u00bc = \\u00be&apos;, 0);\nconsole.log(len + &quot; bytes: &quot; + buf.toString(&apos;utf8&apos;, 0, len));</code></pre>\n<!--\nThe number of characters written (which may be different than the number of\nbytes written) is set in `Buffer._charsWritten` and will be overwritten the\nnext time `buf.write()` is called.\n-->\n\n<p>書き込まれた文字数 (書き込まれたバイト数とは異なる場合があります) は、\n次に <code>buf.write()</code> が呼び出されて上書きされるまで\n<code>Buffer._charsWritten</code> に設定されています。\n\n</p>\n",
+              "desc": "<!--\n* `string` String - data to be written to buffer\n* `offset` Number, Optional, Default: 0\n* `length` Number, Optional, Default: `buffer.length - offset`\n* `encoding` String, Optional, Default: 'utf8'\n-->\n\n<ul>\n<li><code>string</code> String - バッファに書き込まれるデータ</li>\n<li><code>offset</code> Number, Optional, Default: 0</li>\n<li><code>length</code> Number, Optional, Default: <code>buffer.length - offset</code></li>\n<li><code>encoding</code> String, Optional, Default: &apos;utf8&apos;</li>\n</ul>\n<!--\nWrites `string` to the buffer at `offset` using the given encoding.\n`offset` defaults to `0`, `encoding` defaults to `'utf8'`. `length` is\nthe number of bytes to write. Returns number of octets written. If `buffer` did\nnot contain enough space to fit the entire string, it will write a partial\namount of the string. `length` defaults to `buffer.length - offset`.\nThe method will not write partial characters.\n-->\n\n<p>与えられたエンコーディングを使用して、<code>string</code> をバッファの <code>offset</code> から書き込みます。\n<code>offset</code> のデフォルトは <code>0</code>、<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。\n<code>length</code> は書き込むバイト数です。書き込まれたオクテット数を返します。\nもし <code>buffer</code> が文字列全体を挿入するのに十分なスペースを含んでいなければ、文字列の一部だけを書き込みます。\n<code>length</code> のデフォルトは <code>buffer.length - offset</code> です。\nこのメソッドは文字の一部だけを書き込むことはありません。\n\n</p>\n<!--\nExample: write a utf8 string into a buffer, then print it\n-->\n\n<p>例: utf8 の文字列をバッファに書き込み、それをプリントします\n\n</p>\n<pre><code>buf = new Buffer(256);\nlen = buf.write(&apos;\\u00bd + \\u00bc = \\u00be&apos;, 0);\nconsole.log(len + &quot; bytes: &quot; + buf.toString(&apos;utf8&apos;, 0, len));</code></pre>\n<!--\nThe number of characters written (which may be different than the number of\nbytes written) is set in `Buffer._charsWritten` and will be overwritten the\nnext time `buf.write()` is called.\n-->\n\n<p>書き込まれた文字数 (書き込まれたバイト数とは異なる場合があります) は、\n次に <code>buf.write()</code> が呼び出されて上書きされるまで\n<code>Buffer._charsWritten</code> に設定されています。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -61,10 +61,10 @@
                       "optional": true
                     },
                     {
-                      "textRaw": "`end` Number, Optional ",
+                      "textRaw": "`end` Number, Optional, Default: `buffer.length` ",
                       "name": "end",
-                      "optional": true,
-                      "desc": "Number"
+                      "desc": "Number, Optional, Default: `buffer.length`",
+                      "optional": true
                     }
                   ]
                 },
@@ -91,7 +91,7 @@
               "textRaw": "buf.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd])",
               "type": "method",
               "name": "copy",
-              "desc": "<!--\n* `targetBuffer` Buffer object - Buffer to copy into\n* `targetStart` Number, Optional, Default: 0\n* `sourceStart` Number, Optional, Default: 0\n* `sourceEnd` Number, Optional, Default: 0\n-->\n\n<ul>\n<li><code>targetBuffer</code> Buffer object - コピー先の Buffer</li>\n<li><code>targetStart</code> Number, Optional, Default: 0</li>\n<li><code>sourceStart</code> Number, Optional, Default: 0</li>\n<li><code>sourceEnd</code> Number, Optional, Default: 0</li>\n</ul>\n<!--\nDoes copy between buffers. The source and target regions can be overlapped.\n`targetStart` and `sourceStart` default to `0`.\n`sourceEnd` defaults to `buffer.length`.\n-->\n\n<p>バッファ間でコピーします。\nソースとターゲットの領域は重なっていても構いません。\n<code>targetStart</code> と <code>sourceStart</code> のデフォルトは <code>0</code> です。\n<code>sourceEnd</code> のデフォルトは <code>buffer.length</code> です。\n\n</p>\n<!--\nExample: build two Buffers, then copy `buf1` from byte 16 through byte 19\ninto `buf2`, starting at the 8th byte in `buf2`.\n-->\n\n<p>例: バッファを2個作成し、<code>buf1</code> の 16 バイト目から 19 バイト目を、\n<code>buf2</code> の 8 バイト目から始まる位置へコピーします。\n\n</p>\n<pre><code>buf1 = new Buffer(26);\nbuf2 = new Buffer(26);\n\nfor (var i = 0 ; i &lt; 26 ; i++) {\n  buf1[i] = i + 97; // 97 is ASCII a\n  buf2[i] = 33; // ASCII !\n}\n\nbuf1.copy(buf2, 8, 16, 20);\nconsole.log(buf2.toString(&apos;ascii&apos;, 0, 25));\n\n// !!!!!!!!qrst!!!!!!!!!!!!!</code></pre>\n",
+              "desc": "<!--\n* `targetBuffer` Buffer object - Buffer to copy into\n* `targetStart` Number, Optional, Default: 0\n* `sourceStart` Number, Optional, Default: 0\n* `sourceEnd` Number, Optional, Default: `buffer.length`\n-->\n\n<ul>\n<li><code>targetBuffer</code> Buffer object - コピー先の Buffer</li>\n<li><code>targetStart</code> Number, Optional, Default: 0</li>\n<li><code>sourceStart</code> Number, Optional, Default: 0</li>\n<li><code>sourceEnd</code> Number, Optional, Default: <code>buffer.length</code></li>\n</ul>\n<!--\nDoes copy between buffers. The source and target regions can be overlapped.\n`targetStart` and `sourceStart` default to `0`.\n`sourceEnd` defaults to `buffer.length`.\n-->\n\n<p>バッファ間でコピーします。\nソースとターゲットの領域は重なっていても構いません。\n<code>targetStart</code> と <code>sourceStart</code> のデフォルトは <code>0</code> です。\n<code>sourceEnd</code> のデフォルトは <code>buffer.length</code> です。\n\n</p>\n<!--\nExample: build two Buffers, then copy `buf1` from byte 16 through byte 19\ninto `buf2`, starting at the 8th byte in `buf2`.\n-->\n\n<p>例: バッファを2個作成し、<code>buf1</code> の 16 バイト目から 19 バイト目を、\n<code>buf2</code> の 8 バイト目から始まる位置へコピーします。\n\n</p>\n<pre><code>buf1 = new Buffer(26);\nbuf2 = new Buffer(26);\n\nfor (var i = 0 ; i &lt; 26 ; i++) {\n  buf1[i] = i + 97; // 97 is ASCII a\n  buf2[i] = 33; // ASCII !\n}\n\nbuf1.copy(buf2, 8, 16, 20);\nconsole.log(buf2.toString(&apos;ascii&apos;, 0, 25));\n\n// !!!!!!!!qrst!!!!!!!!!!!!!</code></pre>\n",
               "signatures": [
                 {
                   "params": [
@@ -128,9 +128,9 @@
                       "optional": true
                     },
                     {
-                      "textRaw": "`end` Number, Optional, Default: 0 ",
+                      "textRaw": "`end` Number, Optional, Default: `buffer.length` ",
                       "name": "end",
-                      "desc": "Number, Optional, Default: 0",
+                      "desc": "Number, Optional, Default: `buffer.length`",
                       "optional": true
                     }
                   ]
