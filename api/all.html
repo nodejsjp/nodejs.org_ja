@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.6.17 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.6.18 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -42,9 +42,9 @@
         <div id="column1" class="interior">
           <header>
             <!--
-            <h1>Node.js v0.6.17 Manual &amp; Documentation</h1>
+            <h1>Node.js v0.6.18 Manual &amp; Documentation</h1>
             -->
-            <h1>Node.js v0.6.17 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.6.18 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -261,7 +261,6 @@
 <li><a href="#all_stream_pause">stream.pause()</a></li>
 <li><a href="#all_stream_resume">stream.resume()</a></li>
 <li><a href="#all_stream_destroy">stream.destroy()</a></li>
-<li><a href="#all_stream_destroysoon">stream.destroySoon()</a></li>
 <li><a href="#all_stream_pipe_destination_options">stream.pipe(destination, [options])</a></li>
 </ul>
 </li>
@@ -277,7 +276,7 @@
 <li><a href="#all_stream_end_string_encoding">stream.end(string, encoding)</a></li>
 <li><a href="#all_stream_end_buffer">stream.end(buffer)</a></li>
 <li><a href="#all_stream_destroy_1">stream.destroy()</a></li>
-<li><a href="#all_stream_destroysoon_1">stream.destroySoon()</a></li>
+<li><a href="#all_stream_destroysoon">stream.destroySoon()</a></li>
 </ul>
 </li>
 </ul>
@@ -4133,14 +4132,14 @@ Allocates a new buffer containing the given `str`.
 <!--
 * `string` String - data to be written to buffer
 * `offset` Number, Optional, Default: 0
-* `length` Number, Optional
+* `length` Number, Optional, Default: `buffer.length - offset`
 * `encoding` String, Optional, Default: 'utf8'
 -->
 
 <ul>
 <li><code>string</code> String - バッファに書き込まれるデータ</li>
 <li><code>offset</code> Number, Optional, Default: 0</li>
-<li><code>length</code> Number, Optional</li>
+<li><code>length</code> Number, Optional, Default: <code>buffer.length - offset</code></li>
 <li><code>encoding</code> String, Optional, Default: &apos;utf8&apos;</li>
 </ul>
 <!--
@@ -4185,7 +4184,7 @@ next time `buf.write()` is called.
 <div class="signature"><ul>
 <li><code>encoding</code> String, Optional, Default: &apos;utf8&apos;</li>
 <li><code>start</code> Number, Optional, Default: 0</li>
-<li><code>end</code> Number, Optional</li>
+<li><code>end</code> Number, Optional, Default: <code>buffer.length</code></li>
 </div></ul>
 <!--
 Decodes and returns a string from buffer data encoded with `encoding`
@@ -4307,14 +4306,14 @@ console.log(buf.length);
 * `targetBuffer` Buffer object - Buffer to copy into
 * `targetStart` Number, Optional, Default: 0
 * `sourceStart` Number, Optional, Default: 0
-* `sourceEnd` Number, Optional, Default: 0
+* `sourceEnd` Number, Optional, Default: `buffer.length`
 -->
 
 <ul>
 <li><code>targetBuffer</code> Buffer object - コピー先の Buffer</li>
 <li><code>targetStart</code> Number, Optional, Default: 0</li>
 <li><code>sourceStart</code> Number, Optional, Default: 0</li>
-<li><code>sourceEnd</code> Number, Optional, Default: 0</li>
+<li><code>sourceEnd</code> Number, Optional, Default: <code>buffer.length</code></li>
 </ul>
 <!--
 Does copy between buffers. The source and target regions can be overlapped.
@@ -4352,7 +4351,7 @@ console.log(buf2.toString(&apos;ascii&apos;, 0, 25));
 <h3>buf.slice([start], [end])<span><a class="mark" href="#all_buf_slice_start_end" id="all_buf_slice_start_end">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>start</code> Number, Optional, Default: 0</li>
-<li><code>end</code> Number, Optional, Default: 0</li>
+<li><code>end</code> Number, Optional, Default: <code>buffer.length</code></li>
 </div></ul>
 <!--
 Returns a new buffer which references the same memory as the old, but offset
@@ -5241,14 +5240,6 @@ Closes the underlying file descriptor. Stream will not emit any more events.
 <p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
 
 </p>
-<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon" id="all_stream_destroysoon">#</a></span></h3>
-<!--
-After the write queue is drained, close the file descriptor.
--->
-
-<p>書き込みキューが空になった後、ファイル記述子をクローズします。
-
-</p>
 <h3>stream.pipe(destination, [options])<span><a class="mark" href="#all_stream_pipe_destination_options" id="all_stream_pipe_destination_options">#</a></span></h3>
 <!--
 This is a `Stream.prototype` method available on all `Stream`s.
@@ -5455,7 +5446,7 @@ Any queued write data will not be sent.
 キューイングされたデータは送信されません。
 
 </p>
-<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon_1" id="all_stream_destroysoon_1">#</a></span></h3>
+<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon" id="all_stream_destroysoon">#</a></span></h3>
 <!--
 After the write queue is drained, close the file descriptor. `destroySoon()`
 can still destroy straight away, as long as there is no data left in the queue
@@ -5502,8 +5493,10 @@ Creates a credentials object, with the optional details being a dictionary with 
 
 </p>
 <!--
+* `pfx` : A string or buffer holding the PFX or PKCS12 encoded private key, certificate and CA certificates
 * `key` : a string holding the PEM encoded private key
 * `cert` : a string holding the PEM encoded certificate
+* `passphrase` : A string of passphrase for the private key or pfx
 * `ca` : either a string or list of strings of PEM encoded CA certificates to trust.
 * `ciphers`: a string describing the ciphers to use or exclude. Consult
   <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for details
@@ -5511,9 +5504,13 @@ Creates a credentials object, with the optional details being a dictionary with 
 -->
 
 <ul>
-<li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列</li>
-<li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列</li>
-<li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または文字列の配列</li>
+<li><code>pfx</code>: PFX または PKCS12 でエンコードされた秘密鍵、証明書、および認証局を
+表す文字列または <code>Buffer</code>。</li>
+<li><code>key</code> : PEM でエンコードされた秘密鍵を表す文字列。</li>
+<li><code>cert</code> : PEM でエンコードされた証明書を表す文字列。</li>
+<li><code>passphrase</code> : 秘密鍵または pfx のパスフレーズを表す文字列。</li>
+<li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または
+文字列の配列。</li>
 <li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。
 詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>
 を参照してください。</li>
@@ -6217,6 +6214,28 @@ Alternatively you can send the CSR to a Certificate Authority for signing.
 <code>test/fixtures/keys/Makefile</code> を見る必要がある)
 
 </p>
+<!--
+To create .pfx or .p12, do this:
+-->
+
+<p>.pfx または .p12 を作成するには、次のようにします。
+
+</p>
+<pre><code>openssl pkcs12 -export -in agent5-cert.pem -inkey agent5-key.pem \
+    -certfile ca-cert.pem -out agent5.pfx</code></pre>
+<!--
+  - `in`:  certificate
+  - `inkey`: private key
+  - `certfile`: all CA certs concatenated in one file like
+    `cat ca1-cert.pem ca2-cert.pem > ca-cert.pem`
+-->
+
+<ul>
+<li><code>in</code>: 証明書</li>
+<li><code>inkey</code>: 秘密鍵</li>
+<li><code>certfile</code>: 全ての認証局が含まれた、次のようなファイル。
+<code>cat ca1-cert.pem ca2-cert.pem &gt; ca-cert.pem</code></li>
+</ul>
 <h2>Client-initiated renegotiation attack mitigation<span><a class="mark" href="#all_client_initiated_renegotiation_attack_mitigation" id="all_client_initiated_renegotiation_attack_mitigation">#</a></span></h2>
 <!-- type=misc -->
 
@@ -6308,10 +6327,14 @@ The `options` object has these possibilities:
 
 </p>
 <!--
+  - `pfx`: A string or `Buffer` containing the private key, certificate and
+    CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with
+    the `key`, `cert` and `ca` options.)
+
   - `key`: A string or `Buffer` containing the private key of the server in
     PEM format. (Required)
 
-  - `passphrase`: A string of passphrase for the private key.
+  - `passphrase`: A string of passphrase for the private key or pfx.
 
   - `cert`: A string or `Buffer` containing the certificate key of the server in
     PEM format. (Required)
@@ -6348,12 +6371,16 @@ The `options` object has these possibilities:
 -->
 
 <ul>
-<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です
+<li><p><code>pfx</code>: サーバの秘密鍵、証明書、および認証局を含む、PFX または PKCS12
+フォーマットの文字列または <code>Buffer</code> です。
+(<code>key</code>、<code>cert</code> および <code>ca</code> オプションとは相互排他です)。</p>
+</li>
+<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を表す文字列または <code>Buffer</code> です
 (必須)。</p>
 </li>
 <li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>
 </li>
-<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
+<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を表す文字列または <code>Buffer</code> です
 (必須)。</p>
 </li>
 <li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
@@ -6422,9 +6449,14 @@ Here is a simple example echo server:
 
 <p>これはシンプルはエコーサーバの例です:
 
-
 </p>
 <pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;server.pfx&apos;),
+
+var tls = require(&apos;tls&apos;);
 var fs = require(&apos;fs&apos;);
 
 var options = {
@@ -6436,6 +6468,58 @@ var options = {
 
   // これは自己署名のクライアント証明書を認証する場合だけ必要です
   ca: [ fs.readFileSync(&apos;client-cert.pem&apos;) ]
+};
+
+var server = tls.createServer(options, function(cleartextStream) {
+  console.log(&apos;server connected&apos;,
+              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  cleartextStream.write(&quot;welcome!\n&quot;);
+  cleartextStream.setEncoding(&apos;utf8&apos;);
+  cleartextStream.pipe(cleartextStream);
+});
+server.listen(8000, function() {
+  console.log(&apos;server bound&apos;);
+});</code></pre>
+<!--
+Or
+-->
+
+<p>または
+
+</p>
+<!--
+    var tls = require('tls');
+    var fs = require('fs');
+
+    var options = {
+      pfx: fs.readFileSync('server.pfx'),
+
+      // This is necessary only if using the client certificate authentication.
+      requestCert: true,
+
+    };
+
+    var server = tls.createServer(options, function(cleartextStream) {
+      console.log('server connected',
+                  cleartextStream.authorized ? 'authorized' : 'unauthorized');
+      cleartextStream.write("welcome!\n");
+      cleartextStream.setEncoding('utf8');
+      cleartextStream.pipe(cleartextStream);
+    });
+    server.listen(8000, function() {
+      console.log('server bound');
+    });
+-->
+
+<pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;server.pfx&apos;),
+
+  // これはクライアント証明書を用いた認証を行う場合だけ必要です
+  requestCert: true,
+
 };
 
 var server = tls.createServer(options, function(cleartextStream) {
@@ -6469,10 +6553,13 @@ defaults to `localhost`.) `options` should be an object which specifies
 
 </p>
 <!--
+  - `pfx`: A string or `Buffer` containing the private key, certificate and
+    CA certs of the server in PFX or PKCS12 format.
+
   - `key`: A string or `Buffer` containing the private key of the client in
     PEM format.
 
-  - `passphrase`: A string of passphrase for the private key.
+  - `passphrase`: A string of passphrase for the private key or pfx.
 
   - `cert`: A string or `Buffer` containing the certificate key of the client in
     PEM format.
@@ -6495,12 +6582,15 @@ defaults to `localhost`.) `options` should be an object which specifies
 -->
 
 <ul>
-<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または
+<li><p><code>pfx</code>: サーバの秘密鍵、証明書、および認証局を含む、PFX または PKCS12
+フォーマットの文字列または <code>Buffer</code> です。</p>
+</li>
+<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を表す文字列または
 <code>Buffer</code> です。</p>
 </li>
-<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>
+<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>
 </li>
-<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>
+<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を表す文字列または <code>Buffer</code> です。</p>
 </li>
 <li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
@@ -6528,7 +6618,20 @@ The `secureConnectListener` parameter will be added as a listener for the
 `tls.connect()` returns a [CleartextStream](#tls.CleartextStream) object.
 
 Here is an example of a client of echo server as described previously:
+-->
 
+<p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">&apos;secureConnect&apos;</a>
+イベントのリスナとして加えられます。
+
+</p>
+<p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a>
+オブジェクトを返します。
+
+</p>
+<p>これは前述のエコーサーバに接続するクライアントの例です:
+
+</p>
+<!--
     var tls = require('tls');
     var fs = require('fs');
 
@@ -6556,17 +6659,6 @@ Here is an example of a client of echo server as described previously:
     });
 -->
 
-<p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">&apos;secureConnect&apos;</a>
-イベントのリスナとして加えられます。
-
-</p>
-<p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a>
-オブジェクトを返します。
-
-</p>
-<p>これは前述のエコーサーバに接続するクライアントの例です:
-
-</p>
 <pre><code>var tls = require(&apos;tls&apos;);
 var fs = require(&apos;fs&apos;);
 
@@ -6577,6 +6669,33 @@ var options = {
 
   // これはサーバが自己署名証明書を使う場合だけ必要です
   ca: [ fs.readFileSync(&apos;server-cert.pem&apos;) ]
+};
+
+var cleartextStream = tls.connect(8000, options, function() {
+  console.log(&apos;client connected&apos;,
+              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  process.stdin.pipe(cleartextStream);
+  process.stdin.resume();
+});
+cleartextStream.setEncoding(&apos;utf8&apos;);
+cleartextStream.on(&apos;data&apos;, function(data) {
+  console.log(data);
+});
+cleartextStream.on(&apos;end&apos;, function() {
+  server.close();
+});</code></pre>
+<!--
+Or
+-->
+
+<p>または
+
+</p>
+<pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;client.pfx&apos;)
 };
 
 var cleartextStream = tls.connect(8000, options, function() {
@@ -11541,6 +11660,24 @@ https.createServer(options, function (req, res) {
   res.writeHead(200);
   res.end(&quot;hello world\n&quot;);
 }).listen(8000);</code></pre>
+<!--
+Or
+-->
+
+<p>または
+
+</p>
+<pre><code>var https = require(&apos;https&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;server.pfx&apos;)
+};
+
+https.createServer(options, function (req, res) {
+  res.writeHead(200);
+  res.end(&quot;hello world\n&quot;);
+}).listen(8000);</code></pre>
 <h2>https.request(options, callback)<span><a class="mark" href="#all_https_request_options_callback" id="all_https_request_options_callback">#</a></span></h2>
 <!--
 Makes a request to a secure web server.
@@ -11614,8 +11751,9 @@ The options argument has the following options
 The following options from [tls.connect()](tls.html#tls.connect) can also be
 specified. However, a [globalAgent](#https.globalAgent) silently ignores these.
 
+- `pfx`: Certificate, Private key and CA certificates to use for SSL. Default `null`.
 - `key`: Private key to use for SSL. Default `null`.
-- `passphrase`: A string of passphrase for the private key. Default `null`.
+- `passphrase`: A string of passphrase for the private key or pfx. Default `null`.
 - `cert`: Public x509 certificate to use. Default `null`.
 - `ca`: An authority certificate or array of authority certificates to check
   the remote host against.
@@ -11653,8 +11791,10 @@ Example:
 
 </p>
 <ul>
-<li><code>key</code>: SSLで使用する秘密鍵。デフォルトは <code>null</code> です。</li>
-<li><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列。デフォルトは <code>null</code> です。</li>
+<li><code>pfx</code>: SSL で使用する証明書、秘密鍵、および認証局。デフォルトは <code>null</code> です。</li>
+<li><code>key</code>: SSL で使用する秘密鍵。デフォルトは <code>null</code> です。</li>
+<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列。
+デフォルトは <code>null</code> です。</li>
 <li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li>
 <li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li>
 </ul>
@@ -14832,7 +14972,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.17/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.6.18/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
