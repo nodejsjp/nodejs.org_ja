@@ -9,13 +9,21 @@
       "desc": "<!--\nThese functions are in the module `'util'`. Use `require('util')` to access\nthem.\n-->\n\n<p>これらの関数はモジュール <code>&apos;util&apos;</code> 内にあります。\n<code>require(&apos;util&apos;)</code> を使うことでこれらにアクセスします。\n\n\n</p>\n",
       "methods": [
         {
-          "textRaw": "util.format()",
+          "textRaw": "util.format(format, [...])",
           "type": "method",
           "name": "format",
           "desc": "<!--\nReturns a formatted string using the first argument as a `printf`-like format.\n-->\n\n<p>最初の引数を <code>printf</code> のようなフォーマットとして使用して、フォーマット化された\n文字列を返します。\n\n</p>\n<!--\nThe first argument is a string that contains zero or more *placeholders*.\nEach placeholder is replaced with the converted value from its corresponding\nargument. Supported placeholders are:\n-->\n\n<p>第一引数は文字列で、0 個以上の <em>プレースホルダ</em> を含みます。\nそれぞれのプレースホルダは対応する引数を変換した値で置換されます。\nサポートするプレースホルダは:\n\n</p>\n<!--\n* `%s` - String.\n* `%d` - Number (both integer and float).\n* `%j` - JSON.\n* `%` - single percent sign (`'%'`). This does not consume an argument.\n-->\n\n<ul>\n<li><code>%s</code> - 文字列。</li>\n<li><code>%d</code> - 数値 (整数と浮動小数点数の両方)。</li>\n<li><code>%j</code> - JSON。</li>\n<li><code>%</code> - 一つのパーセント記号 (<code>&apos;%&apos;</code>)。これは引数を消費しません。</li>\n</ul>\n<!--\nIf the placeholder does not have a corresponding argument, the placeholder is\nnot replaced.\n-->\n\n<p>プレースホルダに対応する引数が無い場合、そのプレースホルダは置換されません。\n\n</p>\n<pre><code>util.format(&apos;%s:%s&apos;, &apos;foo&apos;); // &apos;foo:%s&apos;</code></pre>\n<!--\nIf there are more arguments than placeholders, the extra arguments are\nconverted to strings with `util.inspect()` and these strings are concatenated,\ndelimited by a space.\n-->\n\n<p>プレースホルダより多くの引数がある場合、余った引数は <code>util.inspect()</code> によって\n文字列化され、それらはスペース区切りで連結されます。\n\n</p>\n<pre><code>util.format(&apos;%s:%s&apos;, &apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;); // &apos;foo:bar baz&apos;</code></pre>\n<!--\nIf the first argument is not a format string then `util.format()` returns\na string that is the concatenation of all its arguments separated by spaces.\nEach argument is converted to a string with `util.inspect()`.\n-->\n\n<p>第一引数がフォーマット文字列ではない場合、<code>util.format()</code> は全ての引数を\nスペース区切りで連結して返します。\nここの引数は <code>util.inspect()</code> で文字列に変換されます。\n\n</p>\n<pre><code>util.format(1, 2, 3); // &apos;1 2 3&apos;</code></pre>\n",
           "signatures": [
             {
-              "params": []
+              "params": [
+                {
+                  "name": "format"
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
             }
           ]
         },
@@ -23,12 +31,60 @@
           "textRaw": "util.debug(string)",
           "type": "method",
           "name": "debug",
-          "desc": "<!--\nA synchronous output function. Will block the process and\noutput `string` immediately to `stderr`.\n-->\n\n<p>同期的な出力関数です。プロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。\n\n</p>\n<pre><code>require(&apos;util&apos;).debug(&apos;message on stderr&apos;);</code></pre>\n",
+          "desc": "<!--\nA synchronous output function. Will block the process and\noutput `string` immediately to `stderr`.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。\n\n</p>\n<pre><code>require(&apos;util&apos;).debug(&apos;message on stderr&apos;);</code></pre>\n",
           "signatures": [
             {
               "params": [
                 {
                   "name": "string"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.error([...])",
+          "type": "method",
+          "name": "error",
+          "desc": "<!--\nSame as `util.debug()` except this will output all arguments immediately to\n`stderr`.\n-->\n\n<p>全ての引数をすぐに <code>stderr</code> に出力することを除いて <code>util.debug()</code> と同じです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.puts([...])",
+          "type": "method",
+          "name": "puts",
+          "desc": "<!--\nA synchronous output function. Will block the process and output all arguments\nto `stdout` with newlines after each argument.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして即座に <code>stdout</code> に出力します。\n各引数は改行が付加されます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.print([...])",
+          "type": "method",
+          "name": "print",
+          "desc": "<!--\nA synchronous output function. Will block the process, cast each argument to a\nstring then output to `stdout`. Does not place newlines after each argument.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして、引数を文字列に変換して <code>stdout</code> に出力します。\n各引数に改行は付加されません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
                 }
               ]
             }

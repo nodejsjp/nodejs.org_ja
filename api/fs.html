@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -117,7 +117,7 @@
 <li><a href="#fs_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&apos;utf8&apos;)</a></li>
 <li><a href="#fs_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
 <li><a href="#fs_fs_unwatchfile_filename">fs.unwatchFile(filename)</a></li>
-<li><a href="#fs_fs_watch_filename_options_listener">fs.watch(filename, [options], listener)</a><ul>
+<li><a href="#fs_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
 <li><a href="#fs_caveats">Caveats</a><ul>
 <li><a href="#fs_availability">Availability</a></li>
 <li><a href="#fs_filename_argument">Filename Argument</a></li>
@@ -488,13 +488,20 @@ Synchronous link(2).
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
-`type` argument can be either `'dir'` or `'file'` (default is `'file'`).  It is only 
+`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only 
 used on Windows (ignored on other platforms).
+Note that Windows junction points require the destination path to be absolute.  When using
+`'junction'`, the `destination` argument will automatically be normalized to absolute path.
 -->
 
-<p>非同期の symlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。
-<code>type</code> 引数は <code>&apos;dir&apos;</code> または <code>&apos;file&apos;</code> (デフォルトは <code>&apos;file&apos;</code>) です。
+<p>非同期の symlink(2)。
+完了コールバックには発生し得る例外以外に引数が渡されることはありません。
+<code>type</code> 引数は <code>&apos;dir&apos;</code>、<code>&apos;file&apos;</code>、または <code>&apos;junction</code>&apos; (デフォルトは <code>&apos;file&apos;</code>)
+です。
 これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
+Windows のジャンクションポイントは対象に絶対パスを要求することに
+注意してください。
+<code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
 
 </p>
 <h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#fs_fs_symlinksync_destination_path_type" id="fs_fs_symlinksync_destination_path_type">#</a></span></h2>
@@ -657,6 +664,19 @@ An exception occurs if the file does not exist.
 * `'r+'` - Open file for reading and writing.
 An exception occurs if the file does not exist.
 
+* `'rs'` - Open file for reading in synchronous mode. Instructs the operating
+  system to bypass the local file system cache.
+
+  This is primarily useful for opening files on NFS mounts as it allows you to
+  skip the potentially stale local cache. It has a very real impact on I/O
+  performance so don't use this mode unless you need it.
+
+  Note that this doesn't turn `fs.open()` into a synchronous blocking call.
+  If that's what you want then you should be using `fs.openSync()`
+
+* `'rs+'` - Open file for reading and writing, telling the OS to open it
+  synchronously. See notes for `'rs'` about using this with caution.
+
 * `'w'` - Open file for writing.
 The file is created (if it does not exist) or truncated (if it exists).
 
@@ -689,30 +709,44 @@ not followed. Exclusive mode may or may not work with network file systems.
 
 </p>
 <ul>
-<li><p><code>&apos;r&apos;</code> - 読み込み専用でオープンします。
+<li><p><code>&apos;r&apos;</code> - ファイルを読み込み専用でオープンします。
 ファイルが存在しない場合は例外が発生します。</p>
 </li>
-<li><p><code>&apos;r+&apos;</code> - 読み書き両用でオープンします。
+<li><p><code>&apos;r+&apos;</code> - ファイルを読み書き両用でオープンします。
 ファイルが存在しない場合は例外が発生します。</p>
 </li>
-<li><p><code>&apos;w&apos;</code> - 書き込み専用でオープンします。
+<li><p><code>&apos;rs&apos;</code> - ファイルを同期モードで読み込むためにオープンします。
+オペレーティングシステムにローカルファイルシステムのキャッシュを
+バイパスするように指示します。</p>
+<p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い
+ローカルキャッシュをスキップするのに役立ちます。
+これはI/O パフォーマンスにとても深刻な影響を与えるため、必要でない限り
+使用しないでください。</p>
+<p>これは <code>fs.open()</code> を同期的なブロッキング呼び出しにするわけではないことに
+注意してください。
+それが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>
+</li>
+<li><p><code>&apos;rs+&apos;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように
+伝えます。これを使用する際の警告は <code>&apos;rs&apos;</code> の注意を参照してください。</p>
+</li>
+<li><p><code>&apos;w&apos;</code> - ファイルを書き込み専用でオープンします。
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
 <li><p><code>&apos;wx&apos;</code> - <code>&apos;w&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;w+&apos;</code> - 読み書き両用でオープンします。
+<li><p><code>&apos;w+&apos;</code> - ファイルを読み書き両用でオープンします。
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
 <li><p><code>&apos;wx&apos;</code> - <code>&apos;w+&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;a&apos;</code> - 追記用でオープンします。
+<li><p><code>&apos;a&apos;</code> - ファイルを追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
 </li>
 <li><p><code>&apos;ax&apos;</code> - <code>&apos;a&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;a+&apos;</code> - 読み込みおよび追記用でオープンします。
+<li><p><code>&apos;a+&apos;</code> - ファイルを読み込みおよび追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
 </li>
 <li><p><code>&apos;ax+&apos;</code> - <code>&apos;a+&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
@@ -898,11 +932,13 @@ Synchronous version of buffer-based `fs.read`. Returns the number of
 </p>
 <h2>fs.readSync(fd, length, position, encoding)<span><a class="mark" href="#fs_fs_readsync_fd_length_position_encoding" id="fs_fs_readsync_fd_length_position_encoding">#</a></span></h2>
 <!--
-Synchronous version of string-based `fs.read`. Returns the number of
-`bytesRead`.
+Legacy synchronous version of string-based `fs.read`. Returns an array with the
+data from the file specified and number of bytes read, `[string, bytesRead]`.
 -->
 
-<p>同期版の文字列に基づく <code>fs.read</code>。<code>bytesRead</code> の数を返します。
+<p>文字列に基づく古い <code>fs.read</code> の同期版。
+指定されたファイルのデータと読み込んだバイト数の配列、<code>[string, bytesRead]</code>
+を返します。
 
 </p>
 <h2>fs.readFile(filename, [encoding], [callback])<span><a class="mark" href="#fs_fs_readfile_filename_encoding_callback" id="fs_fs_readfile_filename_encoding_callback">#</a></span></h2>
@@ -1078,7 +1114,7 @@ Stop watching for changes on `filename`.
 <p><code>filename</code> の変更に対する監視を終了します。
 
 </p>
-<h2>fs.watch(filename, [options], listener)<span><a class="mark" href="#fs_fs_watch_filename_options_listener" id="fs_fs_watch_filename_options_listener">#</a></span></h2>
+<h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#fs_fs_watch_filename_options_listener" id="fs_fs_watch_filename_options_listener">#</a></span></h2>
 <pre><code>Stability: 2 - Unstable.  Not available on all platforms.</code></pre>
 <!--
 Watch for changes on `filename`, where `filename` is either a file or a
@@ -1477,7 +1513,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

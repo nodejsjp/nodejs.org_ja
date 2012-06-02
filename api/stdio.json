@@ -7,52 +7,85 @@
       "stability": 4,
       "stabilityText": "API Frozen",
       "type": "global",
-      "desc": "<!--\nFor printing to stdout and stderr.  Similar to the console object functions\nprovided by most web browsers, here the output is sent to stdout or stderr.\n-->\n\n<p>標準出力と標準エラーに出力するためのものです。\nほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、\n出力は標準出力か標準エラー出力に送られます。\n\n\n</p>\n",
+      "desc": "<!--\nFor printing to stdout and stderr.  Similar to the console object functions\nprovided by most web browsers, here the output is sent to stdout or stderr.\n-->\n\n<p>標準出力と標準エラーに出力するためのものです。\nほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、\n出力は標準出力か標準エラー出力に送られます。\n\n</p>\n",
       "methods": [
         {
-          "textRaw": "console.log()",
+          "textRaw": "console.log([data], [...])",
           "type": "method",
           "name": "log",
           "desc": "<!--\nPrints to stdout with newline. This function can take multiple arguments in a\n`printf()`-like way. Example:\n-->\n\n<p>改行を伴って標準出力へプリントします。\nこの関数は <code>printf()</code> のように複数の引数を受け付けます。\n\n</p>\n<pre><code>console.log(&apos;count: %d&apos;, count);</code></pre>\n<!--\nIf formatting elements are not found in the first string then `util.inspect`\nis used on each argument.\nSee [util.format()](util.html#util.format) for more information.\n-->\n\n<p>最初の引数文字列からフォーマット要素が見つからなかった場合は、\n<code>util.inspect</code> が各引数に使われます。\nより詳細は <a href=\"util.html#util.format\">util.format()</a> を参照してください。\n\n</p>\n",
           "signatures": [
             {
-              "params": []
+              "params": [
+                {
+                  "name": "data",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
             }
           ]
         },
         {
-          "textRaw": "console.info()",
+          "textRaw": "console.info([data], [...])",
           "type": "method",
           "name": "info",
           "desc": "<!--\nSame as `console.log`.\n-->\n\n<p><code>console.log</code> と同じです。\n\n</p>\n",
           "signatures": [
             {
-              "params": []
+              "params": [
+                {
+                  "name": "data",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
             }
           ]
         },
         {
-          "textRaw": "console.warn()",
-          "type": "method",
-          "name": "warn",
-          "desc": "<!--\nSame as `console.log` but prints to stderr.\n-->\n\n<p><code>console.log</code> と同様ですが、標準エラー出力にプリントします。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": []
-            },
-            {
-              "params": []
-            }
-          ]
-        },
-        {
-          "textRaw": "console.error()",
+          "textRaw": "console.error([data], [...])",
           "type": "method",
           "name": "error",
           "desc": "<!--\nSame as `console.log` but prints to stderr.\n-->\n\n<p><code>console.log</code> と同様ですが、標準エラー出力にプリントします。\n\n</p>\n",
           "signatures": [
             {
-              "params": []
+              "params": [
+                {
+                  "name": "data",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "console.warn([data], [...])",
+          "type": "method",
+          "name": "warn",
+          "desc": "<!--\nSame as `console.error`.\n-->\n\n<p><code>console.error()</code> と同じです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "data",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
             }
           ]
         },
@@ -75,7 +108,7 @@
           "textRaw": "console.time(label)",
           "type": "method",
           "name": "time",
-          "desc": "<!--\nMark a time.\n-->\n\n<p>タイマを作成します。\n\n\n</p>\n",
+          "desc": "<!--\nMark a time.\n-->\n\n<p>タイマを作成します。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -90,7 +123,7 @@
           "textRaw": "console.timeEnd(label)",
           "type": "method",
           "name": "timeEnd",
-          "desc": "<!--\nFinish timer, record output. Example\n-->\n\n<p>タイマを終了し、結果を出力します。例\n\n</p>\n<pre><code>console.time(&apos;100-elements&apos;);\nfor (var i = 0; i &lt; 100; i++) {\n  ;\n}\nconsole.timeEnd(&apos;100-elements&apos;);</code></pre>\n",
+          "desc": "<!--\nFinish timer, record output. Example:\n-->\n\n<p>タイマを終了し、結果を出力します。例:\n\n</p>\n<pre><code>console.time(&apos;100-elements&apos;);\nfor (var i = 0; i &lt; 100; i++) {\n  ;\n}\nconsole.timeEnd(&apos;100-elements&apos;);</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -102,24 +135,36 @@
           ]
         },
         {
-          "textRaw": "console.trace()",
+          "textRaw": "console.trace(label)",
           "type": "method",
           "name": "trace",
           "desc": "<!--\nPrint a stack trace to stderr of the current position.\n-->\n\n<p>現在のスタックトレースを標準エラー出力にプリントします。\n\n</p>\n",
           "signatures": [
             {
-              "params": []
+              "params": [
+                {
+                  "name": "label"
+                }
+              ]
             }
           ]
         },
         {
-          "textRaw": "console.assert()",
+          "textRaw": "console.assert(expression, [message])",
           "type": "method",
           "name": "assert",
-          "desc": "<!--\nSame as `assert.ok()`.\n-->\n\n<p><code>assert.ok()</code> と同じです。\n</p>\n",
+          "desc": "<!--\nSame as [assert.ok()](assert.html#assert_assert_value_message_assert_ok_value_message)\nwhere if the `expression` evaluates as `false` throw an AssertionError with `message`.\n-->\n\n<p><a href=\"assert.html#assert_assert_value_message_assert_ok_value_message\">assert.ok()</a>\nを参照してください。\nもし <code>expression</code> が <code>false</code> に評価されると、<code>message</code> を持つ AssertionError\nがスローされます。\n</p>\n",
           "signatures": [
             {
-              "params": []
+              "params": [
+                {
+                  "name": "expression"
+                },
+                {
+                  "name": "message",
+                  "optional": true
+                }
+              ]
             }
           ]
         }

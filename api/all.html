@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -83,15 +83,15 @@
 </ul>
 </li>
 <li><a href="#all_console_1">console</a><ul>
-<li><a href="#all_console_log">console.log()</a></li>
-<li><a href="#all_console_info">console.info()</a></li>
-<li><a href="#all_console_warn">console.warn()</a></li>
-<li><a href="#all_console_error">console.error()</a></li>
+<li><a href="#all_console_log_data">console.log([data], [...])</a></li>
+<li><a href="#all_console_info_data">console.info([data], [...])</a></li>
+<li><a href="#all_console_error_data">console.error([data], [...])</a></li>
+<li><a href="#all_console_warn_data">console.warn([data], [...])</a></li>
 <li><a href="#all_console_dir_obj">console.dir(obj)</a></li>
 <li><a href="#all_console_time_label">console.time(label)</a></li>
 <li><a href="#all_console_timeend_label">console.timeEnd(label)</a></li>
-<li><a href="#all_console_trace">console.trace()</a></li>
-<li><a href="#all_console_assert">console.assert()</a></li>
+<li><a href="#all_console_trace_label">console.trace(label)</a></li>
+<li><a href="#all_console_assert_expression_message">console.assert(expression, [message])</a></li>
 </ul>
 </li>
 <li><a href="#all_timers">Timers</a><ul>
@@ -176,8 +176,11 @@
 </ul>
 </li>
 <li><a href="#all_util">util</a><ul>
-<li><a href="#all_util_format">util.format()</a></li>
+<li><a href="#all_util_format_format">util.format(format, [...])</a></li>
 <li><a href="#all_util_debug_string">util.debug(string)</a></li>
+<li><a href="#all_util_error">util.error([...])</a></li>
+<li><a href="#all_util_puts">util.puts([...])</a></li>
+<li><a href="#all_util_print">util.print([...])</a></li>
 <li><a href="#all_util_log_string">util.log(string)</a></li>
 <li><a href="#all_util_inspect_object_showhidden_depth_colors">util.inspect(object, [showHidden], [depth], [colors])</a></li>
 <li><a href="#all_util_isarray_object">util.isArray(object)</a></li>
@@ -206,8 +209,10 @@
 <li><a href="#all_domain">Domain</a><ul>
 <li><a href="#all_additions_to_error_objects">Additions to Error objects</a></li>
 <li><a href="#all_implicit_binding">Implicit Binding</a></li>
+<li><a href="#all_explicit_binding">Explicit Binding</a></li>
 <li><a href="#all_domain_create">domain.create()</a></li>
 <li><a href="#all_class_domain">Class: Domain</a><ul>
+<li><a href="#all_domain_run_fn">domain.run(fn)</a></li>
 <li><a href="#all_domain_members">domain.members</a></li>
 <li><a href="#all_domain_add_emitter">domain.add(emitter)</a></li>
 <li><a href="#all_domain_remove_emitter">domain.remove(emitter)</a></li>
@@ -279,11 +284,10 @@
 <li><a href="#all_event_error">Event: &apos;error&apos;</a></li>
 <li><a href="#all_event_close">Event: &apos;close&apos;</a></li>
 <li><a href="#all_stream_readable">stream.readable</a></li>
-<li><a href="#all_stream_setencoding_encoding">stream.setEncoding(encoding)</a></li>
+<li><a href="#all_stream_setencoding_encoding">stream.setEncoding([encoding])</a></li>
 <li><a href="#all_stream_pause">stream.pause()</a></li>
 <li><a href="#all_stream_resume">stream.resume()</a></li>
 <li><a href="#all_stream_destroy">stream.destroy()</a></li>
-<li><a href="#all_stream_destroysoon">stream.destroySoon()</a></li>
 <li><a href="#all_stream_pipe_destination_options">stream.pipe(destination, [options])</a></li>
 </ul>
 </li>
@@ -299,7 +303,7 @@
 <li><a href="#all_stream_end_string_encoding">stream.end(string, encoding)</a></li>
 <li><a href="#all_stream_end_buffer">stream.end(buffer)</a></li>
 <li><a href="#all_stream_destroy_1">stream.destroy()</a></li>
-<li><a href="#all_stream_destroysoon_1">stream.destroySoon()</a></li>
+<li><a href="#all_stream_destroysoon">stream.destroySoon()</a></li>
 </ul>
 </li>
 </ul>
@@ -399,6 +403,13 @@
 </li>
 </ul>
 </li>
+<li><a href="#all_stringdecoder">StringDecoder</a><ul>
+<li><a href="#all_class_stringdecoder">Class: StringDecoder</a><ul>
+<li><a href="#all_stringdecoder_write_buffer">StringDecoder.write(buffer)</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#all_file_system">File System</a><ul>
 <li><a href="#all_fs_rename_oldpath_newpath_callback">fs.rename(oldPath, newPath, [callback])</a></li>
 <li><a href="#all_fs_renamesync_oldpath_newpath">fs.renameSync(oldPath, newPath)</a></li>
@@ -461,7 +472,7 @@
 <li><a href="#all_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&apos;utf8&apos;)</a></li>
 <li><a href="#all_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
 <li><a href="#all_fs_unwatchfile_filename">fs.unwatchFile(filename)</a></li>
-<li><a href="#all_fs_watch_filename_options_listener">fs.watch(filename, [options], listener)</a><ul>
+<li><a href="#all_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
 <li><a href="#all_caveats">Caveats</a><ul>
 <li><a href="#all_availability">Availability</a></li>
 <li><a href="#all_filename_argument">Filename Argument</a></li>
@@ -499,6 +510,7 @@
 <li><a href="#all_path_dirname_p">path.dirname(p)</a></li>
 <li><a href="#all_path_basename_p_ext">path.basename(p, [ext])</a></li>
 <li><a href="#all_path_extname_p">path.extname(p)</a></li>
+<li><a href="#all_path_sep">path.sep</a></li>
 </ul>
 </li>
 <li><a href="#all_net">net</a><ul>
@@ -510,7 +522,7 @@
 <li><a href="#all_net_connect_path_connectlistener">net.connect(path, [connectListener])</a></li>
 <li><a href="#all_net_createconnection_path_connectlistener">net.createConnection(path, [connectListener])</a></li>
 <li><a href="#all_class_net_server">Class: net.Server</a><ul>
-<li><a href="#all_server_listen_port_host_listeninglistener">server.listen(port, [host], [listeningListener])</a></li>
+<li><a href="#all_server_listen_port_host_backlog_listeninglistener">server.listen(port, [host], [backlog], [listeningListener])</a></li>
 <li><a href="#all_server_listen_path_listeninglistener">server.listen(path, [listeningListener])</a></li>
 <li><a href="#all_server_close_cb">server.close([cb])</a></li>
 <li><a href="#all_server_address_1">server.address()</a></li>
@@ -584,13 +596,16 @@
 <li><a href="#all_dns_resolvemx_domain_callback">dns.resolveMx(domain, callback)</a></li>
 <li><a href="#all_dns_resolvetxt_domain_callback">dns.resolveTxt(domain, callback)</a></li>
 <li><a href="#all_dns_resolvesrv_domain_callback">dns.resolveSrv(domain, callback)</a></li>
-<li><a href="#all_dns_reverse_ip_callback">dns.reverse(ip, callback)</a></li>
 <li><a href="#all_dns_resolvens_domain_callback">dns.resolveNs(domain, callback)</a></li>
 <li><a href="#all_dns_resolvecname_domain_callback">dns.resolveCname(domain, callback)</a></li>
+<li><a href="#all_dns_reverse_ip_callback">dns.reverse(ip, callback)</a></li>
+<li><a href="#all_error_codes">Error codes</a></li>
 </ul>
 </li>
 <li><a href="#all_http">HTTP</a><ul>
+<li><a href="#all_http_status_codes">http.STATUS_CODES</a></li>
 <li><a href="#all_http_createserver_requestlistener">http.createServer([requestListener])</a></li>
+<li><a href="#all_http_createclient_port_host">http.createClient([port], [host])</a></li>
 <li><a href="#all_class_http_server">Class: http.Server</a><ul>
 <li><a href="#all_event_request">Event: &apos;request&apos;</a></li>
 <li><a href="#all_event_connection_1">Event: &apos;connection&apos;</a></li>
@@ -599,7 +614,7 @@
 <li><a href="#all_event_connect_1">Event: &apos;connect&apos;</a></li>
 <li><a href="#all_event_upgrade">Event: &apos;upgrade&apos;</a></li>
 <li><a href="#all_event_clienterror_1">Event: &apos;clientError&apos;</a></li>
-<li><a href="#all_server_listen_port_hostname_callback">server.listen(port, [hostname], [callback])</a></li>
+<li><a href="#all_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
 <li><a href="#all_server_listen_path_callback">server.listen(path, [callback])</a></li>
 <li><a href="#all_server_close_cb_1">server.close([cb])</a></li>
 <li><a href="#all_server_maxheaderscount">server.maxHeadersCount</a></li>
@@ -695,15 +710,15 @@
 </ul>
 </li>
 <li><a href="#all_readline">Readline</a><ul>
-<li><a href="#all_rl_createinterface_options">rl.createInterface(options)</a></li>
+<li><a href="#all_readline_createinterface_options">readline.createInterface(options)</a></li>
 <li><a href="#all_class_interface">Class: Interface</a><ul>
 <li><a href="#all_rl_setprompt_prompt_length">rl.setPrompt(prompt, length)</a></li>
-<li><a href="#all_rl_prompt">rl.prompt()</a></li>
+<li><a href="#all_rl_prompt_preservecursor">rl.prompt([preserveCursor])</a></li>
 <li><a href="#all_rl_question_query_callback">rl.question(query, callback)</a></li>
 <li><a href="#all_rl_pause">rl.pause()</a></li>
 <li><a href="#all_rl_resume">rl.resume()</a></li>
 <li><a href="#all_rl_close">rl.close()</a></li>
-<li><a href="#all_rl_write">rl.write()</a></li>
+<li><a href="#all_rl_write_data_key">rl.write(data, [key])</a></li>
 </ul>
 </li>
 <li><a href="#all_events_1">Events</a><ul>
@@ -728,6 +743,11 @@
 </ul>
 </li>
 <li><a href="#all_executing_javascript">Executing JavaScript</a><ul>
+<li><a href="#all_caveats_1">Caveats</a><ul>
+<li><a href="#all_sandboxes">Sandboxes</a></li>
+<li><a href="#all_globals">Globals</a></li>
+</ul>
+</li>
 <li><a href="#all_vm_runinthiscontext_code_filename">vm.runInThisContext(code, [filename])</a></li>
 <li><a href="#all_vm_runinnewcontext_code_sandbox_filename">vm.runInNewContext(code, [sandbox], [filename])</a></li>
 <li><a href="#all_vm_runincontext_code_context_filename">vm.runInContext(code, context, [filename])</a></li>
@@ -745,12 +765,14 @@
 <li><a href="#all_event_exit_2">Event:  &apos;exit&apos;</a></li>
 <li><a href="#all_event_close_10">Event: &apos;close&apos;</a></li>
 <li><a href="#all_event_disconnect">Event: &apos;disconnect&apos;</a></li>
+<li><a href="#all_event_message_1">Event: &apos;message&apos;</a></li>
 <li><a href="#all_child_stdin">child.stdin</a></li>
 <li><a href="#all_child_stdout">child.stdout</a></li>
 <li><a href="#all_child_stderr">child.stderr</a></li>
 <li><a href="#all_child_pid">child.pid</a></li>
 <li><a href="#all_child_kill_signal">child.kill([signal])</a></li>
 <li><a href="#all_child_send_message_sendhandle">child.send(message, [sendHandle])</a></li>
+<li><a href="#all_child_disconnect">child.disconnect()</a></li>
 </ul>
 </li>
 <li><a href="#all_child_process_spawn_command_args_options">child_process.spawn(command, [args], [options])</a></li>
@@ -867,13 +889,12 @@
 <li><a href="#all_worker_suicide">worker.suicide</a></li>
 <li><a href="#all_worker_send_message_sendhandle">worker.send(message, [sendHandle])</a></li>
 <li><a href="#all_worker_destroy">worker.destroy()</a></li>
-</ul>
-</li>
-<li><a href="#all_worker_disconnect">Worker.disconnect()</a><ul>
-<li><a href="#all_event_message_1">Event: &apos;message&apos;</a></li>
+<li><a href="#all_worker_disconnect">worker.disconnect()</a></li>
+<li><a href="#all_event_message_2">Event: &apos;message&apos;</a></li>
 <li><a href="#all_event_online_1">Event: &apos;online&apos;</a></li>
 <li><a href="#all_event_listening_3">Event: &apos;listening&apos;</a></li>
 <li><a href="#all_event_disconnect_2">Event: &apos;disconnect&apos;</a></li>
+<li><a href="#all_event_exit_4">Event: &apos;exit&apos;</a></li>
 </ul>
 </li>
 </ul>
@@ -1352,9 +1373,8 @@ provided by most web browsers, here the output is sent to stdout or stderr.
 ほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、
 出力は標準出力か標準エラー出力に送られます。
 
-
 </p>
-<h2>console.log()<span><a class="mark" href="#all_console_log" id="all_console_log">#</a></span></h2>
+<h2>console.log([data], [...])<span><a class="mark" href="#all_console_log_data" id="all_console_log_data">#</a></span></h2>
 <!--
 Prints to stdout with newline. This function can take multiple arguments in a
 `printf()`-like way. Example:
@@ -1376,7 +1396,7 @@ See [util.format()](util.html#util.format) for more information.
 より詳細は <a href="util.html#util.format">util.format()</a> を参照してください。
 
 </p>
-<h2>console.info()<span><a class="mark" href="#all_console_info" id="all_console_info">#</a></span></h2>
+<h2>console.info([data], [...])<span><a class="mark" href="#all_console_info_data" id="all_console_info_data">#</a></span></h2>
 <!--
 Same as `console.log`.
 -->
@@ -1384,13 +1404,20 @@ Same as `console.log`.
 <p><code>console.log</code> と同じです。
 
 </p>
-<h2>console.warn()<span><a class="mark" href="#all_console_warn" id="all_console_warn">#</a></span></h2>
-<h2>console.error()<span><a class="mark" href="#all_console_error" id="all_console_error">#</a></span></h2>
+<h2>console.error([data], [...])<span><a class="mark" href="#all_console_error_data" id="all_console_error_data">#</a></span></h2>
 <!--
 Same as `console.log` but prints to stderr.
 -->
 
 <p><code>console.log</code> と同様ですが、標準エラー出力にプリントします。
+
+</p>
+<h2>console.warn([data], [...])<span><a class="mark" href="#all_console_warn_data" id="all_console_warn_data">#</a></span></h2>
+<!--
+Same as `console.error`.
+-->
+
+<p><code>console.error()</code> と同じです。
 
 </p>
 <h2>console.dir(obj)<span><a class="mark" href="#all_console_dir_obj" id="all_console_dir_obj">#</a></span></h2>
@@ -1408,14 +1435,13 @@ Mark a time.
 
 <p>タイマを作成します。
 
-
 </p>
 <h2>console.timeEnd(label)<span><a class="mark" href="#all_console_timeend_label" id="all_console_timeend_label">#</a></span></h2>
 <!--
-Finish timer, record output. Example
+Finish timer, record output. Example:
 -->
 
-<p>タイマを終了し、結果を出力します。例
+<p>タイマを終了し、結果を出力します。例:
 
 </p>
 <pre><code>console.time(&apos;100-elements&apos;);
@@ -1423,7 +1449,7 @@ for (var i = 0; i &lt; 100; i++) {
   ;
 }
 console.timeEnd(&apos;100-elements&apos;);</code></pre>
-<h2>console.trace()<span><a class="mark" href="#all_console_trace" id="all_console_trace">#</a></span></h2>
+<h2>console.trace(label)<span><a class="mark" href="#all_console_trace_label" id="all_console_trace_label">#</a></span></h2>
 <!--
 Print a stack trace to stderr of the current position.
 -->
@@ -1431,12 +1457,16 @@ Print a stack trace to stderr of the current position.
 <p>現在のスタックトレースを標準エラー出力にプリントします。
 
 </p>
-<h2>console.assert()<span><a class="mark" href="#all_console_assert" id="all_console_assert">#</a></span></h2>
+<h2>console.assert(expression, [message])<span><a class="mark" href="#all_console_assert_expression_message" id="all_console_assert_expression_message">#</a></span></h2>
 <!--
-Same as `assert.ok()`.
+Same as [assert.ok()](assert.html#assert_assert_value_message_assert_ok_value_message)
+where if the `expression` evaluates as `false` throw an AssertionError with `message`.
 -->
 
-<p><code>assert.ok()</code> と同じです。
+<p><a href="assert.html#assert_assert_value_message_assert_ok_value_message">assert.ok()</a>
+を参照してください。
+もし <code>expression</code> が <code>false</code> に評価されると、<code>message</code> を持つ AssertionError
+がスローされます。
 
 </p>
 <h1>Timers<span><a class="mark" href="#all_timers" id="all_timers">#</a></span></h1>
@@ -2359,7 +2389,7 @@ libraries.
 <h2>Hello world<span><a class="mark" href="#all_hello_world" id="all_hello_world">#</a></span></h2>
 <!--
 To get started let's make a small Addon which is the C++ equivalent of
-the following Javascript code:
+the following JavaScript code:
 -->
 
 <p>では、 以下の JavaScript コードと同じ様に動作する小さなアドオンを
@@ -3447,6 +3477,14 @@ The shell that executed node should see the exit code as 1.
 </p>
 <h2>process.getgid()<span><a class="mark" href="#all_process_getgid" id="all_process_getgid">#</a></span></h2>
 <!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
+<!--
 Gets the group identity of the process. (See getgid(2).)
 This is the numerical group id, not the group name.
 -->
@@ -3455,8 +3493,18 @@ This is the numerical group id, not the group name.
 これは数値によるグループ ID で、グループ名ではありません。
 
 </p>
-<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());</code></pre>
+<pre><code>if (process.getgid) {
+  console.log(&apos;Current gid: &apos; + process.getgid());
+}</code></pre>
 <h2>process.setgid(id)<span><a class="mark" href="#all_process_setgid_id" id="all_process_setgid_id">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
 <!--
 Sets the group identity of the process. (See setgid(2).)  This accepts either
 a numerical ID or a groupname string. If a groupname is specified, this method
@@ -3468,15 +3516,25 @@ blocks while resolving it to a numerical ID.
 もしグループ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。
 
 </p>
-<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());
-try {
-  process.setgid(501);
-  console.log(&apos;New gid: &apos; + process.getgid());
-}
-catch (err) {
-  console.log(&apos;Failed to set gid: &apos; + err);
+<pre><code>if (process.getgid &amp;&amp; process.setgid) {
+  console.log(&apos;Current gid: &apos; + process.getgid());
+  try {
+    process.setgid(501);
+    console.log(&apos;New gid: &apos; + process.getgid());
+  }
+  catch (err) {
+    console.log(&apos;Failed to set gid: &apos; + err);
+  }
 }</code></pre>
 <h2>process.getuid()<span><a class="mark" href="#all_process_getuid" id="all_process_getuid">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
 <!--
 Gets the user identity of the process. (See getuid(2).)
 This is the numerical userid, not the username.
@@ -3486,8 +3544,18 @@ This is the numerical userid, not the username.
 これは数値によるユーザ ID で、ユーザ名ではありません。
 
 </p>
-<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());</code></pre>
+<pre><code>if (process.getuid) {
+  console.log(&apos;Current uid: &apos; + process.getuid());
+}</code></pre>
 <h2>process.setuid(id)<span><a class="mark" href="#all_process_setuid_id" id="all_process_setuid_id">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
 <!--
 Sets the user identity of the process. (See setuid(2).)  This accepts either
 a numerical ID or a username string.  If a username is specified, this method
@@ -3499,13 +3567,15 @@ blocks while resolving it to a numerical ID.
 もしユーザ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。
 
 </p>
-<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());
-try {
-  process.setuid(501);
-  console.log(&apos;New uid: &apos; + process.getuid());
-}
-catch (err) {
-  console.log(&apos;Failed to set uid: &apos; + err);
+<pre><code>if (process.getuid &amp;&amp; process.setuid) {
+  console.log(&apos;Current uid: &apos; + process.getuid());
+  try {
+    process.setuid(501);
+    console.log(&apos;New uid: &apos; + process.getuid());
+  }
+  catch (err) {
+    console.log(&apos;Failed to set uid: &apos; + err);
+  }
 }</code></pre>
 <h2>process.version<span><a class="mark" href="#all_process_version" id="all_process_version">#</a></span></h2>
 <!--
@@ -3656,11 +3726,12 @@ What processor architecture you're running on: `'arm'`, `'ia32'`, or `'x64'`.
 <pre><code>console.log(&apos;This processor architecture is &apos; + process.arch);</code></pre>
 <h2>process.platform<span><a class="mark" href="#all_process_platform" id="all_process_platform">#</a></span></h2>
 <!--
-What platform you're running on. `'linux2'`, `'darwin'`, etc.
+What platform you're running on:
+`'darwin'`, `'freebsd'`, `'linux'`, `'solaris'` or `'win32'`
 -->
 
-<p>どのプラットフォームで動いているかを示します。
-<code>&apos;linux2&apos;</code>、<code>&apos;darwin&apos;</code>、など。
+<p>どのプラットフォームで動いているかを示します:
+<code>&apos;darwin&apos;</code>、<code>&apos;freebsd&apos;</code>、<code>&apos;linux&apos;</code>、<code>&apos;solaris&apos;</code>、または <code>&apos;win32&apos;</code>
 
 </p>
 <pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>
@@ -3777,7 +3848,7 @@ them.
 
 
 </p>
-<h2>util.format()<span><a class="mark" href="#all_util_format" id="all_util_format">#</a></span></h2>
+<h2>util.format(format, [...])<span><a class="mark" href="#all_util_format_format" id="all_util_format_format">#</a></span></h2>
 <!--
 Returns a formatted string using the first argument as a `printf`-like format.
 -->
@@ -3848,10 +3919,42 @@ A synchronous output function. Will block the process and
 output `string` immediately to `stderr`.
 -->
 
-<p>同期的な出力関数です。プロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。
+<p>同期的な出力関数です。
+プロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。
 
 </p>
 <pre><code>require(&apos;util&apos;).debug(&apos;message on stderr&apos;);</code></pre>
+<h2>util.error([...])<span><a class="mark" href="#all_util_error" id="all_util_error">#</a></span></h2>
+<!--
+Same as `util.debug()` except this will output all arguments immediately to
+`stderr`.
+-->
+
+<p>全ての引数をすぐに <code>stderr</code> に出力することを除いて <code>util.debug()</code> と同じです。
+
+</p>
+<h2>util.puts([...])<span><a class="mark" href="#all_util_puts" id="all_util_puts">#</a></span></h2>
+<!--
+A synchronous output function. Will block the process and output all arguments
+to `stdout` with newlines after each argument.
+-->
+
+<p>同期的な出力関数です。
+プロセスをブロックして即座に <code>stdout</code> に出力します。
+各引数は改行が付加されます。
+
+</p>
+<h2>util.print([...])<span><a class="mark" href="#all_util_print" id="all_util_print">#</a></span></h2>
+<!--
+A synchronous output function. Will block the process, cast each argument to a
+string then output to `stdout`. Does not place newlines after each argument.
+-->
+
+<p>同期的な出力関数です。
+プロセスをブロックして、引数を文字列に変換して <code>stdout</code> に出力します。
+各引数に改行は付加されません。
+
+</p>
 <h2>util.log(string)<span><a class="mark" href="#all_util_log_string" id="all_util_log_string">#</a></span></h2>
 <!--
 Output with timestamp on `stdout`.
@@ -4357,6 +4460,73 @@ EventEmitter をシャットダウンしません。
 注意を払います。
 
 </p>
+<h2>Explicit Binding<span><a class="mark" href="#all_explicit_binding" id="all_explicit_binding">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+Sometimes, the domain in use is not the one that ought to be used for a
+specific event emitter.  Or, the event emitter could have been created
+in the context of one domain, but ought to instead be bound to some
+other domain.
+-->
+
+<p>時には、使用中のドメインは特定の EventEmitter に使用されるべきではありません。
+あるいは、EventEmitter はあるドメインのコンテキスト中で作成されますが、
+その他のドメインに結びつけられるべきかもしれません。
+
+</p>
+<!--
+For example, there could be one domain in use for an HTTP server, but
+perhaps we would like to have a separate domain to use for each request.
+-->
+
+<p>例えば、HTTP サーバで使われるドメインが一つあるとしても、
+おそらくリクエスト毎に独立したドメインを持ちたいでしょう。
+
+</p>
+<!--
+That is possible via explicit binding.
+-->
+
+<p>これは明示的なバインディングによって可能となります。
+
+</p>
+<!--
+For example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>// create a top-level domain for the server
+var serverDomain = domain.create();
+
+serverDomain.run(function() {
+  // server is created in the scope of serverDomain
+  http.createServer(function(req, res) {
+    // req and res are also created in the scope of serverDomain
+    // however, we&apos;d prefer to have a separate domain for each request.
+    // create it first thing, and add req and res to it.
+    var reqd = domain.create();
+    reqd.add(req);
+    reqd.add(res);
+    reqd.on(&apos;error&apos;, function(er) {
+      console.error(&apos;Error&apos;, er, req.url);
+      try {
+        res.writeHead(500);
+        res.end(&apos;Error occurred, sorry.&apos;);
+        res.on(&apos;close&apos;, function() {
+          // forcibly shut down any other things added to this domain
+          reqd.dispose();
+        });
+      } catch (er) {
+        console.error(&apos;Error sending 500&apos;, er, req.url);
+        // tried our best.  clean up anything remaining.
+        reqd.dispose();
+      }
+    });
+  }).listen(1337);
+});</code></pre>
 <h2>domain.create()<span><a class="mark" href="#all_domain_create" id="all_domain_create">#</a></span></h2>
 <div class="signature"><ul>
 <li>return: <span class="type">Domain</span></li>
@@ -4385,6 +4555,58 @@ catches, listen to its `error` event.
 
 <p>ドメインは EventEmitter の子クラスです。これが捕まえたエラーを扱いたければ、
 <code>&apos;error&apos;</code> イベントを監視してください。
+
+</p>
+<h3>domain.run(fn)<span><a class="mark" href="#all_domain_run_fn" id="all_domain_run_fn">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>fn</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Run the supplied function in the context of the domain, implicitly
+binding all event emitters, timers, and lowlevel requests that are
+created in that context.
+-->
+
+<p>与えられた関数をこのドメインのコンテキストで実行します。
+このコンテキストで作成される全ての EventEmitter、タイマ、そして低水準の要求は
+暗黙的にバインドされます。
+
+</p>
+<!--
+This is the most basic way to use a domain.
+-->
+
+<p>これはドメインを使用するもっとも一般的な方法です。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var d = domain.create();
+d.on(&apos;error&apos;, function(er) {
+  console.error(&apos;Caught error!&apos;, er);
+});
+d.run(function() {
+  process.nextTick(function() {
+    setTimeout(function() { // simulating some various async stuff
+      fs.open(&apos;non-existent file&apos;, &apos;r&apos;, function(er, fd) {
+        if (er) throw er;
+        // proceed...
+      });
+    }, 100);
+  });
+});</code></pre>
+<!--
+In this example, the `d.on('error')` handler will be triggered, rather
+than crashing the program.
+-->
+
+<p>この例では、プログラムはクラッシュせずに <code>d.on(&apos;error&apos;)</code> ハンドラが
+呼び出されます。
 
 </p>
 <h3>domain.members<span><a class="mark" href="#all_domain_members" id="all_domain_members">#</a></span></h3>
@@ -4588,7 +4810,7 @@ Node.js はそれらとコミュニケートしません。
 <h1>Buffer<span><a class="mark" href="#all_buffer" id="all_buffer">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!--
-Pure Javascript is Unicode friendly but not nice to binary data.  When
+Pure JavaScript is Unicode friendly but not nice to binary data.  When
 dealing with TCP streams or the file system, it's necessary to handle octet
 streams. Node has several strategies for manipulating, creating, and
 consuming octet streams.
@@ -4636,10 +4858,13 @@ encoding method.  Here are the different string encodings.
   `0x20` (character code of a space). If you want to convert a null character
   into `0x00`, you should use `'utf8'`.
 
-* `'utf8'` - Multi byte encoded Unicode characters.  Many web pages and other document formats use UTF-8.
+* `'utf8'` - Multibyte encoded Unicode characters. Many web pages and other
+  document formats use UTF-8.
 
-* `'ucs2'` - 2-bytes, little endian encoded Unicode characters. It can encode
-  only BMP(Basic Multilingual Plane, U+0000 - U+FFFF).
+* `'utf16le'` - 2 or 4 bytes, little endian encoded Unicode characters.
+  Surrogate pairs (U+10000 to U+10FFFF) are supported.
+
+* `'ucs2'` - Alias of `'utf16le'`.
 
 * `'base64'` - Base64 string encoding.
 
@@ -4648,24 +4873,33 @@ encoding method.  Here are the different string encodings.
   should be avoided in favor of `Buffer` objects where possible. This encoding
   will be removed in future versions of Node.
 
-* `'hex'` - Encode each byte as two hexidecimal characters.
+* `'hex'` - Encode each byte as two hexadecimal characters.
 -->
 
 <ul>
-<li><code>&apos;ascii&apos;</code> - 7bit の ASCII データ専用です。
+<li><p><code>&apos;ascii&apos;</code> - 7bit の ASCII データ専用です。
 このエンコーディング方式はとても高速で、もし上位ビットがセットされていれば取り除かれます。
 このエンコーディングは、null 文字 (<code>&apos;\0&apos;</code> または <code>&apos;\u0000&apos;</code>) を <code>0x20</code>
 (スペースの文字コード) に変換することに注意してください。
-null 文字を 0x00 に変換したい場合は <code>&apos;utf8&apos;</code> を使用してください。</li>
-<li><code>&apos;utf8&apos;</code> - 可変長のバイト単位でエンコードされたUnicode文字。
-多くのWebページやその他のドキュメントは UTF-8 を使っています。</li>
-<li><code>&apos;ucs2&apos;</code> - 固定長の2バイト（リトルエンディアン）でエンコードされたUnicode文字。
-BMP (基本多言語面、U+0000～U+FFFF) のみエンコードすることができます。</li>
-<li><code>&apos;base64&apos;</code> - Base64 文字列エンコーディング.</li>
-<li><code>&apos;binary&apos;</code> - 生のバイナリデータを各文字の最初の 8bit として使用するエンコーディング方式。
+null 文字を 0x00 に変換したい場合は <code>&apos;utf8&apos;</code> を使用してください。</p>
+</li>
+<li><p><code>&apos;utf8&apos;</code> - 可変長のバイト単位でエンコードされたUnicode文字。
+多くのWebページやその他のドキュメントは UTF-8 を使っています。</p>
+</li>
+<li><p><code>&apos;utf16le&apos;</code> - 2 または 4 バイトのリトルエンディアンでエンコードされた
+Unicode 文字。
+サロゲートペア (U+10000～U+10FFFF) もサポートされます。</p>
+</li>
+<li><p><code>&apos;ucs2&apos;</code> - <code>&apos;utf16le&apos;</code> の別名です。</p>
+</li>
+<li><p><code>&apos;base64&apos;</code> - Base64 文字列エンコーディング.</p>
+</li>
+<li><p><code>&apos;binary&apos;</code> - 生のバイナリデータを各文字の最初の 8bit として使用するエンコーディング方式。
 このエンコーディング方式はもはや価値がなく、<code>Buffer</code> オブジェクトでは可能な限り使用すべきではありません。
-このエンコーディングは、Node の将来のバージョンで削除される予定です。</li>
-<li><code>&apos;hex&apos;</code> - 各バイトを 2 桁の16進数文字列でエンコードします。</li>
+このエンコーディングは、Node の将来のバージョンで削除される予定です。</p>
+</li>
+<li><p><code>&apos;hex&apos;</code> - 各バイトを 2 桁の16進数文字列でエンコードします。</p>
+</li>
 </ul>
 <h2>Class: Buffer<span><a class="mark" href="#all_class_buffer_1" id="all_class_buffer_1">#</a></span></h2>
 <!--
@@ -4722,7 +4956,7 @@ Allocates a new buffer containing the given `str`.
 <!--
 * `string` String - data to be written to buffer
 * `offset` Number, Optional, Default: 0
-* `length` Number, Optional
+* `length` Number, Optional, Default: `buffer.length - offset`
 * `encoding` String, Optional, Default: 'utf8'
 -->
 
@@ -4774,7 +5008,7 @@ next time `buf.write()` is called.
 <div class="signature"><ul>
 <li><code>encoding</code> String, Optional, Default: &apos;utf8&apos;</li>
 <li><code>start</code> Number, Optional, Default: 0</li>
-<li><code>end</code> Number, Optional</li>
+<li><code>end</code> Number, Optional, Default: <code>buffer.length</code></li>
 </div></ul>
 <!--
 Decodes and returns a string from buffer data encoded with `encoding`
@@ -4896,14 +5130,14 @@ console.log(buf.length);
 * `targetBuffer` Buffer object - Buffer to copy into
 * `targetStart` Number, Optional, Default: 0
 * `sourceStart` Number, Optional, Default: 0
-* `sourceEnd` Number, Optional, Default: 0
+* `sourceEnd` Number, Optional, Default: `buffer.length`
 -->
 
 <ul>
 <li><code>targetBuffer</code> Buffer object - コピー先の Buffer</li>
 <li><code>targetStart</code> Number, Optional, Default: 0</li>
 <li><code>sourceStart</code> Number, Optional, Default: 0</li>
-<li><code>sourceEnd</code> Number, Optional, Default: 0</li>
+<li><code>sourceEnd</code> Number, Optional, Default: <code>buffer.length</code></li>
 </ul>
 <!--
 Does copy between buffers. The source and target regions can be overlapped.
@@ -4941,7 +5175,7 @@ console.log(buf2.toString(&apos;ascii&apos;, 0, 25));
 <h3>buf.slice([start], [end])<span><a class="mark" href="#all_buf_slice_start_end" id="all_buf_slice_start_end">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>start</code> Number, Optional, Default: 0</li>
-<li><code>end</code> Number, Optional, Default: 0</li>
+<li><code>end</code> Number, Optional, Default: <code>buffer.length</code></li>
 </div></ul>
 <!--
 Returns a new buffer which references the same memory as the old, but offset
@@ -5774,14 +6008,12 @@ Emitted if there was an error receiving data.
 
 </p>
 <!--
-Emitted when the underlying file descriptor has been closed. Not all streams
-will emit this.  (For example, an incoming HTTP request will not emit
-`'close'`.)
+Emitted when the underlying resource (for example, the backing file descriptor)
+has been closed. Not all streams will emit this.
 -->
 
-<p>下層でファイル記述子がクローズされた時に生成されます。
+<p>下層のリソース (例えば背後のファイル記述子) がクローズされた時に生成されます。
 全てのストリームがこのイベントを発生するわけではありません。
-(例えば、インカミングの HTTP リクエストは <code>&apos;close&apos;</code> イベントを生成しません。)
 
 </p>
 <h3>stream.readable<span><a class="mark" href="#all_stream_readable" id="all_stream_readable">#</a></span></h3>
@@ -5795,15 +6027,16 @@ occurred, the stream came to an `'end'`, or `destroy()` was called.
 <code>false</code> に設定される boolean です。
 
 </p>
-<h3>stream.setEncoding(encoding)<span><a class="mark" href="#all_stream_setencoding_encoding" id="all_stream_setencoding_encoding">#</a></span></h3>
+<h3>stream.setEncoding([encoding])<span><a class="mark" href="#all_stream_setencoding_encoding" id="all_stream_setencoding_encoding">#</a></span></h3>
 <!--
-Makes the data event emit a string instead of a `Buffer`. `encoding` can be
-`'utf8'`, `'ascii'`, or `'base64'`.
+Makes the `'data'` event emit a string instead of a `Buffer`. `encoding` can be
+`'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults to `'utf8'`.
 -->
 
 <p><code>&apos;data&apos;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
-<code>encoding</code> には <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、
-または <code>&apos;base64&apos;</code> を指定することができます。
+<code>encoding</code> には <code>&apos;utf8&apos;</code>、<code>&apos;utf16le&apos;</code> (<code>&apos;ucs2&apos;</code>)、<code>&apos;ascii&apos;</code>、
+または <code>&apos;hex&apos;</code> を指定することができます。
+デフォルトは <code>&apos;utf8&apos;</code> です。
 
 </p>
 <h3>stream.pause()<span><a class="mark" href="#all_stream_pause" id="all_stream_pause">#</a></span></h3>
@@ -5843,14 +6076,6 @@ Closes the underlying file descriptor. Stream will not emit any more events.
 -->
 
 <p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
-
-</p>
-<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon" id="all_stream_destroysoon">#</a></span></h3>
-<!--
-After the write queue is drained, close the file descriptor.
--->
-
-<p>書き込みキューが空になった後、ファイル記述子をクローズします。
 
 </p>
 <h3>stream.pipe(destination, [options])<span><a class="mark" href="#all_stream_pipe_destination_options" id="all_stream_pipe_destination_options">#</a></span></h3>
@@ -6059,7 +6284,7 @@ Any queued write data will not be sent.
 キューイングされたデータは送信されません。
 
 </p>
-<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon_1" id="all_stream_destroysoon_1">#</a></span></h3>
+<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon" id="all_stream_destroysoon">#</a></span></h3>
 <!--
 After the write queue is drained, close the file descriptor. `destroySoon()`
 can still destroy straight away, as long as there is no data left in the queue
@@ -6107,8 +6332,9 @@ Creates a credentials object, with the optional details being a dictionary with 
 
 </p>
 <!--
+* `pfx` : A string or buffer holding the PFX or PKCS12 encoded private key, certificate and CA certificates
 * `key` : A string holding the PEM encoded private key
-* `passphrase` : A string of passphrase for the private key
+* `passphrase` : A string of passphrase for the private key or pfx
 * `cert` : A string holding the PEM encoded certificate
 * `ca` : Either a string or list of strings of PEM encoded CA certificates to trust.
 * `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
@@ -6118,8 +6344,10 @@ Creates a credentials object, with the optional details being a dictionary with 
 -->
 
 <ul>
+<li><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、および CA の
+証明書を含む文字列またはバッファ。</li>
 <li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列。</li>
-<li><code>passphrase</code>: 秘密鍵のパスフレーズ。</li>
+<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズ。</li>
 <li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列。</li>
 <li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または
 文字列の配列。</li>
@@ -6900,6 +7128,21 @@ Alternatively you can send the CSR to a Certificate Authority for signing.
 <code>test/fixtures/keys/Makefile</code> を見る必要がある)
 
 </p>
+<!--
+To create .pfx or .p12, do this:
+-->
+
+<p>.pfx または .p12 を作成するには次のようにします:
+
+</p>
+<pre><code>openssl pkcs12 -export -in agent5-cert.pem -inkey agent5-key.pem \
+    -certfile ca-cert.pem -out agent5.pfx</code></pre>
+<ul>
+<li><code>in</code>:  certificate</li>
+<li><code>inkey</code>: private key</li>
+<li><code>certfile</code>: all CA certs concatenated in one file like
+<code>cat ca1-cert.pem ca2-cert.pem &gt; ca-cert.pem</code></li>
+</ul>
 <h2>Client-initiated renegotiation attack mitigation<span><a class="mark" href="#all_client_initiated_renegotiation_attack_mitigation" id="all_client_initiated_renegotiation_attack_mitigation">#</a></span></h2>
 <!-- type=misc -->
 
@@ -6991,10 +7234,14 @@ The `options` object has these possibilities:
 
 </p>
 <!--
+  - `pfx`: A string or `Buffer` containing the private key, certificate and
+    CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with
+    the `key`, `cert` and `ca` options.)
+
   - `key`: A string or `Buffer` containing the private key of the server in
     PEM format. (Required)
 
-  - `passphrase`: A string of passphrase for the private key.
+  - `passphrase`: A string of passphrase for the private key or pfx.
 
   - `cert`: A string or `Buffer` containing the certificate key of the server in
     PEM format. (Required)
@@ -7050,10 +7297,14 @@ The `options` object has these possibilities:
 -->
 
 <ul>
+<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、および CA の
+証明書を含む文字列またはバッファ
+(<code>key</code>、<code>cert</code>、および <code>ca</code> オプションとは相互に排他的です)。</p>
+</li>
 <li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です
 (必須)。</p>
 </li>
-<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>
+<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>
 </li>
 <li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
 (必須)。</p>
@@ -7109,32 +7360,6 @@ SSLv2 が使われる場合は、サーバは設定のリストをクライア�
 </ul>
 <!--
 Here is a simple example echo server:
-
-    var tls = require('tls');
-    var fs = require('fs');
-
-    var options = {
-      key: fs.readFileSync('server-key.pem'),
-      cert: fs.readFileSync('server-cert.pem'),
-
-      // This is necessary only if using the client certificate authentication.
-      requestCert: true,
-
-      // This is necessary only if the client uses the self-signed certificate.
-      ca: [ fs.readFileSync('client-cert.pem') ]
-    };
-
-    var server = tls.createServer(options, function(cleartextStream) {
-      console.log('server connected',
-                  cleartextStream.authorized ? 'authorized' : 'unauthorized');
-      cleartextStream.write("welcome!\n");
-      cleartextStream.setEncoding('utf8');
-      cleartextStream.pipe(cleartextStream);
-    });
-    server.listen(8000, function() {
-      console.log('server bound');
-    });
-
 -->
 
 <p>これはシンプルはエコーサーバの例です:
@@ -7147,11 +7372,39 @@ var options = {
   key: fs.readFileSync(&apos;server-key.pem&apos;),
   cert: fs.readFileSync(&apos;server-cert.pem&apos;),
 
-  // これはクライアント証明書を用いた認証を行う場合だけ必要です
+  // This is necessary only if using the client certificate authentication.
   requestCert: true,
 
-  // これは自己署名のクライアント証明書を認証する場合だけ必要です
+  // This is necessary only if the client uses the self-signed certificate.
   ca: [ fs.readFileSync(&apos;client-cert.pem&apos;) ]
+};
+
+var server = tls.createServer(options, function(cleartextStream) {
+  console.log(&apos;server connected&apos;,
+              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  cleartextStream.write(&quot;welcome!\n&quot;);
+  cleartextStream.setEncoding(&apos;utf8&apos;);
+  cleartextStream.pipe(cleartextStream);
+});
+server.listen(8000, function() {
+  console.log(&apos;server bound&apos;);
+});</code></pre>
+<!--
+Or
+-->
+
+<p>あるいは:
+
+</p>
+<pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;server.pfx&apos;),
+
+  // This is necessary only if using the client certificate authentication.
+  requestCert: true,
+
 };
 
 var server = tls.createServer(options, function(cleartextStream) {
@@ -7195,10 +7448,13 @@ Creates a new client connection to the given `port` and `host` (old API) or
     creating a new socket. If this option is specified, `host` and `port`
     are ignored.
 
+  - `pfx`: A string or `Buffer` containing the private key, certificate and
+    CA certs of the server in PFX or PKCS12 format.
+
   - `key`: A string or `Buffer` containing the private key of the client in
     PEM format.
 
-  - `passphrase`: A string of passphrase for the private key.
+  - `passphrase`: A string of passphrase for the private key or pfx.
 
   - `cert`: A string or `Buffer` containing the certificate key of the client in
     PEM format.
@@ -7228,10 +7484,13 @@ Creates a new client connection to the given `port` and `host` (old API) or
 セキュアな接続を確立します。
 このオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>
 </li>
+<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、
+およびサーバに対する CA の証明書を含む文字列またはバッファ。</p>
+</li>
 <li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または
 <code>Buffer</code> です。</p>
 </li>
-<li><p><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列です。</p>
+<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>
 </li>
 <li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>
 </li>
@@ -7261,33 +7520,6 @@ The `secureConnectListener` parameter will be added as a listener for the
 `tls.connect()` returns a [CleartextStream](#tls.CleartextStream) object.
 
 Here is an example of a client of echo server as described previously:
-
-    var tls = require('tls');
-    var fs = require('fs');
-
-    var options = {
-      // These are necessary only if using the client certificate authentication
-      key: fs.readFileSync('client-key.pem'),
-      cert: fs.readFileSync('client-cert.pem'),
-
-      // This is necessary only if the server uses the self-signed certificate
-      ca: [ fs.readFileSync('server-cert.pem') ]
-    };
-
-    var cleartextStream = tls.connect(8000, options, function() {
-      console.log('client connected',
-                  cleartextStream.authorized ? 'authorized' : 'unauthorized');
-      process.stdin.pipe(cleartextStream);
-      process.stdin.resume();
-    });
-    cleartextStream.setEncoding('utf8');
-    cleartextStream.on('data', function(data) {
-      console.log(data);
-    });
-    cleartextStream.on('end', function() {
-      server.close();
-    });
-
 -->
 
 <p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">&apos;secureConnect&apos;</a>
@@ -7305,12 +7537,39 @@ Here is an example of a client of echo server as described previously:
 var fs = require(&apos;fs&apos;);
 
 var options = {
-  // これらはクライアント証明書による認証を行う場合だけ必要ですn
+  // These are necessary only if using the client certificate authentication
   key: fs.readFileSync(&apos;client-key.pem&apos;),
   cert: fs.readFileSync(&apos;client-cert.pem&apos;),
 
-  // これはサーバが自己署名証明書を使う場合だけ必要です
+  // This is necessary only if the server uses the self-signed certificate
   ca: [ fs.readFileSync(&apos;server-cert.pem&apos;) ]
+};
+
+var cleartextStream = tls.connect(8000, options, function() {
+  console.log(&apos;client connected&apos;,
+              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  process.stdin.pipe(cleartextStream);
+  process.stdin.resume();
+});
+cleartextStream.setEncoding(&apos;utf8&apos;);
+cleartextStream.on(&apos;data&apos;, function(data) {
+  console.log(data);
+});
+cleartextStream.on(&apos;end&apos;, function() {
+  server.close();
+});</code></pre>
+<!--
+Or
+-->
+
+<p>または:
+
+</p>
+<pre><code>var tls = require(&apos;tls&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;client.pfx&apos;)
 };
 
 var cleartextStream = tls.connect(8000, options, function() {
@@ -7713,6 +7972,43 @@ The numeric representation of the remote port. For example, `443`.
 <p>リモートポートの数値表現です。
 例えば、<code>443</code>。
 
+</p>
+<h1>StringDecoder<span><a class="mark" href="#all_stringdecoder" id="all_stringdecoder">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!--
+To use this module, do `require('string_decoder')`. StringDecoder decodes a
+buffer to a string. It is a simple interface to `buffer.toString()` but provides
+additional support for utf8.
+-->
+
+<p>このモジュールを使用するには <code>require(&apos;string_decoder&apos;)</code> をします。
+StringDecoder はバッファから文字列にデコードします。
+これは単純なインターフェース <code>buffer.toString()</code> ですが、
+UTF-8 を特別にサポートします。
+
+</p>
+<pre><code>var StringDecoder = require(&apos;string_decoder&apos;).StringDecoder;
+var decoder = new StringDecoder(&apos;utf8&apos;);
+
+var cent = new Buffer([0xC2, 0xA2]);
+console.log(decoder.write(cent));
+
+var euro = new Buffer([0xE2, 0x82, 0xAC]);
+console.log(decoder.write(euro));</code></pre>
+<h2>Class: StringDecoder<span><a class="mark" href="#all_class_stringdecoder" id="all_class_stringdecoder">#</a></span></h2>
+<!--
+Accepts a single argument, `encoding` which defaults to `utf8`.
+-->
+
+<p>文字列の引数 <code>encoding</code> を受け取ります。デフォルトは <code>&apos;utf8&apos;</code> です。
+
+</p>
+<h3>StringDecoder.write(buffer)<span><a class="mark" href="#all_stringdecoder_write_buffer" id="all_stringdecoder_write_buffer">#</a></span></h3>
+<!--
+Returns a decoded string.
+-->
+
+<p>デコードされた文字列を返します。
 
 </p>
 <h1>File System<span><a class="mark" href="#all_file_system" id="all_file_system">#</a></span></h1>
@@ -8051,13 +8347,20 @@ Synchronous link(2).
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
-`type` argument can be either `'dir'` or `'file'` (default is `'file'`).  It is only 
+`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only 
 used on Windows (ignored on other platforms).
+Note that Windows junction points require the destination path to be absolute.  When using
+`'junction'`, the `destination` argument will automatically be normalized to absolute path.
 -->
 
-<p>非同期の symlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。
-<code>type</code> 引数は <code>&apos;dir&apos;</code> または <code>&apos;file&apos;</code> (デフォルトは <code>&apos;file&apos;</code>) です。
+<p>非同期の symlink(2)。
+完了コールバックには発生し得る例外以外に引数が渡されることはありません。
+<code>type</code> 引数は <code>&apos;dir&apos;</code>、<code>&apos;file&apos;</code>、または <code>&apos;junction</code>&apos; (デフォルトは <code>&apos;file&apos;</code>)
+です。
 これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
+Windows のジャンクションポイントは対象に絶対パスを要求することに
+注意してください。
+<code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
 
 </p>
 <h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#all_fs_symlinksync_destination_path_type" id="all_fs_symlinksync_destination_path_type">#</a></span></h2>
@@ -8220,6 +8523,19 @@ An exception occurs if the file does not exist.
 * `'r+'` - Open file for reading and writing.
 An exception occurs if the file does not exist.
 
+* `'rs'` - Open file for reading in synchronous mode. Instructs the operating
+  system to bypass the local file system cache.
+
+  This is primarily useful for opening files on NFS mounts as it allows you to
+  skip the potentially stale local cache. It has a very real impact on I/O
+  performance so don't use this mode unless you need it.
+
+  Note that this doesn't turn `fs.open()` into a synchronous blocking call.
+  If that's what you want then you should be using `fs.openSync()`
+
+* `'rs+'` - Open file for reading and writing, telling the OS to open it
+  synchronously. See notes for `'rs'` about using this with caution.
+
 * `'w'` - Open file for writing.
 The file is created (if it does not exist) or truncated (if it exists).
 
@@ -8252,30 +8568,44 @@ not followed. Exclusive mode may or may not work with network file systems.
 
 </p>
 <ul>
-<li><p><code>&apos;r&apos;</code> - 読み込み専用でオープンします。
+<li><p><code>&apos;r&apos;</code> - ファイルを読み込み専用でオープンします。
 ファイルが存在しない場合は例外が発生します。</p>
 </li>
-<li><p><code>&apos;r+&apos;</code> - 読み書き両用でオープンします。
+<li><p><code>&apos;r+&apos;</code> - ファイルを読み書き両用でオープンします。
 ファイルが存在しない場合は例外が発生します。</p>
 </li>
-<li><p><code>&apos;w&apos;</code> - 書き込み専用でオープンします。
+<li><p><code>&apos;rs&apos;</code> - ファイルを同期モードで読み込むためにオープンします。
+オペレーティングシステムにローカルファイルシステムのキャッシュを
+バイパスするように指示します。</p>
+<p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い
+ローカルキャッシュをスキップするのに役立ちます。
+これはI/O パフォーマンスにとても深刻な影響を与えるため、必要でない限り
+使用しないでください。</p>
+<p>これは <code>fs.open()</code> を同期的なブロッキング呼び出しにするわけではないことに
+注意してください。
+それが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>
+</li>
+<li><p><code>&apos;rs+&apos;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように
+伝えます。これを使用する際の警告は <code>&apos;rs&apos;</code> の注意を参照してください。</p>
+</li>
+<li><p><code>&apos;w&apos;</code> - ファイルを書き込み専用でオープンします。
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
 <li><p><code>&apos;wx&apos;</code> - <code>&apos;w&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;w+&apos;</code> - 読み書き両用でオープンします。
+<li><p><code>&apos;w+&apos;</code> - ファイルを読み書き両用でオープンします。
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
 <li><p><code>&apos;wx&apos;</code> - <code>&apos;w+&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;a&apos;</code> - 追記用でオープンします。
+<li><p><code>&apos;a&apos;</code> - ファイルを追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
 </li>
 <li><p><code>&apos;ax&apos;</code> - <code>&apos;a&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;a+&apos;</code> - 読み込みおよび追記用でオープンします。
+<li><p><code>&apos;a+&apos;</code> - ファイルを読み込みおよび追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
 </li>
 <li><p><code>&apos;ax+&apos;</code> - <code>&apos;a+&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
@@ -8461,11 +8791,13 @@ Synchronous version of buffer-based `fs.read`. Returns the number of
 </p>
 <h2>fs.readSync(fd, length, position, encoding)<span><a class="mark" href="#all_fs_readsync_fd_length_position_encoding" id="all_fs_readsync_fd_length_position_encoding">#</a></span></h2>
 <!--
-Synchronous version of string-based `fs.read`. Returns the number of
-`bytesRead`.
+Legacy synchronous version of string-based `fs.read`. Returns an array with the
+data from the file specified and number of bytes read, `[string, bytesRead]`.
 -->
 
-<p>同期版の文字列に基づく <code>fs.read</code>。<code>bytesRead</code> の数を返します。
+<p>文字列に基づく古い <code>fs.read</code> の同期版。
+指定されたファイルのデータと読み込んだバイト数の配列、<code>[string, bytesRead]</code>
+を返します。
 
 </p>
 <h2>fs.readFile(filename, [encoding], [callback])<span><a class="mark" href="#all_fs_readfile_filename_encoding_callback" id="all_fs_readfile_filename_encoding_callback">#</a></span></h2>
@@ -8641,7 +8973,7 @@ Stop watching for changes on `filename`.
 <p><code>filename</code> の変更に対する監視を終了します。
 
 </p>
-<h2>fs.watch(filename, [options], listener)<span><a class="mark" href="#all_fs_watch_filename_options_listener" id="all_fs_watch_filename_options_listener">#</a></span></h2>
+<h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#all_fs_watch_filename_options_listener" id="all_fs_watch_filename_options_listener">#</a></span></h2>
 <pre><code>Stability: 2 - Unstable.  Not available on all platforms.</code></pre>
 <!--
 Watch for changes on `filename`, where `filename` is either a file or a
@@ -9257,6 +9589,34 @@ path.extname(&apos;index.&apos;)
 path.extname(&apos;index&apos;)
 // returns
 &apos;&apos;</code></pre>
+<h2>path.sep<span><a class="mark" href="#all_path_sep" id="all_path_sep">#</a></span></h2>
+<!--
+The platform-specific file separator. `'\\'` or `'/'`.
+-->
+
+<p>プラットフォーム固有のファイルセパレータ。 <code>&apos;\\&apos;</code> または <code>&apos;/&apos;</code>。
+
+</p>
+<!--
+An example on linux:
+-->
+
+<p>Linux での例:
+
+</p>
+<pre><code>&apos;foo/bar/baz&apos;.split(path.sep)
+// returns
+[&apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;]</code></pre>
+<!--
+An example on windows:
+-->
+
+<p>Windows での例:
+
+</p>
+<pre><code>&apos;foo\\bar\\baz&apos;.split(path.sep)
+// returns
+[&apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;]</code></pre>
 <h1>net<span><a class="mark" href="#all_net" id="all_net">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!--
@@ -9492,7 +9852,7 @@ A server is a `net.Socket` that can listen for new incoming connections.
 サーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。
 
 </p>
-<h3>server.listen(port, [host], [listeningListener])<span><a class="mark" href="#all_server_listen_port_host_listeninglistener" id="all_server_listen_port_host_listeninglistener">#</a></span></h3>
+<h3>server.listen(port, [host], [backlog], [listeningListener])<span><a class="mark" href="#all_server_listen_port_host_backlog_listeninglistener" id="all_server_listen_port_host_backlog_listeninglistener">#</a></span></h3>
 <!--
 Begin accepting connections on the specified `port` and `host`.  If the
 `host` is omitted, the server will accept connections directed to any
@@ -9503,6 +9863,19 @@ IPv4 address (`INADDR_ANY`). A port value of zero will assign a random port.
 <code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます
 (<code>INADDR_ANY</code>)。
 ポート番号に 0 を指定すると、ランダムなポートが割り当てられます。
+
+</p>
+<!--
+Backlog is the maximum length of the queue of pending connections.
+The actual length will be determined by your OS through sysctl settings such as
+`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this
+parameter is 511 (not 512).
+-->
+
+<p>バックログは保留された接続のキューの最大長です。
+実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、
+sysctl の設定を通じて OS によって決定されます。
+このパラメータのデフォルト値は 511 (512 ではありません) です。
 
 </p>
 <!--
@@ -9632,12 +10005,29 @@ high.
 <p>サーバの接続数が大きくなった時に接続を拒否するためにこのプロパティを設定します。
 
 </p>
+<!--
+It is not recommended to use this option once a socket has been sent to a child
+with `child_process.fork()`.
+-->
+
+<p><code>child_process.fork()</code> によって子プロセスに送られたソケットに対して
+このオプションを使用することは推奨されません。
+
+</p>
 <h3>server.connections<span><a class="mark" href="#all_server_connections_1" id="all_server_connections_1">#</a></span></h3>
 <!--
 The number of concurrent connections on the server.
 -->
 
 <p>このサーバ上の並行コネクションの数です。
+
+</p>
+<!--
+This becomes `null` when sending a socket to a child with `child_process.fork()`.
+-->
+
+<p>ソケットが <code>child_process.fork()</code> によって子プロセスに送られると、
+これは <code>null</code> になります。
 
 </p>
 <!--
@@ -9825,12 +10215,14 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 </p>
 <h3>socket.setEncoding([encoding])<span><a class="mark" href="#all_socket_setencoding_encoding" id="all_socket_setencoding_encoding">#</a></span></h3>
 <!--
-Sets the encoding (either `'ascii'`, `'utf8'`, or `'base64'`) for data that is
-received. Defaults to `null`.
+Set the encoding for the socket as a Readable Stream. See
+[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
+for more information.
 -->
 
-<p>受信したデータのエンコーディングを設定します (<code>&apos;ascii&apos;</code>、<code>&apos;utf8&apos;</code>、
-あるいは <code>&apos;base64&apos;</code> のいずれかです)。デフォルトは <code>null</code> です。
+<p>ソケットを入力ストリームとしてエンコーディングを設定します。詳細は
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
+を参照してください。
 
 </p>
 <h3>socket.write(data, [encoding], [callback])<span><a class="mark" href="#all_socket_write_data_encoding_callback" id="all_socket_write_data_encoding_callback">#</a></span></h3>
@@ -10470,11 +10862,11 @@ Close the underlying socket and stop listening for data on it.
 <h3>dgram.address()<span><a class="mark" href="#all_dgram_address" id="all_dgram_address">#</a></span></h3>
 <!--
 Returns an object containing the address information for a socket.  For UDP sockets,
-this object will contain `address` and `port`.
+this object will contain `address` , `family` and `port`.
 -->
 
 <p>オブジェクトが持っているソケットのアドレス情報を返します。
-このオブジェクトは <code>address</code> と <code>port</code> を持っています。
+このオブジェクトは <code>address</code>、<code>port</code>、そして <code>family</code> を持っています。
 
 </p>
 <h3>dgram.setBroadcast(flag)<span><a class="mark" href="#all_dgram_setbroadcast_flag" id="all_dgram_setbroadcast_flag">#</a></span></h3>
@@ -10634,12 +11026,10 @@ dns.resolve4(&apos;www.google.com&apos;, function (err, addresses) {
   addresses.forEach(function (a) {
     dns.reverse(a, function (err, domains) {
       if (err) {
-        console.log(&apos;reverse for &apos; + a + &apos; failed: &apos; +
-          err.message);
-      } else {
-        console.log(&apos;reverse for &apos; + a + &apos;: &apos; +
-          JSON.stringify(domains));
+        throw err;
       }
+
+      console.log(&apos;reverse for &apos; + a + &apos;: &apos; + JSON.stringify(domains));
     });
   });
 });</code></pre>
@@ -10668,6 +11058,19 @@ necessarily the value initially passed to `lookup`).
 <code>address</code> 引数は IP v4 または v6 アドレスを表現する文字列です。
 <code>family</code> 引数は整数の 4 または 6 で、<code>address</code> のファミリーを意味します
 (この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。
+
+</p>
+<!--
+On error, `err` is an `Error` object, where `err.code` is the error code.
+Keep in mind that `err.code` will be set to `'ENOENT'` not only when
+the domain does not exist but also when the lookup fails in other ways
+such as no available file descriptors.
+-->
+
+<p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、<code>err.code</code> はエラーコードです。
+<code>err.code</code> が <code>&apos;ENOENT&apos;</code> に設定されるのはドメインが存在しない場合だけではなく、
+ファイル記述子が使えないなどルックアップが失敗した場合もあることに
+注意してください。
 
 
 </p>
@@ -10699,14 +11102,12 @@ documentation for the corresponding lookup methods below.
 
 </p>
 <!--
-On error, `err` would be an instanceof `Error` object, where `err.errno` is
-one of the error codes listed below and `err.message` is a string describing
-the error in English.
+On error, `err` is an `Error` object, where `err.code` is
+one of the error codes listed below.
 -->
 
-<p>エラー発生時、<code>err</code> は <code>Error</code> オブジェクトのインスタンスであり、
-<code>err.errno</code> は後述するエラーコードのいずれか、
-<code>err.message</code> はエラーを英語で説明する文字列となります。
+<p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、
+<code>err.errno</code> は後述するエラーコードのいずれかです。
 
 
 </p>
@@ -10774,21 +11175,6 @@ SRV レコードのプロパティは priority、weight、port、そして name 
 (例 <code>[{&apos;priority&apos;: 10, {&apos;weight&apos;: 5, &apos;port&apos;: 21223, &apos;name&apos;: &apos;service.example.com&apos;}, ...]</code>)。
 
 </p>
-<h2>dns.reverse(ip, callback)<span><a class="mark" href="#all_dns_reverse_ip_callback" id="all_dns_reverse_ip_callback">#</a></span></h2>
-<!--
-Reverse resolves an ip address to an array of domain names.
--->
-
-<p>IP アドレスからドメイン名の配列へ逆引きで解決します。
-
-</p>
-<!--
-The callback has arguments `(err, domains)`.
--->
-
-<p>コールバックは引数 <code>(err, domains)</code> を持ちます。
-
-</p>
 <h2>dns.resolveNs(domain, callback)<span><a class="mark" href="#all_dns_resolvens_domain_callback" id="all_dns_resolvens_domain_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for name server records (`NS` records).
@@ -10815,37 +11201,90 @@ records). `addresses` is an array of the canonical name records available for
 <code>domain</code> (e.g., <code>[&apos;bar.example.com&apos;]</code>)。
 
 </p>
+<h2>dns.reverse(ip, callback)<span><a class="mark" href="#all_dns_reverse_ip_callback" id="all_dns_reverse_ip_callback">#</a></span></h2>
 <!--
-If there an an error, `err` will be non-null and an instanceof the Error
-object.
+Reverse resolves an ip address to an array of domain names.
 -->
 
-<p>エラーがあった場合、<code>err</code> は非 null で Error オブジェクトのインスタンスとなります。
+<p>IP アドレスからドメイン名の配列へ逆引きで解決します。
 
 </p>
 <!--
-Each DNS query can return an error code.
+The callback has arguments `(err, domains)`.
 -->
 
-<p>どの DNS 問い合わせもエラーコードを返せます。
+<p>コールバックは引数 <code>(err, domains)</code> を持ちます。
 
 </p>
 <!--
-- `dns.TEMPFAIL`: timeout, SERVFAIL or similar.
-- `dns.PROTOCOL`: got garbled reply.
-- `dns.NXDOMAIN`: domain does not exists.
-- `dns.NODATA`: domain exists but no data of reqd type.
-- `dns.NOMEM`: out of memory while processing.
-- `dns.BADQUERY`: the query is malformed.
+On error, `err` is an `Error` object, where `err.code` is
+one of the error codes listed below.
+-->
+
+<p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、
+<code>err.errno</code> は後述するエラーコードのいずれかです。
+
+</p>
+<h2>Error codes<span><a class="mark" href="#all_error_codes" id="all_error_codes">#</a></span></h2>
+<!--
+Each DNS query can return one of the following error codes:
+-->
+
+<p>どの DNS 問い合わせも以下のエラーコードの一つを返します:
+
+</p>
+<!--
+- `dns.NODATA`: DNS server returned answer with no data.
+- `dns.FORMERR`: DNS server claims query was misformatted.
+- `dns.SERVFAIL`: DNS server returned general failure.
+- `dns.NOTFOUND`: Domain name not found.
+- `dns.NOTIMP`: DNS server does not implement requested operation.
+- `dns.REFUSED`: DNS server refused query.
+- `dns.BADQUERY`: Misformatted DNS query.
+- `dns.BADNAME`: Misformatted domain name.
+- `dns.BADFAMILY`: Unsupported address family.
+- `dns.BADRESP`: Misformatted DNS reply.
+- `dns.CONNREFUSED`: Could not contact DNS servers.
+- `dns.TIMEOUT`: Timeout while contacting DNS servers.
+- `dns.EOF`: End of file.
+- `dns.FILE`: Error reading file.
+- `dns.NOMEM`: Out of memory.
+- `dns.DESTRUCTION`: Channel is being destroyed.
+- `dns.BADSTR`: Misformatted string.
+- `dns.BADFLAGS`: Illegal flags specified.
+- `dns.NONAME`: Given hostname is not numeric.
+- `dns.BADHINTS`: Illegal hints flags specified.
+- `dns.NOTINITIALIZED`: c-ares library initialization not yet performed.
+- `dns.LOADIPHLPAPI`: Error loading iphlpapi.dll.
+- `dns.ADDRGETNETWORKPARAMS`: Could not find GetNetworkParams function.
+- `dns.CANCELLED`: DNS query cancelled.
 -->
 
 <ul>
-<li><code>dns.TEMPFAIL</code>: タイムアウト、SERVFAIL あるいは同様のもの。</li>
-<li><code>dns.PROTOCOL</code>: 応答が不正。</li>
-<li><code>dns.NXDOMAIN</code>: ドメインが存在しない。</li>
-<li><code>dns.NODATA</code>: ドメインは存在するが、要求された種類のデータがない。</li>
-<li><code>dns.NOMEM</code>: 処理中にメモリが不足。</li>
-<li><code>dns.BADQUERY</code>: 問い合わせが不正な形式。</li>
+<li><code>dns.NODATA</code>: DNS サーバがデータがないと応答した。</li>
+<li><code>dns.FORMERR</code>: DNS サーバが問い合わせフォーマットが不正だと主張した。</li>
+<li><code>dns.SERVFAIL</code>: DNS サーバが一般的な失敗を返した。</li>
+<li><code>dns.NOTFOUND</code>: ドメイン名が見つからない。</li>
+<li><code>dns.NOTIMP</code>: DNS サーバは要求された操作を実装していない。</li>
+<li><code>dns.REFUSED</code>: DNS サーバが問い合わせを拒否した。</li>
+<li><code>dns.BADQUERY</code>: DNS 問い合わせのフォーマットが不正。</li>
+<li><code>dns.BADNAME</code>: ドメイン名のフォーマットが不正。</li>
+<li><code>dns.BADFAMILY</code>: サポートされないアドレスファミリー。</li>
+<li><code>dns.BADRESP</code>: DNS 応答のフォーマットが不正。</li>
+<li><code>dns.CONNREFUSED</code>: DNS サーバに接続できない。</li>
+<li><code>dns.TIMEOUT</code>: DNS サーバへの接続がタイムアウトした。</li>
+<li><code>dns.EOF</code>: エンドオブファイル。</li>
+<li><code>dns.FILE</code>: ファイルの読み込みがエラー。</li>
+<li><code>dns.NOMEM</code>: メモリ不足。</li>
+<li><code>dns.DESTRUCTION</code>: チャネルが壊れている。</li>
+<li><code>dns.BADSTR</code>: 文字列のフォーマットが不正。</li>
+<li><code>dns.BADFLAGS</code>: 不正なフラグが指定された。</li>
+<li><code>dns.NONAME</code>: 与えられたホスト名が数値ではない。</li>
+<li><code>dns.BADHINTS</code>: 不正なヒントフラグが指定された。</li>
+<li><code>dns.NOTINITIALIZED</code>: c-ares ライブラリが初期化されていない。</li>
+<li><code>dns.LOADIPHLPAPI</code>: iphlpapi.dll のローディングでエラー。</li>
+<li><code>dns.ADDRGETNETWORKPARAMS</code>: GetNetworkParams 関数が見つからない。</li>
+<li><code>dns.CANCELLED</code>: DNS 問い合わせがキャンセルされた。</li>
 </ul>
 <h1>HTTP<span><a class="mark" href="#all_http" id="all_http">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
@@ -10902,6 +11341,20 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 
 
 </p>
+<h2>http.STATUS_CODES<span><a class="mark" href="#all_http_status_codes" id="all_http_status_codes">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
+<!--
+A collection of all the standard HTTP response status codes, and the
+short description of each.  For example, `http.STATUS_CODES[404] === 'Not
+Found'`.
+-->
+
+<p>全ての HTTP 標準ステータスコードと短い説明のコレクションです。
+たとえば、<code>http.STATUS_CODES[404] === &apos;Not Found&apos;</code>。
+
+</p>
 <h2>http.createServer([requestListener])<span><a class="mark" href="#all_http_createserver_requestlistener" id="all_http_createserver_requestlistener">#</a></span></h2>
 <!--
 Returns a new web server object.
@@ -10916,6 +11369,19 @@ added to the `'request'` event.
 -->
 
 <p><code>requestListener</code> は自動的に <code>&apos;request&apos;</code> イベントに加えられる関数です。
+
+</p>
+<h2>http.createClient([port], [host])<span><a class="mark" href="#all_http_createclient_port_host" id="all_http_createclient_port_host">#</a></span></h2>
+<!--
+This function is **deprecated**; please use
+[http.request()](#http_http_request_options_callback) instead. Constructs a new
+HTTP client. `port` and `host` refer to the server to be connected to.
+-->
+
+<p>この関数は <strong>deprecated</strong> です; 代わりに
+<a href="#http_http_request_options_callback">http.request()</a> を使用してください。
+新しい HTTP クライアントを構築します。
+<code>port</code> と <code>host</code> は接続するサーバを示します。
 
 </p>
 <h2>Class: http.Server<span><a class="mark" href="#all_class_http_server" id="all_class_http_server">#</a></span></h2>
@@ -11098,7 +11564,7 @@ If a client connection emits an 'error' event - it will forwarded here.
 <p>クライアントコネクションが &apos;error&apos; イベントを発した場合 － ここに転送されます。
 
 </p>
-<h3>server.listen(port, [hostname], [callback])<span><a class="mark" href="#all_server_listen_port_hostname_callback" id="all_server_listen_port_hostname_callback">#</a></span></h3>
+<h3>server.listen(port, [hostname], [backlog], [callback])<span><a class="mark" href="#all_server_listen_port_hostname_backlog_callback" id="all_server_listen_port_hostname_backlog_callback">#</a></span></h3>
 <!--
 Begin accepting connections on the specified port and hostname.  If the
 hostname is omitted, the server will accept connections directed to any
@@ -11114,6 +11580,19 @@ To listen to a unix socket, supply a filename instead of port and hostname.
 -->
 
 <p>UNIX ドメインソケットを待ち受ける場合、ポートとホスト名ではなくファイル名を提供します。
+
+</p>
+<!--
+Backlog is the maximum length of the queue of pending connections.
+The actual length will be determined by your OS through sysctl settings such as
+`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this
+parameter is 511 (not 512).
+-->
+
+<p>バックログは保留された接続のキューの最大長です。
+実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、
+sysctl の設定を通じて OS によって決定されます。
+このパラメータのデフォルト値は 511 (512 ではありません) です。
 
 </p>
 <!--
@@ -11363,15 +11842,14 @@ Also `request.httpVersionMajor` is the first integer and
 </p>
 <h3>request.setEncoding([encoding])<span><a class="mark" href="#all_request_setencoding_encoding" id="all_request_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the request body. Either `'utf8'` or `'binary'`. Defaults
-to `null`, which means that the `'data'` event will emit a `Buffer` object..
+Set the encoding for the request body. See
+[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
+for more information.
 -->
 
-<p>リクエストボディのエンコーディングを設定します。
-<code>&apos;utf8&apos;</code> または <code>&apos;binary&apos;</code> のいずれかです。
-デフォルトは <code>null</code> で、<code>&apos;data&apos;</code> イベントが
-<code>Buffer</code> を生成することを意味します。
-
+<p>リクエストボディのエンコーディングを設定します。詳細は
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
+を参照してください。
 
 </p>
 <h3>request.pause()<span><a class="mark" href="#all_request_pause" id="all_request_pause">#</a></span></h3>
@@ -11733,12 +12211,22 @@ followed by `response.end()`.
 <h2>http.request(options, callback)<span><a class="mark" href="#all_http_request_options_callback" id="all_http_request_options_callback">#</a></span></h2>
 <!--
 Node maintains several connections per server to make HTTP requests.
-This function allows one to transparently issue requests.  `options` align
-with [url.parse()](url.html#url.parse).
+This function allows one to transparently issue requests.
 -->
 
-<p>Node は HTTP リクエストを行うために、サーバごとにいくつかのコネクションを保持します。
+<p>Node は HTTP リクエストを行うために、サーバごとにいくつかのコネクションを
+保持します。
 この関数はその一つを使って透過的にリクエストを発行できるようにします。
+
+</p>
+<!--
+`options` can be an object or a string. If `options` is a string, it is
+automatically parsed with [url.parse()](url.html#url.parse).
+-->
+
+<p><code>options</code> はオブジェクトまたは文字列です。
+もし <code>options</code> が文字列なら、それは <a href="url.html#url.parse">url.parse()</a>
+によって自動的に解析されます。
 
 </p>
 <!--
@@ -11896,13 +12384,14 @@ There are a few special headers that should be noted.
 <h2>http.get(options, callback)<span><a class="mark" href="#all_http_get_options_callback" id="all_http_get_options_callback">#</a></span></h2>
 <!--
 Since most requests are GET requests without bodies, Node provides this
-convenience method. The only difference between this method and `http.request()` is
-that it sets the method to GET and calls `req.end()` automatically.
+convenience method. The only difference between this method and `http.request()`
+is that it sets the method to GET and calls `req.end()` automatically.
 -->
 
 <p>ほとんどのリクエストは本文のない GET リクエストであるため、
 Node は便利なメソッドを提供します。
-このメソッドと <code>http.request()</code> の間の違いは、メソッドを GET に設定して <code>req.end()</code> を自動的に呼び出すことだけです。
+このメソッドと <code>http.request()</code> の間の違いは、メソッドを GET に設定して
+<code>req.end()</code> を自動的に呼び出すことだけです。
 
 </p>
 <!--
@@ -11912,13 +12401,7 @@ Example:
 <p>例:
 
 </p>
-<pre><code>var options = {
-  host: &apos;www.google.com&apos;,
-  port: 80,
-  path: &apos;/index.html&apos;
-};
-
-http.get(options, function(res) {
+<pre><code>http.get(&quot;http://www.google.com/index.html&quot;, function(res) {
   console.log(&quot;Got response: &quot; + res.statusCode);
 }).on(&apos;error&apos;, function(e) {
   console.log(&quot;Got error: &quot; + e.message);
@@ -11928,7 +12411,7 @@ http.get(options, function(res) {
 In node 0.5.3+ there is a new implementation of the HTTP Agent which is used
 for pooling sockets used in HTTP client requests.
 
-Previously, a single agent instance help the pool for single host+port. The
+Previously, a single agent instance helped pool for a single host+port. The
 current implementation now holds sockets for any number of hosts.
 
 The current HTTP Agent also defaults client requests to using
@@ -12509,15 +12992,14 @@ The response trailers object. Only populated after the 'end' event.
 </p>
 <h3>response.setEncoding([encoding])<span><a class="mark" href="#all_response_setencoding_encoding" id="all_response_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the response body. Either `'utf8'`, `'ascii'`, or
-`'base64'`. Defaults to `null`, which means that the `'data'` event will emit
-a `Buffer` object.
+Set the encoding for the response body. See
+[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
+for more information.
 -->
 
-<p>レスポンスボディのエンコーディングを設定します。
-<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、あるいは <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>null</code> で、
-<code>&apos;data&apos;</code> イベントが <code>Buffer</code> を生成することを意味します。
+<p>レスポンスボディのエンコーディングを設定します。詳細は
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
+を参照してください。
 
 </p>
 <h3>response.pause()<span><a class="mark" href="#all_response_pause" id="all_response_pause">#</a></span></h3>
@@ -12583,6 +13065,24 @@ var fs = require(&apos;fs&apos;);
 var options = {
   key: fs.readFileSync(&apos;test/fixtures/keys/agent2-key.pem&apos;),
   cert: fs.readFileSync(&apos;test/fixtures/keys/agent2-cert.pem&apos;)
+};
+
+https.createServer(options, function (req, res) {
+  res.writeHead(200);
+  res.end(&quot;hello world\n&quot;);
+}).listen(8000);</code></pre>
+<!--
+Or
+-->
+
+<p>または:
+
+</p>
+<pre><code>var https = require(&apos;https&apos;);
+var fs = require(&apos;fs&apos;);
+
+var options = {
+  pfx: fs.readFileSync(&apos;server.pfx&apos;)
 };
 
 https.createServer(options, function (req, res) {
@@ -12658,26 +13158,6 @@ The options argument has the following options
  - `Agent` object: explicitly use the passed in `Agent`.
  - `false`: opts out of connection pooling with an Agent, defaults request to
    `Connection: close`.
-
-The following options from [tls.connect()](tls.html#tls.connect) can also be
-specified. However, a [globalAgent](#https.globalAgent) silently ignores these.
-
-- `key`: Private key to use for SSL. Default `null`.
-- `passphrase`: A string of passphrase for the private key. Default `null`.
-- `cert`: Public x509 certificate to use. Default `null`.
-- `ca`: An authority certificate or array of authority certificates to check
-  the remote host against.
-- `ciphers`: A string describing the ciphers to use or exclude. Consult
-  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for
-  details on the format.
-- `rejectUnauthorized`: If `true`, the server certificate is verified against
-  the list of supplied CAs. An `'error'` event is emitted if verification
-  fails. Verification happens at the connection level, *before* the HTTP
-  request is sent. Default `false`.
-
-In order to specify these options, use a custom `Agent`.
-
-Example:
 -->
 
 <ul>
@@ -12702,14 +13182,38 @@ Example:
 </ul>
 </li>
 </ul>
+<!--
+The following options from [tls.connect()](tls.html#tls.connect) can also be
+specified. However, a [globalAgent](#https.globalAgent) silently ignores these.
+-->
+
 <p>以下の <a href="tls.html#tls.connect">tls.connect()</a> 由来のオプションを
 指定することもできますが、
 グローバル <a href="http.html#http.Agent">エージェント</a> はこれらを無視します。
 
 </p>
+<!--
+- `pfx`: Certificate, Private key and CA certificates to use for SSL. Default `null`.
+- `key`: Private key to use for SSL. Default `null`.
+- `passphrase`: A string of passphrase for the private key or pfx. Default `null`.
+- `cert`: Public x509 certificate to use. Default `null`.
+- `ca`: An authority certificate or array of authority certificates to check
+  the remote host against.
+- `ciphers`: A string describing the ciphers to use or exclude. Consult
+  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for
+  details on the format.
+- `rejectUnauthorized`: If `true`, the server certificate is verified against
+  the list of supplied CAs. An `'error'` event is emitted if verification
+  fails. Verification happens at the connection level, *before* the HTTP
+  request is sent. Default `false`.
+-->
+
 <ul>
-<li><code>key</code>: SSLで使用する秘密鍵。デフォルトは <code>null</code> です。</li>
-<li><code>passphrase</code>: 秘密鍵のパスフレーズを表す文字列。デフォルトは <code>null</code> です。</li>
+<li><code>pfx</code>: SSL で使用する証明書、秘密鍵、認証局の証明書。
+ デフォルトは <code>null</code> です。</li>
+<li><code>key</code>: SSL で使用する秘密鍵。デフォルトは <code>null</code> です。</li>
+<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列。
+ デフォルトは <code>null</code> です。</li>
 <li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li>
 <li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li>
 <li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。
@@ -12721,9 +13225,17 @@ Example:
 認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
 デフォルトは false です。</li>
 </ul>
+<!--
+In order to specify these options, use a custom `Agent`.
+-->
+
 <p>これらのオプションを指定するには、カスタムエージェントを使用します。
 
 </p>
+<!--
+Example:
+-->
+
 <p>例:
 
 </p>
@@ -12742,13 +13254,15 @@ var req = https.request(options, function(res) {
 }</code></pre>
 <!--
 Or does not use an `Agent`.
-
-Example:
 -->
 
 <p>あるいは、エージェントを使用しません。
 
 </p>
+<!--
+Example:
+-->
+
 <p>例:
 
 </p>
@@ -12843,72 +13357,88 @@ URL文字列に含まれないフィールドは解析結果のオブジェク�
 <!--
 * `href`: The full URL that was originally parsed. Both the protocol and host are lowercased.
 
-  Example: `'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'`
+    Example: `'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'`
+
 * `protocol`: The request protocol, lowercased.
 
-  Example: `'http:'`
-* `host`: The full lowercased host portion of the URL, including the port.
+    Example: `'http:'`
 
-  Example: `'host.com:8080'`
+* `host`: The full lowercased host portion of the URL, including port
+  information.
+
+    Example: `'host.com:8080'`
+
 * `auth`: The authentication information portion of a URL.
 
-  Example: `'user:pass'`
+    Example: `'user:pass'`
+
 * `hostname`: Just the lowercased hostname portion of the host.
 
-  Example: `'host.com'`
+    Example: `'host.com'`
+
 * `port`: The port number portion of the host.
 
-  Example: `'8080'`
-* `pathname`: The path section of the URL, that comes after the host and before the query, including the initial slash if present.
+    Example: `'8080'`
 
-  Example: `'/p/a/t/h'`
-* `search`: The 'query string' portion of the URL, including the leading question mark.
+* `pathname`: The path section of the URL, that comes after the host and
+  before the query, including the initial slash if present.
 
-  Example: `'?query=string'`
+    Example: `'/p/a/t/h'`
+
+* `search`: The 'query string' portion of the URL, including the leading
+  question mark.
+
+    Example: `'?query=string'`
+
 * `path`: Concatenation of `pathname` and `search`.
 
-  Example: `'/p/a/t/h?query=string'`
-* `query`: Either the 'params' portion of the query string, or a querystring-parsed object.
+    Example: `'/p/a/t/h?query=string'`
 
-  Example: `'query=string'` or `{'query':'string'}`
+* `query`: Either the 'params' portion of the query string, or a
+  querystring-parsed object.
+
+    Example: `'query=string'` or `{'query':'string'}`
+
 * `hash`: The 'fragment' portion of the URL including the pound-sign.
 
-  Example: `'#hash'`
+    Example: `'#hash'`
 -->
 
 <ul>
 <li><p><code>href</code>: 解析する前の完全な URL。protocol と host はどちらも小文字化されます。</p>
-<p>例: <code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code></p>
+<p>  例: <code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code></p>
 </li>
 <li><p><code>protocol</code>: リクエストのプロトコル。小文字化されます。</p>
-<p>例: <code>&apos;http:&apos;</code></p>
+<p>  例: <code>&apos;http:&apos;</code></p>
 </li>
 <li><p><code>host</code>: URL の完全で小文字化されたホスト情報。ポート番号を含みます。</p>
-<p>Example: <code>&apos;host.com:8080&apos;</code></p>
+<p>  例: <code>&apos;host.com:8080&apos;</code></p>
 </li>
 <li><p><code>auth</code>: URL の認証情報。</p>
-<p>例: <code>&apos;user:pass&apos;</code></p>
+<p>  例: <code>&apos;user:pass&apos;</code></p>
 </li>
 <li><p><code>hostname</code>: ホスト情報の中の小文字化されたホスト名。</p>
-<p>例: <code>&apos;host.com&apos;</code></p>
+<p>  例: <code>&apos;host.com&apos;</code></p>
 </li>
 <li><p><code>port</code>: ホスト情報の中のポート番号。</p>
-<p>例: <code>&apos;8080&apos;</code></p>
+<p>  例: <code>&apos;8080&apos;</code></p>
 </li>
-<li><p><code>pathname</code>: URL のパス部分。ホスト情報からクエリまでの間に位置し、最初にスラッシュが存在する場合はそれも含みます。</p>
-<p>例: <code>&apos;/p/a/t/h&apos;</code></p>
+<li><p><code>pathname</code>: URL のパス部分。ホスト情報からクエリまでの間に位置し、
+最初にスラッシュが存在する場合はそれも含みます。</p>
+<p>  例: <code>&apos;/p/a/t/h&apos;</code></p>
 </li>
 <li><p><code>search</code>: URL のクエリ文字列。先頭の ? マークも含みます。</p>
-<p>例: <code>&apos;?query=string&apos;</code></p>
+<p>  例: <code>&apos;?query=string&apos;</code></p>
 </li>
 <li><p><code>path</code>: <code>pathname</code> と <code>search</code> を連結した文字列。</p>
-<p>例: <code>&apos;/p/a/t/h?query=string&apos;</code></p>
+<p>  例: <code>&apos;/p/a/t/h?query=string&apos;</code></p>
 </li>
-<li><p><code>query</code>: クエリの変数部分の文字列、もしくはクエリ文字列を解析したオブジェクト。</p>
-<p>例: <code>&apos;query=string&apos;</code> or <code>{&apos;query&apos;:&apos;string&apos;}</code></p>
+<li><p><code>query</code>: クエリの変数部分の文字列、もしくはクエリ文字列を解析した
+オブジェクト。</p>
+<p>  例: <code>&apos;query=string&apos;</code> or <code>{&apos;query&apos;:&apos;string&apos;}</code></p>
 </li>
 <li><p><code>hash</code>: URL の # マークを含む部分。</p>
-<p>例: <code>&apos;#hash&apos;</code></p>
+<p>  例: <code>&apos;#hash&apos;</code></p>
 </li>
 </ul>
 <!--
@@ -12956,9 +13486,11 @@ Take a parsed URL object, and return a formatted URL string.
 <!--
 * `href` will be ignored.
 * `protocol`is treated the same with or without the trailing `:` (colon).
-  * The protocols `http`, `https`, `ftp`, `gopher`, `file` will be postfixed with `://` (colon-slash-slash).
-  * All other protocols `mailto`, `xmpp`, `aim`, `sftp`, `foo`, etc will be postfixed with `:` (colon)
-* `auth` will only be used if `host` is absent.
+  * The protocols `http`, `https`, `ftp`, `gopher`, `file` will be
+    postfixed with `://` (colon-slash-slash).
+  * All other protocols `mailto`, `xmpp`, `aim`, `sftp`, `foo`, etc will
+    be postfixed with `:` (colon)
+* `auth` will be used if present.
 * `hostname` will only be used if `host` is absent.
 * `port` will only be used if `host` is absent.
 * `host` will be used in place of `hostname` and `port`
@@ -12972,11 +13504,13 @@ Take a parsed URL object, and return a formatted URL string.
 <ul>
 <li><code>href</code> は無視されます。</li>
 <li><code>protocol</code> の末尾に <code>:</code> (コロン) があってもなくても同じように扱われます。<ul>
-<li><code>http</code>、<code>https</code>、<code>ftp</code>、<code>gopher</code>、<code>file</code> は末尾に <code>://</code> (コロン、スラッシュ、スラッシュ) が付けられます。</li>
-<li><code>mailto</code>、<code>xmpp</code>、<code>aim</code>、<code>sftp</code>、<code>foo</code> など、その他のプロトコルは末尾に <code>:</code> (コロン) が付けられます。</li>
+<li><code>http</code>、<code>https</code>、<code>ftp</code>、<code>gopher</code>、<code>file</code> は末尾に <code>://</code>
+(コロン、スラッシュ、スラッシュ) が付けられます。</li>
+<li><code>mailto</code>、<code>xmpp</code>、<code>aim</code>、<code>sftp</code>、<code>foo</code> など、その他のプロトコルは末尾に <code>:</code>
+(コロン) が付けられます。</li>
 </ul>
 </li>
-<li><code>auth</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
+<li><code>auth</code> が与えられると使われます。</li>
 <li><code>hostname</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
 <li><code>port</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
 <li><code>host</code> は <code>hostname</code>、<code>port</code> の位置で使われます。</li>
@@ -12988,7 +13522,8 @@ Take a parsed URL object, and return a formatted URL string.
 </ul>
 <h2>url.resolve(from, to)<span><a class="mark" href="#all_url_resolve_from_to" id="all_url_resolve_from_to">#</a></span></h2>
 <!--
-Take a base URL, and a href URL, and resolve them as a browser would for an anchor tag.
+Take a base URL, and a href URL, and resolve them as a browser would for
+an anchor tag.
 -->
 
 <p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。
@@ -13103,20 +13638,20 @@ program to gracefully exit:
 プログラムをスムーズに終了する方法を以下に示します:
 
 </p>
-<pre><code>var rl = require(&apos;readline&apos;);
+<pre><code>var readline = require(&apos;readline&apos;);
 
-var i = rl.createInterface({
+var rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-i.question(&quot;What do you think of node.js? &quot;, function(answer) {
+rl.question(&quot;What do you think of node.js? &quot;, function(answer) {
   // TODO: Log the answer in a database
   console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
 
-  i.close();
+  rl.close();
 });</code></pre>
-<h2>rl.createInterface(options)<span><a class="mark" href="#all_rl_createinterface_options" id="all_rl_createinterface_options">#</a></span></h2>
+<h2>readline.createInterface(options)<span><a class="mark" href="#all_readline_createinterface_options" id="all_readline_createinterface_options">#</a></span></h2>
 <!--
 Creates a readline `Interface` instance. Accepts an "options" Object that takes
 the following values:
@@ -13231,7 +13766,7 @@ Once you have a readline instance, you most commonly listen for the
 </p>
 <!--
 If `terminal` is `true` for this instance then the `output` stream will get
-the best compatability if it defines an `output.columns` property, and fires
+the best compatibility if it defines an `output.columns` property, and fires
 a `"resize"` event on the `output` if/when the columns ever change
 (`process.stdout` does this automatically when it is a TTY).
 -->
@@ -13263,10 +13798,11 @@ Sets the prompt, for example when you run `node` on the command line, you see
 <code>&gt; </code> を見ることができます。これが Node のプロンプトです。
 
 </p>
-<h3>rl.prompt()<span><a class="mark" href="#all_rl_prompt" id="all_rl_prompt">#</a></span></h3>
+<h3>rl.prompt([preserveCursor])<span><a class="mark" href="#all_rl_prompt_preservecursor" id="all_rl_prompt_preservecursor">#</a></span></h3>
 <!--
 Readies readline for input from the user, putting the current `setPrompt`
-options on a new line, giving the user a new spot to write.
+options on a new line, giving the user a new spot to write. Set `preserveCursor`
+to `true` to prevent the cursor placement being reset to `0`.
 
 This will also resume the `input` stream used with `createInterface` if it has
 been paused.
@@ -13275,6 +13811,8 @@ been paused.
 <p>ユーザからの入力を 1 行読み込みます。
 現在の <code>setPrompt()</code> の値を新しい行に出力し、
 ユーザに新しい入力エリアを与えます。
+<code>preserveCursor</code> を <code>true</code> に設定すると、カーソル位置が
+<code>0</code> にリセットされなくなります。
 
 </p>
 <p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
@@ -13337,19 +13875,34 @@ Closes the `Interface` instance, relinquishing control on the `input` and
 制御を解放します。<code>&apos;close&apos;</code> イベントも生成されます。
 
 </p>
-<h3>rl.write()<span><a class="mark" href="#all_rl_write" id="all_rl_write">#</a></span></h3>
+<h3>rl.write(data, [key])<span><a class="mark" href="#all_rl_write_data_key" id="all_rl_write_data_key">#</a></span></h3>
 <!--
-Writes to `output` stream.
+Writes `data` to `output` stream. `key` is an object literal to represent a key
+sequence; available if the terminal is a TTY.
+-->
 
+<p><code>data</code> を <code>output</code> ストリームに出力します。
+<code>key</code> はキーシーケンスを表現するオブジェクトリテラルです;
+ターミナルが TTY の場合に有効です。
+
+</p>
+<!--
 This will also resume the `input` stream if it has been paused.
 -->
 
-<p><code>output</code> へ出力します。
-
-</p>
 <p>これは、<code>input</code> ストリームが中断されていれば再開します。
 
 </p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>rl.write(&apos;Delete me!&apos;);
+// Simulate ctrl+u to delete the line written previously
+rl.write(null, {ctrl: true, name: &apos;u&apos;});</code></pre>
 <h2>Events<span><a class="mark" href="#all_events_1" id="all_events_1">#</a></span></h2>
 <h3>Event: &apos;line&apos;<span><a class="mark" href="#all_event_line" id="all_event_line">#</a></span></h3>
 <p><code>function (line) {}</code>
@@ -13932,7 +14485,7 @@ The following key combinations in the REPL have these special effects:
 <li><code>&lt;ctrl&gt;D</code> - <code>.exit</code> キーワードと同様です。</li>
 </ul>
 <h1>Executing JavaScript<span><a class="mark" href="#all_executing_javascript" id="all_executing_javascript">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
+<pre><code>Stability: 2 - Unstable. See Caveats, below.</code></pre>
 <!--name=vm-->
 
 <!--
@@ -13949,6 +14502,91 @@ JavaScript code can be compiled and run immediately or compiled, saved, and run 
 
 <p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。
 
+</p>
+<h2>Caveats<span><a class="mark" href="#all_caveats_1" id="all_caveats_1">#</a></span></h2>
+<!--
+The `vm` module has many known issues and edge cases. If you run into
+issues or unexpected behavior, please consult
+[the open issues on GitHub](https://github.com/joyent/node/issues/search?q=vm).
+Some of the biggest problems are described below.
+-->
+
+<p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。
+もし問題や期待と異なる振る舞いを見つけた場合は、
+<a href="https://github.com/joyent/node/issues/search?q=vm">the open issues on GitHub</a>
+に相談してください。
+大きな問題のいくつかは以下に示されます。
+
+</p>
+<h3>Sandboxes<span><a class="mark" href="#all_sandboxes" id="all_sandboxes">#</a></span></h3>
+<!--
+The `sandbox` argument to `vm.runInNewContext` and `vm.createContext`,
+along with the `initSandbox` argument to `vm.createContext`, do not
+behave as one might normally expect and their behavior varies
+between different versions of Node.
+-->
+
+<p><code>vm.runInNewContext</code> と、<code>vm.createContext</code> に <code>initSandbox</code> と共に渡される
+<code>sandbox</code> 引数は、通常期待される振る舞いをせず、それは Node のバージョン間で
+異なった振る舞いをします。
+
+</p>
+<!--
+The key issue to be aware of is that V8 provides no way to directly
+control the global object used within a context. As a result, while
+properties of your `sandbox` object will be available in the context,
+any properties from the `prototype`s of the `sandbox` may not be
+available. Furthermore, the `this` expression within the global scope
+of the context evaluates to the empty object (`{}`) instead of to
+your sandbox.
+-->
+
+<p>知られている重要問題は、コンテキスト内で使用されるグローバルオブジェクトを
+直接制御する方法を V8 が提供しないことです。
+その結果、<code>sandbox</code> オブジェクトのプロパティがコンテキストから
+利用可能な間、<code>sandbox</code> のプロトタイプのプロパティを利用することが
+できないかもしれません。
+さらには、コンテキスト内のグローバルスコープにおける <code>this</code> が
+サンドボックスではなく、空のオブジェクト (<code>{}</code>) に評価されます。
+
+</p>
+<!--
+Your sandbox's properties are also not shared directly with the script.
+Instead, the properties of the sandbox are copied into the context at
+the beginning of execution, and then after execution, the properties
+are copied back out in an attempt to propagate any changes.
+-->
+
+<p>サンドボックスのプロパティはまた、スクリプトに直接共有されません。
+代わりに、サンドボックスのプロパティは実行前にコンテキストにコピーされ、
+実行後、変更を伝播するためにプロパティはサンドボックスにコピーされます。
+
+</p>
+<h3>Globals<span><a class="mark" href="#all_globals" id="all_globals">#</a></span></h3>
+<!--
+Properties of the global object, like `Array` and `String`, have
+different values inside of a context. This means that common
+expressions like `[] instanceof Array` or
+`Object.getPrototypeOf([]) === Array.prototype` may not produce
+expected results when used inside of scripts evaluated via the `vm` module.
+-->
+
+<p><code>Array</code> や <code>String</code> などのグローバルオブジェクトのプロパティは、
+コンテキストの中では異なる値を持ちます。
+これは  <code>[] instanceof Array</code> や
+<code>Object.getPrototypeOf([]) === Array.prototype</code> などのよくある式は、
+<code>vm</code> モジュールによって評価されるスクリプトの中で使われると、
+期待した結果にならないことを意味します。
+
+</p>
+<!--
+Some of these problems have known workarounds listed in the issues for
+`vm` on GitHub. for example, `Array.isArray` works around
+the example problem with `Array`.
+-->
+
+<p>GitHub 上の <code>vm</code> に関する課題には、これらの問題に対する回避策があります。
+例えば、<code>Array.isArray</code> は <code>Array</code> に関する問題の例でもうまく動きます。
 
 </p>
 <h2>vm.runInThisContext(code, [filename])<span><a class="mark" href="#all_vm_runinthiscontext_code_filename" id="all_vm_runinthiscontext_code_filename">#</a></span></h2>
@@ -14097,7 +14735,7 @@ console.log(util.inspect(context));
 // { animal: &apos;cat&apos;, count: 3, name: &apos;CATT&apos; }</code></pre>
 <!--
 Note that `createContext` will perform a shallow clone of the supplied sandbox object in order to
-initialise the global object of the freshly constructed context.
+initialize the global object of the freshly constructed context.
 
 Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
 global variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code
@@ -14380,6 +15018,25 @@ An alternative way to check if you can send messages is to see if the
 かチェックしてください。
 
 </p>
+<h3>Event: &apos;message&apos;<span><a class="mark" href="#all_event_message_1" id="all_event_message_1">#</a></span></h3>
+<!--
+* `message` {Object} a parsed JSON object or primitive value
+* `sendHandle` {Handle object} a Socket or Server object
+-->
+
+<ul>
+<li><code>message</code> {Object} 解析済みの JSON オブジェクトまたはプリミティブ値</li>
+<li><code>sendHandle</code> {Handle object} ソケットまたはサーバオブジェクト</li>
+</ul>
+<!--
+Messages send by `.send(message, [sendHandle])` are obtained using the
+`message` event.
+-->
+
+<p><code>.send(message, [sendHandle])</code> によって送信されたメッセージは <code>&apos;message&apos;</code>
+イベントによって取得できます。
+
+</p>
 <h3>child.stdin<span><a class="mark" href="#all_child_stdin" id="all_child_stdin">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Stream object</span></li>
@@ -14496,7 +15153,6 @@ See `kill(2)`
 
 <p><code>kill(2)</code> を参照してください。
 
-
 </p>
 <h3>child.send(message, [sendHandle])<span><a class="mark" href="#all_child_send_message_sendhandle" id="all_child_send_message_sendhandle">#</a></span></h3>
 <div class="signature"><ul>
@@ -14504,13 +15160,205 @@ See `kill(2)`
 <li><code>sendHandle</code> <span class="type">Handle object</span></li>
 </div></ul>
 <!--
-Send a message (and, optionally, a handle object) to a child process.
-
-See `child_process.fork()` for details.
+When using `child_process.fork()` you can write to the child using
+`child.send(message, [sendHandle])` and messages are received by
+a `'message'` event on the child.
 -->
 
-<p>子プロセスにメッセージ (もしあれば、オプションのハンドルオブジェクト)
-を送ります。詳細は <code>child_process.fork()</code> を参照してください。
+<p><code>child_process.fork()</code> を使うと、<code>child.send(message, [sendHandle])</code> を
+使って子プロセスにメッセージを送信し、子プロセスではそれを <code>&apos;message&apos;</code>
+イベントによって受け取ることができます。
+
+</p>
+<!--
+For example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var cp = require(&apos;child_process&apos;);
+
+var n = cp.fork(__dirname + &apos;/sub.js&apos;);
+
+n.on(&apos;message&apos;, function(m) {
+  console.log(&apos;PARENT got message:&apos;, m);
+});
+
+n.send({ hello: &apos;world&apos; });</code></pre>
+<!--
+And then the child script, `'sub.js'` might look like this:
+-->
+
+<p>子プロセスの <code>&apos;sub.js&apos;</code> は次のようになります:
+
+</p>
+<pre><code>process.on(&apos;message&apos;, function(m) {
+  console.log(&apos;CHILD got message:&apos;, m);
+});
+
+process.send({ foo: &apos;bar&apos; });</code></pre>
+<!--
+In the child the `process` object will have a `send()` method, and `process`
+will emit objects each time it receives a message on its channel.
+-->
+
+<p>子プロセスでは <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、
+そのチャネル上でメッセージを受信するたびにイベントを生成します。
+
+</p>
+<!--
+There is a special case when sending a `{cmd: 'NODE_foo'}` message. All messages
+containing a `NODE_` prefix in its `cmd` property will not be emitted in
+the `message` event, since they are internal messages used by node core.
+Messages containing the prefix are emitted in the `internalMessage` event, you
+should by all means avoid using this feature, it is subject to change without notice.
+-->
+
+<p>特別なケースとして、<code>{cmd: &apos;NODE_foo&apos;}</code> のようなメッセージを
+送信する場合があります。
+<code>cmd</code> プロパティが接頭辞 <code>NODE_</code> を含む全てのメッセージは node のコアで
+使われる内部的なメッセージであるため、<code>&apos;message&apos;</code> イベントを生成しません。
+この接頭辞を含むメッセージは <code>&apos;internalMessage&apos;</code> イベントを生成しますが、
+それを使用すべきではありません。それは保証なしに変更される可能性があります。
+
+</p>
+<!--
+The `sendHandle` option to `child.send()` is for sending a TCP server or
+socket object to another process. The child will receive the object as its
+second argument to the `message` event.
+-->
+
+<p><code>child.send()</code> の <code>sendHandle</code> オプションは TCP サーバまたは
+ソケットオブジェクトを他のプロセスに送信するためのものです。
+子プロセスはそれを <code>&apos;message&apos;</code> イベントの第 2 引数として受信します。
+
+</p>
+<!--
+**send server object**
+-->
+
+<p><strong>サーバオブジェクトを送信する</strong>
+
+</p>
+<!--
+Here is an example of sending a server:
+-->
+
+<p>サーバを送信する例:
+
+</p>
+<pre><code>var child = require(&apos;child_process&apos;).fork(&apos;child.js&apos;);
+
+// Open up the server object and send the handle.
+var server = require(&apos;net&apos;).createServer();
+server.on(&apos;connection&apos;, function (socket) {
+  socket.end(&apos;handled by parent&apos;);
+});
+server.listen(1337, function() {
+  child.send(&apos;server&apos;, server);
+});</code></pre>
+<!--
+And the child would the recive the server object as:
+-->
+
+<p>サーバオブジェクトを受信する子プロセス:
+
+</p>
+<pre><code>process.on(&apos;message&apos;, function(m, server) {
+  if (m === &apos;server&apos;) {
+    server.on(&apos;connection&apos;, function (socket) {
+      socket.end(&apos;handled by child&apos;);
+    });
+  }
+});</code></pre>
+<!--
+Note that the server is now shared between the parent and child, this means
+that some connections will be handled by the parent and some by the child.
+-->
+
+<p>サーバは親プロセスと子プロセスで共有されることに注意してください。
+これはコネクションが時には親あるいは子で処理されることを意味します。
+
+</p>
+<!--
+**send socket object**
+-->
+
+<p><strong>ソケットオブジェクトを送信する</strong>
+
+</p>
+<!--
+Here is an example of sending a socket. It will spawn two childs and handle
+connections with the remote address `74.125.127.100` as VIP by sending the
+socket to a "special" child process. Other sockets will go to a "normal" process.
+-->
+
+<p>これはソケットを送信する例です。
+これは二つの子プロセスを起動し、コネクションのリモートアドレスが VIP
+(<code>74.125.127.100</code>) ならソケットを &quot;special&quot; 子プロセスに送信します。
+その他のソケットは &quot;normal&quot; プロセスに送られます。
+
+</p>
+<pre><code>var normal = require(&apos;child_process&apos;).fork(&apos;child.js&apos;, [&apos;normal&apos;]);
+var special = require(&apos;child_process&apos;).fork(&apos;child.js&apos;, [&apos;special&apos;]);
+
+// Open up the server and send sockets to child
+var server = require(&apos;net&apos;).createServer();
+server.on(&apos;connection&apos;, function (socket) {
+
+  // if this is a VIP
+  if (socket.remoteAddress === &apos;74.125.127.100&apos;) {
+    special.send(&apos;socket&apos;, socket);
+    return;
+  }
+  // just the usual dudes
+  normal.send(&apos;socket&apos;, socket);
+});
+server.listen(1337);</code></pre>
+<!--
+The `child.js` could look like this:
+-->
+
+<p><code>chold.js</code> は次のようになります:
+
+</p>
+<pre><code>process.on(&apos;message&apos;, function(m, socket) {
+  if (m === &apos;socket&apos;) {
+    socket.end(&apos;You where handled as a &apos; + process.argv[2] + &apos; person&apos;);
+  }
+});</code></pre>
+<!--
+Note that once a single socket has been sent to a child the parent can no
+longer keep track of when the socket is destroyed. To indicate this condition
+the `.connections` property becomes `null`.
+It is also recomended not to use `.maxConnections` in this condition.
+-->
+
+<p>一度ソケットが子プロセスに送信されると、親プロセスはもうソケットがいつ
+破棄されるか知ることができないことに注意してください。
+この状態を示すために，<code>.connections</code> プロパティは <code>null</code> になります。
+この状態では、<code>.maxConnections</code> も使わないことを推奨します。
+
+</p>
+<h3>child.disconnect()<span><a class="mark" href="#all_child_disconnect" id="all_child_disconnect">#</a></span></h3>
+<!--
+To close the IPC connection between parent and child use the
+`child.disconnect()` method. This allows the child to exit gracefully since
+there is no IPC channel keeping it alive. When calling this method the
+`disconnect` event will be emitted in both parent and child, and the
+`connected` flag will be set to `false`. Please note that you can also call
+`process.disconnect()` in the child process.
+-->
+
+<p>親プロセスと子プロセス間の IPC コネクションをクローズするには
+<code>child.disconnect()</code> メソッドを使用します。
+これは、子プロセスが IPC チャネルを保持しないことにより、強制的ではない
+終了を可能にします。
+このメソッドを呼び出すと親プロセスと子プロセスの両方で <code>&apos;disconnect&apos;</code>
+イベントが生成され、<code>connected</code> フラグが <code>false</code> に設定されます。
+子プロセスで <code>process.disconnect()</code> を呼び出すことも可能であることに
+注意してください。
 
 </p>
 <h2>child_process.spawn(command, [args], [options])<span><a class="mark" href="#all_child_process_spawn_command_args_options" id="all_child_process_spawn_command_args_options">#</a></span></h2>
@@ -14704,7 +15552,7 @@ Node のドキュメント化されていない API と同様に、
   * `maxBuffer` {Number} (Default: 200*1024)
   * `killSignal` {String} (Default: 'SIGTERM')
 * `callback` {Function} called with the output when process terminates
-  * `code` {Integer} Exit code
+  * `error` {Error}
   * `stdout` {Buffer}
   * `stderr` {Buffer}
 * Return: ChildProcess object
@@ -14725,7 +15573,7 @@ Node のドキュメント化されていない API と同様に、
 </ul>
 </li>
 <li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>
-<li><code>code</code> {Integer} 終了コード</li>
+<li><code>error</code> {Error}</li>
 <li><code>stdout</code> {Buffer}</li>
 <li><code>stderr</code> {Buffer}</li>
 </ul>
@@ -14810,7 +15658,7 @@ the child process is killed.
   * `maxBuffer` {Number} (Default: 200*1024)
   * `killSignal` {String} (Default: 'SIGTERM')
 * `callback` {Function} called with the output when process terminates
-  * `code` {Integer} Exit code
+  * `error` {Error}
   * `stdout` {Buffer}
   * `stderr` {Buffer}
 * Return: ChildProcess object
@@ -14832,7 +15680,7 @@ the child process is killed.
 </ul>
 </li>
 <li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>
-<li><code>code</code> {Integer} 終了コード</li>
+<li><code>error</code> {Error}</li>
 <li><code>stdout</code> {Buffer}</li>
 <li><code>stderr</code> {Buffer}</li>
 </ul>
@@ -14863,10 +15711,6 @@ leaner than `child_process.exec`. It has the same options.
   * `setsid` {Boolean}
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
-* `callback` {Function} called with the output when process terminates
-  * `code` {Integer} Exit code
-  * `stdout` {Buffer}
-  * `stderr` {Buffer}
 * Return: ChildProcess object
 -->
 
@@ -14883,86 +15727,27 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>timeout</code> {Number} (Default: 0)</li>
 </ul>
 </li>
-<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>
-<li><code>code</code> {Integer} 終了コード</li>
-<li><code>stdout</code> {Buffer}</li>
-<li><code>stderr</code> {Buffer}</li>
-</ul>
-</li>
 <li>Return: ChildProcess object</li>
 </ul>
 <!--
 This is a special case of the `spawn()` functionality for spawning Node
 processes. In addition to having all the methods in a normal ChildProcess
-instance, the returned object has a communication channel built-in. The
-channel is written to with `child.send(message, [sendHandle])` and messages
-are received by a `'message'` event on the child.
+instance, the returned object has a communication channel built-in. See
+`child.send(message, [sendHandle])` for details.
 -->
 
 <p>これは <code>spawn()</code> の特別版で、Node プロセスを起動します。
 返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
 組み込みの通信チャネルを持ちます。
-チャネルは <code>child.send(message, [sendHandle])</code> によって書き込まれ、
-メッセージを受信すると <code>child</code> 上で <code>&apos;message&apos;</code> イベントが生成されます。
+詳細は <code>child.send(message, [sendHandle])</code> を参照してください。
 
 </p>
 <!--
-For example:
--->
-
-<p>例:
-
-</p>
-<pre><code>var cp = require(&apos;child_process&apos;);
-
-var n = cp.fork(__dirname + &apos;/sub.js&apos;);
-
-n.on(&apos;message&apos;, function(m) {
-  console.log(&apos;PARENT got message:&apos;, m);
-});
-
-n.send({ hello: &apos;world&apos; });</code></pre>
-<!--
-And then the child script, `'sub.js'` might look like this:
--->
-
-<p>そして子スクリプトの <code>&apos;sub.js&apos;</code> は次のようになります:
-
-</p>
-<pre><code>process.on(&apos;message&apos;, function(m) {
-  console.log(&apos;CHILD got message:&apos;, m);
-});
-
-process.send({ foo: &apos;bar&apos; });</code></pre>
-<!--
-In the child the `process` object will have a `send()` method, and `process`
-will emit objects each time it receives a message on its channel.
--->
-
-<p>子供の <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、
-<code>process</code> はチャネルでメッセージを受信するたびにイベントを生成します。
-
-</p>
-<!--
-There is a special case when sending a `{cmd: 'NODE_foo'}` message. All messages
-containing a `NODE_` prefix in its `cmd` property will not be emitted in
-the `message` event, since they are internal messages used by node core.
-Messages containing the prefix are emitted in the `internalMessage` event, you
-should by all means avoid using this feature, it may change without warranty.
-
 By default the spawned Node process will have the stdout, stderr associated
 with the parent's. To change this behavior set the `silent` property in the
 `options` object to `true`.
 -->
 
-<p>特別なケースとして、<code>{cmd: &apos;NODE_foo&apos;}</code> のようなメッセージを
-送信する場合があります。
-<code>cmd</code> プロパティが接頭辞 <code>NODE_</code> を含む全てのメッセージは node のコアで
-使われる内部的なメッセージであるため、<code>message</code> イベントを生成しません。
-この接頭辞を含むメッセージは <code>internalMessage</code> イベントを生成しますが、
-それを使用すべきではありません。それは保証なしに変更される可能性があります。
-
-</p>
 <p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準出力と
 標準エラー出力を持ちます。これを変更するには <code>options</code> オブジェクトの
 <code>silent</code> プロパティを <code>true</code> に設定します。
@@ -14978,57 +15763,6 @@ thousands of them.
 新しい Node ごとに少なくとも 30 ミリ秒の起動時間と 
 10MB のメモリを前提としてください。
 つまり、数千の子プロセスを作ることは出来ません。
-
-</p>
-<!--
-The `sendHandle` option to `child.send()` is for sending a handle object to
-another process. Child will receive the handle as as second argument to the
-`message` event. Here is an example of sending a handle:
--->
-
-<p><code>child.send()</code> の <code>sendHandle</code> オプションはハンドルオブジェクトを別プロセスに
-送ります。
-子プロセスはそのハンドルを <code>message</code> イベントの第2引数として受け取ります。
-これはハンドルを送信するサンプルです。
-
-</p>
-<pre><code>var server = require(&apos;net&apos;).createServer();
-var child = require(&apos;child_process&apos;).fork(__dirname + &apos;/child.js&apos;);
-// Open up the server object and send the handle.
-server.listen(1337, function() {
-  child.send({ server: true }, server._handle);
-});</code></pre>
-<!--
-Here is an example of receiving the server handle and sharing it between
-processes:
--->
-
-<p>これはサーバのハンドルを受信してプロセス間で共有するサンプルです。
-
-</p>
-<pre><code>process.on(&apos;message&apos;, function(m, serverHandle) {
-  if (serverHandle) {
-    var server = require(&apos;net&apos;).createServer();
-    server.listen(serverHandle);
-  }
-});</code></pre>
-<!--
-To close the IPC connection between parent and child use the
-`child.d, 0isconnect()` method. This allows the child to exit gracefully since
-there is no IPC channel keeping it alive. When calling this method the
-`disconnect` event will be emitted in both parent and child, and the
-`connected` flag will be set to `false`. Please note that you can also call
-`process.disconnect()` in the child process.
--->
-
-<p>親プロセスと子プロセス間の IPC 接続を閉じるには、<code>child.disconnect()</code>
-メソッドを使用します。
-これは IPC チャネルを解放することにより、子プロセスが通常通りに終了することを
-可能にします。
-このメソッドが呼び出されると、親プロセスと子プロセスの両方で <code>&apos;disconnect&apos;</code>
-イベントが生成され、<code>connected</code> フラグは <code>false</code> に設定されます。
-子プロセスでは <code>process.disconnect()</code> を呼び出すこともできることに
-注意してください。
 
 </p>
 <h1>Assert<span><a class="mark" href="#all_assert" id="all_assert">#</a></span></h1>
@@ -16238,7 +16972,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on(&apos;exit&apos;, function(worker) {
+  cluster.on(&apos;exit&apos;, function(worker, code, signal) {
     console.log(&apos;worker &apos; + worker.pid + &apos; died&apos;);
   });
 } else {
@@ -16346,17 +17080,17 @@ This can be used to log worker activity, and create you own timeout.
 
 </p>
 <pre><code>var timeouts = [];
-var errorMsg = function () {
+function errorMsg() {
   console.error(&quot;Something must be wrong with the connection ...&quot;);
-});
+}
 
-cluster.on(&apos;fork&apos;, function (worker) {
+cluster.on(&apos;fork&apos;, function(worker) {
   timeouts[worker.uniqueID] = setTimeout(errorMsg, 2000);
 });
-cluster.on(&apos;listening&apos;, function (worker) {
+cluster.on(&apos;listening&apos;, function(worker, address) {
   clearTimeout(timeouts[worker.uniqueID]);
 });
-cluster.on(&apos;exit&apos;, function (worker) {
+cluster.on(&apos;exit&apos;, function(worker, code, signal) {
   clearTimeout(timeouts[worker.uniqueID]);
   errorMsg();
 });</code></pre>
@@ -16379,12 +17113,13 @@ being executed.
 生成される点です。
 
 </p>
-<pre><code>cluster.on(&apos;online&apos;, function (worker) {
+<pre><code>cluster.on(&apos;online&apos;, function(worker) {
   console.log(&quot;Yay, the worker responded after it was forked&quot;);
 });</code></pre>
 <h2>Event: &apos;listening&apos;<span><a class="mark" href="#all_event_listening_2" id="all_event_listening_2">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
+<li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
 <!--
 When calling `listen()` from a worker, a 'listening' event is automatically assigned
@@ -16398,8 +17133,22 @@ where the 'listening' event is emitted.
 <code>&apos;listening&apos;</code> イベントが生成されます。
 
 </p>
-<pre><code>cluster.on(&apos;listening&apos;, function (worker) {
-  console.log(&quot;We are now connected&quot;);
+<!--
+The event handler is executed with two arguments, the `worker` contains the worker
+object and the `address` object contains the following connection properties:
+`address`, `port` and `addressType`. This is very useful if the worker is listening
+on more than one address.
+-->
+
+<p>イベントハンドラは二つの引数を伴って実行されます。
+<code>worker</code> はワーカオブジェクトを、<code>address</code> オブジェクトは
+以下の接続プロパティを含みます:
+<code>address</code>、<code>prot</code>、そして <code>addressType</code> です。
+これはワーカが複数のアドレスをリッスンしている場合にとても便利です。
+
+</p>
+<pre><code>cluster.on(&apos;listening&apos;, function(worker, address) {
+  console.log(&quot;A worker is now connected to &quot; + address.address + &quot;:&quot; + address.port);
 });</code></pre>
 <h2>Event: &apos;disconnect&apos;<span><a class="mark" href="#all_event_disconnect_1" id="all_event_disconnect_1">#</a></span></h2>
 <div class="signature"><ul>
@@ -16431,9 +17180,19 @@ connections.
   console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);
 });</code></pre>
 <h2>Event: &apos;exit&apos;<span><a class="mark" href="#all_event_exit_3" id="all_event_exit_3">#</a></span></h2>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
+<!--
+* `worker` {Worker object}
+* `code` {Number} the exit code, if it exited normally. 
+* `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
+  the process to be killed.
+-->
+
+<ul>
+<li><code>worker</code> {Worker object}</li>
+<li><code>code</code> {Number} 正常に終了した場合は終了コード。</li>
+<li><code>signal</code> {String} プロセスが殺される原因となったシグナルの名前
+(例: <code>&apos;SIGHUP&apos;</code>)。</li>
+</ul>
 <!--
 When any of the workers die the cluster module will emit the 'exit' event.
 This can be used to restart the worker by calling `fork()` again.
@@ -16444,8 +17203,9 @@ This can be used to restart the worker by calling `fork()` again.
 これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。
 
 </p>
-<pre><code>cluster.on(&apos;exit&apos;, function(worker) {
-  console.log(&apos;worker &apos; + worker.pid + &apos; died. restart...&apos;);
+<pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
+  var exitCode = worker.process.exitCode;
+  console.log(&apos;worker &apos; + worker.pid + &apos; died (&apos;+exitCode+&apos;). restarting...&apos;);
   cluster.fork();
 });</code></pre>
 <h2>Event: &apos;setup&apos;<span><a class="mark" href="#all_event_setup" id="all_event_setup">#</a></span></h2>
@@ -16601,7 +17361,7 @@ function eachWorker(callback) {
     callback(cluster.workers[uniqueID]);
   }
 }
-eachWorker(function (worker) {
+eachWorker(function(worker) {
   worker.send(&apos;big announcement to all workers&apos;);
 });</code></pre>
 <!--
@@ -16613,7 +17373,7 @@ the worker's uniqueID is the easiest way to find the worker.
 ワーカのユニーク ID を使ってワーカを探すのが簡単です。
 
 </p>
-<pre><code>socket.on(&apos;data&apos;, function (uniqueID) {
+<pre><code>socket.on(&apos;data&apos;, function(uniqueID) {
   var worker = cluster.workers[uniqueID];
 });</code></pre>
 <h2>Class: Worker<span><a class="mark" href="#all_class_worker" id="all_class_worker">#</a></span></h2>
@@ -16709,7 +17469,7 @@ This example will echo back all messages from the master:
   worker.send(&apos;hi there&apos;);
 
 } else if (cluster.isWorker) {
-  process.on(&apos;message&apos;, function (msg) {
+  process.on(&apos;message&apos;, function(msg) {
     process.send(msg);
   });
 }</code></pre>
@@ -16724,7 +17484,7 @@ and accidental exit.
 boolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。
 
 </p>
-<pre><code>cluster.on(&apos;exit&apos;, function (worker) {
+<pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
   if (worker.suicide === true) {
     console.log(&apos;Oh, it was just suicide\&apos; – no need to worry&apos;).
   }
@@ -16732,7 +17492,7 @@ boolean の <code>suicide</code> により、自発的かアクシデントに�
 
 // destroy worker
 worker.destroy();</code></pre>
-<h2>Worker.disconnect()<span><a class="mark" href="#all_worker_disconnect" id="all_worker_disconnect">#</a></span></h2>
+<h3>worker.disconnect()<span><a class="mark" href="#all_worker_disconnect" id="all_worker_disconnect">#</a></span></h3>
 <!--
 When calling this function the worker will no longer accept new connections, but
 they will be handled by any other listening worker. Existing connection will be
@@ -16770,36 +17530,36 @@ that would normally not allow the worker to do any cleanup if needed.
   var worker = cluser.fork();
   var timeout;
 
-  worker.on(&apos;listening&apos;, function () {
+  worker.on(&apos;listening&apos;, function(address) {
     worker.disconnect();
-    timeout = setTimeout(function () {
+    timeout = setTimeout(function() {
       worker.send(&apos;force kill&apos;);
     }, 2000);
   });
 
-  worker.on(&apos;disconnect&apos;, function () {
+  worker.on(&apos;disconnect&apos;, function() {
     clearTimeout(timeout);
   });
 
 } else if (cluster.isWorker) {
   var net = require(&apos;net&apos;);
-  var server = net.createServer(function (socket) {
+  var server = net.createServer(function(socket) {
     // connection never end
   });
 
   server.listen(8000);
 
-  server.on(&apos;close&apos;, function () {
+  server.on(&apos;close&apos;, function() {
     // cleanup
   });
 
-  process.on(&apos;message&apos;, function (msg) {
+  process.on(&apos;message&apos;, function(msg) {
     if (msg === &apos;force kill&apos;) {
       server.destroy();
     }
   });
 }</code></pre>
-<h3>Event: &apos;message&apos;<span><a class="mark" href="#all_event_message_1" id="all_event_message_1">#</a></span></h3>
+<h3>Event: &apos;message&apos;<span><a class="mark" href="#all_event_message_2" id="all_event_message_2">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>message</code> <span class="type">Object</span></li>
 </div></ul>
@@ -16833,15 +17593,15 @@ if (cluster.isMaster) {
   }, 1000);
 
   // Count requestes
-  var messageHandler = function (msg) {
+  function messageHandler(msg) {
     if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {
       numReqs += 1;
     }
-  };
+  }
 
   // Start workers and listen for messages containing notifyRequest
   cluster.autoFork();
-  Object.keys(cluster.workers).forEach(function (uniqueID) {
+  Object.keys(cluster.workers).forEach(function(uniqueID) {
     cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);
   });
 
@@ -16857,9 +17617,6 @@ if (cluster.isMaster) {
   }).listen(8000);
 }</code></pre>
 <h3>Event: &apos;online&apos;<span><a class="mark" href="#all_event_online_1" id="all_event_online_1">#</a></span></h3>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
 <!--
 Same as the `cluster.on('online')` event, but emits only when the state change
 on the specified worker.
@@ -16869,12 +17626,12 @@ on the specified worker.
 イベントを生成します。
 
 </p>
-<pre><code>cluster.fork().on(&apos;online&apos;, function (worker) {
+<pre><code>cluster.fork().on(&apos;online&apos;, function() {
   // Worker is online
 };</code></pre>
 <h3>Event: &apos;listening&apos;<span><a class="mark" href="#all_event_listening_3" id="all_event_listening_3">#</a></span></h3>
 <div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
+<li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
 <!--
 Same as the `cluster.on('listening')` event, but emits only when the state change
@@ -16885,39 +17642,53 @@ on the specified worker.
 イベントを生成します。
 
 </p>
-<pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {
+<pre><code>cluster.fork().on(&apos;listening&apos;, function(address) {
   // Worker is listening
 };</code></pre>
 <h3>Event: &apos;disconnect&apos;<span><a class="mark" href="#all_event_disconnect_2" id="all_event_disconnect_2">#</a></span></h3>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
 <!--
 Same as the `cluster.on('disconnect')` event, but emits only when the state change
 on the specified worker.
 -->
-<code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が
+
+<p><code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が
 変更された場合のみ生成されます。
 
-    cluster.fork().on(&apos;disconnect&apos;, function (worker) {
-      // Worker has disconnected
-    };
-
-### Event: &apos;exit&apos;
-
-* <code>worker</code> {Worker object}
-
+</p>
+<pre><code>cluster.fork().on(&apos;disconnect&apos;, function() {
+  // Worker has disconnected
+};</code></pre>
+<h3>Event: &apos;exit&apos;<span><a class="mark" href="#all_event_exit_4" id="all_event_exit_4">#</a></span></h3>
 <!--
-Same as the `cluster.on('exit')` event, but emits only when the state change
-on the specified worker.
+* `code` {Number} the exit code, if it exited normally. 
+* `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
+  the process to be killed.
 -->
 
-<p><code>cluster.on(&apos;exit&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
-イベントを生成します。
+<ul>
+<li><code>code</code> {Number} 正常に終了した場合は終了コード。</li>
+<li><code>signal</code> {String} プロセスが殺される原因となったシグナルの名前
+(例: <code>&apos;SIGHUP&apos;</code>)。</li>
+</ul>
+<!--
+Emitted by the individual worker instance, when the underlying child process
+is terminated.  See [child_process event: 'exit'](child_process.html#child_process_event_exit). 
+-->
+
+<p>子プロセスが終了すると、ワーカのインスタンスによって生成されます。
+<a href="child_process.html#child_process_event_exit">child_process event: &apos;exit&apos;</a>
+を参照してください。
 
 </p>
-<pre><code>cluster.fork().on(&apos;exit&apos;, function (worker) {
-  // Worker has died
+<pre><code>var worker = cluster.fork();
+worker.on(&apos;exit&apos;, function(code, signal) {
+  if( signal ) {
+    console.log(&quot;worker was killed by signal: &quot;+signal);
+  } else if( code !== 0 ) {
+    console.log(&quot;worker exited with error code: &quot;+code);
+  } else {
+    console.log(&quot;worker success!&quot;);
+  }
 };</code></pre>
 <h1>Appendix 1 - Third Party Modules<span><a class="mark" href="#all_appendix_1_third_party_modules" id="all_appendix_1_third_party_modules">#</a></span></h1>
 <!--
@@ -16929,6 +17700,14 @@ There are many third party modules for Node. At the time of writing, August
 <p>Node 向けにサードパーティ製のモジュールが数多くあります。
 執筆時点 (2010 年 8 月) では、モジュールのマスタリポジトリは
 <a href="http://github.com/ry/node/wiki/modules">wiki ページ</a> です。
+
+</p>
+<!--
+You can also find third party modules via [npm search](http://search.npmjs.org).
+-->
+
+<p>サードパーティ製のモジュールは <a href="http://search.npmjs.org">npm search</a> から
+探すこともできます。
 
 </p>
 <!--
@@ -17012,7 +17791,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

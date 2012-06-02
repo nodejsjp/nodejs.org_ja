@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Executing JavaScript Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>Executing JavaScript Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/vm.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,6 +56,11 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#vm_executing_javascript">Executing JavaScript</a><ul>
+<li><a href="#vm_caveats">Caveats</a><ul>
+<li><a href="#vm_sandboxes">Sandboxes</a></li>
+<li><a href="#vm_globals">Globals</a></li>
+</ul>
+</li>
 <li><a href="#vm_vm_runinthiscontext_code_filename">vm.runInThisContext(code, [filename])</a></li>
 <li><a href="#vm_vm_runinnewcontext_code_sandbox_filename">vm.runInNewContext(code, [sandbox], [filename])</a></li>
 <li><a href="#vm_vm_runincontext_code_context_filename">vm.runInContext(code, context, [filename])</a></li>
@@ -74,7 +79,7 @@
 
           <div id="apicontent">
             <h1>Executing JavaScript<span><a class="mark" href="#vm_executing_javascript" id="vm_executing_javascript">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
+<pre><code>Stability: 2 - Unstable. See Caveats, below.</code></pre>
 <!--name=vm-->
 
 <!--
@@ -91,6 +96,91 @@ JavaScript code can be compiled and run immediately or compiled, saved, and run 
 
 <p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。
 
+</p>
+<h2>Caveats<span><a class="mark" href="#vm_caveats" id="vm_caveats">#</a></span></h2>
+<!--
+The `vm` module has many known issues and edge cases. If you run into
+issues or unexpected behavior, please consult
+[the open issues on GitHub](https://github.com/joyent/node/issues/search?q=vm).
+Some of the biggest problems are described below.
+-->
+
+<p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。
+もし問題や期待と異なる振る舞いを見つけた場合は、
+<a href="https://github.com/joyent/node/issues/search?q=vm">the open issues on GitHub</a>
+に相談してください。
+大きな問題のいくつかは以下に示されます。
+
+</p>
+<h3>Sandboxes<span><a class="mark" href="#vm_sandboxes" id="vm_sandboxes">#</a></span></h3>
+<!--
+The `sandbox` argument to `vm.runInNewContext` and `vm.createContext`,
+along with the `initSandbox` argument to `vm.createContext`, do not
+behave as one might normally expect and their behavior varies
+between different versions of Node.
+-->
+
+<p><code>vm.runInNewContext</code> と、<code>vm.createContext</code> に <code>initSandbox</code> と共に渡される
+<code>sandbox</code> 引数は、通常期待される振る舞いをせず、それは Node のバージョン間で
+異なった振る舞いをします。
+
+</p>
+<!--
+The key issue to be aware of is that V8 provides no way to directly
+control the global object used within a context. As a result, while
+properties of your `sandbox` object will be available in the context,
+any properties from the `prototype`s of the `sandbox` may not be
+available. Furthermore, the `this` expression within the global scope
+of the context evaluates to the empty object (`{}`) instead of to
+your sandbox.
+-->
+
+<p>知られている重要問題は、コンテキスト内で使用されるグローバルオブジェクトを
+直接制御する方法を V8 が提供しないことです。
+その結果、<code>sandbox</code> オブジェクトのプロパティがコンテキストから
+利用可能な間、<code>sandbox</code> のプロトタイプのプロパティを利用することが
+できないかもしれません。
+さらには、コンテキスト内のグローバルスコープにおける <code>this</code> が
+サンドボックスではなく、空のオブジェクト (<code>{}</code>) に評価されます。
+
+</p>
+<!--
+Your sandbox's properties are also not shared directly with the script.
+Instead, the properties of the sandbox are copied into the context at
+the beginning of execution, and then after execution, the properties
+are copied back out in an attempt to propagate any changes.
+-->
+
+<p>サンドボックスのプロパティはまた、スクリプトに直接共有されません。
+代わりに、サンドボックスのプロパティは実行前にコンテキストにコピーされ、
+実行後、変更を伝播するためにプロパティはサンドボックスにコピーされます。
+
+</p>
+<h3>Globals<span><a class="mark" href="#vm_globals" id="vm_globals">#</a></span></h3>
+<!--
+Properties of the global object, like `Array` and `String`, have
+different values inside of a context. This means that common
+expressions like `[] instanceof Array` or
+`Object.getPrototypeOf([]) === Array.prototype` may not produce
+expected results when used inside of scripts evaluated via the `vm` module.
+-->
+
+<p><code>Array</code> や <code>String</code> などのグローバルオブジェクトのプロパティは、
+コンテキストの中では異なる値を持ちます。
+これは  <code>[] instanceof Array</code> や
+<code>Object.getPrototypeOf([]) === Array.prototype</code> などのよくある式は、
+<code>vm</code> モジュールによって評価されるスクリプトの中で使われると、
+期待した結果にならないことを意味します。
+
+</p>
+<!--
+Some of these problems have known workarounds listed in the issues for
+`vm` on GitHub. for example, `Array.isArray` works around
+the example problem with `Array`.
+-->
+
+<p>GitHub 上の <code>vm</code> に関する課題には、これらの問題に対する回避策があります。
+例えば、<code>Array.isArray</code> は <code>Array</code> に関する問題の例でもうまく動きます。
 
 </p>
 <h2>vm.runInThisContext(code, [filename])<span><a class="mark" href="#vm_vm_runinthiscontext_code_filename" id="vm_vm_runinthiscontext_code_filename">#</a></span></h2>
@@ -239,7 +329,7 @@ console.log(util.inspect(context));
 // { animal: &apos;cat&apos;, count: 3, name: &apos;CATT&apos; }</code></pre>
 <!--
 Note that `createContext` will perform a shallow clone of the supplied sandbox object in order to
-initialise the global object of the freshly constructed context.
+initialize the global object of the freshly constructed context.
 
 Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
 global variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code
@@ -424,7 +514,7 @@ requires a separate process.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Cluster Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>Cluster Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/cluster.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -76,13 +76,12 @@
 <li><a href="#cluster_worker_suicide">worker.suicide</a></li>
 <li><a href="#cluster_worker_send_message_sendhandle">worker.send(message, [sendHandle])</a></li>
 <li><a href="#cluster_worker_destroy">worker.destroy()</a></li>
-</ul>
-</li>
-<li><a href="#cluster_worker_disconnect">Worker.disconnect()</a><ul>
+<li><a href="#cluster_worker_disconnect">worker.disconnect()</a></li>
 <li><a href="#cluster_event_message">Event: &apos;message&apos;</a></li>
 <li><a href="#cluster_event_online_1">Event: &apos;online&apos;</a></li>
 <li><a href="#cluster_event_listening_1">Event: &apos;listening&apos;</a></li>
 <li><a href="#cluster_event_disconnect_1">Event: &apos;disconnect&apos;</a></li>
+<li><a href="#cluster_event_exit_1">Event: &apos;exit&apos;</a></li>
 </ul>
 </li>
 </ul>
@@ -124,7 +123,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on(&apos;exit&apos;, function(worker) {
+  cluster.on(&apos;exit&apos;, function(worker, code, signal) {
     console.log(&apos;worker &apos; + worker.pid + &apos; died&apos;);
   });
 } else {
@@ -232,17 +231,17 @@ This can be used to log worker activity, and create you own timeout.
 
 </p>
 <pre><code>var timeouts = [];
-var errorMsg = function () {
+function errorMsg() {
   console.error(&quot;Something must be wrong with the connection ...&quot;);
-});
+}
 
-cluster.on(&apos;fork&apos;, function (worker) {
+cluster.on(&apos;fork&apos;, function(worker) {
   timeouts[worker.uniqueID] = setTimeout(errorMsg, 2000);
 });
-cluster.on(&apos;listening&apos;, function (worker) {
+cluster.on(&apos;listening&apos;, function(worker, address) {
   clearTimeout(timeouts[worker.uniqueID]);
 });
-cluster.on(&apos;exit&apos;, function (worker) {
+cluster.on(&apos;exit&apos;, function(worker, code, signal) {
   clearTimeout(timeouts[worker.uniqueID]);
   errorMsg();
 });</code></pre>
@@ -265,12 +264,13 @@ being executed.
 生成される点です。
 
 </p>
-<pre><code>cluster.on(&apos;online&apos;, function (worker) {
+<pre><code>cluster.on(&apos;online&apos;, function(worker) {
   console.log(&quot;Yay, the worker responded after it was forked&quot;);
 });</code></pre>
 <h2>Event: &apos;listening&apos;<span><a class="mark" href="#cluster_event_listening" id="cluster_event_listening">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
+<li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
 <!--
 When calling `listen()` from a worker, a 'listening' event is automatically assigned
@@ -284,8 +284,22 @@ where the 'listening' event is emitted.
 <code>&apos;listening&apos;</code> イベントが生成されます。
 
 </p>
-<pre><code>cluster.on(&apos;listening&apos;, function (worker) {
-  console.log(&quot;We are now connected&quot;);
+<!--
+The event handler is executed with two arguments, the `worker` contains the worker
+object and the `address` object contains the following connection properties:
+`address`, `port` and `addressType`. This is very useful if the worker is listening
+on more than one address.
+-->
+
+<p>イベントハンドラは二つの引数を伴って実行されます。
+<code>worker</code> はワーカオブジェクトを、<code>address</code> オブジェクトは
+以下の接続プロパティを含みます:
+<code>address</code>、<code>prot</code>、そして <code>addressType</code> です。
+これはワーカが複数のアドレスをリッスンしている場合にとても便利です。
+
+</p>
+<pre><code>cluster.on(&apos;listening&apos;, function(worker, address) {
+  console.log(&quot;A worker is now connected to &quot; + address.address + &quot;:&quot; + address.port);
 });</code></pre>
 <h2>Event: &apos;disconnect&apos;<span><a class="mark" href="#cluster_event_disconnect" id="cluster_event_disconnect">#</a></span></h2>
 <div class="signature"><ul>
@@ -317,9 +331,19 @@ connections.
   console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);
 });</code></pre>
 <h2>Event: &apos;exit&apos;<span><a class="mark" href="#cluster_event_exit" id="cluster_event_exit">#</a></span></h2>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
+<!--
+* `worker` {Worker object}
+* `code` {Number} the exit code, if it exited normally. 
+* `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
+  the process to be killed.
+-->
+
+<ul>
+<li><code>worker</code> {Worker object}</li>
+<li><code>code</code> {Number} 正常に終了した場合は終了コード。</li>
+<li><code>signal</code> {String} プロセスが殺される原因となったシグナルの名前
+(例: <code>&apos;SIGHUP&apos;</code>)。</li>
+</ul>
 <!--
 When any of the workers die the cluster module will emit the 'exit' event.
 This can be used to restart the worker by calling `fork()` again.
@@ -330,8 +354,9 @@ This can be used to restart the worker by calling `fork()` again.
 これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。
 
 </p>
-<pre><code>cluster.on(&apos;exit&apos;, function(worker) {
-  console.log(&apos;worker &apos; + worker.pid + &apos; died. restart...&apos;);
+<pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
+  var exitCode = worker.process.exitCode;
+  console.log(&apos;worker &apos; + worker.pid + &apos; died (&apos;+exitCode+&apos;). restarting...&apos;);
   cluster.fork();
 });</code></pre>
 <h2>Event: &apos;setup&apos;<span><a class="mark" href="#cluster_event_setup" id="cluster_event_setup">#</a></span></h2>
@@ -487,7 +512,7 @@ function eachWorker(callback) {
     callback(cluster.workers[uniqueID]);
   }
 }
-eachWorker(function (worker) {
+eachWorker(function(worker) {
   worker.send(&apos;big announcement to all workers&apos;);
 });</code></pre>
 <!--
@@ -499,7 +524,7 @@ the worker's uniqueID is the easiest way to find the worker.
 ワーカのユニーク ID を使ってワーカを探すのが簡単です。
 
 </p>
-<pre><code>socket.on(&apos;data&apos;, function (uniqueID) {
+<pre><code>socket.on(&apos;data&apos;, function(uniqueID) {
   var worker = cluster.workers[uniqueID];
 });</code></pre>
 <h2>Class: Worker<span><a class="mark" href="#cluster_class_worker" id="cluster_class_worker">#</a></span></h2>
@@ -595,7 +620,7 @@ This example will echo back all messages from the master:
   worker.send(&apos;hi there&apos;);
 
 } else if (cluster.isWorker) {
-  process.on(&apos;message&apos;, function (msg) {
+  process.on(&apos;message&apos;, function(msg) {
     process.send(msg);
   });
 }</code></pre>
@@ -610,7 +635,7 @@ and accidental exit.
 boolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。
 
 </p>
-<pre><code>cluster.on(&apos;exit&apos;, function (worker) {
+<pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
   if (worker.suicide === true) {
     console.log(&apos;Oh, it was just suicide\&apos; – no need to worry&apos;).
   }
@@ -618,7 +643,7 @@ boolean の <code>suicide</code> により、自発的かアクシデントに�
 
 // destroy worker
 worker.destroy();</code></pre>
-<h2>Worker.disconnect()<span><a class="mark" href="#cluster_worker_disconnect" id="cluster_worker_disconnect">#</a></span></h2>
+<h3>worker.disconnect()<span><a class="mark" href="#cluster_worker_disconnect" id="cluster_worker_disconnect">#</a></span></h3>
 <!--
 When calling this function the worker will no longer accept new connections, but
 they will be handled by any other listening worker. Existing connection will be
@@ -656,30 +681,30 @@ that would normally not allow the worker to do any cleanup if needed.
   var worker = cluser.fork();
   var timeout;
 
-  worker.on(&apos;listening&apos;, function () {
+  worker.on(&apos;listening&apos;, function(address) {
     worker.disconnect();
-    timeout = setTimeout(function () {
+    timeout = setTimeout(function() {
       worker.send(&apos;force kill&apos;);
     }, 2000);
   });
 
-  worker.on(&apos;disconnect&apos;, function () {
+  worker.on(&apos;disconnect&apos;, function() {
     clearTimeout(timeout);
   });
 
 } else if (cluster.isWorker) {
   var net = require(&apos;net&apos;);
-  var server = net.createServer(function (socket) {
+  var server = net.createServer(function(socket) {
     // connection never end
   });
 
   server.listen(8000);
 
-  server.on(&apos;close&apos;, function () {
+  server.on(&apos;close&apos;, function() {
     // cleanup
   });
 
-  process.on(&apos;message&apos;, function (msg) {
+  process.on(&apos;message&apos;, function(msg) {
     if (msg === &apos;force kill&apos;) {
       server.destroy();
     }
@@ -719,15 +744,15 @@ if (cluster.isMaster) {
   }, 1000);
 
   // Count requestes
-  var messageHandler = function (msg) {
+  function messageHandler(msg) {
     if (msg.cmd &amp;&amp; msg.cmd == &apos;notifyRequest&apos;) {
       numReqs += 1;
     }
-  };
+  }
 
   // Start workers and listen for messages containing notifyRequest
   cluster.autoFork();
-  Object.keys(cluster.workers).forEach(function (uniqueID) {
+  Object.keys(cluster.workers).forEach(function(uniqueID) {
     cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);
   });
 
@@ -743,9 +768,6 @@ if (cluster.isMaster) {
   }).listen(8000);
 }</code></pre>
 <h3>Event: &apos;online&apos;<span><a class="mark" href="#cluster_event_online_1" id="cluster_event_online_1">#</a></span></h3>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
 <!--
 Same as the `cluster.on('online')` event, but emits only when the state change
 on the specified worker.
@@ -755,12 +777,12 @@ on the specified worker.
 イベントを生成します。
 
 </p>
-<pre><code>cluster.fork().on(&apos;online&apos;, function (worker) {
+<pre><code>cluster.fork().on(&apos;online&apos;, function() {
   // Worker is online
 };</code></pre>
 <h3>Event: &apos;listening&apos;<span><a class="mark" href="#cluster_event_listening_1" id="cluster_event_listening_1">#</a></span></h3>
 <div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
+<li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
 <!--
 Same as the `cluster.on('listening')` event, but emits only when the state change
@@ -771,39 +793,53 @@ on the specified worker.
 イベントを生成します。
 
 </p>
-<pre><code>cluster.fork().on(&apos;listening&apos;, function (worker) {
+<pre><code>cluster.fork().on(&apos;listening&apos;, function(address) {
   // Worker is listening
 };</code></pre>
 <h3>Event: &apos;disconnect&apos;<span><a class="mark" href="#cluster_event_disconnect_1" id="cluster_event_disconnect_1">#</a></span></h3>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
 <!--
 Same as the `cluster.on('disconnect')` event, but emits only when the state change
 on the specified worker.
 -->
-<code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が
+
+<p><code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が
 変更された場合のみ生成されます。
 
-    cluster.fork().on(&apos;disconnect&apos;, function (worker) {
-      // Worker has disconnected
-    };
-
-### Event: &apos;exit&apos;
-
-* <code>worker</code> {Worker object}
-
+</p>
+<pre><code>cluster.fork().on(&apos;disconnect&apos;, function() {
+  // Worker has disconnected
+};</code></pre>
+<h3>Event: &apos;exit&apos;<span><a class="mark" href="#cluster_event_exit_1" id="cluster_event_exit_1">#</a></span></h3>
 <!--
-Same as the `cluster.on('exit')` event, but emits only when the state change
-on the specified worker.
+* `code` {Number} the exit code, if it exited normally. 
+* `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
+  the process to be killed.
 -->
 
-<p><code>cluster.on(&apos;exit&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
-イベントを生成します。
+<ul>
+<li><code>code</code> {Number} 正常に終了した場合は終了コード。</li>
+<li><code>signal</code> {String} プロセスが殺される原因となったシグナルの名前
+(例: <code>&apos;SIGHUP&apos;</code>)。</li>
+</ul>
+<!--
+Emitted by the individual worker instance, when the underlying child process
+is terminated.  See [child_process event: 'exit'](child_process.html#child_process_event_exit). 
+-->
+
+<p>子プロセスが終了すると、ワーカのインスタンスによって生成されます。
+<a href="child_process.html#child_process_event_exit">child_process event: &apos;exit&apos;</a>
+を参照してください。
 
 </p>
-<pre><code>cluster.fork().on(&apos;exit&apos;, function (worker) {
-  // Worker has died
+<pre><code>var worker = cluster.fork();
+worker.on(&apos;exit&apos;, function(code, signal) {
+  if( signal ) {
+    console.log(&quot;worker was killed by signal: &quot;+signal);
+  } else if( code !== 0 ) {
+    console.log(&quot;worker exited with error code: &quot;+code);
+  } else {
+    console.log(&quot;worker success!&quot;);
+  }
 };</code></pre>
 
           </div>
@@ -833,7 +869,7 @@ on the specified worker.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Readline Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>Readline Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/readline.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,15 +56,15 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#readline_readline">Readline</a><ul>
-<li><a href="#readline_rl_createinterface_options">rl.createInterface(options)</a></li>
+<li><a href="#readline_readline_createinterface_options">readline.createInterface(options)</a></li>
 <li><a href="#readline_class_interface">Class: Interface</a><ul>
 <li><a href="#readline_rl_setprompt_prompt_length">rl.setPrompt(prompt, length)</a></li>
-<li><a href="#readline_rl_prompt">rl.prompt()</a></li>
+<li><a href="#readline_rl_prompt_preservecursor">rl.prompt([preserveCursor])</a></li>
 <li><a href="#readline_rl_question_query_callback">rl.question(query, callback)</a></li>
 <li><a href="#readline_rl_pause">rl.pause()</a></li>
 <li><a href="#readline_rl_resume">rl.resume()</a></li>
 <li><a href="#readline_rl_close">rl.close()</a></li>
-<li><a href="#readline_rl_write">rl.write()</a></li>
+<li><a href="#readline_rl_write_data_key">rl.write(data, [key])</a></li>
 </ul>
 </li>
 <li><a href="#readline_events">Events</a><ul>
@@ -108,20 +108,20 @@ program to gracefully exit:
 プログラムをスムーズに終了する方法を以下に示します:
 
 </p>
-<pre><code>var rl = require(&apos;readline&apos;);
+<pre><code>var readline = require(&apos;readline&apos;);
 
-var i = rl.createInterface({
+var rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-i.question(&quot;What do you think of node.js? &quot;, function(answer) {
+rl.question(&quot;What do you think of node.js? &quot;, function(answer) {
   // TODO: Log the answer in a database
   console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
 
-  i.close();
+  rl.close();
 });</code></pre>
-<h2>rl.createInterface(options)<span><a class="mark" href="#readline_rl_createinterface_options" id="readline_rl_createinterface_options">#</a></span></h2>
+<h2>readline.createInterface(options)<span><a class="mark" href="#readline_readline_createinterface_options" id="readline_readline_createinterface_options">#</a></span></h2>
 <!--
 Creates a readline `Interface` instance. Accepts an "options" Object that takes
 the following values:
@@ -236,7 +236,7 @@ Once you have a readline instance, you most commonly listen for the
 </p>
 <!--
 If `terminal` is `true` for this instance then the `output` stream will get
-the best compatability if it defines an `output.columns` property, and fires
+the best compatibility if it defines an `output.columns` property, and fires
 a `"resize"` event on the `output` if/when the columns ever change
 (`process.stdout` does this automatically when it is a TTY).
 -->
@@ -268,10 +268,11 @@ Sets the prompt, for example when you run `node` on the command line, you see
 <code>&gt; </code> を見ることができます。これが Node のプロンプトです。
 
 </p>
-<h3>rl.prompt()<span><a class="mark" href="#readline_rl_prompt" id="readline_rl_prompt">#</a></span></h3>
+<h3>rl.prompt([preserveCursor])<span><a class="mark" href="#readline_rl_prompt_preservecursor" id="readline_rl_prompt_preservecursor">#</a></span></h3>
 <!--
 Readies readline for input from the user, putting the current `setPrompt`
-options on a new line, giving the user a new spot to write.
+options on a new line, giving the user a new spot to write. Set `preserveCursor`
+to `true` to prevent the cursor placement being reset to `0`.
 
 This will also resume the `input` stream used with `createInterface` if it has
 been paused.
@@ -280,6 +281,8 @@ been paused.
 <p>ユーザからの入力を 1 行読み込みます。
 現在の <code>setPrompt()</code> の値を新しい行に出力し、
 ユーザに新しい入力エリアを与えます。
+<code>preserveCursor</code> を <code>true</code> に設定すると、カーソル位置が
+<code>0</code> にリセットされなくなります。
 
 </p>
 <p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
@@ -342,19 +345,34 @@ Closes the `Interface` instance, relinquishing control on the `input` and
 制御を解放します。<code>&apos;close&apos;</code> イベントも生成されます。
 
 </p>
-<h3>rl.write()<span><a class="mark" href="#readline_rl_write" id="readline_rl_write">#</a></span></h3>
+<h3>rl.write(data, [key])<span><a class="mark" href="#readline_rl_write_data_key" id="readline_rl_write_data_key">#</a></span></h3>
 <!--
-Writes to `output` stream.
+Writes `data` to `output` stream. `key` is an object literal to represent a key
+sequence; available if the terminal is a TTY.
+-->
 
+<p><code>data</code> を <code>output</code> ストリームに出力します。
+<code>key</code> はキーシーケンスを表現するオブジェクトリテラルです;
+ターミナルが TTY の場合に有効です。
+
+</p>
+<!--
 This will also resume the `input` stream if it has been paused.
 -->
 
-<p><code>output</code> へ出力します。
-
-</p>
 <p>これは、<code>input</code> ストリームが中断されていれば再開します。
 
 </p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>rl.write(&apos;Delete me!&apos;);
+// Simulate ctrl+u to delete the line written previously
+rl.write(null, {ctrl: true, name: &apos;u&apos;});</code></pre>
 <h2>Events<span><a class="mark" href="#readline_events" id="readline_events">#</a></span></h2>
 <h3>Event: &apos;line&apos;<span><a class="mark" href="#readline_event_line" id="readline_event_line">#</a></span></h3>
 <p><code>function (line) {}</code>
@@ -619,7 +637,7 @@ rl.on(&apos;line&apos;, function(line) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

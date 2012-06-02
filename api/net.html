@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>net Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>net Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/net.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -64,7 +64,7 @@
 <li><a href="#net_net_connect_path_connectlistener">net.connect(path, [connectListener])</a></li>
 <li><a href="#net_net_createconnection_path_connectlistener">net.createConnection(path, [connectListener])</a></li>
 <li><a href="#net_class_net_server">Class: net.Server</a><ul>
-<li><a href="#net_server_listen_port_host_listeninglistener">server.listen(port, [host], [listeningListener])</a></li>
+<li><a href="#net_server_listen_port_host_backlog_listeninglistener">server.listen(port, [host], [backlog], [listeningListener])</a></li>
 <li><a href="#net_server_listen_path_listeninglistener">server.listen(path, [listeningListener])</a></li>
 <li><a href="#net_server_close_cb">server.close([cb])</a></li>
 <li><a href="#net_server_address">server.address()</a></li>
@@ -349,7 +349,7 @@ A server is a `net.Socket` that can listen for new incoming connections.
 サーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。
 
 </p>
-<h3>server.listen(port, [host], [listeningListener])<span><a class="mark" href="#net_server_listen_port_host_listeninglistener" id="net_server_listen_port_host_listeninglistener">#</a></span></h3>
+<h3>server.listen(port, [host], [backlog], [listeningListener])<span><a class="mark" href="#net_server_listen_port_host_backlog_listeninglistener" id="net_server_listen_port_host_backlog_listeninglistener">#</a></span></h3>
 <!--
 Begin accepting connections on the specified `port` and `host`.  If the
 `host` is omitted, the server will accept connections directed to any
@@ -360,6 +360,19 @@ IPv4 address (`INADDR_ANY`). A port value of zero will assign a random port.
 <code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます
 (<code>INADDR_ANY</code>)。
 ポート番号に 0 を指定すると、ランダムなポートが割り当てられます。
+
+</p>
+<!--
+Backlog is the maximum length of the queue of pending connections.
+The actual length will be determined by your OS through sysctl settings such as
+`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this
+parameter is 511 (not 512).
+-->
+
+<p>バックログは保留された接続のキューの最大長です。
+実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、
+sysctl の設定を通じて OS によって決定されます。
+このパラメータのデフォルト値は 511 (512 ではありません) です。
 
 </p>
 <!--
@@ -489,12 +502,29 @@ high.
 <p>サーバの接続数が大きくなった時に接続を拒否するためにこのプロパティを設定します。
 
 </p>
+<!--
+It is not recommended to use this option once a socket has been sent to a child
+with `child_process.fork()`.
+-->
+
+<p><code>child_process.fork()</code> によって子プロセスに送られたソケットに対して
+このオプションを使用することは推奨されません。
+
+</p>
 <h3>server.connections<span><a class="mark" href="#net_server_connections" id="net_server_connections">#</a></span></h3>
 <!--
 The number of concurrent connections on the server.
 -->
 
 <p>このサーバ上の並行コネクションの数です。
+
+</p>
+<!--
+This becomes `null` when sending a socket to a child with `child_process.fork()`.
+-->
+
+<p>ソケットが <code>child_process.fork()</code> によって子プロセスに送られると、
+これは <code>null</code> になります。
 
 </p>
 <!--
@@ -682,12 +712,14 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 </p>
 <h3>socket.setEncoding([encoding])<span><a class="mark" href="#net_socket_setencoding_encoding" id="net_socket_setencoding_encoding">#</a></span></h3>
 <!--
-Sets the encoding (either `'ascii'`, `'utf8'`, or `'base64'`) for data that is
-received. Defaults to `null`.
+Set the encoding for the socket as a Readable Stream. See
+[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
+for more information.
 -->
 
-<p>受信したデータのエンコーディングを設定します (<code>&apos;ascii&apos;</code>、<code>&apos;utf8&apos;</code>、
-あるいは <code>&apos;base64&apos;</code> のいずれかです)。デフォルトは <code>null</code> です。
+<p>ソケットを入力ストリームとしてエンコーディングを設定します。詳細は
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
+を参照してください。
 
 </p>
 <h3>socket.write(data, [encoding], [callback])<span><a class="mark" href="#net_socket_write_data_encoding_callback" id="net_socket_write_data_encoding_callback">#</a></span></h3>
@@ -1075,7 +1107,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

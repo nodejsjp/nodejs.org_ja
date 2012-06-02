@@ -39,7 +39,7 @@
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the underlying file descriptor has been closed. Not all streams\nwill emit this.  (For example, an incoming HTTP request will not emit\n`'close'`.)\n-->\n\n<p>下層でファイル記述子がクローズされた時に生成されます。\n全てのストリームがこのイベントを発生するわけではありません。\n(例えば、インカミングの HTTP リクエストは <code>&apos;close&apos;</code> イベントを生成しません。)\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the underlying resource (for example, the backing file descriptor)\nhas been closed. Not all streams will emit this.\n-->\n\n<p>下層のリソース (例えば背後のファイル記述子) がクローズされた時に生成されます。\n全てのストリームがこのイベントを発生するわけではありません。\n\n</p>\n",
               "params": []
             }
           ],
@@ -52,15 +52,16 @@
           ],
           "methods": [
             {
-              "textRaw": "stream.setEncoding(encoding)",
+              "textRaw": "stream.setEncoding([encoding])",
               "type": "method",
               "name": "setEncoding",
-              "desc": "<!--\nMakes the data event emit a string instead of a `Buffer`. `encoding` can be\n`'utf8'`, `'ascii'`, or `'base64'`.\n-->\n\n<p><code>&apos;data&apos;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。\n<code>encoding</code> には <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、\nまたは <code>&apos;base64&apos;</code> を指定することができます。\n\n</p>\n",
+              "desc": "<!--\nMakes the `'data'` event emit a string instead of a `Buffer`. `encoding` can be\n`'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults to `'utf8'`.\n-->\n\n<p><code>&apos;data&apos;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。\n<code>encoding</code> には <code>&apos;utf8&apos;</code>、<code>&apos;utf16le&apos;</code> (<code>&apos;ucs2&apos;</code>)、<code>&apos;ascii&apos;</code>、\nまたは <code>&apos;hex&apos;</code> を指定することができます。\nデフォルトは <code>&apos;utf8&apos;</code> です。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
                     {
-                      "name": "encoding"
+                      "name": "encoding",
+                      "optional": true
                     }
                   ]
                 }
@@ -93,17 +94,6 @@
               "type": "method",
               "name": "destroy",
               "desc": "<!--\nCloses the underlying file descriptor. Stream will not emit any more events.\n-->\n\n<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": []
-                }
-              ]
-            },
-            {
-              "textRaw": "stream.destroySoon()",
-              "type": "method",
-              "name": "destroySoon",
-              "desc": "<!--\nAfter the write queue is drained, close the file descriptor.\n-->\n\n<p>書き込みキューが空になった後、ファイル記述子をクローズします。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []

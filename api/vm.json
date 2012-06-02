@@ -4,9 +4,36 @@
     {
       "textRaw": "Executing JavaScript",
       "name": "vm",
-      "stability": 3,
-      "stabilityText": "Stable",
-      "desc": "<!--\nYou can access this module with:\n-->\n\n<p>次のようにすることで、このモジュールにアクセスすることができます:\n\n</p>\n<pre><code>var vm = require(&apos;vm&apos;);</code></pre>\n<!--\nJavaScript code can be compiled and run immediately or compiled, saved, and run later.\n-->\n\n<p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。\n\n\n</p>\n",
+      "stability": 2,
+      "stabilityText": "Unstable. See Caveats, below.",
+      "desc": "<!--\nYou can access this module with:\n-->\n\n<p>次のようにすることで、このモジュールにアクセスすることができます:\n\n</p>\n<pre><code>var vm = require(&apos;vm&apos;);</code></pre>\n<!--\nJavaScript code can be compiled and run immediately or compiled, saved, and run later.\n-->\n\n<p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。\n\n</p>\n",
+      "modules": [
+        {
+          "textRaw": "Caveats",
+          "name": "caveats",
+          "The `vm` module has many known issues and edge cases. If you run into\nissues or unexpected behavior, please consult\n[the open issues on GitHub](https://github.com/joyent/node/issues/search?q": "vm).\nSome of the biggest problems are described below.",
+          "desc": "<p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。\nもし問題や期待と異なる振る舞いを見つけた場合は、\n<a href=\"https://github.com/joyent/node/issues/search?q=vm\">the open issues on GitHub</a>\nに相談してください。\n大きな問題のいくつかは以下に示されます。\n\n</p>\n",
+          "modules": [
+            {
+              "textRaw": "Sandboxes",
+              "name": "sandboxes",
+              "desc": "<!--\nThe `sandbox` argument to `vm.runInNewContext` and `vm.createContext`,\nalong with the `initSandbox` argument to `vm.createContext`, do not\nbehave as one might normally expect and their behavior varies\nbetween different versions of Node.\n-->\n\n<p><code>vm.runInNewContext</code> と、<code>vm.createContext</code> に <code>initSandbox</code> と共に渡される\n<code>sandbox</code> 引数は、通常期待される振る舞いをせず、それは Node のバージョン間で\n異なった振る舞いをします。\n\n</p>\n<!--\nThe key issue to be aware of is that V8 provides no way to directly\ncontrol the global object used within a context. As a result, while\nproperties of your `sandbox` object will be available in the context,\nany properties from the `prototype`s of the `sandbox` may not be\navailable. Furthermore, the `this` expression within the global scope\nof the context evaluates to the empty object (`{}`) instead of to\nyour sandbox.\n-->\n\n<p>知られている重要問題は、コンテキスト内で使用されるグローバルオブジェクトを\n直接制御する方法を V8 が提供しないことです。\nその結果、<code>sandbox</code> オブジェクトのプロパティがコンテキストから\n利用可能な間、<code>sandbox</code> のプロトタイプのプロパティを利用することが\nできないかもしれません。\nさらには、コンテキスト内のグローバルスコープにおける <code>this</code> が\nサンドボックスではなく、空のオブジェクト (<code>{}</code>) に評価されます。\n\n</p>\n<!--\nYour sandbox's properties are also not shared directly with the script.\nInstead, the properties of the sandbox are copied into the context at\nthe beginning of execution, and then after execution, the properties\nare copied back out in an attempt to propagate any changes.\n-->\n\n<p>サンドボックスのプロパティはまた、スクリプトに直接共有されません。\n代わりに、サンドボックスのプロパティは実行前にコンテキストにコピーされ、\n実行後、変更を伝播するためにプロパティはサンドボックスにコピーされます。\n\n</p>\n",
+              "type": "module",
+              "displayName": "Sandboxes"
+            },
+            {
+              "textRaw": "Globals",
+              "name": "globals",
+              "Properties of the global object, like `Array` and `String`, have\ndifferent values inside of a context. This means that common\nexpressions like `[] instanceof Array` or\n`Object.getPrototypeOf([])": "== Array.prototype` may not produce\nexpected results when used inside of scripts evaluated via the `vm` module.",
+              "desc": "<p><code>Array</code> や <code>String</code> などのグローバルオブジェクトのプロパティは、\nコンテキストの中では異なる値を持ちます。\nこれは  <code>[] instanceof Array</code> や\n<code>Object.getPrototypeOf([]) === Array.prototype</code> などのよくある式は、\n<code>vm</code> モジュールによって評価されるスクリプトの中で使われると、\n期待した結果にならないことを意味します。\n\n</p>\n<!--\nSome of these problems have known workarounds listed in the issues for\n`vm` on GitHub. for example, `Array.isArray` works around\nthe example problem with `Array`.\n-->\n\n<p>GitHub 上の <code>vm</code> に関する課題には、これらの問題に対する回避策があります。\n例えば、<code>Array.isArray</code> は <code>Array</code> に関する問題の例でもうまく動きます。\n\n</p>\n",
+              "type": "module",
+              "displayName": "Globals"
+            }
+          ],
+          "type": "module",
+          "displayName": "Caveats"
+        }
+      ],
       "methods": [
         {
           "textRaw": "vm.runInThisContext(code, [filename])",
@@ -54,7 +81,7 @@
           "textRaw": "vm.runInContext(code, context, [filename])",
           "type": "method",
           "name": "runInContext",
-          "desc": "<!--\n`vm.runInContext` compiles `code`, then runs it in `context` and returns the\nresult. A (V8) context comprises a global object, together with a set of\nbuilt-in objects and functions. Running code does not have access to local scope\nand the global object held within `context` will be used as the global object\nfor `code`.\n`filename` is optional, it's used only in stack traces.\n\nExample: compile and execute code in a existing context.\n-->\n\n<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、\n<code>context</code> をコンテキストとして実行し、その結果を返します。\n(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、\nグローバルオブジェクトを含みます。\n実行されるコードはローカルスコープにアクセスせず、\n<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n\n</p>\n<p>例: コードをコンパイルして既存のコンテキストで実行します。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;),\n    vm = require(&apos;vm&apos;),\n    initSandbox = {\n      animal: &apos;cat&apos;,\n      count: 2\n    },\n    context = vm.createContext(initSandbox);\n\nvm.runInContext(&apos;count += 1; name = &quot;CATT&quot;&apos;, context, &apos;myfile.vm&apos;);\nconsole.log(util.inspect(context));\n\n// { animal: &apos;cat&apos;, count: 3, name: &apos;CATT&apos; }</code></pre>\n<!--\nNote that `createContext` will perform a shallow clone of the supplied sandbox object in order to\ninitialise the global object of the freshly constructed context.\n\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n\nIn case of syntax error in `code`, `vm.runInContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを\n初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを\n作成することに注意してください。\n\n</p>\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n\n</p>\n",
+          "desc": "<!--\n`vm.runInContext` compiles `code`, then runs it in `context` and returns the\nresult. A (V8) context comprises a global object, together with a set of\nbuilt-in objects and functions. Running code does not have access to local scope\nand the global object held within `context` will be used as the global object\nfor `code`.\n`filename` is optional, it's used only in stack traces.\n\nExample: compile and execute code in a existing context.\n-->\n\n<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、\n<code>context</code> をコンテキストとして実行し、その結果を返します。\n(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、\nグローバルオブジェクトを含みます。\n実行されるコードはローカルスコープにアクセスせず、\n<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n\n</p>\n<p>例: コードをコンパイルして既存のコンテキストで実行します。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;),\n    vm = require(&apos;vm&apos;),\n    initSandbox = {\n      animal: &apos;cat&apos;,\n      count: 2\n    },\n    context = vm.createContext(initSandbox);\n\nvm.runInContext(&apos;count += 1; name = &quot;CATT&quot;&apos;, context, &apos;myfile.vm&apos;);\nconsole.log(util.inspect(context));\n\n// { animal: &apos;cat&apos;, count: 3, name: &apos;CATT&apos; }</code></pre>\n<!--\nNote that `createContext` will perform a shallow clone of the supplied sandbox object in order to\ninitialize the global object of the freshly constructed context.\n\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n\nIn case of syntax error in `code`, `vm.runInContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを\n初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを\n作成することに注意してください。\n\n</p>\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [

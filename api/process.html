@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>process Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -413,6 +413,14 @@ The shell that executed node should see the exit code as 1.
 </p>
 <h2>process.getgid()<span><a class="mark" href="#process_process_getgid" id="process_process_getgid">#</a></span></h2>
 <!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
+<!--
 Gets the group identity of the process. (See getgid(2).)
 This is the numerical group id, not the group name.
 -->
@@ -421,8 +429,18 @@ This is the numerical group id, not the group name.
 これは数値によるグループ ID で、グループ名ではありません。
 
 </p>
-<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());</code></pre>
+<pre><code>if (process.getgid) {
+  console.log(&apos;Current gid: &apos; + process.getgid());
+}</code></pre>
 <h2>process.setgid(id)<span><a class="mark" href="#process_process_setgid_id" id="process_process_setgid_id">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
 <!--
 Sets the group identity of the process. (See setgid(2).)  This accepts either
 a numerical ID or a groupname string. If a groupname is specified, this method
@@ -434,15 +452,25 @@ blocks while resolving it to a numerical ID.
 もしグループ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。
 
 </p>
-<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());
-try {
-  process.setgid(501);
-  console.log(&apos;New gid: &apos; + process.getgid());
-}
-catch (err) {
-  console.log(&apos;Failed to set gid: &apos; + err);
+<pre><code>if (process.getgid &amp;&amp; process.setgid) {
+  console.log(&apos;Current gid: &apos; + process.getgid());
+  try {
+    process.setgid(501);
+    console.log(&apos;New gid: &apos; + process.getgid());
+  }
+  catch (err) {
+    console.log(&apos;Failed to set gid: &apos; + err);
+  }
 }</code></pre>
 <h2>process.getuid()<span><a class="mark" href="#process_process_getuid" id="process_process_getuid">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
 <!--
 Gets the user identity of the process. (See getuid(2).)
 This is the numerical userid, not the username.
@@ -452,8 +480,18 @@ This is the numerical userid, not the username.
 これは数値によるユーザ ID で、ユーザ名ではありません。
 
 </p>
-<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());</code></pre>
+<pre><code>if (process.getuid) {
+  console.log(&apos;Current uid: &apos; + process.getuid());
+}</code></pre>
 <h2>process.setuid(id)<span><a class="mark" href="#process_process_setuid_id" id="process_process_setuid_id">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)
+でのみ利用可能です。
+
+</p>
 <!--
 Sets the user identity of the process. (See setuid(2).)  This accepts either
 a numerical ID or a username string.  If a username is specified, this method
@@ -465,13 +503,15 @@ blocks while resolving it to a numerical ID.
 もしユーザ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。
 
 </p>
-<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());
-try {
-  process.setuid(501);
-  console.log(&apos;New uid: &apos; + process.getuid());
-}
-catch (err) {
-  console.log(&apos;Failed to set uid: &apos; + err);
+<pre><code>if (process.getuid &amp;&amp; process.setuid) {
+  console.log(&apos;Current uid: &apos; + process.getuid());
+  try {
+    process.setuid(501);
+    console.log(&apos;New uid: &apos; + process.getuid());
+  }
+  catch (err) {
+    console.log(&apos;Failed to set uid: &apos; + err);
+  }
 }</code></pre>
 <h2>process.version<span><a class="mark" href="#process_process_version" id="process_process_version">#</a></span></h2>
 <!--
@@ -622,11 +662,12 @@ What processor architecture you're running on: `'arm'`, `'ia32'`, or `'x64'`.
 <pre><code>console.log(&apos;This processor architecture is &apos; + process.arch);</code></pre>
 <h2>process.platform<span><a class="mark" href="#process_process_platform" id="process_process_platform">#</a></span></h2>
 <!--
-What platform you're running on. `'linux2'`, `'darwin'`, etc.
+What platform you're running on:
+`'darwin'`, `'freebsd'`, `'linux'`, `'solaris'` or `'win32'`
 -->
 
-<p>どのプラットフォームで動いているかを示します。
-<code>&apos;linux2&apos;</code>、<code>&apos;darwin&apos;</code>、など。
+<p>どのプラットフォームで動いているかを示します:
+<code>&apos;darwin&apos;</code>、<code>&apos;freebsd&apos;</code>、<code>&apos;linux&apos;</code>、<code>&apos;solaris&apos;</code>、または <code>&apos;win32&apos;</code>
 
 </p>
 <pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>
@@ -759,7 +800,7 @@ setTimeout(function () {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -6,13 +6,13 @@
       "name": "dns",
       "stability": 3,
       "stabilityText": "Stable",
-      "desc": "<!--\nUse `require('dns')` to access this module. All methods in the dns module\nuse C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread\npool. C-Ares is much faster than `getaddrinfo` but the system resolver is\nmore constant with how other programs operate. When a user does\n`net.connect(80, 'google.com')` or `http.get({ host: 'google.com' })` the\n`dns.lookup` method is used. Users who need to do a large number of look ups\nquickly should use the methods that go through C-Ares.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&apos;dns&apos;)</code> を使用します。\ndns モジュールの全てのメソッドは C-Ares を使用します。\nただし、<code>dns.lookup</code> はスレッドプール上で <code>getaddrinfo(3)</code> を使用します。\nC-Ares は <code>getaddrinfo</code> よりずっと速いものの、\n他のシステムと連携するにはシステムリゾルバの方が安定しています。\nユーザが <code>net.connect(80, &apos;google.com&apos;)</code> または\n<code>http.get({ host: &apos;google.com&apos; })</code> を行った時、<code>dns.lookup</code>\nメソッドが使われます。\n多数のルックアップを素早く実行したいユーザは、\nC-Ares を呼び出すメソッドを使用すべきです。\n\n</p>\n<!--\nHere is an example which resolves `'www.google.com'` then reverse\nresolves the IP addresses which are returned.\n-->\n\n<p>これは <code>&apos;www.google.com&apos;</code> を解決して、返された IP アドレスを逆引きで解決する例です。\n\n</p>\n<pre><code>var dns = require(&apos;dns&apos;);\n\ndns.resolve4(&apos;www.google.com&apos;, function (err, addresses) {\n  if (err) throw err;\n\n  console.log(&apos;addresses: &apos; + JSON.stringify(addresses));\n\n  addresses.forEach(function (a) {\n    dns.reverse(a, function (err, domains) {\n      if (err) {\n        console.log(&apos;reverse for &apos; + a + &apos; failed: &apos; +\n          err.message);\n      } else {\n        console.log(&apos;reverse for &apos; + a + &apos;: &apos; +\n          JSON.stringify(domains));\n      }\n    });\n  });\n});</code></pre>\n",
+      "desc": "<!--\nUse `require('dns')` to access this module. All methods in the dns module\nuse C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread\npool. C-Ares is much faster than `getaddrinfo` but the system resolver is\nmore constant with how other programs operate. When a user does\n`net.connect(80, 'google.com')` or `http.get({ host: 'google.com' })` the\n`dns.lookup` method is used. Users who need to do a large number of look ups\nquickly should use the methods that go through C-Ares.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&apos;dns&apos;)</code> を使用します。\ndns モジュールの全てのメソッドは C-Ares を使用します。\nただし、<code>dns.lookup</code> はスレッドプール上で <code>getaddrinfo(3)</code> を使用します。\nC-Ares は <code>getaddrinfo</code> よりずっと速いものの、\n他のシステムと連携するにはシステムリゾルバの方が安定しています。\nユーザが <code>net.connect(80, &apos;google.com&apos;)</code> または\n<code>http.get({ host: &apos;google.com&apos; })</code> を行った時、<code>dns.lookup</code>\nメソッドが使われます。\n多数のルックアップを素早く実行したいユーザは、\nC-Ares を呼び出すメソッドを使用すべきです。\n\n</p>\n<!--\nHere is an example which resolves `'www.google.com'` then reverse\nresolves the IP addresses which are returned.\n-->\n\n<p>これは <code>&apos;www.google.com&apos;</code> を解決して、返された IP アドレスを逆引きで解決する例です。\n\n</p>\n<pre><code>var dns = require(&apos;dns&apos;);\n\ndns.resolve4(&apos;www.google.com&apos;, function (err, addresses) {\n  if (err) throw err;\n\n  console.log(&apos;addresses: &apos; + JSON.stringify(addresses));\n\n  addresses.forEach(function (a) {\n    dns.reverse(a, function (err, domains) {\n      if (err) {\n        throw err;\n      }\n\n      console.log(&apos;reverse for &apos; + a + &apos;: &apos; + JSON.stringify(domains));\n    });\n  });\n});</code></pre>\n",
       "methods": [
         {
           "textRaw": "dns.lookup(domain, [family], callback)",
           "type": "method",
           "name": "lookup",
-          "desc": "<!--\nResolves a domain (e.g. `'google.com'`) into the first found A (IPv4) or\nAAAA (IPv6) record.\nThe `family` can be the integer `4` or `6`. Defaults to `null` that indicates\nboth Ip v4 and v6 address family.\n-->\n\n<p>ドメイン (例 <code>&apos;google.com&apos;</code>) を解決して最初に見つかった\nA (IPv4) または AAAA (IPv6) レコードにします。\n<code>family</code> は整数の <code>4</code> または <code>6</code> を指定することができます。\nデフォルトは <code>null</code> で、IP v4 と v6 の両方をアドレスファミリーを意味します。\n\n</p>\n<!--\nThe callback has arguments `(err, address, family)`.  The `address` argument\nis a string representation of a IP v4 or v6 address. The `family` argument\nis either the integer 4 or 6 and denotes the family of `address` (not\nnecessarily the value initially passed to `lookup`).\n-->\n\n<p>コールバックは引数 <code>(err, address, family)</code> を持ちます。\n<code>address</code> 引数は IP v4 または v6 アドレスを表現する文字列です。\n<code>family</code> 引数は整数の 4 または 6 で、<code>address</code> のファミリーを意味します\n(この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。\n\n\n</p>\n",
+          "desc": "<!--\nResolves a domain (e.g. `'google.com'`) into the first found A (IPv4) or\nAAAA (IPv6) record.\nThe `family` can be the integer `4` or `6`. Defaults to `null` that indicates\nboth Ip v4 and v6 address family.\n-->\n\n<p>ドメイン (例 <code>&apos;google.com&apos;</code>) を解決して最初に見つかった\nA (IPv4) または AAAA (IPv6) レコードにします。\n<code>family</code> は整数の <code>4</code> または <code>6</code> を指定することができます。\nデフォルトは <code>null</code> で、IP v4 と v6 の両方をアドレスファミリーを意味します。\n\n</p>\n<!--\nThe callback has arguments `(err, address, family)`.  The `address` argument\nis a string representation of a IP v4 or v6 address. The `family` argument\nis either the integer 4 or 6 and denotes the family of `address` (not\nnecessarily the value initially passed to `lookup`).\n-->\n\n<p>コールバックは引数 <code>(err, address, family)</code> を持ちます。\n<code>address</code> 引数は IP v4 または v6 アドレスを表現する文字列です。\n<code>family</code> 引数は整数の 4 または 6 で、<code>address</code> のファミリーを意味します\n(この値は必ずしも最初に <code>lookup</code> に渡す必要はありません)。\n\n</p>\n<!--\nOn error, `err` is an `Error` object, where `err.code` is the error code.\nKeep in mind that `err.code` will be set to `'ENOENT'` not only when\nthe domain does not exist but also when the lookup fails in other ways\nsuch as no available file descriptors.\n-->\n\n<p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、<code>err.code</code> はエラーコードです。\n<code>err.code</code> が <code>&apos;ENOENT&apos;</code> に設定されるのはドメインが存在しない場合だけではなく、\nファイル記述子が使えないなどルックアップが失敗した場合もあることに\n注意してください。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -34,7 +34,7 @@
           "textRaw": "dns.resolve(domain, [rrtype], callback)",
           "type": "method",
           "name": "resolve",
-          "desc": "<!--\nResolves a domain (e.g. `'google.com'`) into an array of the record types\nspecified by rrtype. Valid rrtypes are `'A'` (IPV4 addresses, default),\n`'AAAA'` (IPV6 addresses), `'MX'` (mail exchange records), `'TXT'` (text\nrecords), `'SRV'` (SRV records), `'PTR'` (used for reverse IP lookups),\n`'NS'` (name server records) and `'CNAME'` (canonical name records).\n-->\n\n<p>ドメイン (例 <code>&apos;google.com&apos;</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。\n妥当な <code>rrtype</code> は <code>&apos;A&apos;</code> (IPV4アドレス)、<code>&apos;AAAA&apos;</code> (IPV6アドレス)、\n<code>&apos;MX&apos;</code> (mail exchangeレコード), <code>&apos;TXT&apos;</code> (テキストレコード)、\n<code>&apos;SRV&apos;</code> (SRVレコード)、<code>&apos;PTR&apos;</code> (IP を逆引きでルックアップするために使われる)、\n<code>&apos;NS&apos;</code> (ネームサーバレコード)、そして <code>&apos;CNAME&apos;</code> (別名レコード) です。\n\n</p>\n<!--\nThe callback has arguments `(err, addresses)`.  The type of each item\nin `addresses` is determined by the record type, and described in the\ndocumentation for the corresponding lookup methods below.\n-->\n\n<p>コールバックは引数 <code>(err, addresses)</code> を持ちます。\n<code>addresses</code> の各要素の種類はレコードの種類によって決まり、\n対応する後述のルックアップメソッドで記述されます。\n\n</p>\n<!--\nOn error, `err` would be an instanceof `Error` object, where `err.errno` is\none of the error codes listed below and `err.message` is a string describing\nthe error in English.\n-->\n\n<p>エラー発生時、<code>err</code> は <code>Error</code> オブジェクトのインスタンスであり、\n<code>err.errno</code> は後述するエラーコードのいずれか、\n<code>err.message</code> はエラーを英語で説明する文字列となります。\n\n\n</p>\n",
+          "desc": "<!--\nResolves a domain (e.g. `'google.com'`) into an array of the record types\nspecified by rrtype. Valid rrtypes are `'A'` (IPV4 addresses, default),\n`'AAAA'` (IPV6 addresses), `'MX'` (mail exchange records), `'TXT'` (text\nrecords), `'SRV'` (SRV records), `'PTR'` (used for reverse IP lookups),\n`'NS'` (name server records) and `'CNAME'` (canonical name records).\n-->\n\n<p>ドメイン (例 <code>&apos;google.com&apos;</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。\n妥当な <code>rrtype</code> は <code>&apos;A&apos;</code> (IPV4アドレス)、<code>&apos;AAAA&apos;</code> (IPV6アドレス)、\n<code>&apos;MX&apos;</code> (mail exchangeレコード), <code>&apos;TXT&apos;</code> (テキストレコード)、\n<code>&apos;SRV&apos;</code> (SRVレコード)、<code>&apos;PTR&apos;</code> (IP を逆引きでルックアップするために使われる)、\n<code>&apos;NS&apos;</code> (ネームサーバレコード)、そして <code>&apos;CNAME&apos;</code> (別名レコード) です。\n\n</p>\n<!--\nThe callback has arguments `(err, addresses)`.  The type of each item\nin `addresses` is determined by the record type, and described in the\ndocumentation for the corresponding lookup methods below.\n-->\n\n<p>コールバックは引数 <code>(err, addresses)</code> を持ちます。\n<code>addresses</code> の各要素の種類はレコードの種類によって決まり、\n対応する後述のルックアップメソッドで記述されます。\n\n</p>\n<!--\nOn error, `err` is an `Error` object, where `err.code` is\none of the error codes listed below.\n-->\n\n<p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、\n<code>err.errno</code> は後述するエラーコードのいずれかです。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -144,24 +144,6 @@
           ]
         },
         {
-          "textRaw": "dns.reverse(ip, callback)",
-          "type": "method",
-          "name": "reverse",
-          "desc": "<!--\nReverse resolves an ip address to an array of domain names.\n-->\n\n<p>IP アドレスからドメイン名の配列へ逆引きで解決します。\n\n</p>\n<!--\nThe callback has arguments `(err, domains)`.\n-->\n\n<p>コールバックは引数 <code>(err, domains)</code> を持ちます。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "ip"
-                },
-                {
-                  "name": "callback"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "textRaw": "dns.resolveNs(domain, callback)",
           "type": "method",
           "name": "resolveNs",
@@ -183,7 +165,7 @@
           "textRaw": "dns.resolveCname(domain, callback)",
           "type": "method",
           "name": "resolveCname",
-          "desc": "<!--\nThe same as `dns.resolve()`, but only for canonical name records (`CNAME`\nrecords). `addresses` is an array of the canonical name records available for\n`domain` (e.g., `['bar.example.com']`).\n-->\n\n<p><code>dns.resolve()</code> と同じですが、別名レコード (<code>CNAME</code> レコード) \nだけを問い合わせます。\n<code>address</code> は <code>domain</code> で利用可能な別名レコードの配列です\n<code>domain</code> (e.g., <code>[&apos;bar.example.com&apos;]</code>)。\n\n</p>\n<!--\nIf there an an error, `err` will be non-null and an instanceof the Error\nobject.\n-->\n\n<p>エラーがあった場合、<code>err</code> は非 null で Error オブジェクトのインスタンスとなります。\n\n</p>\n<!--\nEach DNS query can return an error code.\n-->\n\n<p>どの DNS 問い合わせもエラーコードを返せます。\n\n</p>\n<!--\n- `dns.TEMPFAIL`: timeout, SERVFAIL or similar.\n- `dns.PROTOCOL`: got garbled reply.\n- `dns.NXDOMAIN`: domain does not exists.\n- `dns.NODATA`: domain exists but no data of reqd type.\n- `dns.NOMEM`: out of memory while processing.\n- `dns.BADQUERY`: the query is malformed.\n-->\n\n<ul>\n<li><code>dns.TEMPFAIL</code>: タイムアウト、SERVFAIL あるいは同様のもの。</li>\n<li><code>dns.PROTOCOL</code>: 応答が不正。</li>\n<li><code>dns.NXDOMAIN</code>: ドメインが存在しない。</li>\n<li><code>dns.NODATA</code>: ドメインは存在するが、要求された種類のデータがない。</li>\n<li><code>dns.NOMEM</code>: 処理中にメモリが不足。</li>\n<li><code>dns.BADQUERY</code>: 問い合わせが不正な形式。</li>\n</ul>\n",
+          "desc": "<!--\nThe same as `dns.resolve()`, but only for canonical name records (`CNAME`\nrecords). `addresses` is an array of the canonical name records available for\n`domain` (e.g., `['bar.example.com']`).\n-->\n\n<p><code>dns.resolve()</code> と同じですが、別名レコード (<code>CNAME</code> レコード) \nだけを問い合わせます。\n<code>address</code> は <code>domain</code> で利用可能な別名レコードの配列です\n<code>domain</code> (e.g., <code>[&apos;bar.example.com&apos;]</code>)。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -196,6 +178,33 @@
               ]
             }
           ]
+        },
+        {
+          "textRaw": "dns.reverse(ip, callback)",
+          "type": "method",
+          "name": "reverse",
+          "desc": "<!--\nReverse resolves an ip address to an array of domain names.\n-->\n\n<p>IP アドレスからドメイン名の配列へ逆引きで解決します。\n\n</p>\n<!--\nThe callback has arguments `(err, domains)`.\n-->\n\n<p>コールバックは引数 <code>(err, domains)</code> を持ちます。\n\n</p>\n<!--\nOn error, `err` is an `Error` object, where `err.code` is\none of the error codes listed below.\n-->\n\n<p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、\n<code>err.errno</code> は後述するエラーコードのいずれかです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "ip"
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "modules": [
+        {
+          "textRaw": "Error codes",
+          "name": "error_codes",
+          "desc": "<!--\nEach DNS query can return one of the following error codes:\n-->\n\n<p>どの DNS 問い合わせも以下のエラーコードの一つを返します:\n\n</p>\n<!--\n- `dns.NODATA`: DNS server returned answer with no data.\n- `dns.FORMERR`: DNS server claims query was misformatted.\n- `dns.SERVFAIL`: DNS server returned general failure.\n- `dns.NOTFOUND`: Domain name not found.\n- `dns.NOTIMP`: DNS server does not implement requested operation.\n- `dns.REFUSED`: DNS server refused query.\n- `dns.BADQUERY`: Misformatted DNS query.\n- `dns.BADNAME`: Misformatted domain name.\n- `dns.BADFAMILY`: Unsupported address family.\n- `dns.BADRESP`: Misformatted DNS reply.\n- `dns.CONNREFUSED`: Could not contact DNS servers.\n- `dns.TIMEOUT`: Timeout while contacting DNS servers.\n- `dns.EOF`: End of file.\n- `dns.FILE`: Error reading file.\n- `dns.NOMEM`: Out of memory.\n- `dns.DESTRUCTION`: Channel is being destroyed.\n- `dns.BADSTR`: Misformatted string.\n- `dns.BADFLAGS`: Illegal flags specified.\n- `dns.NONAME`: Given hostname is not numeric.\n- `dns.BADHINTS`: Illegal hints flags specified.\n- `dns.NOTINITIALIZED`: c-ares library initialization not yet performed.\n- `dns.LOADIPHLPAPI`: Error loading iphlpapi.dll.\n- `dns.ADDRGETNETWORKPARAMS`: Could not find GetNetworkParams function.\n- `dns.CANCELLED`: DNS query cancelled.\n-->\n\n<ul>\n<li><code>dns.NODATA</code>: DNS サーバがデータがないと応答した。</li>\n<li><code>dns.FORMERR</code>: DNS サーバが問い合わせフォーマットが不正だと主張した。</li>\n<li><code>dns.SERVFAIL</code>: DNS サーバが一般的な失敗を返した。</li>\n<li><code>dns.NOTFOUND</code>: ドメイン名が見つからない。</li>\n<li><code>dns.NOTIMP</code>: DNS サーバは要求された操作を実装していない。</li>\n<li><code>dns.REFUSED</code>: DNS サーバが問い合わせを拒否した。</li>\n<li><code>dns.BADQUERY</code>: DNS 問い合わせのフォーマットが不正。</li>\n<li><code>dns.BADNAME</code>: ドメイン名のフォーマットが不正。</li>\n<li><code>dns.BADFAMILY</code>: サポートされないアドレスファミリー。</li>\n<li><code>dns.BADRESP</code>: DNS 応答のフォーマットが不正。</li>\n<li><code>dns.CONNREFUSED</code>: DNS サーバに接続できない。</li>\n<li><code>dns.TIMEOUT</code>: DNS サーバへの接続がタイムアウトした。</li>\n<li><code>dns.EOF</code>: エンドオブファイル。</li>\n<li><code>dns.FILE</code>: ファイルの読み込みがエラー。</li>\n<li><code>dns.NOMEM</code>: メモリ不足。</li>\n<li><code>dns.DESTRUCTION</code>: チャネルが壊れている。</li>\n<li><code>dns.BADSTR</code>: 文字列のフォーマットが不正。</li>\n<li><code>dns.BADFLAGS</code>: 不正なフラグが指定された。</li>\n<li><code>dns.NONAME</code>: 与えられたホスト名が数値ではない。</li>\n<li><code>dns.BADHINTS</code>: 不正なヒントフラグが指定された。</li>\n<li><code>dns.NOTINITIALIZED</code>: c-ares ライブラリが初期化されていない。</li>\n<li><code>dns.LOADIPHLPAPI</code>: iphlpapi.dll のローディングでエラー。</li>\n<li><code>dns.ADDRGETNETWORKPARAMS</code>: GetNetworkParams 関数が見つからない。</li>\n<li><code>dns.CANCELLED</code>: DNS 問い合わせがキャンセルされた。</li>\n</ul>\n",
+          "type": "module",
+          "displayName": "Error codes"
         }
       ],
       "type": "module",

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Domain Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>Domain Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/domain.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -58,8 +58,10 @@
 <li><a href="#domain_domain">Domain</a><ul>
 <li><a href="#domain_additions_to_error_objects">Additions to Error objects</a></li>
 <li><a href="#domain_implicit_binding">Implicit Binding</a></li>
+<li><a href="#domain_explicit_binding">Explicit Binding</a></li>
 <li><a href="#domain_domain_create">domain.create()</a></li>
 <li><a href="#domain_class_domain">Class: Domain</a><ul>
+<li><a href="#domain_domain_run_fn">domain.run(fn)</a></li>
 <li><a href="#domain_domain_members">domain.members</a></li>
 <li><a href="#domain_domain_add_emitter">domain.add(emitter)</a></li>
 <li><a href="#domain_domain_remove_emitter">domain.remove(emitter)</a></li>
@@ -222,6 +224,73 @@ EventEmitter をシャットダウンしません。
 注意を払います。
 
 </p>
+<h2>Explicit Binding<span><a class="mark" href="#domain_explicit_binding" id="domain_explicit_binding">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+Sometimes, the domain in use is not the one that ought to be used for a
+specific event emitter.  Or, the event emitter could have been created
+in the context of one domain, but ought to instead be bound to some
+other domain.
+-->
+
+<p>時には、使用中のドメインは特定の EventEmitter に使用されるべきではありません。
+あるいは、EventEmitter はあるドメインのコンテキスト中で作成されますが、
+その他のドメインに結びつけられるべきかもしれません。
+
+</p>
+<!--
+For example, there could be one domain in use for an HTTP server, but
+perhaps we would like to have a separate domain to use for each request.
+-->
+
+<p>例えば、HTTP サーバで使われるドメインが一つあるとしても、
+おそらくリクエスト毎に独立したドメインを持ちたいでしょう。
+
+</p>
+<!--
+That is possible via explicit binding.
+-->
+
+<p>これは明示的なバインディングによって可能となります。
+
+</p>
+<!--
+For example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>// create a top-level domain for the server
+var serverDomain = domain.create();
+
+serverDomain.run(function() {
+  // server is created in the scope of serverDomain
+  http.createServer(function(req, res) {
+    // req and res are also created in the scope of serverDomain
+    // however, we&apos;d prefer to have a separate domain for each request.
+    // create it first thing, and add req and res to it.
+    var reqd = domain.create();
+    reqd.add(req);
+    reqd.add(res);
+    reqd.on(&apos;error&apos;, function(er) {
+      console.error(&apos;Error&apos;, er, req.url);
+      try {
+        res.writeHead(500);
+        res.end(&apos;Error occurred, sorry.&apos;);
+        res.on(&apos;close&apos;, function() {
+          // forcibly shut down any other things added to this domain
+          reqd.dispose();
+        });
+      } catch (er) {
+        console.error(&apos;Error sending 500&apos;, er, req.url);
+        // tried our best.  clean up anything remaining.
+        reqd.dispose();
+      }
+    });
+  }).listen(1337);
+});</code></pre>
 <h2>domain.create()<span><a class="mark" href="#domain_domain_create" id="domain_domain_create">#</a></span></h2>
 <div class="signature"><ul>
 <li>return: <span class="type">Domain</span></li>
@@ -250,6 +319,58 @@ catches, listen to its `error` event.
 
 <p>ドメインは EventEmitter の子クラスです。これが捕まえたエラーを扱いたければ、
 <code>&apos;error&apos;</code> イベントを監視してください。
+
+</p>
+<h3>domain.run(fn)<span><a class="mark" href="#domain_domain_run_fn" id="domain_domain_run_fn">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>fn</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Run the supplied function in the context of the domain, implicitly
+binding all event emitters, timers, and lowlevel requests that are
+created in that context.
+-->
+
+<p>与えられた関数をこのドメインのコンテキストで実行します。
+このコンテキストで作成される全ての EventEmitter、タイマ、そして低水準の要求は
+暗黙的にバインドされます。
+
+</p>
+<!--
+This is the most basic way to use a domain.
+-->
+
+<p>これはドメインを使用するもっとも一般的な方法です。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var d = domain.create();
+d.on(&apos;error&apos;, function(er) {
+  console.error(&apos;Caught error!&apos;, er);
+});
+d.run(function() {
+  process.nextTick(function() {
+    setTimeout(function() { // simulating some various async stuff
+      fs.open(&apos;non-existent file&apos;, &apos;r&apos;, function(er, fd) {
+        if (er) throw er;
+        // proceed...
+      });
+    }, 100);
+  });
+});</code></pre>
+<!--
+In this example, the `d.on('error')` handler will be triggered, rather
+than crashing the program.
+-->
+
+<p>この例では、プログラムはクラッシュせずに <code>d.on(&apos;error&apos;)</code> ハンドラが
+呼び出されます。
 
 </p>
 <h3>domain.members<span><a class="mark" href="#domain_domain_members" id="domain_domain_members">#</a></span></h3>
@@ -477,7 +598,7 @@ Node.js はそれらとコミュニケートしません。
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

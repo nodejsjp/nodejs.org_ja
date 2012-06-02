@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,7 +56,9 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#http_http">HTTP</a><ul>
+<li><a href="#http_http_status_codes">http.STATUS_CODES</a></li>
 <li><a href="#http_http_createserver_requestlistener">http.createServer([requestListener])</a></li>
+<li><a href="#http_http_createclient_port_host">http.createClient([port], [host])</a></li>
 <li><a href="#http_class_http_server">Class: http.Server</a><ul>
 <li><a href="#http_event_request">Event: &apos;request&apos;</a></li>
 <li><a href="#http_event_connection">Event: &apos;connection&apos;</a></li>
@@ -65,7 +67,7 @@
 <li><a href="#http_event_connect">Event: &apos;connect&apos;</a></li>
 <li><a href="#http_event_upgrade">Event: &apos;upgrade&apos;</a></li>
 <li><a href="#http_event_clienterror">Event: &apos;clientError&apos;</a></li>
-<li><a href="#http_server_listen_port_hostname_callback">server.listen(port, [hostname], [callback])</a></li>
+<li><a href="#http_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
 <li><a href="#http_server_listen_path_callback">server.listen(path, [callback])</a></li>
 <li><a href="#http_server_close_cb">server.close([cb])</a></li>
 <li><a href="#http_server_maxheaderscount">server.maxHeadersCount</a></li>
@@ -198,6 +200,20 @@ Node の HTTP API はとても低水準です。それはストリームのハ�
 
 
 </p>
+<h2>http.STATUS_CODES<span><a class="mark" href="#http_http_status_codes" id="http_http_status_codes">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
+<!--
+A collection of all the standard HTTP response status codes, and the
+short description of each.  For example, `http.STATUS_CODES[404] === 'Not
+Found'`.
+-->
+
+<p>全ての HTTP 標準ステータスコードと短い説明のコレクションです。
+たとえば、<code>http.STATUS_CODES[404] === &apos;Not Found&apos;</code>。
+
+</p>
 <h2>http.createServer([requestListener])<span><a class="mark" href="#http_http_createserver_requestlistener" id="http_http_createserver_requestlistener">#</a></span></h2>
 <!--
 Returns a new web server object.
@@ -212,6 +228,19 @@ added to the `'request'` event.
 -->
 
 <p><code>requestListener</code> は自動的に <code>&apos;request&apos;</code> イベントに加えられる関数です。
+
+</p>
+<h2>http.createClient([port], [host])<span><a class="mark" href="#http_http_createclient_port_host" id="http_http_createclient_port_host">#</a></span></h2>
+<!--
+This function is **deprecated**; please use
+[http.request()](#http_http_request_options_callback) instead. Constructs a new
+HTTP client. `port` and `host` refer to the server to be connected to.
+-->
+
+<p>この関数は <strong>deprecated</strong> です; 代わりに
+<a href="#http_http_request_options_callback">http.request()</a> を使用してください。
+新しい HTTP クライアントを構築します。
+<code>port</code> と <code>host</code> は接続するサーバを示します。
 
 </p>
 <h2>Class: http.Server<span><a class="mark" href="#http_class_http_server" id="http_class_http_server">#</a></span></h2>
@@ -394,7 +423,7 @@ If a client connection emits an 'error' event - it will forwarded here.
 <p>クライアントコネクションが &apos;error&apos; イベントを発した場合 － ここに転送されます。
 
 </p>
-<h3>server.listen(port, [hostname], [callback])<span><a class="mark" href="#http_server_listen_port_hostname_callback" id="http_server_listen_port_hostname_callback">#</a></span></h3>
+<h3>server.listen(port, [hostname], [backlog], [callback])<span><a class="mark" href="#http_server_listen_port_hostname_backlog_callback" id="http_server_listen_port_hostname_backlog_callback">#</a></span></h3>
 <!--
 Begin accepting connections on the specified port and hostname.  If the
 hostname is omitted, the server will accept connections directed to any
@@ -410,6 +439,19 @@ To listen to a unix socket, supply a filename instead of port and hostname.
 -->
 
 <p>UNIX ドメインソケットを待ち受ける場合、ポートとホスト名ではなくファイル名を提供します。
+
+</p>
+<!--
+Backlog is the maximum length of the queue of pending connections.
+The actual length will be determined by your OS through sysctl settings such as
+`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this
+parameter is 511 (not 512).
+-->
+
+<p>バックログは保留された接続のキューの最大長です。
+実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、
+sysctl の設定を通じて OS によって決定されます。
+このパラメータのデフォルト値は 511 (512 ではありません) です。
 
 </p>
 <!--
@@ -659,15 +701,14 @@ Also `request.httpVersionMajor` is the first integer and
 </p>
 <h3>request.setEncoding([encoding])<span><a class="mark" href="#http_request_setencoding_encoding" id="http_request_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the request body. Either `'utf8'` or `'binary'`. Defaults
-to `null`, which means that the `'data'` event will emit a `Buffer` object..
+Set the encoding for the request body. See
+[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
+for more information.
 -->
 
-<p>リクエストボディのエンコーディングを設定します。
-<code>&apos;utf8&apos;</code> または <code>&apos;binary&apos;</code> のいずれかです。
-デフォルトは <code>null</code> で、<code>&apos;data&apos;</code> イベントが
-<code>Buffer</code> を生成することを意味します。
-
+<p>リクエストボディのエンコーディングを設定します。詳細は
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
+を参照してください。
 
 </p>
 <h3>request.pause()<span><a class="mark" href="#http_request_pause" id="http_request_pause">#</a></span></h3>
@@ -1029,12 +1070,22 @@ followed by `response.end()`.
 <h2>http.request(options, callback)<span><a class="mark" href="#http_http_request_options_callback" id="http_http_request_options_callback">#</a></span></h2>
 <!--
 Node maintains several connections per server to make HTTP requests.
-This function allows one to transparently issue requests.  `options` align
-with [url.parse()](url.html#url.parse).
+This function allows one to transparently issue requests.
 -->
 
-<p>Node は HTTP リクエストを行うために、サーバごとにいくつかのコネクションを保持します。
+<p>Node は HTTP リクエストを行うために、サーバごとにいくつかのコネクションを
+保持します。
 この関数はその一つを使って透過的にリクエストを発行できるようにします。
+
+</p>
+<!--
+`options` can be an object or a string. If `options` is a string, it is
+automatically parsed with [url.parse()](url.html#url.parse).
+-->
+
+<p><code>options</code> はオブジェクトまたは文字列です。
+もし <code>options</code> が文字列なら、それは <a href="url.html#url.parse">url.parse()</a>
+によって自動的に解析されます。
 
 </p>
 <!--
@@ -1192,13 +1243,14 @@ There are a few special headers that should be noted.
 <h2>http.get(options, callback)<span><a class="mark" href="#http_http_get_options_callback" id="http_http_get_options_callback">#</a></span></h2>
 <!--
 Since most requests are GET requests without bodies, Node provides this
-convenience method. The only difference between this method and `http.request()` is
-that it sets the method to GET and calls `req.end()` automatically.
+convenience method. The only difference between this method and `http.request()`
+is that it sets the method to GET and calls `req.end()` automatically.
 -->
 
 <p>ほとんどのリクエストは本文のない GET リクエストであるため、
 Node は便利なメソッドを提供します。
-このメソッドと <code>http.request()</code> の間の違いは、メソッドを GET に設定して <code>req.end()</code> を自動的に呼び出すことだけです。
+このメソッドと <code>http.request()</code> の間の違いは、メソッドを GET に設定して
+<code>req.end()</code> を自動的に呼び出すことだけです。
 
 </p>
 <!--
@@ -1208,13 +1260,7 @@ Example:
 <p>例:
 
 </p>
-<pre><code>var options = {
-  host: &apos;www.google.com&apos;,
-  port: 80,
-  path: &apos;/index.html&apos;
-};
-
-http.get(options, function(res) {
+<pre><code>http.get(&quot;http://www.google.com/index.html&quot;, function(res) {
   console.log(&quot;Got response: &quot; + res.statusCode);
 }).on(&apos;error&apos;, function(e) {
   console.log(&quot;Got error: &quot; + e.message);
@@ -1224,7 +1270,7 @@ http.get(options, function(res) {
 In node 0.5.3+ there is a new implementation of the HTTP Agent which is used
 for pooling sockets used in HTTP client requests.
 
-Previously, a single agent instance help the pool for single host+port. The
+Previously, a single agent instance helped pool for a single host+port. The
 current implementation now holds sockets for any number of hosts.
 
 The current HTTP Agent also defaults client requests to using
@@ -1805,15 +1851,14 @@ The response trailers object. Only populated after the 'end' event.
 </p>
 <h3>response.setEncoding([encoding])<span><a class="mark" href="#http_response_setencoding_encoding" id="http_response_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the response body. Either `'utf8'`, `'ascii'`, or
-`'base64'`. Defaults to `null`, which means that the `'data'` event will emit
-a `Buffer` object.
+Set the encoding for the response body. See
+[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
+for more information.
 -->
 
-<p>レスポンスボディのエンコーディングを設定します。
-<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、あるいは <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>null</code> で、
-<code>&apos;data&apos;</code> イベントが <code>Buffer</code> を生成することを意味します。
+<p>レスポンスボディのエンコーディングを設定します。詳細は
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
+を参照してください。
 
 </p>
 <h3>response.pause()<span><a class="mark" href="#http_response_pause" id="http_response_pause">#</a></span></h3>
@@ -1859,7 +1904,7 @@ Resumes a paused response.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
