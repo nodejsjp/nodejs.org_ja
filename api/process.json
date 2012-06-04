@@ -98,7 +98,7 @@
         {
           "textRaw": "process.platform",
           "name": "platform",
-          "desc": "<!--\nWhat platform you're running on. `'linux2'`, `'darwin'`, etc.\n-->\n\n<p>どのプラットフォームで動いているかを示します。\n<code>&apos;linux2&apos;</code>、<code>&apos;darwin&apos;</code>、など。\n\n</p>\n<pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>\n"
+          "desc": "<!--\nWhat platform you're running on:\n`'darwin'`, `'freebsd'`, `'linux'`, `'solaris'` or `'win32'`\n-->\n\n<p>どのプラットフォームで動いているかを示します:\n<code>&apos;darwin&apos;</code>、<code>&apos;freebsd&apos;</code>、<code>&apos;linux&apos;</code>、<code>&apos;solaris&apos;</code>、または <code>&apos;win32&apos;</code>\n\n</p>\n<pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>\n"
         }
       ],
       "methods": [
@@ -159,7 +159,7 @@
           "textRaw": "process.getgid()",
           "type": "method",
           "name": "getgid",
-          "desc": "<!--\nGets the group identity of the process. (See getgid(2).)\nThis is the numerical group id, not the group name.\n-->\n\n<p>プロセスのグループ識別子を取得します (getgid(2) 参照)。\nこれは数値によるグループ ID で、グループ名ではありません。\n\n</p>\n<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());</code></pre>\n",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nGets the group identity of the process. (See getgid(2).)\nThis is the numerical group id, not the group name.\n-->\n\n<p>プロセスのグループ識別子を取得します (getgid(2) 参照)。\nこれは数値によるグループ ID で、グループ名ではありません。\n\n</p>\n<pre><code>if (process.getgid) {\n  console.log(&apos;Current gid: &apos; + process.getgid());\n}</code></pre>\n",
           "signatures": [
             {
               "params": []
@@ -170,7 +170,7 @@
           "textRaw": "process.setgid(id)",
           "type": "method",
           "name": "setgid",
-          "desc": "<!--\nSets the group identity of the process. (See setgid(2).)  This accepts either\na numerical ID or a groupname string. If a groupname is specified, this method\nblocks while resolving it to a numerical ID.\n-->\n\n<p>プロセスのグループ識別子を設定します (setgid(2) 参照)。\nこれは数値による ID もグループ名の文字列のどちらも受け入れます。\nもしグループ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。\n\n</p>\n<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());\ntry {\n  process.setgid(501);\n  console.log(&apos;New gid: &apos; + process.getgid());\n}\ncatch (err) {\n  console.log(&apos;Failed to set gid: &apos; + err);\n}</code></pre>\n",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nSets the group identity of the process. (See setgid(2).)  This accepts either\na numerical ID or a groupname string. If a groupname is specified, this method\nblocks while resolving it to a numerical ID.\n-->\n\n<p>プロセスのグループ識別子を設定します (setgid(2) 参照)。\nこれは数値による ID もグループ名の文字列のどちらも受け入れます。\nもしグループ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。\n\n</p>\n<pre><code>if (process.getgid &amp;&amp; process.setgid) {\n  console.log(&apos;Current gid: &apos; + process.getgid());\n  try {\n    process.setgid(501);\n    console.log(&apos;New gid: &apos; + process.getgid());\n  }\n  catch (err) {\n    console.log(&apos;Failed to set gid: &apos; + err);\n  }\n}</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -185,7 +185,7 @@
           "textRaw": "process.getuid()",
           "type": "method",
           "name": "getuid",
-          "desc": "<!--\nGets the user identity of the process. (See getuid(2).)\nThis is the numerical userid, not the username.\n-->\n\n<p>プロセスのユーザ識別子を取得します (getuid(2) 参照)。\nこれは数値によるユーザ ID で、ユーザ名ではありません。\n\n</p>\n<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());</code></pre>\n",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nGets the user identity of the process. (See getuid(2).)\nThis is the numerical userid, not the username.\n-->\n\n<p>プロセスのユーザ識別子を取得します (getuid(2) 参照)。\nこれは数値によるユーザ ID で、ユーザ名ではありません。\n\n</p>\n<pre><code>if (process.getuid) {\n  console.log(&apos;Current uid: &apos; + process.getuid());\n}</code></pre>\n",
           "signatures": [
             {
               "params": []
@@ -196,7 +196,7 @@
           "textRaw": "process.setuid(id)",
           "type": "method",
           "name": "setuid",
-          "desc": "<!--\nSets the user identity of the process. (See setuid(2).)  This accepts either\na numerical ID or a username string.  If a username is specified, this method\nblocks while resolving it to a numerical ID.\n-->\n\n<p>プロセスのユーザ識別子を設定します (setuid(2) 参照)。\nこれは数値による ID もユーザ名の文字列のどちらも受け入れます。\nもしユーザ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。\n\n</p>\n<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());\ntry {\n  process.setuid(501);\n  console.log(&apos;New uid: &apos; + process.getuid());\n}\ncatch (err) {\n  console.log(&apos;Failed to set uid: &apos; + err);\n}</code></pre>\n",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nSets the user identity of the process. (See setuid(2).)  This accepts either\na numerical ID or a username string.  If a username is specified, this method\nblocks while resolving it to a numerical ID.\n-->\n\n<p>プロセスのユーザ識別子を設定します (setuid(2) 参照)。\nこれは数値による ID もユーザ名の文字列のどちらも受け入れます。\nもしユーザ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。\n\n</p>\n<pre><code>if (process.getuid &amp;&amp; process.setuid) {\n  console.log(&apos;Current uid: &apos; + process.getuid());\n  try {\n    process.setuid(501);\n    console.log(&apos;New uid: &apos; + process.getuid());\n  }\n  catch (err) {\n    console.log(&apos;Failed to set uid: &apos; + err);\n  }\n}</code></pre>\n",
           "signatures": [
             {
               "params": [

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>console Node.js v0.7.8 Manual &amp; Documentation</title>
+  <title>console Node.js v0.7.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stdio.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,15 +56,15 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#stdio_console">console</a><ul>
-<li><a href="#stdio_console_log">console.log()</a></li>
-<li><a href="#stdio_console_info">console.info()</a></li>
-<li><a href="#stdio_console_warn">console.warn()</a></li>
-<li><a href="#stdio_console_error">console.error()</a></li>
+<li><a href="#stdio_console_log_data">console.log([data], [...])</a></li>
+<li><a href="#stdio_console_info_data">console.info([data], [...])</a></li>
+<li><a href="#stdio_console_error_data">console.error([data], [...])</a></li>
+<li><a href="#stdio_console_warn_data">console.warn([data], [...])</a></li>
 <li><a href="#stdio_console_dir_obj">console.dir(obj)</a></li>
 <li><a href="#stdio_console_time_label">console.time(label)</a></li>
 <li><a href="#stdio_console_timeend_label">console.timeEnd(label)</a></li>
-<li><a href="#stdio_console_trace">console.trace()</a></li>
-<li><a href="#stdio_console_assert">console.assert()</a></li>
+<li><a href="#stdio_console_trace_label">console.trace(label)</a></li>
+<li><a href="#stdio_console_assert_expression_message">console.assert(expression, [message])</a></li>
 </ul>
 </li>
 </ul>
@@ -88,9 +88,8 @@ provided by most web browsers, here the output is sent to stdout or stderr.
 ほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、
 出力は標準出力か標準エラー出力に送られます。
 
-
 </p>
-<h2>console.log()<span><a class="mark" href="#stdio_console_log" id="stdio_console_log">#</a></span></h2>
+<h2>console.log([data], [...])<span><a class="mark" href="#stdio_console_log_data" id="stdio_console_log_data">#</a></span></h2>
 <!--
 Prints to stdout with newline. This function can take multiple arguments in a
 `printf()`-like way. Example:
@@ -112,7 +111,7 @@ See [util.format()](util.html#util.format) for more information.
 より詳細は <a href="util.html#util.format">util.format()</a> を参照してください。
 
 </p>
-<h2>console.info()<span><a class="mark" href="#stdio_console_info" id="stdio_console_info">#</a></span></h2>
+<h2>console.info([data], [...])<span><a class="mark" href="#stdio_console_info_data" id="stdio_console_info_data">#</a></span></h2>
 <!--
 Same as `console.log`.
 -->
@@ -120,13 +119,20 @@ Same as `console.log`.
 <p><code>console.log</code> と同じです。
 
 </p>
-<h2>console.warn()<span><a class="mark" href="#stdio_console_warn" id="stdio_console_warn">#</a></span></h2>
-<h2>console.error()<span><a class="mark" href="#stdio_console_error" id="stdio_console_error">#</a></span></h2>
+<h2>console.error([data], [...])<span><a class="mark" href="#stdio_console_error_data" id="stdio_console_error_data">#</a></span></h2>
 <!--
 Same as `console.log` but prints to stderr.
 -->
 
 <p><code>console.log</code> と同様ですが、標準エラー出力にプリントします。
+
+</p>
+<h2>console.warn([data], [...])<span><a class="mark" href="#stdio_console_warn_data" id="stdio_console_warn_data">#</a></span></h2>
+<!--
+Same as `console.error`.
+-->
+
+<p><code>console.error()</code> と同じです。
 
 </p>
 <h2>console.dir(obj)<span><a class="mark" href="#stdio_console_dir_obj" id="stdio_console_dir_obj">#</a></span></h2>
@@ -144,14 +150,13 @@ Mark a time.
 
 <p>タイマを作成します。
 
-
 </p>
 <h2>console.timeEnd(label)<span><a class="mark" href="#stdio_console_timeend_label" id="stdio_console_timeend_label">#</a></span></h2>
 <!--
-Finish timer, record output. Example
+Finish timer, record output. Example:
 -->
 
-<p>タイマを終了し、結果を出力します。例
+<p>タイマを終了し、結果を出力します。例:
 
 </p>
 <pre><code>console.time(&apos;100-elements&apos;);
@@ -159,7 +164,7 @@ for (var i = 0; i &lt; 100; i++) {
   ;
 }
 console.timeEnd(&apos;100-elements&apos;);</code></pre>
-<h2>console.trace()<span><a class="mark" href="#stdio_console_trace" id="stdio_console_trace">#</a></span></h2>
+<h2>console.trace(label)<span><a class="mark" href="#stdio_console_trace_label" id="stdio_console_trace_label">#</a></span></h2>
 <!--
 Print a stack trace to stderr of the current position.
 -->
@@ -167,12 +172,16 @@ Print a stack trace to stderr of the current position.
 <p>現在のスタックトレースを標準エラー出力にプリントします。
 
 </p>
-<h2>console.assert()<span><a class="mark" href="#stdio_console_assert" id="stdio_console_assert">#</a></span></h2>
+<h2>console.assert(expression, [message])<span><a class="mark" href="#stdio_console_assert_expression_message" id="stdio_console_assert_expression_message">#</a></span></h2>
 <!--
-Same as `assert.ok()`.
+Same as [assert.ok()](assert.html#assert_assert_value_message_assert_ok_value_message)
+where if the `expression` evaluates as `false` throw an AssertionError with `message`.
 -->
 
-<p><code>assert.ok()</code> と同じです。
+<p><a href="assert.html#assert_assert_value_message_assert_ok_value_message">assert.ok()</a>
+を参照してください。
+もし <code>expression</code> が <code>false</code> に評価されると、<code>message</code> を持つ AssertionError
+がスローされます。
 </p>
 
           </div>
@@ -202,7 +211,7 @@ Same as `assert.ok()`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
