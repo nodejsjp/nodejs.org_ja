@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Child Process Node.js v0.7.9 Manual &amp; Documentation</title>
+  <title>Child Process Node.js v0.7.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/child_process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -555,10 +555,11 @@ there is no IPC channel keeping it alive. When calling this method the
 * `args` {Array} List of string arguments
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
+  * `stdio` {Array|String} Child's stdio configuration. (See below)
   * `customFds` {Array} **Deprecated** File descriptors for the child to use
     for stdio.  (See below)
   * `env` {Object} Environment key-value pairs
-  * `setsid` {Boolean}
+  * `detached` {Boolean} The child will be a process group leader.  (See below)
 * return: {ChildProcess object}
 -->
 
@@ -567,10 +568,12 @@ there is no IPC channel keeping it alive. When calling this method the
 <li><code>args</code> {Array} 文字列による引数の配列</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
+<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (後述)。</li>
 <li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
 ファイル記述子の配列 (後述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
-<li><code>setsid</code> {Boolean}</li>
+<li><code>detached</code> {Boolean} 子プロセスがプロセスグループのリーダになるかどうか
+(後述)。</li>
 </ul>
 </li>
 <li>return: {ChildProcess object}</li>
@@ -694,6 +697,167 @@ API.
 
 </p>
 <!--
+The 'stdio' option to `child_process.spawn()` is an array where each
+index corresponds to a fd in the child.  The value is one of the following:
+-->
+
+<p><code>child_process.spawn()</code> の <code>stdio</code> オプションは配列で、
+それぞれのインデックスは子プロセスの fd に対応します。
+要素の値は以下のいずれかです:
+
+</p>
+<!--
+1. `'pipe'` - Create a pipe between the child process and the parent process.
+   The parent end of the pipe is exposed to the parent as a property on the
+   `child_process` object as `ChildProcess.stdio[fd]`. Pipes created for
+   fds 0 - 2 are also available as ChildProcess.stdin, ChildProcess.stdout
+   and ChildProcess.stderr, respectively.
+2. `'ipc'` - Create an IPC channel for passing messages/file descriptors
+   between parent and child. A ChildProcess may have at most *one* IPC stdio
+   file descriptor. Setting this option enables the ChildProcess.send() method.
+   If the child writes JSON messages to this file descriptor, then this will
+   trigger ChildProcess.on('message').  If the child is a Node.js program, then
+   the presence of an IPC channel will enable process.send() and
+   process.on('message').
+3. `'ignore'` - Do not set this file descriptor in the child. Note that Node
+   will always open fd 0 - 2 for the processes it spawns. When any of these is
+   ignored node will open `/dev/null` and attach it to the child's fd.
+4. `Stream` object - Share a readable or writable stream that refers to a tty,
+   file, socket, or a pipe with the child process. The stream's underlying
+   file descriptor is duplicated in the child process to the fd that 
+   corresponds to the index in the `stdio` array.
+5. Positive integer - The integer value is interpreted as a file descriptor 
+   that is is currently open in the parent process. It is shared with the child
+   process, similar to how `Stream` objects can be shared.
+6. `null`, `undefined` - Use default value. For stdio fds 0, 1 and 2 (in other
+   words, stdin, stdout, and stderr) a pipe is created. For fd 3 and up, the
+   default is `'ignore'`.
+-->
+
+<ol>
+<li><code>&apos;pipe&apos;</code> - 子プロセスと親プロセスの間でパイプを作成します。
+パイプの親側の端点は <code>child_process</code> オブジェクトのプロパティ
+<code>ChildProcess.stdio[fd]</code> として親プロセスに公開されます。
+fd 0～2 はそれぞれ、<code>ChildProcess.stdin</code>、<code>ChildProcess.stdout</code>、
+<code>ChildProcess.stderr</code> としても参照可能です。</li>
+<li><code>&apos;ipc&apos;</code> - 親プロセスと子プロセスの間でメッセージパッシングのための
+IPC チャネル／ファイル記述子を作成します。
+<code>ChildProcess</code> は標準入出力に高々一つの IPC ファイル記述子を持ちます。
+このオプションを設定すると、<code>ChildProcess.send()</code> メソッドが有効になります。
+子プロセスがこのファイル記述子に JSON メッセージを書き込むと、
+それは <code>ChildProcess.on(&apos;message&apos;)</code> を引き起こします。
+子プロセスが Node.js プログラムなら、IPC チャネルの存在は <code>process.send()</code>
+および <code>process.on(&apos;message&apos;)</code> を有効にします。</li>
+<li><code>&apos;ignore&apos;</code> - 子プロセスにファイル記述子を設定しません。
+Node は子プロセスを起動する際、常に fd 0～2 をオープンすることに
+注意してください。これらのうちのどれかが <code>&apos;ignore&apos;</code> の場合、node は
+<code>/dev/null</code> をオープンして、それを子プロセスの fd に割り当てます。</li>
+<li><code>Stream</code> オブジェクト - tty、ファイル、ソケット、またはパイプを参照する
+読み込みまたは書き込み可能なストリームを子プロセスと共有します。
+ストリームの下層にあるファイル記述子は、子プロセスの <code>stdio</code> 配列の
+対応する位置にコピーされます。</li>
+<li>非負整数 - 整数の値を親プロセスが現在オープンしているファイル記述子として
+解釈されます。
+それは <code>Stream</code> オブジェクトの場合と同様に子プロセスに共有されます。</li>
+<li><code>null</code>、<code>undefined</code> - デフォルト値を使用します。
+<code>stdio</code> の <code>fd</code> が 0、1、または 2 (言い換えると stdin、stdout、または
+stderr) の場合はパイプが作成されます。fd が 3 以上の場合、デフォルトは
+<code>&apos;ignore&apos;</code> です。</li>
+</ol>
+<!--
+As a shorthand, the `stdio` argument may also be one of the following
+strings, rather than an array:
+-->
+
+<p>簡易な記法として、<code>stdio</code> に配列ではなく以下の文字列の一つを指定することも
+できます。
+
+</p>
+<!--
+* `ignore` - `['ignore', 'ignore', 'ignore']`
+* `pipe` - `['pipe', 'pipe', 'pipe']`
+* `inherit` - `[process.stdin, process.stdout, process.stderr]` or `[0,1,2]`
+-->
+
+<ul>
+<li><code>ignore</code> - <code>[&apos;ignore&apos;, &apos;ignore&apos;, &apos;ignore&apos;]</code></li>
+<li><code>pipe</code> - <code>[&apos;pipe&apos;, &apos;pipe&apos;, &apos;pipe&apos;]</code></li>
+<li><code>inherit</code> - <code>[process.stdin, process.stdout, process.stderr]</code> または <code>[0,1,2]</code></li>
+</ul>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var spawn = require(&apos;child_process&apos;).spawn;
+
+// Child will use parent&apos;s stdios
+spawn(&apos;prg&apos;, [], { stdio: &apos;inherit&apos; });
+
+// Spawn child sharing only stderr
+spawn(&apos;prg&apos;, [], { stdio: [&apos;pipe&apos;, &apos;pipe&apos;, process.stderr] });
+
+// Open an extra fd=4, to interact with programs present a
+// startd-style interface.
+spawn(&apos;prg&apos;, [], { stdio: [&apos;pipe&apos;, null, null, null, &apos;pipe&apos;] });</code></pre>
+<!--
+If the `detached` option is set, the child process will be made the leader of a
+new process group.  This makes it possible for the child to continue running 
+after the parent exits.
+-->
+
+<p><code>detached</code> オプションが設定されると、子プロセスは新しいプロセスグループの
+リーダになります。
+これは親プロセスが終了しても子プロセスの実行が継続することを可能にします。
+
+</p>
+<!--
+By default, the parent will wait for the detached child to exit.  To prevent
+the parent from waiting for a given `child`, use the `child.unref()` method,
+and the parent's event loop will not include the child in its reference count.
+-->
+
+<p>デフォルトでは、親プロセスは切り離された子プロセスの終了を待機します。
+親プロセスが <code>child</code> を待機することを防ぐには、<code>child.unref()</code> メソッドを
+使用し、親のイベントループに子のリファレンスカウントが含まれないようにします。
+
+</p>
+<!--
+Example of detaching a long-running process and redirecting its output to a
+file:
+-->
+
+<p>長時間実行する子プロセスを切り離し、出力をファイルにリダイレクトする例:
+
+</p>
+<pre><code> var fs = require(&apos;fs&apos;),
+     spawn = require(&apos;child_process&apos;).spawn,
+     out = fs.openSync(&apos;./out.log&apos;, &apos;a&apos;),
+     err = fs.openSync(&apos;./out.log&apos;, &apos;a&apos;);
+
+ var child = spawn(&apos;prg&apos;, [], {
+   detached: &apos;true&apos;,
+   stdio: [ &apos;ignore&apos;, out, err ]
+ });
+
+ child.unref();</code></pre>
+<!--
+When using the `detached` option to start a long-running process, the process
+will not stay running in the background unless it is provided with a `stdio`
+configuration that is not connected to the parent.  If the parent's `stdio` is
+inherited, the child will remain attached to the controlling terminal.
+-->
+
+<p>長時間実行されるプロセスを開始するために <code>detached</code> オプションを使用する場合、
+その <code>stdio</code> が親と接続するような構成を与えられない限り、そのプロセスは
+バックグラウンドにとどまりません。
+親の <code>stdio</code> が継承されるなら、子プロセスは制御しているターミナルに
+接続されたままです。
+
+</p>
+<!--
 There is a deprecated option called `customFds` which allows one to specify
 specific file descriptors for the stdio of the child process. This API was
 not portable to all platforms and therefore removed.
@@ -731,10 +895,10 @@ Node のドキュメント化されていない API と同様に、
 * `command` {String} The command to run, with space-separated arguments
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
+  * `stdio` {Array|String} Child's stdio configuration. (See above)
   * `customFds` {Array} **Deprecated** File descriptors for the child to use
-    for stdio.  (See below)
+    for stdio.  (See above)
   * `env` {Object} Environment key-value pairs
-  * `setsid` {Boolean}
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
   * `maxBuffer` {Number} (Default: 200*1024)
@@ -750,10 +914,10 @@ Node のドキュメント化されていない API と同様に、
 <li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
+<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。</li>
 <li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
-ファイル記述子の配列 (後述)</li>
+ファイル記述子の配列 (前述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
-<li><code>setsid</code> {Boolean}</li>
 <li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>
 <li><code>timeout</code> {Number} (Default: 0)</li>
 <li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>
@@ -837,10 +1001,10 @@ the child process is killed.
 * `args` {Array} List of string arguments
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
+  * `stdio` {Array|String} Child's stdio configuration. (See above)
   * `customFds` {Array} **Deprecated** File descriptors for the child to use
-    for stdio.  (See below)
+    for stdio.  (See above)
   * `env` {Object} Environment key-value pairs
-  * `setsid` {Boolean}
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
   * `maxBuffer` {Number} (Default: 200*1024)
@@ -857,10 +1021,10 @@ the child process is killed.
 <li><code>args</code> {Array} 文字列による引数の配列</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
+<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。</li>
 <li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
-ファイル記述子の配列 (後述)</li>
+ファイル記述子の配列 (前述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
-<li><code>setsid</code> {Boolean}</li>
 <li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>
 <li><code>timeout</code> {Number} (Default: 0)</li>
 <li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>
@@ -893,10 +1057,7 @@ leaner than `child_process.exec`. It has the same options.
 * `args` {Array} List of string arguments
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
-  * `customFds` {Array} **Deprecated** File descriptors for the child to use
-    for stdio.  (See below)
   * `env` {Object} Environment key-value pairs
-  * `setsid` {Boolean}
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
 * Return: ChildProcess object
@@ -907,10 +1068,7 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>args</code> {Array} 文字列による引数の配列</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
-<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
-ファイル記述子の配列 (後述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
-<li><code>setsid</code> {Boolean}</li>
 <li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>
 <li><code>timeout</code> {Number} (Default: 0)</li>
 </ul>
@@ -980,7 +1138,7 @@ thousands of them.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
