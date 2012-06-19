@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.7.10 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.7.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -187,8 +187,8 @@ server-side resources, which makes it a potential vector for denial-of-service
 attacks.
 
 To mitigate this, renegotiations are limited to three times every 10 minutes. An
-error is emitted on the [CleartextStream](#tls.CleartextStream) instance when
-the threshold is exceeded. The limits are configurable:
+error is emitted on the [CleartextStream][] instance when the threshold is
+exceeded. The limits are configurable:
 
   - `tls.CLIENT_RENEG_LIMIT`: renegotiation limit, default is 3.
 
@@ -211,7 +211,7 @@ times.
 
 </p>
 <p>これを軽減するために、再ネゴシエーションは 10 分当たり 3 回までに
-制限されています。この制限を超えると、<a href="#tls.CleartextStream">CleartextStream</a>
+制限されています。この制限を超えると、<a href="#tls_class_tls_cleartextstream">CleartextStream</a>
 のインスタンス上でエラーが生成されます。この制限は変更可能です:
 
 </p>
@@ -254,15 +254,14 @@ TLS の拡張で、以下を可能にします。
 </ul>
 <h2>tls.createServer(options, [secureConnectionListener])<span><a class="mark" href="#tls_tls_createserver_options_secureconnectionlistener" id="tls_tls_createserver_options_secureconnectionlistener">#</a></span></h2>
 <!--
-Creates a new [tls.Server](#tls.Server).
-The `connectionListener` argument is automatically set as a listener for the
-[secureConnection](#event_secureConnection_) event.
-The `options` object has these possibilities:
+Creates a new [tls.Server][].  The `connectionListener` argument is
+automatically set as a listener for the [secureConnection][] event.  The
+`options` object has these possibilities:
 -->
 
-<p>新しい <a href="#tls.Server">tls.Server</a> を作成します。
-<code>connectionListener</code> は <a href="#event_secureConnection_">secureConnection</a>
-イベントのリスナとして自動的に登録されます。
+<p>新しい <a href="#tls_class_tls_server">tls.Server</a> を作成します。
+<code>connectionListener</code> は <a href="#tls_event_secureconnection">secureConnection</a> イベントのリスナとして
+自動的に登録されます。
 <code>options</code> は以下を持つことができます:
 
 
@@ -549,19 +548,18 @@ Creates a new client connection to the given `port` and `host` (old API) or
 </ul>
 <!--
 The `secureConnectListener` parameter will be added as a listener for the
-['secureConnect'](#event_secureConnect_) event.
+['secureConnect'][] event.
 
-`tls.connect()` returns a [CleartextStream](#tls.CleartextStream) object.
+`tls.connect()` returns a [CleartextStream][] object.
 
 Here is an example of a client of echo server as described previously:
 -->
 
-<p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">&apos;secureConnect&apos;</a>
-イベントのリスナとして加えられます。
+<p><code>secureConnectLister</code> 引数は <a href="#tls_event_secureconnect">&apos;secureConnect&apos;</a> イベントのリスナとして
+加えられます。
 
 </p>
-<p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a>
-オブジェクトを返します。
+<p><code>tls.connect()</code> は <a href="#tls_class_tls_cleartextstream">CleartextStream</a> オブジェクトを返します。
 
 </p>
 <p>これは前述のエコーサーバに接続するクライアントの例です:
@@ -637,8 +635,8 @@ and the cleartext one is used as a replacement for the initial encrypted stream.
    automatically reject clients with invalid certificates. Only applies to
    servers with `requestCert` enabled.
 
-`tls.createSecurePair()` returns a SecurePair object with
-[cleartext](#tls.CleartextStream) and `encrypted` stream properties.
+`tls.createSecurePair()` returns a SecurePair object with [cleartext][] and
+`encrypted` stream properties.
 -->
 
 <p>二つのストリームを持つセキュアペアオブジェクトを作成します。
@@ -663,7 +661,7 @@ and the cleartext one is used as a replacement for the initial encrypted stream.
 <code>requestCert</code> が有効なサーバにのみ適用されます。</p>
 </li>
 </ul>
-<p><code>tls.createSequrePair()</code> は、<a href="#tls.CleartextStream">cleartext</a> と <code>encrypted</code>
+<p><code>tls.createSequrePair()</code> は、[cleartext][] と <code>encrypted</code>
 をプロパティとして持つ <code>SecurePair</code> オブジェクトを返します。
 
 </p>
@@ -711,13 +709,12 @@ TLS または SSL を使った暗号化されたコネクションを受け付�
 </p>
 <!--
 This event is emitted after a new connection has been successfully
-handshaked. The argument is a instance of
-[CleartextStream](#tls.CleartextStream). It has all the common stream methods
-and events.
+handshaked. The argument is a instance of [CleartextStream][]. It has all the
+common stream methods and events.
 -->
 
 <p>このイベントは、新しい接続のハンドシェークが成功した場合に生成されます。
-引数は <a href="#tls.CleartextStream">CleartextStream</a> のインスタンスです。
+引数は <a href="#tls_class_tls_cleartextstream">CleartextStream</a> のインスタンスです。
 これはストリームに共通する全てのメソッドとイベントを持っています。
 
 </p>
@@ -800,14 +797,13 @@ event.
 <h3>server.address()<span><a class="mark" href="#tls_server_address" id="tls_server_address">#</a></span></h3>
 <!--
 Returns the bound address, the address family name and port of the
-server as reported by the operating system.
-See [net.Server.address()](net.html#server.address) for more information.
+server as reported by the operating system.  See [net.Server.address()][] for
+more information.
 -->
 
 <p>オペレーティングシステムから報告された、サーバにバインドされたアドレスと
 アドレスファミリ名、ポートを返します。 
-より詳しくは <a href="net.html#server.address">net.Server.address()</a>
-を参照してください。
+より詳しくは <a href="net.html#net_server_address">net.Server.address()</a> を参照してください。
 
 </p>
 <h3>server.addContext(hostname, credentials)<span><a class="mark" href="#tls_server_addcontext_hostname_credentials" id="tls_server_addcontext_hostname_credentials">#</a></span></h3>
@@ -843,16 +839,15 @@ The number of concurrent connections on the server.
 This is a stream on top of the *Encrypted* stream that makes it possible to
 read/write an encrypted data as a cleartext data.
 
-This instance implements a duplex [Stream](stream.html) interfaces.
-It has all the common stream methods and events.
+This instance implements a duplex [Stream][] interfaces.  It has all the
+common stream methods and events.
 -->
 
 <p>暗号化されたストリーム上で、暗号化されたデータを平文のデータとして
 読み書きすることができるストリームです。
 
 </p>
-<p>このインスタンスは双方向の <a href="stream.html">Stream</a> インタフェースを
-実装します。
+<p>このインスタンスは双方向の <a href="stream.html#stream_stream">Stream</a> インタフェースを実装します。
 ストリームに共通な全てのメソッドとイベントを持ちます。
 
 </p>
@@ -1005,6 +1000,7 @@ The numeric representation of the remote port. For example, `443`.
 
 <p>リモートポートの数値表現です。
 例えば、<code>443</code>。
+
 </p>
 
           </div>
@@ -1034,7 +1030,7 @@ The numeric representation of the remote port. For example, `443`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

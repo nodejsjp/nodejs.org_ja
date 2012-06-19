@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Zlib Node.js v0.7.10 Manual &amp; Documentation</title>
+  <title>Zlib Node.js v0.7.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/zlib.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -57,7 +57,6 @@
             <ul>
 <li><a href="#zlib_zlib">Zlib</a><ul>
 <li><a href="#zlib_examples">Examples</a></li>
-<li><a href="#zlib_constants">Constants</a></li>
 <li><a href="#zlib_zlib_creategzip_options">zlib.createGzip([options])</a></li>
 <li><a href="#zlib_zlib_creategunzip_options">zlib.createGunzip([options])</a></li>
 <li><a href="#zlib_zlib_createdeflate_options">zlib.createDeflate([options])</a></li>
@@ -82,6 +81,7 @@
 <li><a href="#zlib_zlib_unzip_buf_callback">zlib.unzip(buf, callback)</a></li>
 <li><a href="#zlib_options">Options</a></li>
 <li><a href="#zlib_memory_usage_tuning">Memory Usage Tuning</a></li>
+<li><a href="#zlib_constants">Constants</a></li>
 </ul>
 </li>
 </ul>
@@ -227,21 +227,6 @@ http.createServer(function(request, response) {
     raw.pipe(response);
   }
 }).listen(1337);</code></pre>
-<h2>Constants<span><a class="mark" href="#zlib_constants" id="zlib_constants">#</a></span></h2>
-<!--type=misc-->
-
-<!--
-All of the constants defined in zlib.h are also defined on
-`require('zlib')`.  They are described in more detail in the zlib
-documentation.  See <http://zlib.net/manual.html#Constants>
-for more details.
--->
-
-<p>zlib.h に定義された定数は <code>require(&apos;zlib&apos;)</code> でも定義されます。
-それらは zlib のドキュメントでより詳しく説明されます。
-詳細は <a href="http://zlib.net/manual.html#Constants">http://zlib.net/manual.html#Constants</a> を参照してください。
-
-</p>
 <h2>zlib.createGzip([options])<span><a class="mark" href="#zlib_zlib_creategzip_options" id="zlib_zlib_creategzip_options">#</a></span></h2>
 <!--
 Returns a new [Gzip](#zlib_class_zlib_gzip) object with an
@@ -462,8 +447,8 @@ relevant when compressing, and are ignored by the decompression classes.
 * strategy (compression only)
 * dictionary (deflate/inflate only, empty dictionary by default)
 
-See the description of `deflateInit2` and `inflateInit2` at
-<http://zlib.net/manual.html#Advanced> for more information on these.
+See the description of `deflateInit2` and `inflateInit2`
+at <http://zlib.net/manual.html#Advanced> for more information on these.
 -->
 
 <p>どのクラスもオプションオブジェクトを受け取ります。
@@ -563,7 +548,127 @@ speed, at the cost of memory usage.
 少なくなることを意味し、
 一回の <code>write</code> 操作でより多くのデータを処理できることになります。
 これはあスピードに影響するもう一つのファクタで、メモリ使用量を犠牲にします。
+
 </p>
+<h2>Constants<span><a class="mark" href="#zlib_constants" id="zlib_constants">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+All of the constants defined in zlib.h are also defined on
+`require('zlib')`.
+In the normal course of operations, you will not need to ever set any of
+these.  They are documented here so that their presence is not
+surprising.  This section is taken almost directly from the [zlib
+documentation](http://zlib.net/manual.html#Constants).  See
+<http://zlib.net/manual.html#Constants> for more details.
+-->
+
+<p>zlib.h に定義された定数は <code>require(&apos;zlib&apos;)</code> でも定義されます。
+通常の使い方ではこれらを設定する必要はありません。
+それが存在することで驚かれないように、これらはドキュメント化されます。
+このセクションのほとんどは
+<a href="http://zlib.net/manual.html#Constants">zlib documentation</a>
+から直接得ることができます。
+より詳細は <a href="http://zlib.net/manual.html#Constants">http://zlib.net/manual.html#Constants</a> を参照してください。
+
+</p>
+<!--
+Allowed flush values.
+-->
+
+<p>利用可能なフラッシュ値。
+
+</p>
+<ul>
+<li><code>zlib.Z_NO_FLUSH</code></li>
+<li><code>zlib.Z_PARTIAL_FLUSH</code></li>
+<li><code>zlib.Z_SYNC_FLUSH</code></li>
+<li><code>zlib.Z_FULL_FLUSH</code></li>
+<li><code>zlib.Z_FINISH</code></li>
+<li><code>zlib.Z_BLOCK</code></li>
+<li><code>zlib.Z_TREES</code></li>
+</ul>
+<!--
+Return codes for the compression/decompression functions. Negative
+values are errors, positive values are used for special but normal
+events.
+-->
+
+<p>圧縮／解凍関数のリターンコード。
+負数はエラー、正数は正常なイベントの特別な場合に使われます。
+
+</p>
+<ul>
+<li><code>zlib.Z_OK</code></li>
+<li><code>zlib.Z_STREAM_END</code></li>
+<li><code>zlib.Z_NEED_DICT</code></li>
+<li><code>zlib.Z_ERRNO</code></li>
+<li><code>zlib.Z_STREAM_ERROR</code></li>
+<li><code>zlib.Z_DATA_ERROR</code></li>
+<li><code>zlib.Z_MEM_ERROR</code></li>
+<li><code>zlib.Z_BUF_ERROR</code></li>
+<li><code>zlib.Z_VERSION_ERROR</code></li>
+</ul>
+<!--
+Compression levels.
+-->
+
+<p>圧縮レベル。
+
+</p>
+<ul>
+<li><code>zlib.Z_NO_COMPRESSION</code></li>
+<li><code>zlib.Z_BEST_SPEED</code></li>
+<li><code>zlib.Z_BEST_COMPRESSION</code></li>
+<li><code>zlib.Z_DEFAULT_COMPRESSION</code></li>
+</ul>
+<!--
+Compression strategy.
+-->
+
+<p>圧縮ストラテジ。
+
+</p>
+<ul>
+<li><code>zlib.Z_FILTERED</code></li>
+<li><code>zlib.Z_HUFFMAN_ONLY</code></li>
+<li><code>zlib.Z_RLE</code></li>
+<li><code>zlib.Z_FIXED</code></li>
+<li><code>zlib.Z_DEFAULT_STRATEGY</code></li>
+</ul>
+<!--
+Possible values of the data_type field.
+-->
+
+<p>data_type フィールドで利用可能な値。
+
+</p>
+<ul>
+<li><code>zlib.Z_BINARY</code></li>
+<li><code>zlib.Z_TEXT</code></li>
+<li><code>zlib.Z_ASCII</code></li>
+<li><code>zlib.Z_UNKNOWN</code></li>
+</ul>
+<!--
+The deflate compression method (the only one supported in this version).
+-->
+
+<p>deflate の圧縮方法 (このバージョンでは一つだけがサポートされます)。
+
+</p>
+<ul>
+<li><code>zlib.Z_DEFLATED</code></li>
+</ul>
+<!--
+For initializing zalloc, zfree, opaque.
+-->
+
+<p>zalloc、zfree、opaque の初期化用。
+
+</p>
+<ul>
+<li><code>zlib.Z_NULL</code></li>
+</ul>
 
           </div>
         </div>
@@ -592,7 +697,7 @@ speed, at the cost of memory usage.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

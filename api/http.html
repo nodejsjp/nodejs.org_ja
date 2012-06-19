@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.7.10 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.7.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -69,6 +69,7 @@
 <li><a href="#http_event_clienterror">Event: &apos;clientError&apos;</a></li>
 <li><a href="#http_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
 <li><a href="#http_server_listen_path_callback">server.listen(path, [callback])</a></li>
+<li><a href="#http_server_listen_handle_listeninglistener">server.listen(handle, [listeningListener])</a></li>
 <li><a href="#http_server_close_cb">server.close([cb])</a></li>
 <li><a href="#http_server_maxheaderscount">server.maxHeadersCount</a></li>
 </ul>
@@ -232,9 +233,9 @@ added to the `'request'` event.
 </p>
 <h2>http.createClient([port], [host])<span><a class="mark" href="#http_http_createclient_port_host" id="http_http_createclient_port_host">#</a></span></h2>
 <!--
-This function is **deprecated**; please use
-[http.request()](#http_http_request_options_callback) instead. Constructs a new
-HTTP client. `port` and `host` refer to the server to be connected to.
+This function is **deprecated**; please use [http.request()][] instead.
+Constructs a new HTTP client. `port` and `host` refer to the server to be
+connected to.
 -->
 
 <p>この関数は <strong>deprecated</strong> です; 代わりに
@@ -245,10 +246,10 @@ HTTP client. `port` and `host` refer to the server to be connected to.
 </p>
 <h2>Class: http.Server<span><a class="mark" href="#http_class_http_server" id="http_class_http_server">#</a></span></h2>
 <!--
-This is an `EventEmitter` with the following events:
+This is an [EventEmitter][] with the following events:
 -->
 
-<p>これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;request&apos;<span><a class="mark" href="#http_event_request" id="http_event_request">#</a></span></h3>
@@ -456,13 +457,12 @@ sysctl の設定を通じて OS によって決定されます。
 </p>
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
-a listener for the ['listening'](net.html#event_listening_) event.
-See also [net.Server.listen()](net.html#server.listen).
+a listener for the ['listening'][] event.  See also [net.Server.listen(port)][].
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#event_listening_">&apos;listening&apos;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#server.listen">net.Server.listen()</a> を参照してください。
+<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_port_host_backlog_listeninglistener">net.Server.listen(port)</a> を参照してください。
 
 
 </p>
@@ -476,24 +476,65 @@ Start a UNIX socket server listening for connections on the given `path`.
 </p>
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
+a listener for the ['listening'][] event.  See also [net.Server.listen(path)][].
+-->
+
+<p>この関数は非同期です。最後の引数の <code>callback</code> は
+<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+
+
+</p>
+<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#http_server_listen_handle_listeninglistener" id="http_server_listen_handle_listeninglistener">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>handle</code> <span class="type">Object</span></li>
+<li><code>listeningListener</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+The `handle` object can be set to either a server or socket (anything
+with an underlying `_handle` member), or a `{fd: <n>}` object.
+-->
+
+<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら
+なんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。
+
+</p>
+<!--
+This will cause the server to accept connections on the specified
+handle, but it is presumed that the file descriptor or handle has
+already been bound to a port or domain socket.
+-->
+
+<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、
+ファイル記述子またはハンドルは既にポートまたはドメインソケットに
+バインドされているものと見なされます。
+
+</p>
+<!--
+Listening on a file descriptor is not supported on Windows.
+-->
+
+<p>ファイル記述子へのリスニングは Windows ではサポートされません。
+
+</p>
+<!--
+This function is asynchronous. The last parameter `callback` will be added as
 a listener for the ['listening'](net.html#event_listening_) event.
 See also [net.Server.listen()](net.html#server.listen).
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#event_listening_">&apos;listening&apos;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#server.listen">net.Server.listen()</a> を参照してください。
-
+<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
 
 </p>
 <h3>server.close([cb])<span><a class="mark" href="#http_server_close_cb" id="http_server_close_cb">#</a></span></h3>
 <!--
-Stops the server from accepting new connections.
-See [net.Server.close()](net.html#server.close).
+Stops the server from accepting new connections.  See [net.Server.close()][].
 -->
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。
-
+<a href="net.html#net_server_close_cb">net.Server.close()</a> を参照してください。
 
 </p>
 <h3>server.maxHeadersCount<span><a class="mark" href="#http_server_maxheaderscount" id="http_server_maxheaderscount">#</a></span></h3>
@@ -518,13 +559,12 @@ the user -- and passed as the first argument to a `'request'` listener.
 
 </p>
 <!--
-The request implements the [Readable Stream](stream.html#readable_stream)
-interface. This is an `EventEmitter` with the following events:
+The request implements the [Readable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
-<p>リクエストは <a href="stream.html#readable_stream">Readable Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>リクエストは <a href="stream.html#stream_readable_stream">Readable Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;data&apos;<span><a class="mark" href="#http_event_data" id="http_event_data">#</a></span></h3>
@@ -534,12 +574,12 @@ interface. This is an `EventEmitter` with the following events:
 <!--
 Emitted when a piece of the message body is received. The chunk is a string if
 an encoding has been set with `request.setEncoding()`, otherwise it's a
-[Buffer](buffer.html).
+[Buffer][].
 -->
 
 <p>メッセージボディの断片を受信した場合に生成されます。
 <code>request.setEncoding()</code> によってエンコーディングが設定された場合、
-<code>chunk</code> は文字列です。それ以外の場合は <a href="buffer.html">Buffer</a> です。
+<code>chunk</code> は文字列です。それ以外の場合は <a href="buffer.html#buffer_buffer">Buffer</a> です。
 
 </p>
 <!--
@@ -701,14 +741,12 @@ Also `request.httpVersionMajor` is the first integer and
 </p>
 <h3>request.setEncoding([encoding])<span><a class="mark" href="#http_request_setencoding_encoding" id="http_request_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the request body. See
-[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
-for more information.
+Set the encoding for the request body. See [stream.setEncoding()][] for more
+information.
 -->
 
 <p>リクエストボディのエンコーディングを設定します。詳細は
-<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
-を参照してください。
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a> を参照してください。
 
 </p>
 <h3>request.pause()<span><a class="mark" href="#http_request_pause" id="http_request_pause">#</a></span></h3>
@@ -755,17 +793,16 @@ authentication details.
 This object is created internally by a HTTP server--not by the user. It is
 passed as the second parameter to the `'request'` event.
 
-The response implements the [Writable  Stream](stream.html#writable_stream)
-interface. This is an `EventEmitter` with the following events:
+The response implements the [Writable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
 <p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。
 <code>&apos;request&apos;</code> リスナーの第 2 引数として渡されます。
 
 </p>
-<p>レスポンスは <a href="stream.html#writable_stream">Writable  Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>レスポンスは <a href="stream.html#stream_writable_stream">Writable  Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;close&apos;<span><a class="mark" href="#http_event_close_2" id="http_event_close_2">#</a></span></h3>
@@ -784,13 +821,12 @@ Indicates that the underlaying connection was terminated before
 <h3>response.writeContinue()<span><a class="mark" href="#http_response_writecontinue" id="http_response_writecontinue">#</a></span></h3>
 <!--
 Sends a HTTP/1.1 100 Continue message to the client, indicating that
-the request body should be sent. See the [checkContinue](#event_checkContinue_) event on
-`Server`.
+the request body should be sent. See the ['checkContinue'][] event on `Server`.
 -->
 
 <p>HTTP/1.1 の 100 Continue メッセージをクライアントに送信し、
 リクエストボディを送信してもよいことを示します。
-<code>Server</code>の <a href="#event_checkContinue_">checkContinue</a> イベントを参照してください。
+<code>Server</code>の <a href="#http_event_checkcontinue">&apos;checkContinue&apos;</a> イベントを参照してください。
 
 </p>
 <h3>response.writeHead(statusCode, [reasonPhrase], [headers])<span><a class="mark" href="#http_response_writehead_statuscode_reasonphrase_headers" id="http_response_writehead_statuscode_reasonphrase_headers">#</a></span></h3>
@@ -1080,12 +1116,12 @@ This function allows one to transparently issue requests.
 </p>
 <!--
 `options` can be an object or a string. If `options` is a string, it is
-automatically parsed with [url.parse()](url.html#url.parse).
+automatically parsed with [url.parse()][].
 -->
 
 <p><code>options</code> はオブジェクトまたは文字列です。
-もし <code>options</code> が文字列なら、それは <a href="url.html#url.parse">url.parse()</a>
-によって自動的に解析されます。
+もし <code>options</code> が文字列なら、それは <a href="url.html#url_url_parse_urlstr_parsequerystring_slashesdenotehost">url.parse()</a> によって自動的に
+解析されます。
 
 </p>
 <!--
@@ -1108,10 +1144,9 @@ Options:
 - `headers`: An object containing request headers.
 - `auth`: Basic authentication i.e. `'user:password'` to compute an
   Authorization header.
-- `agent`: Controls [Agent](#http.Agent) behavior. When an Agent is used
-  request will default to `Connection: keep-alive`. Possible values:
- - `undefined` (default): use [global Agent](#http.globalAgent) for this host
-   and port.
+- `agent`: Controls [Agent][] behavior. When an Agent is used request will
+  default to `Connection: keep-alive`. Possible values:
+ - `undefined` (default): use [global Agent][] for this host and port.
  - `Agent` object: explicitly use the passed in `Agent`.
  - `false`: opts out of connection pooling with an Agent, defaults request to
    `Connection: close`.
@@ -1130,11 +1165,10 @@ Options:
 <li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>
 <li><code>auth</code>: ベーシック認証すなわち Authorization ヘッダのための
 <code>&apos;user:password&apos;</code>。</li>
-<li><code>agent</code>: <code>Agent</code> の振る舞いを制御します。
+<li><code>agent</code>: <a href="#http_class_http_agent">Agent</a> の振る舞いを制御します。
 エージェントが使われる場合、Connection:keep-alive がデフォルトになります。
 可能な値は:<ul>
-<li><code>undefined</code> (デフォルト): ホストとポートで
-<a href="#http.globalAgent">グローバル Agent</a> を使用します。</li>
+<li><code>undefined</code> (デフォルト): ホストとポートで <a href="#http_http_globalagent">global Agent</a> を使用します。</li>
 <li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>
 <li><code>false</code>: Agent によるコネクションプーリングを使用しません。
  Connection:close の場合のデフォルトです。</li>
@@ -1444,13 +1478,12 @@ which has been transmitted are equal or not.
 
 </p>
 <!--
-The request implements the [Writable  Stream](stream.html#writable_stream)
-interface. This is an `EventEmitter` with the following events:
+The request implements the [Writable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
-<p>リクエストは <a href="stream.html#writable_stream">Writable  Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です。
+<p>リクエストは <a href="stream.html#stream_writable_stream">Writable  Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です。
 
 </p>
 <h3>Event &apos;response&apos;<span><a class="mark" href="#http_event_response" id="http_event_response">#</a></span></h3>
@@ -1458,8 +1491,8 @@ interface. This is an `EventEmitter` with the following events:
 
 </p>
 <!--
-Emitted when a response is received to this request. This event is emitted only once. The
-`response` argument will be an instance of `http.ClientResponse`.
+Emitted when a response is received to this request. This event is emitted only
+once. The `response` argument will be an instance of `http.ClientResponse`.
 -->
 
 <p>このリクエストに対するレスポンスを受信した時に生成されます。
@@ -1660,10 +1693,10 @@ creating the request.
 
 </p>
 <!--
-The `chunk` argument should be a [buffer](buffer.html) or a string.
+The `chunk` argument should be a [Buffer][] or a string.
 -->
 
-<p><code>chunk</code> 引数は<a href="buffer.html">buffer</a> または文字列です。
+<p><code>chunk</code> 引数は <a href="buffer.html#buffer_buffer">Buffer</a> または文字列です。
 
 </p>
 <!--
@@ -1707,40 +1740,33 @@ Aborts a request.  (New since v0.3.8.)
 </p>
 <h3>request.setTimeout(timeout, [callback])<span><a class="mark" href="#http_request_settimeout_timeout_callback" id="http_request_settimeout_timeout_callback">#</a></span></h3>
 <!--
-Once a socket is assigned to this request and is connected 
-[socket.setTimeout(timeout, [callback])](net.html#socket.setTimeout)
-will be called.
+Once a socket is assigned to this request and is connected
+[socket.setTimeout()][] will be called.
 -->
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<a href="net.html#socket.setTimeout">socket.setTimeout(timeout, [callback])</a>
-が呼び出されます。
+<a href="net.html#net_socket_settimeout_timeout_callback">socket.setTimeout()</a> が呼び出されます。
 
 </p>
 <h3>request.setNoDelay([noDelay])<span><a class="mark" href="#http_request_setnodelay_nodelay" id="http_request_setnodelay_nodelay">#</a></span></h3>
 <!--
-Once a socket is assigned to this request and is connected 
-[socket.setNoDelay(noDelay)](net.html#socket.setNoDelay)
-will be called.
+Once a socket is assigned to this request and is connected
+[socket.setNoDelay()][] will be called.
 -->
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<a href="net.html#socket.setNoDelay">socket.setNoDelay(noDelay)</a>
-が呼び出されます。
+<a href="net.html#net_socket_setnodelay_nodelay">socket.setNoDelay()</a> が呼び出されます。
 
 
 </p>
 <h3>request.setSocketKeepAlive([enable], [initialDelay])<span><a class="mark" href="#http_request_setsocketkeepalive_enable_initialdelay" id="http_request_setsocketkeepalive_enable_initialdelay">#</a></span></h3>
 <!--
-Once a socket is assigned to this request and is connected 
-[socket.setKeepAlive(enable, [initialDelay])](net.html#socket.setKeepAlive)
-will be called.
+Once a socket is assigned to this request and is connected
+[socket.setKeepAlive()][] will be called.
 -->
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<a href="net.html#socket.setKeepAlive">socket.setKeepAlive(enable, [initialDelay])</a>
-が呼び出されます。
-
+<a href="net.html#net_socket_setkeepalive_enable_initialdelay">socket.setKeepAlive()</a> が呼び出されます。
 
 </p>
 <h2>http.ClientResponse<span><a class="mark" href="#http_http_clientresponse" id="http_http_clientresponse">#</a></span></h2>
@@ -1754,13 +1780,12 @@ passed to the `'response'` event of the request object.
 
 </p>
 <!--
-The response implements the [Readable Stream](stream.html#readable_stream)
-interface. This is an `EventEmitter` with the following events:
+The response implements the [Readable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
-<p>レスポンスは <a href="stream.html#readable_stream">Readable Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>レスポンスは <a href="stream.html#stream_readable_stream">Readable Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;data&apos;<span><a class="mark" href="#http_event_data_1" id="http_event_data_1">#</a></span></h3>
@@ -1801,13 +1826,11 @@ emitted no other events will be emitted on the response.
 <!--
 Indicates that the underlaying connection was terminated before
 `end` event was emitted.
-See [http.ServerRequest](#http.ServerRequest)'s `'close'` event for more
-information.
+See [http.ServerRequest][]'s `'close'` event for more information.
 -->
 
 <p><code>&apos;end&apos;</code> イベントが生成される前に下層の接続が切断されたことを示します。
-<a href="#http.ServerRequest">http.ServerRequest</a> の <code>&apos;close&apos;</code>
-イベントにより多くの情報があります。
+<a href="#http_class_http_serverrequest">http.ServerRequest</a> の <code>&apos;close&apos;</code> イベントにより多くの情報があります。
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#http_response_statuscode_1" id="http_response_statuscode_1">#</a></span></h3>
@@ -1851,14 +1874,12 @@ The response trailers object. Only populated after the 'end' event.
 </p>
 <h3>response.setEncoding([encoding])<span><a class="mark" href="#http_response_setencoding_encoding" id="http_response_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the response body. See
-[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
-for more information.
+Set the encoding for the response body. See [stream.setEncoding()][] for more
+information.
 -->
 
 <p>レスポンスボディのエンコーディングを設定します。詳細は
-<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
-を参照してください。
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a> を参照してください。
 
 </p>
 <h3>response.pause()<span><a class="mark" href="#http_response_pause" id="http_response_pause">#</a></span></h3>
@@ -1875,6 +1896,7 @@ Resumes a paused response.
 -->
 
 <p>中断されていたレスポンスを再開します。
+
 </p>
 
           </div>
@@ -1904,7 +1926,7 @@ Resumes a paused response.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
