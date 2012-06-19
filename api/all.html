@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.7.10 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.7.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -239,6 +239,7 @@
 <li><a href="#all_buf_index">buf[index]</a></li>
 <li><a href="#all_class_method_buffer_isbuffer_obj">Class Method: Buffer.isBuffer(obj)</a></li>
 <li><a href="#all_class_method_buffer_bytelength_string_encoding">Class Method: Buffer.byteLength(string, [encoding])</a></li>
+<li><a href="#all_class_method_buffer_concat_list_totallength">Class Method: Buffer.concat(list, [totalLength])</a></li>
 <li><a href="#all_buf_length">buf.length</a></li>
 <li><a href="#all_buf_copy_targetbuffer_targetstart_sourcestart_sourceend">buf.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd])</a></li>
 <li><a href="#all_buf_slice_start_end">buf.slice([start], [end])</a></li>
@@ -524,6 +525,7 @@
 <li><a href="#all_class_net_server">Class: net.Server</a><ul>
 <li><a href="#all_server_listen_port_host_backlog_listeninglistener">server.listen(port, [host], [backlog], [listeningListener])</a></li>
 <li><a href="#all_server_listen_path_listeninglistener">server.listen(path, [listeningListener])</a></li>
+<li><a href="#all_server_listen_handle_listeninglistener">server.listen(handle, [listeningListener])</a></li>
 <li><a href="#all_server_close_cb">server.close([cb])</a></li>
 <li><a href="#all_server_address_1">server.address()</a></li>
 <li><a href="#all_server_maxconnections_1">server.maxConnections</a></li>
@@ -616,6 +618,7 @@
 <li><a href="#all_event_clienterror_1">Event: &apos;clientError&apos;</a></li>
 <li><a href="#all_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
 <li><a href="#all_server_listen_path_callback">server.listen(path, [callback])</a></li>
+<li><a href="#all_server_listen_handle_listeninglistener_1">server.listen(handle, [listeningListener])</a></li>
 <li><a href="#all_server_close_cb_1">server.close([cb])</a></li>
 <li><a href="#all_server_maxheaderscount">server.maxHeadersCount</a></li>
 </ul>
@@ -813,7 +816,6 @@
 </li>
 <li><a href="#all_zlib">Zlib</a><ul>
 <li><a href="#all_examples">Examples</a></li>
-<li><a href="#all_constants">Constants</a></li>
 <li><a href="#all_zlib_creategzip_options">zlib.createGzip([options])</a></li>
 <li><a href="#all_zlib_creategunzip_options">zlib.createGunzip([options])</a></li>
 <li><a href="#all_zlib_createdeflate_options">zlib.createDeflate([options])</a></li>
@@ -838,9 +840,11 @@
 <li><a href="#all_zlib_unzip_buf_callback">zlib.unzip(buf, callback)</a></li>
 <li><a href="#all_options">Options</a></li>
 <li><a href="#all_memory_usage_tuning">Memory Usage Tuning</a></li>
+<li><a href="#all_constants">Constants</a></li>
 </ul>
 </li>
 <li><a href="#all_os">os</a><ul>
+<li><a href="#all_os_tmpdir">os.tmpDir()</a></li>
 <li><a href="#all_os_hostname">os.hostname()</a></li>
 <li><a href="#all_os_type">os.type()</a></li>
 <li><a href="#all_os_platform">os.platform()</a></li>
@@ -869,6 +873,7 @@
 </ul>
 </li>
 <li><a href="#all_cluster">Cluster</a><ul>
+<li><a href="#all_how_it_works">How It Works</a></li>
 <li><a href="#all_cluster_settings">cluster.settings</a></li>
 <li><a href="#all_cluster_ismaster">cluster.isMaster</a></li>
 <li><a href="#all_cluster_isworker">cluster.isWorker</a></li>
@@ -884,7 +889,7 @@
 <li><a href="#all_cluster_disconnect_callback">cluster.disconnect([callback])</a></li>
 <li><a href="#all_cluster_workers">cluster.workers</a></li>
 <li><a href="#all_class_worker">Class: Worker</a><ul>
-<li><a href="#all_worker_uniqueid">worker.uniqueID</a></li>
+<li><a href="#all_worker_id">worker.id</a></li>
 <li><a href="#all_worker_process">worker.process</a></li>
 <li><a href="#all_worker_suicide">worker.suicide</a></li>
 <li><a href="#all_worker_send_message_sendhandle">worker.send(message, [sendHandle])</a></li>
@@ -1130,10 +1135,10 @@ Node のモジュール内での <code>var something</code> はそのモジュ�
 <li>{Object}</li>
 </ul>
 <!--
-The process object. See the [process object](process.html#process) section.
+The process object. See the [process object][] section.
 -->
 
-<p>プロセスオブジェクトです。<a href="process.html#process">process object</a> の節を参照してください。
+<p>プロセスオブジェクトです。<a href="process.html#process_process">process オブジェクト</a> の節を参照してください。
 
 </p>
 <h2>console<span><a class="mark" href="#all_console" id="all_console">#</a></span></h2>
@@ -1143,7 +1148,7 @@ The process object. See the [process object](process.html#process) section.
 <li>{Object}</li>
 </ul>
 <!--
-Used to print to stdout and stderr. See the [stdio](stdio.html) section.
+Used to print to stdout and stderr. See the [stdio][] section.
 -->
 
 <p>標準出力および標準エラー出力へのプリントに使われます。
@@ -1157,11 +1162,11 @@ Used to print to stdout and stderr. See the [stdio](stdio.html) section.
 <li>{Function}</li>
 </ul>
 <!--
-Used to handle binary data. See the [buffer section](buffer.html).
+Used to handle binary data. See the [buffer section][]
 -->
 
 <p>バイナリデータを扱うために使われます。
-<a href="buffers.html">buffer セクション</a> を参照してください。
+<a href="buffer.html">バッファセクション</a> を参照してください。
 
 </p>
 <h2>require()<span><a class="mark" href="#all_require" id="all_require">#</a></span></h2>
@@ -1171,11 +1176,11 @@ Used to handle binary data. See the [buffer section](buffer.html).
 <li>{Function}</li>
 </ul>
 <!--
-To require modules. See the [Modules](modules.html#modules) section.
-`require` isn't actually a global but rather local to each module.
+To require modules. See the [Modules][] section.  `require` isn't actually a
+global but rather local to each module.
 -->
 
-<p>require モジュールを指します。<a href="modules.html#modules">モジュール</a> の節を参照してください。
+<p>require モジュールを指します。<a href="modules.html#modules_modules">モジュール</a> の節を参照してください。
 <code>require</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
@@ -1308,8 +1313,7 @@ A reference to the current module. In particular
 `module.exports` is the same as the `exports` object.
 `module` isn't actually a global but rather local to each module.
 
-See the [module system documentation](modules.html) for more
-information.
+See the [module system documentation][] for more information.
 -->
 
 <p>現在のモジュールへの参照です。
@@ -1317,8 +1321,7 @@ information.
 <code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
-<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a>
-を参照してください。
+<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
 
 </p>
 <h2>exports<span><a class="mark" href="#all_exports" id="all_exports">#</a></span></h2>
@@ -1330,8 +1333,9 @@ made accessible through `require()`.
 `exports` is the same as the `module.exports` object.
 `exports` isn't actually a global but rather local to each module.
 
-See the [module system documentation](modules.html) for more
-information.
+See the [module system documentation][] for more information.
+
+See the [module section][] for more information.
 -->
 
 <p>現在のモジュールの全てのインスタンス間で共有されるオブジェクトで、
@@ -1340,8 +1344,7 @@ information.
 <code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
-<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a>
-を参照してください。
+<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
 
 </p>
 <h2>setTimeout(cb, ms)<span><a class="mark" href="#all_settimeout_cb_ms" id="all_settimeout_cb_ms">#</a></span></h2>
@@ -1351,12 +1354,22 @@ information.
 <!--type=global-->
 
 <!--
-The timer functions are global variables. See the [timers](timers.html) section.
+The timer functions are global variables. See the [timers][] section.
 -->
 
 <p>タイマー関数はグローバル変数です。<a href="timers.html">タイマー</a> を参照してください。
 
 </p>
+<!--
+[buffer section]: buffer.html
+[module section]: modules.html
+[module system documentation]: modules.html
+[Modules]: modules.html#modules_modules
+[process object]: process.html#process_process
+[stdio]: stdio.html
+[timers]: timers.html
+-->
+
 <h1>console<span><a class="mark" href="#all_console_1" id="all_console_1">#</a></span></h1>
 <pre><code>Stability: 4 - API Frozen</code></pre>
 <ul>
@@ -1387,13 +1400,12 @@ Prints to stdout with newline. This function can take multiple arguments in a
 <pre><code>console.log(&apos;count: %d&apos;, count);</code></pre>
 <!--
 If formatting elements are not found in the first string then `util.inspect`
-is used on each argument.
-See [util.format()](util.html#util.format) for more information.
+is used on each argument.  See [util.format()][] for more information.
 -->
 
 <p>最初の引数文字列からフォーマット要素が見つからなかった場合は、
 <code>util.inspect</code> が各引数に使われます。
-より詳細は <a href="util.html#util.format">util.format()</a> を参照してください。
+より詳細は <a href="util.html#util_util_format_format">util.format()</a> を参照してください。
 
 </p>
 <h2>console.info([data], [...])<span><a class="mark" href="#all_console_info_data" id="all_console_info_data">#</a></span></h2>
@@ -1459,14 +1471,12 @@ Print a stack trace to stderr of the current position.
 </p>
 <h2>console.assert(expression, [message])<span><a class="mark" href="#all_console_assert_expression_message" id="all_console_assert_expression_message">#</a></span></h2>
 <!--
-Same as [assert.ok()](assert.html#assert_assert_value_message_assert_ok_value_message)
-where if the `expression` evaluates as `false` throw an AssertionError with `message`.
+Same as [assert.ok()][] where if the `expression` evaluates as `false` throw an
+AssertionError with `message`.
 -->
 
-<p><a href="assert.html#assert_assert_value_message_assert_ok_value_message">assert.ok()</a>
-を参照してください。
-もし <code>expression</code> が <code>false</code> に評価されると、<code>message</code> を持つ AssertionError
-がスローされます。
+<p><a href="assert.html#assert_assert_value_message_assert_ok_value_message">assert.ok()</a> と同様に、もし <code>expression</code> が <code>false</code> に評価されると、
+<code>message</code> を持つ AssertionError がスローされます。
 
 </p>
 <h1>Timers<span><a class="mark" href="#all_timers" id="all_timers">#</a></span></h1>
@@ -3163,11 +3173,11 @@ console.log(result); // 30</code></pre>
 
 <!--
 The `process` object is a global object and can be accessed from anywhere.
-It is an instance of `EventEmitter`.
+It is an instance of [EventEmitter][].
 -->
 
 <p><code>process</code> はグローバルオブジェクトで、どこからでもアクセスすることができます。
-それは <code>EventEmitter</code> のインスタンスです。
+それは <a href="events.html#events_class_events_eventemitter">EventEmitter</a> のインスタンスです。
 
 
 </p>
@@ -4268,6 +4278,15 @@ Removes all listeners, or those of the specified event.
 
 <p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。
 
+</p>
+<!--
+Note that this will **invalidate** any arrays that have previously been
+returned by `emitter.listeners(event)`.
+-->
+
+<p>これは <code>emitter.listeners(event)</code> から返された以前の配列を <strong>無効化</strong>
+することに注意してください。
+
 
 </p>
 <h3>emitter.setMaxListeners(n)<span><a class="mark" href="#all_emitter_setmaxlisteners_n" id="all_emitter_setmaxlisteners_n">#</a></span></h3>
@@ -4287,18 +4306,54 @@ that to be increased. Set to zero for unlimited.
 </p>
 <h3>emitter.listeners(event)<span><a class="mark" href="#all_emitter_listeners_event" id="all_emitter_listeners_event">#</a></span></h3>
 <!--
-Returns an array of listeners for the specified event. This array can be
-manipulated, e.g. to remove listeners.
+Returns an array of listeners for the specified event.
 -->
 
 <p>指定されたイベントに対するリスナー配列を返します。
-この配列は変更することができます、例えばリスナーを削除するなど。
 
 </p>
 <pre><code>server.on(&apos;connection&apos;, function (stream) {
   console.log(&apos;someone connected!&apos;);
 });
 console.log(util.inspect(server.listeners(&apos;connection&apos;))); // [ [Function] ]</code></pre>
+<!--
+This array **may** be a mutable reference to the same underlying list of
+listeners that is used by the event subsystem.  However, certain
+actions (specifically, removeAllListeners) will invalidate this
+reference.
+-->
+
+<p>この配列は下層でイベントサブシステムによって使われる、リスナの可変な
+リストを参照する <strong>場合が</strong> あります。
+しかしながら、特定のアクション (特に <code>removeAllListeners</code>) は
+その参照を無効にすることがあります。
+
+</p>
+<!--
+If you would like to get a copy of the listeners at a specific point in
+time that is guaranteed not to change, make a copy, for example by doing
+`emitter.listeners(event).slice(0)`.
+-->
+
+<p>もしある特定の時点におけるリスナの変更されないことが保証されたコピーが
+必要であるなら、<code>emitter.listeners(event).slice(0)</code> などによって
+コピーを作成してください。
+
+</p>
+<!--
+In a future release of node, this behavior **may** change to always
+return a copy, for consistency.  In your programs, please do not rely on
+being able to modify the EventEmitter listeners using array methods.
+Always use the 'on' method to add new listeners.
+-->
+
+<p>将来リリースされる Node では、この振る舞いは一貫性のため常にコピーを返すように
+変更される <strong>かも</strong> しれません。
+配列のメソッドを使って EventEmitter のリスナを変更できることに
+頼らないでください。
+新しいリスナの追加は常に <code>on()</code> メソッドを使ってください。
+
+</p>
 <h3>emitter.emit(event, [arg1], [arg2], [...])<span><a class="mark" href="#all_emitter_emit_event_arg1_arg2" id="all_emitter_emit_event_arg1_arg2">#</a></span></h3>
 <!--
 Execute each of the listeners in order with the supplied arguments.
@@ -4549,12 +4604,12 @@ uncaught exceptions to the active Domain object.
 
 </p>
 <!--
-Domain is a child class of EventEmitter.  To handle the errors that it
+Domain is a child class of [EventEmitter][].  To handle the errors that it
 catches, listen to its `error` event.
 -->
 
-<p>ドメインは EventEmitter の子クラスです。これが捕まえたエラーを扱いたければ、
-<code>&apos;error&apos;</code> イベントを監視してください。
+<p>ドメインは <a href="events.html#events_class_events_eventemitter">EventEmitter</a> の子クラスです。
+これが捕まえたエラーを扱いたければ、<code>&apos;error&apos;</code> イベントを監視してください。
 
 </p>
 <h3>domain.run(fn)<span><a class="mark" href="#all_domain_run_fn" id="all_domain_run_fn">#</a></span></h3>
@@ -5112,6 +5167,59 @@ console.log(str + &quot;: &quot; + str.length + &quot; characters, &quot; +
   Buffer.byteLength(str, &apos;utf8&apos;) + &quot; bytes&quot;);
 
 // ½ + ¼ = ¾: 9 characters, 12 bytes</code></pre>
+<h3>Class Method: Buffer.concat(list, [totalLength])<span><a class="mark" href="#all_class_method_buffer_concat_list_totallength" id="all_class_method_buffer_concat_list_totallength">#</a></span></h3>
+<!--
+* `list` {Array} List of Buffer objects to concat
+* `totalLength` {Number} Total length of the buffers when concatenated
+-->
+
+<ul>
+<li><code>list</code> {Array} 結合するバッファのリスト</li>
+<li><code>totalLength</code> {Number} 結合されるバッファ全体の長さ</li>
+</ul>
+<!--
+Returns a buffer which is the result of concatenating all the buffers in
+the list together.
+-->
+
+<p>リストに含まれるバッファ全体を結合した結果のバッファを返します。
+
+</p>
+<!--
+If the list has no items, or if the totalLength is 0, then it returns a
+zero-length buffer.
+-->
+
+<p>リストが空の場合、または <code>totalLength</code> が 0 の場合は長さが
+0 のバッファを返します。
+
+</p>
+<!--
+If the list has exactly one item, then the first item of the list is
+returned.
+-->
+
+<p>リストが一つだけの要素を持つ場合、リストの先頭要素が返されます。
+
+</p>
+<!--
+If the list has more than one item, then a new Buffer is created.
+-->
+
+<p>リストが複数の要素を持つ場合、新しいバッファが作成されます。
+
+</p>
+<!--
+If totalLength is not provided, it is read from the buffers in the list.
+However, this adds an additional loop to the function, so it is faster
+to provide the length explicitly.
+-->
+
+<p><code>totalLength</code> が与えられない場合はリスト中のバッファから求められます。
+しかし、これは余計なループが必要になるため、明示的に長さを指定する方が
+高速です。
+
+</p>
 <h3>buf.length<span><a class="mark" href="#all_buf_length" id="all_buf_length">#</a></span></h3>
 <div class="signature"><ul>
 <li>Number</li>
@@ -5943,7 +6051,7 @@ then Node will allocate a SlowBuffer slab for it directly.
 <!--
 A stream is an abstract interface implemented by various objects in Node.
 For example a request to an HTTP server is a stream, as is stdout. Streams
-are readable, writable, or both. All streams are instances of `EventEmitter`.
+are readable, writable, or both. All streams are instances of [EventEmitter][]
 
 You can load up the Stream base class by doing `require('stream')`.
 -->
@@ -5951,7 +6059,7 @@ You can load up the Stream base class by doing `require('stream')`.
 <p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。
 例えば HTTP サーバへのリクエストは標準出力と同様にストリームです。
 ストリームは読み込み可能、書き込み可能、またはその両方です。
-全てのストリームは <code>EventEmitter</code> のインスタンスです。
+全てのストリームは <a href="events.html#events_class_events_eventemitter">EventEmitter</a> のインスタンスです。
 
 </p>
 <p>Stream のベースクラスは <code>require(&apos;stream&apos;)</code> でロードすることができます。
@@ -6537,8 +6645,8 @@ Creates and returns a cipher object, with the given algorithm and password.
 `algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.
 On recent releases, `openssl list-cipher-algorithms` will display the
 available cipher algorithms.
-`password` is used to derive key and IV, which must be `'binary'` encoded
-string (See the [Buffer section](buffer.html) for more information).
+`password` is used to derive key and IV, which must be a `'binary'` encoded
+string or a [buffer](buffer.html).
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。
@@ -6546,27 +6654,34 @@ string (See the [Buffer section](buffer.html) for more information).
 最近のリリースでは、<code>openssl list-cipher-algorithms</code>
 で利用可能な暗号アルゴリズムが表示されます。
 <code>password</code> はキーと IV の生成に使用されます。
-これは <code>&apos;binary&apos;</code> でエンコードされた文字列でなければなりません
-(より詳細は <a href="buffer.html">Buffer のセクション</a> を参照してください)。
+これは <code>&apos;binary&apos;</code> でエンコードされた文字列または <a href="buffer.html">buffer</a>
+でなければなりません
 
 </p>
 <h2>crypto.createCipheriv(algorithm, key, iv)<span><a class="mark" href="#all_crypto_createcipheriv_algorithm_key_iv" id="all_crypto_createcipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
 Creates and returns a cipher object, with the given algorithm, key and iv.
 
-`algorithm` is the same as the `createCipher()`. `key` is a raw key used in
-algorithm. `iv` is an Initialization vector. `key` and `iv` must be `'binary'`
-encoded string (See the [Buffer section](buffer.html) for more information).
+`algorithm` is the same as the argument to `createCipher()`.
+`key` is the raw key used by the algorithm.
+`iv` is an [initialization
+vector](http://en.wikipedia.org/wiki/Initialization_vector).
+
+`key` and `iv` must be `'binary'` encoded strings or [buffers](buffer.html).
 -->
 
 <p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して
 返します。
 
 </p>
-<p><code>algorithm</code> は <code>createCipher()</code> と同じです。
-<code>key</code> はアルゴリズムで使用される生のキーです。 <code>iv</code> は初期化ベクトルです。
-<code>key</code> と <code>iv</code> は <code>&apos;binary&apos;</code> でエンコードされた文字列でなければなりません
-(より詳細は <a href="buffer.html">Buffer のセクション</a> を参照してください)。
+<p><code>algorithm</code> は <code>createCipher()</code> の引数と同じです。
+<code>key</code> はアルゴリズムで使用される生のキーです。
+<code>iv</code> は<a href="http://en.wikipedia.org/wiki/Initialization_vector">initialization
+vector</a> です。
+
+</p>
+<p><code>key</code> と <code>iv</code> は <code>&apos;binary&apos;</code> でエンコードされた文字列または
+<a href="buffer.html">buffers</a> でなければなりません
 
 </p>
 <h2>Class: Cipher<span><a class="mark" href="#all_class_cipher" id="all_class_cipher">#</a></span></h2>
@@ -6647,21 +6762,21 @@ Useful for non-standard padding, e.g. using `0x0` instead of PKCS padding. You m
 <h2>crypto.createDecipher(algorithm, password)<span><a class="mark" href="#all_crypto_createdecipher_algorithm_password" id="all_crypto_createdecipher_algorithm_password">#</a></span></h2>
 <!--
 Creates and returns a decipher object, with the given algorithm and key.
-This is the mirror of the [createCipher()](#crypto.createCipher) above.
+This is the mirror of the [createCipher()][] above.
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。
-これは前述の <a href="#crypto.createCipher">createCipher()</a> の鏡写しです。
+これは前述の <a href="#crypto_crypto_createcipher_algorithm_password">createCipher()</a> の鏡写しです。
 
 </p>
 <h2>crypto.createDecipheriv(algorithm, key, iv)<span><a class="mark" href="#all_crypto_createdecipheriv_algorithm_key_iv" id="all_crypto_createdecipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
 Creates and returns a decipher object, with the given algorithm, key and iv.
-This is the mirror of the [createCipheriv()](#crypto.createCipheriv) above.
+This is the mirror of the [createCipheriv()][] above.
 -->
 
 <p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。
-これは前述の <a href="#crypto.createCipheriv">createCipheriv()</a> の鏡写しです。
+これは前述の <a href="#crypto_crypto_createcipheriv_algorithm_key_iv">createCipheriv()</a> の鏡写しです。
 
 </p>
 <h2>Class: Decipher<span><a class="mark" href="#all_class_decipher" id="all_class_decipher">#</a></span></h2>
@@ -6990,13 +7105,13 @@ or `'base64'`. Defaults to `'binary'`.
 <!--
 Creates a predefined Diffie-Hellman key exchange object.
 The supported groups are: `'modp1'`, `'modp2'`, `'modp5'`
-(defined in [RFC 2412](http://www.rfc-editor.org/rfc/rfc2412.txt ))
+(defined in [RFC 2412][])
 and `'modp14'`, `'modp15'`, `'modp16'`, `'modp17'`, `'modp18'`
-(defined in [RFC 3526](http://www.rfc-editor.org/rfc/rfc3526.txt )).
+(defined in [RFC 3526][]).
 The returned object mimics the interface of objects created by
-[crypto.createDiffieHellman()](#crypto.createDiffieHellman) above, but
+[crypto.createDiffieHellman()][] above, but
 will not allow to change the keys (with
-[diffieHellman.setPublicKey()](#diffieHellman.setPublicKey) for example).
+[diffieHellman.setPublicKey()][] for example).
 The advantage of using this routine is that the parties don't have to
 generate nor exchange group modulus beforehand, saving both processor and
 communication time.
@@ -7008,10 +7123,10 @@ communication time.
 および <code>&apos;modp14&apos;</code>, <code>&apos;modp15&apos;</code>, <code>&apos;modp16&apos;</code>, <code>&apos;modp17&apos;</code>, <code>&apos;modp18&apos;</code>
 (<a href="http://www.rfc-editor.org/rfc/rfc3526.txt">RFC 3526</a> で定義される) です。
 返されるオブジェクトは、前述の
-<a href="#crypto.createDiffieHellman">crypto.createDiffieHellman()</a>
+<a href="#crypto_crypto_creatediffiehellman_prime_encoding">crypto.createDiffieHellman()</a>
 によって作成されたオブジェクトのインタフェースを模倣します。
 しかし、
-(たとえば <a href="#diffieHellman.setPublicKey">diffieHellman.setPublicKey()</a> で)
+(たとえば <a href="#crypto_diffiehellman_setpublickey_public_key_encoding">diffieHellman.setPublicKey()</a> で)
 鍵を交換することはできません。
 このルーチンを使うことによるアドバンテージは、
 事前にグループ係数を生成することも交換する必要もないため、
@@ -7163,8 +7278,8 @@ server-side resources, which makes it a potential vector for denial-of-service
 attacks.
 
 To mitigate this, renegotiations are limited to three times every 10 minutes. An
-error is emitted on the [CleartextStream](#tls.CleartextStream) instance when
-the threshold is exceeded. The limits are configurable:
+error is emitted on the [CleartextStream][] instance when the threshold is
+exceeded. The limits are configurable:
 
   - `tls.CLIENT_RENEG_LIMIT`: renegotiation limit, default is 3.
 
@@ -7187,7 +7302,7 @@ times.
 
 </p>
 <p>これを軽減するために、再ネゴシエーションは 10 分当たり 3 回までに
-制限されています。この制限を超えると、<a href="#tls.CleartextStream">CleartextStream</a>
+制限されています。この制限を超えると、<a href="#tls_class_tls_cleartextstream">CleartextStream</a>
 のインスタンス上でエラーが生成されます。この制限は変更可能です:
 
 </p>
@@ -7230,15 +7345,14 @@ TLS の拡張で、以下を可能にします。
 </ul>
 <h2>tls.createServer(options, [secureConnectionListener])<span><a class="mark" href="#all_tls_createserver_options_secureconnectionlistener" id="all_tls_createserver_options_secureconnectionlistener">#</a></span></h2>
 <!--
-Creates a new [tls.Server](#tls.Server).
-The `connectionListener` argument is automatically set as a listener for the
-[secureConnection](#event_secureConnection_) event.
-The `options` object has these possibilities:
+Creates a new [tls.Server][].  The `connectionListener` argument is
+automatically set as a listener for the [secureConnection][] event.  The
+`options` object has these possibilities:
 -->
 
-<p>新しい <a href="#tls.Server">tls.Server</a> を作成します。
-<code>connectionListener</code> は <a href="#event_secureConnection_">secureConnection</a>
-イベントのリスナとして自動的に登録されます。
+<p>新しい <a href="#tls_class_tls_server">tls.Server</a> を作成します。
+<code>connectionListener</code> は <a href="#tls_event_secureconnection">secureConnection</a> イベントのリスナとして
+自動的に登録されます。
 <code>options</code> は以下を持つことができます:
 
 
@@ -7525,19 +7639,18 @@ Creates a new client connection to the given `port` and `host` (old API) or
 </ul>
 <!--
 The `secureConnectListener` parameter will be added as a listener for the
-['secureConnect'](#event_secureConnect_) event.
+['secureConnect'][] event.
 
-`tls.connect()` returns a [CleartextStream](#tls.CleartextStream) object.
+`tls.connect()` returns a [CleartextStream][] object.
 
 Here is an example of a client of echo server as described previously:
 -->
 
-<p><code>secureConnectLister</code> 引数は <a href="#event_secureConnect_">&apos;secureConnect&apos;</a>
-イベントのリスナとして加えられます。
+<p><code>secureConnectLister</code> 引数は <a href="#tls_event_secureconnect">&apos;secureConnect&apos;</a> イベントのリスナとして
+加えられます。
 
 </p>
-<p><code>tls.connect()</code> は <a href="#tls.CleartextStream">CleartextStream</a>
-オブジェクトを返します。
+<p><code>tls.connect()</code> は <a href="#tls_class_tls_cleartextstream">CleartextStream</a> オブジェクトを返します。
 
 </p>
 <p>これは前述のエコーサーバに接続するクライアントの例です:
@@ -7613,8 +7726,8 @@ and the cleartext one is used as a replacement for the initial encrypted stream.
    automatically reject clients with invalid certificates. Only applies to
    servers with `requestCert` enabled.
 
-`tls.createSecurePair()` returns a SecurePair object with
-[cleartext](#tls.CleartextStream) and `encrypted` stream properties.
+`tls.createSecurePair()` returns a SecurePair object with [cleartext][] and
+`encrypted` stream properties.
 -->
 
 <p>二つのストリームを持つセキュアペアオブジェクトを作成します。
@@ -7639,7 +7752,7 @@ and the cleartext one is used as a replacement for the initial encrypted stream.
 <code>requestCert</code> が有効なサーバにのみ適用されます。</p>
 </li>
 </ul>
-<p><code>tls.createSequrePair()</code> は、<a href="#tls.CleartextStream">cleartext</a> と <code>encrypted</code>
+<p><code>tls.createSequrePair()</code> は、[cleartext][] と <code>encrypted</code>
 をプロパティとして持つ <code>SecurePair</code> オブジェクトを返します。
 
 </p>
@@ -7687,13 +7800,12 @@ TLS または SSL を使った暗号化されたコネクションを受け付�
 </p>
 <!--
 This event is emitted after a new connection has been successfully
-handshaked. The argument is a instance of
-[CleartextStream](#tls.CleartextStream). It has all the common stream methods
-and events.
+handshaked. The argument is a instance of [CleartextStream][]. It has all the
+common stream methods and events.
 -->
 
 <p>このイベントは、新しい接続のハンドシェークが成功した場合に生成されます。
-引数は <a href="#tls.CleartextStream">CleartextStream</a> のインスタンスです。
+引数は <a href="#tls_class_tls_cleartextstream">CleartextStream</a> のインスタンスです。
 これはストリームに共通する全てのメソッドとイベントを持っています。
 
 </p>
@@ -7776,14 +7888,13 @@ event.
 <h3>server.address()<span><a class="mark" href="#all_server_address" id="all_server_address">#</a></span></h3>
 <!--
 Returns the bound address, the address family name and port of the
-server as reported by the operating system.
-See [net.Server.address()](net.html#server.address) for more information.
+server as reported by the operating system.  See [net.Server.address()][] for
+more information.
 -->
 
 <p>オペレーティングシステムから報告された、サーバにバインドされたアドレスと
 アドレスファミリ名、ポートを返します。 
-より詳しくは <a href="net.html#server.address">net.Server.address()</a>
-を参照してください。
+より詳しくは <a href="net.html#net_server_address">net.Server.address()</a> を参照してください。
 
 </p>
 <h3>server.addContext(hostname, credentials)<span><a class="mark" href="#all_server_addcontext_hostname_credentials" id="all_server_addcontext_hostname_credentials">#</a></span></h3>
@@ -7819,16 +7930,15 @@ The number of concurrent connections on the server.
 This is a stream on top of the *Encrypted* stream that makes it possible to
 read/write an encrypted data as a cleartext data.
 
-This instance implements a duplex [Stream](stream.html) interfaces.
-It has all the common stream methods and events.
+This instance implements a duplex [Stream][] interfaces.  It has all the
+common stream methods and events.
 -->
 
 <p>暗号化されたストリーム上で、暗号化されたデータを平文のデータとして
 読み書きすることができるストリームです。
 
 </p>
-<p>このインスタンスは双方向の <a href="stream.html">Stream</a> インタフェースを
-実装します。
+<p>このインスタンスは双方向の <a href="stream.html#stream_stream">Stream</a> インタフェースを実装します。
 ストリームに共通な全てのメソッドとイベントを持ちます。
 
 </p>
@@ -9643,14 +9753,13 @@ this module with `require('net');`
 <h2>net.createServer([options], [connectionListener])<span><a class="mark" href="#all_net_createserver_options_connectionlistener" id="all_net_createserver_options_connectionlistener">#</a></span></h2>
 <!--
 Creates a new TCP server. The `connectionListener` argument is
-automatically set as a listener for the ['connection'](#event_connection_)
-event.
+automatically set as a listener for the ['connection'][] event.
 
 `options` is an object with the following defaults:
 -->
 
 <p>新しい TCP サーバを作成します。
-<code>connectionListener</code> 引数は <a href="#event_connection_">&apos;connection&apos;</a>
+<code>connectionListener</code> 引数は <a href="#net_event_connection">&apos;connection&apos;</a>
 イベントに対するリスナーとして自動的に加えられます。
 
 </p>
@@ -9663,13 +9772,13 @@ event.
 If `allowHalfOpen` is `true`, then the socket won't automatically send a FIN
 packet when the other end of the socket sends a FIN packet. The socket becomes
 non-readable, but still writable. You should call the `end()` method explicitly.
-See ['end'](#event_end_) event for more information.
+See ['end'][] event for more information.
 -->
 
 <p><code>allowHalfOpen</code> が <code>true</code> だと、反対側のソケットが FIN パケットを送信してきても自動的に FIN を送信しなくなります。
 ソケットは読み込み可能ではなくなりますが、書き込み可能のままです。
 明示的に <code>end()</code> を呼び出す必要があります。
-<a href="#event_end_">&apos;end&apos;</a> イベントにより多くの情報があります。
+<a href="#net_event_end">&apos;end&apos;</a> イベントにより多くの情報があります。
 
 </p>
 <!--
@@ -9721,13 +9830,12 @@ Use `nc` to connect to a UNIX domain socket server:
 <h2>net.createConnection(options, [connectionListener])<span><a class="mark" href="#all_net_createconnection_options_connectionlistener" id="all_net_createconnection_options_connectionlistener">#</a></span></h2>
 <!--
 Constructs a new socket object and opens the socket to the given location.
-When the socket is established, the ['connect'](#event_connect_) event will be
-emitted.
+When the socket is established, the ['connect'][] event will be emitted.
 -->
 
 <p>新しいソケットオブジェクトを構築し、与えられたロケーションへのソケットを
 オープンします。
-ソケットが確立されると、<a href="#event_connect_">&apos;connect&apos;</a> イベントが生成されます。
+ソケットが確立されると、<a href="#net_event_connect">&apos;connect&apos;</a> イベントが生成されます。
 
 </p>
 <!--
@@ -9777,22 +9885,21 @@ Common options are:
 <!--
   - `allowHalfOpen`: if `true`, the socket won't automatically send
     a FIN packet when the other end of the socket sends a FIN packet.
-    Defaults to `false`.
-    See ['end'](#event_end_) event for more information.
+    Defaults to `false`.  See ['end'][] event for more information.
 -->
 
 <ul>
 <li><code>allowHalfOpen</code>: <code>true</code> の場合、反対側のソケットが FIN
 パケットを送信してきても自動的に FIN を送信しなくなります。
-<a href="#event_end_">&apos;end&apos;</a> イベントにより多くの情報があります。</li>
+デフォルトは <code>false</code> です。
+<a href="#net_event_end">&apos;end&apos;</a> イベントにより多くの情報があります。</li>
 </ul>
 <!--
 The `connectListener` parameter will be added as an listener for the
-['connect'](#event_connect_) event.
+['connect'][] event.
 -->
 
-<p><code>connectListener</code> 引数は <a href="#event_connect_">&apos;connect&apos;</a>
-イベントのリスナとして追加されます。
+<p><code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナとして追加されます。
 
 </p>
 <!--
@@ -9830,13 +9937,12 @@ changed to
 Creates a TCP connection to `port` on `host`. If `host` is omitted,
 `'localhost'` will be assumed.
 The `connectListener` parameter will be added as an listener for the
-['connect'](#event_connect_) event.
+['connect'][] event.
 -->
 
 <p><code>host</code> 上の <code>port</code> に対する TCP コネクションを作成します。
 <code>host</code> が省略されると <code>localhost</code> が仮定されます。
-<code>connectListener</code> 引数は <a href="#event_connect_">&apos;connect&apos;</a>
-イベントのリスナとして追加されます。
+<code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナとして追加されます。
 
 </p>
 <h2>net.connect(path, [connectListener])<span><a class="mark" href="#all_net_connect_path_connectlistener" id="all_net_connect_path_connectlistener">#</a></span></h2>
@@ -9844,12 +9950,11 @@ The `connectListener` parameter will be added as an listener for the
 <!--
 Creates unix socket connection to `path`.
 The `connectListener` parameter will be added as an listener for the
-['connect'](#event_connect_) event.
+['connect'][] event.
 -->
 
 <p><code>path</code> に対する UNIX ドメインソケットを作成します。
-<code>connectListener</code> 引数は <a href="#event_connect_">&apos;connect&apos;</a>
-イベントのリスナとして追加されます。
+<code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナとして追加されます。
 
 </p>
 <h2>Class: net.Server<span><a class="mark" href="#all_class_net_server" id="all_class_net_server">#</a></span></h2>
@@ -9890,16 +9995,13 @@ sysctl の設定を通じて OS によって決定されます。
 </p>
 <!--
 This function is asynchronous.  When the server has been bound,
-['listening'](#event_listening_) event will be emitted.
-the last parameter `listeningListener` will be added as an listener for the
-['listening'](#event_listening_) event.
+['listening'][] event will be emitted.  The last parameter `listeningListener`
+will be added as an listener for the ['listening'][] event.
 -->
 
 <p>この関数は非同期です。
-サーバがバインドされると、<a href="#event_listening_">&apos;listening&apos;</a>
-イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="#event_listening_">&apos;listening&apos;</a>
-のリスナとして加えられます。
+サーバがバインドされると、<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントが生成されます。
+最後の引数 <code>listeningListener</code> は <a href="net.html#net_event_listening">&apos;listening&apos;</a> のリスナとして加えられます。
 
 </p>
 <!--
@@ -9941,15 +10043,57 @@ Start a UNIX socket server listening for connections on the given `path`.
 </p>
 <!--
 This function is asynchronous.  When the server has been bound,
+['listening'][] event will be emitted.  The last parameter `listeningListener`
+will be added as an listener for the ['listening'][] event.
+-->
+
+<p>この関数は非同期です。
+サーバがバインドされると、<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントが生成されます。
+最後の引数 <code>listeningListener</code> は <a href="net.html#net_event_listening">&apos;listening&apos;</a> のリスナとして加えられます。
+
+</p>
+<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#all_server_listen_handle_listeninglistener" id="all_server_listen_handle_listeninglistener">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>handle</code> <span class="type">Object</span></li>
+<li><code>listeningListener</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+The `handle` object can be set to either a server or socket (anything
+with an underlying `_handle` member), or a `{fd: <n>}` object.
+-->
+
+<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら
+なんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。
+
+</p>
+<!--
+This will cause the server to accept connections on the specified
+handle, but it is presumed that the file descriptor or handle has
+already been bound to a port or domain socket.
+-->
+
+<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、
+ファイル記述子またはハンドルは既にポートまたはドメインソケットに
+バインドされているものと見なされます。
+
+</p>
+<!--
+Listening on a file descriptor is not supported on Windows.
+-->
+
+<p>ファイル記述子へのリスニングは Windows ではサポートされません。
+
+</p>
+<!--
+This function is asynchronous.  When the server has been bound,
 ['listening'](#event_listening_) event will be emitted.
 the last parameter `listeningListener` will be added as an listener for the
 ['listening'](#event_listening_) event.
 -->
 
 <p>この関数は非同期です。
-サーバがバインドされると、<code>&apos;listening&apos;</code> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="#event_listening_">&apos;listening&apos;</a>
-のリスナとして加えられます。
+サーバがバインドされると、<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントが生成されます。
+最後の引数 <code>listeningListener</code> は <a href="net.html#net_event_listening">&apos;listening&apos;</a> のリスナとして加えられます。
 
 </p>
 <h3>server.close([cb])<span><a class="mark" href="#all_server_close_cb" id="all_server_close_cb">#</a></span></h3>
@@ -10041,10 +10185,10 @@ This becomes `null` when sending a socket to a child with `child_process.fork()`
 
 </p>
 <!--
-`net.Server` is an `EventEmitter` with the following events:
+`net.Server` is an [EventEmitter][] with the following events:
 -->
 
-<p><code>net.Server</code> は以下のイベントを持つ <code>EventEmitter</code> です:
+<p><code>net.Server</code> は以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;listening&apos;<span><a class="mark" href="#all_event_listening" id="all_event_listening">#</a></span></h3>
@@ -10167,13 +10311,12 @@ Socket is closed and you want to reuse it to connect to another server.
 
 </p>
 <!--
-This function is asynchronous. When the ['connect'](#event_connect_) event is
-emitted the socket is established. If there is a problem connecting, the
-`'connect'` event will not be emitted, the `'error'` event will be emitted with
-the exception.
+This function is asynchronous. When the ['connect'][] event is emitted the
+socket is established. If there is a problem connecting, the `'connect'` event
+will not be emitted, the `'error'` event will be emitted with the exception.
 -->
 
-<p>この関数は非同期です。ソケットが確立されると <a href="#event_connect_">&apos;connect&apos;</a>
+<p>この関数は非同期です。ソケットが確立されると <a href="#net_event_connect">&apos;connect&apos;</a>
 イベントが生成されます。
 接続で問題があった場合は <code>&apos;connect&apos;</code> イベントは生成されず、
 例外とともに <code>&apos;error&apos;</code> イベントが生成されます。
@@ -10181,11 +10324,10 @@ the exception.
 </p>
 <!--
 The `connectListener` parameter will be added as an listener for the
-['connect'](#event_connect_) event.
+['connect'][] event.
 -->
 
-<p><code>connectListener</code> 引数は <a href="#event_connect_">&apos;connect&apos;</a>
-イベントのリスナに加えられます。
+<p><code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナに加えられます。
 
 
 </p>
@@ -10226,13 +10368,11 @@ Node は、ソケットに書き込まれるデータを内部のキューに入
 <h3>socket.setEncoding([encoding])<span><a class="mark" href="#all_socket_setencoding_encoding" id="all_socket_setencoding_encoding">#</a></span></h3>
 <!--
 Set the encoding for the socket as a Readable Stream. See
-[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
-for more information.
+[stream.setEncoding()][] for more information.
 -->
 
-<p>ソケットを入力ストリームとしてエンコーディングを設定します。詳細は
-<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
-を参照してください。
+<p>ソケットを入力ストリームとしてエンコーディングを設定します。
+詳細は <a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a> を参照してください。
 
 </p>
 <h3>socket.write(data, [encoding], [callback])<span><a class="mark" href="#all_socket_write_data_encoding_callback" id="all_socket_write_data_encoding_callback">#</a></span></h3>
@@ -10443,10 +10583,10 @@ The amount of bytes sent.
 
 </p>
 <!--
-`net.Socket` instances are EventEmitters with the following events:
+`net.Socket` instances are [EventEmitter][] with the following events:
 -->
 
-<p><code>net.Socket</code> のインスタンスは以下のイベントを持つ EventEmitter です:
+<p><code>net.Socket</code> のインスタンスは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;connect&apos;<span><a class="mark" href="#all_event_connect" id="all_event_connect">#</a></span></h3>
@@ -10466,8 +10606,7 @@ See `connect()`.
 <!--
 Emitted when data is received.  The argument `data` will be a `Buffer` or
 `String`.  Encoding of data is set by `socket.setEncoding()`.
-(See the [Readable Stream](stream.html#readable_stream) section for more
-information.)
+(See the [Readable Stream][] section for more information.)
 
 Note that the __data will be lost__ if there is no listener when a `Socket`
 emits a `'data'` event.
@@ -10476,7 +10615,7 @@ emits a `'data'` event.
 <p>データを受信した場合に生成されます。
 <code>data</code> 引数は <code>Buffer</code> または <code>String</code> です。
 データのエンコーディングは <code>socket.setEncoding()</code> で設定されます。
-(より詳しい情報は <a href="stream.html#readable_stream">Readable Stream</a> を参照してください)。
+(より詳しい情報は <a href="stream.html#stream_readable_stream">Readable Stream</a> を参照してください)。
 
 </p>
 <p><code>Socket</code> が <code>&apos;data&apos;</code> イベントを生成した時にリスナが存在しなければ、
@@ -11383,23 +11522,23 @@ added to the `'request'` event.
 </p>
 <h2>http.createClient([port], [host])<span><a class="mark" href="#all_http_createclient_port_host" id="all_http_createclient_port_host">#</a></span></h2>
 <!--
-This function is **deprecated**; please use
-[http.request()](#http_http_request_options_callback) instead. Constructs a new
-HTTP client. `port` and `host` refer to the server to be connected to.
+This function is **deprecated**; please use [http.request()][] instead.
+Constructs a new HTTP client. `port` and `host` refer to the server to be
+connected to.
 -->
 
 <p>この関数は <strong>deprecated</strong> です; 代わりに
-<a href="#http_http_request_options_callback">http.request()</a> を使用してください。
+<a href="http.html#http_http_request_options_callback">http.request()</a> を使用してください。
 新しい HTTP クライアントを構築します。
 <code>port</code> と <code>host</code> は接続するサーバを示します。
 
 </p>
 <h2>Class: http.Server<span><a class="mark" href="#all_class_http_server" id="all_class_http_server">#</a></span></h2>
 <!--
-This is an `EventEmitter` with the following events:
+This is an [EventEmitter][] with the following events:
 -->
 
-<p>これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;request&apos;<span><a class="mark" href="#all_event_request" id="all_event_request">#</a></span></h3>
@@ -11607,13 +11746,12 @@ sysctl の設定を通じて OS によって決定されます。
 </p>
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
-a listener for the ['listening'](net.html#event_listening_) event.
-See also [net.Server.listen()](net.html#server.listen).
+a listener for the ['listening'][] event.  See also [net.Server.listen(port)][].
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#event_listening_">&apos;listening&apos;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#server.listen">net.Server.listen()</a> を参照してください。
+<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_port_host_backlog_listeninglistener">net.Server.listen(port)</a> を参照してください。
 
 
 </p>
@@ -11627,24 +11765,65 @@ Start a UNIX socket server listening for connections on the given `path`.
 </p>
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
+a listener for the ['listening'][] event.  See also [net.Server.listen(path)][].
+-->
+
+<p>この関数は非同期です。最後の引数の <code>callback</code> は
+<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+
+
+</p>
+<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#all_server_listen_handle_listeninglistener_1" id="all_server_listen_handle_listeninglistener_1">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>handle</code> <span class="type">Object</span></li>
+<li><code>listeningListener</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+The `handle` object can be set to either a server or socket (anything
+with an underlying `_handle` member), or a `{fd: <n>}` object.
+-->
+
+<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら
+なんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。
+
+</p>
+<!--
+This will cause the server to accept connections on the specified
+handle, but it is presumed that the file descriptor or handle has
+already been bound to a port or domain socket.
+-->
+
+<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、
+ファイル記述子またはハンドルは既にポートまたはドメインソケットに
+バインドされているものと見なされます。
+
+</p>
+<!--
+Listening on a file descriptor is not supported on Windows.
+-->
+
+<p>ファイル記述子へのリスニングは Windows ではサポートされません。
+
+</p>
+<!--
+This function is asynchronous. The last parameter `callback` will be added as
 a listener for the ['listening'](net.html#event_listening_) event.
 See also [net.Server.listen()](net.html#server.listen).
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#event_listening_">&apos;listening&apos;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#server.listen">net.Server.listen()</a> を参照してください。
-
+<a href="net.html#net_event_listening">&apos;listening&apos;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
 
 </p>
 <h3>server.close([cb])<span><a class="mark" href="#all_server_close_cb_1" id="all_server_close_cb_1">#</a></span></h3>
 <!--
-Stops the server from accepting new connections.
-See [net.Server.close()](net.html#server.close).
+Stops the server from accepting new connections.  See [net.Server.close()][].
 -->
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。
-
+<a href="net.html#net_server_close_cb">net.Server.close()</a> を参照してください。
 
 </p>
 <h3>server.maxHeadersCount<span><a class="mark" href="#all_server_maxheaderscount" id="all_server_maxheaderscount">#</a></span></h3>
@@ -11669,13 +11848,12 @@ the user -- and passed as the first argument to a `'request'` listener.
 
 </p>
 <!--
-The request implements the [Readable Stream](stream.html#readable_stream)
-interface. This is an `EventEmitter` with the following events:
+The request implements the [Readable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
-<p>リクエストは <a href="stream.html#readable_stream">Readable Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>リクエストは <a href="stream.html#stream_readable_stream">Readable Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;data&apos;<span><a class="mark" href="#all_event_data_2" id="all_event_data_2">#</a></span></h3>
@@ -11685,12 +11863,12 @@ interface. This is an `EventEmitter` with the following events:
 <!--
 Emitted when a piece of the message body is received. The chunk is a string if
 an encoding has been set with `request.setEncoding()`, otherwise it's a
-[Buffer](buffer.html).
+[Buffer][].
 -->
 
 <p>メッセージボディの断片を受信した場合に生成されます。
 <code>request.setEncoding()</code> によってエンコーディングが設定された場合、
-<code>chunk</code> は文字列です。それ以外の場合は <a href="buffer.html">Buffer</a> です。
+<code>chunk</code> は文字列です。それ以外の場合は <a href="buffer.html#buffer_buffer">Buffer</a> です。
 
 </p>
 <!--
@@ -11852,14 +12030,12 @@ Also `request.httpVersionMajor` is the first integer and
 </p>
 <h3>request.setEncoding([encoding])<span><a class="mark" href="#all_request_setencoding_encoding" id="all_request_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the request body. See
-[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
-for more information.
+Set the encoding for the request body. See [stream.setEncoding()][] for more
+information.
 -->
 
 <p>リクエストボディのエンコーディングを設定します。詳細は
-<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
-を参照してください。
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a> を参照してください。
 
 </p>
 <h3>request.pause()<span><a class="mark" href="#all_request_pause" id="all_request_pause">#</a></span></h3>
@@ -11906,17 +12082,16 @@ authentication details.
 This object is created internally by a HTTP server--not by the user. It is
 passed as the second parameter to the `'request'` event.
 
-The response implements the [Writable  Stream](stream.html#writable_stream)
-interface. This is an `EventEmitter` with the following events:
+The response implements the [Writable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
 <p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。
 <code>&apos;request&apos;</code> リスナーの第 2 引数として渡されます。
 
 </p>
-<p>レスポンスは <a href="stream.html#writable_stream">Writable  Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>レスポンスは <a href="stream.html#stream_writable_stream">Writable  Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;close&apos;<span><a class="mark" href="#all_event_close_7" id="all_event_close_7">#</a></span></h3>
@@ -11935,13 +12110,12 @@ Indicates that the underlaying connection was terminated before
 <h3>response.writeContinue()<span><a class="mark" href="#all_response_writecontinue" id="all_response_writecontinue">#</a></span></h3>
 <!--
 Sends a HTTP/1.1 100 Continue message to the client, indicating that
-the request body should be sent. See the [checkContinue](#event_checkContinue_) event on
-`Server`.
+the request body should be sent. See the ['checkContinue'][] event on `Server`.
 -->
 
 <p>HTTP/1.1 の 100 Continue メッセージをクライアントに送信し、
 リクエストボディを送信してもよいことを示します。
-<code>Server</code>の <a href="#event_checkContinue_">checkContinue</a> イベントを参照してください。
+<code>Server</code>の <a href="#http_event_checkcontinue">&apos;checkContinue&apos;</a> イベントを参照してください。
 
 </p>
 <h3>response.writeHead(statusCode, [reasonPhrase], [headers])<span><a class="mark" href="#all_response_writehead_statuscode_reasonphrase_headers" id="all_response_writehead_statuscode_reasonphrase_headers">#</a></span></h3>
@@ -12231,12 +12405,12 @@ This function allows one to transparently issue requests.
 </p>
 <!--
 `options` can be an object or a string. If `options` is a string, it is
-automatically parsed with [url.parse()](url.html#url.parse).
+automatically parsed with [url.parse()][].
 -->
 
 <p><code>options</code> はオブジェクトまたは文字列です。
-もし <code>options</code> が文字列なら、それは <a href="url.html#url.parse">url.parse()</a>
-によって自動的に解析されます。
+もし <code>options</code> が文字列なら、それは <a href="url.html#url_url_parse_urlstr_parsequerystring_slashesdenotehost">url.parse()</a> によって自動的に
+解析されます。
 
 </p>
 <!--
@@ -12259,10 +12433,9 @@ Options:
 - `headers`: An object containing request headers.
 - `auth`: Basic authentication i.e. `'user:password'` to compute an
   Authorization header.
-- `agent`: Controls [Agent](#http.Agent) behavior. When an Agent is used
-  request will default to `Connection: keep-alive`. Possible values:
- - `undefined` (default): use [global Agent](#http.globalAgent) for this host
-   and port.
+- `agent`: Controls [Agent][] behavior. When an Agent is used request will
+  default to `Connection: keep-alive`. Possible values:
+ - `undefined` (default): use [global Agent][] for this host and port.
  - `Agent` object: explicitly use the passed in `Agent`.
  - `false`: opts out of connection pooling with an Agent, defaults request to
    `Connection: close`.
@@ -12281,11 +12454,10 @@ Options:
 <li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>
 <li><code>auth</code>: ベーシック認証すなわち Authorization ヘッダのための
 <code>&apos;user:password&apos;</code>。</li>
-<li><code>agent</code>: <code>Agent</code> の振る舞いを制御します。
+<li><code>agent</code>: <a href="#https_class_https_agent">Agent</a> の振る舞いを制御します。
 エージェントが使われる場合、Connection:keep-alive がデフォルトになります。
 可能な値は:<ul>
-<li><code>undefined</code> (デフォルト): ホストとポートで
-<a href="#http.globalAgent">グローバル Agent</a> を使用します。</li>
+<li><code>undefined</code> (デフォルト): ホストとポートで <a href="#http_http_globalagent">global Agent</a> を使用します。</li>
 <li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>
 <li><code>false</code>: Agent によるコネクションプーリングを使用しません。
  Connection:close の場合のデフォルトです。</li>
@@ -12595,13 +12767,12 @@ which has been transmitted are equal or not.
 
 </p>
 <!--
-The request implements the [Writable  Stream](stream.html#writable_stream)
-interface. This is an `EventEmitter` with the following events:
+The request implements the [Writable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
-<p>リクエストは <a href="stream.html#writable_stream">Writable  Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です。
+<p>リクエストは <a href="stream.html#stream_writable_stream">Writable  Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です。
 
 </p>
 <h3>Event &apos;response&apos;<span><a class="mark" href="#all_event_response" id="all_event_response">#</a></span></h3>
@@ -12609,8 +12780,8 @@ interface. This is an `EventEmitter` with the following events:
 
 </p>
 <!--
-Emitted when a response is received to this request. This event is emitted only once. The
-`response` argument will be an instance of `http.ClientResponse`.
+Emitted when a response is received to this request. This event is emitted only
+once. The `response` argument will be an instance of `http.ClientResponse`.
 -->
 
 <p>このリクエストに対するレスポンスを受信した時に生成されます。
@@ -12811,10 +12982,10 @@ creating the request.
 
 </p>
 <!--
-The `chunk` argument should be a [buffer](buffer.html) or a string.
+The `chunk` argument should be a [Buffer][] or a string.
 -->
 
-<p><code>chunk</code> 引数は<a href="buffer.html">buffer</a> または文字列です。
+<p><code>chunk</code> 引数は <a href="buffer.html#buffer_buffer">Buffer</a> または文字列です。
 
 </p>
 <!--
@@ -12858,40 +13029,33 @@ Aborts a request.  (New since v0.3.8.)
 </p>
 <h3>request.setTimeout(timeout, [callback])<span><a class="mark" href="#all_request_settimeout_timeout_callback" id="all_request_settimeout_timeout_callback">#</a></span></h3>
 <!--
-Once a socket is assigned to this request and is connected 
-[socket.setTimeout(timeout, [callback])](net.html#socket.setTimeout)
-will be called.
+Once a socket is assigned to this request and is connected
+[socket.setTimeout()][] will be called.
 -->
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<a href="net.html#socket.setTimeout">socket.setTimeout(timeout, [callback])</a>
-が呼び出されます。
+<a href="net.html#net_socket_settimeout_timeout_callback">socket.setTimeout()</a> が呼び出されます。
 
 </p>
 <h3>request.setNoDelay([noDelay])<span><a class="mark" href="#all_request_setnodelay_nodelay" id="all_request_setnodelay_nodelay">#</a></span></h3>
 <!--
-Once a socket is assigned to this request and is connected 
-[socket.setNoDelay(noDelay)](net.html#socket.setNoDelay)
-will be called.
+Once a socket is assigned to this request and is connected
+[socket.setNoDelay()][] will be called.
 -->
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<a href="net.html#socket.setNoDelay">socket.setNoDelay(noDelay)</a>
-が呼び出されます。
+<a href="net.html#net_socket_setnodelay_nodelay">socket.setNoDelay()</a> が呼び出されます。
 
 
 </p>
 <h3>request.setSocketKeepAlive([enable], [initialDelay])<span><a class="mark" href="#all_request_setsocketkeepalive_enable_initialdelay" id="all_request_setsocketkeepalive_enable_initialdelay">#</a></span></h3>
 <!--
-Once a socket is assigned to this request and is connected 
-[socket.setKeepAlive(enable, [initialDelay])](net.html#socket.setKeepAlive)
-will be called.
+Once a socket is assigned to this request and is connected
+[socket.setKeepAlive()][] will be called.
 -->
 
 <p>このリクエストにソケットが割り当てられて接続した際に、
-<a href="net.html#socket.setKeepAlive">socket.setKeepAlive(enable, [initialDelay])</a>
-が呼び出されます。
-
+<a href="net.html#net_socket_setkeepalive_enable_initialdelay">socket.setKeepAlive()</a> が呼び出されます。
 
 </p>
 <h2>http.ClientResponse<span><a class="mark" href="#all_http_clientresponse" id="all_http_clientresponse">#</a></span></h2>
@@ -12905,13 +13069,12 @@ passed to the `'response'` event of the request object.
 
 </p>
 <!--
-The response implements the [Readable Stream](stream.html#readable_stream)
-interface. This is an `EventEmitter` with the following events:
+The response implements the [Readable Stream][] interface. This is an
+[EventEmitter][] with the following events:
 -->
 
-<p>レスポンスは <a href="stream.html#readable_stream">Readable Stream</a>
-インタフェースを実装します。
-これは以下のイベントを持つ <code>EventEmitter</code> です:
+<p>レスポンスは <a href="stream.html#stream_readable_stream">Readable Stream</a> インタフェースを実装します。
+これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
 <h3>Event: &apos;data&apos;<span><a class="mark" href="#all_event_data_3" id="all_event_data_3">#</a></span></h3>
@@ -12952,13 +13115,11 @@ emitted no other events will be emitted on the response.
 <!--
 Indicates that the underlaying connection was terminated before
 `end` event was emitted.
-See [http.ServerRequest](#http.ServerRequest)'s `'close'` event for more
-information.
+See [http.ServerRequest][]'s `'close'` event for more information.
 -->
 
 <p><code>&apos;end&apos;</code> イベントが生成される前に下層の接続が切断されたことを示します。
-<a href="#http.ServerRequest">http.ServerRequest</a> の <code>&apos;close&apos;</code>
-イベントにより多くの情報があります。
+<a href="#http_class_http_serverrequest">http.ServerRequest</a> の <code>&apos;close&apos;</code> イベントにより多くの情報があります。
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#all_response_statuscode_1" id="all_response_statuscode_1">#</a></span></h3>
@@ -13002,14 +13163,12 @@ The response trailers object. Only populated after the 'end' event.
 </p>
 <h3>response.setEncoding([encoding])<span><a class="mark" href="#all_response_setencoding_encoding" id="all_response_setencoding_encoding">#</a></span></h3>
 <!--
-Set the encoding for the response body. See
-[stream.setEncoding()](stream.html#stream_stream_setencoding_encoding)
-for more information.
+Set the encoding for the response body. See [stream.setEncoding()][] for more
+information.
 -->
 
 <p>レスポンスボディのエンコーディングを設定します。詳細は
-<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a>
-を参照してください。
+<a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a> を参照してください。
 
 </p>
 <h3>response.pause()<span><a class="mark" href="#all_response_pause" id="all_response_pause">#</a></span></h3>
@@ -13052,12 +13211,12 @@ This class is a subclass of `tls.Server` and emits events same as
 <h2>https.createServer(options, [requestListener])<span><a class="mark" href="#all_https_createserver_options_requestlistener" id="all_https_createserver_options_requestlistener">#</a></span></h2>
 <!--
 Returns a new HTTPS web server object. The `options` is similar to
-[tls.createServer()](tls.html#tls.createServer).  The `requestListener` is
-a function which is automatically added to the `'request'` event.
+[tls.createServer()][].  The `requestListener` is a function which is
+automatically added to the `'request'` event.
 -->
 
 <p>新しい HTTPS Web サーバオブジェクトを返します。
-<code>option</code> は <code>tls.createServer()</code> と同じです。
+<code>option</code> は <a href="tls.html#tls_tls_createserver_options_secureconnectionlistener">tls.createServer()</a> と同じです。
 <code>requestListener</code> は関数で、 <code>&apos;request&apos;</code> イベントに自動的に追加されます。
 
 </p>
@@ -13101,12 +13260,12 @@ https.createServer(options, function (req, res) {
 }).listen(8000);</code></pre>
 <h2>https.request(options, callback)<span><a class="mark" href="#all_https_request_options_callback" id="all_https_request_options_callback">#</a></span></h2>
 <!--
-Makes a request to a secure web server.
-All options from [http.request()](http.html#http.request) are valid.
+Makes a request to a secure web server.  All options from [http.request()][]
+are valid.
 -->
 
 <p>セキュアな Web サーバへのリクエストを作成します。
-<a href="http.html#http.request">http.request()</a> の全てと同様のオプションが指定できます。
+<a href="http.html#http_http_request_options_callback">http.request()</a> の全てと同様のオプションが指定できます。
 
 </p>
 <!--
@@ -13161,10 +13320,9 @@ The options argument has the following options
 - `headers`: An object containing request headers.
 - `auth`: Basic authentication i.e. `'user:password'` to compute an
   Authorization header.
-- `agent`: Controls [Agent](#https.Agent) behavior. When an Agent is
-  used request will default to `Connection: keep-alive`. Possible values:
- - `undefined` (default): use [globalAgent](#https.globalAgent) for this
-   host and port.
+- `agent`: Controls [Agent][] behavior. When an Agent is used request will
+  default to `Connection: keep-alive`. Possible values:
+ - `undefined` (default): use [globalAgent][] for this host and port.
  - `Agent` object: explicitly use the passed in `Agent`.
  - `false`: opts out of connection pooling with an Agent, defaults request to
    `Connection: close`.
@@ -13181,11 +13339,10 @@ The options argument has the following options
 例 <code>&apos;/index.html?page=12&apos;</code></li>
 <li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>
 <li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>&apos;user:password&apos;</code>。</li>
-<li><code>agent</code>: <a href="#https.Agent">Agent</a> の振る舞いを制御します。
+<li><code>agent</code>: <a href="#https_class_https_agent">Agent</a> の振る舞いを制御します。
 エージェントが使われる場合、<code>Connection:keep-alive</code> がデフォルトになります。
 可能な値は:<ul>
-<li><code>undefined</code> (デフォルト): ホストとポートで
-<a href="#https.globalAgent">グローバル Agent</a> を使用します。</li>
+<li><code>undefined</code> (デフォルト): ホストとポートで <a href="#https_https_globalagent">globalAgent</a> を使用します。</li>
 <li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>
 <li><code>false</code>: Agent によるコネクションプーリングを使用しません。
 <code>Connection:close</code> の場合のデフォルトです。</li>
@@ -13193,13 +13350,12 @@ The options argument has the following options
 </li>
 </ul>
 <!--
-The following options from [tls.connect()](tls.html#tls.connect) can also be
-specified. However, a [globalAgent](#https.globalAgent) silently ignores these.
+The following options from [tls.connect()][] can also be specified. However, a
+[globalAgent][] silently ignores these.
 -->
 
-<p>以下の <a href="tls.html#tls.connect">tls.connect()</a> 由来のオプションを
-指定することもできますが、
-グローバル <a href="http.html#http.Agent">エージェント</a> はこれらを無視します。
+<p>以下の <a href="tls.html#tls_tls_connect_options_secureconnectlistener">tls.connect()</a> 由来のオプションを指定することもできますが、
+グローバル <a href="#https_https_globalagent">globalAgent</a> はこれらを無視します。
 
 </p>
 <!--
@@ -13319,23 +13475,21 @@ https.get({ host: &apos;encrypted.google.com&apos;, path: &apos;/&apos; }, funct
 });</code></pre>
 <h2>Class: https.Agent<span><a class="mark" href="#all_class_https_agent" id="all_class_https_agent">#</a></span></h2>
 <!--
-An Agent object for HTTPS similar to [http.Agent](http.html#http.Agent).
-See [https.request()](#https.request) for more information.
+An Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]
+for more information.
 -->
 
-<p>HTTPS 用の Agent オブジェクトで，
-<a href="http.html#http.Agent">http.Agent</a> と同様です。
-詳細は <a href="#https.request">https.request()</a> を参照してください。
+<p>HTTPS 用の Agent オブジェクトで，<a href="http.html#http_class_http_agent">http.Agent</a> と同様です。
+詳細は [https.request()][] を参照してください。
 
 </p>
 <h2>https.globalAgent<span><a class="mark" href="#all_https_globalagent" id="all_https_globalagent">#</a></span></h2>
 <!--
-Global instance of [https.Agent](#https.Agent) which is used as the default
-for all HTTPS client requests.
+Global instance of [https.Agent][] for all HTTPS client requests.
 -->
 
 <p>全ての HTTPS クライアントリクエストで使用される、デフォルトの
-<a href="#https.Agent">https.Agent</a> のインスタンスです。
+<a href="#https_class_https_agent">https.Agent</a> のインスタンスです。
 
 </p>
 <h1>URL<span><a class="mark" href="#all_url" id="all_url">#</a></span></h1>
@@ -14937,10 +15091,10 @@ different, and explained below.
 </p>
 <h2>Class: ChildProcess<span><a class="mark" href="#all_class_childprocess" id="all_class_childprocess">#</a></span></h2>
 <!--
-`ChildProcess` is an `EventEmitter`.
+`ChildProcess` is an [EventEmitter][].
 -->
 
-<p><code>ChildProcess</code> は <code>EventEmitter</code> です。
+<p><code>ChildProcess</code> は <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です。
 
 </p>
 <!--
@@ -15829,7 +15983,7 @@ the child process is killed.
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
-  * `maxBuffer` {Number} (Default: 200*1024)
+  * `maxBuffer` {Number} (Default: 200\*1024)
   * `killSignal` {String} (Default: 'SIGTERM')
 * `callback` {Function} called with the output when process terminates
   * `error` {Error}
@@ -16356,21 +16510,6 @@ http.createServer(function(request, response) {
     raw.pipe(response);
   }
 }).listen(1337);</code></pre>
-<h2>Constants<span><a class="mark" href="#all_constants" id="all_constants">#</a></span></h2>
-<!--type=misc-->
-
-<!--
-All of the constants defined in zlib.h are also defined on
-`require('zlib')`.  They are described in more detail in the zlib
-documentation.  See <http://zlib.net/manual.html#Constants>
-for more details.
--->
-
-<p>zlib.h に定義された定数は <code>require(&apos;zlib&apos;)</code> でも定義されます。
-それらは zlib のドキュメントでより詳しく説明されます。
-詳細は <a href="http://zlib.net/manual.html#Constants">http://zlib.net/manual.html#Constants</a> を参照してください。
-
-</p>
 <h2>zlib.createGzip([options])<span><a class="mark" href="#all_zlib_creategzip_options" id="all_zlib_creategzip_options">#</a></span></h2>
 <!--
 Returns a new [Gzip](#zlib_class_zlib_gzip) object with an
@@ -16591,8 +16730,8 @@ relevant when compressing, and are ignored by the decompression classes.
 * strategy (compression only)
 * dictionary (deflate/inflate only, empty dictionary by default)
 
-See the description of `deflateInit2` and `inflateInit2` at
-<http://zlib.net/manual.html#Advanced> for more information on these.
+See the description of `deflateInit2` and `inflateInit2`
+at <http://zlib.net/manual.html#Advanced> for more information on these.
 -->
 
 <p>どのクラスもオプションオブジェクトを受け取ります。
@@ -16694,6 +16833,125 @@ speed, at the cost of memory usage.
 これはあスピードに影響するもう一つのファクタで、メモリ使用量を犠牲にします。
 
 </p>
+<h2>Constants<span><a class="mark" href="#all_constants" id="all_constants">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+All of the constants defined in zlib.h are also defined on
+`require('zlib')`.
+In the normal course of operations, you will not need to ever set any of
+these.  They are documented here so that their presence is not
+surprising.  This section is taken almost directly from the [zlib
+documentation](http://zlib.net/manual.html#Constants).  See
+<http://zlib.net/manual.html#Constants> for more details.
+-->
+
+<p>zlib.h に定義された定数は <code>require(&apos;zlib&apos;)</code> でも定義されます。
+通常の使い方ではこれらを設定する必要はありません。
+それが存在することで驚かれないように、これらはドキュメント化されます。
+このセクションのほとんどは
+<a href="http://zlib.net/manual.html#Constants">zlib documentation</a>
+から直接得ることができます。
+より詳細は <a href="http://zlib.net/manual.html#Constants">http://zlib.net/manual.html#Constants</a> を参照してください。
+
+</p>
+<!--
+Allowed flush values.
+-->
+
+<p>利用可能なフラッシュ値。
+
+</p>
+<ul>
+<li><code>zlib.Z_NO_FLUSH</code></li>
+<li><code>zlib.Z_PARTIAL_FLUSH</code></li>
+<li><code>zlib.Z_SYNC_FLUSH</code></li>
+<li><code>zlib.Z_FULL_FLUSH</code></li>
+<li><code>zlib.Z_FINISH</code></li>
+<li><code>zlib.Z_BLOCK</code></li>
+<li><code>zlib.Z_TREES</code></li>
+</ul>
+<!--
+Return codes for the compression/decompression functions. Negative
+values are errors, positive values are used for special but normal
+events.
+-->
+
+<p>圧縮／解凍関数のリターンコード。
+負数はエラー、正数は正常なイベントの特別な場合に使われます。
+
+</p>
+<ul>
+<li><code>zlib.Z_OK</code></li>
+<li><code>zlib.Z_STREAM_END</code></li>
+<li><code>zlib.Z_NEED_DICT</code></li>
+<li><code>zlib.Z_ERRNO</code></li>
+<li><code>zlib.Z_STREAM_ERROR</code></li>
+<li><code>zlib.Z_DATA_ERROR</code></li>
+<li><code>zlib.Z_MEM_ERROR</code></li>
+<li><code>zlib.Z_BUF_ERROR</code></li>
+<li><code>zlib.Z_VERSION_ERROR</code></li>
+</ul>
+<!--
+Compression levels.
+-->
+
+<p>圧縮レベル。
+
+</p>
+<ul>
+<li><code>zlib.Z_NO_COMPRESSION</code></li>
+<li><code>zlib.Z_BEST_SPEED</code></li>
+<li><code>zlib.Z_BEST_COMPRESSION</code></li>
+<li><code>zlib.Z_DEFAULT_COMPRESSION</code></li>
+</ul>
+<!--
+Compression strategy.
+-->
+
+<p>圧縮ストラテジ。
+
+</p>
+<ul>
+<li><code>zlib.Z_FILTERED</code></li>
+<li><code>zlib.Z_HUFFMAN_ONLY</code></li>
+<li><code>zlib.Z_RLE</code></li>
+<li><code>zlib.Z_FIXED</code></li>
+<li><code>zlib.Z_DEFAULT_STRATEGY</code></li>
+</ul>
+<!--
+Possible values of the data_type field.
+-->
+
+<p>data_type フィールドで利用可能な値。
+
+</p>
+<ul>
+<li><code>zlib.Z_BINARY</code></li>
+<li><code>zlib.Z_TEXT</code></li>
+<li><code>zlib.Z_ASCII</code></li>
+<li><code>zlib.Z_UNKNOWN</code></li>
+</ul>
+<!--
+The deflate compression method (the only one supported in this version).
+-->
+
+<p>deflate の圧縮方法 (このバージョンでは一つだけがサポートされます)。
+
+</p>
+<ul>
+<li><code>zlib.Z_DEFLATED</code></li>
+</ul>
+<!--
+For initializing zalloc, zfree, opaque.
+-->
+
+<p>zalloc、zfree、opaque の初期化用。
+
+</p>
+<ul>
+<li><code>zlib.Z_NULL</code></li>
+</ul>
 <h1>os<span><a class="mark" href="#all_os" id="all_os">#</a></span></h1>
 <pre><code>Stability: 4 - API Frozen</code></pre>
 <!--
@@ -16706,6 +16964,14 @@ Use `require('os')` to access this module.
 -->
 
 <p><code>require(&apos;os&apos;)</code> によってこのモジュールにアクセスします。
+
+</p>
+<h2>os.tmpDir()<span><a class="mark" href="#all_os_tmpdir" id="all_os_tmpdir">#</a></span></h2>
+<!--
+Returns the operating system's default directory for temp files.
+-->
+
+<p>一時ファイルのためのデフォルトディレクトリを返します。
 
 </p>
 <h2>os.hostname()<span><a class="mark" href="#all_os_hostname" id="all_os_hostname">#</a></span></h2>
@@ -17171,6 +17437,111 @@ Please try it out and provide feedback.
 これを試して、フィードバックを行ってください。
 
 </p>
+<h2>How It Works<span><a class="mark" href="#all_how_it_works" id="all_how_it_works">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+The worker processes are spawned using the `child_process.fork` method,
+so that they can communicate with the parent via IPC and pass server
+handles back and forth.
+-->
+
+<p>ワーカプロセスは <code>child_process.fork</code> メソッドを使って起動されるため、
+親プロセスと IPC で通信したり、サーバハンドルをやり取りしたりすることが
+できます。
+
+</p>
+<!--
+When you call `server.listen(...)` in a worker, it serializes the
+arguments and passes the request to the master process.  If the master
+process already has a listening server matching the worker's
+requirements, then it passes the handle to the worker.  If it does not
+already have a listening server matching that requirement, then it will
+create one, and pass the handle to the child.
+-->
+
+<p>ワーカが <code>server.listen(...)</code> を呼び出すと、引数がシリアライズされて
+マスタプロセスにリクエストが渡されます。
+マスタプロセスは、ワーカのリクエストにマッチするリスニングサーバが既に
+存在すればそのハンドルをワーカに渡します。
+リクエストにマッチするリスニングサーバが存在しなければ、それが作成されて
+子プロセスに渡されます。
+
+</p>
+<!--
+This causes potentially surprising behavior in three edge cases:
+-->
+
+<p>これは三つの極端なケースで驚くような振る舞いを引き起こすかもしれません。
+
+</p>
+<!--
+1. `server.listen({fd: 7})` Because the message is passed to the worker,
+   file descriptor 7 **in the parent** will be listened on, and the
+   handle passed to the worker, rather than listening to the worker's
+   idea of what the number 7 file descriptor references.
+2. `server.listen(handle)` Listening on handles explicitly will cause
+   the worker to use the supplied handle, rather than talk to the master
+   process.  If the worker already has the handle, then it's presumed
+   that you know what you are doing.
+3. `server.listen(0)` Normally, this will case servers to listen on a
+   random port.  However, in a cluster, each worker will receive the
+   same "random" port each time they do `listen(0)`.  In essence, the
+   port is random the first time, but predictable thereafter.  If you
+   want to listen on a unique port, generate a port number based on the
+   cluster worker ID.
+-->
+
+<ol>
+<li><code>server.listen({fd: 7})</code> メッセージはワーカに渡されてるため、
+ワーカのファイル記述子 7 が参照するものではなく、
+<strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに
+渡されます。</li>
+<li><code>server.listen(handle)</code> 明示的なハンドルをリスニングするとマスタプロセスは
+関与することなく、ワーカは与えられたハンドルを使うことになります。
+ワーカがすでにハンドルを持っているなら、何をしようとしているか
+あなたは分かっているでしょう。</li>
+<li><code>&apos;server.listen(0)</code> 通常、これはサーバがランダムなポートをリッスンすることを
+意味します。しかしながらクラスタでは、各ワーカは <code>listen(0)</code> によって
+同じ &quot;ランダムな&quot; ポートを受信します。
+すなわち、初回はポートはランダムになりますが、その後はそうではありません。
+もしユニークなポートをリッスンしたければ、クラスタのワーカ ID に基づいて
+ポート番号を生成してください。</li>
+</ol>
+<!--
+When multiple processes are all `accept()`ing on the same underlying
+resource, the operating system load-balances across them very
+efficiently.  There is no routing logic in Node.js, or in your program,
+and no shared state between the workers.  Therefore, it is important to
+design your program such that it does not rely too heavily on in-memory
+data objects for things like sessions and login.
+-->
+
+<p>複数のプロセスが同じリソースを <code>accept()</code> する時、オペレーティングシステムは
+とても効率的にそれら全体をロードバランスします。
+Node.js にもあなたのプログラムにも、ルーティングのためのロジックや
+ワーカ間で共有される状態はありません。
+したがって、あなたのプログラムがセッションやログインのためにメモリ内の
+データオブジェクトに過度に頼らないように設計することが重要です。
+
+</p>
+<!--
+Because workers are all separate processes, they can be killed or
+re-spawned depending on your program's needs, without affecting other
+workers.  As long as there are some workers still alive, the server will
+continue to accept connections.  Node does not automatically manage the
+number of workers for you, however.  It is your responsibility to manage
+the worker pool for your application's needs.
+-->
+
+<p>全てのワーカは独立したプロセスなので、他のワーカに影響を与えることなく
+プログラムのニーズに応じてそれらを殺したり再起動したりすることができます。
+いくつかのワーカが生きている限り、サーバは接続を受け付け続けます。
+しかしながら、Node はワーカの数を自動的に管理することはありません。
+アプリケーションのニーズに応じてワーカのプールを管理することは、
+あなたの責務です。
+
+</p>
 <h2>cluster.settings<span><a class="mark" href="#all_cluster_settings" id="all_cluster_settings">#</a></span></h2>
 <!--
 * {Object}
@@ -17253,13 +17624,13 @@ function errorMsg() {
 }
 
 cluster.on(&apos;fork&apos;, function(worker) {
-  timeouts[worker.uniqueID] = setTimeout(errorMsg, 2000);
+  timeouts[worker.id] = setTimeout(errorMsg, 2000);
 });
 cluster.on(&apos;listening&apos;, function(worker, address) {
-  clearTimeout(timeouts[worker.uniqueID]);
+  clearTimeout(timeouts[worker.id]);
 });
 cluster.on(&apos;exit&apos;, function(worker, code, signal) {
-  clearTimeout(timeouts[worker.uniqueID]);
+  clearTimeout(timeouts[worker.id]);
   errorMsg();
 });</code></pre>
 <h2>Event: &apos;online&apos;<span><a class="mark" href="#all_event_online" id="all_event_online">#</a></span></h2>
@@ -17345,12 +17716,12 @@ connections.
 
 </p>
 <pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {
-  console.log(&apos;The worker #&apos; + worker.uniqueID + &apos; has disconnected&apos;);
+  console.log(&apos;The worker #&apos; + worker.id + &apos; has disconnected&apos;);
 });</code></pre>
 <h2>Event: &apos;exit&apos;<span><a class="mark" href="#all_event_exit_3" id="all_event_exit_3">#</a></span></h2>
 <!--
 * `worker` {Worker object}
-* `code` {Number} the exit code, if it exited normally. 
+* `code` {Number} the exit code, if it exited normally.
 * `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
   the process to be killed.
 -->
@@ -17515,18 +17886,18 @@ The method takes an optional callback argument which will be called when finishe
 </div></ul>
 <!--
 In the cluster all living worker objects are stored in this object by there
-`uniqueID` as the key. This makes it easy to loop through all living workers.
+`id` as the key. This makes it easy to loop through all living workers.
 -->
 
-<p>このクラスタで生きている全てのワーカオブジェクトを、その <code>uniqueID</code>
+<p>このクラスタで生きている全てのワーカオブジェクトを、その <code>id</code>
 をキーとして保存しているオブジェクトです。
 これは全ての生きているワーカに対して繰り返しを行うことを容易にします。
 
 </p>
 <pre><code>// Go through all workers
 function eachWorker(callback) {
-  for (var uniqueID in cluster.workers) {
-    callback(cluster.workers[uniqueID]);
+  for (var id in cluster.workers) {
+    callback(cluster.workers[id]);
   }
 }
 eachWorker(function(worker) {
@@ -17534,15 +17905,15 @@ eachWorker(function(worker) {
 });</code></pre>
 <!--
 Should you wish to reference a worker over a communication channel, using
-the worker's uniqueID is the easiest way to find the worker.
+the worker's unique id is the easiest way to find the worker.
 -->
 
 <p>通信チャネルを越えてワーカの参照を渡す場合は、
-ワーカのユニーク ID を使ってワーカを探すのが簡単です。
+ワーカのユニークな ID を使ってワーカを探すのが簡単です。
 
 </p>
-<pre><code>socket.on(&apos;data&apos;, function(uniqueID) {
-  var worker = cluster.workers[uniqueID];
+<pre><code>socket.on(&apos;data&apos;, function(id) {
+  var worker = cluster.workers[id];
 });</code></pre>
 <h2>Class: Worker<span><a class="mark" href="#all_class_worker" id="all_class_worker">#</a></span></h2>
 <!--
@@ -17556,20 +17927,20 @@ it can be obtained using `cluster.worker`.
 ワーカでは <code>cluster.worker</code> から取得することができます。
 
 </p>
-<h3>worker.uniqueID<span><a class="mark" href="#all_worker_uniqueid" id="all_worker_uniqueid">#</a></span></h3>
+<h3>worker.id<span><a class="mark" href="#all_worker_id" id="all_worker_id">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">String</span></li>
 </div></ul>
 <!--
 Each new worker is given its own unique id, this id is stored in the
-`uniqueID`.
+`id`.
 
 While a worker is alive, this is the key that indexes it in
 cluster.workers
 -->
 
 <p>新しいワーカはいずれもユニークな ID を与えられます。
-この ID は <code>uniqueID</code> に保存されます。.
+この ID は <code>id</code> に保存されます。
 
 </p>
 <p>ワーカが生きている間、これは <code>cluseter.workers</code> のキーとなります。
@@ -17769,8 +18140,8 @@ if (cluster.isMaster) {
 
   // Start workers and listen for messages containing notifyRequest
   cluster.autoFork();
-  Object.keys(cluster.workers).forEach(function(uniqueID) {
-    cluster.workers[uniqueID].on(&apos;message&apos;, messageHandler);
+  Object.keys(cluster.workers).forEach(function(id) {
+    cluster.workers[id].on(&apos;message&apos;, messageHandler);
   });
 
 } else {
@@ -17828,7 +18199,7 @@ on the specified worker.
 };</code></pre>
 <h3>Event: &apos;exit&apos;<span><a class="mark" href="#all_event_exit_4" id="all_event_exit_4">#</a></span></h3>
 <!--
-* `code` {Number} the exit code, if it exited normally. 
+* `code` {Number} the exit code, if it exited normally.
 * `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
   the process to be killed.
 -->
@@ -17840,7 +18211,7 @@ on the specified worker.
 </ul>
 <!--
 Emitted by the individual worker instance, when the underlying child process
-is terminated.  See [child_process event: 'exit'](child_process.html#child_process_event_exit). 
+is terminated.  See [child_process event: 'exit'](child_process.html#child_process_event_exit).
 -->
 
 <p>子プロセスが終了すると、ワーカのインスタンスによって生成されます。
@@ -17959,7 +18330,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

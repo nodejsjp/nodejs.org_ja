@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTPS Node.js v0.7.10 Manual &amp; Documentation</title>
+  <title>HTTPS Node.js v0.7.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/https.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -93,12 +93,12 @@ This class is a subclass of `tls.Server` and emits events same as
 <h2>https.createServer(options, [requestListener])<span><a class="mark" href="#https_https_createserver_options_requestlistener" id="https_https_createserver_options_requestlistener">#</a></span></h2>
 <!--
 Returns a new HTTPS web server object. The `options` is similar to
-[tls.createServer()](tls.html#tls.createServer).  The `requestListener` is
-a function which is automatically added to the `'request'` event.
+[tls.createServer()][].  The `requestListener` is a function which is
+automatically added to the `'request'` event.
 -->
 
 <p>新しい HTTPS Web サーバオブジェクトを返します。
-<code>option</code> は <code>tls.createServer()</code> と同じです。
+<code>option</code> は <a href="tls.html#tls_tls_createserver_options_secureconnectionlistener">tls.createServer()</a> と同じです。
 <code>requestListener</code> は関数で、 <code>&apos;request&apos;</code> イベントに自動的に追加されます。
 
 </p>
@@ -142,12 +142,12 @@ https.createServer(options, function (req, res) {
 }).listen(8000);</code></pre>
 <h2>https.request(options, callback)<span><a class="mark" href="#https_https_request_options_callback" id="https_https_request_options_callback">#</a></span></h2>
 <!--
-Makes a request to a secure web server.
-All options from [http.request()](http.html#http.request) are valid.
+Makes a request to a secure web server.  All options from [http.request()][]
+are valid.
 -->
 
 <p>セキュアな Web サーバへのリクエストを作成します。
-<a href="http.html#http.request">http.request()</a> の全てと同様のオプションが指定できます。
+<a href="http.html#http_http_request_options_callback">http.request()</a> の全てと同様のオプションが指定できます。
 
 </p>
 <!--
@@ -202,10 +202,9 @@ The options argument has the following options
 - `headers`: An object containing request headers.
 - `auth`: Basic authentication i.e. `'user:password'` to compute an
   Authorization header.
-- `agent`: Controls [Agent](#https.Agent) behavior. When an Agent is
-  used request will default to `Connection: keep-alive`. Possible values:
- - `undefined` (default): use [globalAgent](#https.globalAgent) for this
-   host and port.
+- `agent`: Controls [Agent][] behavior. When an Agent is used request will
+  default to `Connection: keep-alive`. Possible values:
+ - `undefined` (default): use [globalAgent][] for this host and port.
  - `Agent` object: explicitly use the passed in `Agent`.
  - `false`: opts out of connection pooling with an Agent, defaults request to
    `Connection: close`.
@@ -222,11 +221,10 @@ The options argument has the following options
 例 <code>&apos;/index.html?page=12&apos;</code></li>
 <li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>
 <li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>&apos;user:password&apos;</code>。</li>
-<li><code>agent</code>: <a href="#https.Agent">Agent</a> の振る舞いを制御します。
+<li><code>agent</code>: <a href="#https_class_https_agent">Agent</a> の振る舞いを制御します。
 エージェントが使われる場合、<code>Connection:keep-alive</code> がデフォルトになります。
 可能な値は:<ul>
-<li><code>undefined</code> (デフォルト): ホストとポートで
-<a href="#https.globalAgent">グローバル Agent</a> を使用します。</li>
+<li><code>undefined</code> (デフォルト): ホストとポートで <a href="#https_https_globalagent">globalAgent</a> を使用します。</li>
 <li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>
 <li><code>false</code>: Agent によるコネクションプーリングを使用しません。
 <code>Connection:close</code> の場合のデフォルトです。</li>
@@ -234,13 +232,12 @@ The options argument has the following options
 </li>
 </ul>
 <!--
-The following options from [tls.connect()](tls.html#tls.connect) can also be
-specified. However, a [globalAgent](#https.globalAgent) silently ignores these.
+The following options from [tls.connect()][] can also be specified. However, a
+[globalAgent][] silently ignores these.
 -->
 
-<p>以下の <a href="tls.html#tls.connect">tls.connect()</a> 由来のオプションを
-指定することもできますが、
-グローバル <a href="http.html#http.Agent">エージェント</a> はこれらを無視します。
+<p>以下の <a href="tls.html#tls_tls_connect_options_secureconnectlistener">tls.connect()</a> 由来のオプションを指定することもできますが、
+グローバル <a href="#https_https_globalagent">globalAgent</a> はこれらを無視します。
 
 </p>
 <!--
@@ -360,23 +357,22 @@ https.get({ host: &apos;encrypted.google.com&apos;, path: &apos;/&apos; }, funct
 });</code></pre>
 <h2>Class: https.Agent<span><a class="mark" href="#https_class_https_agent" id="https_class_https_agent">#</a></span></h2>
 <!--
-An Agent object for HTTPS similar to [http.Agent](http.html#http.Agent).
-See [https.request()](#https.request) for more information.
+An Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]
+for more information.
 -->
 
-<p>HTTPS 用の Agent オブジェクトで，
-<a href="http.html#http.Agent">http.Agent</a> と同様です。
-詳細は <a href="#https.request">https.request()</a> を参照してください。
+<p>HTTPS 用の Agent オブジェクトで，<a href="http.html#http_class_http_agent">http.Agent</a> と同様です。
+詳細は [https.request()][] を参照してください。
 
 </p>
 <h2>https.globalAgent<span><a class="mark" href="#https_https_globalagent" id="https_https_globalagent">#</a></span></h2>
 <!--
-Global instance of [https.Agent](#https.Agent) which is used as the default
-for all HTTPS client requests.
+Global instance of [https.Agent][] for all HTTPS client requests.
 -->
 
 <p>全ての HTTPS クライアントリクエストで使用される、デフォルトの
-<a href="#https.Agent">https.Agent</a> のインスタンスです。
+<a href="#https_class_https_agent">https.Agent</a> のインスタンスです。
+
 </p>
 
           </div>
@@ -406,7 +402,7 @@ for all HTTPS client requests.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

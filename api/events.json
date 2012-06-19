@@ -101,7 +101,7 @@
               "textRaw": "emitter.removeAllListeners([event])",
               "type": "method",
               "name": "removeAllListeners",
-              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n\n</p>\n",
+              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n</p>\n<!--\nNote that this will **invalidate** any arrays that have previously been\nreturned by `emitter.listeners(event)`.\n-->\n\n<p>これは <code>emitter.listeners(event)</code> から返された以前の配列を <strong>無効化</strong>\nすることに注意してください。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -132,7 +132,7 @@
               "textRaw": "emitter.listeners(event)",
               "type": "method",
               "name": "listeners",
-              "desc": "<!--\nReturns an array of listeners for the specified event. This array can be\nmanipulated, e.g. to remove listeners.\n-->\n\n<p>指定されたイベントに対するリスナー配列を返します。\nこの配列は変更することができます、例えばリスナーを削除するなど。\n\n</p>\n<pre><code>server.on(&apos;connection&apos;, function (stream) {\n  console.log(&apos;someone connected!&apos;);\n});\nconsole.log(util.inspect(server.listeners(&apos;connection&apos;))); // [ [Function] ]</code></pre>\n",
+              "desc": "<!--\nReturns an array of listeners for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列を返します。\n\n</p>\n<pre><code>server.on(&apos;connection&apos;, function (stream) {\n  console.log(&apos;someone connected!&apos;);\n});\nconsole.log(util.inspect(server.listeners(&apos;connection&apos;))); // [ [Function] ]</code></pre>\n<!--\nThis array **may** be a mutable reference to the same underlying list of\nlisteners that is used by the event subsystem.  However, certain\nactions (specifically, removeAllListeners) will invalidate this\nreference.\n-->\n\n<p>この配列は下層でイベントサブシステムによって使われる、リスナの可変な\nリストを参照する <strong>場合が</strong> あります。\nしかしながら、特定のアクション (特に <code>removeAllListeners</code>) は\nその参照を無効にすることがあります。\n\n</p>\n<!--\nIf you would like to get a copy of the listeners at a specific point in\ntime that is guaranteed not to change, make a copy, for example by doing\n`emitter.listeners(event).slice(0)`.\n-->\n\n<p>もしある特定の時点におけるリスナの変更されないことが保証されたコピーが\n必要であるなら、<code>emitter.listeners(event).slice(0)</code> などによって\nコピーを作成してください。\n\n</p>\n<!--\nIn a future release of node, this behavior **may** change to always\nreturn a copy, for consistency.  In your programs, please do not rely on\nbeing able to modify the EventEmitter listeners using array methods.\nAlways use the 'on' method to add new listeners.\n-->\n\n<p>将来リリースされる Node では、この振る舞いは一貫性のため常にコピーを返すように\n変更される <strong>かも</strong> しれません。\n配列のメソッドを使って EventEmitter のリスナを変更できることに\n頼らないでください。\n新しいリスナの追加は常に <code>on()</code> メソッドを使ってください。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [

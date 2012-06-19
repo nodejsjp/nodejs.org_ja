@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.7.10 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.7.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -352,8 +352,8 @@ Creates and returns a cipher object, with the given algorithm and password.
 `algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.
 On recent releases, `openssl list-cipher-algorithms` will display the
 available cipher algorithms.
-`password` is used to derive key and IV, which must be `'binary'` encoded
-string (See the [Buffer section](buffer.html) for more information).
+`password` is used to derive key and IV, which must be a `'binary'` encoded
+string or a [buffer](buffer.html).
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。
@@ -361,27 +361,34 @@ string (See the [Buffer section](buffer.html) for more information).
 最近のリリースでは、<code>openssl list-cipher-algorithms</code>
 で利用可能な暗号アルゴリズムが表示されます。
 <code>password</code> はキーと IV の生成に使用されます。
-これは <code>&apos;binary&apos;</code> でエンコードされた文字列でなければなりません
-(より詳細は <a href="buffer.html">Buffer のセクション</a> を参照してください)。
+これは <code>&apos;binary&apos;</code> でエンコードされた文字列または <a href="buffer.html">buffer</a>
+でなければなりません
 
 </p>
 <h2>crypto.createCipheriv(algorithm, key, iv)<span><a class="mark" href="#crypto_crypto_createcipheriv_algorithm_key_iv" id="crypto_crypto_createcipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
 Creates and returns a cipher object, with the given algorithm, key and iv.
 
-`algorithm` is the same as the `createCipher()`. `key` is a raw key used in
-algorithm. `iv` is an Initialization vector. `key` and `iv` must be `'binary'`
-encoded string (See the [Buffer section](buffer.html) for more information).
+`algorithm` is the same as the argument to `createCipher()`.
+`key` is the raw key used by the algorithm.
+`iv` is an [initialization
+vector](http://en.wikipedia.org/wiki/Initialization_vector).
+
+`key` and `iv` must be `'binary'` encoded strings or [buffers](buffer.html).
 -->
 
 <p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して
 返します。
 
 </p>
-<p><code>algorithm</code> は <code>createCipher()</code> と同じです。
-<code>key</code> はアルゴリズムで使用される生のキーです。 <code>iv</code> は初期化ベクトルです。
-<code>key</code> と <code>iv</code> は <code>&apos;binary&apos;</code> でエンコードされた文字列でなければなりません
-(より詳細は <a href="buffer.html">Buffer のセクション</a> を参照してください)。
+<p><code>algorithm</code> は <code>createCipher()</code> の引数と同じです。
+<code>key</code> はアルゴリズムで使用される生のキーです。
+<code>iv</code> は<a href="http://en.wikipedia.org/wiki/Initialization_vector">initialization
+vector</a> です。
+
+</p>
+<p><code>key</code> と <code>iv</code> は <code>&apos;binary&apos;</code> でエンコードされた文字列または
+<a href="buffer.html">buffers</a> でなければなりません
 
 </p>
 <h2>Class: Cipher<span><a class="mark" href="#crypto_class_cipher" id="crypto_class_cipher">#</a></span></h2>
@@ -462,21 +469,21 @@ Useful for non-standard padding, e.g. using `0x0` instead of PKCS padding. You m
 <h2>crypto.createDecipher(algorithm, password)<span><a class="mark" href="#crypto_crypto_createdecipher_algorithm_password" id="crypto_crypto_createdecipher_algorithm_password">#</a></span></h2>
 <!--
 Creates and returns a decipher object, with the given algorithm and key.
-This is the mirror of the [createCipher()](#crypto.createCipher) above.
+This is the mirror of the [createCipher()][] above.
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。
-これは前述の <a href="#crypto.createCipher">createCipher()</a> の鏡写しです。
+これは前述の <a href="#crypto_crypto_createcipher_algorithm_password">createCipher()</a> の鏡写しです。
 
 </p>
 <h2>crypto.createDecipheriv(algorithm, key, iv)<span><a class="mark" href="#crypto_crypto_createdecipheriv_algorithm_key_iv" id="crypto_crypto_createdecipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
 Creates and returns a decipher object, with the given algorithm, key and iv.
-This is the mirror of the [createCipheriv()](#crypto.createCipheriv) above.
+This is the mirror of the [createCipheriv()][] above.
 -->
 
 <p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。
-これは前述の <a href="#crypto.createCipheriv">createCipheriv()</a> の鏡写しです。
+これは前述の <a href="#crypto_crypto_createcipheriv_algorithm_key_iv">createCipheriv()</a> の鏡写しです。
 
 </p>
 <h2>Class: Decipher<span><a class="mark" href="#crypto_class_decipher" id="crypto_class_decipher">#</a></span></h2>
@@ -805,13 +812,13 @@ or `'base64'`. Defaults to `'binary'`.
 <!--
 Creates a predefined Diffie-Hellman key exchange object.
 The supported groups are: `'modp1'`, `'modp2'`, `'modp5'`
-(defined in [RFC 2412](http://www.rfc-editor.org/rfc/rfc2412.txt ))
+(defined in [RFC 2412][])
 and `'modp14'`, `'modp15'`, `'modp16'`, `'modp17'`, `'modp18'`
-(defined in [RFC 3526](http://www.rfc-editor.org/rfc/rfc3526.txt )).
+(defined in [RFC 3526][]).
 The returned object mimics the interface of objects created by
-[crypto.createDiffieHellman()](#crypto.createDiffieHellman) above, but
+[crypto.createDiffieHellman()][] above, but
 will not allow to change the keys (with
-[diffieHellman.setPublicKey()](#diffieHellman.setPublicKey) for example).
+[diffieHellman.setPublicKey()][] for example).
 The advantage of using this routine is that the parties don't have to
 generate nor exchange group modulus beforehand, saving both processor and
 communication time.
@@ -823,10 +830,10 @@ communication time.
 および <code>&apos;modp14&apos;</code>, <code>&apos;modp15&apos;</code>, <code>&apos;modp16&apos;</code>, <code>&apos;modp17&apos;</code>, <code>&apos;modp18&apos;</code>
 (<a href="http://www.rfc-editor.org/rfc/rfc3526.txt">RFC 3526</a> で定義される) です。
 返されるオブジェクトは、前述の
-<a href="#crypto.createDiffieHellman">crypto.createDiffieHellman()</a>
+<a href="#crypto_crypto_creatediffiehellman_prime_encoding">crypto.createDiffieHellman()</a>
 によって作成されたオブジェクトのインタフェースを模倣します。
 しかし、
-(たとえば <a href="#diffieHellman.setPublicKey">diffieHellman.setPublicKey()</a> で)
+(たとえば <a href="#crypto_diffiehellman_setpublickey_public_key_encoding">diffieHellman.setPublicKey()</a> で)
 鍵を交換することはできません。
 このルーチンを使うことによるアドバンテージは、
 事前にグループ係数を生成することも交換する必要もないため、
@@ -914,7 +921,7 @@ try {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
