@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.7.11 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.7.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -162,7 +162,6 @@
 <li><a href="#all_process_version">process.version</a></li>
 <li><a href="#all_process_versions">process.versions</a></li>
 <li><a href="#all_process_config">process.config</a></li>
-<li><a href="#all_process_installprefix">process.installPrefix</a></li>
 <li><a href="#all_process_kill_pid_signal">process.kill(pid, [signal])</a></li>
 <li><a href="#all_process_pid">process.pid</a></li>
 <li><a href="#all_process_title">process.title</a></li>
@@ -2174,7 +2173,7 @@ node は他で見つからなかったモジュールをそれらのパスから
 </ul>
 <!--
 Where `$HOME` is the user's home directory, and `$PREFIX` is node's
-configured `installPrefix`.
+configured `node_prefix`.
 
 These are mostly for historic reasons.  You are highly encouraged to
 place your dependencies locally in `node_modules` folders.  They will be
@@ -2182,7 +2181,7 @@ loaded faster, and more reliably.
 -->
 
 <p><code>$HOME</code> はユーザのホームディレクトリ、<code>$PREFIX</code> は node を
-configure した時の <code>installPrefix</code> です。
+configure した時の <code>node_prefix</code> です。
 
 </p>
 <p>これらは主に歴史的な理由によるものです。
@@ -3654,15 +3653,6 @@ JavaScript で表現したオブジェクトを保持します。
      strict_aliasing: &apos;true&apos;,
      target_arch: &apos;x64&apos;,
      v8_use_snapshot: &apos;true&apos; } }</code></pre>
-<h2>process.installPrefix<span><a class="mark" href="#all_process_installprefix" id="all_process_installprefix">#</a></span></h2>
-<!--
-A compiled-in property that exposes `NODE_PREFIX`.
--->
-
-<p><code>NODE_PREFIX</code> を提示するコンパイル済みプロパティです。
-
-</p>
-<pre><code>console.log(&apos;Prefix: &apos; + process.installPrefix);</code></pre>
 <h2>process.kill(pid, [signal])<span><a class="mark" href="#all_process_kill_pid_signal" id="all_process_kill_pid_signal">#</a></span></h2>
 <!--
 Send a signal to a process. `pid` is the process id and `signal` is the
@@ -17437,6 +17427,15 @@ Please try it out and provide feedback.
 これを試して、フィードバックを行ってください。
 
 </p>
+<!--
+Also note that, on Windows, it is not yet possible to set up a named pipe
+server in a worker.
+-->
+
+<p>Windows では、ワーカが名前付きパイプによるサーバをセットアップすることは
+まだできないことにも注意してください。
+
+</p>
 <h2>How It Works<span><a class="mark" href="#all_how_it_works" id="all_how_it_works">#</a></span></h2>
 <!--type=misc-->
 
@@ -17476,7 +17475,7 @@ This causes potentially surprising behavior in three edge cases:
 
 </p>
 <!--
-1. `server.listen({fd: 7})` Because the message is passed to the worker,
+1. `server.listen({fd: 7})` Because the message is passed to the master,
    file descriptor 7 **in the parent** will be listened on, and the
    handle passed to the worker, rather than listening to the worker's
    idea of what the number 7 file descriptor references.
@@ -17493,7 +17492,7 @@ This causes potentially surprising behavior in three edge cases:
 -->
 
 <ol>
-<li><code>server.listen({fd: 7})</code> メッセージはワーカに渡されてるため、
+<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、
 ワーカのファイル記述子 7 が参照するものではなく、
 <strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに
 渡されます。</li>
@@ -18330,7 +18329,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

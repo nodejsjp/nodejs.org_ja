@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Cluster Node.js v0.7.11 Manual &amp; Documentation</title>
+  <title>Cluster Node.js v0.7.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/cluster.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.7.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -155,6 +155,15 @@ Please try it out and provide feedback.
 これを試して、フィードバックを行ってください。
 
 </p>
+<!--
+Also note that, on Windows, it is not yet possible to set up a named pipe
+server in a worker.
+-->
+
+<p>Windows では、ワーカが名前付きパイプによるサーバをセットアップすることは
+まだできないことにも注意してください。
+
+</p>
 <h2>How It Works<span><a class="mark" href="#cluster_how_it_works" id="cluster_how_it_works">#</a></span></h2>
 <!--type=misc-->
 
@@ -194,7 +203,7 @@ This causes potentially surprising behavior in three edge cases:
 
 </p>
 <!--
-1. `server.listen({fd: 7})` Because the message is passed to the worker,
+1. `server.listen({fd: 7})` Because the message is passed to the master,
    file descriptor 7 **in the parent** will be listened on, and the
    handle passed to the worker, rather than listening to the worker's
    idea of what the number 7 file descriptor references.
@@ -211,7 +220,7 @@ This causes potentially surprising behavior in three edge cases:
 -->
 
 <ol>
-<li><code>server.listen({fd: 7})</code> メッセージはワーカに渡されてるため、
+<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、
 ワーカのファイル記述子 7 が参照するものではなく、
 <strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに
 渡されます。</li>
@@ -975,7 +984,7 @@ worker.on(&apos;exit&apos;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
