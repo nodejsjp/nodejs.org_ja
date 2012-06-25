@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>change_0.4_to_0.6 - Node.js v0.7.5 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/docs/latest/api/change_0.4_to_0.6.html">
+</head>
+<body class="alt apidoc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/docs/latest/api/index.html" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/index.html" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+        <header>
+          <h1>Node.js v0.7.5 マニュアル &amp; ドキュメンテーション</h1>
+          <div id="gtoc">
+            <p><a href="index.html" name="toc">Index</a> | <a href="all.html">View on single page</a></p>
+          </div>
+          <hr>
+        </header>
+        <div id="apicontent">
+          <div id="toc"><h2>Table Of Contents</h2><ul><li><a href="#v0.4_v0.6_API">v0.4 から v0.6 で変更された API</a><ul><li><a href="#changed_">Changed:</a></li><li><a href="#added_">Added:</a></li></ul></li></ul><hr></div>
+<h2 id="v0.4_v0.6_API">v0.4 から v0.6 で変更された API <span><a class="top" href="#">↑</a><a class="mark" href="#v0.4_v0.6_API">#</a></span></h2>
+
+<h3 id="changed_">Changed: <span><a class="top" href="#">↑</a><a class="mark" href="#changed_">#</a></span></h3>
+
+<ul><li><p>Cygwin はもうサポートされません．Windows ネイティブ版を使用してください．</p></li><li><p><code>Buffer</code></p><ul><li><p><code>Buffer.write()</code> にオプションの第3引数 <code>length</code> が追加されました．</p></li></ul></li><li><p><code>child_process</code></p><ul><li><code>child_process.spawn()</code> の <code>customFds</code> オプションは非推奨になりました．<code>customFds</code> は値が -1, 0, 1, 2 で，それらが TTY ファイル記述子の場合だけ動作します．同様の機能として <code>stdinStream</code>，<code>stdoutStream</code>，<code>stderrStream</code> オプションを使うことができます．</li><li><p>Unix パイプを通じてファイル記述子を送ることはできなくなりました．<code>child_process.fork()</code> を通じてハンドルを渡してください．</p></li></ul></li><li><p><code>dgram</code></p><ul><li><p><code>dgram.createSocket()</code> で <code>'unix_dgram'</code> はサポートされなくなりました．代わりに <a href="https://github.com/bnoordhuis/node-unix-dgram">bnoordhuis/node-unix-dgram</a> を使用してください．Unix ドメインのデータグラムは，インターネットドメインのデータグラム (UDP) では <em>ない</em> ことに注意してください．それはサポートされています．</p></li></ul></li><li><p><code>dns</code></p><ul><li><p><code>dns.lookup</code> は C-Ares ではなく，スレッドプール上で <code>getaddrinfo</code> を使うようになりました．DNS モジュールのその他のメソッドは C-Ares を使用します．ルックアップにシステムリゾルバを使用するのは，mDNS や /et/host ファイル，nsswitch その他を使用してフックしやすいために便利です．従来，<code>dns.lookup()</code> は <code>"****"</code> のような不正なドメイン名に対して <code>EBADNAME</code> エラーを返していました．<code>getaddrinfo()</code> はそれとは異なり，不正なドメインに対して <code>ENOTFOUND</code> (別名 <code>NXDOMAIN</code>) を返していました．そのため，<code>dns.lookup()</code> は <code>"****"</code> のような不正なドメインに対して <code>ENOTFOUND</code> を返すようになりました．</p></li></ul></li><li><p><code>events</code></p><ul><li>C++ <code>node::EventEmitter</code> は削除されました．<code>node::MakeCallback()</code> を使用してください．</li><li><p><code>EventEmitter.removeAllListeners()</code> は全てのリスナを一度に削除できるようになりました．</p></li></ul></li><li><p><code>fs</code></p><ul><li><code>fs.mkdir()</code> および <code>fs.mkdirSync()</code> の <code>mode</code> 引数がオプションになりました (デフォルトは <code>0777</code>)．</li><li><p><code>fs.symlink()</code> はオプションの <code>mode</code> 引数を受け取るようになりました．それは <code>'dir'</code> または <code>'file'</code> を指定することができます．デフォルトは <code>'file'</code> です．この引数は Windows でのみ必要です (その他のプラットフォームでは無視されます)．</p></li></ul></li><li><p><code>http</code></p><ul><li><code>http.request()</code> と <code>http.get()</code> はデフォルトで <code>Connection: Keep-Alive</code> を使うようになりました．</li><li><code>http.Agent.appendMessage()</code> は削除されました．</li><li><code>http.getAgent()</code> は削除されました. <code>http.globalAgent</code> を使用してください．</li><li><p><code>httpAgent</code> ではなく <code>http.ClientRequest</code> が <code>'upgrade'</code> イベントを生成するようになりました．</p></li></ul></li><li><p><code>https</code></p><ul><li><p><code>https.request()</code> と <code>https.get()</code> のデフォルト <code>Agent</code> は，<code>key</code>，<code>cert</code>，<code>ca</code> オプションを無視します. カスタムの <code>Agent</code> を使用してください．</p></li></ul></li><li><p>Module system</p><ul><li><p><code>require.paths</code> は削除されました (<code>NODE_PATH</code> 環境変数を使用してください)．</p></li></ul></li><li><p><code>net</code></p><ul><li><p><code>net.Server.listenFD()</code> はサポートされなくなりました．</p></li></ul></li><li><p><code>process</code></p><ul><li><code>process.ENV</code> は削除されました．<code>process.env</code> を使用してください．</li><li><code>process.ARGV</code> は削除されました．<code>process.argv</code> を使用してください．</li><li><code>process.binding('stdio')</code> は削除されました．これはプライベート API で，そもそも使用すべきではありません．</li><li><code>process.binding('net')</code> は削除されました．</li><li><code>process.memoryUsage().vsize</code> は削除されました．必要になることはないでしょう．</li><li><code>process.stdout</code> と <code>process.stderr</code> は，それらが通常ファイルか TTY ファイル記述子を参照している場合，ブロックします．</li><li><p><code>process.stdin</code>，<code>process.stdout</code>，<code>process.stderr</code> は getter になりました．
+オーバーライドするには (もし本当に必要なら):</p><p><code>javascript
+process.__defineGetter__('stdout', function() {
+return your_object;
+});
+</code></p></li></ul></li><li><p><code>stream</code></p><ul><li><p><code>stream.pipe()</code> は，<code>pause()/resume()</code> を実装していないソースストリーム上で <code>'pause'/'resume'</code> イベントを生成しなくなりました．</p></li></ul></li><li><p><code>tty</code></p><ul><li><code>tty.setWindowSize(fd, row, col)</code> は削除されました．</li><li><p><code>tty.getWindowSize(fd)</code> は削除されました．代わりに <code>process.stdout.getWindowSize()</code> を使用してください．</p></li></ul></li><li><p>V8 (v3.1 から v3.6)</p><ul><li><code>RegExp</code> は <code>Function</code> ではなくなりました (ES5 準拠)．<code>RegExp.exec()</code> を使用してください．</li><li><code>Date</code> のフォーマット文字列がタイムゾーンを含まない場合 (例: <code>new Date('2011-06-06')</code>) は，ローカルのタイムゾーンではなく UTC に基づきます (ES5 準拠).明示的にタイムゾーンを指定してください (例: <code>new Date('2011-06-06 00:00:00 +09:00')</code>)．</li><li><code>Error</code> の全ての標準プロパティは列挙されなくなりました (ES5 準拠). それらを表示したい場合は <code>util.inspect(err, true)</code> を使用してください．</li></ul></li></ul>
+
+<h3 id="added_">Added: <span><a class="top" href="#">↑</a><a class="mark" href="#added_">#</a></span></h3>
+
+<ul><li><code>assert</code><ul><li><code>assert.ok(val)</code> の短縮版 <code>assert(val)</code></li></ul></li><li><p><code>Buffer</code></p><ul><li><code>'hex'</code> エンコーディング．</li><li><code>Buffer.readInt8()/readInt16LE()/readInt16BE()/readInt32LE()/readInt32BE()</code></li><li><code>Buffer.readUInt8()/readUInt16LE()/readUInt16BE()/readUInt32LE()/readUInt32BE()</code></li><li><code>Buffer.readFloatLE()/readFloatBE()/readDoubleLE()/readDoubleBE()</code></li><li><code>Buffer.writeInt8()/writeInt16LE()/writeInt16BE()/writeInt32LE()/writeInt32BE()</code></li><li><code>Buffer.writeUInt8()/writeUInt16LE()/writeUInt16BE()/writeUInt32LE()/writeUInt32BE()</code></li><li><code>Buffer.writeFloatLE()/writeFloatBE()/writeDoubleLE()/writeDoubleBE()</code></li><li><code>Buffer.fill()</code></li><li><p>Typed Arrays</p></li></ul></li><li><p><code>child_process</code></p><ul><li><p><code>child_process.fork()</code></p></li></ul></li><li><p><code>cluster</code></p><ul><li><p><code>node cluster</code> <a href="cluster.html">API docs</a> を参照してください．</p></li></ul></li><li><p><code>crypto</code></p><ul><li><p><code>crypto.createDiffieHellman()</code>, <code>crypto.pbkdf2()</code>, <code>crypto.randomBytes()</code></p></li></ul></li><li><p><code>fs</code></p><ul><li><code>fs.watch()</code></li><li><code>fs.utimes()/utimesSync()</code>, <code>fs.futimes()/futimesSync()</code></li><li><p><code>fs.createReadStream()</code> と <code>fs.createWriteStream()</code> に <code>start</code> オプションが追加されました．</p></li></ul></li><li><p><code>http</code></p><ul><li><code>http.ClientRequest.setTimeout()/setNoDelay()/setSocketKeepAlive()</code></li><li><p><code>http.request()</code> に <code>auth</code> オプションが追加されました．</p></li></ul></li><li><p><code>https</code></p><ul><li><p><code>https.createServer()</code>，<code>https.request()</code>，<code>https.get()</code> に <code>passphrase</code> オプションが追加されました．</p></li></ul></li><li><p>Module system</p><ul><li><code>.json</code> モジュール．</li><li><p><code>module.require()</code></p></li></ul></li><li><p><code>net</code></p><ul><li><code>net.connect()</code></li><li><p><code>net.Socket.remotePort</code>, <code>bytesRead</code>, <code>bytesWrite</code></p></li></ul></li><li><p><code>os</code></p><ul><li><p><code>os.arch()</code>, <code>os.platform()</code>, <code>os.uptime()</code>, <code>os.networkInterfaces()</code></p></li></ul></li><li><p><code>path</code></p><ul><li><p><code>path.relative()</code></p></li></ul></li><li><p><code>process</code></p><ul><li><p><code>process.arch</code>, <code>process.uptime()</code></p></li></ul></li><li><p><code>tls</code></p><ul><li><code>tls.createServer()</code> と <code>tls.connect()</code> に <code>passphrase</code> オプションが追加されました．</li><li><code>tls.createServer()</code> に <code>sessionIdContext</code> オプションが追加されました．</li><li><code>tls.connect()</code> に <code>session</code> オプションが追加されました．</li><li><code>tls.CryptoStream.getSession()</code></li><li><code>tls.CleartextStream.address()</code>, <code>remoteAddress</code>, <code>remotePort</code></li><li><p><code>tls.Server</code> が <a href="tls.html#nPN_and_SNI">NPN (Next Protocol Negotiation) と SNI (Server Name Indication)</a> をサポートしました．</p></li></ul></li><li><p><code>util</code></p><ul><li><p><code>util.format()</code>, <code>util.isArray()</code>, <code>util.isRegExp()</code>, <code>uitl.isDate()</code>, <code>util.isError()</code>.</p></li></ul></li><li><p><code>zlib</code> モジュール</p><ul><li><a href="zlib.html">API docs</a> を参照してください．</li></ul></li></ul>
+        </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/docs/latest/api/index.html">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/index.html">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright 2012 <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.5/LICENSE">license</a>.</p>
+    </div>
+    
+  <script src="assets/sh_main.js"></script>
+  <script src="assets/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    var gaJsHost = (("https:" == document.location.protocol) ?
+    "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script>
+    try {
+      var pageTracker = _gat._getTracker("UA-10874194-2");
+      pageTracker._trackPageview();
+      } catch(err) {}</script>
+</body>
+</html>

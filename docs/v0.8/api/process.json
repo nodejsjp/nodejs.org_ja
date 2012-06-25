@@ -1,0 +1,291 @@
+{
+  "source": "doc/api/process.markdown",
+  "globals": [
+    {
+      "textRaw": "process",
+      "name": "process",
+      "type": "global",
+      "desc": "<!--\nThe `process` object is a global object and can be accessed from anywhere.\nIt is an instance of [EventEmitter][].\n-->\n\n<p><code>process</code> はグローバルオブジェクトで、どこからでもアクセスすることができます。\nそれは [EventEmitter][] のインスタンスです。\n\n\n</p>\n",
+      "events": [
+        {
+          "textRaw": "Event: 'exit'",
+          "type": "event",
+          "name": "exit",
+          "desc": "<!--\nEmitted when the process is about to exit.  This is a good hook to perform\nconstant time checks of the module's state (like for unit tests).  The main\nevent loop will no longer be run after the 'exit' callback finishes, so\ntimers may not be scheduled.\n-->\n\n<p>プロセスが終了しようとしている時に生成されます。\nこれは (ユニットテストのように) モジュールの状態を一定の時間でチェックするのに適したフックとなります。\nメインのイベントループは &apos;exit&apos; コールバックが終了するともはや動作しないので、\nタイマーはスケジュールされないかもしれません。\n\n</p>\n<!--\nExample of listening for `exit`:\n-->\n\n<p><code>exit</code> を監視する例:\n\n</p>\n<pre><code>process.on(&apos;exit&apos;, function () {\n  process.nextTick(function () {\n   console.log(&apos;This will not run&apos;);\n  });\n  console.log(&apos;About to exit.&apos;);\n});</code></pre>\n",
+          "params": []
+        },
+        {
+          "textRaw": "Event: 'uncaughtException'",
+          "type": "event",
+          "name": "uncaughtException",
+          "desc": "<!--\nEmitted when an exception bubbles all the way back to the event loop. If a\nlistener is added for this exception, the default action (which is to print\na stack trace and exit) will not occur.\n-->\n\n<p>発生した例外がイベントループまでたどり着いた場合に生成されます。\nもしこの例外に対するリスナーが加えられていれば、\nデフォルトの動作 (それはスタックトレースをプリントして終了します) は起こりません。\n\n</p>\n<!--\nExample of listening for `uncaughtException`:\n-->\n\n<p><code>uncaughtException</code> を監視する例:\n\n</p>\n<pre><code>process.on(&apos;uncaughtException&apos;, function (err) {\n  console.log(&apos;Caught exception: &apos; + err);\n});\n\nsetTimeout(function () {\n  console.log(&apos;This will still run.&apos;);\n}, 500);\n\n// Intentionally cause an exception, but don&apos;t catch it.\nnonexistentFunc();\nconsole.log(&apos;This will not run.&apos;);</code></pre>\n<!--\nNote that `uncaughtException` is a very crude mechanism for exception\nhandling.  Using try / catch in your program will give you more control over\nyour program's flow.  Especially for server programs that are designed to\nstay running forever, `uncaughtException` can be a useful safety mechanism.\n-->\n\n<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであることに注意してください。\nプログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。\n特にサーバプログラムはいつまでも実行し続けるように設計されるので、\n<code>uncaughtException</code> は有益で安全なメカニズムになり得ます。\n\n\n</p>\n",
+          "params": []
+        },
+        {
+          "textRaw": "Signal Events",
+          "name": "SIGINT, SIGUSR1, etc.",
+          "type": "event",
+          "desc": "<!--\nEmitted when the processes receives a signal. See sigaction(2) for a list of\nstandard POSIX signal names such as SIGINT, SIGUSR1, etc.\n-->\n\n<p>プロセスがシグナルを受信した場合に生成されます。\nSIGINT、SIGUSR1、その他の POSIX 標準シグナル名の一覧について は sigaction(2) を参照してください。\n\n</p>\n<!--\nExample of listening for `SIGINT`:\n-->\n\n<p><code>SIGINT</code>を監視する例:\n\n</p>\n<pre><code>// Start reading from stdin so we don&apos;t exit.\nprocess.stdin.resume();\n\nprocess.on(&apos;SIGINT&apos;, function () {\n  console.log(&apos;Got SIGINT.  Press Control-D to exit.&apos;);\n});</code></pre>\n<!--\nAn easy way to send the `SIGINT` signal is with `Control-C` in most terminal\nprograms.\n-->\n\n<p>多くの端末プログラムで簡単に <code>SIGINT</code> を送る方法は <code>Control-C</code> を押すことです。\n\n\n</p>\n",
+          "params": []
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "process.stdout",
+          "name": "stdout",
+          "desc": "<!--\nA `Writable Stream` to `stdout`.\n-->\n\n<p><code>stdout</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<!--\nExample: the definition of `console.log`\n-->\n\n<p>例: <code>console.log</code> の定義\n\n</p>\n<pre><code>console.log = function (d) {\n  process.stdout.write(d + &apos;\\n&apos;);\n};</code></pre>\n<!--\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.  They are blocking in the case\nthat they refer to regular files or TTY file descriptors. In the case they\nrefer to pipes, they are non-blocking like other streams.\n-->\n\n<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、\n書き込みは通常ブロックします。\nそれらが通常ファイルや TTY のファイル記述子を参照しているケースでは、\nそれらはブロックします。\nパイプを参照しているケースでは、他のストリームと同様にブロックしません。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "process.stderr",
+          "name": "stderr",
+          "desc": "<!--\nA writable stream to stderr.\n\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.  They are blocking in the case\nthat they refer to regular files or TTY file descriptors. In the case they\nrefer to pipes, they are non-blocking like other streams.\n-->\n\n<p><code>stderr</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、\n書き込みは通常ブロックします。\nそれらが通常ファイルや TTY のファイル記述子を参照しているケースでは、\nそれらはブロックします。\nパイプを参照しているケースでは、他のストリームと同様にブロックしません。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "process.stdin",
+          "name": "stdin",
+          "desc": "<!--\nA `Readable Stream` for stdin. The stdin stream is paused by default, so one\nmust call `process.stdin.resume()` to read from it.\n-->\n\n<p>標準入力に対する <code>Readable Stream</code> です。\nデフォルトでは、標準入力に対するストリームは中断されているため、\n読み込みのためには <code>process.stdin.resume()</code> を呼び出さなければなりません。\n\n</p>\n<!--\nExample of opening standard input and listening for both events:\n-->\n\n<p>標準入力をオープンして二つのイベントを監視する例:\n\n</p>\n<pre><code>process.stdin.resume();\nprocess.stdin.setEncoding(&apos;utf8&apos;);\n\nprocess.stdin.on(&apos;data&apos;, function (chunk) {\n  process.stdout.write(&apos;data: &apos; + chunk);\n});\n\nprocess.stdin.on(&apos;end&apos;, function () {\n  process.stdout.write(&apos;end&apos;);\n});</code></pre>\n"
+        },
+        {
+          "textRaw": "process.argv",
+          "name": "argv",
+          "desc": "<!--\nAn array containing the command line arguments.  The first element will be\n'node', the second element will be the name of the JavaScript file.  The\nnext elements will be any additional command line arguments.\n-->\n\n<p>コマンドライン引数を含む配列です。\n最初の要素は &apos;node&apos;、2 番目の要素は JavaScript ファイルの名前になります。\nその後の要素はコマンドラインの追加の引数になります。\n\n</p>\n<pre><code>// print process.argv\nprocess.argv.forEach(function (val, index, array) {\n  console.log(index + &apos;: &apos; + val);\n});</code></pre>\n<!--\nThis will generate:\n-->\n\n<p>このように出力されます:\n\n</p>\n<pre><code>$ node process-2.js one two=three four\n0: node\n1: /Users/mjr/work/node/process-2.js\n2: one\n3: two=three\n4: four</code></pre>\n"
+        },
+        {
+          "textRaw": "process.execPath",
+          "name": "execPath",
+          "desc": "<!--\nThis is the absolute pathname of the executable that started the process.\n-->\n\n<p>プロセスによって開始された実行可能ファイルの絶対パスです。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>/usr/local/bin/node</code></pre>\n"
+        },
+        {
+          "textRaw": "process.env",
+          "name": "env",
+          "desc": "<!--\nAn object containing the user environment. See environ(7).\n-->\n\n<p>ユーザの環境を含むオブジェクトです。environ(7) を参照してください。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "process.version",
+          "name": "version",
+          "desc": "<!--\nA compiled-in property that exposes `NODE_VERSION`.\n-->\n\n<p><code>NODE_VERSION</code> を提示するコンパイル済みプロパティです。\n\n</p>\n<pre><code>console.log(&apos;Version: &apos; + process.version);</code></pre>\n"
+        },
+        {
+          "textRaw": "process.versions",
+          "name": "versions",
+          "desc": "<!--\nA property exposing version strings of node and its dependencies.\n-->\n\n<p>node と依存ライブラリのバージョン文字列を提示します。\n\n</p>\n<pre><code>console.log(process.versions);</code></pre>\n<!--\nWill output:\n-->\n\n<p>は以下を出力します。\n\n</p>\n<pre><code>{ node: &apos;0.4.12&apos;,\n  v8: &apos;3.1.8.26&apos;,\n  ares: &apos;1.7.4&apos;,\n  ev: &apos;4.4&apos;,\n  openssl: &apos;1.0.0e-fips&apos; }</code></pre>\n"
+        },
+        {
+          "textRaw": "process.config",
+          "name": "config",
+          "desc": "<!--\nAn Object containing the JavaScript representation of the configure options\nthat were used to compile the current node executable. This is the same as\nthe \"config.gypi\" file that was produced when running the `./configure` script.\n\nAn example of the possible output looks like:\n-->\n\n<p>現在のnode実行ファイルをコンパイルした際に使われた configure のオプションを\nJavaScript で表現したオブジェクトを保持します。\nこれは <code>./configure</code> スクリプトを実行した際に生成された &quot;cofnig.gypi&quot;\nファイルと同じです。\n\n</p>\n<p>実際の出力の例です:\n\n</p>\n<pre><code>{ target_defaults:\n   { cflags: [],\n     default_configuration: &apos;Release&apos;,\n     defines: [],\n     include_dirs: [],\n     libraries: [] },\n  variables:\n   { host_arch: &apos;x64&apos;,\n     node_install_npm: &apos;true&apos;,\n     node_install_waf: &apos;true&apos;,\n     node_prefix: &apos;&apos;,\n     node_shared_v8: &apos;false&apos;,\n     node_shared_zlib: &apos;false&apos;,\n     node_use_dtrace: &apos;false&apos;,\n     node_use_openssl: &apos;true&apos;,\n     node_shared_openssl: &apos;false&apos;,\n     strict_aliasing: &apos;true&apos;,\n     target_arch: &apos;x64&apos;,\n     v8_use_snapshot: &apos;true&apos; } }</code></pre>\n"
+        },
+        {
+          "textRaw": "process.pid",
+          "name": "pid",
+          "desc": "<!--\nThe PID of the process.\n-->\n\n<p>このプロセスの PID です。\n\n</p>\n<pre><code>console.log(&apos;This process is pid &apos; + process.pid);</code></pre>\n"
+        },
+        {
+          "textRaw": "process.title",
+          "name": "title",
+          "desc": "<!--\nGetter/setter to set what is displayed in 'ps'.\n-->\n\n<p>&apos;ps&apos; でどのよう表示されるかを設定するための getter/setter です。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "process.arch",
+          "name": "arch",
+          "desc": "<!--\nWhat processor architecture you're running on: `'arm'`, `'ia32'`, or `'x64'`.\n-->\n\n<p>実行しているプロセッサのアーキテクチャ: <code>&apos;arm&apos;</code>、<code>&apos;ia32&apos;</code>、または\n<code>&apos;x64&apos;</code>。\n\n</p>\n<pre><code>console.log(&apos;This processor architecture is &apos; + process.arch);</code></pre>\n"
+        },
+        {
+          "textRaw": "process.platform",
+          "name": "platform",
+          "desc": "<!--\nWhat platform you're running on:\n`'darwin'`, `'freebsd'`, `'linux'`, `'solaris'` or `'win32'`\n-->\n\n<p>どのプラットフォームで動いているかを示します:\n<code>&apos;darwin&apos;</code>、<code>&apos;freebsd&apos;</code>、<code>&apos;linux&apos;</code>、<code>&apos;solaris&apos;</code>、または <code>&apos;win32&apos;</code>\n\n</p>\n<pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>\n"
+        }
+      ],
+      "methods": [
+        {
+          "textRaw": "process.abort()",
+          "type": "method",
+          "name": "abort",
+          "desc": "<!--\nThis causes node to emit an abort. This will cause node to exit and\ngenerate a core file.\n-->\n\n<p>これは node をアボートさせます。\nこれは node が終了してコアファイルを生成する原因となります。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "process.chdir(directory)",
+          "type": "method",
+          "name": "chdir",
+          "desc": "<!--\nChanges the current working directory of the process or throws an exception if that fails.\n-->\n\n<p>プロセスのカレントワーキングディレクトリを変更します。\nもし失敗した場合は例外をスローします。\n\n</p>\n<pre><code>console.log(&apos;Starting directory: &apos; + process.cwd());\ntry {\n  process.chdir(&apos;/tmp&apos;);\n  console.log(&apos;New directory: &apos; + process.cwd());\n}\ncatch (err) {\n  console.log(&apos;chdir: &apos; + err);\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "directory"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.cwd()",
+          "type": "method",
+          "name": "cwd",
+          "desc": "<!--\nReturns the current working directory of the process.\n-->\n\n<p>プロセスのカレントワーキングディレクトリを返します。\n\n</p>\n<pre><code>console.log(&apos;Current directory: &apos; + process.cwd());</code></pre>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "process.exit([code])",
+          "type": "method",
+          "name": "exit",
+          "desc": "<!--\nEnds the process with the specified `code`.  If omitted, exit uses the\n'success' code `0`.\n-->\n\n<p>指定の <code>code</code> でプロセスを終了します。\nもし省略されると、「成功」を示すコード <code>0</code> を使って終了します。\n\n</p>\n<!--\nTo exit with a 'failure' code:\n-->\n\n<p>「失敗」を示すコードで終了する例:\n\n</p>\n<pre><code>process.exit(1);</code></pre>\n<!--\nThe shell that executed node should see the exit code as 1.\n-->\n\n<p>node を実行したシェルで終了コードが 1 であることを見ることができるでしょう。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.getgid()",
+          "type": "method",
+          "name": "getgid",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nGets the group identity of the process. (See getgid(2).)\nThis is the numerical group id, not the group name.\n-->\n\n<p>プロセスのグループ識別子を取得します (getgid(2) 参照)。\nこれは数値によるグループ ID で、グループ名ではありません。\n\n</p>\n<pre><code>if (process.getgid) {\n  console.log(&apos;Current gid: &apos; + process.getgid());\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "process.setgid(id)",
+          "type": "method",
+          "name": "setgid",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nSets the group identity of the process. (See setgid(2).)  This accepts either\na numerical ID or a groupname string. If a groupname is specified, this method\nblocks while resolving it to a numerical ID.\n-->\n\n<p>プロセスのグループ識別子を設定します (setgid(2) 参照)。\nこれは数値による ID もグループ名の文字列のどちらも受け入れます。\nもしグループ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。\n\n</p>\n<pre><code>if (process.getgid &amp;&amp; process.setgid) {\n  console.log(&apos;Current gid: &apos; + process.getgid());\n  try {\n    process.setgid(501);\n    console.log(&apos;New gid: &apos; + process.getgid());\n  }\n  catch (err) {\n    console.log(&apos;Failed to set gid: &apos; + err);\n  }\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "id"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.getuid()",
+          "type": "method",
+          "name": "getuid",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nGets the user identity of the process. (See getuid(2).)\nThis is the numerical userid, not the username.\n-->\n\n<p>プロセスのユーザ識別子を取得します (getuid(2) 参照)。\nこれは数値によるユーザ ID で、ユーザ名ではありません。\n\n</p>\n<pre><code>if (process.getuid) {\n  console.log(&apos;Current uid: &apos; + process.getuid());\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "process.setuid(id)",
+          "type": "method",
+          "name": "setuid",
+          "desc": "<!--\nNote: this function is only available on POSIX platforms (i.e. not Windows)\n-->\n\n<p>注意: この関数は POSIX プラットフォーム (すなわち、非 Windows)\nでのみ利用可能です。\n\n</p>\n<!--\nSets the user identity of the process. (See setuid(2).)  This accepts either\na numerical ID or a username string.  If a username is specified, this method\nblocks while resolving it to a numerical ID.\n-->\n\n<p>プロセスのユーザ識別子を設定します (setuid(2) 参照)。\nこれは数値による ID もユーザ名の文字列のどちらも受け入れます。\nもしユーザ名が指定されると、数値による ID が解決できるまでこのメソッドはブロックします。\n\n</p>\n<pre><code>if (process.getuid &amp;&amp; process.setuid) {\n  console.log(&apos;Current uid: &apos; + process.getuid());\n  try {\n    process.setuid(501);\n    console.log(&apos;New uid: &apos; + process.getuid());\n  }\n  catch (err) {\n    console.log(&apos;Failed to set uid: &apos; + err);\n  }\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "id"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.kill(pid, [signal])",
+          "type": "method",
+          "name": "kill",
+          "desc": "<!--\nSend a signal to a process. `pid` is the process id and `signal` is the\nstring describing the signal to send.  Signal names are strings like\n'SIGINT' or 'SIGUSR1'.  If omitted, the signal will be 'SIGTERM'.\nSee kill(2) for more information.\n-->\n\n<p>プロセスにシグナルを送ります。\n<code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。\nシグナルの名前は &apos;SIGINT&apos; や &apos;SIGUSR1&apos; のような文字列です。\n省略すると、シグナルは &apos;SIGTERM&apos; となります。\n詳細は kill(2) を参照してください。\n\n</p>\n<!--\nNote that just because the name of this function is `process.kill`, it is\nreally just a signal sender, like the `kill` system call.  The signal sent\nmay do something other than kill the target process.\n-->\n\n<p>この関数の名前が <code>process.kill</code> であるとおり、\nこれは <code>kill</code> システムコールのように本当にシグナルを送信することに注意してください。\n対象のプロセスを殺すだけでなく、他のシグナルも送信されます。\n\n</p>\n<!--\nExample of sending a signal to yourself:\n-->\n\n<p>自身にシグナルを送信する例:\n\n</p>\n<pre><code>process.on(&apos;SIGHUP&apos;, function () {\n  console.log(&apos;Got SIGHUP signal.&apos;);\n});\n\nsetTimeout(function () {\n  console.log(&apos;Exiting.&apos;);\n  process.exit(0);\n}, 100);\n\nprocess.kill(process.pid, &apos;SIGHUP&apos;);</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "pid"
+                },
+                {
+                  "name": "signal",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.memoryUsage()",
+          "type": "method",
+          "name": "memoryUsage",
+          "desc": "<!--\nReturns an object describing the memory usage of the Node process\nmeasured in bytes.\n-->\n\n<p>Node プロセスのメモリ使用状況をバイト単位で記述したオブジェクトを返します。\n\n</p>\n<pre><code>var util = require(&apos;util&apos;);\n\nconsole.log(util.inspect(process.memoryUsage()));</code></pre>\n<!--\nThis will generate:\n-->\n\n<p>このように生成されます:\n\n</p>\n<pre><code>{ rss: 4935680,\n  heapTotal: 1826816,\n  heapUsed: 650472 }</code></pre>\n<!--\n`heapTotal` and `heapUsed` refer to V8's memory usage.\n-->\n\n<p><code>heapTotal</code> と <code>heapUsed</code> は V8 のメモリ使用状況を参照します。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "process.nextTick(callback)",
+          "type": "method",
+          "name": "nextTick",
+          "desc": "<!--\nOn the next loop around the event loop call this callback.\nThis is *not* a simple alias to `setTimeout(fn, 0)`, it's much more\nefficient.\n-->\n\n<p>イベントループの次以降のループでコールバックを呼び出します。\nこれは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、\nはるかに効率的です。\n\n</p>\n<pre><code>process.nextTick(function () {\n  console.log(&apos;nextTick callback&apos;);\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.umask([mask])",
+          "type": "method",
+          "name": "umask",
+          "desc": "<!--\nSets or reads the process's file mode creation mask. Child processes inherit\nthe mask from the parent process. Returns the old mask if `mask` argument is\ngiven, otherwise returns the current mask.\n-->\n\n<p>プロセスのファイルモード作成マスクを設定または読み込みます。\n子プロセスは親プロセスからマスクを継承します。\n<code>mask</code> 引数が与えられると元のマスクが返され、そうでなければ現在のマスクが返されます。\n\n</p>\n<pre><code>var oldmask, newmask = 0644;\n\noldmask = process.umask(newmask);\nconsole.log(&apos;Changed umask from: &apos; + oldmask.toString(8) +\n            &apos; to &apos; + newmask.toString(8));</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "mask",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "process.uptime()",
+          "type": "method",
+          "name": "uptime",
+          "desc": "<!--\nNumber of seconds Node has been running.\n-->\n\n<p>Node が実行されてからの秒数です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "process.hrtime()",
+          "type": "method",
+          "name": "hrtime",
+          "desc": "<!--\nReturns the current high-resolution real time in a `[seconds, nanoseconds]`\ntuple Array. It is relative to an arbitrary time in the past. It is not\nrelated to the time of day and therefore not subject to clock drift. The\nprimary use is for measuring performance between intervals.\n\nYou may pass in the result of a previous call to `process.hrtime()` to get\na diff reading, useful for benchmarks and measuring intervals:\n-->\n\n<p>高分解能な現在時刻を <code>[seconds, nanoseconds]</code> の配列で返します。\n過去の任意の時間との比較することができます。\nそれは一日における時刻には関連が無いため、クロックドリフトに影響されません。\n主な用途はベンチマークやインターバルの測定です。\n\n</p>\n<p>以前に <code>process.hrtime()</code> を呼び出した結果を渡すことにより、\n差分を得ることができます。これはベンチマークやインターバルの測定に便利です。\n\n</p>\n<pre><code>var t = process.hrtime();\n// [ 1800216, 927643717 ]\n\nsetTimeout(function () {\n  t = process.hrtime(t);\n  // [ 1, 6962306 ]\n\n  console.log(&apos;benchmark took %d seconds and %d nanoseconds&apos;, t[0], t[1]);\n  // benchmark took 1 seconds and 6962306 nanoseconds\n}, 1000);</code></pre>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

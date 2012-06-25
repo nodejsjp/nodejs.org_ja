@@ -1,0 +1,72 @@
+{
+  "source": "doc/api/url.markdown",
+  "modules": [
+    {
+      "textRaw": "URL",
+      "name": "url",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nThis module has utilities for URL resolution and parsing.\nCall `require('url')` to use it.\n-->\n\n<p>このモジュールはURLの解決や解析の為のユーティリティを持ちます。\n利用するには <code>require(&apos;url&apos;)</code> を呼び出してください。\n\n</p>\n<!--\nParsed URL objects have some or all of the following fields, depending on\nwhether or not they exist in the URL string. Any parts that are not in the URL\nstring will not be in the parsed object. Examples are shown for the URL\n-->\n\n<p>解析されたURLオブジェクトは、URL文字列の中に存在するかどうかに応じて\n次に示すフィールドをいくつかもしくは全てを持ちます。\nURL文字列に含まれないフィールドは解析結果のオブジェクトに含まれません。\n次のURLで例を示します。\n\n</p>\n<p><code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code>\n\n</p>\n<!--\n* `href`: The full URL that was originally parsed. Both the protocol and host are lowercased.\n\n    Example: `'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'`\n\n* `protocol`: The request protocol, lowercased.\n\n    Example: `'http:'`\n\n* `host`: The full lowercased host portion of the URL, including port\n  information.\n\n    Example: `'host.com:8080'`\n\n* `auth`: The authentication information portion of a URL.\n\n    Example: `'user:pass'`\n\n* `hostname`: Just the lowercased hostname portion of the host.\n\n    Example: `'host.com'`\n\n* `port`: The port number portion of the host.\n\n    Example: `'8080'`\n\n* `pathname`: The path section of the URL, that comes after the host and\n  before the query, including the initial slash if present.\n\n    Example: `'/p/a/t/h'`\n\n* `search`: The 'query string' portion of the URL, including the leading\n  question mark.\n\n    Example: `'?query=string'`\n\n* `path`: Concatenation of `pathname` and `search`.\n\n    Example: `'/p/a/t/h?query=string'`\n\n* `query`: Either the 'params' portion of the query string, or a\n  querystring-parsed object.\n\n    Example: `'query=string'` or `{'query':'string'}`\n\n* `hash`: The 'fragment' portion of the URL including the pound-sign.\n\n    Example: `'#hash'`\n-->\n\n<ul>\n<li><p><code>href</code>: 解析する前の完全な URL。protocol と host はどちらも小文字化されます。</p>\n<p>  例: <code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code></p>\n</li>\n<li><p><code>protocol</code>: リクエストのプロトコル。小文字化されます。</p>\n<p>  例: <code>&apos;http:&apos;</code></p>\n</li>\n<li><p><code>host</code>: URL の完全で小文字化されたホスト情報。ポート番号を含みます。</p>\n<p>  例: <code>&apos;host.com:8080&apos;</code></p>\n</li>\n<li><p><code>auth</code>: URL の認証情報。</p>\n<p>  例: <code>&apos;user:pass&apos;</code></p>\n</li>\n<li><p><code>hostname</code>: ホスト情報の中の小文字化されたホスト名。</p>\n<p>  例: <code>&apos;host.com&apos;</code></p>\n</li>\n<li><p><code>port</code>: ホスト情報の中のポート番号。</p>\n<p>  例: <code>&apos;8080&apos;</code></p>\n</li>\n<li><p><code>pathname</code>: URL のパス部分。ホスト情報からクエリまでの間に位置し、\n最初にスラッシュが存在する場合はそれも含みます。</p>\n<p>  例: <code>&apos;/p/a/t/h&apos;</code></p>\n</li>\n<li><p><code>search</code>: URL のクエリ文字列。先頭の ? マークも含みます。</p>\n<p>  例: <code>&apos;?query=string&apos;</code></p>\n</li>\n<li><p><code>path</code>: <code>pathname</code> と <code>search</code> を連結した文字列。</p>\n<p>  例: <code>&apos;/p/a/t/h?query=string&apos;</code></p>\n</li>\n<li><p><code>query</code>: クエリの変数部分の文字列、もしくはクエリ文字列を解析した\nオブジェクト。</p>\n<p>  例: <code>&apos;query=string&apos;</code> or <code>{&apos;query&apos;:&apos;string&apos;}</code></p>\n</li>\n<li><p><code>hash</code>: URL の # マークを含む部分。</p>\n<p>  例: <code>&apos;#hash&apos;</code></p>\n</li>\n</ul>\n<!--\nThe following methods are provided by the URL module:\n-->\n\n<p>以下のメソッドはURLモジュールにより提供されます:\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "url.parse(urlStr, [parseQueryString], [slashesDenoteHost])",
+          "type": "method",
+          "name": "parse",
+          "desc": "<!--\nTake a URL string, and return an object.\n\nPass `true` as the second argument to also parse\nthe query string using the `querystring` module.\nDefaults to `false`.\n\nPass `true` as the third argument to treat `//foo/bar` as\n`{ host: 'foo', pathname: '/bar' }` rather than\n`{ pathname: '//foo/bar' }`. Defaults to `false`.\n-->\n\n<p>URL文字列を引数に取り、解析結果のオブジェクトを返します。\n\n</p>\n<p><code>querystring</code> モジュールを使ってクエリ文字列も解析したい場合は、\n第 2 引数に <code>true</code> を渡してください。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>//foo/bar</code> を <code>{ pathname: &apos;//foo/bar&apos; }</code> ではなく\n<code>{ host: &apos;foo&apos;, pathname: &apos;/bar&apos; }</code> としたい場合は、\n第 3 引数に <code>true</code> を渡してください。\nデフォルトは <code>false</code> です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "urlStr"
+                },
+                {
+                  "name": "parseQueryString",
+                  "optional": true
+                },
+                {
+                  "name": "slashesDenoteHost",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "url.format(urlObj)",
+          "type": "method",
+          "name": "format",
+          "desc": "<!--\nTake a parsed URL object, and return a formatted URL string.\n-->\n\n<p>URL オブジェクトを引数に取り、フォーマットした URL 文字列を返します。\n\n</p>\n<!--\n* `href` will be ignored.\n* `protocol`is treated the same with or without the trailing `:` (colon).\n  * The protocols `http`, `https`, `ftp`, `gopher`, `file` will be\n    postfixed with `://` (colon-slash-slash).\n  * All other protocols `mailto`, `xmpp`, `aim`, `sftp`, `foo`, etc will\n    be postfixed with `:` (colon)\n* `auth` will be used if present.\n* `hostname` will only be used if `host` is absent.\n* `port` will only be used if `host` is absent.\n* `host` will be used in place of `hostname` and `port`\n* `pathname` is treated the same with or without the leading `/` (slash)\n* `search` will be used in place of `query`\n* `query` (object; see `querystring`) will only be used if `search` is absent.\n* `search` is treated the same with or without the leading `?` (question mark)\n* `hash` is treated the same with or without the leading `#` (pound sign, anchor)\n-->\n\n<ul>\n<li><code>href</code> は無視されます。</li>\n<li><code>protocol</code> の末尾に <code>:</code> (コロン) があってもなくても同じように扱われます。<ul>\n<li><code>http</code>、<code>https</code>、<code>ftp</code>、<code>gopher</code>、<code>file</code> は末尾に <code>://</code>\n(コロン、スラッシュ、スラッシュ) が付けられます。</li>\n<li><code>mailto</code>、<code>xmpp</code>、<code>aim</code>、<code>sftp</code>、<code>foo</code> など、その他のプロトコルは末尾に <code>:</code>\n(コロン) が付けられます。</li>\n</ul>\n</li>\n<li><code>auth</code> が与えられると使われます。</li>\n<li><code>hostname</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>\n<li><code>port</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>\n<li><code>host</code> は <code>hostname</code>、<code>port</code> の位置で使われます。</li>\n<li><code>pathname</code> の先頭に <code>/</code> (スラッシュ) があってもなくても同じように扱われます。</li>\n<li><code>search</code> は <code>query</code> の位置で使われます。</li>\n<li><code>query</code> (文字列ではなくオブジェクトです; <code>querystring</code> を参照してください) は <code>search</code> が与えられなかった場合だけ使われます。</li>\n<li><code>search</code> の先頭に <code>?</code> (クエスチョンマーク) があってもなくても同じように扱われます。</li>\n<li><code>hash</code> の先頭に <code>#</code> (シャープ, アンカー) があってもなくても同じように扱われます。</li>\n</ul>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "urlObj"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "url.resolve(from, to)",
+          "type": "method",
+          "name": "resolve",
+          "desc": "<!--\nTake a base URL, and a href URL, and resolve them as a browser would for\nan anchor tag.\n-->\n\n<p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "from"
+                },
+                {
+                  "name": "to"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "URL"
+    }
+  ]
+}

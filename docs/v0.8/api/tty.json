@@ -1,0 +1,108 @@
+{
+  "source": "doc/api/tty.markdown",
+  "modules": [
+    {
+      "textRaw": "TTY",
+      "name": "tty",
+      "stability": 2,
+      "stabilityText": "Unstable",
+      "desc": "<!--\nThe `tty` module houses the `tty.ReadStream` and `tty.WriteStream` classes. In\nmost cases, you will not need to use this module directly.\n-->\n\n<p><code>tty</code> モジュールは <code>tty.ReadStream</code> と <code>tty.WriteStream</code> クラスを持ちます。\n多くのケースでは、これらを直接使う必要はありません。\n\n</p>\n<!--\nWhen node detects that it is being run inside a TTY context, then `process.stdin`\nwill be a `tty.ReadStream` instance and `process.stdout` will be\na `tty.WriteStream` instance. The preferred way to check if node is being run in\na TTY context is to check `process.stdout.isTTY`:\n-->\n\n<p>node は TTY コンテキストの中にいるかどうかを検出し、\n<code>process.stdin</code> は <code>tty.ReadStream</code> のインスタンスに、\n<code>process.stdout</code> は <code>tty.WriteStream</code> のインスタンスになります。\nもし node が TTY のコンテキストで実行されているかどうかをチェックしたければ、\n<code>process.stdout.isTTY</code> を使うことができます:\n\n</p>\n<pre><code>$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot;\ntrue\n$ node -p -e &quot;Boolean(process.stdout.isTTY)&quot; | cat\nfalse</code></pre>\n",
+      "methods": [
+        {
+          "textRaw": "tty.isatty(fd)",
+          "type": "method",
+          "name": "isatty",
+          "desc": "<!--\nReturns `true` or `false` depending on if the `fd` is associated with a\nterminal.\n-->\n\n<p><code>fd</code> が端末に関連づけられているかどうかを <code>true</code> または <code>false</code> で返します。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "tty.setRawMode(mode)",
+          "type": "method",
+          "name": "setRawMode",
+          "desc": "<!--\nDeprecated. Use `tty.ReadStream#setRawMode()`\n(i.e. `process.stdin.setRawMode()`) instead.\n-->\n\n<p>Deprecated.\n代わりに <code>tty.ReadStream#setRawMode()</code> (すなわち、<code>process.stdin.setRawMode()</code>)\nを使用してください。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "mode"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: ReadStream",
+          "type": "class",
+          "name": "ReadStream",
+          "desc": "<!--\nA `net.Socket` subclass that represents the readable portion of a tty. In normal\ncircumstances, `process.stdin` will be the only `tty.ReadStream` instance in any\nnode program (only when `isatty(0)` is true).\n-->\n\n<p><code>net.Socket</code> のサブクラスで、tty の入力側を表現します。\n一般的な状況では、どんなプログラムでも (<code>isatty(0)</code> が true の場合に限り)\n<code>process.stdin</code> が唯一の <code>tty.ReadStream</code> のインスタンスとなります。\n\n</p>\n",
+          "properties": [
+            {
+              "textRaw": "rs.isRaw",
+              "name": "isRaw",
+              "desc": "<!--\nA `Boolean` that is initialized to `false`. It represents the current \"raw\" state\nof the `tty.ReadStream` instance.\n-->\n\n<p><code>Boolean</code> 値で <code>false</code> に初期化されます。\n<code>tty.ReadStream</code> インスタンスの現在の &quot;raw&quot; 状態を表現します。\n\n</p>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "rs.setRawMode(mode)",
+              "type": "method",
+              "name": "setRawMode",
+              "desc": "<!--\n`mode` should be `true` or `false`. This sets the properties of the\n`tty.ReadStream` to act either as a raw device or default. `isRaw` will be set\nto the resulting mode.\n-->\n\n<p><code>mode</code> は <code>true</code> または <code>false</code> のどちらかです。\nこれは <code>tty.ReadStream</code> がローデバイスかデフォルトのどちらで振る舞うかを\n設定します。\n結果のモードは <code>isRaw</code> に設定されます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "mode"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "modules": [
+        {
+          "textRaw": "Class WriteStream",
+          "name": "class_writestream",
+          "desc": "<!--\nA `net.Socket` subclass that represents the writable portion of a tty. In normal\ncircumstances, `process.stdout` will be the only `tty.WriteStream` instance\never created (and only when `isatty(1)` is true).\n-->\n\n<p><code>net.Socket</code> のサブクラスで、tty の出力側を表現します。\n一般的な状況では、どんなプログラムでも (<code>isatty(1)</code> が true の場合に限り)\n<code>process.stdout</code> が唯一の <code>tty.WriteStream</code> のインスタンスとなります。\n\n</p>\n",
+          "properties": [
+            {
+              "textRaw": "ws.columns",
+              "name": "columns",
+              "desc": "<!--\nA `Number` that gives the number of columns the TTY currently has. This property\ngets updated on \"resize\" events.\n-->\n\n<p>TTY の現在のカラム数を保持する <code>Number</code> 値です。\nこのプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。\n\n</p>\n"
+            },
+            {
+              "textRaw": "ws.rows",
+              "name": "rows",
+              "desc": "<!--\nA `Number` that gives the number of rows the TTY currently has. This property\ngets updated on \"resize\" events.\n-->\n\n<p>TTY の現在の行数を保持する <code>Number</code> 値です。\nこのプロパティは <code>&apos;resize&apos;</code> イベントで更新されます。\n\n</p>\n"
+            }
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'resize'",
+              "type": "event",
+              "name": "resize",
+              "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted by `refreshSize()` when either of the `columns` or `rows` properties\nhas changed.\n-->\n\n<p><code>columns</code> または <code>rows</code> プロパティが変更された場合に\n<code>refreshSize()</code> によって生成されます。\n\n</p>\n<pre><code>process.stdout.on(&apos;resize&apos;, function() {\n  console.log(&apos;screen size has changed!&apos;);\n  console.log(process.stdout.columns + &apos;x&apos; + process.stdout.rows);\n});</code></pre>\n",
+              "params": []
+            }
+          ],
+          "type": "module",
+          "displayName": "Class WriteStream"
+        }
+      ],
+      "type": "module",
+      "displayName": "TTY"
+    }
+  ]
+}

@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Zlib Node.js v0.8.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/zlib.html">
+</head>
+<body class="alt apidoc" id="api-section-zlib">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.8.0 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="zlib.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#zlib_zlib">Zlib</a><ul>
+<li><a href="#zlib_examples">Examples</a></li>
+<li><a href="#zlib_zlib_creategzip_options">zlib.createGzip([options])</a></li>
+<li><a href="#zlib_zlib_creategunzip_options">zlib.createGunzip([options])</a></li>
+<li><a href="#zlib_zlib_createdeflate_options">zlib.createDeflate([options])</a></li>
+<li><a href="#zlib_zlib_createinflate_options">zlib.createInflate([options])</a></li>
+<li><a href="#zlib_zlib_createdeflateraw_options">zlib.createDeflateRaw([options])</a></li>
+<li><a href="#zlib_zlib_createinflateraw_options">zlib.createInflateRaw([options])</a></li>
+<li><a href="#zlib_zlib_createunzip_options">zlib.createUnzip([options])</a></li>
+<li><a href="#zlib_class_zlib_gzip">Class: zlib.Gzip</a></li>
+<li><a href="#zlib_class_zlib_gunzip">Class: zlib.Gunzip</a></li>
+<li><a href="#zlib_class_zlib_deflate">Class: zlib.Deflate</a></li>
+<li><a href="#zlib_class_zlib_inflate">Class: zlib.Inflate</a></li>
+<li><a href="#zlib_class_zlib_deflateraw">Class: zlib.DeflateRaw</a></li>
+<li><a href="#zlib_class_zlib_inflateraw">Class: zlib.InflateRaw</a></li>
+<li><a href="#zlib_class_zlib_unzip">Class: zlib.Unzip</a></li>
+<li><a href="#zlib_convenience_methods">Convenience Methods</a></li>
+<li><a href="#zlib_zlib_deflate_buf_callback">zlib.deflate(buf, callback)</a></li>
+<li><a href="#zlib_zlib_deflateraw_buf_callback">zlib.deflateRaw(buf, callback)</a></li>
+<li><a href="#zlib_zlib_gzip_buf_callback">zlib.gzip(buf, callback)</a></li>
+<li><a href="#zlib_zlib_gunzip_buf_callback">zlib.gunzip(buf, callback)</a></li>
+<li><a href="#zlib_zlib_inflate_buf_callback">zlib.inflate(buf, callback)</a></li>
+<li><a href="#zlib_zlib_inflateraw_buf_callback">zlib.inflateRaw(buf, callback)</a></li>
+<li><a href="#zlib_zlib_unzip_buf_callback">zlib.unzip(buf, callback)</a></li>
+<li><a href="#zlib_options">Options</a></li>
+<li><a href="#zlib_memory_usage_tuning">Memory Usage Tuning</a></li>
+<li><a href="#zlib_constants">Constants</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Zlib<span><a class="mark" href="#zlib_zlib" id="zlib_zlib">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!--
+You can access this module with:
+-->
+
+<p>このモジュールは次のようにアクセスできます。
+
+</p>
+<pre><code>var zlib = require(&apos;zlib&apos;);</code></pre>
+<!--
+This provides bindings to Gzip/Gunzip, Deflate/Inflate, and
+DeflateRaw/InflateRaw classes.  Each class takes the same options, and
+is a readable/writable Stream.
+-->
+
+<p>これは Gzip/Gunzip、Deflate/Inflate、そして DeflateRaw/InflateRaw
+へバインディングするクラスを提供します。
+どのクラスも同じオプションを持つ、読み込みと書き込みが可能なストリームです。
+
+</p>
+<h2>Examples<span><a class="mark" href="#zlib_examples" id="zlib_examples">#</a></span></h2>
+<!--
+Compressing or decompressing a file can be done by piping an
+fs.ReadStream into a zlib stream, then into an fs.WriteStream.
+-->
+
+<p>ファイルを圧縮および解凍するには、fs.ReadStream から zlib へ、
+そして fs.WriteStream へパイプをつなぐだけです。
+
+</p>
+<pre><code>var gzip = zlib.createGzip();
+var fs = require(&apos;fs&apos;);
+var inp = fs.createReadStream(&apos;input.txt&apos;);
+var out = fs.createWriteStream(&apos;input.txt.gz&apos;);
+
+inp.pipe(gzip).pipe(out);</code></pre>
+<!--
+Compressing or decompressing data in one step can be done by using
+the convenience methods.
+-->
+
+<p>データの圧縮または解凍は <a href="#convenience_Methods">簡易メソッド</a>
+を使うことにより、ワンステップで行うことができます。
+
+</p>
+<pre><code>var input = &apos;.................................&apos;;
+zlib.deflate(input, function(err, buffer) {
+  if (!err) {
+    console.log(buffer.toString(&apos;base64&apos;));
+  }
+});
+
+var buffer = new Buffer(&apos;eJzT0yMAAGTvBe8=&apos;, &apos;base64&apos;);
+zlib.unzip(buffer, function(err, buffer) {
+  if (!err) {
+    console.log(buffer.toString());
+  }
+});</code></pre>
+<!--
+To use this module in an HTTP client or server, use the
+[accept-encoding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3)
+on requests, and the
+[content-encoding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.11)
+header on responses.
+
+**Note: these examples are drastically simplified to show
+the basic concept.**  Zlib encoding can be expensive, and the results
+ought to be cached.  See [Memory Usage Tuning](#zlib_memory_usage_tuning)
+below for more information on the speed/memory/compression
+tradeoffs involved in zlib usage.
+-->
+
+<p>このモジュールを HTTP クライアントとサーバで使うには、リクエストに
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3">accept-encoding</a>
+ヘッダを、レスポンスに
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.11">content-encoding</a>
+ヘッダを使用します。
+
+</p>
+<p><strong>注意:
+これらのサンプルは基本コンセプトを見せるためにとても単純化されています。</strong>
+Zlib エンコーディングは高価なので、結果はキャッシュされるべきです。
+zlibの使い方に関する速度／メモリ／圧縮率のトレードオフについてより詳しくは、
+後述の <a href="#zlib_memory_usage_tuning">Memory Usage Tuning</a> を参照してください。
+
+</p>
+<pre><code>// client request example
+var zlib = require(&apos;zlib&apos;);
+var http = require(&apos;http&apos;);
+var fs = require(&apos;fs&apos;);
+var request = http.get({ host: &apos;izs.me&apos;,
+                         path: &apos;/&apos;,
+                         port: 80,
+                         headers: { &apos;accept-encoding&apos;: &apos;gzip,deflate&apos; } });
+request.on(&apos;response&apos;, function(response) {
+  var output = fs.createWriteStream(&apos;izs.me_index.html&apos;);
+
+  switch (response.headers[&apos;content-encoding&apos;]) {
+    // or, just use zlib.createUnzip() to handle both cases
+    case &apos;gzip&apos;:
+      response.pipe(zlib.createGunzip()).pipe(output);
+      break;
+    case &apos;deflate&apos;:
+      response.pipe(zlib.createInflate()).pipe(output);
+      break;
+    default:
+      response.pipe(output);
+      break;
+  }
+});
+
+// server example
+// Running a gzip operation on every request is quite expensive.
+// It would be much more efficient to cache the compressed buffer.
+var zlib = require(&apos;zlib&apos;);
+var http = require(&apos;http&apos;);
+var fs = require(&apos;fs&apos;);
+http.createServer(function(request, response) {
+  var raw = fs.createReadStream(&apos;index.html&apos;);
+  var acceptEncoding = request.headers[&apos;accept-encoding&apos;];
+  if (!acceptEncoding) {
+    acceptEncoding = &apos;&apos;;
+  }
+
+  // Note: this is not a conformant accept-encoding parser.
+  // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3
+  if (acceptEncoding.match(/\bdeflate\b/)) {
+    response.writeHead(200, { &apos;content-encoding&apos;: &apos;deflate&apos; });
+    raw.pipe(zlib.createDeflate()).pipe(response);
+  } else if (acceptEncoding.match(/\bgzip\b/)) {
+    response.writeHead(200, { &apos;content-encoding&apos;: &apos;gzip&apos; });
+    raw.pipe(zlib.createGzip()).pipe(response);
+  } else {
+    response.writeHead(200, {});
+    raw.pipe(response);
+  }
+}).listen(1337);</code></pre>
+<h2>zlib.createGzip([options])<span><a class="mark" href="#zlib_zlib_creategzip_options" id="zlib_zlib_creategzip_options">#</a></span></h2>
+<!--
+Returns a new [Gzip](#zlib_class_zlib_gzip) object with an
+[options](#zlib_options).
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_gzip">Gzip</a> オブジェクトを返します。
+
+</p>
+<h2>zlib.createGunzip([options])<span><a class="mark" href="#zlib_zlib_creategunzip_options" id="zlib_zlib_creategunzip_options">#</a></span></h2>
+<!--
+Returns a new [Gunzip](#zlib_class_zlib_gunzip) object with an
+[options](#zlib_options).
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_gunzip">Gunzip</a> オブジェクトを返します。
+
+</p>
+<h2>zlib.createDeflate([options])<span><a class="mark" href="#zlib_zlib_createdeflate_options" id="zlib_zlib_createdeflate_options">#</a></span></h2>
+<!--
+Returns a new [Deflate](#zlib_class_zlib_deflate) object with an
+[options](#zlib_options).
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_deflate">Deflate</a> オブジェクトを返します。
+
+</p>
+<h2>zlib.createInflate([options])<span><a class="mark" href="#zlib_zlib_createinflate_options" id="zlib_zlib_createinflate_options">#</a></span></h2>
+<!--
+Returns a new [Inflate](#zlib_class_zlib_inflate) object with an
+[options](#zlib_options).
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_inflate">Inflate</a> オブジェクトを返します。
+
+</p>
+<h2>zlib.createDeflateRaw([options])<span><a class="mark" href="#zlib_zlib_createdeflateraw_options" id="zlib_zlib_createdeflateraw_options">#</a></span></h2>
+<!--
+Returns a new [DeflateRaw](#zlib_class_zlib_deflateraw) object with an
+[options](#zlib_options).
+
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_deflateraw">DeflateRaw</a> オブジェクトを返します。
+
+</p>
+<h2>zlib.createInflateRaw([options])<span><a class="mark" href="#zlib_zlib_createinflateraw_options" id="zlib_zlib_createinflateraw_options">#</a></span></h2>
+<!--
+Returns a new [InflateRaw](#zlib_class_zlib_inflateraw) object with an
+[options](#zlib_options).
+
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_inflateraw">InflateRaw</a> オブジェクトを返します。
+
+</p>
+<h2>zlib.createUnzip([options])<span><a class="mark" href="#zlib_zlib_createunzip_options" id="zlib_zlib_createunzip_options">#</a></span></h2>
+<!--
+Returns a new [Unzip](#zlib_class_zlib_unzip) object with an
+[options](#zlib_options).
+-->
+
+<p><a href="#zlib_options">options</a> によって作られた新しい
+<a href="#zlib_class_zlib_unzip">Unzip</a> オブジェクトを返します。
+
+
+</p>
+<h2>Class: zlib.Gzip<span><a class="mark" href="#zlib_class_zlib_gzip" id="zlib_class_zlib_gzip">#</a></span></h2>
+<!--
+Compress data using gzip.
+-->
+
+<p>gzip を使ってデータを圧縮します。
+
+</p>
+<h2>Class: zlib.Gunzip<span><a class="mark" href="#zlib_class_zlib_gunzip" id="zlib_class_zlib_gunzip">#</a></span></h2>
+<!--
+Decompress a gzip stream.
+-->
+
+<p>gzip ストリームを解凍します。
+
+</p>
+<h2>Class: zlib.Deflate<span><a class="mark" href="#zlib_class_zlib_deflate" id="zlib_class_zlib_deflate">#</a></span></h2>
+<!--
+Compress data using deflate.
+-->
+
+<p>deflate を使ってデータを圧縮します。
+
+</p>
+<h2>Class: zlib.Inflate<span><a class="mark" href="#zlib_class_zlib_inflate" id="zlib_class_zlib_inflate">#</a></span></h2>
+<!--
+Decompress a deflate stream.
+-->
+
+<p>deflate ストリームを解凍します。
+
+</p>
+<h2>Class: zlib.DeflateRaw<span><a class="mark" href="#zlib_class_zlib_deflateraw" id="zlib_class_zlib_deflateraw">#</a></span></h2>
+<!--
+Compress data using deflate, and do not append a zlib header.
+-->
+
+<p>deflate を使ってデータを圧縮しますが、zlib ヘッダを付加しません。
+
+</p>
+<h2>Class: zlib.InflateRaw<span><a class="mark" href="#zlib_class_zlib_inflateraw" id="zlib_class_zlib_inflateraw">#</a></span></h2>
+<!--
+Decompress a raw deflate stream.
+-->
+
+<p>生の deflate ストリームを解凍します。
+
+</p>
+<h2>Class: zlib.Unzip<span><a class="mark" href="#zlib_class_zlib_unzip" id="zlib_class_zlib_unzip">#</a></span></h2>
+<!--
+Decompress either a Gzip- or Deflate-compressed stream by auto-detecting
+the header.
+-->
+
+<p>Gzip または Deflate で圧縮されたストリームをヘッダで自動判別して解凍します。
+
+</p>
+<h2>Convenience Methods<span><a class="mark" href="#zlib_convenience_methods" id="zlib_convenience_methods">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+All of these take a string or buffer as the first argument, and call the
+supplied callback with `callback(error, result)`.  The
+compression/decompression engine is created using the default settings
+in all convenience methods.  To supply different options, use the
+zlib classes directly.
+-->
+
+<p>これらは全て第 1 引数として文字列またはバッファを受け取り、
+与えられたコールバック <code>callback(error, result)</code> を呼び出します。
+全ての簡易メソッドで、圧縮・解凍エンジンはデフォルトの設定で作成されます。
+異なったオプションを与えるには、zlib のクラスを直接使用してください。
+
+</p>
+<h2>zlib.deflate(buf, callback)<span><a class="mark" href="#zlib_zlib_deflate_buf_callback" id="zlib_zlib_deflate_buf_callback">#</a></span></h2>
+<!--
+Compress a string with Deflate.
+-->
+
+<p>Deflate で文字列を圧縮します。
+
+</p>
+<h2>zlib.deflateRaw(buf, callback)<span><a class="mark" href="#zlib_zlib_deflateraw_buf_callback" id="zlib_zlib_deflateraw_buf_callback">#</a></span></h2>
+<!--
+Compress a string with DeflateRaw.
+-->
+
+<p>DeflateRaw で文字列を圧縮します。
+
+</p>
+<h2>zlib.gzip(buf, callback)<span><a class="mark" href="#zlib_zlib_gzip_buf_callback" id="zlib_zlib_gzip_buf_callback">#</a></span></h2>
+<!--
+Compress a string with Gzip.
+-->
+
+<p>Gzip で文字列を圧縮します。
+
+</p>
+<h2>zlib.gunzip(buf, callback)<span><a class="mark" href="#zlib_zlib_gunzip_buf_callback" id="zlib_zlib_gunzip_buf_callback">#</a></span></h2>
+<!--
+Decompress a raw Buffer with Gunzip.
+-->
+
+<p>Gunzip で生のバッファを解凍します。
+
+</p>
+<h2>zlib.inflate(buf, callback)<span><a class="mark" href="#zlib_zlib_inflate_buf_callback" id="zlib_zlib_inflate_buf_callback">#</a></span></h2>
+<!--
+Decompress a raw Buffer with Inflate.
+-->
+
+<p>Infrate で生のバッファを解凍します。
+
+</p>
+<h2>zlib.inflateRaw(buf, callback)<span><a class="mark" href="#zlib_zlib_inflateraw_buf_callback" id="zlib_zlib_inflateraw_buf_callback">#</a></span></h2>
+<!--
+Decompress a raw Buffer with InflateRaw.
+-->
+
+<p>InflateRaw で生のバッファを解凍します。
+
+</p>
+<h2>zlib.unzip(buf, callback)<span><a class="mark" href="#zlib_zlib_unzip_buf_callback" id="zlib_zlib_unzip_buf_callback">#</a></span></h2>
+<!--
+Decompress a raw Buffer with Unzip.
+-->
+
+<p>Unzip で生のバッファを解凍します。
+
+</p>
+<h2>Options<span><a class="mark" href="#zlib_options" id="zlib_options">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+Each class takes an options object.  All options are optional.  (The
+convenience methods use the default settings for all options.)
+
+Note that some options are only
+relevant when compressing, and are ignored by the decompression classes.
+
+* chunkSize (default: 16*1024)
+* windowBits
+* level (compression only)
+* memLevel (compression only)
+* strategy (compression only)
+* dictionary (deflate/inflate only, empty dictionary by default)
+
+See the description of `deflateInit2` and `inflateInit2`
+at <http://zlib.net/manual.html#Advanced> for more information on these.
+-->
+
+<p>どのクラスもオプションオブジェクトを受け取ります。
+全てのオプションは任意です
+(簡易メソッドは全てのオプションでデフォルト値を使用します)。
+
+</p>
+<p>いくつかのオプションは圧縮にだけ関連し、
+解凍するクラスでは無視されることに注意してください。
+
+</p>
+<ul>
+<li>chunkSize (デフォルト: 16*1024)</li>
+<li>windowBits</li>
+<li>level (圧縮のみ)</li>
+<li>memLevel (圧縮のみ)</li>
+<li>strategy (圧縮のみ)</li>
+<li>dictionary (deflate/inflate のみ、デフォルトは空の辞書です)</li>
+</ul>
+<p>これらの詳細は <a href="http://zlib.net/manual.html#Advanced">http://zlib.net/manual.html#Advanced</a> の
+<code>deflateInit2</code> および <code>inflateInit2</code> の説明を参照してください。
+
+</p>
+<h2>Memory Usage Tuning<span><a class="mark" href="#zlib_memory_usage_tuning" id="zlib_memory_usage_tuning">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+From `zlib/zconf.h`, modified to node's usage:
+
+The memory requirements for deflate are (in bytes):
+-->
+
+<p>node は <code>zlib/zconf.h</code> を変更して使っています:
+
+</p>
+<pre><code>(1 &lt;&lt; (windowBits+2)) +  (1 &lt;&lt; (memLevel+9))</code></pre>
+<!--
+that is: 128K for windowBits=15  +  128K for memLevel = 8
+(default values) plus a few kilobytes for small objects.
+
+For example, if you want to reduce
+the default memory requirements from 256K to 128K, set the options to:
+-->
+
+<p>すなわち: windowBits = 15 の場合 128K + 
+memLevel = 8 の場合 128K (デフォルト値) に加えて数キロバイトが
+小さなオブジェクトのために使われます。
+
+</p>
+<p>たとえば、デフォルトで要求されるメモリを 256K から 128K へ縮小したければ、
+次のオプションを設定します:
+
+</p>
+<pre><code>{ windowBits: 14, memLevel: 7 }</code></pre>
+<!--
+Of course this will generally degrade compression (there's no free lunch).
+
+The memory requirements for inflate are (in bytes)
+-->
+
+<p>もちろん、これは圧縮率を悪化します (ただ飯ははありません)。
+
+
+</p>
+<pre><code>1 &lt;&lt; windowBits</code></pre>
+<!--
+that is, 32K for windowBits=15 (default value) plus a few kilobytes
+for small objects.
+
+This is in addition to a single internal output slab buffer of size
+`chunkSize`, which defaults to 16K.
+
+The speed of zlib compression is affected most dramatically by the
+`level` setting.  A higher level will result in better compression, but
+will take longer to complete.  A lower level will result in less
+compression, but will be much faster.
+
+In general, greater memory usage options will mean that node has to make
+fewer calls to zlib, since it'll be able to process more data in a
+single `write` operation.  So, this is another factor that affects the
+speed, at the cost of memory usage.
+-->
+
+<p>この場合、windowBits=15 (デフォルト値) の場合 32K に加えて数キロバイトが
+小さなオブジェクトのために使われます。
+
+</p>
+<p>これは、デフォルト値 16K の <code>chunkSize</code> で指定されたサイズの内部バッファに加えられます。
+
+</p>
+<p>zlib の圧縮速度は <code>level</code> の設定で劇的に変化します
+高レベルにするとより圧縮できますが、完了までの時間が長くなります。
+低レベルにするとあまり圧縮されませんが、高速になります。
+
+</p>
+<p>一般的に、メモリをより多く使うオプションにすると node が zlib を呼び出す回数が
+少なくなることを意味し、
+一回の <code>write</code> 操作でより多くのデータを処理できることになります。
+これはあスピードに影響するもう一つのファクタで、メモリ使用量を犠牲にします。
+
+</p>
+<h2>Constants<span><a class="mark" href="#zlib_constants" id="zlib_constants">#</a></span></h2>
+<!--type=misc-->
+
+<!--
+All of the constants defined in zlib.h are also defined on
+`require('zlib')`.
+In the normal course of operations, you will not need to ever set any of
+these.  They are documented here so that their presence is not
+surprising.  This section is taken almost directly from the [zlib
+documentation](http://zlib.net/manual.html#Constants).  See
+<http://zlib.net/manual.html#Constants> for more details.
+-->
+
+<p>zlib.h に定義された定数は <code>require(&apos;zlib&apos;)</code> でも定義されます。
+通常の使い方ではこれらを設定する必要はありません。
+それが存在することで驚かれないように、これらはドキュメント化されます。
+このセクションのほとんどは
+<a href="http://zlib.net/manual.html#Constants">zlib documentation</a>
+から直接得ることができます。
+より詳細は <a href="http://zlib.net/manual.html#Constants">http://zlib.net/manual.html#Constants</a> を参照してください。
+
+</p>
+<!--
+Allowed flush values.
+-->
+
+<p>利用可能なフラッシュ値。
+
+</p>
+<ul>
+<li><code>zlib.Z_NO_FLUSH</code></li>
+<li><code>zlib.Z_PARTIAL_FLUSH</code></li>
+<li><code>zlib.Z_SYNC_FLUSH</code></li>
+<li><code>zlib.Z_FULL_FLUSH</code></li>
+<li><code>zlib.Z_FINISH</code></li>
+<li><code>zlib.Z_BLOCK</code></li>
+<li><code>zlib.Z_TREES</code></li>
+</ul>
+<!--
+Return codes for the compression/decompression functions. Negative
+values are errors, positive values are used for special but normal
+events.
+-->
+
+<p>圧縮／解凍関数のリターンコード。
+負数はエラー、正数は正常なイベントの特別な場合に使われます。
+
+</p>
+<ul>
+<li><code>zlib.Z_OK</code></li>
+<li><code>zlib.Z_STREAM_END</code></li>
+<li><code>zlib.Z_NEED_DICT</code></li>
+<li><code>zlib.Z_ERRNO</code></li>
+<li><code>zlib.Z_STREAM_ERROR</code></li>
+<li><code>zlib.Z_DATA_ERROR</code></li>
+<li><code>zlib.Z_MEM_ERROR</code></li>
+<li><code>zlib.Z_BUF_ERROR</code></li>
+<li><code>zlib.Z_VERSION_ERROR</code></li>
+</ul>
+<!--
+Compression levels.
+-->
+
+<p>圧縮レベル。
+
+</p>
+<ul>
+<li><code>zlib.Z_NO_COMPRESSION</code></li>
+<li><code>zlib.Z_BEST_SPEED</code></li>
+<li><code>zlib.Z_BEST_COMPRESSION</code></li>
+<li><code>zlib.Z_DEFAULT_COMPRESSION</code></li>
+</ul>
+<!--
+Compression strategy.
+-->
+
+<p>圧縮ストラテジ。
+
+</p>
+<ul>
+<li><code>zlib.Z_FILTERED</code></li>
+<li><code>zlib.Z_HUFFMAN_ONLY</code></li>
+<li><code>zlib.Z_RLE</code></li>
+<li><code>zlib.Z_FIXED</code></li>
+<li><code>zlib.Z_DEFAULT_STRATEGY</code></li>
+</ul>
+<!--
+Possible values of the data_type field.
+-->
+
+<p>data_type フィールドで利用可能な値。
+
+</p>
+<ul>
+<li><code>zlib.Z_BINARY</code></li>
+<li><code>zlib.Z_TEXT</code></li>
+<li><code>zlib.Z_ASCII</code></li>
+<li><code>zlib.Z_UNKNOWN</code></li>
+</ul>
+<!--
+The deflate compression method (the only one supported in this version).
+-->
+
+<p>deflate の圧縮方法 (このバージョンでは一つだけがサポートされます)。
+
+</p>
+<ul>
+<li><code>zlib.Z_DEFLATED</code></li>
+</ul>
+<!--
+For initializing zalloc, zfree, opaque.
+-->
+
+<p>zalloc、zfree、opaque の初期化用。
+
+</p>
+<ul>
+<li><code>zlib.Z_NULL</code></li>
+</ul>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.0/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+

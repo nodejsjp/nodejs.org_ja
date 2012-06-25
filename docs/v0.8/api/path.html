@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Path Node.js v0.8.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/path.html">
+</head>
+<body class="alt apidoc" id="api-section-path">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.8.0 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="path.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#path_path">Path</a><ul>
+<li><a href="#path_path_normalize_p">path.normalize(p)</a></li>
+<li><a href="#path_path_join_path1_path2">path.join([path1], [path2], [...])</a></li>
+<li><a href="#path_path_resolve_from_to">path.resolve([from ...], to)</a></li>
+<li><a href="#path_path_relative_from_to">path.relative(from, to)</a></li>
+<li><a href="#path_path_dirname_p">path.dirname(p)</a></li>
+<li><a href="#path_path_basename_p_ext">path.basename(p, [ext])</a></li>
+<li><a href="#path_path_extname_p">path.extname(p)</a></li>
+<li><a href="#path_path_sep">path.sep</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Path<span><a class="mark" href="#path_path" id="path_path">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!--
+This module contains utilities for handling and transforming file
+paths.  Almost all these methods perform only string transformations.
+The file system is not consulted to check whether paths are valid.
+
+Use `require('path')` to use this module.  The following methods are provided:
+-->
+
+<p>このモジュールはファイルのパスに対する処理や変換を行うユーティリティを含みます。
+ほとんどのメソッドは文字列の変換だけを行います。
+パスが正しいか検証するためにファイルシステムに尋ねることはありません。
+
+</p>
+<p>このモジュールを利用するには<code>require(&apos;path&apos;)</code>を呼び出してください。
+このモジュールは以下のメソッドを提供します。
+
+</p>
+<h2>path.normalize(p)<span><a class="mark" href="#path_path_normalize_p" id="path_path_normalize_p">#</a></span></h2>
+<!--
+Normalize a string path, taking care of `'..'` and `'.'` parts.
+->
+
+文字列によるパスを正規化します。`'..'` と `'.'` の要素には注意してください。
+
+<!--
+When multiple slashes are found, they're replaced by a single one;
+when the path contains a trailing slash, it is preserved.
+On windows backslashes are used. 
+-->
+
+<p>複数のスラッシュが見つかると、それらは一つに置換されます;
+パスの最後にスラッシュが含まれていると、それは維持されます。
+Windows ではバックスラッシュが使われます。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.normalize(&apos;/foo/bar//baz/asdf/quux/..&apos;)
+// returns
+&apos;/foo/bar/baz/asdf&apos;</code></pre>
+<h2>path.join([path1], [path2], [...])<span><a class="mark" href="#path_path_join_path1_path2" id="path_path_join_path1_path2">#</a></span></h2>
+<!--
+Join all arguments together and normalize the resulting path.
+Non-string arguments are ignored.
+-->
+
+<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。
+文字列でない引数は無視されます。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.join(&apos;/foo&apos;, &apos;bar&apos;, &apos;baz/asdf&apos;, &apos;quux&apos;, &apos;..&apos;)
+// returns
+&apos;/foo/bar/baz/asdf&apos;
+
+path.join(&apos;foo&apos;, {}, &apos;bar&apos;)
+// returns
+&apos;foo/bar&apos;</code></pre>
+<h2>path.resolve([from ...], to)<span><a class="mark" href="#path_path_resolve_from_to" id="path_path_resolve_from_to">#</a></span></h2>
+<!--
+Resolves `to` to an absolute path.
+-->
+
+<p><code>to</code> の絶対パスを解決します。
+
+</p>
+<!--
+If `to` isn't already absolute `from` arguments are prepended in right to left
+order, until an absolute path is found. If after using all `from` paths still
+no absolute path is found, the current working directory is used as well. The
+resulting path is normalized, and trailing slashes are removed unless the path 
+gets resolved to the root directory. Non-string arguments are ignored.
+-->
+
+<p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。
+全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。
+結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。
+文字列でない引数は無視されます。
+
+</p>
+<!--
+Another way to think of it is as a sequence of `cd` commands in a shell.
+-->
+
+<p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。
+
+</p>
+<!--
+Examples:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.resolve(&apos;foo/bar&apos;, &apos;/tmp/file/&apos;, &apos;..&apos;, &apos;a/../subfile&apos;)</code></pre>
+<!--
+Is similar to:
+-->
+
+<p>これは以下と同様です。
+
+</p>
+<pre><code>cd foo/bar
+cd /tmp/file/
+cd ..
+cd a/../subfile
+pwd</code></pre>
+<!--
+The difference is that the different paths don't need to exist and may also be
+files.
+-->
+
+<p>いは、それぞれのパスが必ずしも存在する必要がないことと、ファイルでも構わないことです。
+
+</p>
+<!--
+Examples:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.resolve(&apos;/foo/bar&apos;, &apos;./baz&apos;)
+// returns
+&apos;/foo/bar/baz&apos;
+
+path.resolve(&apos;/foo/bar&apos;, &apos;/tmp/file/&apos;)
+// returns
+&apos;/tmp/file&apos;
+
+path.resolve(&apos;wwwroot&apos;, &apos;static_files/png/&apos;, &apos;../gif/image.gif&apos;)
+// if currently in /home/myself/node, it returns
+&apos;/home/myself/node/wwwroot/static_files/gif/image.gif&apos;</code></pre>
+<h2>path.relative(from, to)<span><a class="mark" href="#path_path_relative_from_to" id="path_path_relative_from_to">#</a></span></h2>
+<!--
+Solve the relative path from `from` to `to`.
+-->
+
+<p><code>from</code> から <code>to</code> への相対パスを解決します。
+
+</p>
+<!--
+At times we have two absolute paths, and we need to derive the relative
+path from one to the other.  This is actually the reverse transform of
+`path.resolve`, which means we see that:
+-->
+
+<p>二つの絶対パスがあり、一方から他方への相対パスを得なければならない場合があります。
+これは実際のところ、<code>path.resolve()</code> とは逆の変換です。
+それは以下を意味します:
+
+</p>
+<pre><code>path.resolve(from, path.relative(from, to)) == path.resolve(to)</code></pre>
+<!--
+Examples:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.relative(&apos;C:\\orandea\\test\\aaa&apos;, &apos;C:\\orandea\\impl\\bbb&apos;)
+// returns
+&apos;..\\..\\impl\\bbb&apos;
+
+path.relative(&apos;/data/orandea/test/aaa&apos;, &apos;/data/orandea/impl/bbb&apos;)
+// returns
+&apos;../../impl/bbb&apos;</code></pre>
+<h2>path.dirname(p)<span><a class="mark" href="#path_path_dirname_p" id="path_path_dirname_p">#</a></span></h2>
+<!--
+Return the directory name of a path.  Similar to the Unix `dirname` command.
+-->
+
+<p>パスに含まれるディレクトリ名を返します。Unixの <code>dirname</code> コマンドと同様です。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.dirname(&apos;/foo/bar/baz/asdf/quux&apos;)
+// returns
+&apos;/foo/bar/baz/asdf&apos;</code></pre>
+<h2>path.basename(p, [ext])<span><a class="mark" href="#path_path_basename_p_ext" id="path_path_basename_p_ext">#</a></span></h2>
+<!--
+Return the last portion of a path.  Similar to the Unix `basename` command.
+-->
+
+<p>パスの最後の要素を返します。Unixの <code>basename</code> コマンドと同様です。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>path.basename(&apos;/foo/bar/baz/asdf/quux.html&apos;)
+// returns
+&apos;quux.html&apos;
+
+path.basename(&apos;/foo/bar/baz/asdf/quux.html&apos;, &apos;.html&apos;)
+// returns
+&apos;quux&apos;</code></pre>
+<h2>path.extname(p)<span><a class="mark" href="#path_path_extname_p" id="path_path_extname_p">#</a></span></h2>
+<!--
+Return the extension of the path, from the last '.' to end of string
+in the last portion of the path.  If there is no '.' in the last portion
+of the path or the first character of it is '.', then it returns
+an empty string.  Examples:
+-->
+
+<p>パスの最後の要素について、最後の &apos;.&apos; から文字列の最後までのパスの拡張子を返します。
+最後の要素に &apos;.&apos; が含まれていなかった場合、もしくは &apos;.&apos; が最初の文字だった場合は、空の文字列を返します。
+例:
+
+</p>
+<pre><code>path.extname(&apos;index.html&apos;)
+// returns
+&apos;.html&apos;
+
+path.extname(&apos;index.&apos;)
+// returns
+&apos;.&apos;
+
+path.extname(&apos;index&apos;)
+// returns
+&apos;&apos;</code></pre>
+<h2>path.sep<span><a class="mark" href="#path_path_sep" id="path_path_sep">#</a></span></h2>
+<!--
+The platform-specific file separator. `'\\'` or `'/'`.
+-->
+
+<p>プラットフォーム固有のファイルセパレータ。 <code>&apos;\\&apos;</code> または <code>&apos;/&apos;</code>。
+
+</p>
+<!--
+An example on linux:
+-->
+
+<p>Linux での例:
+
+</p>
+<pre><code>&apos;foo/bar/baz&apos;.split(path.sep)
+// returns
+[&apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;]</code></pre>
+<!--
+An example on windows:
+-->
+
+<p>Windows での例:
+
+</p>
+<pre><code>&apos;foo\\bar\\baz&apos;.split(path.sep)
+// returns
+[&apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;]</code></pre>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.0/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+

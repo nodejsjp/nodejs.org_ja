@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Readline Node.js v0.8.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/readline.html">
+</head>
+<body class="alt apidoc" id="api-section-readline">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.8.0 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="readline.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#readline_readline">Readline</a><ul>
+<li><a href="#readline_readline_createinterface_options">readline.createInterface(options)</a></li>
+<li><a href="#readline_class_interface">Class: Interface</a><ul>
+<li><a href="#readline_rl_setprompt_prompt_length">rl.setPrompt(prompt, length)</a></li>
+<li><a href="#readline_rl_prompt_preservecursor">rl.prompt([preserveCursor])</a></li>
+<li><a href="#readline_rl_question_query_callback">rl.question(query, callback)</a></li>
+<li><a href="#readline_rl_pause">rl.pause()</a></li>
+<li><a href="#readline_rl_resume">rl.resume()</a></li>
+<li><a href="#readline_rl_close">rl.close()</a></li>
+<li><a href="#readline_rl_write_data_key">rl.write(data, [key])</a></li>
+</ul>
+</li>
+<li><a href="#readline_events">Events</a><ul>
+<li><a href="#readline_event_line">Event: &apos;line&apos;</a></li>
+<li><a href="#readline_event_pause">Event: &apos;pause&apos;</a></li>
+<li><a href="#readline_event_resume">Event: &apos;resume&apos;</a></li>
+<li><a href="#readline_event_close">Event: &apos;close&apos;</a></li>
+<li><a href="#readline_event_sigint">Event: &apos;SIGINT&apos;</a></li>
+<li><a href="#readline_event_sigtstp">Event: &apos;SIGTSTP&apos;</a></li>
+<li><a href="#readline_event_sigcont">Event: &apos;SIGCONT&apos;</a></li>
+</ul>
+</li>
+<li><a href="#readline_example_tiny_cli">Example: Tiny CLI</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Readline<span><a class="mark" href="#readline_readline" id="readline_readline">#</a></span></h1>
+<pre><code>Stability: 2 - Unstable</code></pre>
+<!--
+To use this module, do `require('readline')`. Readline allows reading of a
+stream (such as `process.stdin`) on a line-by-line basis.
+-->
+
+<p>このモジュールを使用するには、<code>require(&apos;readline&apos;)</code> をします。
+Readline はストリーム (たとえば <code>process.stdin</code>)
+を行ごとに読み込むことを可能にします。
+
+</p>
+<!--
+Note that once you've invoked this module, your node program will not
+terminate until you've closed the interface. Here's how to allow your
+program to gracefully exit:
+-->
+
+<p>このモジュールを一度起動すると、このインタフェースを
+クローズするまで node プログラムは終了しないことに注意してください。
+プログラムをスムーズに終了する方法を以下に示します:
+
+</p>
+<pre><code>var readline = require(&apos;readline&apos;);
+
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.question(&quot;What do you think of node.js? &quot;, function(answer) {
+  // TODO: Log the answer in a database
+  console.log(&quot;Thank you for your valuable feedback:&quot;, answer);
+
+  rl.close();
+});</code></pre>
+<h2>readline.createInterface(options)<span><a class="mark" href="#readline_readline_createinterface_options" id="readline_readline_createinterface_options">#</a></span></h2>
+<!--
+Creates a readline `Interface` instance. Accepts an "options" Object that takes
+the following values:
+-->
+
+<p>行を読み込む <code>Interface</code> のインスタンスを作成します。
+以下の値を含む <code>options</code> オブジェクトを受け取ります。
+
+</p>
+<!--
+ - `input` - the readable stream to listen to (Required).
+
+ - `output` - the writable stream to write readline data to (Required).
+
+ - `completer` - an optional function that is used for Tab autocompletion. See
+   below for an example of using this.
+
+ - `terminal` - pass `true` if the `input` and `output` streams should be
+   treated like a TTY, and have ANSI/VT100 escape codes written to it.
+   Defaults to checking `isTTY` on the `output` stream upon instantiation.
+-->
+
+<ul>
+<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>
+</li>
+<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>
+</li>
+<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。
+後述の例を参照してください。</p>
+</li>
+<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、
+ANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。
+デフォルトはインスタンス生成時に <code>output</code> に対して
+<code>isTTY</code> でチェックします。</p>
+</li>
+</ul>
+<!--
+The `completer` function is given a the current line entered by the user, and
+is supposed to return an Array with 2 entries:
+-->
+
+<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、
+2 つのエントリを含む配列を返すことが期待されます:
+
+</p>
+<!--
+ 1. An Array with matching entries for the completion.
+
+ 2. The substring that was used for the matching.
+-->
+
+<ol>
+<li><p>補完によってマッチするエントリの配列。</p>
+</li>
+<li><p>マッチングに使用された部分文字列。</p>
+</li>
+</ol>
+<!--
+Which ends up looking something like:
+`[[substr1, substr2, ...], originalsubstring]`.
+-->
+
+<p>それは次のようになります:
+<code>[[substr1, substr2, ...], originalsubstring]</code>。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>function completer(line) {
+  var completions = &apos;.help .error .exit .quit .q&apos;.split(&apos; &apos;)
+  var hits = completions.filter(function(c) { return c.indexOf(line) == 0 })
+  // show all completions if none found
+  return [hits.length ? hits : completions, line]
+}</code></pre>
+<!--
+Also `completer` can be run in async mode if it accepts two arguments:
+-->
+
+<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。
+
+</p>
+<pre><code>function completer(linePartial, callback) {
+  callback(null, [[&apos;123&apos;], linePartial]);
+}</code></pre>
+<!--
+`createInterface` is commonly used with `process.stdin` and
+`process.stdout` in order to accept user input:
+-->
+
+<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と
+<code>process.stdout</code> が使用されます。
+
+</p>
+<pre><code>var readline = require(&apos;readline&apos;);
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});</code></pre>
+<!--
+Once you have a readline instance, you most commonly listen for the
+`"line"` event.
+-->
+
+<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&apos;line&apos;</code> イベントを
+監視することになります。
+
+</p>
+<!--
+If `terminal` is `true` for this instance then the `output` stream will get
+the best compatibility if it defines an `output.columns` property, and fires
+a `"resize"` event on the `output` if/when the columns ever change
+(`process.stdout` does this automatically when it is a TTY).
+-->
+
+<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、
+<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば
+それに適合し、カラム幅が変更されると <code>output</code> 上で
+<code>&apos;resize&apos;</code> イベントが生成されます
+(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。
+
+</p>
+<h2>Class: Interface<span><a class="mark" href="#readline_class_interface" id="readline_class_interface">#</a></span></h2>
+<!--
+The class that represents a readline interface with an input and output
+stream.
+-->
+
+<p>入力と出力を持つ readline インタフェースを表現するクラスです。
+
+</p>
+<h3>rl.setPrompt(prompt, length)<span><a class="mark" href="#readline_rl_setprompt_prompt_length" id="readline_rl_setprompt_prompt_length">#</a></span></h3>
+<!--
+Sets the prompt, for example when you run `node` on the command line, you see
+`> `, which is node's prompt.
+-->
+
+<p>プロンプトを設定します。
+たとえば、コマンドプロンプトで <code>node</code> コマンドを実行すると、
+<code>&gt; </code> を見ることができます。これが Node のプロンプトです。
+
+</p>
+<h3>rl.prompt([preserveCursor])<span><a class="mark" href="#readline_rl_prompt_preservecursor" id="readline_rl_prompt_preservecursor">#</a></span></h3>
+<!--
+Readies readline for input from the user, putting the current `setPrompt`
+options on a new line, giving the user a new spot to write. Set `preserveCursor`
+to `true` to prevent the cursor placement being reset to `0`.
+
+This will also resume the `input` stream used with `createInterface` if it has
+been paused.
+-->
+
+<p>ユーザからの入力を 1 行読み込みます。
+現在の <code>setPrompt()</code> の値を新しい行に出力し、
+ユーザに新しい入力エリアを与えます。
+<code>preserveCursor</code> を <code>true</code> に設定すると、カーソル位置が
+<code>0</code> にリセットされなくなります。
+
+</p>
+<p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
+中断されていれば再開します。
+
+</p>
+<h3>rl.question(query, callback)<span><a class="mark" href="#readline_rl_question_query_callback" id="readline_rl_question_query_callback">#</a></span></h3>
+<!--
+Prepends the prompt with `query` and invokes `callback` with the user's
+response. Displays the query to the user, and then invokes `callback`
+with the user's response after it has been typed.
+
+This will also resume the `input` stream used with `createInterface` if
+it has been paused.
+-->
+
+<p><code>query</code> をプロンプトとして、ユーザが応答すると <code>callback</code> を起動します。
+ユーザに質問を表示し、ユーザが応答をタイプすると、<code>callback</code> が起動されます。
+
+</p>
+<p>これは、 <code>createInterface()</code> によって使われる <code>input</code> ストリームが
+中断されていれば再開します。
+
+</p>
+<!--
+Example usage:
+-->
+
+<p>使用例:
+
+</p>
+<pre><code>interface.question(&apos;What is your favorite food?&apos;, function(answer) {
+  console.log(&apos;Oh, so your favorite food is &apos; + answer);
+});</code></pre>
+<h3>rl.pause()<span><a class="mark" href="#readline_rl_pause" id="readline_rl_pause">#</a></span></h3>
+<!--
+Pauses the readline `in` stream, allowing it to be resumed later if needed.
+Pauses the readline `input` stream, allowing it to be resumed later if needed.
+-->
+
+<p><code>input</code> ストリームからの入力を中断します。
+必要なら後で再開することができます。
+
+</p>
+<h3>rl.resume()<span><a class="mark" href="#readline_rl_resume" id="readline_rl_resume">#</a></span></h3>
+<!--
+Resumes the readline `input` stream.
+-->
+
+<p><code>input</code> ストリームからの入力を再開します。
+
+</p>
+<h3>rl.close()<span><a class="mark" href="#readline_rl_close" id="readline_rl_close">#</a></span></h3>
+<!--
+Closes the `Interface` instance, relinquishing control on the `input` and
+`output` streams. The "close" event will also be emitted.
+-->
+
+<p><code>Interface</code> のインスタンスをクローズし、<code>input</code> および <code>output</code> ストリームの
+制御を解放します。<code>&apos;close&apos;</code> イベントも生成されます。
+
+</p>
+<h3>rl.write(data, [key])<span><a class="mark" href="#readline_rl_write_data_key" id="readline_rl_write_data_key">#</a></span></h3>
+<!--
+Writes `data` to `output` stream. `key` is an object literal to represent a key
+sequence; available if the terminal is a TTY.
+-->
+
+<p><code>data</code> を <code>output</code> ストリームに出力します。
+<code>key</code> はキーシーケンスを表現するオブジェクトリテラルです;
+ターミナルが TTY の場合に有効です。
+
+</p>
+<!--
+This will also resume the `input` stream if it has been paused.
+-->
+
+<p>これは、<code>input</code> ストリームが中断されていれば再開します。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>rl.write(&apos;Delete me!&apos;);
+// Simulate ctrl+u to delete the line written previously
+rl.write(null, {ctrl: true, name: &apos;u&apos;});</code></pre>
+<h2>Events<span><a class="mark" href="#readline_events" id="readline_events">#</a></span></h2>
+<h3>Event: &apos;line&apos;<span><a class="mark" href="#readline_event_line" id="readline_event_line">#</a></span></h3>
+<p><code>function (line) {}</code>
+
+</p>
+<!--
+Emitted whenever the `input` stream receives a `\n`, usually received when the
+user hits enter, or return. This is a good hook to listen for user input.
+-->
+
+<p><code>input</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
+通常、ユーザがエンターまたはリターンを打つごとに受信します。
+これはユーザ入浴のよいフックとなります。
+
+</p>
+<!--
+Example of listening for `line`:
+-->
+
+<p><code>line</code> を監視する例:
+
+</p>
+<pre><code>rl.on(&apos;line&apos;, function (cmd) {
+  console.log(&apos;You just typed: &apos;+cmd);
+});</code></pre>
+<h3>Event: &apos;pause&apos;<span><a class="mark" href="#readline_event_pause" id="readline_event_pause">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted whenever the `input` stream is paused.
+-->
+
+<p><code>input</code> ストリームが中断されたときに生成されます。
+
+</p>
+<!--
+Also emitted whenever the `input` stream is not paused and receives the
+`SIGCONT` event. (See events `SIGTSTP` and `SIGCONT`)
+-->
+
+<p><code>input</code> ストリームが中断されていない時に <code>SIGCONT</code> イベントを受信した際にも
+生成されます (<code>SIGTSTP</code> および <code>SIGCONT</code> も参照してください)。
+
+</p>
+<!--
+Example of listening for `pause`:
+-->
+
+<p><code>&apos;pause&apos;</code> を監視する例:
+
+</p>
+<pre><code>rl.on(&apos;pause&apos;, function() {
+  console.log(&apos;Readline paused.&apos;);
+});</code></pre>
+<h3>Event: &apos;resume&apos;<span><a class="mark" href="#readline_event_resume" id="readline_event_resume">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted whenever the `input` stream is resumed.
+
+Example of listening for `resume`:
+-->
+
+<p><code>input</code> ストリームが再開された時に生成されます。
+
+</p>
+<p><code>&apos;resume&apos;</code> を監視する例:
+
+</p>
+<pre><code>rl.on(&apos;resume&apos;, function() {
+  console.log(&apos;Readline resumed.&apos;);
+});</code></pre>
+<h3>Event: &apos;close&apos;<span><a class="mark" href="#readline_event_close" id="readline_event_close">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted when `close()` is called.
+-->
+
+<p><code>close()</code> が呼ばれた場合に生成されます。
+
+</p>
+<!--
+Also emitted when the `input` stream receives its "end" event. The `Interface`
+instance should be considered "finished" once this is emitted. For example, when
+the `input` stream receives `^D`, respectively known as `EOT`.
+-->
+
+<p><code>input</code> ストリームが <code>&apos;end&apos;</code> イベントを受け取った場合にも生成されます。
+これが生成された後、<code>Interface</code> インスタンスは完了したと考えられるべきです。
+例えば、<code>input</code> ストリームが <code>EOT</code> として知られる <code>^D</code> を受け取った場合。
+
+</p>
+<!--
+This event is also called if there is no `SIGINT` event listener present when
+the `input` stream receives a `^C`, respectively known as `SIGINT`.
+-->
+
+<p>このイベントは <code>SIGINT</code> イベントリスナが与えられていない場合に、
+<code>input</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受け取った場合にも
+生成されます。
+
+</p>
+<h3>Event: &apos;SIGINT&apos;<span><a class="mark" href="#readline_event_sigint" id="readline_event_sigint">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+Emitted whenever the `input` stream receives a `^C`, respectively known as
+`SIGINT`. If there is no `SIGINT` event listener present when the `input`
+stream receives a `SIGINT`, `pause` will be triggered.
+
+Example of listening for `SIGINT`:
+-->
+
+<p><code>input</code> ストリームが <code>SIGINT</code> として知られる <code>^C</code> を受信した場合に
+生成されます。
+もし <code>input</code> ストリームが <code>SIGINT</code> を受信した時に <code>&apos;SIGINT&apos;</code> イベントの
+リスナが存在しなければ、<code>&apos;pause&apos;</code> イベントがトリガされます。
+
+</p>
+<p><code>&apos;SIGINT&apos;</code> を監視する例:
+
+</p>
+<pre><code>rl.on(&apos;SIGINT&apos;, function() {
+  rl.question(&apos;Are you sure you want to exit?&apos;, function(answer) {
+    if (answer.match(/^y(es)?$/i)) rl.pause();
+  });
+});</code></pre>
+<h3>Event: &apos;SIGTSTP&apos;<span><a class="mark" href="#readline_event_sigtstp" id="readline_event_sigtstp">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+**This does not work on Windows.**
+
+Emitted whenever the `input` stream receives a `^Z`, respectively known as
+`SIGTSTP`. If there is no `SIGTSTP` event listener present when the `input`
+stream receives a `SIGTSTP`, the program will be sent to the background.
+
+When the program is resumed with `fg`, the `pause` and `SIGCONT` events will be
+emitted. You can use either to resume the stream.
+
+The `pause` and `SIGCONT` events will not be triggered if the stream was paused
+before the program was sent to the background.
+
+Example of listening for `SIGTSTP`:
+-->
+
+<p><strong>これは Windows では動作しません。</strong>
+
+</p>
+<p><code>input</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> を受信した場合に
+生成されます。
+もし <code>input</code> ストリームが <code>SIGTSTP</code> を受信した時に <code>&apos;SIGTSTP&apos;</code> イベントの
+リスナが存在しなければ、プログラムはバックグラウンドに送られます。
+
+</p>
+<p>プログラムが <code>fg</code> により再開されると、<code>&apos;pause&apos;</code> および <code>&apos;SIGCONT&apos;</code> イベントが
+生成されます。どちらもストリームを再開するために使うことができます。
+
+</p>
+<p>プログラムがバックグラウンドに送られる前にストリームが中断されていると、
+<code>&apos;pause&apos;</code> および <code>&apos;SIGCONT&apos;</code> イベントは生成されません。
+
+</p>
+<p><code>&apos;SIGTSTP&apos;</code> を監視する例:
+
+</p>
+<pre><code>rl.on(&apos;SIGTSTP&apos;, function() {
+  // This will override SIGTSTP and prevent the program from going to the
+  // background.
+  console.log(&apos;Caught SIGTSTP.&apos;);
+});</code></pre>
+<h3>Event: &apos;SIGCONT&apos;<span><a class="mark" href="#readline_event_sigcont" id="readline_event_sigcont">#</a></span></h3>
+<p><code>function () {}</code>
+
+</p>
+<!--
+**This does not work on Windows.**
+
+Emitted whenever the `input` stream is sent to the background with `^Z`,
+respectively known as `SIGTSTP`, and then continued with `fg(1)`. This event
+only emits if the stream was not paused before sending the program to the
+background.
+
+Example of listening for `SIGCONT`:
+-->
+
+<p><strong>これは Windows では動作しません。</strong>
+
+</p>
+<p><code>input</code> ストリームが <code>SIGTSTP</code> として知られる <code>^Z</code> によってバックグラウンドに
+送られた後で、<code>fg(1)</code> によって再開されるた場合に生成されます。
+このイベントはプログラムがバックグラウンドに送られる前にストリームが中断されていなかった場合にのみ生成されます。
+
+</p>
+<p><code>&apos;SIGCONT&apos;</code> を監視する例:
+
+</p>
+<pre><code>rl.on(&apos;SIGCONT&apos;, function() {
+  // `prompt` will automatically resume the stream
+  rl.prompt();
+});</code></pre>
+<h2>Example: Tiny CLI<span><a class="mark" href="#readline_example_tiny_cli" id="readline_example_tiny_cli">#</a></span></h2>
+<!--
+Here's an example of how to use all these together to craft a tiny command
+line interface:
+-->
+
+<p>全てを一緒に使う、小さなコマンドラインインタフェースの例:
+
+</p>
+<pre><code>var readline = require(&apos;readline&apos;),
+    rl = readline.createInterface(process.stdin, process.stdout);
+
+rl.setPrompt(&apos;OHAI&gt; &apos;);
+rl.prompt();
+
+rl.on(&apos;line&apos;, function(line) {
+  switch(line.trim()) {
+    case &apos;hello&apos;:
+      console.log(&apos;world!&apos;);
+      break;
+    default:
+      console.log(&apos;Say what? I might have heard `&apos; + line.trim() + &apos;`&apos;);
+      break;
+  }
+  rl.prompt();
+}).on(&apos;close&apos;, function() {
+  console.log(&apos;Have a great day!&apos;);
+  process.exit(0);
+});</code></pre>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.0/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+

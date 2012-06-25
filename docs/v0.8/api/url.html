@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>URL Node.js v0.8.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/url.html">
+</head>
+<body class="alt apidoc" id="api-section-url">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.8.0 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="url.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#url_url">URL</a><ul>
+<li><a href="#url_url_parse_urlstr_parsequerystring_slashesdenotehost">url.parse(urlStr, [parseQueryString], [slashesDenoteHost])</a></li>
+<li><a href="#url_url_format_urlobj">url.format(urlObj)</a></li>
+<li><a href="#url_url_resolve_from_to">url.resolve(from, to)</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>URL<span><a class="mark" href="#url_url" id="url_url">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!--
+This module has utilities for URL resolution and parsing.
+Call `require('url')` to use it.
+-->
+
+<p>このモジュールはURLの解決や解析の為のユーティリティを持ちます。
+利用するには <code>require(&apos;url&apos;)</code> を呼び出してください。
+
+</p>
+<!--
+Parsed URL objects have some or all of the following fields, depending on
+whether or not they exist in the URL string. Any parts that are not in the URL
+string will not be in the parsed object. Examples are shown for the URL
+-->
+
+<p>解析されたURLオブジェクトは、URL文字列の中に存在するかどうかに応じて
+次に示すフィールドをいくつかもしくは全てを持ちます。
+URL文字列に含まれないフィールドは解析結果のオブジェクトに含まれません。
+次のURLで例を示します。
+
+</p>
+<p><code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code>
+
+</p>
+<!--
+* `href`: The full URL that was originally parsed. Both the protocol and host are lowercased.
+
+    Example: `'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'`
+
+* `protocol`: The request protocol, lowercased.
+
+    Example: `'http:'`
+
+* `host`: The full lowercased host portion of the URL, including port
+  information.
+
+    Example: `'host.com:8080'`
+
+* `auth`: The authentication information portion of a URL.
+
+    Example: `'user:pass'`
+
+* `hostname`: Just the lowercased hostname portion of the host.
+
+    Example: `'host.com'`
+
+* `port`: The port number portion of the host.
+
+    Example: `'8080'`
+
+* `pathname`: The path section of the URL, that comes after the host and
+  before the query, including the initial slash if present.
+
+    Example: `'/p/a/t/h'`
+
+* `search`: The 'query string' portion of the URL, including the leading
+  question mark.
+
+    Example: `'?query=string'`
+
+* `path`: Concatenation of `pathname` and `search`.
+
+    Example: `'/p/a/t/h?query=string'`
+
+* `query`: Either the 'params' portion of the query string, or a
+  querystring-parsed object.
+
+    Example: `'query=string'` or `{'query':'string'}`
+
+* `hash`: The 'fragment' portion of the URL including the pound-sign.
+
+    Example: `'#hash'`
+-->
+
+<ul>
+<li><p><code>href</code>: 解析する前の完全な URL。protocol と host はどちらも小文字化されます。</p>
+<p>  例: <code>&apos;http://user:pass@host.com:8080/p/a/t/h?query=string#hash&apos;</code></p>
+</li>
+<li><p><code>protocol</code>: リクエストのプロトコル。小文字化されます。</p>
+<p>  例: <code>&apos;http:&apos;</code></p>
+</li>
+<li><p><code>host</code>: URL の完全で小文字化されたホスト情報。ポート番号を含みます。</p>
+<p>  例: <code>&apos;host.com:8080&apos;</code></p>
+</li>
+<li><p><code>auth</code>: URL の認証情報。</p>
+<p>  例: <code>&apos;user:pass&apos;</code></p>
+</li>
+<li><p><code>hostname</code>: ホスト情報の中の小文字化されたホスト名。</p>
+<p>  例: <code>&apos;host.com&apos;</code></p>
+</li>
+<li><p><code>port</code>: ホスト情報の中のポート番号。</p>
+<p>  例: <code>&apos;8080&apos;</code></p>
+</li>
+<li><p><code>pathname</code>: URL のパス部分。ホスト情報からクエリまでの間に位置し、
+最初にスラッシュが存在する場合はそれも含みます。</p>
+<p>  例: <code>&apos;/p/a/t/h&apos;</code></p>
+</li>
+<li><p><code>search</code>: URL のクエリ文字列。先頭の ? マークも含みます。</p>
+<p>  例: <code>&apos;?query=string&apos;</code></p>
+</li>
+<li><p><code>path</code>: <code>pathname</code> と <code>search</code> を連結した文字列。</p>
+<p>  例: <code>&apos;/p/a/t/h?query=string&apos;</code></p>
+</li>
+<li><p><code>query</code>: クエリの変数部分の文字列、もしくはクエリ文字列を解析した
+オブジェクト。</p>
+<p>  例: <code>&apos;query=string&apos;</code> or <code>{&apos;query&apos;:&apos;string&apos;}</code></p>
+</li>
+<li><p><code>hash</code>: URL の # マークを含む部分。</p>
+<p>  例: <code>&apos;#hash&apos;</code></p>
+</li>
+</ul>
+<!--
+The following methods are provided by the URL module:
+-->
+
+<p>以下のメソッドはURLモジュールにより提供されます:
+
+</p>
+<h2>url.parse(urlStr, [parseQueryString], [slashesDenoteHost])<span><a class="mark" href="#url_url_parse_urlstr_parsequerystring_slashesdenotehost" id="url_url_parse_urlstr_parsequerystring_slashesdenotehost">#</a></span></h2>
+<!--
+Take a URL string, and return an object.
+
+Pass `true` as the second argument to also parse
+the query string using the `querystring` module.
+Defaults to `false`.
+
+Pass `true` as the third argument to treat `//foo/bar` as
+`{ host: 'foo', pathname: '/bar' }` rather than
+`{ pathname: '//foo/bar' }`. Defaults to `false`.
+-->
+
+<p>URL文字列を引数に取り、解析結果のオブジェクトを返します。
+
+</p>
+<p><code>querystring</code> モジュールを使ってクエリ文字列も解析したい場合は、
+第 2 引数に <code>true</code> を渡してください。
+デフォルトは <code>false</code> です。
+
+</p>
+<p><code>//foo/bar</code> を <code>{ pathname: &apos;//foo/bar&apos; }</code> ではなく
+<code>{ host: &apos;foo&apos;, pathname: &apos;/bar&apos; }</code> としたい場合は、
+第 3 引数に <code>true</code> を渡してください。
+デフォルトは <code>false</code> です。
+
+</p>
+<h2>url.format(urlObj)<span><a class="mark" href="#url_url_format_urlobj" id="url_url_format_urlobj">#</a></span></h2>
+<!--
+Take a parsed URL object, and return a formatted URL string.
+-->
+
+<p>URL オブジェクトを引数に取り、フォーマットした URL 文字列を返します。
+
+</p>
+<!--
+* `href` will be ignored.
+* `protocol`is treated the same with or without the trailing `:` (colon).
+  * The protocols `http`, `https`, `ftp`, `gopher`, `file` will be
+    postfixed with `://` (colon-slash-slash).
+  * All other protocols `mailto`, `xmpp`, `aim`, `sftp`, `foo`, etc will
+    be postfixed with `:` (colon)
+* `auth` will be used if present.
+* `hostname` will only be used if `host` is absent.
+* `port` will only be used if `host` is absent.
+* `host` will be used in place of `hostname` and `port`
+* `pathname` is treated the same with or without the leading `/` (slash)
+* `search` will be used in place of `query`
+* `query` (object; see `querystring`) will only be used if `search` is absent.
+* `search` is treated the same with or without the leading `?` (question mark)
+* `hash` is treated the same with or without the leading `#` (pound sign, anchor)
+-->
+
+<ul>
+<li><code>href</code> は無視されます。</li>
+<li><code>protocol</code> の末尾に <code>:</code> (コロン) があってもなくても同じように扱われます。<ul>
+<li><code>http</code>、<code>https</code>、<code>ftp</code>、<code>gopher</code>、<code>file</code> は末尾に <code>://</code>
+(コロン、スラッシュ、スラッシュ) が付けられます。</li>
+<li><code>mailto</code>、<code>xmpp</code>、<code>aim</code>、<code>sftp</code>、<code>foo</code> など、その他のプロトコルは末尾に <code>:</code>
+(コロン) が付けられます。</li>
+</ul>
+</li>
+<li><code>auth</code> が与えられると使われます。</li>
+<li><code>hostname</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
+<li><code>port</code> は <code>host</code> が与えられなかった場合だけ使われます。</li>
+<li><code>host</code> は <code>hostname</code>、<code>port</code> の位置で使われます。</li>
+<li><code>pathname</code> の先頭に <code>/</code> (スラッシュ) があってもなくても同じように扱われます。</li>
+<li><code>search</code> は <code>query</code> の位置で使われます。</li>
+<li><code>query</code> (文字列ではなくオブジェクトです; <code>querystring</code> を参照してください) は <code>search</code> が与えられなかった場合だけ使われます。</li>
+<li><code>search</code> の先頭に <code>?</code> (クエスチョンマーク) があってもなくても同じように扱われます。</li>
+<li><code>hash</code> の先頭に <code>#</code> (シャープ, アンカー) があってもなくても同じように扱われます。</li>
+</ul>
+<h2>url.resolve(from, to)<span><a class="mark" href="#url_url_resolve_from_to" id="url_url_resolve_from_to">#</a></span></h2>
+<!--
+Take a base URL, and a href URL, and resolve them as a browser would for
+an anchor tag.
+-->
+
+<p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.0/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+

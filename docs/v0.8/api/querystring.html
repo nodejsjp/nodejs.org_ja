@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Query String Node.js v0.8.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/querystring.html">
+</head>
+<body class="alt apidoc" id="api-section-querystring">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.8.0 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="querystring.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#querystring_query_string">Query String</a><ul>
+<li><a href="#querystring_querystring_stringify_obj_sep_eq">querystring.stringify(obj, [sep], [eq])</a></li>
+<li><a href="#querystring_querystring_parse_str_sep_eq_options">querystring.parse(str, [sep], [eq], [options])</a></li>
+<li><a href="#querystring_querystring_escape">querystring.escape</a></li>
+<li><a href="#querystring_querystring_unescape">querystring.unescape</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Query String<span><a class="mark" href="#querystring_query_string" id="querystring_query_string">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!--name=querystring-->
+
+<!--
+This module provides utilities for dealing with query strings.
+It provides the following methods:
+-->
+
+<p>このモジュールはクエリ文字列を処理するユーティリティを提供します。 以下のメソッドから成ります:
+
+</p>
+<h2>querystring.stringify(obj, [sep], [eq])<span><a class="mark" href="#querystring_querystring_stringify_obj_sep_eq" id="querystring_querystring_stringify_obj_sep_eq">#</a></span></h2>
+<!--
+Serialize an object to a query string.
+Optionally override the default separator (`'&'`) and assignment (`'='`)
+characters.
+-->
+
+<p>クエリオブジェクトを文字列へ直列化します。
+オプションとしてデフォルトの区切り文字 (デフォルトは <code>&apos;&amp;&apos;</code>) と代入文字
+(デフォルトは <code>&apos;=&apos;</code>) を上書き指定できます。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>querystring.stringify({ foo: &apos;bar&apos;, baz: [&apos;qux&apos;, &apos;quux&apos;], corge: &apos;&apos; })
+// returns
+&apos;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge=&apos;
+
+querystring.stringify({foo: &apos;bar&apos;, baz: &apos;qux&apos;}, &apos;;&apos;, &apos;:&apos;)
+// returns
+&apos;foo:bar;baz:qux&apos;</code></pre>
+<h2>querystring.parse(str, [sep], [eq], [options])<span><a class="mark" href="#querystring_querystring_parse_str_sep_eq_options" id="querystring_querystring_parse_str_sep_eq_options">#</a></span></h2>
+<!--
+Deserialize a query string to an object.
+Optionally override the default separator (`'&'`) and assignment (`'='`)
+characters.
+
+Options object may contain `maxKeys` property (equal to 1000 by default), it'll
+be used to limit processed keys. Set it to 0 to remove key count limitation.
+-->
+
+<p>クエリ文字列をオブジェクトに復元します。
+オプションとしてデフォルトの区切り文字 (<code>&apos;&amp;&apos;</code>) と代入文字 (<code>&apos;=&apos;</code>)
+を上書き指定できます。
+
+</p>
+<p>オプションオブジェクトは <code>maxKeys</code> を含むことができます (デフォルトは
+1000 です)。それはキーを処理する上限として使われます。
+0 を設定すると制限は取り除かれます。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>querystring.parse(&apos;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge&apos;)
+// returns
+{ foo: &apos;bar&apos;, baz: [&apos;qux&apos;, &apos;quux&apos;], corge: &apos;&apos; }</code></pre>
+<h2>querystring.escape<span><a class="mark" href="#querystring_querystring_escape" id="querystring_querystring_escape">#</a></span></h2>
+<!--
+The escape function used by `querystring.stringify`,
+provided so that it could be overridden if necessary.
+-->
+
+<p>escape 関数は <code>querystring.stringify</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。
+
+</p>
+<h2>querystring.unescape<span><a class="mark" href="#querystring_querystring_unescape" id="querystring_querystring_unescape">#</a></span></h2>
+<!--
+The unescape function used by `querystring.parse`,
+provided so that it could be overridden if necessary.
+-->
+
+<p>unescape関数は <code>querystring.parse</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.0/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+

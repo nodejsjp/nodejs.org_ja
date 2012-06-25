@@ -1,0 +1,1653 @@
+{
+  "source": "doc/api/buffer.markdown",
+  "modules": [
+    {
+      "textRaw": "Buffer",
+      "name": "buffer",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nPure JavaScript is Unicode friendly but not nice to binary data.  When\ndealing with TCP streams or the file system, it's necessary to handle octet\nstreams. Node has several strategies for manipulating, creating, and\nconsuming octet streams.\n-->\n\n<p>純粋な JavaScript は Unicode と相性がいいものの、バイナリデータの扱いはうまくありません。\nTCP ストリームやファイルシステムを扱う場合は、オクテットストリームを処理する必要があります。\nNode にはオクテットストリームを操作、作成、消費するためにいくつかの戦略があります。\n\n</p>\n<!--\nRaw data is stored in instances of the `Buffer` class. A `Buffer` is similar\nto an array of integers but corresponds to a raw memory allocation outside\nthe V8 heap. A `Buffer` cannot be resized.\n-->\n\n<p>生のデータは <code>Buffer</code> クラスのインスタンスに保存されます。\n<code>Buffer</code> は整数の配列と似ていますが、\nV8 ヒープの外部に割り当てられた生のメモリに対応します。\n<code>Buffer</code> のサイズを変更することはできません。\n\n</p>\n<!--\nThe `Buffer` class is a global, making it very rare that one would need\nto ever `require('buffer')`.\n-->\n\n<p><code>Buffer</code> クラスはグローバルなので、<code>require(&apos;buffer&apos;)</code> が必要になることは\nほとんどありません。\n\n</p>\n<!--\nConverting between Buffers and JavaScript string objects requires an explicit\nencoding method.  Here are the different string encodings.\n-->\n\n<p>バッファを JavaScript 文字列オブジェクトとの間で変換するにはエンコーディング方式を明示する必要があります。\nいくつかのエンコーディング方式があります。\n\n</p>\n<!--\n* `'ascii'` - for 7 bit ASCII data only.  This encoding method is very fast, and\n  will strip the high bit if set.\n  Note that this encoding converts a null character (`'\\0'` or `'\\u0000'`) into\n  `0x20` (character code of a space). If you want to convert a null character\n  into `0x00`, you should use `'utf8'`.\n\n* `'utf8'` - Multibyte encoded Unicode characters. Many web pages and other\n  document formats use UTF-8.\n\n* `'utf16le'` - 2 or 4 bytes, little endian encoded Unicode characters.\n  Surrogate pairs (U+10000 to U+10FFFF) are supported.\n\n* `'ucs2'` - Alias of `'utf16le'`.\n\n* `'base64'` - Base64 string encoding.\n\n* `'binary'` - A way of encoding raw binary data into strings by using only\n  the first 8 bits of each character. This encoding method is deprecated and\n  should be avoided in favor of `Buffer` objects where possible. This encoding\n  will be removed in future versions of Node.\n\n* `'hex'` - Encode each byte as two hexadecimal characters.\n-->\n\n<ul>\n<li><p><code>&apos;ascii&apos;</code> - 7bit の ASCII データ専用です。\nこのエンコーディング方式はとても高速で、もし上位ビットがセットされていれば取り除かれます。\nこのエンコーディングは、null 文字 (<code>&apos;\\0&apos;</code> または <code>&apos;\\u0000&apos;</code>) を <code>0x20</code>\n(スペースの文字コード) に変換することに注意してください。\nnull 文字を 0x00 に変換したい場合は <code>&apos;utf8&apos;</code> を使用してください。</p>\n</li>\n<li><p><code>&apos;utf8&apos;</code> - 可変長のバイト単位でエンコードされたUnicode文字。\n多くのWebページやその他のドキュメントは UTF-8 を使っています。</p>\n</li>\n<li><p><code>&apos;utf16le&apos;</code> - 2 または 4 バイトのリトルエンディアンでエンコードされた\nUnicode 文字。\nサロゲートペア (U+10000～U+10FFFF) もサポートされます。</p>\n</li>\n<li><p><code>&apos;ucs2&apos;</code> - <code>&apos;utf16le&apos;</code> の別名です。</p>\n</li>\n<li><p><code>&apos;base64&apos;</code> - Base64 文字列エンコーディング.</p>\n</li>\n<li><p><code>&apos;binary&apos;</code> - 生のバイナリデータを各文字の最初の 8bit として使用するエンコーディング方式。\nこのエンコーディング方式はもはや価値がなく、<code>Buffer</code> オブジェクトでは可能な限り使用すべきではありません。\nこのエンコーディングは、Node の将来のバージョンで削除される予定です。</p>\n</li>\n<li><p><code>&apos;hex&apos;</code> - 各バイトを 2 桁の16進数文字列でエンコードします。</p>\n</li>\n</ul>\n",
+      "classes": [
+        {
+          "textRaw": "Class: Buffer",
+          "type": "class",
+          "name": "Buffer",
+          "desc": "<!--\nThe Buffer class is a global type for dealing with binary data directly.\nIt can be constructed in a variety of ways.\n-->\n\n<p>Buffer クラスはバイナリデータを直接扱うためのグローバルな型です。\nそれは様々な方法で構築することができます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "buf.write(string, [offset], [length], [encoding])",
+              "type": "method",
+              "name": "write",
+              "desc": "<!--\n* `string` String - data to be written to buffer\n* `offset` Number, Optional, Default: 0\n* `length` Number, Optional, Default: `buffer.length - offset`\n* `encoding` String, Optional, Default: 'utf8'\n-->\n\n<ul>\n<li><code>string</code> String - バッファに書き込まれるデータ</li>\n<li><code>offset</code> Number, Optional, Default: 0</li>\n<li><code>length</code> Number, Optional</li>\n<li><code>encoding</code> String, Optional, Default: &apos;utf8&apos;</li>\n</ul>\n<!--\nWrites `string` to the buffer at `offset` using the given encoding.\n`offset` defaults to `0`, `encoding` defaults to `'utf8'`. `length` is\nthe number of bytes to write. Returns number of octets written. If `buffer` did\nnot contain enough space to fit the entire string, it will write a partial\namount of the string. `length` defaults to `buffer.length - offset`.\nThe method will not write partial characters.\n-->\n\n<p>与えられたエンコーディングを使用して、<code>string</code> をバッファの <code>offset</code> から書き込みます。\n<code>offset</code> のデフォルトは <code>0</code>、<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。\n<code>length</code> は書き込むバイト数です。書き込まれたオクテット数を返します。\nもし <code>buffer</code> が文字列全体を挿入するのに十分なスペースを含んでいなければ、文字列の一部だけを書き込みます。\n<code>length</code> のデフォルトは <code>buffer.length - offset</code> です。\nこのメソッドは文字の一部だけを書き込むことはありません。\n\n</p>\n<!--\nExample: write a utf8 string into a buffer, then print it\n-->\n\n<p>例: utf8 の文字列をバッファに書き込み、それをプリントします\n\n</p>\n<pre><code>buf = new Buffer(256);\nlen = buf.write(&apos;\\u00bd + \\u00bc = \\u00be&apos;, 0);\nconsole.log(len + &quot; bytes: &quot; + buf.toString(&apos;utf8&apos;, 0, len));</code></pre>\n<!--\nThe number of characters written (which may be different than the number of\nbytes written) is set in `Buffer._charsWritten` and will be overwritten the\nnext time `buf.write()` is called.\n-->\n\n<p>書き込まれた文字数 (書き込まれたバイト数とは異なる場合があります) は、\n次に <code>buf.write()</code> が呼び出されて上書きされるまで\n<code>Buffer._charsWritten</code> に設定されています。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "string"
+                    },
+                    {
+                      "name": "offset",
+                      "optional": true
+                    },
+                    {
+                      "name": "length",
+                      "optional": true
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "buf.toString([encoding], [start], [end])",
+              "type": "method",
+              "name": "toString",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`encoding` String, Optional, Default: 'utf8' ",
+                      "name": "encoding",
+                      "desc": "String, Optional, Default: 'utf8'",
+                      "optional": true
+                    },
+                    {
+                      "textRaw": "`start` Number, Optional, Default: 0 ",
+                      "name": "start",
+                      "desc": "Number, Optional, Default: 0",
+                      "optional": true
+                    },
+                    {
+                      "textRaw": "`end` Number, Optional, Default: `buffer.length` ",
+                      "name": "end",
+                      "desc": "Number, Optional, Default: `buffer.length`",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "start",
+                      "optional": true
+                    },
+                    {
+                      "name": "end",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nDecodes and returns a string from buffer data encoded with `encoding`\n(defaults to `'utf8'`) beginning at `start` (defaults to `0`) and ending at\n`end` (defaults to `buffer.length`).\n-->\n\n<p><code>encoding</code> (デフォルトは <code>&apos;utf8&apos;</code>) でエンコードされたバッファデータの\n<code>start</code> (デフォルトは <code>0</code>) から <code>end</code> (デフォルトは <code>buffer.length</code>)\nまでをデコードした文字列を返します。\n\n</p>\n<!--\nSee `buffer.write()` example, above.\n-->\n\n<p>上の <code>buffer.write()</code> の例を参照してください。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd])",
+              "type": "method",
+              "name": "copy",
+              "desc": "<!--\n* `targetBuffer` Buffer object - Buffer to copy into\n* `targetStart` Number, Optional, Default: 0\n* `sourceStart` Number, Optional, Default: 0\n* `sourceEnd` Number, Optional, Default: `buffer.length`\n-->\n\n<ul>\n<li><code>targetBuffer</code> Buffer object - コピー先の Buffer</li>\n<li><code>targetStart</code> Number, Optional, Default: 0</li>\n<li><code>sourceStart</code> Number, Optional, Default: 0</li>\n<li><code>sourceEnd</code> Number, Optional, Default: <code>buffer.length</code></li>\n</ul>\n<!--\nDoes copy between buffers. The source and target regions can be overlapped.\n`targetStart` and `sourceStart` default to `0`.\n`sourceEnd` defaults to `buffer.length`.\n-->\n\n<p>バッファ間でコピーします。\nソースとターゲットの領域は重なっていても構いません。\n<code>targetStart</code> と <code>sourceStart</code> のデフォルトは <code>0</code> です。\n<code>sourceEnd</code> のデフォルトは <code>buffer.length</code> です。\n\n</p>\n<!--\nExample: build two Buffers, then copy `buf1` from byte 16 through byte 19\ninto `buf2`, starting at the 8th byte in `buf2`.\n-->\n\n<p>例: バッファを2個作成し、<code>buf1</code> の 16 バイト目から 19 バイト目を、\n<code>buf2</code> の 8 バイト目から始まる位置へコピーします。\n\n</p>\n<pre><code>buf1 = new Buffer(26);\nbuf2 = new Buffer(26);\n\nfor (var i = 0 ; i &lt; 26 ; i++) {\n  buf1[i] = i + 97; // 97 is ASCII a\n  buf2[i] = 33; // ASCII !\n}\n\nbuf1.copy(buf2, 8, 16, 20);\nconsole.log(buf2.toString(&apos;ascii&apos;, 0, 25));\n\n// !!!!!!!!qrst!!!!!!!!!!!!!</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "targetBuffer"
+                    },
+                    {
+                      "name": "targetStart",
+                      "optional": true
+                    },
+                    {
+                      "name": "sourceStart",
+                      "optional": true
+                    },
+                    {
+                      "name": "sourceEnd",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "buf.slice([start], [end])",
+              "type": "method",
+              "name": "slice",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`start` Number, Optional, Default: 0 ",
+                      "name": "start",
+                      "desc": "Number, Optional, Default: 0",
+                      "optional": true
+                    },
+                    {
+                      "textRaw": "`end` Number, Optional, Default: `buffer.length` ",
+                      "name": "end",
+                      "desc": "Number, Optional, Default: `buffer.length`",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "start",
+                      "optional": true
+                    },
+                    {
+                      "name": "end",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReturns a new buffer which references the same memory as the old, but offset\nand cropped by the `start` (defaults to `0`) and `end` (defaults to\n`buffer.length`) indexes.\n-->\n\n<p>元のバッファと同じメモリを参照しますが、<code>start</code> (デフォルトは <code>0</code>) と\n<code>end</code> (デフォルトは <code>buffer.length</code>) で示されるオフセットと長さを持つ\n新しいバッファを返します。\n\n</p>\n<!--\n**Modifying the new buffer slice will modify memory in the original buffer!**\n-->\n\n<p><strong>新しいバッファスライスの変更は、オリジナルバッファのメモリを変更することになります！</strong>\n\n</p>\n<!--\nExample: build a Buffer with the ASCII alphabet, take a slice, then modify one\nbyte from the original Buffer.\n-->\n\n<p>例: ASCII のアルファベットでバッファを構築してスライスし、元のバッファで 1 バイトを変更します。\n\n</p>\n<pre><code>var buf1 = new Buffer(26);\n\nfor (var i = 0 ; i &lt; 26 ; i++) {\n  buf1[i] = i + 97; // 97 is ASCII a\n}\n\nvar buf2 = buf1.slice(0, 3);\nconsole.log(buf2.toString(&apos;ascii&apos;, 0, buf2.length));\nbuf1[0] = 33;\nconsole.log(buf2.toString(&apos;ascii&apos;, 0, buf2.length));\n\n// abc\n// !bc</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readUInt8(offset, [noAssert])",
+              "type": "method",
+              "name": "readUInt8",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads an unsigned 8 bit integer from the buffer at the specified offset.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を符号無し 8bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x3;\nbuf[1] = 0x4;\nbuf[2] = 0x23;\nbuf[3] = 0x42;\n\nfor (ii = 0; ii &lt; buf.length; ii++) {\n  console.log(buf.readUInt8(ii));\n}\n\n// 0x3\n// 0x4\n// 0x23\n// 0x42</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readUInt16LE(offset, [noAssert])",
+              "type": "method",
+              "name": "readUInt16LE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads an unsigned 16 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を符号無し 16bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x3;\nbuf[1] = 0x4;\nbuf[2] = 0x23;\nbuf[3] = 0x42;\n\nconsole.log(buf.readUInt16BE(0));\nconsole.log(buf.readUInt16LE(0));\nconsole.log(buf.readUInt16BE(1));\nconsole.log(buf.readUInt16LE(1));\nconsole.log(buf.readUInt16BE(2));\nconsole.log(buf.readUInt16LE(2));\n\n// 0x0304\n// 0x0403\n// 0x0423\n// 0x2304\n// 0x2342\n// 0x4223</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readUInt16BE(offset, [noAssert])",
+              "type": "method",
+              "name": "readUInt16BE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads an unsigned 16 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を符号無し 16bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x3;\nbuf[1] = 0x4;\nbuf[2] = 0x23;\nbuf[3] = 0x42;\n\nconsole.log(buf.readUInt16BE(0));\nconsole.log(buf.readUInt16LE(0));\nconsole.log(buf.readUInt16BE(1));\nconsole.log(buf.readUInt16LE(1));\nconsole.log(buf.readUInt16BE(2));\nconsole.log(buf.readUInt16LE(2));\n\n// 0x0304\n// 0x0403\n// 0x0423\n// 0x2304\n// 0x2342\n// 0x4223</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readUInt32LE(offset, [noAssert])",
+              "type": "method",
+              "name": "readUInt32LE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads an unsigned 32 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を符号無し 32bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x3;\nbuf[1] = 0x4;\nbuf[2] = 0x23;\nbuf[3] = 0x42;\n\nconsole.log(buf.readUInt32BE(0));\nconsole.log(buf.readUInt32LE(0));\n\n// 0x03042342\n// 0x42230403</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readUInt32BE(offset, [noAssert])",
+              "type": "method",
+              "name": "readUInt32BE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads an unsigned 32 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を符号無し 32bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x3;\nbuf[1] = 0x4;\nbuf[2] = 0x23;\nbuf[3] = 0x42;\n\nconsole.log(buf.readUInt32BE(0));\nconsole.log(buf.readUInt32LE(0));\n\n// 0x03042342\n// 0x42230403</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readInt8(offset, [noAssert])",
+              "type": "method",
+              "name": "readInt8",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a signed 8 bit integer from the buffer at the specified offset.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n\nWorks as `buffer.readUInt8`, except buffer contents are treated as two's\ncomplement signed values.\n-->\n\n<p>バッファの指定された位置を符号付き 8bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は\n<code>buffer.readUInt8</code> と同じように動作します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.readInt16LE(offset, [noAssert])",
+              "type": "method",
+              "name": "readInt16LE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a signed 16 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n\nWorks as `buffer.readUInt16*`, except buffer contents are treated as two's\ncomplement signed values.\n-->\n\n<p>バッファの指定された位置を符号付き 16bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は\n<code>buffer.readUInt16</code> と同じように動作します。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.readInt16BE(offset, [noAssert])",
+              "type": "method",
+              "name": "readInt16BE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a signed 16 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n\nWorks as `buffer.readUInt16*`, except buffer contents are treated as two's\ncomplement signed values.\n-->\n\n<p>バッファの指定された位置を符号付き 16bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は\n<code>buffer.readUInt16</code> と同じように動作します。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.readInt32LE(offset, [noAssert])",
+              "type": "method",
+              "name": "readInt32LE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a signed 32 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n\nWorks as `buffer.readUInt32*`, except buffer contents are treated as two's\ncomplement signed values.\n-->\n\n<p>バッファの指定された位置を符号付き 32bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は\n<code>buffer.readUInt32</code> と同じように動作します。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.readInt32BE(offset, [noAssert])",
+              "type": "method",
+              "name": "readInt32BE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a signed 32 bit integer from the buffer at the specified offset with\nspecified endian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n\nWorks as `buffer.readUInt32*`, except buffer contents are treated as two's\ncomplement signed values.\n-->\n\n<p>バッファの指定された位置を符号付き 32bit 整数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<p>バッファの内容を 2 の補数による符号付き値として扱うこと以外は\n<code>buffer.readUInt32</code> と同じように動作します。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.readFloatLE(offset, [noAssert])",
+              "type": "method",
+              "name": "readFloatLE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a 32 bit float from the buffer at the specified offset with specified\nendian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を 32bit 浮動小数点数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x00;\nbuf[1] = 0x00;\nbuf[2] = 0x80;\nbuf[3] = 0x3f;\n\nconsole.log(buf.readFloatLE(0));\n\n// 0x01</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readFloatBE(offset, [noAssert])",
+              "type": "method",
+              "name": "readFloatBE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a 32 bit float from the buffer at the specified offset with specified\nendian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を 32bit 浮動小数点数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\n\nbuf[0] = 0x00;\nbuf[1] = 0x00;\nbuf[2] = 0x80;\nbuf[3] = 0x3f;\n\nconsole.log(buf.readFloatLE(0));\n\n// 0x01</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readDoubleLE(offset, [noAssert])",
+              "type": "method",
+              "name": "readDoubleLE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a 64 bit double from the buffer at the specified offset with specified\nendian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を 64bit 倍精度浮動小数点数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(8);\n\nbuf[0] = 0x55;\nbuf[1] = 0x55;\nbuf[2] = 0x55;\nbuf[3] = 0x55;\nbuf[4] = 0x55;\nbuf[5] = 0x55;\nbuf[6] = 0xd5;\nbuf[7] = 0x3f;\n\nconsole.log(buf.readDoubleLE(0));\n\n// 0.3333333333333333</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.readDoubleBE(offset, [noAssert])",
+              "type": "method",
+              "name": "readDoubleBE",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nReads a 64 bit double from the buffer at the specified offset with specified\nendian format.\n\nSet `noAssert` to true to skip validation of `offset`. This means that `offset`\nmay be beyond the end of the buffer. Defaults to `false`.\n-->\n\n<p>バッファの指定された位置を 64bit 倍精度浮動小数点数として読み込みます。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら <code>offset</code> の検証をスキップします。\nこれは <code>offset</code> がバッファの終端を越えてしまう場合があることを意味します。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(8);\n\nbuf[0] = 0x55;\nbuf[1] = 0x55;\nbuf[2] = 0x55;\nbuf[3] = 0x55;\nbuf[4] = 0x55;\nbuf[5] = 0x55;\nbuf[6] = 0xd5;\nbuf[7] = 0x3f;\n\nconsole.log(buf.readDoubleLE(0));\n\n// 0.3333333333333333</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeUInt8(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeUInt8",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset. Note, `value` must be a\nvalid unsigned 8 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を符号無し 8bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 8bit 符号無し整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeUInt8(0x3, 0);\nbuf.writeUInt8(0x4, 1);\nbuf.writeUInt8(0x23, 2);\nbuf.writeUInt8(0x42, 3);\n\nconsole.log(buf);\n\n// &lt;Buffer 03 04 23 42&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeUInt16LE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeUInt16LE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid unsigned 16 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を符号無し 16bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 16bit 符号無し整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeUInt16BE(0xdead, 0);\nbuf.writeUInt16BE(0xbeef, 2);\n\nconsole.log(buf);\n\nbuf.writeUInt16LE(0xdead, 0);\nbuf.writeUInt16LE(0xbeef, 2);\n\nconsole.log(buf);\n\n// &lt;Buffer de ad be ef&gt;\n// &lt;Buffer ad de ef be&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeUInt16BE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeUInt16BE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid unsigned 16 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を符号無し 16bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 16bit 符号無し整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeUInt16BE(0xdead, 0);\nbuf.writeUInt16BE(0xbeef, 2);\n\nconsole.log(buf);\n\nbuf.writeUInt16LE(0xdead, 0);\nbuf.writeUInt16LE(0xbeef, 2);\n\nconsole.log(buf);\n\n// &lt;Buffer de ad be ef&gt;\n// &lt;Buffer ad de ef be&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeUInt32LE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeUInt32LE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid unsigned 32 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を符号無し 32bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 32bit 符号無し整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeUInt32BE(0xfeedface, 0);\n\nconsole.log(buf);\n\nbuf.writeUInt32LE(0xfeedface, 0);\n\nconsole.log(buf);\n\n// &lt;Buffer fe ed fa ce&gt;\n// &lt;Buffer ce fa ed fe&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeUInt32BE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeUInt32BE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid unsigned 32 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を符号無し 32bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 32bit 符号無し整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeUInt32BE(0xfeedface, 0);\n\nconsole.log(buf);\n\nbuf.writeUInt32LE(0xfeedface, 0);\n\nconsole.log(buf);\n\n// &lt;Buffer fe ed fa ce&gt;\n// &lt;Buffer ce fa ed fe&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeInt8(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeInt8",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset. Note, `value` must be a\nvalid signed 8 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n\nWorks as `buffer.writeUInt8`, except value is written out as a two's complement\nsigned integer into `buffer`.\n-->\n\n<p><code>value</code> を符号付き 8bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 8bit 符号付き整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は \n<code>buffer.writeUInt8</code> と同じように動作します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.writeInt16LE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeInt16LE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid signed 16 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n\nWorks as `buffer.writeUInt16*`, except value is written out as a two's\ncomplement signed integer into `buffer`.\n-->\n\n<p><code>value</code> を符号付き 16bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 16bit 符号付き整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は \n<code>buffer.writeUInt16</code> と同じように動作します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.writeInt16BE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeInt16BE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid signed 16 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n\nWorks as `buffer.writeUInt16*`, except value is written out as a two's\ncomplement signed integer into `buffer`.\n-->\n\n<p><code>value</code> を符号付き 16bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 16bit 符号付き整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は \n<code>buffer.writeUInt16</code> と同じように動作します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.writeInt32LE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeInt32LE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid signed 32 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n\nWorks as `buffer.writeUInt32*`, except value is written out as a two's\ncomplement signed integer into `buffer`.\n-->\n\n<p><code>value</code> を符号付き 32bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 32bit 符号付き整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は \n<code>buffer.writeUInt32</code> と同じように動作します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.writeInt32BE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeInt32BE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid signed 32 bit integer.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n\nWorks as `buffer.writeUInt32*`, except value is written out as a two's\ncomplement signed integer into `buffer`.\n-->\n\n<p><code>value</code> を符号付き 32bit 整数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 32bit 符号付き整数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<p><code>value</code> を 2 の補数による符号付き値として書き込むこと以外は \n<code>buffer.writeUInt32</code> と同じように動作します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "buf.writeFloatLE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeFloatLE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid 32 bit float.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を 32bit 浮動小数点数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 32bit 浮動小数点数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeFloatBE(0xcafebabe, 0);\n\nconsole.log(buf);\n\nbuf.writeFloatLE(0xcafebabe, 0);\n\nconsole.log(buf);\n\n// &lt;Buffer 4f 4a fe bb&gt;\n// &lt;Buffer bb fe 4a 4f&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeFloatBE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeFloatBE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid 32 bit float.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を 32bit 浮動小数点数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 32bit 浮動小数点数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(4);\nbuf.writeFloatBE(0xcafebabe, 0);\n\nconsole.log(buf);\n\nbuf.writeFloatLE(0xcafebabe, 0);\n\nconsole.log(buf);\n\n// &lt;Buffer 4f 4a fe bb&gt;\n// &lt;Buffer bb fe 4a 4f&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeDoubleLE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeDoubleLE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid 64 bit double.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を 64bit 倍精度浮動小数点数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 64bit 倍精度浮動小数点数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(8);\nbuf.writeDoubleBE(0xdeadbeefcafebabe, 0);\n\nconsole.log(buf);\n\nbuf.writeDoubleLE(0xdeadbeefcafebabe, 0);\n\nconsole.log(buf);\n\n// &lt;Buffer 43 eb d5 b7 dd f9 5f d7&gt;\n// &lt;Buffer d7 5f f9 dd b7 d5 eb 43&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.writeDoubleBE(value, offset, [noAssert])",
+              "type": "method",
+              "name": "writeDoubleBE",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` Number ",
+                      "name": "value",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`offset` Number ",
+                      "name": "offset",
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`noAssert` Boolean, Optional, Default: false ",
+                      "name": "noAssert",
+                      "desc": "Boolean, Optional, Default: false",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset"
+                    },
+                    {
+                      "name": "noAssert",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nWrites `value` to the buffer at the specified offset with specified endian\nformat. Note, `value` must be a valid 64 bit double.\n\nSet `noAssert` to true to skip validation of `value` and `offset`. This means\nthat `value` may be too large for the specific function and `offset` may be\nbeyond the end of the buffer leading to the values being silently dropped. This\nshould not be used unless you are certain of correctness. Defaults to `false`.\n-->\n\n<p><code>value</code> を 64bit 倍精度浮動小数点数としてバッファの指定された位置に、\n指定されたエンディアンで書き込みます。\n<code>value</code> は妥当な 64bit 倍精度浮動小数点数でなければならないことに注意してください。\n\n</p>\n<p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。\nこれは、<code>value</code> がこの関数で扱えるより大きな場合や、<code>offset</code> \nがバッファの終端を越えてしまう場合は、静かに捨てられることを意味します。\n正確性に確信がない限り、これらを使用すべきではありません。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(8);\nbuf.writeDoubleBE(0xdeadbeefcafebabe, 0);\n\nconsole.log(buf);\n\nbuf.writeDoubleLE(0xdeadbeefcafebabe, 0);\n\nconsole.log(buf);\n\n// &lt;Buffer 43 eb d5 b7 dd f9 5f d7&gt;\n// &lt;Buffer d7 5f f9 dd b7 d5 eb 43&gt;</code></pre>\n"
+            },
+            {
+              "textRaw": "buf.fill(value, [offset], [end])",
+              "type": "method",
+              "name": "fill",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`value` ",
+                      "name": "value"
+                    },
+                    {
+                      "textRaw": "`offset` Number, Optional ",
+                      "name": "offset",
+                      "optional": true,
+                      "desc": "Number"
+                    },
+                    {
+                      "textRaw": "`end` Number, Optional ",
+                      "name": "end",
+                      "optional": true,
+                      "desc": "Number"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "value"
+                    },
+                    {
+                      "name": "offset",
+                      "optional": true
+                    },
+                    {
+                      "name": "end",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nFills the buffer with the specified value. If the `offset` (defaults to `0`)\nand `end` (defaults to `buffer.length`) are not given it will fill the entire\nbuffer.\n-->\n\n<p>指定された値でバッファを埋めます。\n<code>offset</code> (デフォルトは <code>0</code>) と <code>end</code> (デフォルトは <code>buffer.length</code>)\nFが与えられなかった場合はバッファ全体を埋めます。\n\n</p>\n<pre><code>var b = new Buffer(50);\nb.fill(&quot;h&quot;);</code></pre>\n"
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "buf[index]",
+              "name": "[index]",
+              "desc": "<!--\nGet and set the octet at `index`. The values refer to individual bytes,\nso the legal range is between `0x00` and `0xFF` hex or `0` and `255`.\n-->\n\n<p><code>index</code> の位置のオクテットを取得および設定します。\nその値は個々のバイトを参照するので、妥当な範囲は 16 進の <code>0x00</code> から <code>0xFF</code>\nまたは <code>0</code> から<code>255</code>までの間です。\n\n</p>\n<!--\nExample: copy an ASCII string into a buffer, one byte at a time:\n-->\n\n<p>例: ASCII 文字列を 1 バイトずつバッファにコピーします\n\n</p>\n<pre><code>str = &quot;node.js&quot;;\nbuf = new Buffer(str.length);\n\nfor (var i = 0; i &lt; str.length ; i++) {\n  buf[i] = str.charCodeAt(i);\n}\n\nconsole.log(buf);\n\n// node.js</code></pre>\n"
+            },
+            {
+              "textRaw": "`length` Number ",
+              "name": "length",
+              "desc": "<!--\nThe size of the buffer in bytes.  Note that this is not necessarily the size\nof the contents. `length` refers to the amount of memory allocated for the\nbuffer object.  It does not change when the contents of the buffer are changed.\n-->\n\n<p>バイト数によるバッファのサイズ。\nこれは実際の内容のサイズではないことに注意してください。\n<code>length</code> はバッファオブジェクトに割り当てられたメモリ全体を参照します。\n\n</p>\n<pre><code>buf = new Buffer(1234);\n\nconsole.log(buf.length);\nbuf.write(&quot;some string&quot;, 0, &quot;ascii&quot;);\nconsole.log(buf.length);\n\n// 1234\n// 1234</code></pre>\n",
+              "shortDesc": "Number"
+            }
+          ],
+          "classMethods": [
+            {
+              "textRaw": "Class Method: Buffer.isBuffer(obj)",
+              "type": "classMethod",
+              "name": "isBuffer",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Boolean ",
+                    "name": "return",
+                    "desc": "Boolean"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`obj` Object ",
+                      "name": "obj",
+                      "desc": "Object"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "obj"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nTests if `obj` is a `Buffer`.\n-->\n\n<p><code>obj</code> が <code>Buffer</code> かどうかテストします。\n\n</p>\n"
+            },
+            {
+              "textRaw": "Class Method: Buffer.byteLength(string, [encoding])",
+              "type": "classMethod",
+              "name": "byteLength",
+              "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: Number ",
+                    "name": "return",
+                    "desc": "Number"
+                  },
+                  "params": [
+                    {
+                      "textRaw": "`string` String ",
+                      "name": "string",
+                      "desc": "String"
+                    },
+                    {
+                      "textRaw": "`encoding` String, Optional, Default: 'utf8' ",
+                      "name": "encoding",
+                      "desc": "String, Optional, Default: 'utf8'",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "string"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nGives the actual byte length of a string. `encoding` defaults to `'utf8'`.\nThis is not the same as `String.prototype.length` since that returns the\nnumber of *characters* in a string.\n-->\n\n<p>文字列の実際のバイト数を返します。<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。\nこれは文字列の<em>文字</em>数を返す <code>String.prototype.length</code> と同じではありません。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>str = &apos;\\u00bd + \\u00bc = \\u00be&apos;;\n\nconsole.log(str + &quot;: &quot; + str.length + &quot; characters, &quot; +\n  Buffer.byteLength(str, &apos;utf8&apos;) + &quot; bytes&quot;);\n\n// ½ + ¼ = ¾: 9 characters, 12 bytes</code></pre>\n"
+            },
+            {
+              "textRaw": "Class Method: Buffer.concat(list, [totalLength])",
+              "type": "classMethod",
+              "name": "concat",
+              "desc": "<!--\n* `list` {Array} List of Buffer objects to concat\n* `totalLength` {Number} Total length of the buffers when concatenated\n-->\n\n<ul>\n<li><code>list</code> {Array} 結合するバッファのリスト</li>\n<li><code>totalLength</code> {Number} 結合されるバッファ全体の長さ</li>\n</ul>\n<!--\nReturns a buffer which is the result of concatenating all the buffers in\nthe list together.\n-->\n\n<p>リストに含まれるバッファ全体を結合した結果のバッファを返します。\n\n</p>\n<!--\nIf the list has no items, or if the totalLength is 0, then it returns a\nzero-length buffer.\n-->\n\n<p>リストが空の場合、または <code>totalLength</code> が 0 の場合は長さが\n0 のバッファを返します。\n\n</p>\n<!--\nIf the list has exactly one item, then the first item of the list is\nreturned.\n-->\n\n<p>リストが一つだけの要素を持つ場合、リストの先頭要素が返されます。\n\n</p>\n<!--\nIf the list has more than one item, then a new Buffer is created.\n-->\n\n<p>リストが複数の要素を持つ場合、新しいバッファが作成されます。\n\n</p>\n<!--\nIf totalLength is not provided, it is read from the buffers in the list.\nHowever, this adds an additional loop to the function, so it is faster\nto provide the length explicitly.\n-->\n\n<p><code>totalLength</code> が与えられない場合はリスト中のバッファから求められます。\nしかし、これは余計なループが必要になるため、明示的に長さを指定する方が\n高速です。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "list"
+                    },
+                    {
+                      "name": "totalLength",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`size` Number ",
+                  "name": "size",
+                  "desc": "Number"
+                }
+              ],
+              "desc": "<!--\nAllocates a new buffer of `size` octets.\n-->\n\n<p><code>size</code> オクテットの新しいバッファを割り当てます。\n\n</p>\n"
+            },
+            {
+              "params": [
+                {
+                  "name": "size"
+                }
+              ],
+              "desc": "<!--\nAllocates a new buffer of `size` octets.\n-->\n\n<p><code>size</code> オクテットの新しいバッファを割り当てます。\n\n</p>\n"
+            },
+            {
+              "params": [
+                {
+                  "textRaw": "`array` Array ",
+                  "name": "array",
+                  "desc": "Array"
+                }
+              ],
+              "desc": "<!--\nAllocates a new buffer using an `array` of octets.\n-->\n\n<p>オクテットの <code>array</code> を使用する新しいバッファを割り当てます。\n\n</p>\n"
+            },
+            {
+              "params": [
+                {
+                  "name": "array"
+                }
+              ],
+              "desc": "<!--\nAllocates a new buffer using an `array` of octets.\n-->\n\n<p>オクテットの <code>array</code> を使用する新しいバッファを割り当てます。\n\n</p>\n"
+            },
+            {
+              "params": [
+                {
+                  "name": "str"
+                },
+                {
+                  "name": "encoding",
+                  "optional": true
+                }
+              ],
+              "desc": "<!--\n* `str` String - string to encode.\n* `encoding` String - encoding to use, Optional.\n-->\n\n<ul>\n<li><code>str</code> String - エンコードされる文字列</li>\n<li><code>encoding</code> String - 使用するエンコード、Optional、Default: &apos;utf8&apos;</li>\n</ul>\n<!--\nAllocates a new buffer containing the given `str`.\n`encoding` defaults to `'utf8'`.\n-->\n\n<p>与えられた <code>str</code> を内容とする新しいバッファを割り当てます。\n<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: SlowBuffer",
+          "type": "class",
+          "name": "SlowBuffer",
+          "desc": "<!--\nThis class is primarily for internal use.  JavaScript programs should\nuse Buffer instead of using SlowBuffer.\n\nIn order to avoid the overhead of allocating many C++ Buffer objects for\nsmall blocks of memory in the lifetime of a server, Node allocates memory\nin 8Kb (8192 byte) chunks.  If a buffer is smaller than this size, then it\nwill be backed by a parent SlowBuffer object.  If it is larger than this,\nthen Node will allocate a SlowBuffer slab for it directly.\n-->\n\n<p>このクラスは主に内部利用のためのものです。JavaScsript プログラムは SlowBuffer\nよりも Buffer を使用すべきです。\n\n</p>\n<p>サーバの動作中に、小さなメモリブロックのために多くの C++ バッファオブジェクトが\n割り当てられるオーバーヘッドを避けるため、Node はメモリを 8Kb (8192 バイト) の\nチャンク内に割り当てます。もしバッファがこのサイズより小さければ、それは\n親の SlowBuffer に支えられます。それより大きければ、Node は SlowBuffer を\n直接割り当てます。\n</p>\n"
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "`INSPECT_MAX_BYTES` Number, Default: 50 ",
+          "name": "INSPECT_MAX_BYTES",
+          "desc": "<!--\nHow many bytes will be returned when `buffer.inspect()` is called. This can\nbe overridden by user modules.\n\nNote that this is a property on the buffer module returned by\n`require('buffer')`, not on the Buffer global, or a buffer instance.\n-->\n\n<p><code>buffer.inspect()</code> が呼び出された場合に返すバイト数です。\nこれはユーザモジュールによって上書きすることができます。\n\n</p>\n<p>これはグローバルの Buffer やそのインスタンスではなく、 <code>requrie(&apos;buffer&apos;)</code>\nによって返される buffer モジュールのプロパティであることに注意してください。\n\n</p>\n",
+          "shortDesc": "Number, Default: 50"
+        }
+      ],
+      "type": "module",
+      "displayName": "Buffer"
+    }
+  ]
+}

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Debugger Node.js v0.8.0 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/debugger.html">
+</head>
+<body class="alt apidoc" id="api-section-debugger">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.8.0 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="debugger.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#debugger_debugger">Debugger</a><ul>
+<li><a href="#debugger_watchers">Watchers</a></li>
+<li><a href="#debugger_commands_reference">Commands reference</a><ul>
+<li><a href="#debugger_stepping">Stepping</a></li>
+<li><a href="#debugger_breakpoints">Breakpoints</a></li>
+<li><a href="#debugger_info">Info</a></li>
+<li><a href="#debugger_execution_control">Execution control</a></li>
+<li><a href="#debugger_various">Various</a></li>
+</ul>
+</li>
+<li><a href="#debugger_advanced_usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Debugger<span><a class="mark" href="#debugger_debugger" id="debugger_debugger">#</a></span></h1>
+<pre><code>Stability: 3 - Stable</code></pre>
+<!-- type=misc -->
+
+<!--
+V8 comes with an extensive debugger which is accessible out-of-process via a
+simple [TCP protocol](http://code.google.com/p/v8/wiki/DebuggerProtocol).
+Node has a built-in client for this debugger. To use this, start Node with the
+`debug` argument; a prompt will appear:
+-->
+
+<p>V8は外部プロセスから <a href="http://code.google.com/p/v8/wiki/DebuggerProtocol">TCP プロトコル</a>経由で接続可能なデバッガを備えています。
+Node にはこのデバッガへのクライアントが組み込まれています。
+これを使うには、 <code>debug</code> 引数を指定して Node を起動します。
+次のようになります:
+
+</p>
+<pre><code>% node debug myscript.js
+&lt; debugger listening on port 5858
+connecting... ok
+break in /home/indutny/Code/git/indutny/myscript.js:1
+  1 x = 5;
+  2 setTimeout(function () {
+  3   debugger;
+debug&gt;</code></pre>
+<!--
+Node's debugger client doesn't support the full range of commands, but
+simple step and inspection is possible. By putting the statement `debugger;`
+into the source code of your script, you will enable a breakpoint.
+-->
+
+<p>Node のデバッガクライアントはあらゆるコマンドを完全にサポートしているわけではありませんが、
+単純なステップ実行やインスペクションが可能です。
+スクリプトのソースコードに <code>debugger;</code> 文を挿入すると、
+ブレークポイントが有効になります。
+
+</p>
+<!--
+For example, suppose `myscript.js` looked like this:
+-->
+
+<p>例えば、<code>myscript.js</code> が次のようだとします:
+
+</p>
+<pre><code>// myscript.js
+x = 5;
+setTimeout(function () {
+  debugger;
+  console.log(&quot;world&quot;);
+}, 1000);
+console.log(&quot;hello&quot;);</code></pre>
+<!--
+Then once the debugger is run, it will break on line 4.
+-->
+
+<p>ひとたびデバッガを実行すると、4行目で中断します。
+
+</p>
+<pre><code>% node debug myscript.js
+&lt; debugger listening on port 5858
+connecting... ok
+break in /home/indutny/Code/git/indutny/myscript.js:1
+  1 x = 5;
+  2 setTimeout(function () {
+  3   debugger;
+debug&gt; cont
+&lt; hello
+break in /home/indutny/Code/git/indutny/myscript.js:3
+  1 x = 5;
+  2 setTimeout(function () {
+  3   debugger;
+  4   console.log(&quot;world&quot;);
+  5 }, 1000);
+debug&gt; next
+break in /home/indutny/Code/git/indutny/myscript.js:4
+  2 setTimeout(function () {
+  3   debugger;
+  4   console.log(&quot;world&quot;);
+  5 }, 1000);
+  6 console.log(&quot;hello&quot;);
+debug&gt; repl
+Press Ctrl + C to leave debug repl
+&gt; x
+5
+&gt; 2+2
+4
+debug&gt; next
+&lt; world
+break in /home/indutny/Code/git/indutny/myscript.js:5
+  3   debugger;
+  4   console.log(&quot;world&quot;);
+  5 }, 1000);
+  6 console.log(&quot;hello&quot;);
+  7
+debug&gt; quit
+%</code></pre>
+<!--
+The `repl` command allows you to evaluate code remotely. The `next` command
+steps over to the next line. There are a few other commands available and more
+to come. Type `help` to see others.
+-->
+
+<p><code>repl</code> コマンドはコードをリモートで評価します。
+<code>next</code> コマンドは次の行にステップオーバーします。
+他にもいくつかのコマンドを利用することができます。
+その他については <code>help</code> をタイプしてください。
+
+</p>
+<h2>Watchers<span><a class="mark" href="#debugger_watchers" id="debugger_watchers">#</a></span></h2>
+<!--
+You can watch expression and variable values while debugging your code.
+On every breakpoint each expression from the watchers list will be evaluated
+in the current context and displayed just before the breakpoint's source code
+listing.
+-->
+
+<p>デバッグ中に式や変数の値をウォッチすることができます。
+全てのブレークポイントにおいて、ウォッチリストのそれぞれの式は
+現在のコンテキストで評価され、ブレークポイントのソースコードの前に
+表示されます。
+
+</p>
+<!--
+To start watching an expression, type `watch("my_expression")`. `watchers`
+prints the active watchers. To remove a watcher, type
+`unwatch("my_expression")`.
+-->
+
+<p>式のウォッチを開始するには、<code>watch(&quot;my_expression&quot;)</code> をタイプします。
+<code>watchers</code> はアクティブなウォッチの一覧を表示します。
+ウォッチを解除するには、<code>unwatch(&quot;my_expression&quot;)</code> とタイプします。
+
+</p>
+<h2>Commands reference<span><a class="mark" href="#debugger_commands_reference" id="debugger_commands_reference">#</a></span></h2>
+<h3>Stepping<span><a class="mark" href="#debugger_stepping" id="debugger_stepping">#</a></span></h3>
+<!--
+* `cont`, `c` - Continue execution
+* `next`, `n` - Step next
+* `step`, `s` - Step in
+* `out`, `o` - Step out
+* `pause` - Pause running code (like pause button in Developer TOols)
+-->
+
+<ul>
+<li><code>cont</code>, <code>c</code> - 実行を継続します。</li>
+<li><code>next</code>, <code>n</code> - 次の行へステップオーバーします。</li>
+<li><code>step</code>, <code>s</code> - ステップインします。</li>
+<li><code>out</code>, <code>o</code> - ステップアウトします。</li>
+<li><code>pause</code> - コードの実行を中断します (Developer Tools の pause
+ボタンと同じです。</li>
+</ul>
+<h3>Breakpoints<span><a class="mark" href="#debugger_breakpoints" id="debugger_breakpoints">#</a></span></h3>
+<!--
+* `setBreakpoint()`, `sb()` - Set breakpoint on current line
+* `setBreakpoint(line)`, `sb(line)` - Set breakpoint on specific line
+* `setBreakpoint('fn()')`, `sb(...)` - Set breakpoint on a first statement in
+functions body
+* `setBreakpoint('script.js', 1)`, `sb(...)` - Set breakpoint on first line of
+script.js
+* `clearBreakpoint`, `cb(...)` - Clear breakpoint
+-->
+
+<ul>
+<li><code>setBreakpoint()</code>, <code>sb()</code> - 現在行にブレークポイントを設定します。</li>
+<li><code>setBreakpoint(line)</code>, <code>sb(line)</code> - 指定した行にブレークポイントを設定します。</li>
+<li><code>setBreakpoint(&apos;fn()&apos;)</code>, <code>sb(...)</code> - 指定した関数の先頭行にブレークポイントを設定します</li>
+<li><code>setBreakpoint(&apos;script.js&apos;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>
+<li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>
+</ul>
+<h3>Info<span><a class="mark" href="#debugger_info" id="debugger_info">#</a></span></h3>
+<!--
+* `backtrace`, `bt` - Print backtrace of current execution frame
+* `list(5)` - List scripts source code with 5 line context (5 lines before and
+after)
+* `watch(expr)` - Add expression to watch list
+* `unwatch(expr)` - Remove expression from watch list
+* `watchers` - List all watchers and their values (automatically listed on each
+breakpoint)
+* `repl` - Open debugger's repl for evaluation in debugging script's context
+-->
+
+<ul>
+<li><code>backtrace</code>, <code>bt</code> - 現在の実行フレームのバックトレースを表示します。</li>
+<li><code>list(5)</code> - 現在の行の前後のソースコードを表示します (例では前後とも 5 行が表示されます)。</li>
+<li><code>watch(expr)</code> - 式をウォッチリストに追加します。</li>
+<li><code>unwatch(expr)</code> - 式をウォッチリストから削除します。</li>
+<li><code>watchers</code> - ウォッチしている全ての式とその値を表示します (各ブレークポイントで自動的に表示されます)。</li>
+<li><code>repl</code> - デバッグしているスクリプトをコンテキストとする REPL を開きます。</li>
+</ul>
+<h3>Execution control<span><a class="mark" href="#debugger_execution_control" id="debugger_execution_control">#</a></span></h3>
+<!--
+* `run` - Run script (automatically runs on debugger's start)
+* `restart` - Restart script
+* `kill` - Kill script
+-->
+
+<ul>
+<li><code>run</code> - スクリプトを実行します (デバッガを開始すると自動的に実行します)。</li>
+<li><code>restart</code> - スクリプトを再実行します。</li>
+<li><code>kill</code> - スクリプトを終了します。</li>
+</ul>
+<h3>Various<span><a class="mark" href="#debugger_various" id="debugger_various">#</a></span></h3>
+<!--
+* `scripts` - List all loaded scripts
+* `version` - Display v8's version
+-->
+
+<ul>
+<li><code>scripts</code> - ロードされている全スクリプトの一覧を表示します。</li>
+<li><code>version</code> - v8 のバージョンを表示します。</li>
+</ul>
+<h2>Advanced Usage<span><a class="mark" href="#debugger_advanced_usage" id="debugger_advanced_usage">#</a></span></h2>
+<!--
+The V8 debugger can be enabled and accessed either by starting Node with
+the `--debug` command-line flag or by signaling an existing Node process
+with `SIGUSR1`.
+-->
+
+<p>V8 デバッガは Node をコマンドラインの <code>--debug</code> フラグで起動したり、起動済みの Node プロセスに <code>SIGUSR1</code> シグナルを送ることでも有効にできます。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.0/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+
