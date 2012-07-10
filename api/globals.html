@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Global Objects Node.js v0.8.1 Manual &amp; Documentation</title>
+  <title>Global Objects Node.js v0.8.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/globals.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -337,9 +337,84 @@ See the [module section][] for more information.
 
 </p>
 <h2>setTimeout(cb, ms)<span><a class="mark" href="#globals_settimeout_cb_ms" id="globals_settimeout_cb_ms">#</a></span></h2>
+<!--
+Run callback `cb` after *at least* `ms` milliseconds. The actual delay depends
+on external factors like OS timer granularity and system load.
+-->
+
+<p><em>少なくとも</em> <code>ms</code> ミリ秒が経過した後、コールバック <code>cb</code> を実行します。
+実際の遅延は OS のタイマ分解能やシステムの負荷など外部要因に依存します。
+
+</p>
+<!--
+The timeout must be in the range of 1-2,147,483,647 inclusive. If the value is
+outside that range, it's changed to 1 millisecond. Broadly speaking, a timer
+cannot span more than 24.8 days.
+-->
+
+<p>タイムアウト値は 1～2,147,483,647 の範囲内でなければなりません。
+もし値がこの範囲外だった場合は 1 ミリ秒となります。
+大雑把に言って、タイマは 24.8 日を越えることはできません。
+
+</p>
+<!--
+Returns an opaque value that represents the timer.
+-->
+
+<p>タイマを表現する不透明な値を返します。
+
+</p>
 <h2>clearTimeout(t)<span><a class="mark" href="#globals_cleartimeout_t" id="globals_cleartimeout_t">#</a></span></h2>
+<!--
+Stop a timer that was previously created with `setTimeout()`. The callback will
+not execute.
+-->
+
+<p><code>setTimeout()</code> によって以前に作成されたタイマを終了します。
+コールバックは実行されなくなります。
+
+</p>
 <h2>setInterval(cb, ms)<span><a class="mark" href="#globals_setinterval_cb_ms" id="globals_setinterval_cb_ms">#</a></span></h2>
+<!--
+Run callback `cb` repeatedly every `ms` milliseconds. Note that the actual
+interval may vary, depending on external factors like OS timer granularity and
+system load. It's never less than `ms` but it may be longer.
+-->
+
+<p><code>ms</code> ミリ秒ごとにコールバック <code>cb</code> を繰り返し実行します。
+OS のタイマ分解能やシステムの負荷など外部要因によって、
+実際のインターバルが異なるかもしれないことに注意してください。
+それは決して <code>ms</code> より短いことはありませんが、より長いことがあります。
+
+</p>
+<!--
+The interval must be in the range of 1-2,147,483,647 inclusive. If the value is
+outside that range, it's changed to 1 millisecond. Broadly speaking, a timer
+cannot span more than 24.8 days.
+-->
+
+<p>インターバル値は 1～2,147,483,647 の範囲内でなければなりません。
+もし値がこの範囲外だった場合は 1 ミリ秒となります。
+大雑把に言って、タイマは 24.8 日を越えることはできません。
+
+</p>
+<!--
+Returns an opaque value that represents the timer.
+-->
+
+<p>タイマを表現する不透明な値を返します。
+
+</p>
 <h2>clearInterval(t)<span><a class="mark" href="#globals_clearinterval_t" id="globals_clearinterval_t">#</a></span></h2>
+<!--
+Stop a timer that was previously created with `setInterval()`. The callback
+will not execute.
+-->
+
+<p><code>setInterval()</code> によって以前に作成されたタイマを終了します。
+コールバックは実行されなくなります。
+
+</p>
 <!--type=global-->
 
 <!--
@@ -387,7 +462,7 @@ The timer functions are global variables. See the [timers][] section.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

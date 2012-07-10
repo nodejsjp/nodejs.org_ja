@@ -29,7 +29,7 @@
       "textRaw": "clearInterval(t)",
       "type": "global",
       "name": "clearInterval",
-      "desc": "<!--\nThe timer functions are global variables. See the [timers][] section.\n-->\n\n<p>タイマー関数はグローバル変数です。[タイマー][] を参照してください。\n\n</p>\n<!--\n[buffer section]: buffer.html\n[module section]: modules.html\n[module system documentation]: modules.html\n[Modules]: modules.html#modules_modules\n[process object]: process.html#process_process\n[stdio]: stdio.html\n[timers]: timers.html\n-->\n\n"
+      "desc": "<!--\nStop a timer that was previously created with `setInterval()`. The callback\nwill not execute.\n-->\n\n<p><code>setInterval()</code> によって以前に作成されたタイマを終了します。\nコールバックは実行されなくなります。\n\n</p>\n<!--\nThe timer functions are global variables. See the [timers][] section.\n-->\n\n<p>タイマー関数はグローバル変数です。[タイマー][] を参照してください。\n\n</p>\n<!--\n[buffer section]: buffer.html\n[module section]: modules.html\n[module system documentation]: modules.html\n[Modules]: modules.html#modules_modules\n[process object]: process.html#process_process\n[stdio]: stdio.html\n[timers]: timers.html\n-->\n\n"
     }
   ],
   "vars": [
@@ -91,10 +91,43 @@
   ],
   "methods": [
     {
+      "textRaw": "setTimeout(cb, ms)",
+      "type": "method",
+      "name": "setTimeout",
+      "desc": "<!--\nRun callback `cb` after *at least* `ms` milliseconds. The actual delay depends\non external factors like OS timer granularity and system load.\n-->\n\n<p><em>少なくとも</em> <code>ms</code> ミリ秒が経過した後、コールバック <code>cb</code> を実行します。\n実際の遅延は OS のタイマ分解能やシステムの負荷など外部要因に依存します。\n\n</p>\n<!--\nThe timeout must be in the range of 1-2,147,483,647 inclusive. If the value is\noutside that range, it's changed to 1 millisecond. Broadly speaking, a timer\ncannot span more than 24.8 days.\n-->\n\n<p>タイムアウト値は 1～2,147,483,647 の範囲内でなければなりません。\nもし値がこの範囲外だった場合は 1 ミリ秒となります。\n大雑把に言って、タイマは 24.8 日を越えることはできません。\n\n</p>\n<!--\nReturns an opaque value that represents the timer.\n-->\n\n<p>タイマを表現する不透明な値を返します。\n\n</p>\n",
+      "signatures": [
+        {
+          "params": [
+            {
+              "name": "cb"
+            },
+            {
+              "name": "ms"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "textRaw": "clearTimeout(t)",
+      "type": "method",
+      "name": "clearTimeout",
+      "desc": "<!--\nStop a timer that was previously created with `setTimeout()`. The callback will\nnot execute.\n-->\n\n<p><code>setTimeout()</code> によって以前に作成されたタイマを終了します。\nコールバックは実行されなくなります。\n\n</p>\n",
+      "signatures": [
+        {
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "textRaw": "setInterval(cb, ms)",
       "type": "method",
       "name": "setInterval",
-      "desc": "<!--\nThe timer functions are global variables. See the [timers][] section.\n-->\n\n<p>タイマー関数はグローバル変数です。[タイマー][] を参照してください。\n\n</p>\n<!--\n[buffer section]: buffer.html\n[module section]: modules.html\n[module system documentation]: modules.html\n[Modules]: modules.html#modules_modules\n[process object]: process.html#process_process\n[stdio]: stdio.html\n[timers]: timers.html\n-->\n\n",
+      "desc": "<!--\nRun callback `cb` repeatedly every `ms` milliseconds. Note that the actual\ninterval may vary, depending on external factors like OS timer granularity and\nsystem load. It's never less than `ms` but it may be longer.\n-->\n\n<p><code>ms</code> ミリ秒ごとにコールバック <code>cb</code> を繰り返し実行します。\nOS のタイマ分解能やシステムの負荷など外部要因によって、\n実際のインターバルが異なるかもしれないことに注意してください。\nそれは決して <code>ms</code> より短いことはありませんが、より長いことがあります。\n\n</p>\n<!--\nThe interval must be in the range of 1-2,147,483,647 inclusive. If the value is\noutside that range, it's changed to 1 millisecond. Broadly speaking, a timer\ncannot span more than 24.8 days.\n-->\n\n<p>インターバル値は 1～2,147,483,647 の範囲内でなければなりません。\nもし値がこの範囲外だった場合は 1 ミリ秒となります。\n大雑把に言って、タイマは 24.8 日を越えることはできません。\n\n</p>\n<!--\nReturns an opaque value that represents the timer.\n-->\n\n<p>タイマを表現する不透明な値を返します。\n\n</p>\n",
       "signatures": [
         {
           "params": [
@@ -144,7 +177,7 @@
           "textRaw": "clearInterval(t)",
           "type": "global",
           "name": "clearInterval",
-          "desc": "<!--\nThe timer functions are global variables. See the [timers][] section.\n-->\n\n<p>タイマー関数はグローバル変数です。[タイマー][] を参照してください。\n\n</p>\n<!--\n[buffer section]: buffer.html\n[module section]: modules.html\n[module system documentation]: modules.html\n[Modules]: modules.html#modules_modules\n[process object]: process.html#process_process\n[stdio]: stdio.html\n[timers]: timers.html\n-->\n\n"
+          "desc": "<!--\nStop a timer that was previously created with `setInterval()`. The callback\nwill not execute.\n-->\n\n<p><code>setInterval()</code> によって以前に作成されたタイマを終了します。\nコールバックは実行されなくなります。\n\n</p>\n<!--\nThe timer functions are global variables. See the [timers][] section.\n-->\n\n<p>タイマー関数はグローバル変数です。[タイマー][] を参照してください。\n\n</p>\n<!--\n[buffer section]: buffer.html\n[module section]: modules.html\n[module system documentation]: modules.html\n[Modules]: modules.html#modules_modules\n[process object]: process.html#process_process\n[stdio]: stdio.html\n[timers]: timers.html\n-->\n\n"
         }
       ],
       "vars": [
@@ -206,10 +239,43 @@
       ],
       "methods": [
         {
+          "textRaw": "setTimeout(cb, ms)",
+          "type": "method",
+          "name": "setTimeout",
+          "desc": "<!--\nRun callback `cb` after *at least* `ms` milliseconds. The actual delay depends\non external factors like OS timer granularity and system load.\n-->\n\n<p><em>少なくとも</em> <code>ms</code> ミリ秒が経過した後、コールバック <code>cb</code> を実行します。\n実際の遅延は OS のタイマ分解能やシステムの負荷など外部要因に依存します。\n\n</p>\n<!--\nThe timeout must be in the range of 1-2,147,483,647 inclusive. If the value is\noutside that range, it's changed to 1 millisecond. Broadly speaking, a timer\ncannot span more than 24.8 days.\n-->\n\n<p>タイムアウト値は 1～2,147,483,647 の範囲内でなければなりません。\nもし値がこの範囲外だった場合は 1 ミリ秒となります。\n大雑把に言って、タイマは 24.8 日を越えることはできません。\n\n</p>\n<!--\nReturns an opaque value that represents the timer.\n-->\n\n<p>タイマを表現する不透明な値を返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "cb"
+                },
+                {
+                  "name": "ms"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "clearTimeout(t)",
+          "type": "method",
+          "name": "clearTimeout",
+          "desc": "<!--\nStop a timer that was previously created with `setTimeout()`. The callback will\nnot execute.\n-->\n\n<p><code>setTimeout()</code> によって以前に作成されたタイマを終了します。\nコールバックは実行されなくなります。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "t"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "textRaw": "setInterval(cb, ms)",
           "type": "method",
           "name": "setInterval",
-          "desc": "<!--\nThe timer functions are global variables. See the [timers][] section.\n-->\n\n<p>タイマー関数はグローバル変数です。[タイマー][] を参照してください。\n\n</p>\n<!--\n[buffer section]: buffer.html\n[module section]: modules.html\n[module system documentation]: modules.html\n[Modules]: modules.html#modules_modules\n[process object]: process.html#process_process\n[stdio]: stdio.html\n[timers]: timers.html\n-->\n\n",
+          "desc": "<!--\nRun callback `cb` repeatedly every `ms` milliseconds. Note that the actual\ninterval may vary, depending on external factors like OS timer granularity and\nsystem load. It's never less than `ms` but it may be longer.\n-->\n\n<p><code>ms</code> ミリ秒ごとにコールバック <code>cb</code> を繰り返し実行します。\nOS のタイマ分解能やシステムの負荷など外部要因によって、\n実際のインターバルが異なるかもしれないことに注意してください。\nそれは決して <code>ms</code> より短いことはありませんが、より長いことがあります。\n\n</p>\n<!--\nThe interval must be in the range of 1-2,147,483,647 inclusive. If the value is\noutside that range, it's changed to 1 millisecond. Broadly speaking, a timer\ncannot span more than 24.8 days.\n-->\n\n<p>インターバル値は 1～2,147,483,647 の範囲内でなければなりません。\nもし値がこの範囲外だった場合は 1 ミリ秒となります。\n大雑把に言って、タイマは 24.8 日を越えることはできません。\n\n</p>\n<!--\nReturns an opaque value that represents the timer.\n-->\n\n<p>タイマを表現する不透明な値を返します。\n\n</p>\n",
           "signatures": [
             {
               "params": [
