@@ -310,7 +310,7 @@
           "textRaw": "fs.lchmod(path, mode, [callback])",
           "type": "method",
           "name": "lchmod",
-          "desc": "<!--\nAsynchronous lchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "desc": "<!--\nAsynchronous lchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n<!--\nOnly available on Mac OS X.\n-->\n\n<p>Mac OS X でのみ利用可能です。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1268,17 +1268,21 @@
           ]
         },
         {
-          "textRaw": "fs.unwatchFile(filename)",
+          "textRaw": "fs.unwatchFile(filename, [listener])",
           "type": "method",
           "name": "unwatchFile",
           "stability": 2,
           "stabilityText": "Unstable.  Use fs.watch instead, if available.",
-          "desc": "<!--\nStop watching for changes on `filename`.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n\n</p>\n",
+          "desc": "<!--\nStop watching for changes on `filename`. If `listener` is specified, only that\nparticular listener is removed. Otherwise, *all* listeners are removed and you\nhave effectively stopped watching `filename`.\n\nCalling `fs.unwatchFile()` with a filename that is not being watched is a\nno-op, not an error.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n<code>listener</code> が指定された場合は該当の <code>listener</code> だけが取り除かれます。\nそうでなければ、<em>全ての</em> リスナが取り除かれ、\n<code>filenam</code> の監視は事実上終了します。\n\n</p>\n<p>監視されていないファイル名を指定した <code>fs.unwatchFile()</code> の呼び出しは\nエラーになるのではなく、何もしません。\n\n</p>\n",
           "signatures": [
             {
               "params": [
                 {
                   "name": "filename"
+                },
+                {
+                  "name": "listener",
+                  "optional": true
                 }
               ]
             }
