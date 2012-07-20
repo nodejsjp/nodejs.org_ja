@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.8.2 Manual &amp; Documentation</title>
+  <title>process Node.js v0.8.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -165,16 +165,51 @@ nonexistentFunc();
 console.log(&apos;This will not run.&apos;);</code></pre>
 <!--
 Note that `uncaughtException` is a very crude mechanism for exception
-handling.  Using try / catch in your program will give you more control over
-your program's flow.  Especially for server programs that are designed to
-stay running forever, `uncaughtException` can be a useful safety mechanism.
+handling and may be removed in the future.
 -->
 
-<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであることに注意してください。
-プログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。
-特にサーバプログラムはいつまでも実行し続けるように設計されるので、
-<code>uncaughtException</code> は有益で安全なメカニズムになり得ます。
+<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであり、
+将来削除されるかもしれないことに注意してください。
 
+</p>
+<!--
+Don't use it, use [domains](domain.html) instead. If you do use it, restart
+your application after every unhandled exception!
+-->
+
+<p>これを使う代わりに、<a href="domain.html">ドメイン</a> を使ってください。
+それを使えば、捕まえられない例外が発生した後でもアプリケーションを
+再開することができます！
+
+</p>
+<!--
+Do *not* use it as the node.js equivalent of `On Error Resume Next`. An
+unhandled exception means your application - and by extension node.js itself -
+is in an undefined state. Blindly resuming means *anything* could happen.
+-->
+
+<p>これを Node.js における <code>On Error Resume Next</code> として <em>使わないで</em> ください。
+捕まえられなかった例外は、アプリケーション
+- および Node.js 自身の拡張 - が未定義の状態となることを意味します。
+やみくもな再開は <em>どんなことでも</em> 起こることを意味します。
+
+</p>
+<!--
+Think of resuming as pulling the power cord when you are upgrading your system.
+Nine out of ten times nothing happens - but the 10th time, your system is bust.
+-->
+
+<p>電源を引き抜きながらアプリケーションをアップグレードすることを
+想像してください。
+10 回中 9 回は何も起こりません
+- しかし 10 回目にはそのシステムは使えなくなるかもしれません。
+
+</p>
+<!--
+You have been warned.
+-->
+
+<p>これは警告です。
 
 </p>
 <h2>Signal Events<span><a class="mark" href="#process_signal_events" id="process_signal_events">#</a></span></h2>
@@ -790,7 +825,7 @@ setTimeout(function () {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

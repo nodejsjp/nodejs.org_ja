@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.8.2 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.8.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -435,8 +435,8 @@
 <li><a href="#all_fs_fstatsync_fd">fs.fstatSync(fd)</a></li>
 <li><a href="#all_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, [callback])</a></li>
 <li><a href="#all_fs_linksync_srcpath_dstpath">fs.linkSync(srcpath, dstpath)</a></li>
-<li><a href="#all_fs_symlink_destination_path_type_callback">fs.symlink(destination, path, [type], [callback])</a></li>
-<li><a href="#all_fs_symlinksync_destination_path_type">fs.symlinkSync(destination, path, [type])</a></li>
+<li><a href="#all_fs_symlink_srcpath_dstpath_type_callback">fs.symlink(srcpath, dstpath, [type], [callback])</a></li>
+<li><a href="#all_fs_symlinksync_srcpath_dstpath_type">fs.symlinkSync(srcpath, dstpath, [type])</a></li>
 <li><a href="#all_fs_readlink_path_callback">fs.readlink(path, [callback])</a></li>
 <li><a href="#all_fs_readlinksync_path">fs.readlinkSync(path)</a></li>
 <li><a href="#all_fs_realpath_path_cache_callback">fs.realpath(path, [cache], callback)</a></li>
@@ -3326,16 +3326,51 @@ nonexistentFunc();
 console.log(&apos;This will not run.&apos;);</code></pre>
 <!--
 Note that `uncaughtException` is a very crude mechanism for exception
-handling.  Using try / catch in your program will give you more control over
-your program's flow.  Especially for server programs that are designed to
-stay running forever, `uncaughtException` can be a useful safety mechanism.
+handling and may be removed in the future.
 -->
 
-<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであることに注意してください。
-プログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。
-特にサーバプログラムはいつまでも実行し続けるように設計されるので、
-<code>uncaughtException</code> は有益で安全なメカニズムになり得ます。
+<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであり、
+将来削除されるかもしれないことに注意してください。
 
+</p>
+<!--
+Don't use it, use [domains](domain.html) instead. If you do use it, restart
+your application after every unhandled exception!
+-->
+
+<p>これを使う代わりに、<a href="domain.html">ドメイン</a> を使ってください。
+それを使えば、捕まえられない例外が発生した後でもアプリケーションを
+再開することができます！
+
+</p>
+<!--
+Do *not* use it as the node.js equivalent of `On Error Resume Next`. An
+unhandled exception means your application - and by extension node.js itself -
+is in an undefined state. Blindly resuming means *anything* could happen.
+-->
+
+<p>これを Node.js における <code>On Error Resume Next</code> として <em>使わないで</em> ください。
+捕まえられなかった例外は、アプリケーション
+- および Node.js 自身の拡張 - が未定義の状態となることを意味します。
+やみくもな再開は <em>どんなことでも</em> 起こることを意味します。
+
+</p>
+<!--
+Think of resuming as pulling the power cord when you are upgrading your system.
+Nine out of ten times nothing happens - but the 10th time, your system is bust.
+-->
+
+<p>電源を引き抜きながらアプリケーションをアップグレードすることを
+想像してください。
+10 回中 9 回は何も起こりません
+- しかし 10 回目にはそのシステムは使えなくなるかもしれません。
+
+</p>
+<!--
+You have been warned.
+-->
+
+<p>これは警告です。
 
 </p>
 <h2>Signal Events<span><a class="mark" href="#all_signal_events" id="all_signal_events">#</a></span></h2>
@@ -8561,7 +8596,7 @@ Synchronous link(2).
 <p>同期の link(2)。
 
 </p>
-<h2>fs.symlink(destination, path, [type], [callback])<span><a class="mark" href="#all_fs_symlink_destination_path_type_callback" id="all_fs_symlink_destination_path_type_callback">#</a></span></h2>
+<h2>fs.symlink(srcpath, dstpath, [type], [callback])<span><a class="mark" href="#all_fs_symlink_srcpath_dstpath_type_callback" id="all_fs_symlink_srcpath_dstpath_type_callback">#</a></span></h2>
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -8581,7 +8616,7 @@ Windows のジャンクションポイントは対象に絶対パスを要求す
 <code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
 
 </p>
-<h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#all_fs_symlinksync_destination_path_type" id="all_fs_symlinksync_destination_path_type">#</a></span></h2>
+<h2>fs.symlinkSync(srcpath, dstpath, [type])<span><a class="mark" href="#all_fs_symlinksync_srcpath_dstpath_type" id="all_fs_symlinksync_srcpath_dstpath_type">#</a></span></h2>
 <!--
 Synchronous symlink(2).
 -->
@@ -15825,7 +15860,7 @@ ps.on(&apos;exit&apos;, function (code) {
 });
 
 grep.stdout.on(&apos;data&apos;, function (data) {
-  console.log(data);
+  console.log(&apos;&apos; + data);
 });
 
 grep.stderr.on(&apos;data&apos;, function (data) {
@@ -18536,7 +18571,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
