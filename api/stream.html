@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.7.12 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.9.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.12 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -94,9 +94,10 @@
             <h1>Stream<span><a class="mark" href="#stream_stream" id="stream_stream">#</a></span></h1>
 <pre><code>Stability: 2 - Unstable</code></pre>
 <!--
-A stream is an abstract interface implemented by various objects in Node.
-For example a request to an HTTP server is a stream, as is stdout. Streams
-are readable, writable, or both. All streams are instances of [EventEmitter][]
+A stream is an abstract interface implemented by various objects in
+Node.  For example a request to an HTTP server is a stream, as is
+stdout. Streams are readable, writable, or both. All streams are
+instances of [EventEmitter][]
 
 You can load up the Stream base class by doing `require('stream')`.
 -->
@@ -146,8 +147,8 @@ Note that the __data will be lost__ if there is no listener when a
 </p>
 <!--
 Emitted when the stream has received an EOF (FIN in TCP terminology).
-Indicates that no more `'data'` events will happen. If the stream is also
-writable, it may be possible to continue writing.
+Indicates that no more `'data'` events will happen. If the stream is
+also writable, it may be possible to continue writing.
 -->
 
 <p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。
@@ -171,8 +172,8 @@ Emitted if there was an error receiving data.
 
 </p>
 <!--
-Emitted when the underlying resource (for example, the backing file descriptor)
-has been closed. Not all streams will emit this.
+Emitted when the underlying resource (for example, the backing file
+descriptor) has been closed. Not all streams will emit this.
 -->
 
 <p>下層のリソース (例えば背後のファイル記述子) がクローズされた時に生成されます。
@@ -181,8 +182,9 @@ has been closed. Not all streams will emit this.
 </p>
 <h3>stream.readable<span><a class="mark" href="#stream_stream_readable" id="stream_stream_readable">#</a></span></h3>
 <!--
-A boolean that is `true` by default, but turns `false` after an `'error'`
-occurred, the stream came to an `'end'`, or `destroy()` was called.
+A boolean that is `true` by default, but turns `false` after an
+`'error'` occurred, the stream came to an `'end'`, or `destroy()` was
+called.
 -->
 
 <p>デフォルトでは <code>true</code> ですが、<code>&apos;error&apos;</code> が発生した後、
@@ -192,8 +194,9 @@ occurred, the stream came to an `'end'`, or `destroy()` was called.
 </p>
 <h3>stream.setEncoding([encoding])<span><a class="mark" href="#stream_stream_setencoding_encoding" id="stream_stream_setencoding_encoding">#</a></span></h3>
 <!--
-Makes the `'data'` event emit a string instead of a `Buffer`. `encoding` can be
-`'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults to `'utf8'`.
+Makes the `'data'` event emit a string instead of a `Buffer`. `encoding`
+can be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults
+to `'utf8'`.
 -->
 
 <p><code>&apos;data&apos;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
@@ -204,8 +207,8 @@ Makes the `'data'` event emit a string instead of a `Buffer`. `encoding` can be
 </p>
 <h3>stream.pause()<span><a class="mark" href="#stream_stream_pause" id="stream_stream_pause">#</a></span></h3>
 <!--
-Issues an advisory signal to the underlying communication layer, requesting
-that no further data be sent until `resume()` is called.
+Issues an advisory signal to the underlying communication layer,
+requesting that no further data be sent until `resume()` is called.
 -->
 
 <p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
@@ -213,10 +216,10 @@ that no further data be sent until `resume()` is called.
 
 </p>
 <!--
-Note that, due to the advisory nature, certain streams will not be paused
-immediately, and so `'data'` events may be emitted for some indeterminate
-period of time even after `pause()` is called. You may wish to buffer such
-`'data'` events.
+Note that, due to the advisory nature, certain streams will not be
+paused immediately, and so `'data'` events may be emitted for some
+indeterminate period of time even after `pause()` is called. You may
+wish to buffer such `'data'` events.
 -->
 
 <p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
@@ -235,10 +238,17 @@ Resumes the incoming `'data'` events after a `pause()`.
 </p>
 <h3>stream.destroy()<span><a class="mark" href="#stream_stream_destroy" id="stream_stream_destroy">#</a></span></h3>
 <!--
-Closes the underlying file descriptor. Stream will not emit any more events.
+Closes the underlying file descriptor. Stream is no longer `writable`
+nor `readable`.  The stream will not emit any more 'data', or 'end'
+events. Any queued write data will not be sent.  The stream should emit
+'close' event once its resources have been disposed of.
 -->
 
-<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+<p>下層のファイル記述子をクローズします。
+ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
+ストリームはそれ以上 <code>&apos;data&apos;</code> あるいは <code>&apos;end&apos;</code> イベントを生成しなくなります。
+キューイングされたデータは送信されません。
+ストリームはそのリソースが破棄されたときに <code>&apos;close&apos;</code> イベントを生成すべきです。
 
 </p>
 <h3>stream.pipe(destination, [options])<span><a class="mark" href="#stream_stream_pipe_destination_options" id="stream_stream_pipe_destination_options">#</a></span></h3>
@@ -250,8 +260,8 @@ This is a `Stream.prototype` method available on all `Stream`s.
 
 </p>
 <!--
-Connects this read stream to `destination` WriteStream. Incoming
-data on this stream gets written to `destination`. The destination and source
+Connects this read stream to `destination` WriteStream. Incoming data on
+this stream gets written to `destination`. The destination and source
 streams are kept in sync by pausing and resuming as necessary.
 -->
 
@@ -274,12 +284,11 @@ Emulating the Unix `cat` command:
 <p>Unix の <code>cat</code> コマンドのエミュレート:
 
 </p>
-<pre><code>process.stdin.resume();
-process.stdin.pipe(process.stdout);</code></pre>
+<pre><code>process.stdin.resume(); process.stdin.pipe(process.stdout);</code></pre>
 <!--
-By default `end()` is called on the destination when the source stream emits
-`end`, so that `destination` is no longer writable. Pass `{ end: false }` as
-`options` to keep the destination stream open.
+By default `end()` is called on the destination when the source stream
+emits `end`, so that `destination` is no longer writable. Pass `{ end:
+false }` as `options` to keep the destination stream open.
 -->
 
 <p>デフォルトでは接続元ストリームで <code>end</code> イベントが生成されると、
@@ -288,7 +297,8 @@ By default `end()` is called on the destination when the source stream emits
 
 </p>
 <!--
-This keeps `process.stdout` open so that "Goodbye" can be written at the end.
+This keeps `process.stdout` open so that "Goodbye" can be written at the
+end.
 -->
 
 <p>これは <code>process.stdout</code> をオープンしたままにして最後に &quot;Goodbye&quot; と出力します。
@@ -299,8 +309,7 @@ This keeps `process.stdout` open so that "Goodbye" can be written at the end.
 process.stdin.pipe(process.stdout, { end: false });
 
 process.stdin.on(&quot;end&quot;, function() {
-  process.stdout.write(&quot;Goodbye\n&quot;);
-});</code></pre>
+process.stdout.write(&quot;Goodbye\n&quot;); });</code></pre>
 <h2>Writable Stream<span><a class="mark" href="#stream_writable_stream" id="stream_writable_stream">#</a></span></h2>
 <!--type=class-->
 
@@ -360,8 +369,8 @@ Emitted when the stream is passed to a readable stream's pipe method.
 </p>
 <h3>stream.writable<span><a class="mark" href="#stream_stream_writable" id="stream_stream_writable">#</a></span></h3>
 <!--
-A boolean that is `true` by default, but turns `false` after an `'error'`
-occurred or `end()` / `destroy()` was called.
+A boolean that is `true` by default, but turns `false` after an
+`'error'` occurred or `end()` / `destroy()` was called.
 -->
 
 <p>デフォルトでは <code>true</code> ですが、<code>&apos;error&apos;</code> が発生した後、
@@ -370,11 +379,11 @@ occurred or `end()` / `destroy()` was called.
 </p>
 <h3>stream.write(string, [encoding], [fd])<span><a class="mark" href="#stream_stream_write_string_encoding_fd" id="stream_stream_write_string_encoding_fd">#</a></span></h3>
 <!--
-Writes `string` with the given `encoding` to the stream.  Returns `true` if
-the string has been flushed to the kernel buffer.  Returns `false` to
-indicate that the kernel buffer is full, and the data will be sent out in
-the future. The `'drain'` event will indicate when the kernel buffer is
-empty again. The `encoding` defaults to `'utf8'`.
+Writes `string` with the given `encoding` to the stream.  Returns `true`
+if the string has been flushed to the kernel buffer.  Returns `false` to
+indicate that the kernel buffer is full, and the data will be sent out
+in the future. The `'drain'` event will indicate when the kernel buffer
+is empty again. The `encoding` defaults to `'utf8'`.
 -->
 
 <p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。
@@ -386,11 +395,11 @@ empty again. The `encoding` defaults to `'utf8'`.
 
 </p>
 <!--
-If the optional `fd` parameter is specified, it is interpreted as an integral
-file descriptor to be sent over the stream. This is only supported for UNIX
-streams, and is silently ignored otherwise. When writing a file descriptor in
-this manner, closing the descriptor before the stream drains risks sending an
-invalid (closed) FD.
+If the optional `fd` parameter is specified, it is interpreted as an
+integral file descriptor to be sent over the stream. This is only
+supported for UNIX streams, and is silently ignored otherwise. When
+writing a file descriptor in this manner, closing the descriptor before
+the stream drains risks sending an invalid (closed) FD.
 -->
 
 <p>オプションの <code>fd</code> 引数が指定されると、
@@ -410,8 +419,8 @@ Same as the above except with a raw buffer.
 </p>
 <h3>stream.end()<span><a class="mark" href="#stream_stream_end" id="stream_stream_end">#</a></span></h3>
 <!--
-Terminates the stream with EOF or FIN.
-This call will allow queued write data to be sent before closing the stream.
+Terminates the stream with EOF or FIN.  This call will allow queued
+write data to be sent before closing the stream.
 -->
 
 <p>ストリームを EOF または FIN で終了します。
@@ -421,8 +430,8 @@ This call will allow queued write data to be sent before closing the stream.
 </p>
 <h3>stream.end(string, encoding)<span><a class="mark" href="#stream_stream_end_string_encoding" id="stream_stream_end_string_encoding">#</a></span></h3>
 <!--
-Sends `string` with the given `encoding` and terminates the stream with EOF
-or FIN. This is useful to reduce the number of packets sent.
+Sends `string` with the given `encoding` and terminates the stream with
+EOF or FIN. This is useful to reduce the number of packets sent.
 -->
 
 <p>与えられた <code>encoding</code> で <code>string</code> を送信してからEOFまたはFINでストリームを終了します。
@@ -439,19 +448,24 @@ Same as above but with a `buffer`.
 </p>
 <h3>stream.destroy()<span><a class="mark" href="#stream_stream_destroy_1" id="stream_stream_destroy_1">#</a></span></h3>
 <!--
-Closes the underlying file descriptor. Stream will not emit any more events.
-Any queued write data will not be sent.
+Closes the underlying file descriptor. Stream is no longer `writable`
+nor `readable`.  The stream will not emit any more 'data', or 'end'
+events. Any queued write data will not be sent.  The stream should emit
+'close' event once its resources have been disposed of.
 -->
 
-<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+<p>下層のファイル記述子をクローズします。
+ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
+ストリームはそれ以上 <code>&apos;data&apos;</code> あるいは <code>&apos;end&apos;</code> イベントを生成しなくなります。
 キューイングされたデータは送信されません。
+ストリームはそのリソースが破棄されたときに <code>&apos;close&apos;</code> イベントを生成すべきです。
 
 </p>
 <h3>stream.destroySoon()<span><a class="mark" href="#stream_stream_destroysoon" id="stream_stream_destroysoon">#</a></span></h3>
 <!--
-After the write queue is drained, close the file descriptor. `destroySoon()`
-can still destroy straight away, as long as there is no data left in the queue
-for writes.
+After the write queue is drained, close the file descriptor.
+`destroySoon()` can still destroy straight away, as long as there is no
+data left in the queue for writes.
 -->
 
 <p>出力キューが空になった後、ファイル記述子をクローズします。
@@ -486,22 +500,21 @@ for writes.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.12/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
   <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
-    var gaJsHost = (("https:" == document.location.protocol) ?
-    "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
   </script>
-  <script>
-    try {
-      var pageTracker = _gat._getTracker("UA-10874194-2");
-      pageTracker._trackPageview();
-      } catch(err) {}</script>
 </body>
 </html>
 

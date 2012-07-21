@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.7.12 Manual &amp; Documentation</title>
+  <title>process Node.js v0.9.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.12 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -83,6 +83,7 @@
 <li><a href="#process_process_platform">process.platform</a></li>
 <li><a href="#process_process_memoryusage">process.memoryUsage()</a></li>
 <li><a href="#process_process_nexttick_callback">process.nextTick(callback)</a></li>
+<li><a href="#process_process_maxtickdepth">process.maxTickDepth</a></li>
 <li><a href="#process_process_umask_mask">process.umask([mask])</a></li>
 <li><a href="#process_process_uptime">process.uptime()</a></li>
 <li><a href="#process_process_hrtime">process.hrtime()</a></li>
@@ -127,10 +128,10 @@ Example of listening for `exit`:
 <p><code>exit</code> を監視する例:
 
 </p>
-<pre><code>process.on(&apos;exit&apos;, function () {
-  process.nextTick(function () {
-   console.log(&apos;This will not run&apos;);
-  });
+<pre><code>process.on(&apos;exit&apos;, function() {
+  setTimeout(function() {
+    console.log(&apos;This will not run&apos;);
+  }, 0);
   console.log(&apos;About to exit.&apos;);
 });</code></pre>
 <h2>Event: &apos;uncaughtException&apos;<span><a class="mark" href="#process_event_uncaughtexception" id="process_event_uncaughtexception">#</a></span></h2>
@@ -152,11 +153,11 @@ Example of listening for `uncaughtException`:
 <p><code>uncaughtException</code> を監視する例:
 
 </p>
-<pre><code>process.on(&apos;uncaughtException&apos;, function (err) {
+<pre><code>process.on(&apos;uncaughtException&apos;, function(err) {
   console.log(&apos;Caught exception: &apos; + err);
 });
 
-setTimeout(function () {
+setTimeout(function() {
   console.log(&apos;This will still run.&apos;);
 }, 500);
 
@@ -165,16 +166,51 @@ nonexistentFunc();
 console.log(&apos;This will not run.&apos;);</code></pre>
 <!--
 Note that `uncaughtException` is a very crude mechanism for exception
-handling.  Using try / catch in your program will give you more control over
-your program's flow.  Especially for server programs that are designed to
-stay running forever, `uncaughtException` can be a useful safety mechanism.
+handling and may be removed in the future.
 -->
 
-<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであることに注意してください。
-プログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。
-特にサーバプログラムはいつまでも実行し続けるように設計されるので、
-<code>uncaughtException</code> は有益で安全なメカニズムになり得ます。
+<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであり、
+将来削除されるかもしれないことに注意してください。
 
+</p>
+<!--
+Don't use it, use [domains](domain.html) instead. If you do use it, restart
+your application after every unhandled exception!
+-->
+
+<p>これを使う代わりに、<a href="domain.html">ドメイン</a> を使ってください。
+それを使えば、捕まえられない例外が発生した後でもアプリケーションを
+再開することができます！
+
+</p>
+<!--
+Do *not* use it as the node.js equivalent of `On Error Resume Next`. An
+unhandled exception means your application - and by extension node.js itself -
+is in an undefined state. Blindly resuming means *anything* could happen.
+-->
+
+<p>これを Node.js における <code>On Error Resume Next</code> として <em>使わないで</em> ください。
+捕まえられなかった例外は、アプリケーション
+- および Node.js 自身の拡張 - が未定義の状態となることを意味します。
+やみくもな再開は <em>どんなことでも</em> 起こることを意味します。
+
+</p>
+<!--
+Think of resuming as pulling the power cord when you are upgrading your system.
+Nine out of ten times nothing happens - but the 10th time, your system is bust.
+-->
+
+<p>電源を引き抜きながらアプリケーションをアップグレードすることを
+想像してください。
+10 回中 9 回は何も起こりません
+- しかし 10 回目にはそのシステムは使えなくなるかもしれません。
+
+</p>
+<!--
+You have been warned.
+-->
+
+<p>これは警告です。
 
 </p>
 <h2>Signal Events<span><a class="mark" href="#process_signal_events" id="process_signal_events">#</a></span></h2>
@@ -200,7 +236,7 @@ Example of listening for `SIGINT`:
 <pre><code>// Start reading from stdin so we don&apos;t exit.
 process.stdin.resume();
 
-process.on(&apos;SIGINT&apos;, function () {
+process.on(&apos;SIGINT&apos;, function() {
   console.log(&apos;Got SIGINT.  Press Control-D to exit.&apos;);
 });</code></pre>
 <!--
@@ -227,7 +263,7 @@ Example: the definition of `console.log`
 <p>例: <code>console.log</code> の定義
 
 </p>
-<pre><code>console.log = function (d) {
+<pre><code>console.log = function(d) {
   process.stdout.write(d + &apos;\n&apos;);
 };</code></pre>
 <!--
@@ -287,11 +323,11 @@ Example of opening standard input and listening for both events:
 <pre><code>process.stdin.resume();
 process.stdin.setEncoding(&apos;utf8&apos;);
 
-process.stdin.on(&apos;data&apos;, function (chunk) {
+process.stdin.on(&apos;data&apos;, function(chunk) {
   process.stdout.write(&apos;data: &apos; + chunk);
 });
 
-process.stdin.on(&apos;end&apos;, function () {
+process.stdin.on(&apos;end&apos;, function() {
   process.stdout.write(&apos;end&apos;);
 });</code></pre>
 <h2>process.argv<span><a class="mark" href="#process_process_argv" id="process_process_argv">#</a></span></h2>
@@ -307,7 +343,7 @@ next elements will be any additional command line arguments.
 
 </p>
 <pre><code>// print process.argv
-process.argv.forEach(function (val, index, array) {
+process.argv.forEach(function(val, index, array) {
   console.log(index + &apos;: &apos; + val);
 });</code></pre>
 <!--
@@ -575,7 +611,7 @@ JavaScript で表現したオブジェクトを保持します。
      node_shared_zlib: &apos;false&apos;,
      node_use_dtrace: &apos;false&apos;,
      node_use_openssl: &apos;true&apos;,
-     node_use_system_openssl: &apos;false&apos;,
+     node_shared_openssl: &apos;false&apos;,
      strict_aliasing: &apos;true&apos;,
      target_arch: &apos;x64&apos;,
      v8_use_snapshot: &apos;true&apos; } }</code></pre>
@@ -612,11 +648,11 @@ Example of sending a signal to yourself:
 <p>自身にシグナルを送信する例:
 
 </p>
-<pre><code>process.on(&apos;SIGHUP&apos;, function () {
+<pre><code>process.on(&apos;SIGHUP&apos;, function() {
   console.log(&apos;Got SIGHUP signal.&apos;);
 });
 
-setTimeout(function () {
+setTimeout(function() {
   console.log(&apos;Exiting.&apos;);
   process.exit(0);
 }, 100);
@@ -695,17 +731,141 @@ This will generate:
 <!--
 On the next loop around the event loop call this callback.
 This is *not* a simple alias to `setTimeout(fn, 0)`, it's much more
-efficient.
+efficient.  It typically runs before any other I/O events fire, but there
+are some exceptions.  See `process.maxTickDepth` below.
 -->
 
 <p>イベントループの次以降のループでコールバックを呼び出します。
 これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、
 はるかに効率的です。
+これは通常他の I/O イベントが発生するよりも前に実行されますが、
+いくつかの例外があります。
+後述の <code>process.maxTickDepth</code> を参照してください。
 
 </p>
-<pre><code>process.nextTick(function () {
+<pre><code>process.nextTick(function() {
   console.log(&apos;nextTick callback&apos;);
 });</code></pre>
+<!--
+This is important in developing APIs where you want to give the user the
+chance to assign event handlers after an object has been constructed,
+but before any I/O has occurred.
+-->
+
+<p>これは API の開発において、オブジェクトが構築された後で
+どんな I/O イベントが発生するよりも前に、
+イベントハンドラを割り当てるチャンスをユーザに与えたい場合に重要になります。
+
+</p>
+<pre><code>function MyThing(options) {
+  this.setupOptions(options);
+
+  process.nextTick(function() {
+    this.startDoingStuff();
+  }.bind(this));
+}
+
+var thing = new MyThing();
+thing.getReadyForStuff();
+
+// thing.startDoingStuff() gets called now, not before.</code></pre>
+<!--
+It is very important for APIs to be either 100% synchronous or 100%
+asynchronous.  Consider this example:
+-->
+
+<p>API は 100% 同期的か、100% 非同期的かのどちらかであることがとても重要です。
+この例を考えてみてください:
+
+</p>
+<pre><code>// WARNING!  DO NOT USE!  BAD UNSAFE HAZARD!
+function maybeSync(arg, cb) {
+  if (arg) {
+    cb();
+    return;
+  }
+
+  fs.stat(&apos;file&apos;, cb);
+}</code></pre>
+<!--
+This API is hazardous.  If you do this:
+-->
+
+<p>この API は危険です。こうすると:
+
+</p>
+<pre><code>maybeSync(true, function() {
+  foo();
+});
+bar();</code></pre>
+<!--
+then it's not clear whether `foo()` or `bar()` will be called first.
+-->
+
+<p><code>foo()</code> と <code>bar()</code> のどちらが先に呼び出されるか不明瞭になります。
+
+</p>
+<!--
+This approach is much better:
+-->
+
+<p>以下のアプローチはずっと優れています:
+
+</p>
+<pre><code>function definitelyAsync(arg, cb) {
+  if (arg) {
+    process.nextTick(cb);
+    return;
+  }
+
+  fs.stat(&apos;file&apos;, cb);
+}</code></pre>
+<h2>process.maxTickDepth<span><a class="mark" href="#process_process_maxtickdepth" id="process_process_maxtickdepth">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Number</span> Default = 1000</li>
+</div></ul>
+<!--
+Callbacks passed to `process.nextTick` will *usually* be called at the
+end of the current flow of execution, and are thus approximately as fast
+as calling a function synchronously.  Left unchecked, this would starve
+the event loop, preventing any I/O from occurring.
+-->
+
+<p><code>process.nextTick()</code> に渡されたコールバックは、<em>通常</em> 現在の実行フローの
+後で呼び出され、それは関数を同期的に呼び出すのと同じくらい高速です。
+これを放置するとあらゆる I/O が阻まれ、イベントループは飢餓状態となるでしょう。
+
+</p>
+<!--
+Consider this code:
+-->
+
+<p>以下のコードを考えてみてください。
+
+</p>
+<pre><code>process.nextTick(function foo() {
+  process.nextTick(foo);
+});</code></pre>
+<!--
+In order to avoid the situation where Node is blocked by an infinite
+loop of recursive series of nextTick calls, it defers to allow some I/O
+to be done every so often.
+-->
+
+<p>nextTick の再帰が連鎖する無限ループによって Node がブロックする状況を
+避けるには、それを先送りして時々 I/O を可能にします。
+
+</p>
+<!--
+The `process.maxTickDepth` value is the maximum depth of
+nextTick-calling nextTick-callbacks that will be evaluated before
+allowing other forms of I/O to occur.
+-->
+
+<p><code>process.maxTickDepth</code> の値は、nextTick が nextTick のコールバックを呼び出す
+最大の深さで、他の I/O を可能にする前に評価されます。
+
+</p>
 <h2>process.umask([mask])<span><a class="mark" href="#process_process_umask_mask" id="process_process_umask_mask">#</a></span></h2>
 <!--
 Sets or reads the process's file mode creation mask. Child processes inherit
@@ -755,7 +915,7 @@ a diff reading, useful for benchmarks and measuring intervals:
 <pre><code>var t = process.hrtime();
 // [ 1800216, 927643717 ]
 
-setTimeout(function () {
+setTimeout(function() {
   t = process.hrtime(t);
   // [ 1, 6962306 ]
 
@@ -790,22 +950,21 @@ setTimeout(function () {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.12/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
   <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
-    var gaJsHost = (("https:" == document.location.protocol) ?
-    "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
   </script>
-  <script>
-    try {
-      var pageTracker = _gat._getTracker("UA-10874194-2");
-      pageTracker._trackPageview();
-      } catch(err) {}</script>
 </body>
 </html>
 
