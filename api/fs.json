@@ -310,7 +310,7 @@
           "textRaw": "fs.lchmod(path, mode, [callback])",
           "type": "method",
           "name": "lchmod",
-          "desc": "<!--\nAsynchronous lchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "desc": "<!--\nAsynchronous lchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n<!--\nOnly available on Mac OS X.\n-->\n\n<p>Mac OS X でのみ利用可能です。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -489,7 +489,7 @@
           ]
         },
         {
-          "textRaw": "fs.symlink(destination, path, [type], [callback])",
+          "textRaw": "fs.symlink(srcpath, dstpath, [type], [callback])",
           "type": "method",
           "name": "symlink",
           "desc": "<!--\nAsynchronous symlink(2). No arguments other than a possible exception are given\nto the completion callback.\n`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only \nused on Windows (ignored on other platforms).\nNote that Windows junction points require the destination path to be absolute.  When using\n`'junction'`, the `destination` argument will automatically be normalized to absolute path.\n-->\n\n<p>非同期の symlink(2)。\n完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n<code>type</code> 引数は <code>&apos;dir&apos;</code>、<code>&apos;file&apos;</code>、または <code>&apos;junction</code>&apos; (デフォルトは <code>&apos;file&apos;</code>)\nです。\nこれは Windows でのみ使われます (他のプラットフォームでは無視されます)。\nWindows のジャンクションポイントは対象に絶対パスを要求することに\n注意してください。\n<code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。\n\n</p>\n",
@@ -497,10 +497,10 @@
             {
               "params": [
                 {
-                  "name": "destination"
+                  "name": "srcpath"
                 },
                 {
-                  "name": "path"
+                  "name": "dstpath"
                 },
                 {
                   "name": "type",
@@ -515,7 +515,7 @@
           ]
         },
         {
-          "textRaw": "fs.symlinkSync(destination, path, [type])",
+          "textRaw": "fs.symlinkSync(srcpath, dstpath, [type])",
           "type": "method",
           "name": "symlinkSync",
           "desc": "<!--\nSynchronous symlink(2).\n-->\n\n<p>同期の symlink(2)。\n\n</p>\n",
@@ -523,10 +523,10 @@
             {
               "params": [
                 {
-                  "name": "destination"
+                  "name": "srcpath"
                 },
                 {
-                  "name": "path"
+                  "name": "dstpath"
                 },
                 {
                   "name": "type",
@@ -1024,7 +1024,7 @@
           "textRaw": "fs.writeSync(fd, buffer, offset, length, position)",
           "type": "method",
           "name": "writeSync",
-          "desc": "<!--\nSynchronous version of buffer-based `fs.write()`. Returns the number of bytes\nwritten.\n-->\n同期版のバッファに基づく <code>fs.write()</code>。書き込まれたバイト数を返します。\n\n## fs.writeSync(fd, str, position, [encoding])\n\n<!--\nSynchronous version of string-based `fs.write()`. `encoding` defaults to\n`'utf8'`. Returns the number of _bytes_ written.\n-->\n\n<p>同期版の文字列に基づく <code>fs.write()</code>。\n<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。\n書き込まれたバイト数を返します。\n\n</p>\n",
+          "desc": "<!--\nSynchronous version of `fs.write()`. Returns the number of bytes written.\n-->\n\n<p>同期版の <code>fs.write()</code>。書き込まれたバイト数を返します。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1082,7 +1082,7 @@
           "textRaw": "fs.readSync(fd, buffer, offset, length, position)",
           "type": "method",
           "name": "readSync",
-          "desc": "<!--\nSynchronous version of buffer-based `fs.read`. Returns the number of\n`bytesRead`.\n-->\n\n<p>同期版のバッファに基づく <code>fs.read</code>。<code>bytesRead</code> の数を返します。\n\n</p>\n",
+          "desc": "<!--\nSynchronous version of `fs.read`. Returns the number of `bytesRead`.\n-->\n\n<p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1100,30 +1100,6 @@
                 },
                 {
                   "name": "position"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "fs.readSync(fd, length, position, encoding)",
-          "type": "method",
-          "name": "readSync",
-          "desc": "<!--\nLegacy synchronous version of string-based `fs.read`. Returns an array with the\ndata from the file specified and number of bytes read, `[string, bytesRead]`.\n-->\n\n<p>文字列に基づく古い <code>fs.read</code> の同期版。\n指定されたファイルのデータと読み込んだバイト数の配列、<code>[string, bytesRead]</code>\nを返します。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "fd"
-                },
-                {
-                  "name": "length"
-                },
-                {
-                  "name": "position"
-                },
-                {
-                  "name": "encoding"
                 }
               ]
             }
@@ -1273,7 +1249,7 @@
           "name": "watchFile",
           "stability": 2,
           "stabilityText": "Unstable.  Use fs.watch instead, if available.",
-          "desc": "<!--\nWatch for changes on `filename`. The callback `listener` will be called each\ntime the file is accessed.\n-->\n\n<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。\n\n</p>\n<!--\nThe second argument is optional. The `options` if provided should be an object\ncontaining two members a boolean, `persistent`, and `interval`. `persistent`\nindicates whether the process should continue to run as long as files are\nbeing watched. `interval` indicates how often the target should be polled,\nin milliseconds. (On Linux systems with inotify, `interval` is ignored.) The\ndefault is `{ persistent: true, interval: 0 }`.\n-->\n\n<p>第 2 引数はオプションです．\n<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と <code>interval</code>\nの二つのメンバを含むオブジェクトです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\n<code>interval</code> は対象をポーリングする間隔をミリ秒で示します\n(inotify を備えた Linux システムでは <code>interval</code> は無視されます)。\nデフォルトは <code>{ persistent: true, interval: 0}</code> です。\n\n</p>\n<!--\nThe `listener` gets two arguments the current stat object and the previous\nstat object:\n-->\n\n<p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:\n\n</p>\n<pre><code>fs.watchFile(&apos;message.text&apos;, function (curr, prev) {\n  console.log(&apos;the current mtime is: &apos; + curr.mtime);\n  console.log(&apos;the previous mtime was: &apos; + prev.mtime);\n});</code></pre>\n<!--\nThese stat objects are instances of `fs.Stat`.\n\nIf you want to be notified when the file was modified, not just accessed\nyou need to compare `curr.mtime` and `prev.mtime`.\n-->\n\n<p>これらの状態オブジェクトは <code>fs.Stat</code> のインスタンスです。\n\n</p>\n<p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。\n\n</p>\n",
+          "desc": "<!--\nWatch for changes on `filename`. The callback `listener` will be called each\ntime the file is accessed.\n-->\n\n<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。\n\n</p>\n<!--\nThe second argument is optional. The `options` if provided should be an object\ncontaining two members a boolean, `persistent`, and `interval`. `persistent`\nindicates whether the process should continue to run as long as files are\nbeing watched. `interval` indicates how often the target should be polled,\nin milliseconds. The default is `{ persistent: true, interval: 5007 }`.\n-->\n\n<p>第 2 引数はオプションです．\n<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と <code>interval</code>\nの二つのメンバを含むオブジェクトです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\n<code>interval</code> は対象をポーリングする間隔をミリ秒で示します\nデフォルトは <code>{ persistent: true, interval: 5007 }</code> です。\n\n</p>\n<!--\nThe `listener` gets two arguments the current stat object and the previous\nstat object:\n-->\n\n<p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:\n\n</p>\n<pre><code>fs.watchFile(&apos;message.text&apos;, function (curr, prev) {\n  console.log(&apos;the current mtime is: &apos; + curr.mtime);\n  console.log(&apos;the previous mtime was: &apos; + prev.mtime);\n});</code></pre>\n<!--\nThese stat objects are instances of `fs.Stat`.\n\nIf you want to be notified when the file was modified, not just accessed\nyou need to compare `curr.mtime` and `prev.mtime`.\n-->\n\n<p>これらの状態オブジェクトは <code>fs.Stat</code> のインスタンスです。\n\n</p>\n<p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1292,17 +1268,21 @@
           ]
         },
         {
-          "textRaw": "fs.unwatchFile(filename)",
+          "textRaw": "fs.unwatchFile(filename, [listener])",
           "type": "method",
           "name": "unwatchFile",
           "stability": 2,
           "stabilityText": "Unstable.  Use fs.watch instead, if available.",
-          "desc": "<!--\nStop watching for changes on `filename`.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n\n</p>\n",
+          "desc": "<!--\nStop watching for changes on `filename`. If `listener` is specified, only that\nparticular listener is removed. Otherwise, *all* listeners are removed and you\nhave effectively stopped watching `filename`.\n\nCalling `fs.unwatchFile()` with a filename that is not being watched is a\nno-op, not an error.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n<code>listener</code> が指定された場合は該当の <code>listener</code> だけが取り除かれます。\nそうでなければ、<em>全ての</em> リスナが取り除かれ、\n<code>filenam</code> の監視は事実上終了します。\n\n</p>\n<p>監視されていないファイル名を指定した <code>fs.unwatchFile()</code> の呼び出しは\nエラーになるのではなく、何もしません。\n\n</p>\n",
           "signatures": [
             {
               "params": [
                 {
                   "name": "filename"
+                },
+                {
+                  "name": "listener",
+                  "optional": true
                 }
               ]
             }

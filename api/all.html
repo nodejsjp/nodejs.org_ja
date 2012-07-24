@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.7.12 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.12 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -169,6 +169,7 @@
 <li><a href="#all_process_platform">process.platform</a></li>
 <li><a href="#all_process_memoryusage">process.memoryUsage()</a></li>
 <li><a href="#all_process_nexttick_callback">process.nextTick(callback)</a></li>
+<li><a href="#all_process_maxtickdepth">process.maxTickDepth</a></li>
 <li><a href="#all_process_umask_mask">process.umask([mask])</a></li>
 <li><a href="#all_process_uptime">process.uptime()</a></li>
 <li><a href="#all_process_hrtime">process.hrtime()</a></li>
@@ -181,7 +182,10 @@
 <li><a href="#all_util_puts">util.puts([...])</a></li>
 <li><a href="#all_util_print">util.print([...])</a></li>
 <li><a href="#all_util_log_string">util.log(string)</a></li>
-<li><a href="#all_util_inspect_object_showhidden_depth_colors">util.inspect(object, [showHidden], [depth], [colors])</a></li>
+<li><a href="#all_util_inspect_object_showhidden_depth_colors">util.inspect(object, [showHidden], [depth], [colors])</a><ul>
+<li><a href="#all_customizing_util_inspect_colors">Customizing <code>util.inspect</code> colors</a></li>
+</ul>
+</li>
 <li><a href="#all_util_isarray_object">util.isArray(object)</a></li>
 <li><a href="#all_util_isregexp_object">util.isRegExp(object)</a></li>
 <li><a href="#all_util_isdate_object">util.isDate(object)</a></li>
@@ -435,8 +439,8 @@
 <li><a href="#all_fs_fstatsync_fd">fs.fstatSync(fd)</a></li>
 <li><a href="#all_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, [callback])</a></li>
 <li><a href="#all_fs_linksync_srcpath_dstpath">fs.linkSync(srcpath, dstpath)</a></li>
-<li><a href="#all_fs_symlink_destination_path_type_callback">fs.symlink(destination, path, [type], [callback])</a></li>
-<li><a href="#all_fs_symlinksync_destination_path_type">fs.symlinkSync(destination, path, [type])</a></li>
+<li><a href="#all_fs_symlink_srcpath_dstpath_type_callback">fs.symlink(srcpath, dstpath, [type], [callback])</a></li>
+<li><a href="#all_fs_symlinksync_srcpath_dstpath_type">fs.symlinkSync(srcpath, dstpath, [type])</a></li>
 <li><a href="#all_fs_readlink_path_callback">fs.readlink(path, [callback])</a></li>
 <li><a href="#all_fs_readlinksync_path">fs.readlinkSync(path)</a></li>
 <li><a href="#all_fs_realpath_path_cache_callback">fs.realpath(path, [cache], callback)</a></li>
@@ -463,7 +467,6 @@
 <li><a href="#all_fs_writesync_fd_buffer_offset_length_position">fs.writeSync(fd, buffer, offset, length, position)</a></li>
 <li><a href="#all_fs_read_fd_buffer_offset_length_position_callback">fs.read(fd, buffer, offset, length, position, [callback])</a></li>
 <li><a href="#all_fs_readsync_fd_buffer_offset_length_position">fs.readSync(fd, buffer, offset, length, position)</a></li>
-<li><a href="#all_fs_readsync_fd_length_position_encoding">fs.readSync(fd, length, position, encoding)</a></li>
 <li><a href="#all_fs_readfile_filename_encoding_callback">fs.readFile(filename, [encoding], [callback])</a></li>
 <li><a href="#all_fs_readfilesync_filename_encoding">fs.readFileSync(filename, [encoding])</a></li>
 <li><a href="#all_fs_writefile_filename_data_encoding_callback">fs.writeFile(filename, data, [encoding], [callback])</a></li>
@@ -471,7 +474,7 @@
 <li><a href="#all_fs_appendfile_filename_data_encoding_utf8_callback">fs.appendFile(filename, data, encoding=&apos;utf8&apos;, [callback])</a></li>
 <li><a href="#all_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&apos;utf8&apos;)</a></li>
 <li><a href="#all_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
-<li><a href="#all_fs_unwatchfile_filename">fs.unwatchFile(filename)</a></li>
+<li><a href="#all_fs_unwatchfile_filename_listener">fs.unwatchFile(filename, [listener])</a></li>
 <li><a href="#all_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
 <li><a href="#all_caveats">Caveats</a><ul>
 <li><a href="#all_availability">Availability</a></li>
@@ -709,6 +712,19 @@
 <li><a href="#all_querystring_parse_str_sep_eq_options">querystring.parse(str, [sep], [eq], [options])</a></li>
 <li><a href="#all_querystring_escape">querystring.escape</a></li>
 <li><a href="#all_querystring_unescape">querystring.unescape</a></li>
+</ul>
+</li>
+<li><a href="#all_punycode">punycode</a><ul>
+<li><a href="#all_punycode_decode_string">punycode.decode(string)</a></li>
+<li><a href="#all_punycode_encode_string">punycode.encode(string)</a></li>
+<li><a href="#all_punycode_tounicode_domain">punycode.toUnicode(domain)</a></li>
+<li><a href="#all_punycode_toascii_domain">punycode.toASCII(domain)</a></li>
+<li><a href="#all_punycode_ucs2">punycode.ucs2</a><ul>
+<li><a href="#all_punycode_ucs2_decode_string">punycode.ucs2.decode(string)</a></li>
+<li><a href="#all_punycode_ucs2_encode_codepoints">punycode.ucs2.encode(codePoints)</a></li>
+</ul>
+</li>
+<li><a href="#all_punycode_version">punycode.version</a></li>
 </ul>
 </li>
 <li><a href="#all_readline">Readline</a><ul>
@@ -1347,9 +1363,84 @@ See the [module section][] for more information.
 
 </p>
 <h2>setTimeout(cb, ms)<span><a class="mark" href="#all_settimeout_cb_ms" id="all_settimeout_cb_ms">#</a></span></h2>
+<!--
+Run callback `cb` after *at least* `ms` milliseconds. The actual delay depends
+on external factors like OS timer granularity and system load.
+-->
+
+<p><em>少なくとも</em> <code>ms</code> ミリ秒が経過した後、コールバック <code>cb</code> を実行します。
+実際の遅延は OS のタイマ分解能やシステムの負荷など外部要因に依存します。
+
+</p>
+<!--
+The timeout must be in the range of 1-2,147,483,647 inclusive. If the value is
+outside that range, it's changed to 1 millisecond. Broadly speaking, a timer
+cannot span more than 24.8 days.
+-->
+
+<p>タイムアウト値は 1～2,147,483,647 の範囲内でなければなりません。
+もし値がこの範囲外だった場合は 1 ミリ秒となります。
+大雑把に言って、タイマは 24.8 日を越えることはできません。
+
+</p>
+<!--
+Returns an opaque value that represents the timer.
+-->
+
+<p>タイマを表現する不透明な値を返します。
+
+</p>
 <h2>clearTimeout(t)<span><a class="mark" href="#all_cleartimeout_t" id="all_cleartimeout_t">#</a></span></h2>
+<!--
+Stop a timer that was previously created with `setTimeout()`. The callback will
+not execute.
+-->
+
+<p><code>setTimeout()</code> によって以前に作成されたタイマを終了します。
+コールバックは実行されなくなります。
+
+</p>
 <h2>setInterval(cb, ms)<span><a class="mark" href="#all_setinterval_cb_ms" id="all_setinterval_cb_ms">#</a></span></h2>
+<!--
+Run callback `cb` repeatedly every `ms` milliseconds. Note that the actual
+interval may vary, depending on external factors like OS timer granularity and
+system load. It's never less than `ms` but it may be longer.
+-->
+
+<p><code>ms</code> ミリ秒ごとにコールバック <code>cb</code> を繰り返し実行します。
+OS のタイマ分解能やシステムの負荷など外部要因によって、
+実際のインターバルが異なるかもしれないことに注意してください。
+それは決して <code>ms</code> より短いことはありませんが、より長いことがあります。
+
+</p>
+<!--
+The interval must be in the range of 1-2,147,483,647 inclusive. If the value is
+outside that range, it's changed to 1 millisecond. Broadly speaking, a timer
+cannot span more than 24.8 days.
+-->
+
+<p>インターバル値は 1～2,147,483,647 の範囲内でなければなりません。
+もし値がこの範囲外だった場合は 1 ミリ秒となります。
+大雑把に言って、タイマは 24.8 日を越えることはできません。
+
+</p>
+<!--
+Returns an opaque value that represents the timer.
+-->
+
+<p>タイマを表現する不透明な値を返します。
+
+</p>
 <h2>clearInterval(t)<span><a class="mark" href="#all_clearinterval_t" id="all_clearinterval_t">#</a></span></h2>
+<!--
+Stop a timer that was previously created with `setInterval()`. The callback
+will not execute.
+-->
+
+<p><code>setInterval()</code> によって以前に作成されたタイマを終了します。
+コールバックは実行されなくなります。
+
+</p>
 <!--type=global-->
 
 <!--
@@ -3201,10 +3292,10 @@ Example of listening for `exit`:
 <p><code>exit</code> を監視する例:
 
 </p>
-<pre><code>process.on(&apos;exit&apos;, function () {
-  process.nextTick(function () {
-   console.log(&apos;This will not run&apos;);
-  });
+<pre><code>process.on(&apos;exit&apos;, function() {
+  setTimeout(function() {
+    console.log(&apos;This will not run&apos;);
+  }, 0);
   console.log(&apos;About to exit.&apos;);
 });</code></pre>
 <h2>Event: &apos;uncaughtException&apos;<span><a class="mark" href="#all_event_uncaughtexception" id="all_event_uncaughtexception">#</a></span></h2>
@@ -3226,11 +3317,11 @@ Example of listening for `uncaughtException`:
 <p><code>uncaughtException</code> を監視する例:
 
 </p>
-<pre><code>process.on(&apos;uncaughtException&apos;, function (err) {
+<pre><code>process.on(&apos;uncaughtException&apos;, function(err) {
   console.log(&apos;Caught exception: &apos; + err);
 });
 
-setTimeout(function () {
+setTimeout(function() {
   console.log(&apos;This will still run.&apos;);
 }, 500);
 
@@ -3239,16 +3330,51 @@ nonexistentFunc();
 console.log(&apos;This will not run.&apos;);</code></pre>
 <!--
 Note that `uncaughtException` is a very crude mechanism for exception
-handling.  Using try / catch in your program will give you more control over
-your program's flow.  Especially for server programs that are designed to
-stay running forever, `uncaughtException` can be a useful safety mechanism.
+handling and may be removed in the future.
 -->
 
-<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであることに注意してください。
-プログラムの中で try / catch を使えばもっとプログラムの流れをうまく制御できるでしょう。
-特にサーバプログラムはいつまでも実行し続けるように設計されるので、
-<code>uncaughtException</code> は有益で安全なメカニズムになり得ます。
+<p><code>uncaughtException</code> は例外を扱うとても荒削りなメカニズムであり、
+将来削除されるかもしれないことに注意してください。
 
+</p>
+<!--
+Don't use it, use [domains](domain.html) instead. If you do use it, restart
+your application after every unhandled exception!
+-->
+
+<p>これを使う代わりに、<a href="domain.html">ドメイン</a> を使ってください。
+それを使えば、捕まえられない例外が発生した後でもアプリケーションを
+再開することができます！
+
+</p>
+<!--
+Do *not* use it as the node.js equivalent of `On Error Resume Next`. An
+unhandled exception means your application - and by extension node.js itself -
+is in an undefined state. Blindly resuming means *anything* could happen.
+-->
+
+<p>これを Node.js における <code>On Error Resume Next</code> として <em>使わないで</em> ください。
+捕まえられなかった例外は、アプリケーション
+- および Node.js 自身の拡張 - が未定義の状態となることを意味します。
+やみくもな再開は <em>どんなことでも</em> 起こることを意味します。
+
+</p>
+<!--
+Think of resuming as pulling the power cord when you are upgrading your system.
+Nine out of ten times nothing happens - but the 10th time, your system is bust.
+-->
+
+<p>電源を引き抜きながらアプリケーションをアップグレードすることを
+想像してください。
+10 回中 9 回は何も起こりません
+- しかし 10 回目にはそのシステムは使えなくなるかもしれません。
+
+</p>
+<!--
+You have been warned.
+-->
+
+<p>これは警告です。
 
 </p>
 <h2>Signal Events<span><a class="mark" href="#all_signal_events" id="all_signal_events">#</a></span></h2>
@@ -3274,7 +3400,7 @@ Example of listening for `SIGINT`:
 <pre><code>// Start reading from stdin so we don&apos;t exit.
 process.stdin.resume();
 
-process.on(&apos;SIGINT&apos;, function () {
+process.on(&apos;SIGINT&apos;, function() {
   console.log(&apos;Got SIGINT.  Press Control-D to exit.&apos;);
 });</code></pre>
 <!--
@@ -3301,7 +3427,7 @@ Example: the definition of `console.log`
 <p>例: <code>console.log</code> の定義
 
 </p>
-<pre><code>console.log = function (d) {
+<pre><code>console.log = function(d) {
   process.stdout.write(d + &apos;\n&apos;);
 };</code></pre>
 <!--
@@ -3361,11 +3487,11 @@ Example of opening standard input and listening for both events:
 <pre><code>process.stdin.resume();
 process.stdin.setEncoding(&apos;utf8&apos;);
 
-process.stdin.on(&apos;data&apos;, function (chunk) {
+process.stdin.on(&apos;data&apos;, function(chunk) {
   process.stdout.write(&apos;data: &apos; + chunk);
 });
 
-process.stdin.on(&apos;end&apos;, function () {
+process.stdin.on(&apos;end&apos;, function() {
   process.stdout.write(&apos;end&apos;);
 });</code></pre>
 <h2>process.argv<span><a class="mark" href="#all_process_argv" id="all_process_argv">#</a></span></h2>
@@ -3381,7 +3507,7 @@ next elements will be any additional command line arguments.
 
 </p>
 <pre><code>// print process.argv
-process.argv.forEach(function (val, index, array) {
+process.argv.forEach(function(val, index, array) {
   console.log(index + &apos;: &apos; + val);
 });</code></pre>
 <!--
@@ -3649,7 +3775,7 @@ JavaScript で表現したオブジェクトを保持します。
      node_shared_zlib: &apos;false&apos;,
      node_use_dtrace: &apos;false&apos;,
      node_use_openssl: &apos;true&apos;,
-     node_use_system_openssl: &apos;false&apos;,
+     node_shared_openssl: &apos;false&apos;,
      strict_aliasing: &apos;true&apos;,
      target_arch: &apos;x64&apos;,
      v8_use_snapshot: &apos;true&apos; } }</code></pre>
@@ -3686,11 +3812,11 @@ Example of sending a signal to yourself:
 <p>自身にシグナルを送信する例:
 
 </p>
-<pre><code>process.on(&apos;SIGHUP&apos;, function () {
+<pre><code>process.on(&apos;SIGHUP&apos;, function() {
   console.log(&apos;Got SIGHUP signal.&apos;);
 });
 
-setTimeout(function () {
+setTimeout(function() {
   console.log(&apos;Exiting.&apos;);
   process.exit(0);
 }, 100);
@@ -3769,17 +3895,141 @@ This will generate:
 <!--
 On the next loop around the event loop call this callback.
 This is *not* a simple alias to `setTimeout(fn, 0)`, it's much more
-efficient.
+efficient.  It typically runs before any other I/O events fire, but there
+are some exceptions.  See `process.maxTickDepth` below.
 -->
 
 <p>イベントループの次以降のループでコールバックを呼び出します。
 これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、
 はるかに効率的です。
+これは通常他の I/O イベントが発生するよりも前に実行されますが、
+いくつかの例外があります。
+後述の <code>process.maxTickDepth</code> を参照してください。
 
 </p>
-<pre><code>process.nextTick(function () {
+<pre><code>process.nextTick(function() {
   console.log(&apos;nextTick callback&apos;);
 });</code></pre>
+<!--
+This is important in developing APIs where you want to give the user the
+chance to assign event handlers after an object has been constructed,
+but before any I/O has occurred.
+-->
+
+<p>これは API の開発において、オブジェクトが構築された後で
+どんな I/O イベントが発生するよりも前に、
+イベントハンドラを割り当てるチャンスをユーザに与えたい場合に重要になります。
+
+</p>
+<pre><code>function MyThing(options) {
+  this.setupOptions(options);
+
+  process.nextTick(function() {
+    this.startDoingStuff();
+  }.bind(this));
+}
+
+var thing = new MyThing();
+thing.getReadyForStuff();
+
+// thing.startDoingStuff() gets called now, not before.</code></pre>
+<!--
+It is very important for APIs to be either 100% synchronous or 100%
+asynchronous.  Consider this example:
+-->
+
+<p>API は 100% 同期的か、100% 非同期的かのどちらかであることがとても重要です。
+この例を考えてみてください:
+
+</p>
+<pre><code>// WARNING!  DO NOT USE!  BAD UNSAFE HAZARD!
+function maybeSync(arg, cb) {
+  if (arg) {
+    cb();
+    return;
+  }
+
+  fs.stat(&apos;file&apos;, cb);
+}</code></pre>
+<!--
+This API is hazardous.  If you do this:
+-->
+
+<p>この API は危険です。こうすると:
+
+</p>
+<pre><code>maybeSync(true, function() {
+  foo();
+});
+bar();</code></pre>
+<!--
+then it's not clear whether `foo()` or `bar()` will be called first.
+-->
+
+<p><code>foo()</code> と <code>bar()</code> のどちらが先に呼び出されるか不明瞭になります。
+
+</p>
+<!--
+This approach is much better:
+-->
+
+<p>以下のアプローチはずっと優れています:
+
+</p>
+<pre><code>function definitelyAsync(arg, cb) {
+  if (arg) {
+    process.nextTick(cb);
+    return;
+  }
+
+  fs.stat(&apos;file&apos;, cb);
+}</code></pre>
+<h2>process.maxTickDepth<span><a class="mark" href="#all_process_maxtickdepth" id="all_process_maxtickdepth">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Number</span> Default = 1000</li>
+</div></ul>
+<!--
+Callbacks passed to `process.nextTick` will *usually* be called at the
+end of the current flow of execution, and are thus approximately as fast
+as calling a function synchronously.  Left unchecked, this would starve
+the event loop, preventing any I/O from occurring.
+-->
+
+<p><code>process.nextTick()</code> に渡されたコールバックは、<em>通常</em> 現在の実行フローの
+後で呼び出され、それは関数を同期的に呼び出すのと同じくらい高速です。
+これを放置するとあらゆる I/O が阻まれ、イベントループは飢餓状態となるでしょう。
+
+</p>
+<!--
+Consider this code:
+-->
+
+<p>以下のコードを考えてみてください。
+
+</p>
+<pre><code>process.nextTick(function foo() {
+  process.nextTick(foo);
+});</code></pre>
+<!--
+In order to avoid the situation where Node is blocked by an infinite
+loop of recursive series of nextTick calls, it defers to allow some I/O
+to be done every so often.
+-->
+
+<p>nextTick の再帰が連鎖する無限ループによって Node がブロックする状況を
+避けるには、それを先送りして時々 I/O を可能にします。
+
+</p>
+<!--
+The `process.maxTickDepth` value is the maximum depth of
+nextTick-calling nextTick-callbacks that will be evaluated before
+allowing other forms of I/O to occur.
+-->
+
+<p><code>process.maxTickDepth</code> の値は、nextTick が nextTick のコールバックを呼び出す
+最大の深さで、他の I/O を可能にする前に評価されます。
+
+</p>
 <h2>process.umask([mask])<span><a class="mark" href="#all_process_umask_mask" id="all_process_umask_mask">#</a></span></h2>
 <!--
 Sets or reads the process's file mode creation mask. Child processes inherit
@@ -3829,7 +4079,7 @@ a diff reading, useful for benchmarks and measuring intervals:
 <pre><code>var t = process.hrtime();
 // [ 1800216, 927643717 ]
 
-setTimeout(function () {
+setTimeout(function() {
   t = process.hrtime(t);
   // [ 1, 6962306 ]
 
@@ -4004,10 +4254,12 @@ in `null` for `depth`.
 <!--
 If `colors` is `true`, the output will be styled with ANSI color codes.
 Defaults to `false`.
+Colors are customizable, see below.
 -->
 
 <p><code>colors</code> が <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。
 デフォルトは <code>false</code> です。
+後述するように、色はカスタマイズ可能です。
 
 </p>
 <!--
@@ -4020,6 +4272,63 @@ Example of inspecting all properties of the `util` object:
 <pre><code>var util = require(&apos;util&apos;);
 
 console.log(util.inspect(util, true, null));</code></pre>
+<h3>Customizing <code>util.inspect</code> colors<span><a class="mark" href="#all_customizing_util_inspect_colors" id="all_customizing_util_inspect_colors">#</a></span></h3>
+<!--
+Color output (if enabled) of `util.inspect` is customizable globally
+via `util.inspect.styles` and `util.inspect.colors` objects.
+-->
+
+<p><code>util.inspect</code> が出力する色は、(有効であれば) <code>util.inspect.styles</code> および
+<code>util.inspect.colors</code> オブジェクトを通じてグローバルにカスタマイズすることが
+可能です。
+
+</p>
+<!--
+`util.inspect.styles` is a map assigning each style a color
+from `util.inspect.colors`.
+Highlighted styles and their default values are:
+-->
+
+<p><code>util.inspect.styles</code> は各スタイルと <code>util.inspect.colors</code> に
+定義された色を割り当てたマッピングです。
+強調されるスタイルとそれらのデフォルト値は:
+
+</p>
+<!--
+ * `number` (yellow)
+ * `boolean` (yellow)
+ * `string` (green)
+ * `date` (magenta)
+ * `regexp` (red)
+ * `null` (bold)
+ * `undefined` (grey)
+ * `special` - only function at this time (cyan)
+ * `name` (intentionally no styling)
+-->
+
+<ul>
+<li><code>number</code> (黄)</li>
+<li><code>boolean</code> (黄)</li>
+<li><code>string</code> (緑)</li>
+<li><code>date</code> (紫)</li>
+<li><code>regexp</code> (赤)</li>
+<li><code>null</code> (太字)</li>
+<li><code>undefined</code> (灰)</li>
+<li><code>special</code> - only function at this time (水色)</li>
+<li><code>name</code> (意図的にスタイル無し)</li>
+</ul>
+<!--
+Predefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, 
+`green`, `magenta`, `red` and `yellow`.
+There are also `bold`, `italic`, `underline` and `inverse` codes.
+-->
+
+<p>事前に定義された色は: <code>white</code>、<code>grey</code>、<code>black</code>、<code>blue</code>、<code>cyan</code>、
+<code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。
+<code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。
+
+
+</p>
 <h2>util.isArray(object)<span><a class="mark" href="#all_util_isarray_object" id="all_util_isarray_object">#</a></span></h2>
 <!--
 Returns `true` if the given "object" is an `Array`. `false` otherwise.
@@ -6039,9 +6348,10 @@ then Node will allocate a SlowBuffer slab for it directly.
 <h1>Stream<span><a class="mark" href="#all_stream" id="all_stream">#</a></span></h1>
 <pre><code>Stability: 2 - Unstable</code></pre>
 <!--
-A stream is an abstract interface implemented by various objects in Node.
-For example a request to an HTTP server is a stream, as is stdout. Streams
-are readable, writable, or both. All streams are instances of [EventEmitter][]
+A stream is an abstract interface implemented by various objects in
+Node.  For example a request to an HTTP server is a stream, as is
+stdout. Streams are readable, writable, or both. All streams are
+instances of [EventEmitter][]
 
 You can load up the Stream base class by doing `require('stream')`.
 -->
@@ -6091,8 +6401,8 @@ Note that the __data will be lost__ if there is no listener when a
 </p>
 <!--
 Emitted when the stream has received an EOF (FIN in TCP terminology).
-Indicates that no more `'data'` events will happen. If the stream is also
-writable, it may be possible to continue writing.
+Indicates that no more `'data'` events will happen. If the stream is
+also writable, it may be possible to continue writing.
 -->
 
 <p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。
@@ -6116,8 +6426,8 @@ Emitted if there was an error receiving data.
 
 </p>
 <!--
-Emitted when the underlying resource (for example, the backing file descriptor)
-has been closed. Not all streams will emit this.
+Emitted when the underlying resource (for example, the backing file
+descriptor) has been closed. Not all streams will emit this.
 -->
 
 <p>下層のリソース (例えば背後のファイル記述子) がクローズされた時に生成されます。
@@ -6126,8 +6436,9 @@ has been closed. Not all streams will emit this.
 </p>
 <h3>stream.readable<span><a class="mark" href="#all_stream_readable" id="all_stream_readable">#</a></span></h3>
 <!--
-A boolean that is `true` by default, but turns `false` after an `'error'`
-occurred, the stream came to an `'end'`, or `destroy()` was called.
+A boolean that is `true` by default, but turns `false` after an
+`'error'` occurred, the stream came to an `'end'`, or `destroy()` was
+called.
 -->
 
 <p>デフォルトでは <code>true</code> ですが、<code>&apos;error&apos;</code> が発生した後、
@@ -6137,8 +6448,9 @@ occurred, the stream came to an `'end'`, or `destroy()` was called.
 </p>
 <h3>stream.setEncoding([encoding])<span><a class="mark" href="#all_stream_setencoding_encoding" id="all_stream_setencoding_encoding">#</a></span></h3>
 <!--
-Makes the `'data'` event emit a string instead of a `Buffer`. `encoding` can be
-`'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults to `'utf8'`.
+Makes the `'data'` event emit a string instead of a `Buffer`. `encoding`
+can be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults
+to `'utf8'`.
 -->
 
 <p><code>&apos;data&apos;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
@@ -6149,8 +6461,8 @@ Makes the `'data'` event emit a string instead of a `Buffer`. `encoding` can be
 </p>
 <h3>stream.pause()<span><a class="mark" href="#all_stream_pause" id="all_stream_pause">#</a></span></h3>
 <!--
-Issues an advisory signal to the underlying communication layer, requesting
-that no further data be sent until `resume()` is called.
+Issues an advisory signal to the underlying communication layer,
+requesting that no further data be sent until `resume()` is called.
 -->
 
 <p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
@@ -6158,10 +6470,10 @@ that no further data be sent until `resume()` is called.
 
 </p>
 <!--
-Note that, due to the advisory nature, certain streams will not be paused
-immediately, and so `'data'` events may be emitted for some indeterminate
-period of time even after `pause()` is called. You may wish to buffer such
-`'data'` events.
+Note that, due to the advisory nature, certain streams will not be
+paused immediately, and so `'data'` events may be emitted for some
+indeterminate period of time even after `pause()` is called. You may
+wish to buffer such `'data'` events.
 -->
 
 <p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
@@ -6180,10 +6492,17 @@ Resumes the incoming `'data'` events after a `pause()`.
 </p>
 <h3>stream.destroy()<span><a class="mark" href="#all_stream_destroy" id="all_stream_destroy">#</a></span></h3>
 <!--
-Closes the underlying file descriptor. Stream will not emit any more events.
+Closes the underlying file descriptor. Stream is no longer `writable`
+nor `readable`.  The stream will not emit any more 'data', or 'end'
+events. Any queued write data will not be sent.  The stream should emit
+'close' event once its resources have been disposed of.
 -->
 
-<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+<p>下層のファイル記述子をクローズします。
+ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
+ストリームはそれ以上 <code>&apos;data&apos;</code> あるいは <code>&apos;end&apos;</code> イベントを生成しなくなります。
+キューイングされたデータは送信されません。
+ストリームはそのリソースが破棄されたときに <code>&apos;close&apos;</code> イベントを生成すべきです。
 
 </p>
 <h3>stream.pipe(destination, [options])<span><a class="mark" href="#all_stream_pipe_destination_options" id="all_stream_pipe_destination_options">#</a></span></h3>
@@ -6195,8 +6514,8 @@ This is a `Stream.prototype` method available on all `Stream`s.
 
 </p>
 <!--
-Connects this read stream to `destination` WriteStream. Incoming
-data on this stream gets written to `destination`. The destination and source
+Connects this read stream to `destination` WriteStream. Incoming data on
+this stream gets written to `destination`. The destination and source
 streams are kept in sync by pausing and resuming as necessary.
 -->
 
@@ -6219,12 +6538,11 @@ Emulating the Unix `cat` command:
 <p>Unix の <code>cat</code> コマンドのエミュレート:
 
 </p>
-<pre><code>process.stdin.resume();
-process.stdin.pipe(process.stdout);</code></pre>
+<pre><code>process.stdin.resume(); process.stdin.pipe(process.stdout);</code></pre>
 <!--
-By default `end()` is called on the destination when the source stream emits
-`end`, so that `destination` is no longer writable. Pass `{ end: false }` as
-`options` to keep the destination stream open.
+By default `end()` is called on the destination when the source stream
+emits `end`, so that `destination` is no longer writable. Pass `{ end:
+false }` as `options` to keep the destination stream open.
 -->
 
 <p>デフォルトでは接続元ストリームで <code>end</code> イベントが生成されると、
@@ -6233,7 +6551,8 @@ By default `end()` is called on the destination when the source stream emits
 
 </p>
 <!--
-This keeps `process.stdout` open so that "Goodbye" can be written at the end.
+This keeps `process.stdout` open so that "Goodbye" can be written at the
+end.
 -->
 
 <p>これは <code>process.stdout</code> をオープンしたままにして最後に &quot;Goodbye&quot; と出力します。
@@ -6244,8 +6563,7 @@ This keeps `process.stdout` open so that "Goodbye" can be written at the end.
 process.stdin.pipe(process.stdout, { end: false });
 
 process.stdin.on(&quot;end&quot;, function() {
-  process.stdout.write(&quot;Goodbye\n&quot;);
-});</code></pre>
+process.stdout.write(&quot;Goodbye\n&quot;); });</code></pre>
 <h2>Writable Stream<span><a class="mark" href="#all_writable_stream" id="all_writable_stream">#</a></span></h2>
 <!--type=class-->
 
@@ -6305,8 +6623,8 @@ Emitted when the stream is passed to a readable stream's pipe method.
 </p>
 <h3>stream.writable<span><a class="mark" href="#all_stream_writable" id="all_stream_writable">#</a></span></h3>
 <!--
-A boolean that is `true` by default, but turns `false` after an `'error'`
-occurred or `end()` / `destroy()` was called.
+A boolean that is `true` by default, but turns `false` after an
+`'error'` occurred or `end()` / `destroy()` was called.
 -->
 
 <p>デフォルトでは <code>true</code> ですが、<code>&apos;error&apos;</code> が発生した後、
@@ -6315,11 +6633,11 @@ occurred or `end()` / `destroy()` was called.
 </p>
 <h3>stream.write(string, [encoding], [fd])<span><a class="mark" href="#all_stream_write_string_encoding_fd" id="all_stream_write_string_encoding_fd">#</a></span></h3>
 <!--
-Writes `string` with the given `encoding` to the stream.  Returns `true` if
-the string has been flushed to the kernel buffer.  Returns `false` to
-indicate that the kernel buffer is full, and the data will be sent out in
-the future. The `'drain'` event will indicate when the kernel buffer is
-empty again. The `encoding` defaults to `'utf8'`.
+Writes `string` with the given `encoding` to the stream.  Returns `true`
+if the string has been flushed to the kernel buffer.  Returns `false` to
+indicate that the kernel buffer is full, and the data will be sent out
+in the future. The `'drain'` event will indicate when the kernel buffer
+is empty again. The `encoding` defaults to `'utf8'`.
 -->
 
 <p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。
@@ -6331,11 +6649,11 @@ empty again. The `encoding` defaults to `'utf8'`.
 
 </p>
 <!--
-If the optional `fd` parameter is specified, it is interpreted as an integral
-file descriptor to be sent over the stream. This is only supported for UNIX
-streams, and is silently ignored otherwise. When writing a file descriptor in
-this manner, closing the descriptor before the stream drains risks sending an
-invalid (closed) FD.
+If the optional `fd` parameter is specified, it is interpreted as an
+integral file descriptor to be sent over the stream. This is only
+supported for UNIX streams, and is silently ignored otherwise. When
+writing a file descriptor in this manner, closing the descriptor before
+the stream drains risks sending an invalid (closed) FD.
 -->
 
 <p>オプションの <code>fd</code> 引数が指定されると、
@@ -6355,8 +6673,8 @@ Same as the above except with a raw buffer.
 </p>
 <h3>stream.end()<span><a class="mark" href="#all_stream_end" id="all_stream_end">#</a></span></h3>
 <!--
-Terminates the stream with EOF or FIN.
-This call will allow queued write data to be sent before closing the stream.
+Terminates the stream with EOF or FIN.  This call will allow queued
+write data to be sent before closing the stream.
 -->
 
 <p>ストリームを EOF または FIN で終了します。
@@ -6366,8 +6684,8 @@ This call will allow queued write data to be sent before closing the stream.
 </p>
 <h3>stream.end(string, encoding)<span><a class="mark" href="#all_stream_end_string_encoding" id="all_stream_end_string_encoding">#</a></span></h3>
 <!--
-Sends `string` with the given `encoding` and terminates the stream with EOF
-or FIN. This is useful to reduce the number of packets sent.
+Sends `string` with the given `encoding` and terminates the stream with
+EOF or FIN. This is useful to reduce the number of packets sent.
 -->
 
 <p>与えられた <code>encoding</code> で <code>string</code> を送信してからEOFまたはFINでストリームを終了します。
@@ -6384,19 +6702,24 @@ Same as above but with a `buffer`.
 </p>
 <h3>stream.destroy()<span><a class="mark" href="#all_stream_destroy_1" id="all_stream_destroy_1">#</a></span></h3>
 <!--
-Closes the underlying file descriptor. Stream will not emit any more events.
-Any queued write data will not be sent.
+Closes the underlying file descriptor. Stream is no longer `writable`
+nor `readable`.  The stream will not emit any more 'data', or 'end'
+events. Any queued write data will not be sent.  The stream should emit
+'close' event once its resources have been disposed of.
 -->
 
-<p>下層のファイル記述子をクローズします。ストリームはそれ以上イベントを生成しなくなります。
+<p>下層のファイル記述子をクローズします。
+ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
+ストリームはそれ以上 <code>&apos;data&apos;</code> あるいは <code>&apos;end&apos;</code> イベントを生成しなくなります。
 キューイングされたデータは送信されません。
+ストリームはそのリソースが破棄されたときに <code>&apos;close&apos;</code> イベントを生成すべきです。
 
 </p>
 <h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon" id="all_stream_destroysoon">#</a></span></h3>
 <!--
-After the write queue is drained, close the file descriptor. `destroySoon()`
-can still destroy straight away, as long as there is no data left in the queue
-for writes.
+After the write queue is drained, close the file descriptor.
+`destroySoon()` can still destroy straight away, as long as there is no
+data left in the queue for writes.
 -->
 
 <p>出力キューが空になった後、ファイル記述子をクローズします。
@@ -8358,6 +8681,13 @@ are given to the completion callback.
 <p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。
 
 </p>
+<!--
+Only available on Mac OS X.
+-->
+
+<p>Mac OS X でのみ利用可能です。
+
+</p>
 <h2>fs.lchmodSync(path, mode)<span><a class="mark" href="#all_fs_lchmodsync_path_mode" id="all_fs_lchmodsync_path_mode">#</a></span></h2>
 <!--
 Synchronous lchmod(2).
@@ -8453,7 +8783,7 @@ Synchronous link(2).
 <p>同期の link(2)。
 
 </p>
-<h2>fs.symlink(destination, path, [type], [callback])<span><a class="mark" href="#all_fs_symlink_destination_path_type_callback" id="all_fs_symlink_destination_path_type_callback">#</a></span></h2>
+<h2>fs.symlink(srcpath, dstpath, [type], [callback])<span><a class="mark" href="#all_fs_symlink_srcpath_dstpath_type_callback" id="all_fs_symlink_srcpath_dstpath_type_callback">#</a></span></h2>
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -8473,7 +8803,7 @@ Windows のジャンクションポイントは対象に絶対パスを要求す
 <code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
 
 </p>
-<h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#all_fs_symlinksync_destination_path_type" id="all_fs_symlinksync_destination_path_type">#</a></span></h2>
+<h2>fs.symlinkSync(srcpath, dstpath, [type])<span><a class="mark" href="#all_fs_symlinksync_srcpath_dstpath_type" id="all_fs_symlinksync_srcpath_dstpath_type">#</a></span></h2>
 <!--
 Synchronous symlink(2).
 -->
@@ -8828,21 +9158,10 @@ without waiting for the callback. For this scenario,
 </p>
 <h2>fs.writeSync(fd, buffer, offset, length, position)<span><a class="mark" href="#all_fs_writesync_fd_buffer_offset_length_position" id="all_fs_writesync_fd_buffer_offset_length_position">#</a></span></h2>
 <!--
-Synchronous version of buffer-based `fs.write()`. Returns the number of bytes
-written.
--->
-同期版のバッファに基づく <code>fs.write()</code>。書き込まれたバイト数を返します。
-
-## fs.writeSync(fd, str, position, [encoding])
-
-<!--
-Synchronous version of string-based `fs.write()`. `encoding` defaults to
-`'utf8'`. Returns the number of _bytes_ written.
+Synchronous version of `fs.write()`. Returns the number of bytes written.
 -->
 
-<p>同期版の文字列に基づく <code>fs.write()</code>。
-<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。
-書き込まれたバイト数を返します。
+<p>同期版の <code>fs.write()</code>。書き込まれたバイト数を返します。
 
 </p>
 <h2>fs.read(fd, buffer, offset, length, position, [callback])<span><a class="mark" href="#all_fs_read_fd_buffer_offset_length_position_callback" id="all_fs_read_fd_buffer_offset_length_position_callback">#</a></span></h2>
@@ -8892,22 +9211,10 @@ The callback is given the three arguments, `(err, bytesRead, buffer)`.
 </p>
 <h2>fs.readSync(fd, buffer, offset, length, position)<span><a class="mark" href="#all_fs_readsync_fd_buffer_offset_length_position" id="all_fs_readsync_fd_buffer_offset_length_position">#</a></span></h2>
 <!--
-Synchronous version of buffer-based `fs.read`. Returns the number of
-`bytesRead`.
+Synchronous version of `fs.read`. Returns the number of `bytesRead`.
 -->
 
-<p>同期版のバッファに基づく <code>fs.read</code>。<code>bytesRead</code> の数を返します。
-
-</p>
-<h2>fs.readSync(fd, length, position, encoding)<span><a class="mark" href="#all_fs_readsync_fd_length_position_encoding" id="all_fs_readsync_fd_length_position_encoding">#</a></span></h2>
-<!--
-Legacy synchronous version of string-based `fs.read`. Returns an array with the
-data from the file specified and number of bytes read, `[string, bytesRead]`.
--->
-
-<p>文字列に基づく古い <code>fs.read</code> の同期版。
-指定されたファイルのデータと読み込んだバイト数の配列、<code>[string, bytesRead]</code>
-を返します。
+<p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。
 
 </p>
 <h2>fs.readFile(filename, [encoding], [callback])<span><a class="mark" href="#all_fs_readfile_filename_encoding_callback" id="all_fs_readfile_filename_encoding_callback">#</a></span></h2>
@@ -9035,8 +9342,7 @@ The second argument is optional. The `options` if provided should be an object
 containing two members a boolean, `persistent`, and `interval`. `persistent`
 indicates whether the process should continue to run as long as files are
 being watched. `interval` indicates how often the target should be polled,
-in milliseconds. (On Linux systems with inotify, `interval` is ignored.) The
-default is `{ persistent: true, interval: 0 }`.
+in milliseconds. The default is `{ persistent: true, interval: 5007 }`.
 -->
 
 <p>第 2 引数はオプションです．
@@ -9045,8 +9351,7 @@ default is `{ persistent: true, interval: 0 }`.
 <code>persistent</code> はファイルが監視されている間、
 プロセスが実行し続けることを示します。
 <code>interval</code> は対象をポーリングする間隔をミリ秒で示します
-(inotify を備えた Linux システムでは <code>interval</code> は無視されます)。
-デフォルトは <code>{ persistent: true, interval: 0}</code> です。
+デフォルトは <code>{ persistent: true, interval: 5007 }</code> です。
 
 </p>
 <!--
@@ -9074,13 +9379,25 @@ you need to compare `curr.mtime` and `prev.mtime`.
 <p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。
 
 </p>
-<h2>fs.unwatchFile(filename)<span><a class="mark" href="#all_fs_unwatchfile_filename" id="all_fs_unwatchfile_filename">#</a></span></h2>
+<h2>fs.unwatchFile(filename, [listener])<span><a class="mark" href="#all_fs_unwatchfile_filename_listener" id="all_fs_unwatchfile_filename_listener">#</a></span></h2>
 <pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if available.</code></pre>
 <!--
-Stop watching for changes on `filename`.
+Stop watching for changes on `filename`. If `listener` is specified, only that
+particular listener is removed. Otherwise, *all* listeners are removed and you
+have effectively stopped watching `filename`.
+
+Calling `fs.unwatchFile()` with a filename that is not being watched is a
+no-op, not an error.
 -->
 
 <p><code>filename</code> の変更に対する監視を終了します。
+<code>listener</code> が指定された場合は該当の <code>listener</code> だけが取り除かれます。
+そうでなければ、<em>全ての</em> リスナが取り除かれ、
+<code>filenam</code> の監視は事実上終了します。
+
+</p>
+<p>監視されていないファイル名を指定した <code>fs.unwatchFile()</code> の呼び出しは
+エラーになるのではなく、何もしません。
 
 </p>
 <h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#all_fs_watch_filename_options_listener" id="all_fs_watch_filename_options_listener">#</a></span></h2>
@@ -13769,6 +14086,114 @@ provided so that it could be overridden if necessary.
 <p>unescape関数は <code>querystring.parse</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。
 
 </p>
+<h1>punycode<span><a class="mark" href="#all_punycode" id="all_punycode">#</a></span></h1>
+<pre><code>Stability: 2 - Unstable</code></pre>
+<!--
+[Punycode.js](http://mths.be/punycode) is bundled with Node.js v0.6.2+. Use
+`require('punycode')` to access it. (To use it with other Node.js versions,
+use npm to install the `punycode` module first.)
+-->
+
+<p><a href="http://mths.be/punycode">Punycode.js</a> は Node.js v0.6.2 以降に
+バンドルされています。
+アクセスするには <code>require(&apos;punycode&apos;)</code> を使用します
+(他のバージョンの Node.js でこれを使用するには、先に npm を使用して <code>punycode</code>
+モジュールをインストールしてください)。
+
+</p>
+<h2>punycode.decode(string)<span><a class="mark" href="#all_punycode_decode_string" id="all_punycode_decode_string">#</a></span></h2>
+<!--
+Converts a Punycode string of ASCII code points to a string of Unicode code
+points.
+-->
+
+<p>ASCII コードポイントによる Punycode 文字列を Unicode コードポイントに
+変換します。
+
+</p>
+<pre><code>// decode domain name parts
+punycode.decode(&apos;maana-pta&apos;); // &apos;mañana&apos;
+punycode.decode(&apos;--dqo34k&apos;); // &apos;☃-⌘&apos;</code></pre>
+<h2>punycode.encode(string)<span><a class="mark" href="#all_punycode_encode_string" id="all_punycode_encode_string">#</a></span></h2>
+<!--
+Converts a string of Unicode code points to a Punycode string of ASCII code
+points.
+-->
+
+<p>Unicode コードポイントを ASCII コードポイントによる Punycode 文字列に
+変換します。
+
+</p>
+<pre><code>// encode domain name parts
+punycode.encode(&apos;mañana&apos;); // &apos;maana-pta&apos;
+punycode.encode(&apos;☃-⌘&apos;); // &apos;--dqo34k&apos;</code></pre>
+<h2>punycode.toUnicode(domain)<span><a class="mark" href="#all_punycode_tounicode_domain" id="all_punycode_tounicode_domain">#</a></span></h2>
+<!--
+Converts a Punycode string representing a domain name to Unicode. Only the
+Punycoded parts of the domain name will be converted, i.e. it doesn't matter if
+you call it on a string that has already been converted to Unicode.
+-->
+
+<p>Punycode 文字列で表現されたドメイン名を Unicode に変換します。
+ドメイン名の中の Punycode 化された文字列だけが変換されます。
+そのため、すでに Unicode に変換された文字列でも気にせずに渡すことができます。
+
+</p>
+<pre><code>// decode domain names
+punycode.toUnicode(&apos;xn--maana-pta.com&apos;); // &apos;mañana.com&apos;
+punycode.toUnicode(&apos;xn----dqo34k.com&apos;); // &apos;☃-⌘.com&apos;</code></pre>
+<h2>punycode.toASCII(domain)<span><a class="mark" href="#all_punycode_toascii_domain" id="all_punycode_toascii_domain">#</a></span></h2>
+<!--
+Converts a Unicode string representing a domain name to Punycode. Only the
+non-ASCII parts of the domain name will be converted, i.e. it doesn't matter if
+you call it with a domain that's already in ASCII.
+-->
+
+<p>Unicode 文字列で表現されたドメイン名を Punycode に変換します。
+ドメイン名の中の非 ASCII 文字だけが変換されます。
+すなわち、すでに ASCII 化されたドメインでも気にせずに渡すことができます。
+
+</p>
+<pre><code>// encode domain names
+punycode.toASCII(&apos;mañana.com&apos;); // &apos;xn--maana-pta.com&apos;
+punycode.toASCII(&apos;☃-⌘.com&apos;); // &apos;xn----dqo34k.com&apos;</code></pre>
+<h2>punycode.ucs2<span><a class="mark" href="#all_punycode_ucs2" id="all_punycode_ucs2">#</a></span></h2>
+<h3>punycode.ucs2.decode(string)<span><a class="mark" href="#all_punycode_ucs2_decode_string" id="all_punycode_ucs2_decode_string">#</a></span></h3>
+<!--
+Creates an array containing the decimal code points of each Unicode character
+in the string. While [JavaScript uses UCS-2
+internally](http://mathiasbynens.be/notes/javascript-encoding), this function
+will convert a pair of surrogate halves (each of which UCS-2 exposes as
+separate characters) into a single code point, matching UTF-16.
+-->
+
+<p>文字列中の Unicode 文字のコードポイントに対応する数値を含む配列を作成します。
+<a href="http://mathiasbynens.be/notes/javascript-encoding">JavaScript uses UCS-2 internally</a>
+のように、この関数はサロゲートペア (それぞれは UCS-2 の独立した文字) を
+UTF-16 にマッチする一つのコードポイントに変換します。
+
+</p>
+<pre><code>punycode.ucs2.decode(&apos;abc&apos;); // [97, 98, 99]
+// surrogate pair for U+1D306 tetragram for centre:
+punycode.ucs2.decode(&apos;\uD834\uDF06&apos;); // [0x1D306]</code></pre>
+<h3>punycode.ucs2.encode(codePoints)<span><a class="mark" href="#all_punycode_ucs2_encode_codepoints" id="all_punycode_ucs2_encode_codepoints">#</a></span></h3>
+<!--
+Creates a string based on an array of decimal code points.
+-->
+
+<p>コードポイントの数値を含む配列を元に文字列を作成します。
+
+</p>
+<pre><code>punycode.ucs2.encode([97, 98, 99]); // &apos;abc&apos;
+punycode.ucs2.encode([0x1D306]); // &apos;\uD834\uDF06&apos;</code></pre>
+<h2>punycode.version<span><a class="mark" href="#all_punycode_version" id="all_punycode_version">#</a></span></h2>
+<!--
+A string representing the current Punycode.js version number.
+-->
+
+<p>現在の Punycode.js のバージョン番号を表す文字列です。
+
+</p>
 <h1>Readline<span><a class="mark" href="#all_readline" id="all_readline">#</a></span></h1>
 <pre><code>Stability: 2 - Unstable</code></pre>
 <!--
@@ -15622,7 +16047,7 @@ ps.on(&apos;exit&apos;, function (code) {
 });
 
 grep.stdout.on(&apos;data&apos;, function (data) {
-  console.log(data);
+  console.log(&apos;&apos; + data);
 });
 
 grep.stderr.on(&apos;data&apos;, function (data) {
@@ -15804,7 +16229,7 @@ file:
      err = fs.openSync(&apos;./out.log&apos;, &apos;a&apos;);
 
  var child = spawn(&apos;prg&apos;, [], {
-   detached: &apos;true&apos;,
+   detached: true,
    stdio: [ &apos;ignore&apos;, out, err ]
  });
 
@@ -17397,7 +17822,7 @@ if (cluster.isMaster) {
   }
 
   cluster.on(&apos;exit&apos;, function(worker, code, signal) {
-    console.log(&apos;worker &apos; + worker.pid + &apos; died&apos;);
+    console.log(&apos;worker &apos; + worker.process.pid + &apos; died&apos;);
   });
 } else {
   // Workers can share any TCP connection
@@ -17743,7 +18168,7 @@ This can be used to restart the worker by calling `fork()` again.
 </p>
 <pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
   var exitCode = worker.process.exitCode;
-  console.log(&apos;worker &apos; + worker.pid + &apos; died (&apos;+exitCode+&apos;). restarting...&apos;);
+  console.log(&apos;worker &apos; + worker.process.pid + &apos; died (&apos;+exitCode+&apos;). restarting...&apos;);
   cluster.fork();
 });</code></pre>
 <h2>Event: &apos;setup&apos;<span><a class="mark" href="#all_event_setup" id="all_event_setup">#</a></span></h2>
@@ -17802,7 +18227,7 @@ cluster.setupMaster({
   args : [&quot;--use&quot;, &quot;https&quot;],
   silent : true
 });
-cluster.autoFork();</code></pre>
+cluster.fork();</code></pre>
 <h2>cluster.fork([env])<span><a class="mark" href="#all_cluster_fork_env" id="all_cluster_fork_env">#</a></span></h2>
 <!--
 * `env` {Object} Key/value pairs to add to child process environment.
@@ -18138,7 +18563,11 @@ if (cluster.isMaster) {
   }
 
   // Start workers and listen for messages containing notifyRequest
-  cluster.autoFork();
+  var numCPUs = require(&apos;os&apos;).cpus().length;
+  for (var i = 0; i &lt; numCPUs; i++) {
+    cluster.fork();
+  }
+
   Object.keys(cluster.workers).forEach(function(id) {
     cluster.workers[id].on(&apos;message&apos;, messageHandler);
   });
@@ -18329,22 +18758,21 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.12/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
   <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
-    var gaJsHost = (("https:" == document.location.protocol) ?
-    "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
   </script>
-  <script>
-    try {
-      var pageTracker = _gat._getTracker("UA-10874194-2");
-      pageTracker._trackPageview();
-      } catch(err) {}</script>
 </body>
 </html>
 

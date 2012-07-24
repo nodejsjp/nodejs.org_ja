@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.7.12 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.9.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.7.12 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -80,8 +80,8 @@
 <li><a href="#fs_fs_fstatsync_fd">fs.fstatSync(fd)</a></li>
 <li><a href="#fs_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, [callback])</a></li>
 <li><a href="#fs_fs_linksync_srcpath_dstpath">fs.linkSync(srcpath, dstpath)</a></li>
-<li><a href="#fs_fs_symlink_destination_path_type_callback">fs.symlink(destination, path, [type], [callback])</a></li>
-<li><a href="#fs_fs_symlinksync_destination_path_type">fs.symlinkSync(destination, path, [type])</a></li>
+<li><a href="#fs_fs_symlink_srcpath_dstpath_type_callback">fs.symlink(srcpath, dstpath, [type], [callback])</a></li>
+<li><a href="#fs_fs_symlinksync_srcpath_dstpath_type">fs.symlinkSync(srcpath, dstpath, [type])</a></li>
 <li><a href="#fs_fs_readlink_path_callback">fs.readlink(path, [callback])</a></li>
 <li><a href="#fs_fs_readlinksync_path">fs.readlinkSync(path)</a></li>
 <li><a href="#fs_fs_realpath_path_cache_callback">fs.realpath(path, [cache], callback)</a></li>
@@ -108,7 +108,6 @@
 <li><a href="#fs_fs_writesync_fd_buffer_offset_length_position">fs.writeSync(fd, buffer, offset, length, position)</a></li>
 <li><a href="#fs_fs_read_fd_buffer_offset_length_position_callback">fs.read(fd, buffer, offset, length, position, [callback])</a></li>
 <li><a href="#fs_fs_readsync_fd_buffer_offset_length_position">fs.readSync(fd, buffer, offset, length, position)</a></li>
-<li><a href="#fs_fs_readsync_fd_length_position_encoding">fs.readSync(fd, length, position, encoding)</a></li>
 <li><a href="#fs_fs_readfile_filename_encoding_callback">fs.readFile(filename, [encoding], [callback])</a></li>
 <li><a href="#fs_fs_readfilesync_filename_encoding">fs.readFileSync(filename, [encoding])</a></li>
 <li><a href="#fs_fs_writefile_filename_data_encoding_callback">fs.writeFile(filename, data, [encoding], [callback])</a></li>
@@ -116,7 +115,7 @@
 <li><a href="#fs_fs_appendfile_filename_data_encoding_utf8_callback">fs.appendFile(filename, data, encoding=&apos;utf8&apos;, [callback])</a></li>
 <li><a href="#fs_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&apos;utf8&apos;)</a></li>
 <li><a href="#fs_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
-<li><a href="#fs_fs_unwatchfile_filename">fs.unwatchFile(filename)</a></li>
+<li><a href="#fs_fs_unwatchfile_filename_listener">fs.unwatchFile(filename, [listener])</a></li>
 <li><a href="#fs_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
 <li><a href="#fs_caveats">Caveats</a><ul>
 <li><a href="#fs_availability">Availability</a></li>
@@ -389,6 +388,13 @@ are given to the completion callback.
 <p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。
 
 </p>
+<!--
+Only available on Mac OS X.
+-->
+
+<p>Mac OS X でのみ利用可能です。
+
+</p>
 <h2>fs.lchmodSync(path, mode)<span><a class="mark" href="#fs_fs_lchmodsync_path_mode" id="fs_fs_lchmodsync_path_mode">#</a></span></h2>
 <!--
 Synchronous lchmod(2).
@@ -484,7 +490,7 @@ Synchronous link(2).
 <p>同期の link(2)。
 
 </p>
-<h2>fs.symlink(destination, path, [type], [callback])<span><a class="mark" href="#fs_fs_symlink_destination_path_type_callback" id="fs_fs_symlink_destination_path_type_callback">#</a></span></h2>
+<h2>fs.symlink(srcpath, dstpath, [type], [callback])<span><a class="mark" href="#fs_fs_symlink_srcpath_dstpath_type_callback" id="fs_fs_symlink_srcpath_dstpath_type_callback">#</a></span></h2>
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -504,7 +510,7 @@ Windows のジャンクションポイントは対象に絶対パスを要求す
 <code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
 
 </p>
-<h2>fs.symlinkSync(destination, path, [type])<span><a class="mark" href="#fs_fs_symlinksync_destination_path_type" id="fs_fs_symlinksync_destination_path_type">#</a></span></h2>
+<h2>fs.symlinkSync(srcpath, dstpath, [type])<span><a class="mark" href="#fs_fs_symlinksync_srcpath_dstpath_type" id="fs_fs_symlinksync_srcpath_dstpath_type">#</a></span></h2>
 <!--
 Synchronous symlink(2).
 -->
@@ -859,21 +865,10 @@ without waiting for the callback. For this scenario,
 </p>
 <h2>fs.writeSync(fd, buffer, offset, length, position)<span><a class="mark" href="#fs_fs_writesync_fd_buffer_offset_length_position" id="fs_fs_writesync_fd_buffer_offset_length_position">#</a></span></h2>
 <!--
-Synchronous version of buffer-based `fs.write()`. Returns the number of bytes
-written.
--->
-同期版のバッファに基づく <code>fs.write()</code>。書き込まれたバイト数を返します。
-
-## fs.writeSync(fd, str, position, [encoding])
-
-<!--
-Synchronous version of string-based `fs.write()`. `encoding` defaults to
-`'utf8'`. Returns the number of _bytes_ written.
+Synchronous version of `fs.write()`. Returns the number of bytes written.
 -->
 
-<p>同期版の文字列に基づく <code>fs.write()</code>。
-<code>encoding</code> のデフォルトは <code>&apos;utf8&apos;</code> です。
-書き込まれたバイト数を返します。
+<p>同期版の <code>fs.write()</code>。書き込まれたバイト数を返します。
 
 </p>
 <h2>fs.read(fd, buffer, offset, length, position, [callback])<span><a class="mark" href="#fs_fs_read_fd_buffer_offset_length_position_callback" id="fs_fs_read_fd_buffer_offset_length_position_callback">#</a></span></h2>
@@ -923,22 +918,10 @@ The callback is given the three arguments, `(err, bytesRead, buffer)`.
 </p>
 <h2>fs.readSync(fd, buffer, offset, length, position)<span><a class="mark" href="#fs_fs_readsync_fd_buffer_offset_length_position" id="fs_fs_readsync_fd_buffer_offset_length_position">#</a></span></h2>
 <!--
-Synchronous version of buffer-based `fs.read`. Returns the number of
-`bytesRead`.
+Synchronous version of `fs.read`. Returns the number of `bytesRead`.
 -->
 
-<p>同期版のバッファに基づく <code>fs.read</code>。<code>bytesRead</code> の数を返します。
-
-</p>
-<h2>fs.readSync(fd, length, position, encoding)<span><a class="mark" href="#fs_fs_readsync_fd_length_position_encoding" id="fs_fs_readsync_fd_length_position_encoding">#</a></span></h2>
-<!--
-Legacy synchronous version of string-based `fs.read`. Returns an array with the
-data from the file specified and number of bytes read, `[string, bytesRead]`.
--->
-
-<p>文字列に基づく古い <code>fs.read</code> の同期版。
-指定されたファイルのデータと読み込んだバイト数の配列、<code>[string, bytesRead]</code>
-を返します。
+<p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。
 
 </p>
 <h2>fs.readFile(filename, [encoding], [callback])<span><a class="mark" href="#fs_fs_readfile_filename_encoding_callback" id="fs_fs_readfile_filename_encoding_callback">#</a></span></h2>
@@ -1066,8 +1049,7 @@ The second argument is optional. The `options` if provided should be an object
 containing two members a boolean, `persistent`, and `interval`. `persistent`
 indicates whether the process should continue to run as long as files are
 being watched. `interval` indicates how often the target should be polled,
-in milliseconds. (On Linux systems with inotify, `interval` is ignored.) The
-default is `{ persistent: true, interval: 0 }`.
+in milliseconds. The default is `{ persistent: true, interval: 5007 }`.
 -->
 
 <p>第 2 引数はオプションです．
@@ -1076,8 +1058,7 @@ default is `{ persistent: true, interval: 0 }`.
 <code>persistent</code> はファイルが監視されている間、
 プロセスが実行し続けることを示します。
 <code>interval</code> は対象をポーリングする間隔をミリ秒で示します
-(inotify を備えた Linux システムでは <code>interval</code> は無視されます)。
-デフォルトは <code>{ persistent: true, interval: 0}</code> です。
+デフォルトは <code>{ persistent: true, interval: 5007 }</code> です。
 
 </p>
 <!--
@@ -1105,13 +1086,25 @@ you need to compare `curr.mtime` and `prev.mtime`.
 <p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。
 
 </p>
-<h2>fs.unwatchFile(filename)<span><a class="mark" href="#fs_fs_unwatchfile_filename" id="fs_fs_unwatchfile_filename">#</a></span></h2>
+<h2>fs.unwatchFile(filename, [listener])<span><a class="mark" href="#fs_fs_unwatchfile_filename_listener" id="fs_fs_unwatchfile_filename_listener">#</a></span></h2>
 <pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if available.</code></pre>
 <!--
-Stop watching for changes on `filename`.
+Stop watching for changes on `filename`. If `listener` is specified, only that
+particular listener is removed. Otherwise, *all* listeners are removed and you
+have effectively stopped watching `filename`.
+
+Calling `fs.unwatchFile()` with a filename that is not being watched is a
+no-op, not an error.
 -->
 
 <p><code>filename</code> の変更に対する監視を終了します。
+<code>listener</code> が指定された場合は該当の <code>listener</code> だけが取り除かれます。
+そうでなければ、<em>全ての</em> リスナが取り除かれ、
+<code>filenam</code> の監視は事実上終了します。
+
+</p>
+<p>監視されていないファイル名を指定した <code>fs.unwatchFile()</code> の呼び出しは
+エラーになるのではなく、何もしません。
 
 </p>
 <h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#fs_fs_watch_filename_options_listener" id="fs_fs_watch_filename_options_listener">#</a></span></h2>
@@ -1513,22 +1506,21 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.7.12/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
   <script src="../sh_javascript.min.js"></script>
   <script>highlight(undefined, undefined, 'pre');</script>
   <script>
-    var gaJsHost = (("https:" == document.location.protocol) ?
-    "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
   </script>
-  <script>
-    try {
-      var pageTracker = _gat._getTracker("UA-10874194-2");
-      pageTracker._trackPageview();
-      } catch(err) {}</script>
 </body>
 </html>
 
