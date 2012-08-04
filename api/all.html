@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.8.4 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.8.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.4 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.5 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -2023,13 +2023,13 @@ representing the current module.  In particular
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
 </div></ul>
-<p>The <code>exports</code> object is created by the Module system. Sometimes this is not
+<!--
+The `exports` object is created by the Module system. Sometimes this is not
 acceptable, many want their module to be an instance of some class. To do this
-assign the desired export object to <code>module.exports</code>. For example suppose we
-were making a module called <code>a.js</code>
---&gt;
+assign the desired export object to `module.exports`. For example suppose we
+were making a module called `a.js`
+-->
 
-</p>
 <p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。
 時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。
 それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
@@ -4872,9 +4872,9 @@ thrown will be routed to the domain's `error` event.
 <pre><code>var d = domain.create();
 
 function readSomeFile(filename, cb) {
-  fs.readFile(filename, d.bind(function(er, data) {
+  fs.readFile(filename, &apos;utf8&apos;, d.bind(function(er, data) {
     // if this throws, it will also be passed to the domain
-    return cb(er, JSON.parse(data));
+    return cb(er, data ? JSON.parse(data) : null);
   }));
 }
 
@@ -4917,7 +4917,7 @@ with a single error handler in a single place.
 <pre><code>var d = domain.create();
 
 function readSomeFile(filename, cb) {
-  fs.readFile(filename, d.intercept(function(data) {
+  fs.readFile(filename, &apos;utf8&apos;, d.intercept(function(data) {
     // note, the first argument is never passed to the
     // callback since it is assumed to be the &apos;Error&apos; argument
     // and thus intercepted by the domain.
@@ -12454,6 +12454,18 @@ Node はストリーミングデータを分割して送信しようとしてい
 すなわち、レスポンスはボディの最初のチャンクまでバッファリングされます。
 
 </p>
+<!--
+Returns `true` if the entire data was flushed successfully to the kernel
+buffer. Returns `false` if all or part of the data was queued in user memory.
+`'drain'` will be emitted when the buffer is again free.
+-->
+
+<p>データ全体のカーネルバッファへのフラッシュが成功すると <code>true</code> を返します。
+データ全体または一部がユーザメモリ内のキューに入れられた場合は
+<code>false</code> を返します。
+再びバッファが空いた場合は <code>&apos;drain&apos;</code> イベントが生成されます。
+
+</p>
 <h3>response.addTrailers(headers)<span><a class="mark" href="#all_response_addtrailers_headers" id="all_response_addtrailers_headers">#</a></span></h3>
 <!--
 This method adds HTTP trailing headers (a header but at the end of the
@@ -16141,8 +16153,7 @@ Runs a command in a shell and buffers the output.
 <p>コマンドをシェルで実行し、その出力をバッファに格納します。
 
 </p>
-<pre><code>var util = require(&apos;util&apos;),
-    exec = require(&apos;child_process&apos;).exec,
+<pre><code>var exec = require(&apos;child_process&apos;).exec,
     child;
 
 child = exec(&apos;cat *.js bad_file | wc -l&apos;,
@@ -16261,7 +16272,6 @@ leaner than `child_process.exec`. It has the same options.
   * `cwd` {String} Current working directory of the child process
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
-  * `timeout` {Number} (Default: 0)
 * Return: ChildProcess object
 -->
 
@@ -16272,7 +16282,6 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>encoding</code> {String} (Default: &apos;utf8&apos;)</li>
-<li><code>timeout</code> {Number} (Default: 0)</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -16299,6 +16308,16 @@ with the parent's. To change this behavior set the `silent` property in the
 <p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準出力と
 標準エラー出力を持ちます。これを変更するには <code>options</code> オブジェクトの
 <code>silent</code> プロパティを <code>true</code> に設定します。
+
+</p>
+<!--
+The child process does not automatically exit once it's done, you need to call
+`process.exit()` explicitly. This limitation may be lifted in the future.
+-->
+
+<p>子プロセスは自動的に終了するわけではないので、
+明示的に <code>process.exit()</code> を呼び出す必要があります。
+この制限は将来取り除かれるかもしれません。
 
 </p>
 <!--
@@ -18090,13 +18109,12 @@ The method takes an optional callback argument which will be called when finishe
 <li><span class="type">Object</span></li>
 </div></ul>
 <!--
-In the cluster all living worker objects are stored in this object by there
-`id` as the key. This makes it easy to loop through all living workers.
+A hash that stores the active worker objects, keyed by `id` field. Makes it
+easy to loop through all the workers.
 -->
 
-<p>このクラスタで生きている全てのワーカオブジェクトを、その <code>id</code>
-をキーとして保存しているオブジェクトです。
-これは全ての生きているワーカに対して繰り返しを行うことを容易にします。
+<p><code>id</code> をキーとしてアクティブなワーカオブジェクトを保存しているハッシュです。
+これは全てのワーカに対して繰り返しを行うことを容易にします。
 
 </p>
 <pre><code>// Go through all workers
@@ -18539,7 +18557,7 @@ Patches to this list are welcome.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.4/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.5/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
