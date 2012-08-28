@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.8.7 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.8.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -286,21 +286,31 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate
     Revocation List)
 
-  - `ciphers`: A string describing the ciphers to use or exclude. Consult
-    <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for
-    details on the format.
-    To mitigate [BEAST attacks]
-    (http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html),
-    it is recommended that you use this option in conjunction with the
-    `honorCipherOrder` option described below to prioritize the RC4 algorithm,
-    since it is a non-CBC cipher. A recommended cipher list follows:
-    `ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM`
+  - `ciphers`: A string describing the ciphers to use or exclude.
 
-  - `honorCipherOrder` :
-    When choosing a cipher, use the server's preferences instead of the client
-    preferences.
+    To mitigate [BEAST attacks] it is recommended that you use this option in
+    conjunction with the `honorCipherOrder` option described below to
+    prioritize the non-CBC cipher.
+
+    Defaults to
+    `ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
+    Consult the [OpenSSL cipher list format documentation] for details on the
+    format.
+
+    `ECDHE-RSA-AES128-SHA256` and `AES128-GCM-SHA256` are used when node.js is
+    linked against OpenSSL 1.0.1 or newer and the client speaks TLS 1.2, RC4 is
+    used as a secure fallback.
+
+    **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an
+    acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
+    susceptible to BEAST attacks. Do *not* use it.
+
+  - `honorCipherOrder` : When choosing a cipher, use the server's preferences
+    instead of the client preferences.
+
     Note that if SSLv2 is used, the server will send its list of preferences
     to the client, and the client chooses the cipher.
+
     Although, this option is disabled by default, it is *recommended* that you
     use this option in conjunction with the `ciphers` option to mitigate
     BEAST attacks.
@@ -349,20 +359,27 @@ automatically set as a listener for the [secureConnection][] event.  The
 <li><p><code>crl</code> : PEM でエンコードされた CRL (Certificate Revocation List、
 失効した証明書の一覧) の文字列または文字列の配列。</p>
 </li>
-<li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。
-詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>
-を参照してください。
-<a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a>
-を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
-を共に使って、非 CBC 暗号である RC4 アルゴリズムを優先することを推奨します。
-推奨する暗号リストはこの通りです:
-<code>ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM</code></p>
+<li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。</p>
+<p><a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a>を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
+を共に使って、非 CBC 暗号を優先することを推奨します。</p>
+<p>デフォルトは
+<code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code>
+です。
+詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。</p>
+<p><code>ECDHE-RSA-AES128-SHA256</code> と <code>AES128-GCM-SHA256</code> は、Node.js が
+OpenSSL 1.0.1 以降とリンクされていて、クライアントが TLS 1.2 を
+サポートしている場合に使われます。
+RC4 は安全なフォールバックとして使われます。</p>
+<p><strong>注意</strong>: 以前のバージョンのこのセクションは <code>AES256-SHA</code> を
+受け入れ可能な暗号であるかのように示していました。
+残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって BEAST
+攻撃には弱いです。</p>
 </li>
 <li><p><code>honorCipherOrder</code> :
-暗号を選択する際に、クライアントではなくサーバの設定を使用します。
-SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、
-クライアントが暗号を選択することに注意してください。
-このオプションはデフォルトで無効にですが、BEAST 攻撃を抑制するために
+暗号を選択する際に、クライアントではなくサーバの設定を使用します。</p>
+<p>SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、
+クライアントが暗号を選択することに注意してください。</p>
+<p>このオプションはデフォルトでは無効ですが、BEAST 攻撃を抑制するために
 <code>ciphers</code> オプションと共に使用することを <em>推奨</em> します。</p>
 </li>
 <li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
@@ -1002,6 +1019,17 @@ The numeric representation of the remote port. For example, `443`.
 例えば、<code>443</code>。
 
 </p>
+<!--
+[OpenSSL cipher list format documentation]: http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT
+[BEAST attacks]: http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html
+[CleartextStream]: #tls_class_tls_cleartextstream
+[net.Server.address()]: net.html#net_server_address
+['secureConnect']: #tls_event_secureconnect
+[secureConnection]: #tls_event_secureconnection
+[Stream]: stream.html#stream_stream
+[tls.Server]: #tls_class_tls_server
+-->
+
 
           </div>
         </div>
@@ -1030,7 +1058,7 @@ The numeric representation of the remote port. For example, `443`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
