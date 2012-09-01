@@ -2,12 +2,6 @@
 <html lang="ja">
   <head>
   <meta charset="utf-8">
-    <style>
-    ul {
-      padding: 0;
-      margin: 0;
-    }
-    </style>
     <link type="image/x-icon" rel="icon" href="favicon.ico">
     <link type="image/x-icon" rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="pipe.css">
@@ -39,15 +33,23 @@
         アプリケーションに最適です。</p>
 
         <!--
-        <a href="#download" class="button" id="downloadbutton">Download</a>
-        <a href="api/" class="button" id="docsbutton">Docs</a>
+        <div class=buttons>
+        <a href="http://nodejs.org/dist/v0.9.1/node-v0.9.1.tar.gz" class="button downloadbutton" id="downloadbutton">INSTALL</a>
+
+        <a href="download/" class=button id="all-dl-options">Downloads</a
+        ><a href="api/" class="button" id="docsbutton">API Docs</a>
+        </div>
         -->
-        <a href="#download" class="button" id="downloadbutton">ダウンロード</a>
-        <a href="./api/" class="button" id="docsbutton">ドキュメント</a>
-        <p class="version">v0.9.0</p>
+        <div class=buttons>
+        <a href="http://nodejs.org/dist/v0.9.1/node-v0.9.1.tar.gz" class="button downloadbutton" id="downloadbutton">インストール</a>
+
+        <a href="download/" class=button id="all-dl-options">ダウンロード</a
+        ><a href="api/" class="button" id="docsbutton">API ドキュメント</a>
+        </div>
 
         <a href="http://github.com/joyent/node"><img class="forkme" src="images/forkme.png" alt="Fork me on GitHub"></a>
     </div>
+
     <div id="quotes" class="clearfix">
         <h2>Node.js in the Industry</h2>
         <ul>
@@ -108,102 +110,6 @@
             <span>Sr. Product Manger, Cocktail</span></p></li>
         </ul>
     </div>
-
-    <!--
-
-    <div id="download">
-        <a href="#" id="download-close">X</a>
-        <img id="download-logo" src="http://nodejs.org/images/download-logo.png" alt="node.js">
-        <ul id="installers" class="clearfix">
-            <li><a href="http://nodejs.org/dist/v0.9.0/node-v0.9.0-x86.msi">Windows Installer</a><br>node-v0.9.0-x86.msi</li>
-            <li><a href="http://nodejs.org/dist/v0.9.0/node-v0.9.0.pkg">Macintosh Installer</a><br>node-v0.9.0.pkg</li>
-            <li id="source"><a href="http://nodejs.org/dist/v0.9.0/node-v0.9.0.tar.gz">Source Code</a><br>node-v0.9.0.tar.gz</li>
-        </ul>
-        <ul id="documentation">
-            <li><a href="https://raw.github.com/joyent/node/v0.9.0/ChangeLog">Change Log</a></li>
-            <li><a href="http://nodejs.org/docs/v0.9.0/api/">Documentation</a></li>
-            <li><a href="http://nodejs.org/dist/v0.9.0">Other release files</a></li>
-            <li><a href="http://nodejs.org/dist/v0.9.0/x64/node-v0.9.0-x64.msi">Windows x64 Installer</a></li>
-            <li><a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">License</a></li>
-            <li><a href="https://github.com/joyent/node">Git Repository</a></li>
-            <li><a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">Installing
-            with a Package Manager</a>
-        </ul>
-    </div>
-
-    -->
-    <div id="download">
-        <a href="#" id="download-close">X</a>
-        <img id="download-logo" src="http://nodejs.org/images/download-logo.png" alt="node.js">
-        <ul id="installers" class="clearfix">
-            <li><a href="http://nodejs.org/dist/v0.9.0/node-v0.9.0-x86.msi">Windows インストーラ</a><br>node-v0.9.0-x86.msi</li>
-            <li><a href="http://nodejs.org/dist/v0.9.0/node-v0.9.0.pkg">Macintosh インストーラ</a><br>node-v0.9.0.pkg</li>
-            <li id="source"><a href="http://nodejs.org/dist/v0.9.0/node-v0.9.0.tar.gz">ソースコード</a><br>node-v0.9.0.tar.gz</li>
-        </ul>
-        <ul id="documentation">
-            <li><a href="http://nodejs.jp/changelog.html">変更履歴</a></li>
-            <li><a href="api/">ドキュメント</a></li>
-            <li><a href="http://nodejs.org/dist/v0.9.0">その他リリースファイル</a></li>
-            <li><a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">License</a></li>
-            <li><a href="https://github.com/joyent/node">Git リポジトリ</a></li>
-            <li><a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">パッケージマネージャを利用したインストール</a>
-        </ul>
-    </div>
-
-    <script>;(function() {
-      // attach as soon as the required elements are in the DOM.
-      // don't need to wait for entire document to be ready, since we're
-      // not adding any *new* nodes to the <body>, so there's no threat
-      // of 'Invalid operation' errors in old MSIE 6.
-      document.getElementById('downloadbutton').onclick = function(e) {
-        e = e || window.event;
-        e.stopPropagation && e.stopPropagation();
-        e.cancelBubble = true;
-        // need to give the hash a tick to update
-        setTimeout(downloadDialogUpdate, 0);
-      };
-
-      document.getElementById('download-close').onclick =
-      document.documentElement.onclick = function(e) {
-        e = e || window.event;
-        if (location.hash === '#download') location.hash = '';
-        downloadDialogUpdate();
-      };
-
-      document.getElementById('download').onclick = function(e) {
-        e = e || window.event;
-        e.stopPropagation && e.stopPropagation();
-        e.cancelBubble = true;
-      };
-
-      // I keep expecting <Esc> to close the dialog...
-      document.documentElement.onkeydown = function(e) {
-        e = e || window.event;
-        var k = e.which || e.keyCode || e.keyIdentifier;
-        if (typeof k === 'string') k = k.charCodeAt(0);
-        if (k === 27) document.documentElement.onclick(e);
-      };
-
-      // hacky workaround for old ie browsers that don't support :target css.
-      function downloadDialogUpdate () {
-        var div = document.getElementById('download');
-        if (!div) return;
-        var expect = location.hash === '#download' ? 'block' : 'none';
-        var actual = div.currentStyle ? div.currentStyle.display
-                   : window.getComputedStyle
-                     ? document.defaultView.getComputedStyle(div, null).getPropertyValue('display')
-                   : null;
-
-        // it looks like a string, but it might not actually be a string.
-        // explicitly cast for MSIE 6 and 7.
-        actual = '' + actual;
-        expect = '' + expect;
-        if (actual !== expect) {
-          div.style.display = expect;
-        }
-      }
-      downloadDialogUpdate();
-    })();</script>
 
     <div id="content" class="clearfix">
             <div id="column1">
@@ -283,7 +189,7 @@ server.listen(1337, '127.0.0.1');</pre>
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
-            <li><a href="/#download">Download</a></li>
+            <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
@@ -292,7 +198,7 @@ server.listen(1337, '127.0.0.1');</pre>
             <li><a href="/logos/">Logos</a></li>
             -->
             <li><a href="./">Node.js</a></li>
-            <li><a href="./#download">ダウンロード</a></li>
+            <li><a href="./download">ダウンロード</a></li>
             <li><a href="./about/">概要</a></li>
             <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
             <li><a href="./api/">ドキュメント</a></li>
@@ -303,7 +209,7 @@ server.listen(1337, '127.0.0.1');</pre>
             <!-- <li><a hrfe="http://twitter.com/nodejs" class="twitter">@nodejs</a></li> -->
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
     </div>
 
 
@@ -319,6 +225,41 @@ server.listen(1337, '127.0.0.1');</pre>
         g.src = '//www.google-analytics.com/ga.js';
         s.parentNode.insertBefore(g, s);
       }(document, 'script'));
+      ;(function(d,n) {
+        var os = n.platform.match(/(Win|Mac|Linux)/);
+        var x = n.userAgent.match(/x86_64|Win64|WOW64/) ||
+                n.cpuClass === 'x64' ? 'x64' : 'x86';
+        var base = 'http://nodejs.org/dist/v0.9.1/';
+        var href = 'node-v0.9.1.tar.gz';
+        var db = d.getElementById('downloadbutton');
+        var d2;
+        switch (os && os[1]) {
+          case 'Mac':
+            href = 'node-v0.9.1.pkg';
+            break;
+          case 'Win':
+            href = 'node-v0.9.1-' + x + '.msi';
+            if (x === 'x64') href = 'x64/' + href;
+            break;
+
+          // TODO uncomment when we have these
+          // case 'Linux':
+          //   // two buttons: .deb and .rpm
+          //   href = 'node-v0.9.1-' + x + '.rpm';
+          //   var d2 = document.createElement('a');
+          //   d2.href = base + 'node-v0.9.1-' + x + '.deb';
+          //   d2.className = 'button downloadbutton';
+          //   d2.innerHTML = 'INSTALL .deb';
+          //   db.innerHTML = 'INSTALL .rpm';
+          //   db.parentNode.insertBefore(d2, db);
+          //   break;
+        }
+
+        db.href = base + href;
+        // if there's one download option, then download it at #download
+        if (location.hash === '#download' && !d2)
+          location.replace(b.href);
+      })(document,navigator);
     </script>
-  </body>
+ </body>
 </html>

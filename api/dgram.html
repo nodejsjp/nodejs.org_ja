@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>UDP / Datagram Sockets Node.js v0.9.0 Manual &amp; Documentation</title>
+  <title>UDP / Datagram Sockets Node.js v0.9.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/dgram.html">
@@ -18,7 +18,7 @@
             <ul>
                 <!--
                 <li><a href="/" class="home">Home</a></li>
-                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -72,6 +72,8 @@
 <li><a href="#dgram_dgram_setmulticastloopback_flag">dgram.setMulticastLoopback(flag)</a></li>
 <li><a href="#dgram_dgram_addmembership_multicastaddress_multicastinterface">dgram.addMembership(multicastAddress, [multicastInterface])</a></li>
 <li><a href="#dgram_dgram_dropmembership_multicastaddress_multicastinterface">dgram.dropMembership(multicastAddress, [multicastInterface])</a></li>
+<li><a href="#dgram_dgram_unref">dgram.unref()</a></li>
+<li><a href="#dgram_dgram_ref">dgram.ref()</a></li>
 </ul>
 </li>
 </ul>
@@ -480,6 +482,30 @@ interfaces.
 
 </p>
 <p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップから削除しようとします。
+
+</p>
+<h3>dgram.unref()<span><a class="mark" href="#dgram_dgram_unref" id="dgram_dgram_unref">#</a></span></h3>
+<!--
+Calling `unref` on a socket will allow the program to exit if this is the only
+active socket in the event system. If the socket is already `unref`d calling
+`unref` again will have no effect.
+-->
+
+<p>イベントシステムにおいて、このソケットだけがアクティブな場合にプログラムを
+終了することができるように、<code>unref</code> を呼び出します。
+既に <code>unref</code> されたソケットで再び <code>unref</code> が呼び出されても影響はありません。
+
+</p>
+<h3>dgram.ref()<span><a class="mark" href="#dgram_dgram_ref" id="dgram_dgram_ref">#</a></span></h3>
+<!--
+Opposite of `unref`, calling `ref` on a previously `unref`d socket will *not*
+let the program exit if it's the only socket left (the default behavior). If
+the socket is `ref`d calling `ref` again will have no effect.
+-->
+
+<p><code>unref</code> とは逆に、以前に <code>unref</code> されたソケットが唯一残ったソケットになっても、
+プログラムが終了 (デフォルトの動作です) しないように、<code>ref</code> を呼び出します。
+既に <code>ref</code> されたソケットで再び <code>ref</code> が呼び出されても影響はありません。
 </p>
 
           </div>
@@ -489,7 +515,7 @@ interfaces.
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
-            <li><a href="/#download">Download</a></li>
+            <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
@@ -509,7 +535,7 @@ interfaces.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
