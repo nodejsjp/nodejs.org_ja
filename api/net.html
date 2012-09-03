@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>net Node.js v0.9.0 Manual &amp; Documentation</title>
+  <title>net Node.js v0.9.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/net.html">
@@ -18,7 +18,7 @@
             <ul>
                 <!--
                 <li><a href="/" class="home">Home</a></li>
-                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -69,6 +69,8 @@
 <li><a href="#net_server_listen_handle_listeninglistener">server.listen(handle, [listeningListener])</a></li>
 <li><a href="#net_server_close_cb">server.close([cb])</a></li>
 <li><a href="#net_server_address">server.address()</a></li>
+<li><a href="#net_server_unref">server.unref()</a></li>
+<li><a href="#net_server_ref">server.ref()</a></li>
 <li><a href="#net_server_maxconnections">server.maxConnections</a></li>
 <li><a href="#net_server_connections">server.connections</a></li>
 <li><a href="#net_event_listening">Event: &apos;listening&apos;</a></li>
@@ -92,6 +94,8 @@
 <li><a href="#net_socket_setnodelay_nodelay">socket.setNoDelay([noDelay])</a></li>
 <li><a href="#net_socket_setkeepalive_enable_initialdelay">socket.setKeepAlive([enable], [initialDelay])</a></li>
 <li><a href="#net_socket_address">socket.address()</a></li>
+<li><a href="#net_socket_unref">socket.unref()</a></li>
+<li><a href="#net_socket_ref">socket.ref()</a></li>
 <li><a href="#net_socket_remoteaddress">socket.remoteAddress</a></li>
 <li><a href="#net_socket_remoteport">socket.remotePort</a></li>
 <li><a href="#net_socket_bytesread">socket.bytesRead</a></li>
@@ -528,6 +532,30 @@ Don't call `server.address()` until the `'listening'` event has been emitted.
 <p><code>&apos;listening&apos;</code> イベントが生成される前に <code>server.address()</code> を呼び出してはいけません。
 
 </p>
+<h3>server.unref()<span><a class="mark" href="#net_server_unref" id="net_server_unref">#</a></span></h3>
+<!--
+Calling `unref` on a server will allow the program to exit if this is the only
+active server in the event system. If the server is already `unref`d calling
+`unref` again will have no effect.
+-->
+
+<p>イベントシステムにおいて、このサーバだけがアクティブな場合にプログラムを
+終了することができるように、<code>unref</code> を呼び出します。
+既に <code>unref</code> されたサーバで再び <code>unref</code> が呼び出されても影響はありません。
+
+</p>
+<h3>server.ref()<span><a class="mark" href="#net_server_ref" id="net_server_ref">#</a></span></h3>
+<!--
+Opposite of `unref`, calling `ref` on a previously `unref`d server will *not*
+let the program exit if it's the only server left (the default behavior). If
+the server is `ref`d calling `ref` again will have no effect.
+-->
+
+<p><code>unref</code> とは逆に、以前に <code>unref</code> されたサーバが唯一残ったサーバになっても、
+プログラムが終了 (デフォルトの動作です) しないように、<code>ref</code> を呼び出します。
+既に <code>ref</code> されたサーバで再び <code>ref</code> が呼び出されても影響はありません。
+
+</p>
 <h3>server.maxConnections<span><a class="mark" href="#net_server_maxconnections" id="net_server_maxconnections">#</a></span></h3>
 <!--
 Set this property to reject connections when the server's connection count gets
@@ -917,6 +945,30 @@ three properties, e.g.
 <code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
 
 </p>
+<h3>socket.unref()<span><a class="mark" href="#net_socket_unref" id="net_socket_unref">#</a></span></h3>
+<!--
+Calling `unref` on a socket will allow the program to exit if this is the only
+active socket in the event system. If the socket is already `unref`d calling
+`unref` again will have no effect.
+-->
+
+<p>イベントシステムにおいて、このソケットだけがアクティブな場合にプログラムを
+終了することができるように、<code>unref</code> を呼び出します。
+既に <code>unref</code> されたソケットで再び <code>unref</code> が呼び出されても影響はありません。
+
+</p>
+<h3>socket.ref()<span><a class="mark" href="#net_socket_ref" id="net_socket_ref">#</a></span></h3>
+<!--
+Opposite of `unref`, calling `ref` on a previously `unref`d socket will *not*
+let the program exit if it's the only socket left (the default behavior). If
+the socket is `ref`d calling `ref` again will have no effect.
+-->
+
+<p><code>unref</code> とは逆に、以前に <code>unref</code> されたソケットが唯一残ったソケットになっても、
+プログラムが終了 (デフォルトの動作です) しないように、<code>ref</code> を呼び出します。
+既に <code>ref</code> されたソケットで再び <code>ref</code> が呼び出されても影響はありません。
+
+</p>
 <h3>socket.remoteAddress<span><a class="mark" href="#net_socket_remoteaddress" id="net_socket_remoteaddress">#</a></span></h3>
 <!--
 The string representation of the remote IP address. For example,
@@ -1118,7 +1170,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
-            <li><a href="/#download">Download</a></li>
+            <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
@@ -1138,7 +1190,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

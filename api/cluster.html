@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Cluster Node.js v0.9.0 Manual &amp; Documentation</title>
+  <title>Cluster Node.js v0.9.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/cluster.html">
@@ -18,7 +18,7 @@
             <ul>
                 <!--
                 <li><a href="/" class="home">Home</a></li>
-                <li><a href="/#download" class="download">Download</a></li>
+                <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
                 <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -68,7 +68,6 @@
 <li><a href="#cluster_event_setup">Event: &apos;setup&apos;</a></li>
 <li><a href="#cluster_cluster_setupmaster_settings">cluster.setupMaster([settings])</a></li>
 <li><a href="#cluster_cluster_fork_env">cluster.fork([env])</a></li>
-<li><a href="#cluster_cluster_settings_1">cluster.settings</a></li>
 <li><a href="#cluster_cluster_disconnect_callback">cluster.disconnect([callback])</a></li>
 <li><a href="#cluster_cluster_workers">cluster.workers</a></li>
 <li><a href="#cluster_class_worker">Class: Worker</a><ul>
@@ -94,24 +93,13 @@
           <div id="apicontent">
             <h1>Cluster<span><a class="mark" href="#cluster_cluster" id="cluster_cluster">#</a></span></h1>
 <pre><code>Stability: 1 - Experimental</code></pre>
-<!--
-A single instance of Node runs in a single thread. To take advantage of
+<p>A single instance of Node runs in a single thread. To take advantage of
 multi-core systems the user will sometimes want to launch a cluster of Node
 processes to handle the load.
--->
-
-<p>一つの Node インスタンスは一つのスレッドで実行されます。
-マルチコアシステムのメリットを生かすために、
-ユーザは時々 Node プロセスのクラスを起動して負荷を分散したくなります。
 
 </p>
-<!--
-The cluster module allows you to easily create a network of processes that
+<p>The cluster module allows you to easily create a network of processes that
 all share server ports.
--->
-
-<p>クラスタモジュールは、サーバポートを共有するプロセスのネットワークを
-簡単に構築することを可能にします。
 
 </p>
 <pre><code>var cluster = require(&apos;cluster&apos;);
@@ -135,214 +123,110 @@ if (cluster.isMaster) {
     res.end(&quot;hello world\n&quot;);
   }).listen(8000);
 }</code></pre>
-<!--
-Running node will now share port 8000 between the workers:
--->
-
-<p>node は 8000 番ポートをワーカ間で共有します。
+<p>Running node will now share port 8000 between the workers:
 
 </p>
 <pre><code>% node server.js
 Worker 2438 online
 Worker 2437 online</code></pre>
-<!--
-This feature was introduced recently, and may change in future versions.
+<p>This feature was introduced recently, and may change in future versions.
 Please try it out and provide feedback.
--->
-
-<p>この機能は最近導入されたばかりであり、
-将来のバージョンで変更される可能性があります。
-これを試して、フィードバックを行ってください。
 
 </p>
-<!--
-Also note that, on Windows, it is not yet possible to set up a named pipe
+<p>Also note that, on Windows, it is not yet possible to set up a named pipe
 server in a worker.
--->
-
-<p>Windows では、ワーカが名前付きパイプによるサーバをセットアップすることは
-まだできないことにも注意してください。
 
 </p>
 <h2>How It Works<span><a class="mark" href="#cluster_how_it_works" id="cluster_how_it_works">#</a></span></h2>
 <!--type=misc-->
 
-<!--
-The worker processes are spawned using the `child_process.fork` method,
+<p>The worker processes are spawned using the <code>child_process.fork</code> method,
 so that they can communicate with the parent via IPC and pass server
 handles back and forth.
--->
-
-<p>ワーカプロセスは <code>child_process.fork</code> メソッドを使って起動されるため、
-親プロセスと IPC で通信したり、サーバハンドルをやり取りしたりすることが
-できます。
 
 </p>
-<!--
-When you call `server.listen(...)` in a worker, it serializes the
+<p>When you call <code>server.listen(...)</code> in a worker, it serializes the
 arguments and passes the request to the master process.  If the master
-process already has a listening server matching the worker's
+process already has a listening server matching the worker&apos;s
 requirements, then it passes the handle to the worker.  If it does not
 already have a listening server matching that requirement, then it will
 create one, and pass the handle to the child.
--->
-
-<p>ワーカが <code>server.listen(...)</code> を呼び出すと、引数がシリアライズされて
-マスタプロセスにリクエストが渡されます。
-マスタプロセスは、ワーカのリクエストにマッチするリスニングサーバが既に
-存在すればそのハンドルをワーカに渡します。
-リクエストにマッチするリスニングサーバが存在しなければ、それが作成されて
-子プロセスに渡されます。
 
 </p>
-<!--
-This causes potentially surprising behavior in three edge cases:
--->
-
-<p>これは三つの極端なケースで驚くような振る舞いを引き起こすかもしれません。
+<p>This causes potentially surprising behavior in three edge cases:
 
 </p>
-<!--
-1. `server.listen({fd: 7})` Because the message is passed to the master,
-   file descriptor 7 **in the parent** will be listened on, and the
-   handle passed to the worker, rather than listening to the worker's
-   idea of what the number 7 file descriptor references.
-2. `server.listen(handle)` Listening on handles explicitly will cause
-   the worker to use the supplied handle, rather than talk to the master
-   process.  If the worker already has the handle, then it's presumed
-   that you know what you are doing.
-3. `server.listen(0)` Normally, this will case servers to listen on a
-   random port.  However, in a cluster, each worker will receive the
-   same "random" port each time they do `listen(0)`.  In essence, the
-   port is random the first time, but predictable thereafter.  If you
-   want to listen on a unique port, generate a port number based on the
-   cluster worker ID.
--->
-
 <ol>
-<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、
-ワーカのファイル記述子 7 が参照するものではなく、
-<strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに
-渡されます。</li>
-<li><code>server.listen(handle)</code> 明示的なハンドルをリスニングするとマスタプロセスは
-関与することなく、ワーカは与えられたハンドルを使うことになります。
-ワーカがすでにハンドルを持っているなら、何をしようとしているか
-あなたは分かっているでしょう。</li>
-<li><code>&apos;server.listen(0)</code> 通常、これはサーバがランダムなポートをリッスンすることを
-意味します。しかしながらクラスタでは、各ワーカは <code>listen(0)</code> によって
-同じ &quot;ランダムな&quot; ポートを受信します。
-すなわち、初回はポートはランダムになりますが、その後はそうではありません。
-もしユニークなポートをリッスンしたければ、クラスタのワーカ ID に基づいて
-ポート番号を生成してください。</li>
+<li><code>server.listen({fd: 7})</code> Because the message is passed to the master,
+file descriptor 7 <strong>in the parent</strong> will be listened on, and the
+handle passed to the worker, rather than listening to the worker&apos;s
+idea of what the number 7 file descriptor references.</li>
+<li><code>server.listen(handle)</code> Listening on handles explicitly will cause
+the worker to use the supplied handle, rather than talk to the master
+process.  If the worker already has the handle, then it&apos;s presumed
+that you know what you are doing.</li>
+<li><code>server.listen(0)</code> Normally, this will case servers to listen on a
+random port.  However, in a cluster, each worker will receive the
+same &quot;random&quot; port each time they do <code>listen(0)</code>.  In essence, the
+port is random the first time, but predictable thereafter.  If you
+want to listen on a unique port, generate a port number based on the
+cluster worker ID.</li>
 </ol>
-<!--
-When multiple processes are all `accept()`ing on the same underlying
+<p>When multiple processes are all <code>accept()</code>ing on the same underlying
 resource, the operating system load-balances across them very
 efficiently.  There is no routing logic in Node.js, or in your program,
 and no shared state between the workers.  Therefore, it is important to
 design your program such that it does not rely too heavily on in-memory
 data objects for things like sessions and login.
--->
-
-<p>複数のプロセスが同じリソースを <code>accept()</code> する時、オペレーティングシステムは
-とても効率的にそれら全体をロードバランスします。
-Node.js にもあなたのプログラムにも、ルーティングのためのロジックや
-ワーカ間で共有される状態はありません。
-したがって、あなたのプログラムがセッションやログインのためにメモリ内の
-データオブジェクトに過度に頼らないように設計することが重要です。
 
 </p>
-<!--
-Because workers are all separate processes, they can be killed or
-re-spawned depending on your program's needs, without affecting other
+<p>Because workers are all separate processes, they can be killed or
+re-spawned depending on your program&apos;s needs, without affecting other
 workers.  As long as there are some workers still alive, the server will
 continue to accept connections.  Node does not automatically manage the
 number of workers for you, however.  It is your responsibility to manage
-the worker pool for your application's needs.
--->
-
-<p>全てのワーカは独立したプロセスなので、他のワーカに影響を与えることなく
-プログラムのニーズに応じてそれらを殺したり再起動したりすることができます。
-いくつかのワーカが生きている限り、サーバは接続を受け付け続けます。
-しかしながら、Node はワーカの数を自動的に管理することはありません。
-アプリケーションのニーズに応じてワーカのプールを管理することは、
-あなたの責務です。
+the worker pool for your application&apos;s needs.
 
 </p>
 <h2>cluster.settings<span><a class="mark" href="#cluster_cluster_settings" id="cluster_cluster_settings">#</a></span></h2>
-<!--
-* {Object}
-  * `exec` {String} file path to worker file.  (Default=`__filename`)
-  * `args` {Array} string arguments passed to worker.
-    (Default=`process.argv.slice(2)`)
-  * `silent` {Boolean} whether or not to send output to parent's stdio.
-    (Default=`false`)
--->
-
-<ul>
-<li>{Object}<ul>
-<li><code>exec</code> {String} ワーカで実行するファイルへのパス.
-(デフォルトは <code>__filename</code>)</li>
-<li><code>args</code> {Array} ワーカに渡される引数となる文字列。
-(デフォルトは <code>process.argv.slice(2)</code>)</li>
-<li><code>silent</code> {Boolean} 出力を親プロセスに送るかどうか。
-(デフォルトは <code>false</code>)</li>
+<div class="signature"><ul>
+<li><span class="type">Object</span><ul>
+<li><code>exec</code> <span class="type">String</span> file path to worker file.  (Default=<code>__filename</code>)</li>
+<li><code>args</code> <span class="type">Array</span> string arguments passed to worker.
+(Default=<code>process.argv.slice(2)</code>)</li>
+<li><code>silent</code> <span class="type">Boolean</span> whether or not to send output to parent&apos;s stdio.
+(Default=<code>false</code>)</li>
 </ul>
 </li>
-</ul>
-<!--
-All settings set by the `.setupMaster` is stored in this settings object.
+</div></ul>
+<p>All settings set by the <code>.setupMaster</code> is stored in this settings object.
 This object is not supposed to be change or set manually, by you.
--->
-
-<p><code>cluster.setupMaster()</code> によってセットされた全ての情報は設定オブジェクトに
-保存されます。
-このオブジェクトはあなたによって変更されることを想定していません。
 
 </p>
 <h2>cluster.isMaster<span><a class="mark" href="#cluster_cluster_ismaster" id="cluster_cluster_ismaster">#</a></span></h2>
 <div class="signature"><ul>
 <li><span class="type">Boolean</span></li>
 </div></ul>
-<!--
-True if the process is a master. This is determined
-by the `process.env.NODE_UNIQUE_ID`. If `process.env.NODE_UNIQUE_ID` is
-undefined, then `isMaster` is `true`.
--->
-
-<p>現在のプロセスがマスタの場合は <code>true</code> です。
-これは <code>process.env.NODE_UNIQUE_ID</code> から決定されます。
-<code>process.env.NODE_UNIQUE_ID</code> が未定義だと <code>isMaster</code> は <code>true</code> になります。
+<p>True if the process is a master. This is determined
+by the <code>process.env.NODE_UNIQUE_ID</code>. If <code>process.env.NODE_UNIQUE_ID</code> is
+undefined, then <code>isMaster</code> is <code>true</code>.
 
 </p>
 <h2>cluster.isWorker<span><a class="mark" href="#cluster_cluster_isworker" id="cluster_cluster_isworker">#</a></span></h2>
 <div class="signature"><ul>
 <li><span class="type">Boolean</span></li>
 </div></ul>
-<!--
-This boolean flag is true if the process is a worker forked from a master.
-If the `process.env.NODE_UNIQUE_ID` is set to a value, then
-`isWorker` is `true`.
--->
-
-<p>現在のプロセスがマスタからフォークされたワーカの場合、
-この論理値型のフラグは <code>true</code> です。
-<code>process.env.NODE_UNIQUE_ID</code> に値が設定されていると、
-<code>isWorker</code> は <code>true</code> になります。
+<p>This boolean flag is true if the process is a worker forked from a master.
+If the <code>process.env.NODE_UNIQUE_ID</code> is set to a value, then
+<code>isWorker</code> is <code>true</code>.
 
 </p>
 <h2>Event: &apos;fork&apos;<span><a class="mark" href="#cluster_event_fork" id="cluster_event_fork">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
-<!--
-When a new worker is forked the cluster module will emit a 'fork' event.
+<p>When a new worker is forked the cluster module will emit a &apos;fork&apos; event.
 This can be used to log worker activity, and create you own timeout.
--->
-
-<p>新しいワーカがフォークされると、クラスタモジュールは <code>&apos;fork&apos;</code> イベントを
-生成します。
-これはワーカの活動をロギングしたり、タイムアウトのために使うことができます。
 
 </p>
 <pre><code>var timeouts = [];
@@ -364,19 +248,11 @@ cluster.on(&apos;exit&apos;, function(worker, code, signal) {
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
-<!--
-After forking a new worker, the worker should respond with a online message.
+<p>After forking a new worker, the worker should respond with a online message.
 When the master receives a online message it will emit such event.
-The difference between 'fork' and 'online' is that fork is emitted when the
-master tries to fork a worker, and 'online' is emitted when the worker is
+The difference between &apos;fork&apos; and &apos;online&apos; is that fork is emitted when the
+master tries to fork a worker, and &apos;online&apos; is emitted when the worker is
 being executed.
--->
-
-<p>新しいワーカをフォークした後、ワーカはオンラインメッセージを応答します。
-マスタがオンラインメッセージを受信すると、このイベントが生成されます。
-<code>&apos;fork&apos;</code> と <code>&apos;online&apos;</code> の違いは、<code>&apos;fork&apos;</code> はマスタがワーカのフォークを
-試みた時点で生成されるのに対し、<code>&apos;online&apos;</code> はワーカの実行が開始されてから
-生成される点です。
 
 </p>
 <pre><code>cluster.on(&apos;online&apos;, function(worker) {
@@ -387,30 +263,15 @@ being executed.
 <li><code>worker</code> <span class="type">Worker object</span></li>
 <li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
-<!--
-When calling `listen()` from a worker, a 'listening' event is automatically assigned
+<p>When calling <code>listen()</code> from a worker, a &apos;listening&apos; event is automatically assigned
 to the server instance. When the server is listening a message is send to the master
-where the 'listening' event is emitted.
--->
-
-<p>ワーカが <code>net.Server.listen()</code> を呼び出すと、<code>&apos;listening&apos;</code> イベントは自動的に
-<code>net.Server</code> インスタンスに割り当てられます。
-<code>net.Server</code> が <code>&apos;listening&apos;</code> メッセージをマスタに送信すると、
-<code>&apos;listening&apos;</code> イベントが生成されます。
+where the &apos;listening&apos; event is emitted.
 
 </p>
-<!--
-The event handler is executed with two arguments, the `worker` contains the worker
-object and the `address` object contains the following connection properties:
-`address`, `port` and `addressType`. This is very useful if the worker is listening
+<p>The event handler is executed with two arguments, the <code>worker</code> contains the worker
+object and the <code>address</code> object contains the following connection properties:
+<code>address</code>, <code>port</code> and <code>addressType</code>. This is very useful if the worker is listening
 on more than one address.
--->
-
-<p>イベントハンドラは二つの引数を伴って実行されます。
-<code>worker</code> はワーカオブジェクトを、<code>address</code> オブジェクトは
-以下の接続プロパティを含みます:
-<code>address</code>、<code>prot</code>、そして <code>addressType</code> です。
-これはワーカが複数のアドレスをリッスンしている場合にとても便利です。
 
 </p>
 <pre><code>cluster.on(&apos;listening&apos;, function(worker, address) {
@@ -420,53 +281,28 @@ on more than one address.
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
-<!--
-When a workers IPC channel has disconnected this event is emitted. This will happen
-when the worker dies, usually after calling `.destroy()`.
--->
-
-<p>ワーカの IPC チャネルが切断された場合に生成されます。
-それはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。
+<p>When a workers IPC channel has disconnected this event is emitted. This will happen
+when the worker dies, usually after calling <code>.destroy()</code>.
 
 </p>
-<!--
-When calling `.disconnect()`, there may be a delay between the
-`disconnect` and `exit` events.  This event can be used to detect if
+<p>When calling <code>.disconnect()</code>, there may be a delay between the
+<code>disconnect</code> and <code>exit</code> events.  This event can be used to detect if
 the process is stuck in a cleanup or if there are long-living
 connections.
--->
-
-<p><code>.disconnect()</code> を呼び出した後、<code>&apos;disconnect&apos;</code> と <code>&apos;exit&apos;</code> の間には
-遅延があるかもしれません。このイベントはプロセスがクリーンナップで
-行き詰まったり、長時間生きている接続がないかを検出することに
-使用できます。
 
 </p>
 <pre><code>cluster.on(&apos;disconnect&apos;, function(worker) {
   console.log(&apos;The worker #&apos; + worker.id + &apos; has disconnected&apos;);
 });</code></pre>
 <h2>Event: &apos;exit&apos;<span><a class="mark" href="#cluster_event_exit" id="cluster_event_exit">#</a></span></h2>
-<!--
-* `worker` {Worker object}
-* `code` {Number} the exit code, if it exited normally.
-* `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
-  the process to be killed.
--->
-
-<ul>
-<li><code>worker</code> {Worker object}</li>
-<li><code>code</code> {Number} 正常に終了した場合は終了コード。</li>
-<li><code>signal</code> {String} プロセスが殺される原因となったシグナルの名前
-(例: <code>&apos;SIGHUP&apos;</code>)。</li>
-</ul>
-<!--
-When any of the workers die the cluster module will emit the 'exit' event.
-This can be used to restart the worker by calling `fork()` again.
--->
-
-<p>どのワーカが死んだ場合でも、クラスタモジュールは <code>&apos;exit&apos;</code> イベントを
-生成します。
-これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。
+<div class="signature"><ul>
+<li><code>worker</code> <span class="type">Worker object</span></li>
+<li><code>code</code> <span class="type">Number</span> the exit code, if it exited normally.</li>
+<li><code>signal</code> <span class="type">String</span> the name of the signal (eg. <code>&apos;SIGHUP&apos;</code>) that caused
+the process to be killed.</li>
+</div></ul>
+<p>When any of the workers die the cluster module will emit the &apos;exit&apos; event.
+This can be used to restart the worker by calling <code>fork()</code> again.
 
 </p>
 <pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
@@ -478,50 +314,27 @@ This can be used to restart the worker by calling `fork()` again.
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
-<!--
-When the `.setupMaster()` function has been executed this event emits.
-If `.setupMaster()` was not executed before `fork()` this function will
-call `.setupMaster()` with no arguments.
--->
-
-<p><code>setupMaster()</code> が実行された時、このイベントが生成されます。
-<code>fork()</code> の前に<code>setupMaster()</code> が呼ばれなかった場合、
-この関数は引数無しで <code>setupMaster()</code> を呼び出します。
+<p>When the <code>.setupMaster()</code> function has been executed this event emits.
+If <code>.setupMaster()</code> was not executed before <code>fork()</code> this function will
+call <code>.setupMaster()</code> with no arguments.
 
 </p>
 <h2>cluster.setupMaster([settings])<span><a class="mark" href="#cluster_cluster_setupmaster_settings" id="cluster_cluster_setupmaster_settings">#</a></span></h2>
-<!--
-* `settings` {Object}
-  * `exec` {String} file path to worker file.  (Default=`__filename`)
-  * `args` {Array} string arguments passed to worker.
-    (Default=`process.argv.slice(2)`)
-  * `silent` {Boolean} whether or not to send output to parent's stdio.
-    (Default=`false`)
--->
-
-<ul>
-<li><code>settings</code> {Object}<ul>
-<li><code>exec</code> {String} ワーカで実行するファイルへのパス.
-(デフォルトは <code>__filename</code>)</li>
-<li><code>args</code> {Array} ワーカに渡される引数となる文字列。
-(デフォルトは <code>process.argv.slice(2)</code>)</li>
-<li><code>silent</code> {Boolean} 出力を親プロセスに送るかどうか。
-(デフォルトは <code>false</code>)</li>
+<div class="signature"><ul>
+<li><code>settings</code> <span class="type">Object</span><ul>
+<li><code>exec</code> <span class="type">String</span> file path to worker file.  (Default=<code>__filename</code>)</li>
+<li><code>args</code> <span class="type">Array</span> string arguments passed to worker.
+(Default=<code>process.argv.slice(2)</code>)</li>
+<li><code>silent</code> <span class="type">Boolean</span> whether or not to send output to parent&apos;s stdio.
+(Default=<code>false</code>)</li>
 </ul>
 </li>
-</ul>
-<!--
-The `setupMaster` is used to change the default 'fork' behavior. It takes
-one option object argument.
-
-Example:
--->
-
-<p><code>setupMaster()</code> は &apos;fork&apos; のデフォルト動作を変更するために使われます。
-引数として一つのオプションオブジェクトを受け取ります。
+</div></ul>
+<p><code>setupMaster</code> is used to change the default &apos;fork&apos; behavior. The new settings
+are effective immediately and permanently, they cannot be changed later on.
 
 </p>
-<p>例:
+<p>Example:
 
 </p>
 <pre><code>var cluster = require(&quot;cluster&quot;);
@@ -532,93 +345,31 @@ cluster.setupMaster({
 });
 cluster.fork();</code></pre>
 <h2>cluster.fork([env])<span><a class="mark" href="#cluster_cluster_fork_env" id="cluster_cluster_fork_env">#</a></span></h2>
-<!--
-* `env` {Object} Key/value pairs to add to child process environment.
-* return {Worker object}
--->
-
-<ul>
-<li><code>env</code> {Object} 子プロセスの環境に加えられるキーと値のペア。</li>
-<li>return {Worker object}</li>
-</ul>
-<!--
-Spawn a new worker process. This can only be called from the master process.
--->
-
-<p>新しいワーカプロセスを起動します。
-これはマスタプロセスからのみ呼び出すことができます。
-
-</p>
-<h2>cluster.settings<span><a class="mark" href="#cluster_cluster_settings_1" id="cluster_cluster_settings_1">#</a></span></h2>
-<!--
-* {Object}
-  * `exec` {String} file path to worker file.  Default: `__filename`
-  * `args` {Array} string arguments passed to worker.
-    (Default=`process.argv.slice(2)`)
-  * `silent` {Boolean} whether or not to send output to parent's stdio.
-    (Default=`false`)
--->
-
-<ul>
-<li>{Object}<ul>
-<li><code>exec</code> {String} ワーカで実行するファイルへのパス.
-(デフォルトは <code>__filename</code>)</li>
-<li><code>args</code> {Array} ワーカに渡される引数となる文字列。
-(デフォルトは <code>process.argv.slice(2)</code>)</li>
-<li><code>silent</code> {Boolean} 出力を親プロセスに送るかどうか。
-(デフォルトは <code>false</code>)</li>
-</ul>
-</li>
-</ul>
-<!--
-All settings set by the `.setupMaster` is stored in this settings object.
-This object is not supposed to be change or set manually.
--->
-
-<p><code>setupMaster()</code> の設定はこのオブジェクトに保存されます。
-このオブジェクトは変更されることを想定していません。
+<div class="signature"><ul>
+<li><code>env</code> <span class="type">Object</span> Key/value pairs to add to child process environment.</li>
+<li>return <span class="type">Worker object</span></li>
+</div></ul>
+<p>Spawn a new worker process. This can only be called from the master process.
 
 </p>
 <h2>cluster.disconnect([callback])<span><a class="mark" href="#cluster_cluster_disconnect_callback" id="cluster_cluster_disconnect_callback">#</a></span></h2>
-<!--
-* `callback` {Function} called when all workers are disconnected and handlers are closed
--->
-
-<ul>
-<li><code>callback</code> {Function} 全てのワーカが切断し、ハンドルがクローズされると
-呼び出されます。</li>
-</ul>
-<!--
-When calling this method, all workers will commit a graceful suicide. When they are
+<div class="signature"><ul>
+<li><code>callback</code> <span class="type">Function</span> called when all workers are disconnected and handlers are closed</li>
+</div></ul>
+<p>When calling this method, all workers will commit a graceful suicide. When they are
 disconnected all internal handlers will be closed, allowing the master process to
 die graceful if no other event is waiting.
--->
-
-<p>このメソッドを呼び出すと、全てのワーカは強制的でない終了に向かいます。
-それらの内部的なハンドルが全てクローズされると、
-他に待機しているイベントがなければ、
-マスタプロセスを非強制的に終了することができます。
 
 </p>
-<!--
-The method takes an optional callback argument which will be called when finished.
--->
-
-<p>このメソッドはオプションの引数としてコールバックを受け取ります。
+<p>The method takes an optional callback argument which will be called when finished.
 
 </p>
 <h2>cluster.workers<span><a class="mark" href="#cluster_cluster_workers" id="cluster_cluster_workers">#</a></span></h2>
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
 </div></ul>
-<!--
-In the cluster all living worker objects are stored in this object by there
-`id` as the key. This makes it easy to loop through all living workers.
--->
-
-<p>このクラスタで生きている全てのワーカオブジェクトを、その <code>id</code>
-をキーとして保存しているオブジェクトです。
-これは全ての生きているワーカに対して繰り返しを行うことを容易にします。
+<p>A hash that stores the active worker objects, keyed by <code>id</code> field. Makes it
+easy to loop through all the workers.
 
 </p>
 <pre><code>// Go through all workers
@@ -630,80 +381,48 @@ function eachWorker(callback) {
 eachWorker(function(worker) {
   worker.send(&apos;big announcement to all workers&apos;);
 });</code></pre>
-<!--
-Should you wish to reference a worker over a communication channel, using
-the worker's unique id is the easiest way to find the worker.
--->
-
-<p>通信チャネルを越えてワーカの参照を渡す場合は、
-ワーカのユニークな ID を使ってワーカを探すのが簡単です。
+<p>Should you wish to reference a worker over a communication channel, using
+the worker&apos;s unique id is the easiest way to find the worker.
 
 </p>
 <pre><code>socket.on(&apos;data&apos;, function(id) {
   var worker = cluster.workers[id];
 });</code></pre>
 <h2>Class: Worker<span><a class="mark" href="#cluster_class_worker" id="cluster_class_worker">#</a></span></h2>
-<!--
-A Worker object contains all public information and method about a worker.
-In the master it can be obtained using `cluster.workers`. In a worker
-it can be obtained using `cluster.worker`.
--->
-
-<p>ワーカに関する全ての公開された情報やメソッドを持つオブジェクトです。
-マスタでは <code>cluster.wrokers</code> から取得することができます。
-ワーカでは <code>cluster.worker</code> から取得することができます。
+<p>A Worker object contains all public information and method about a worker.
+In the master it can be obtained using <code>cluster.workers</code>. In a worker
+it can be obtained using <code>cluster.worker</code>.
 
 </p>
 <h3>worker.id<span><a class="mark" href="#cluster_worker_id" id="cluster_worker_id">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">String</span></li>
 </div></ul>
-<!--
-Each new worker is given its own unique id, this id is stored in the
-`id`.
-
-While a worker is alive, this is the key that indexes it in
-cluster.workers
--->
-
-<p>新しいワーカはいずれもユニークな ID を与えられます。
-この ID は <code>id</code> に保存されます。
+<p>Each new worker is given its own unique id, this id is stored in the
+<code>id</code>.
 
 </p>
-<p>ワーカが生きている間、これは <code>cluseter.workers</code> のキーとなります。
+<p>While a worker is alive, this is the key that indexes it in
+cluster.workers
 
 </p>
 <h3>worker.process<span><a class="mark" href="#cluster_worker_process" id="cluster_worker_process">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">ChildProcess object</span></li>
 </div></ul>
-<!--
-All workers are created using `child_process.fork()`, the returned object
+<p>All workers are created using <code>child_process.fork()</code>, the returned object
 from this function is stored in process.
 
-See: [Child Process module](child_process.html)
--->
-
-<p>全てのワーカは <code>child_process.fork()</code> によって作成されます。
-その戻り値が <code>process</code> に設定されます。
-
 </p>
-<p>参照: <a href="child_process.html">Child Process module</a>
+<p>See: <a href="child_process.html">Child Process module</a>
 
 </p>
 <h3>worker.suicide<span><a class="mark" href="#cluster_worker_suicide" id="cluster_worker_suicide">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Boolean</span></li>
 </div></ul>
-<!--
-This property is a boolean. It is set when a worker dies after calling `.destroy()`
-or immediately after calling the `.disconnect()` method. Until then it is `undefined`.
--->
-
-<p>このプロパティは論理値型です。
-これはワーカが <code>.destroy()</code> を呼び出して終了するか、
-<code>.disconnect()</code> メソッドを呼び出した後に設定されます。
-それまでは <code>undefined</code> です。
+<p>This property is a boolean. It is set when a worker dies after calling <code>.destroy()</code>
+or immediately after calling the <code>.disconnect()</code> method. Until then it is <code>undefined</code>.
 
 </p>
 <h3>worker.send(message, [sendHandle])<span><a class="mark" href="#cluster_worker_send_message_sendhandle" id="cluster_worker_send_message_sendhandle">#</a></span></h3>
@@ -711,23 +430,13 @@ or immediately after calling the `.disconnect()` method. Until then it is `undef
 <li><code>message</code> <span class="type">Object</span></li>
 <li><code>sendHandle</code> <span class="type">Handle object</span></li>
 </div></ul>
-<!--
-This function is equal to the send methods provided by
-`child_process.fork()`.  In the master you should use this function to
+<p>This function is equal to the send methods provided by
+<code>child_process.fork()</code>.  In the master you should use this function to
 send a message to a specific worker.  However in a worker you can also use
-`process.send(message)`, since this is the same function.
-
-This example will echo back all messages from the master:
--->
-
-<p>この関数は <code>child_process.fork()</code> が返すオブジェクトの <code>send()</code>
-メソッドと同じです．
-マスタは特定のワーカにメッセージを送信するためにこの関数を
-使用することができます。
-しかし、ワーカでは <code>process.send(message)</code> を使うこともできます。
+<code>process.send(message)</code>, since this is the same function.
 
 </p>
-<p>この例はマスタからのメッセージをエコーバックします。
+<p>This example will echo back all messages from the master:
 
 </p>
 <pre><code>if (cluster.isMaster) {
@@ -740,14 +449,9 @@ This example will echo back all messages from the master:
   });
 }</code></pre>
 <h3>worker.destroy()<span><a class="mark" href="#cluster_worker_destroy" id="cluster_worker_destroy">#</a></span></h3>
-<!--
-This function will kill the worker, and inform the master to not spawn a
-new worker.  The boolean `suicide` lets you distinguish between voluntary
+<p>This function will kill the worker, and inform the master to not spawn a
+new worker.  The boolean <code>suicide</code> lets you distinguish between voluntary
 and accidental exit.
--->
-
-<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。
-boolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。
 
 </p>
 <pre><code>cluster.on(&apos;exit&apos;, function(worker, code, signal) {
@@ -759,41 +463,22 @@ boolean の <code>suicide</code> により、自発的かアクシデントに�
 // destroy worker
 worker.destroy();</code></pre>
 <h3>worker.disconnect()<span><a class="mark" href="#cluster_worker_disconnect" id="cluster_worker_disconnect">#</a></span></h3>
-<!--
-When calling this function the worker will no longer accept new connections, but
+<p>When calling this function the worker will no longer accept new connections, but
 they will be handled by any other listening worker. Existing connection will be
 allowed to exit as usual. When no more connections exist, the IPC channel to the worker
-will close allowing it to die graceful. When the IPC channel is closed the `disconnect`
-event will emit, this is then followed by the `exit` event, there is emitted when
+will close allowing it to die graceful. When the IPC channel is closed the <code>disconnect</code>
+event will emit, this is then followed by the <code>exit</code> event, there is emitted when
 the worker finally die.
--->
-
-<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続
-(それらは他のワーカによって扱われます) を受け付けなくなります。
-既存の接続は通常通りに
-コネクションが無くなると、ワーカを正常に終了するために IPC チャネルは
-閉じられます。
-IPC チャネルが閉じられると <code>&apos;disconnect&apos;</code> イベントが生成され、
-その後ワーカが終了すると <code>&apos;exit&apos;</code> イベントが生成されます。
 
 </p>
-<!--
-Because there might be long living connections, it is useful to implement a timeout.
+<p>Because there might be long living connections, it is useful to implement a timeout.
 This example ask the worker to disconnect and after 2 seconds it will destroy the
-server. An alternative wound be to execute `worker.destroy()` after 2 seconds, but
+server. An alternative wound be to execute <code>worker.destroy()</code> after 2 seconds, but
 that would normally not allow the worker to do any cleanup if needed.
--->
-
-<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために
-有益です。
-この例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。
-他の方法として <code>worker.destroy()</code> を呼び出してから
-2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを
-行えないかもしれません。
 
 </p>
 <pre><code>if (cluster.isMaster) {
-  var worker = cluser.fork();
+  var worker = cluster.fork();
   var timeout;
 
   worker.on(&apos;listening&apos;, function(address) {
@@ -829,22 +514,13 @@ that would normally not allow the worker to do any cleanup if needed.
 <div class="signature"><ul>
 <li><code>message</code> <span class="type">Object</span></li>
 </div></ul>
-<!--
-This event is the same as the one provided by `child_process.fork()`.
+<p>This event is the same as the one provided by <code>child_process.fork()</code>.
 In the master you should use this event, however in a worker you can also use
-`process.on('message')`
-
-As an example, here is a cluster that keeps count of the number of requests
-in the master process using the message system:
--->
-
-<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。
-マスタではこのイベントを使うべきですが、ワーカでは <code>process.on(&apos;message&apos;)</code>
-を使うこともできます。
+<code>process.on(&apos;message&apos;)</code>
 
 </p>
-<p>メッセージシステムを使用してクラスタ全体のリクエスト数を
-マスタプロセスで保持する例です:
+<p>As an example, here is a cluster that keeps count of the number of requests
+in the master process using the message system:
 
 </p>
 <pre><code>var cluster = require(&apos;cluster&apos;);
@@ -887,13 +563,8 @@ if (cluster.isMaster) {
   }).listen(8000);
 }</code></pre>
 <h3>Event: &apos;online&apos;<span><a class="mark" href="#cluster_event_online_1" id="cluster_event_online_1">#</a></span></h3>
-<!--
-Same as the `cluster.on('online')` event, but emits only when the state change
+<p>Same as the <code>cluster.on(&apos;online&apos;)</code> event, but emits only when the state change
 on the specified worker.
--->
-
-<p><code>cluster.on(&apos;online&apos;)</code> と同様ですが，特定のワーカの状態が変化した場合のみ
-イベントを生成します。
 
 </p>
 <pre><code>cluster.fork().on(&apos;online&apos;, function() {
@@ -903,51 +574,29 @@ on the specified worker.
 <div class="signature"><ul>
 <li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
-<!--
-Same as the `cluster.on('listening')` event, but emits only when the state change
+<p>Same as the <code>cluster.on(&apos;listening&apos;)</code> event, but emits only when the state change
 on the specified worker.
--->
-
-<p><code>cluster.on(&apos;listening&apos;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
-イベントを生成します。
 
 </p>
 <pre><code>cluster.fork().on(&apos;listening&apos;, function(address) {
   // Worker is listening
 };</code></pre>
 <h3>Event: &apos;disconnect&apos;<span><a class="mark" href="#cluster_event_disconnect_1" id="cluster_event_disconnect_1">#</a></span></h3>
-<!--
-Same as the `cluster.on('disconnect')` event, but emits only when the state change
+<p>Same as the <code>cluster.on(&apos;disconnect&apos;)</code> event, but emits only when the state change
 on the specified worker.
--->
-
-<p><code>cluster.on(&apos;disconnect&apos;)</code> と同じですが、指定されたワーカの状態が
-変更された場合のみ生成されます。
 
 </p>
 <pre><code>cluster.fork().on(&apos;disconnect&apos;, function() {
   // Worker has disconnected
 };</code></pre>
 <h3>Event: &apos;exit&apos;<span><a class="mark" href="#cluster_event_exit_1" id="cluster_event_exit_1">#</a></span></h3>
-<!--
-* `code` {Number} the exit code, if it exited normally.
-* `signal` {String} the name of the signal (eg. `'SIGHUP'`) that caused
-  the process to be killed.
--->
-
-<ul>
-<li><code>code</code> {Number} 正常に終了した場合は終了コード。</li>
-<li><code>signal</code> {String} プロセスが殺される原因となったシグナルの名前
-(例: <code>&apos;SIGHUP&apos;</code>)。</li>
-</ul>
-<!--
-Emitted by the individual worker instance, when the underlying child process
-is terminated.  See [child_process event: 'exit'](child_process.html#child_process_event_exit).
--->
-
-<p>子プロセスが終了すると、ワーカのインスタンスによって生成されます。
-<a href="child_process.html#child_process_event_exit">child_process event: &apos;exit&apos;</a>
-を参照してください。
+<div class="signature"><ul>
+<li><code>code</code> <span class="type">Number</span> the exit code, if it exited normally.</li>
+<li><code>signal</code> <span class="type">String</span> the name of the signal (eg. <code>&apos;SIGHUP&apos;</code>) that caused
+the process to be killed.</li>
+</div></ul>
+<p>Emitted by the individual worker instance, when the underlying child process
+is terminated.  See <a href="child_process.html#child_process_event_exit">child_process event: &apos;exit&apos;</a>.
 
 </p>
 <pre><code>var worker = cluster.fork();
@@ -968,7 +617,7 @@ worker.on(&apos;exit&apos;, function(code, signal) {
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
-            <li><a href="/#download">Download</a></li>
+            <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
             <li><a href="http://search.npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
@@ -988,7 +637,7 @@ worker.on(&apos;exit&apos;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

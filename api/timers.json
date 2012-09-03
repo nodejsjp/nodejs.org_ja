@@ -79,12 +79,72 @@
           "textRaw": "clearInterval(intervalId)",
           "type": "method",
           "name": "clearInterval",
-          "desc": "<!--\nStops a interval from triggering.\n-->\n\n<p>インターバルがトリガーされるのを止めます。\n</p>\n",
+          "desc": "<!--\nStops a interval from triggering.\n-->\n\n<p>インターバルがトリガーされるのを止めます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
                 {
                   "name": "intervalId"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "unref()",
+          "type": "method",
+          "name": "unref",
+          "desc": "<!--\nThe opaque value returned by `setTimeout` and `setInterval` also has the method\n`timer.unref()` which will allow you to create a timer that is active but if\nit is the only item left in the event loop won't keep the program running.\nIf the timer is already `unref`d calling `unref` again will have no effect.\n-->\n\n<p><code>setTimeout()</code> あるいは <code>setInterval()</code> が返す不透明な値は、\nアクティブであるにもかかわらず、それがイベントループの最後の一つになっても\nプログラムの実行を継続しないタイマを作ることを可能にする、\n<code>timer.unref()</code> メソッドを持っています。\n既に <code>unref</code> されたタイマで再び <code>unref</code> が呼び出されても影響はありません。\n\n</p>\n<!--\nIn the case of `setTimeout` when you `unref` you create a separate timer that\nwill wakeup the event loop, creating too many of these may adversely effect\nevent loop performance -- use wisely.\n-->\n\n<p><code>setTimeout()</code> が <code>unref</code> された場合、イベントループを起こすために独立した\nタイマが作成されるため、それらがあまりに多く作成されるとイベントループの\nパフォーマンスに悪影響を与えます -- 賢明に使ってください。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "ref()",
+          "type": "method",
+          "name": "ref",
+          "desc": "<!--\nIf you had previously `unref()`d a timer you can call `ref()` to explicitly\nrequest the timer hold the program open. If the timer is already `ref`d calling\n`ref` again will have no effect.\n-->\n\n<p>以前に <code>unref</code> されたタイマは、明示的に <code>ref()</code> を呼び出すことで\nプログラムを実行したままにするよう要求することができます。\n既に <code>ref</code> されたタイマで再び <code>ref</code> が呼び出されても影響はありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "setImmediate(callback, [arg], [...])",
+          "type": "method",
+          "name": "setImmediate",
+          "desc": "<!--\nTo schedule the \"immediate\" execution of `callback`. Returns an `immediateId`\nfor possible use with `clearImmediate()`. Optionally you can also pass\narguments to the callback.\n-->\n\n<p><code>callback</code> を「即時に」実行するようスケジュールします。\n<code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。\nオプションとして、コールバックへの引数を渡すことができます。\n\n</p>\n<!--\nImmediates are queued in the order created, and are popped off the queue once\nper loop iteration. This is different from `process.nextTick` which will\nexecute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`\nwill yield to the event loop after firing a queued callback to make sure I/O is\nnot being starved. While order is preserved for execution, other I/O events may\nfire between any two scheduled immediate callbacks.\n-->\n\n<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの\n繰り返し毎に一度、キューから取り出されます。\nこれは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに\n入れられた関数が実行される <code>process.nextTick()</code> とは異なります。\n<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが\n呼び出された後イベントループに制御を譲ります。\n二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、\n他の I/O が間に挟まるかもしれません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback"
+                },
+                {
+                  "name": "arg",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "clearImmediate(immediateId)",
+          "type": "method",
+          "name": "clearImmediate",
+          "desc": "<!--\nStops an immediate from triggering.\n-->\n\n<p><code>setImmediate()</code> に渡した関数が呼び出されることを中止します。\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "immediateId"
                 }
               ]
             }
