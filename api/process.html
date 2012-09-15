@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.8.8 Manual &amp; Documentation</title>
+  <title>process Node.js v0.8.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,8 +56,8 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#process_process">process</a><ul>
-<li><a href="#process_event_exit">Event: &apos;exit&apos;</a></li>
-<li><a href="#process_event_uncaughtexception">Event: &apos;uncaughtException&apos;</a></li>
+<li><a href="#process_event_exit">Event: &#39;exit&#39;</a></li>
+<li><a href="#process_event_uncaughtexception">Event: &#39;uncaughtException&#39;</a></li>
 <li><a href="#process_signal_events">Signal Events</a></li>
 <li><a href="#process_process_stdout">process.stdout</a></li>
 <li><a href="#process_process_stderr">process.stderr</a></li>
@@ -106,7 +106,7 @@ It is an instance of [EventEmitter][].
 
 
 </p>
-<h2>Event: &apos;exit&apos;<span><a class="mark" href="#process_event_exit" id="process_event_exit">#</a></span></h2>
+<h2>Event: &#39;exit&#39;<span><a class="mark" href="#process_event_exit" id="process_event_exit">#</a></span></h2>
 <!--
 Emitted when the process is about to exit.  This is a good hook to perform
 constant time checks of the module's state (like for unit tests).  The main
@@ -116,7 +116,7 @@ timers may not be scheduled.
 
 <p>プロセスが終了しようとしている時に生成されます。
 これは (ユニットテストのように) モジュールの状態を一定の時間でチェックするのに適したフックとなります。
-メインのイベントループは &apos;exit&apos; コールバックが終了するともはや動作しないので、
+メインのイベントループは &#39;exit&#39; コールバックが終了するともはや動作しないので、
 タイマーはスケジュールされないかもしれません。
 
 </p>
@@ -127,13 +127,13 @@ Example of listening for `exit`:
 <p><code>exit</code> を監視する例:
 
 </p>
-<pre><code>process.on(&apos;exit&apos;, function () {
+<pre><code>process.on(&#39;exit&#39;, function () {
   process.nextTick(function () {
-   console.log(&apos;This will not run&apos;);
+   console.log(&#39;This will not run&#39;);
   });
-  console.log(&apos;About to exit.&apos;);
+  console.log(&#39;About to exit.&#39;);
 });</code></pre>
-<h2>Event: &apos;uncaughtException&apos;<span><a class="mark" href="#process_event_uncaughtexception" id="process_event_uncaughtexception">#</a></span></h2>
+<h2>Event: &#39;uncaughtException&#39;<span><a class="mark" href="#process_event_uncaughtexception" id="process_event_uncaughtexception">#</a></span></h2>
 <!--
 Emitted when an exception bubbles all the way back to the event loop. If a
 listener is added for this exception, the default action (which is to print
@@ -152,17 +152,17 @@ Example of listening for `uncaughtException`:
 <p><code>uncaughtException</code> を監視する例:
 
 </p>
-<pre><code>process.on(&apos;uncaughtException&apos;, function (err) {
-  console.log(&apos;Caught exception: &apos; + err);
+<pre><code>process.on(&#39;uncaughtException&#39;, function (err) {
+  console.log(&#39;Caught exception: &#39; + err);
 });
 
 setTimeout(function () {
-  console.log(&apos;This will still run.&apos;);
+  console.log(&#39;This will still run.&#39;);
 }, 500);
 
-// Intentionally cause an exception, but don&apos;t catch it.
+// Intentionally cause an exception, but don&#39;t catch it.
 nonexistentFunc();
-console.log(&apos;This will not run.&apos;);</code></pre>
+console.log(&#39;This will not run.&#39;);</code></pre>
 <!--
 Note that `uncaughtException` is a very crude mechanism for exception
 handling and may be removed in the future.
@@ -232,11 +232,11 @@ Example of listening for `SIGINT`:
 <p><code>SIGINT</code>を監視する例:
 
 </p>
-<pre><code>// Start reading from stdin so we don&apos;t exit.
+<pre><code>// Start reading from stdin so we don&#39;t exit.
 process.stdin.resume();
 
-process.on(&apos;SIGINT&apos;, function () {
-  console.log(&apos;Got SIGINT.  Press Control-D to exit.&apos;);
+process.on(&#39;SIGINT&#39;, function () {
+  console.log(&#39;Got SIGINT.  Press Control-D to exit.&#39;);
 });</code></pre>
 <!--
 An easy way to send the `SIGINT` signal is with `Control-C` in most terminal
@@ -263,7 +263,7 @@ Example: the definition of `console.log`
 
 </p>
 <pre><code>console.log = function (d) {
-  process.stdout.write(d + &apos;\n&apos;);
+  process.stdout.write(d + &#39;\n&#39;);
 };</code></pre>
 <!--
 `process.stderr` and `process.stdout` are unlike other streams in Node in
@@ -320,14 +320,14 @@ Example of opening standard input and listening for both events:
 
 </p>
 <pre><code>process.stdin.resume();
-process.stdin.setEncoding(&apos;utf8&apos;);
+process.stdin.setEncoding(&#39;utf8&#39;);
 
-process.stdin.on(&apos;data&apos;, function (chunk) {
-  process.stdout.write(&apos;data: &apos; + chunk);
+process.stdin.on(&#39;data&#39;, function (chunk) {
+  process.stdout.write(&#39;data: &#39; + chunk);
 });
 
-process.stdin.on(&apos;end&apos;, function () {
-  process.stdout.write(&apos;end&apos;);
+process.stdin.on(&#39;end&#39;, function () {
+  process.stdout.write(&#39;end&#39;);
 });</code></pre>
 <h2>process.argv<span><a class="mark" href="#process_process_argv" id="process_process_argv">#</a></span></h2>
 <!--
@@ -337,13 +337,13 @@ next elements will be any additional command line arguments.
 -->
 
 <p>コマンドライン引数を含む配列です。
-最初の要素は &apos;node&apos;、2 番目の要素は JavaScript ファイルの名前になります。
+最初の要素は &#39;node&#39;、2 番目の要素は JavaScript ファイルの名前になります。
 その後の要素はコマンドラインの追加の引数になります。
 
 </p>
 <pre><code>// print process.argv
 process.argv.forEach(function (val, index, array) {
-  console.log(index + &apos;: &apos; + val);
+  console.log(index + &#39;: &#39; + val);
 });</code></pre>
 <!--
 This will generate:
@@ -393,13 +393,13 @@ Changes the current working directory of the process or throws an exception if t
 もし失敗した場合は例外をスローします。
 
 </p>
-<pre><code>console.log(&apos;Starting directory: &apos; + process.cwd());
+<pre><code>console.log(&#39;Starting directory: &#39; + process.cwd());
 try {
-  process.chdir(&apos;/tmp&apos;);
-  console.log(&apos;New directory: &apos; + process.cwd());
+  process.chdir(&#39;/tmp&#39;);
+  console.log(&#39;New directory: &#39; + process.cwd());
 }
 catch (err) {
-  console.log(&apos;chdir: &apos; + err);
+  console.log(&#39;chdir: &#39; + err);
 }</code></pre>
 <h2>process.cwd()<span><a class="mark" href="#process_process_cwd" id="process_process_cwd">#</a></span></h2>
 <!--
@@ -409,7 +409,7 @@ Returns the current working directory of the process.
 <p>プロセスのカレントワーキングディレクトリを返します。
 
 </p>
-<pre><code>console.log(&apos;Current directory: &apos; + process.cwd());</code></pre>
+<pre><code>console.log(&#39;Current directory: &#39; + process.cwd());</code></pre>
 <h2>process.env<span><a class="mark" href="#process_process_env" id="process_process_env">#</a></span></h2>
 <!--
 An object containing the user environment. See environ(7).
@@ -464,7 +464,7 @@ This is the numerical group id, not the group name.
 
 </p>
 <pre><code>if (process.getgid) {
-  console.log(&apos;Current gid: &apos; + process.getgid());
+  console.log(&#39;Current gid: &#39; + process.getgid());
 }</code></pre>
 <h2>process.setgid(id)<span><a class="mark" href="#process_process_setgid_id" id="process_process_setgid_id">#</a></span></h2>
 <!--
@@ -487,13 +487,13 @@ blocks while resolving it to a numerical ID.
 
 </p>
 <pre><code>if (process.getgid &amp;&amp; process.setgid) {
-  console.log(&apos;Current gid: &apos; + process.getgid());
+  console.log(&#39;Current gid: &#39; + process.getgid());
   try {
     process.setgid(501);
-    console.log(&apos;New gid: &apos; + process.getgid());
+    console.log(&#39;New gid: &#39; + process.getgid());
   }
   catch (err) {
-    console.log(&apos;Failed to set gid: &apos; + err);
+    console.log(&#39;Failed to set gid: &#39; + err);
   }
 }</code></pre>
 <h2>process.getuid()<span><a class="mark" href="#process_process_getuid" id="process_process_getuid">#</a></span></h2>
@@ -515,7 +515,7 @@ This is the numerical userid, not the username.
 
 </p>
 <pre><code>if (process.getuid) {
-  console.log(&apos;Current uid: &apos; + process.getuid());
+  console.log(&#39;Current uid: &#39; + process.getuid());
 }</code></pre>
 <h2>process.setuid(id)<span><a class="mark" href="#process_process_setuid_id" id="process_process_setuid_id">#</a></span></h2>
 <!--
@@ -538,13 +538,13 @@ blocks while resolving it to a numerical ID.
 
 </p>
 <pre><code>if (process.getuid &amp;&amp; process.setuid) {
-  console.log(&apos;Current uid: &apos; + process.getuid());
+  console.log(&#39;Current uid: &#39; + process.getuid());
   try {
     process.setuid(501);
-    console.log(&apos;New uid: &apos; + process.getuid());
+    console.log(&#39;New uid: &#39; + process.getuid());
   }
   catch (err) {
-    console.log(&apos;Failed to set uid: &apos; + err);
+    console.log(&#39;Failed to set uid: &#39; + err);
   }
 }</code></pre>
 <h2>process.version<span><a class="mark" href="#process_process_version" id="process_process_version">#</a></span></h2>
@@ -555,7 +555,7 @@ A compiled-in property that exposes `NODE_VERSION`.
 <p><code>NODE_VERSION</code> を提示するコンパイル済みプロパティです。
 
 </p>
-<pre><code>console.log(&apos;Version: &apos; + process.version);</code></pre>
+<pre><code>console.log(&#39;Version: &#39; + process.version);</code></pre>
 <h2>process.versions<span><a class="mark" href="#process_process_versions" id="process_process_versions">#</a></span></h2>
 <!--
 A property exposing version strings of node and its dependencies.
@@ -572,11 +572,11 @@ Will output:
 <p>は以下を出力します。
 
 </p>
-<pre><code>{ node: &apos;0.4.12&apos;,
-  v8: &apos;3.1.8.26&apos;,
-  ares: &apos;1.7.4&apos;,
-  ev: &apos;4.4&apos;,
-  openssl: &apos;1.0.0e-fips&apos; }</code></pre>
+<pre><code>{ node: &#39;0.4.12&#39;,
+  v8: &#39;3.1.8.26&#39;,
+  ares: &#39;1.7.4&#39;,
+  ev: &#39;4.4&#39;,
+  openssl: &#39;1.0.0e-fips&#39; }</code></pre>
 <h2>process.config<span><a class="mark" href="#process_process_config" id="process_process_config">#</a></span></h2>
 <!--
 An Object containing the JavaScript representation of the configure options
@@ -597,23 +597,23 @@ JavaScript で表現したオブジェクトを保持します。
 </p>
 <pre><code>{ target_defaults:
    { cflags: [],
-     default_configuration: &apos;Release&apos;,
+     default_configuration: &#39;Release&#39;,
      defines: [],
      include_dirs: [],
      libraries: [] },
   variables:
-   { host_arch: &apos;x64&apos;,
-     node_install_npm: &apos;true&apos;,
-     node_install_waf: &apos;true&apos;,
-     node_prefix: &apos;&apos;,
-     node_shared_v8: &apos;false&apos;,
-     node_shared_zlib: &apos;false&apos;,
-     node_use_dtrace: &apos;false&apos;,
-     node_use_openssl: &apos;true&apos;,
-     node_shared_openssl: &apos;false&apos;,
-     strict_aliasing: &apos;true&apos;,
-     target_arch: &apos;x64&apos;,
-     v8_use_snapshot: &apos;true&apos; } }</code></pre>
+   { host_arch: &#39;x64&#39;,
+     node_install_npm: &#39;true&#39;,
+     node_install_waf: &#39;true&#39;,
+     node_prefix: &#39;&#39;,
+     node_shared_v8: &#39;false&#39;,
+     node_shared_zlib: &#39;false&#39;,
+     node_use_dtrace: &#39;false&#39;,
+     node_use_openssl: &#39;true&#39;,
+     node_shared_openssl: &#39;false&#39;,
+     strict_aliasing: &#39;true&#39;,
+     target_arch: &#39;x64&#39;,
+     v8_use_snapshot: &#39;true&#39; } }</code></pre>
 <h2>process.kill(pid, [signal])<span><a class="mark" href="#process_process_kill_pid_signal" id="process_process_kill_pid_signal">#</a></span></h2>
 <!--
 Send a signal to a process. `pid` is the process id and `signal` is the
@@ -624,8 +624,8 @@ See kill(2) for more information.
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
-シグナルの名前は &apos;SIGINT&apos; や &apos;SIGUSR1&apos; のような文字列です。
-省略すると、シグナルは &apos;SIGTERM&apos; となります。
+シグナルの名前は &#39;SIGINT&#39; や &#39;SIGUSR1&#39; のような文字列です。
+省略すると、シグナルは &#39;SIGTERM&#39; となります。
 詳細は kill(2) を参照してください。
 
 </p>
@@ -647,16 +647,16 @@ Example of sending a signal to yourself:
 <p>自身にシグナルを送信する例:
 
 </p>
-<pre><code>process.on(&apos;SIGHUP&apos;, function () {
-  console.log(&apos;Got SIGHUP signal.&apos;);
+<pre><code>process.on(&#39;SIGHUP&#39;, function () {
+  console.log(&#39;Got SIGHUP signal.&#39;);
 });
 
 setTimeout(function () {
-  console.log(&apos;Exiting.&apos;);
+  console.log(&#39;Exiting.&#39;);
   process.exit(0);
 }, 100);
 
-process.kill(process.pid, &apos;SIGHUP&apos;);</code></pre>
+process.kill(process.pid, &#39;SIGHUP&#39;);</code></pre>
 <h2>process.pid<span><a class="mark" href="#process_process_pid" id="process_process_pid">#</a></span></h2>
 <!--
 The PID of the process.
@@ -665,13 +665,13 @@ The PID of the process.
 <p>このプロセスの PID です。
 
 </p>
-<pre><code>console.log(&apos;This process is pid &apos; + process.pid);</code></pre>
+<pre><code>console.log(&#39;This process is pid &#39; + process.pid);</code></pre>
 <h2>process.title<span><a class="mark" href="#process_process_title" id="process_process_title">#</a></span></h2>
 <!--
 Getter/setter to set what is displayed in 'ps'.
 -->
 
-<p>&apos;ps&apos; でどのよう表示されるかを設定するための getter/setter です。
+<p>&#39;ps&#39; でどのよう表示されるかを設定するための getter/setter です。
 
 
 </p>
@@ -680,22 +680,22 @@ Getter/setter to set what is displayed in 'ps'.
 What processor architecture you're running on: `'arm'`, `'ia32'`, or `'x64'`.
 -->
 
-<p>実行しているプロセッサのアーキテクチャ: <code>&apos;arm&apos;</code>、<code>&apos;ia32&apos;</code>、または
-<code>&apos;x64&apos;</code>。
+<p>実行しているプロセッサのアーキテクチャ: <code>&#39;arm&#39;</code>、<code>&#39;ia32&#39;</code>、または
+<code>&#39;x64&#39;</code>。
 
 </p>
-<pre><code>console.log(&apos;This processor architecture is &apos; + process.arch);</code></pre>
+<pre><code>console.log(&#39;This processor architecture is &#39; + process.arch);</code></pre>
 <h2>process.platform<span><a class="mark" href="#process_process_platform" id="process_process_platform">#</a></span></h2>
 <!--
 What platform you're running on:
-`'darwin'`, `'freebsd'`, `'linux'`, `'solaris'` or `'win32'`
+`'darwin'`, `'freebsd'`, `'linux'`, `'sunos'` or `'win32'`
 -->
 
 <p>どのプラットフォームで動いているかを示します:
-<code>&apos;darwin&apos;</code>、<code>&apos;freebsd&apos;</code>、<code>&apos;linux&apos;</code>、<code>&apos;solaris&apos;</code>、または <code>&apos;win32&apos;</code>
+<code>&#39;darwin&#39;</code>、<code>&#39;freebsd&#39;</code>、<code>&#39;linux&#39;</code>、<code>&#39;sunos&#39;</code>、または <code>&#39;win32&#39;</code>
 
 </p>
-<pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>
+<pre><code>console.log(&#39;This platform is &#39; + process.platform);</code></pre>
 <h2>process.memoryUsage()<span><a class="mark" href="#process_process_memoryusage" id="process_process_memoryusage">#</a></span></h2>
 <!--
 Returns an object describing the memory usage of the Node process
@@ -705,7 +705,7 @@ measured in bytes.
 <p>Node プロセスのメモリ使用状況をバイト単位で記述したオブジェクトを返します。
 
 </p>
-<pre><code>var util = require(&apos;util&apos;);
+<pre><code>var util = require(&#39;util&#39;);
 
 console.log(util.inspect(process.memoryUsage()));</code></pre>
 <!--
@@ -739,7 +739,7 @@ efficient.
 
 </p>
 <pre><code>process.nextTick(function () {
-  console.log(&apos;nextTick callback&apos;);
+  console.log(&#39;nextTick callback&#39;);
 });</code></pre>
 <h2>process.umask([mask])<span><a class="mark" href="#process_process_umask_mask" id="process_process_umask_mask">#</a></span></h2>
 <!--
@@ -756,8 +756,8 @@ given, otherwise returns the current mask.
 <pre><code>var oldmask, newmask = 0644;
 
 oldmask = process.umask(newmask);
-console.log(&apos;Changed umask from: &apos; + oldmask.toString(8) +
-            &apos; to &apos; + newmask.toString(8));</code></pre>
+console.log(&#39;Changed umask from: &#39; + oldmask.toString(8) +
+            &#39; to &#39; + newmask.toString(8));</code></pre>
 <h2>process.uptime()<span><a class="mark" href="#process_process_uptime" id="process_process_uptime">#</a></span></h2>
 <!--
 Number of seconds Node has been running.
@@ -794,7 +794,7 @@ setTimeout(function () {
   t = process.hrtime(t);
   // [ 1, 6962306 ]
 
-  console.log(&apos;benchmark took %d seconds and %d nanoseconds&apos;, t[0], t[1]);
+  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;, t[0], t[1]);
   // benchmark took 1 seconds and 6962306 nanoseconds
 }, 1000);</code></pre>
 
@@ -825,7 +825,7 @@ setTimeout(function () {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
