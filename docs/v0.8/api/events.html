@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Events Node.js v0.8.8 Manual &amp; Documentation</title>
+  <title>Events Node.js v0.8.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/events.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -65,7 +65,7 @@
 <li><a href="#events_emitter_setmaxlisteners_n">emitter.setMaxListeners(n)</a></li>
 <li><a href="#events_emitter_listeners_event">emitter.listeners(event)</a></li>
 <li><a href="#events_emitter_emit_event_arg1_arg2">emitter.emit(event, [arg1], [arg2], [...])</a></li>
-<li><a href="#events_event_newlistener">Event: &apos;newListener&apos;</a></li>
+<li><a href="#events_event_newlistener">Event: &#39;newListener&#39;</a></li>
 </ul>
 </li>
 </ul>
@@ -117,7 +117,7 @@ is emitted. These functions are called _listeners_.
 To access the EventEmitter class, `require('events').EventEmitter`.
 -->
 
-<p>EventEmitterクラスにアクセスするには、<code>require(&apos;events&apos;).EventEmitter</code> を使います。
+<p>EventEmitterクラスにアクセスするには、<code>require(&#39;events&#39;).EventEmitter</code> を使います。
 
 </p>
 <!--
@@ -128,7 +128,7 @@ trace and exit the program.
 -->
 
 <p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、
-典型的な動作は <code>&apos;error&apos;</code> イベントを生成することです。
+典型的な動作は <code>&#39;error&#39;</code> イベントを生成することです。
 node ではエラーイベントは特別に扱われます．
 もしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。
 
@@ -138,7 +138,7 @@ All EventEmitters emit the event `'newListener'` when new listeners are
 added.
 -->
 
-<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&apos;newListener&apos;</code> を生成します。
+<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&#39;newListener&#39;</code> を生成します。
 
 </p>
 <h3>emitter.addListener(event, listener)<span><a class="mark" href="#events_emitter_addlistener_event_listener" id="events_emitter_addlistener_event_listener">#</a></span></h3>
@@ -150,8 +150,8 @@ Adds a listener to the end of the listeners array for the specified event.
 <p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。
 
 </p>
-<pre><code>server.on(&apos;connection&apos;, function (stream) {
-  console.log(&apos;someone connected!&apos;);
+<pre><code>server.on(&#39;connection&#39;, function (stream) {
+  console.log(&#39;someone connected!&#39;);
 });</code></pre>
 <h3>emitter.once(event, listener)<span><a class="mark" href="#events_emitter_once_event_listener" id="events_emitter_once_event_listener">#</a></span></h3>
 <!--
@@ -164,8 +164,8 @@ it is removed.
 このリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。
 
 </p>
-<pre><code>server.once(&apos;connection&apos;, function (stream) {
-  console.log(&apos;Ah, we have our first user!&apos;);
+<pre><code>server.once(&#39;connection&#39;, function (stream) {
+  console.log(&#39;Ah, we have our first user!&#39;);
 });</code></pre>
 <h3>emitter.removeListener(event, listener)<span><a class="mark" href="#events_emitter_removelistener_event_listener" id="events_emitter_removelistener_event_listener">#</a></span></h3>
 <!--
@@ -178,11 +178,11 @@ Remove a listener from the listener array for the specified event.
 
 </p>
 <pre><code>var callback = function(stream) {
-  console.log(&apos;someone connected!&apos;);
+  console.log(&#39;someone connected!&#39;);
 };
-server.on(&apos;connection&apos;, callback);
+server.on(&#39;connection&#39;, callback);
 // ...
-server.removeListener(&apos;connection&apos;, callback);</code></pre>
+server.removeListener(&#39;connection&#39;, callback);</code></pre>
 <h3>emitter.removeAllListeners([event])<span><a class="mark" href="#events_emitter_removealllisteners_event" id="events_emitter_removealllisteners_event">#</a></span></h3>
 <!--
 Removes all listeners, or those of the specified event.
@@ -224,10 +224,10 @@ Returns an array of listeners for the specified event.
 <p>指定されたイベントに対するリスナー配列を返します。
 
 </p>
-<pre><code>server.on(&apos;connection&apos;, function (stream) {
-  console.log(&apos;someone connected!&apos;);
+<pre><code>server.on(&#39;connection&#39;, function (stream) {
+  console.log(&#39;someone connected!&#39;);
 });
-console.log(util.inspect(server.listeners(&apos;connection&apos;))); // [ [Function] ]</code></pre>
+console.log(util.inspect(server.listeners(&#39;connection&#39;))); // [ [Function] ]</code></pre>
 <!--
 This array **may** be a mutable reference to the same underlying list of
 listeners that is used by the event subsystem.  However, certain
@@ -274,7 +274,7 @@ Execute each of the listeners in order with the supplied arguments.
 <p>提供された引数の並びでそれぞれのリスナーを実行します。
 
 </p>
-<h3>Event: &apos;newListener&apos;<span><a class="mark" href="#events_event_newlistener" id="events_event_newlistener">#</a></span></h3>
+<h3>Event: &#39;newListener&#39;<span><a class="mark" href="#events_event_newlistener" id="events_event_newlistener">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>event</code> <span class="type">String</span> The event name</li>
 <li><code>listener</code> <span class="type">Function</span> The event handler function</li>
@@ -313,7 +313,7 @@ This event is emitted any time someone adds a new listener.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

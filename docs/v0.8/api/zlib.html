@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Zlib Node.js v0.8.8 Manual &amp; Documentation</title>
+  <title>Zlib Node.js v0.8.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/zlib.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -98,7 +98,7 @@ You can access this module with:
 <p>このモジュールは次のようにアクセスできます。
 
 </p>
-<pre><code>var zlib = require(&apos;zlib&apos;);</code></pre>
+<pre><code>var zlib = require(&#39;zlib&#39;);</code></pre>
 <!--
 This provides bindings to Gzip/Gunzip, Deflate/Inflate, and
 DeflateRaw/InflateRaw classes.  Each class takes the same options, and
@@ -121,9 +121,9 @@ fs.ReadStream into a zlib stream, then into an fs.WriteStream.
 
 </p>
 <pre><code>var gzip = zlib.createGzip();
-var fs = require(&apos;fs&apos;);
-var inp = fs.createReadStream(&apos;input.txt&apos;);
-var out = fs.createWriteStream(&apos;input.txt.gz&apos;);
+var fs = require(&#39;fs&#39;);
+var inp = fs.createReadStream(&#39;input.txt&#39;);
+var out = fs.createWriteStream(&#39;input.txt.gz&#39;);
 
 inp.pipe(gzip).pipe(out);</code></pre>
 <!--
@@ -135,14 +135,14 @@ the convenience methods.
 を使うことにより、ワンステップで行うことができます。
 
 </p>
-<pre><code>var input = &apos;.................................&apos;;
+<pre><code>var input = &#39;.................................&#39;;
 zlib.deflate(input, function(err, buffer) {
   if (!err) {
-    console.log(buffer.toString(&apos;base64&apos;));
+    console.log(buffer.toString(&#39;base64&#39;));
   }
 });
 
-var buffer = new Buffer(&apos;eJzT0yMAAGTvBe8=&apos;, &apos;base64&apos;);
+var buffer = new Buffer(&#39;eJzT0yMAAGTvBe8=&#39;, &#39;base64&#39;);
 zlib.unzip(buffer, function(err, buffer) {
   if (!err) {
     console.log(buffer.toString());
@@ -177,22 +177,22 @@ zlibの使い方に関する速度／メモリ／圧縮率のトレードオフ�
 
 </p>
 <pre><code>// client request example
-var zlib = require(&apos;zlib&apos;);
-var http = require(&apos;http&apos;);
-var fs = require(&apos;fs&apos;);
-var request = http.get({ host: &apos;izs.me&apos;,
-                         path: &apos;/&apos;,
+var zlib = require(&#39;zlib&#39;);
+var http = require(&#39;http&#39;);
+var fs = require(&#39;fs&#39;);
+var request = http.get({ host: &#39;izs.me&#39;,
+                         path: &#39;/&#39;,
                          port: 80,
-                         headers: { &apos;accept-encoding&apos;: &apos;gzip,deflate&apos; } });
-request.on(&apos;response&apos;, function(response) {
-  var output = fs.createWriteStream(&apos;izs.me_index.html&apos;);
+                         headers: { &#39;accept-encoding&#39;: &#39;gzip,deflate&#39; } });
+request.on(&#39;response&#39;, function(response) {
+  var output = fs.createWriteStream(&#39;izs.me_index.html&#39;);
 
-  switch (response.headers[&apos;content-encoding&apos;]) {
+  switch (response.headers[&#39;content-encoding&#39;]) {
     // or, just use zlib.createUnzip() to handle both cases
-    case &apos;gzip&apos;:
+    case &#39;gzip&#39;:
       response.pipe(zlib.createGunzip()).pipe(output);
       break;
-    case &apos;deflate&apos;:
+    case &#39;deflate&#39;:
       response.pipe(zlib.createInflate()).pipe(output);
       break;
     default:
@@ -204,23 +204,23 @@ request.on(&apos;response&apos;, function(response) {
 // server example
 // Running a gzip operation on every request is quite expensive.
 // It would be much more efficient to cache the compressed buffer.
-var zlib = require(&apos;zlib&apos;);
-var http = require(&apos;http&apos;);
-var fs = require(&apos;fs&apos;);
+var zlib = require(&#39;zlib&#39;);
+var http = require(&#39;http&#39;);
+var fs = require(&#39;fs&#39;);
 http.createServer(function(request, response) {
-  var raw = fs.createReadStream(&apos;index.html&apos;);
-  var acceptEncoding = request.headers[&apos;accept-encoding&apos;];
+  var raw = fs.createReadStream(&#39;index.html&#39;);
+  var acceptEncoding = request.headers[&#39;accept-encoding&#39;];
   if (!acceptEncoding) {
-    acceptEncoding = &apos;&apos;;
+    acceptEncoding = &#39;&#39;;
   }
 
   // Note: this is not a conformant accept-encoding parser.
   // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3
   if (acceptEncoding.match(/\bdeflate\b/)) {
-    response.writeHead(200, { &apos;content-encoding&apos;: &apos;deflate&apos; });
+    response.writeHead(200, { &#39;content-encoding&#39;: &#39;deflate&#39; });
     raw.pipe(zlib.createDeflate()).pipe(response);
   } else if (acceptEncoding.match(/\bgzip\b/)) {
-    response.writeHead(200, { &apos;content-encoding&apos;: &apos;gzip&apos; });
+    response.writeHead(200, { &#39;content-encoding&#39;: &#39;gzip&#39; });
     raw.pipe(zlib.createGzip()).pipe(response);
   } else {
     response.writeHead(200, {});
@@ -563,7 +563,7 @@ documentation](http://zlib.net/manual.html#Constants).  See
 <http://zlib.net/manual.html#Constants> for more details.
 -->
 
-<p>zlib.h に定義された定数は <code>require(&apos;zlib&apos;)</code> でも定義されます。
+<p>zlib.h に定義された定数は <code>require(&#39;zlib&#39;)</code> でも定義されます。
 通常の使い方ではこれらを設定する必要はありません。
 それが存在することで驚かれないように、これらはドキュメント化されます。
 このセクションのほとんどは
@@ -697,7 +697,7 @@ For initializing zalloc, zfree, opaque.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

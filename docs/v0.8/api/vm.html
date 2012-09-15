@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Executing JavaScript Node.js v0.8.8 Manual &amp; Documentation</title>
+  <title>Executing JavaScript Node.js v0.8.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/vm.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -89,7 +89,7 @@ You can access this module with:
 <p>次のようにすることで、このモジュールにアクセスすることができます:
 
 </p>
-<pre><code>var vm = require(&apos;vm&apos;);</code></pre>
+<pre><code>var vm = require(&#39;vm&#39;);</code></pre>
 <!--
 JavaScript code can be compiled and run immediately or compiled, saved, and run later.
 -->
@@ -204,14 +204,14 @@ Example of using `vm.runInThisContext` and `eval` to run the same code:
 </p>
 <pre><code>var localVar = 123,
     usingscript, evaled,
-    vm = require(&apos;vm&apos;);
+    vm = require(&#39;vm&#39;);
 
-usingscript = vm.runInThisContext(&apos;localVar = 1;&apos;,
-  &apos;myfile.vm&apos;);
-console.log(&apos;localVar: &apos; + localVar + &apos;, usingscript: &apos; +
+usingscript = vm.runInThisContext(&#39;localVar = 1;&#39;,
+  &#39;myfile.vm&#39;);
+console.log(&#39;localVar: &#39; + localVar + &#39;, usingscript: &#39; +
   usingscript);
-evaled = eval(&apos;localVar = 1;&apos;);
-console.log(&apos;localVar: &apos; + localVar + &apos;, evaled: &apos; +
+evaled = eval(&#39;localVar = 1;&#39;);
+console.log(&#39;localVar: &#39; + localVar + &#39;, evaled: &#39; +
   evaled);
 
 // localVar: 123, usingscript: 1
@@ -260,17 +260,17 @@ These globals are contained in the sandbox.
 これらのグローバル変数はサンドボックスに含まれます。
 
 </p>
-<pre><code>var util = require(&apos;util&apos;),
-    vm = require(&apos;vm&apos;),
+<pre><code>var util = require(&#39;util&#39;),
+    vm = require(&#39;vm&#39;),
     sandbox = {
-      animal: &apos;cat&apos;,
+      animal: &#39;cat&#39;,
       count: 2
     };
 
-vm.runInNewContext(&apos;count += 1; name = &quot;kitty&quot;&apos;, sandbox, &apos;myfile.vm&apos;);
+vm.runInNewContext(&#39;count += 1; name = &quot;kitty&quot;&#39;, sandbox, &#39;myfile.vm&#39;);
 console.log(util.inspect(sandbox));
 
-// { animal: &apos;cat&apos;, count: 3, name: &apos;kitty&apos; }</code></pre>
+// { animal: &#39;cat&#39;, count: 3, name: &#39;kitty&#39; }</code></pre>
 <!--
 Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
 global variable leakage, `vm.runInNewContext` is quite useful, but safely running untrusted code
@@ -315,18 +315,18 @@ Example: compile and execute code in a existing context.
 <p>例: コードをコンパイルして既存のコンテキストで実行します。
 
 </p>
-<pre><code>var util = require(&apos;util&apos;),
-    vm = require(&apos;vm&apos;),
+<pre><code>var util = require(&#39;util&#39;),
+    vm = require(&#39;vm&#39;),
     initSandbox = {
-      animal: &apos;cat&apos;,
+      animal: &#39;cat&#39;,
       count: 2
     },
     context = vm.createContext(initSandbox);
 
-vm.runInContext(&apos;count += 1; name = &quot;CATT&quot;&apos;, context, &apos;myfile.vm&apos;);
+vm.runInContext(&#39;count += 1; name = &quot;CATT&quot;&#39;, context, &#39;myfile.vm&#39;);
 console.log(util.inspect(context));
 
-// { animal: &apos;cat&apos;, count: 3, name: &apos;CATT&apos; }</code></pre>
+// { animal: &#39;cat&#39;, count: 3, name: &#39;CATT&#39; }</code></pre>
 <!--
 Note that `createContext` will perform a shallow clone of the supplied sandbox object in order to
 initialize the global object of the freshly constructed context.
@@ -423,11 +423,11 @@ Example of using `script.runInThisContext` to compile code once and run it multi
 <p><code>script.runInThisContext</code> を使ってコードを一度だけコンパイルし、複数回実行する例:
 
 </p>
-<pre><code>var vm = require(&apos;vm&apos;);
+<pre><code>var vm = require(&#39;vm&#39;);
 
 globalVar = 0;
 
-var script = vm.createScript(&apos;globalVar += 1&apos;, &apos;myfile.vm&apos;);
+var script = vm.createScript(&#39;globalVar += 1&#39;, &#39;myfile.vm&#39;);
 
 for (var i = 0; i &lt; 1000 ; i += 1) {
   script.runInThisContext();
@@ -460,14 +460,14 @@ These globals are contained in the sandbox.
 これらのグローバル変数はサンドボックスに含まれます。
 
 </p>
-<pre><code>var util = require(&apos;util&apos;),
-    vm = require(&apos;vm&apos;),
+<pre><code>var util = require(&#39;util&#39;),
+    vm = require(&#39;vm&#39;),
     sandbox = {
-      animal: &apos;cat&apos;,
+      animal: &#39;cat&#39;,
       count: 2
     };
 
-var script = vm.createScript(&apos;count += 1; name = &quot;kitty&quot;&apos;, &apos;myfile.vm&apos;);
+var script = vm.createScript(&#39;count += 1; name = &quot;kitty&quot;&#39;, &#39;myfile.vm&#39;);
 
 for (var i = 0; i &lt; 10 ; i += 1) {
   script.runInNewContext(sandbox);
@@ -475,7 +475,7 @@ for (var i = 0; i &lt; 10 ; i += 1) {
 
 console.log(util.inspect(sandbox));
 
-// { animal: &apos;cat&apos;, count: 12, name: &apos;kitty&apos; }</code></pre>
+// { animal: &#39;cat&#39;, count: 12, name: &#39;kitty&#39; }</code></pre>
 <!--
 Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
 global variable leakage, `script.runInNewContext` is quite useful, but safely running untrusted code
@@ -514,7 +514,7 @@ requires a separate process.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

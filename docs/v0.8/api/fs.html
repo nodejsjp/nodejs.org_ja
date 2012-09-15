@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.8.8 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.8.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -112,8 +112,8 @@
 <li><a href="#fs_fs_readfilesync_filename_encoding">fs.readFileSync(filename, [encoding])</a></li>
 <li><a href="#fs_fs_writefile_filename_data_encoding_callback">fs.writeFile(filename, data, [encoding], [callback])</a></li>
 <li><a href="#fs_fs_writefilesync_filename_data_encoding">fs.writeFileSync(filename, data, [encoding])</a></li>
-<li><a href="#fs_fs_appendfile_filename_data_encoding_utf8_callback">fs.appendFile(filename, data, encoding=&apos;utf8&apos;, [callback])</a></li>
-<li><a href="#fs_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&apos;utf8&apos;)</a></li>
+<li><a href="#fs_fs_appendfile_filename_data_encoding_utf8_callback">fs.appendFile(filename, data, encoding=&#39;utf8&#39;, [callback])</a></li>
+<li><a href="#fs_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&#39;utf8&#39;)</a></li>
 <li><a href="#fs_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
 <li><a href="#fs_fs_unwatchfile_filename_listener">fs.unwatchFile(filename, [listener])</a></li>
 <li><a href="#fs_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
@@ -129,19 +129,19 @@
 <li><a href="#fs_class_fs_stats">Class: fs.Stats</a></li>
 <li><a href="#fs_fs_createreadstream_path_options">fs.createReadStream(path, [options])</a></li>
 <li><a href="#fs_class_fs_readstream">Class: fs.ReadStream</a><ul>
-<li><a href="#fs_event_open">Event: &apos;open&apos;</a></li>
+<li><a href="#fs_event_open">Event: &#39;open&#39;</a></li>
 </ul>
 </li>
 <li><a href="#fs_fs_createwritestream_path_options">fs.createWriteStream(path, [options])</a></li>
 <li><a href="#fs_fs_writestream">fs.WriteStream</a><ul>
-<li><a href="#fs_event_open_1">Event: &apos;open&apos;</a></li>
+<li><a href="#fs_event_open_1">Event: &#39;open&#39;</a></li>
 <li><a href="#fs_file_byteswritten">file.bytesWritten</a></li>
 </ul>
 </li>
 <li><a href="#fs_class_fs_fswatcher">Class: fs.FSWatcher</a><ul>
 <li><a href="#fs_watcher_close">watcher.close()</a></li>
-<li><a href="#fs_event_change">Event: &apos;change&apos;</a></li>
-<li><a href="#fs_event_error">Event: &apos;error&apos;</a></li>
+<li><a href="#fs_event_change">Event: &#39;change&#39;</a></li>
+<li><a href="#fs_event_error">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 </ul>
@@ -162,7 +162,7 @@ synchronous forms.
 -->
 
 <p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。
-このモジュールを使用するには <code>require(&apos;fs&apos;)</code> してください。
+このモジュールを使用するには <code>require(&#39;fs&#39;)</code> してください。
 全てのメソッドは非同期と同期の形式があります。
 
 </p>
@@ -193,11 +193,11 @@ Here is an example of the asynchronous version:
 <p>非同期バージョンの例です:
 
 </p>
-<pre><code>var fs = require(&apos;fs&apos;);
+<pre><code>var fs = require(&#39;fs&#39;);
 
-fs.unlink(&apos;/tmp/hello&apos;, function (err) {
+fs.unlink(&#39;/tmp/hello&#39;, function (err) {
   if (err) throw err;
-  console.log(&apos;successfully deleted /tmp/hello&apos;);
+  console.log(&#39;successfully deleted /tmp/hello&#39;);
 });</code></pre>
 <!--
 Here is the synchronous version:
@@ -206,10 +206,10 @@ Here is the synchronous version:
 <p>同期バージョンです:
 
 </p>
-<pre><code>var fs = require(&apos;fs&apos;);
+<pre><code>var fs = require(&#39;fs&#39;);
 
-fs.unlinkSync(&apos;/tmp/hello&apos;)
-console.log(&apos;successfully deleted /tmp/hello&apos;);</code></pre>
+fs.unlinkSync(&#39;/tmp/hello&#39;)
+console.log(&#39;successfully deleted /tmp/hello&#39;);</code></pre>
 <!--
 With the asynchronous methods there is no guaranteed ordering. So the
 following is prone to error:
@@ -219,13 +219,13 @@ following is prone to error:
 以下のような傾向のエラーがあります。
 
 </p>
-<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {
+<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {
   if (err) throw err;
-  console.log(&apos;renamed complete&apos;);
+  console.log(&#39;renamed complete&#39;);
 });
-fs.stat(&apos;/tmp/world&apos;, function (err, stats) {
+fs.stat(&#39;/tmp/world&#39;, function (err, stats) {
   if (err) throw err;
-  console.log(&apos;stats: &apos; + JSON.stringify(stats));
+  console.log(&#39;stats: &#39; + JSON.stringify(stats));
 });</code></pre>
 <!--
 It could be that `fs.stat` is executed before `fs.rename`.
@@ -236,11 +236,11 @@ The correct way to do this is to chain the callbacks.
 正しい方法はコールバックをチェーンすることです。
 
 </p>
-<pre><code>fs.rename(&apos;/tmp/hello&apos;, &apos;/tmp/world&apos;, function (err) {
+<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {
   if (err) throw err;
-  fs.stat(&apos;/tmp/world&apos;, function (err, stats) {
+  fs.stat(&#39;/tmp/world&#39;, function (err, stats) {
     if (err) throw err;
-    console.log(&apos;stats: &apos; + JSON.stringify(stats));
+    console.log(&#39;stats: &#39; + JSON.stringify(stats));
   });
 });</code></pre>
 <!--
@@ -502,12 +502,12 @@ Note that Windows junction points require the destination path to be absolute.  
 
 <p>非同期の symlink(2)。
 完了コールバックには発生し得る例外以外に引数が渡されることはありません。
-<code>type</code> 引数は <code>&apos;dir&apos;</code>、<code>&apos;file&apos;</code>、または <code>&apos;junction</code>&apos; (デフォルトは <code>&apos;file&apos;</code>)
+<code>type</code> 引数は <code>&#39;dir&#39;</code>、<code>&#39;file&#39;</code>、または <code>&#39;junction</code>&#39; (デフォルトは <code>&#39;file&#39;</code>)
 です。
 これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
 Windows のジャンクションポイントは対象に絶対パスを要求することに
 注意してください。
-<code>&apos;junction&apos;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
+<code>&#39;junction&#39;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
 
 </p>
 <h2>fs.symlinkSync(srcpath, dstpath, [type])<span><a class="mark" href="#fs_fs_symlinksync_srcpath_dstpath_type" id="fs_fs_symlinksync_srcpath_dstpath_type">#</a></span></h2>
@@ -557,8 +557,8 @@ Example:
 <p>例:
 
 </p>
-<pre><code>var cache = {&apos;/etc&apos;:&apos;/private/etc&apos;};
-fs.realpath(&apos;/etc/passwd&apos;, cache, function (err, resolvedPath) {
+<pre><code>var cache = {&#39;/etc&#39;:&#39;/private/etc&#39;};
+fs.realpath(&#39;/etc/passwd&#39;, cache, function (err, resolvedPath) {
   if (err) throw err;
   console.log(resolvedPath);
 });</code></pre>
@@ -631,7 +631,7 @@ the names of the files in the directory excluding `'.'` and `'..'`.
 
 <p>非同期の readdir(3)。ディレクトリの内容を読み込みます。
 コールバックは 2 つの引数を受け取る <code>(err, files)</code>で、
-<code>files</code> は <code>&apos;.&apos;</code> と <code>&apos;..&apos;</code> を除くディレクトリ内のファイル名の配列です。
+<code>files</code> は <code>&#39;.&#39;</code> と <code>&#39;..&#39;</code> を除くディレクトリ内のファイル名の配列です。
 
 </p>
 <h2>fs.readdirSync(path)<span><a class="mark" href="#fs_fs_readdirsync_path" id="fs_fs_readdirsync_path">#</a></span></h2>
@@ -640,7 +640,7 @@ Synchronous readdir(3). Returns an array of filenames excluding `'.'` and
 `'..'`.
 -->
 
-<p>同期の readdir(3)。<code>&apos;.&apos;</code> と <code>&apos;..&apos;</code> を除くディレクトリ内のファイル名の配列を返します。
+<p>同期の readdir(3)。<code>&#39;.&#39;</code> と <code>&#39;..&#39;</code> を除くディレクトリ内のファイル名の配列を返します。
 
 </p>
 <h2>fs.close(fd, [callback])<span><a class="mark" href="#fs_fs_close_fd_callback" id="fs_fs_close_fd_callback">#</a></span></h2>
@@ -715,13 +715,13 @@ not followed. Exclusive mode may or may not work with network file systems.
 
 </p>
 <ul>
-<li><p><code>&apos;r&apos;</code> - ファイルを読み込み専用でオープンします。
+<li><p><code>&#39;r&#39;</code> - ファイルを読み込み専用でオープンします。
 ファイルが存在しない場合は例外が発生します。</p>
 </li>
-<li><p><code>&apos;r+&apos;</code> - ファイルを読み書き両用でオープンします。
+<li><p><code>&#39;r+&#39;</code> - ファイルを読み書き両用でオープンします。
 ファイルが存在しない場合は例外が発生します。</p>
 </li>
-<li><p><code>&apos;rs&apos;</code> - ファイルを同期モードで読み込むためにオープンします。
+<li><p><code>&#39;rs&#39;</code> - ファイルを同期モードで読み込むためにオープンします。
 オペレーティングシステムにローカルファイルシステムのキャッシュを
 バイパスするように指示します。</p>
 <p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い
@@ -732,30 +732,30 @@ not followed. Exclusive mode may or may not work with network file systems.
 注意してください。
 それが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>
 </li>
-<li><p><code>&apos;rs+&apos;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように
-伝えます。これを使用する際の警告は <code>&apos;rs&apos;</code> の注意を参照してください。</p>
+<li><p><code>&#39;rs+&#39;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように
+伝えます。これを使用する際の警告は <code>&#39;rs&#39;</code> の注意を参照してください。</p>
 </li>
-<li><p><code>&apos;w&apos;</code> - ファイルを書き込み専用でオープンします。
+<li><p><code>&#39;w&#39;</code> - ファイルを書き込み専用でオープンします。
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
-<li><p><code>&apos;wx&apos;</code> - <code>&apos;w&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
+<li><p><code>&#39;wx&#39;</code> - <code>&#39;w&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;w+&apos;</code> - ファイルを読み書き両用でオープンします。
+<li><p><code>&#39;w+&#39;</code> - ファイルを読み書き両用でオープンします。
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
-<li><p><code>&apos;wx&apos;</code> - <code>&apos;w+&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
+<li><p><code>&#39;wx&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;a&apos;</code> - ファイルを追記用でオープンします。
+<li><p><code>&#39;a&#39;</code> - ファイルを追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
 </li>
-<li><p><code>&apos;ax&apos;</code> - <code>&apos;a&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
+<li><p><code>&#39;ax&#39;</code> - <code>&#39;a&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
-<li><p><code>&apos;a+&apos;</code> - ファイルを読み込みおよび追記用でオープンします。
+<li><p><code>&#39;a+&#39;</code> - ファイルを読み込みおよび追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
 </li>
-<li><p><code>&apos;ax+&apos;</code> - <code>&apos;a+&apos;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
+<li><p><code>&#39;ax+&#39;</code> - <code>&#39;a+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
 </ul>
 <p><code>mode</code> のデフォルトは 0666 です。
@@ -932,7 +932,7 @@ Asynchronously reads the entire contents of a file. Example:
 <p>ファイル全体の内容を非同期に読み込みます。例:
 
 </p>
-<pre><code>fs.readFile(&apos;/etc/passwd&apos;, function (err, data) {
+<pre><code>fs.readFile(&#39;/etc/passwd&#39;, function (err, data) {
   if (err) throw err;
   console.log(data);
 });</code></pre>
@@ -979,7 +979,7 @@ Asynchronously writes data to a file, replacing the file if it already exists.
 ファイルが既に存在する場合は置き換えられます。
 <code>data</code> は文字列またはバッファです。
 <code>data</code> がバッファの場合、<code>encoding</code> は無視されます。
-デフォルトは <code>&apos;utf8&apos;</code> です。
+デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
 <!--
@@ -989,9 +989,9 @@ Example:
 <p>例:
 
 </p>
-<pre><code>fs.writeFile(&apos;message.txt&apos;, &apos;Hello Node&apos;, function (err) {
+<pre><code>fs.writeFile(&#39;message.txt&#39;, &#39;Hello Node&#39;, function (err) {
   if (err) throw err;
-  console.log(&apos;It\&apos;s saved!&apos;);
+  console.log(&#39;It\&#39;s saved!&#39;);
 });</code></pre>
 <h2>fs.writeFileSync(filename, data, [encoding])<span><a class="mark" href="#fs_fs_writefilesync_filename_data_encoding" id="fs_fs_writefilesync_filename_data_encoding">#</a></span></h2>
 <!--
@@ -1001,7 +1001,7 @@ The synchronous version of `fs.writeFile`.
 <p>同期版の <code>fs.writeFile</code>。
 
 </p>
-<h2>fs.appendFile(filename, data, encoding=&apos;utf8&apos;, [callback])<span><a class="mark" href="#fs_fs_appendfile_filename_data_encoding_utf8_callback" id="fs_fs_appendfile_filename_data_encoding_utf8_callback">#</a></span></h2>
+<h2>fs.appendFile(filename, data, encoding=&#39;utf8&#39;, [callback])<span><a class="mark" href="#fs_fs_appendfile_filename_data_encoding_utf8_callback" id="fs_fs_appendfile_filename_data_encoding_utf8_callback">#</a></span></h2>
 <!--
 Asynchronously append data to a file, creating the file if it not yet exists.
 `data` can be a string or a buffer. The `encoding` argument is ignored if
@@ -1012,7 +1012,7 @@ Asynchronously append data to a file, creating the file if it not yet exists.
 ファイルが存在しなければ作成されます。
 <code>data</code> は文字列またはバッファです。
 <code>data</code> がバッファの場合、<code>encoding</code> は無視されます。
-デフォルトは <code>&apos;utf8&apos;</code> です。
+デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
 <!--
@@ -1022,11 +1022,11 @@ Example:
 <p>例:
 
 </p>
-<pre><code>fs.appendFile(&apos;message.txt&apos;, &apos;data to append&apos;, function (err) {
+<pre><code>fs.appendFile(&#39;message.txt&#39;, &#39;data to append&#39;, function (err) {
   if (err) throw err;
-  console.log(&apos;The &quot;data to append&quot; was appended to file!&apos;);
+  console.log(&#39;The &quot;data to append&quot; was appended to file!&#39;);
 });</code></pre>
-<h2>fs.appendFileSync(filename, data, encoding=&apos;utf8&apos;)<span><a class="mark" href="#fs_fs_appendfilesync_filename_data_encoding_utf8" id="fs_fs_appendfilesync_filename_data_encoding_utf8">#</a></span></h2>
+<h2>fs.appendFileSync(filename, data, encoding=&#39;utf8&#39;)<span><a class="mark" href="#fs_fs_appendfilesync_filename_data_encoding_utf8" id="fs_fs_appendfilesync_filename_data_encoding_utf8">#</a></span></h2>
 <!--
 The synchronous version of `fs.appendFile`.
 -->
@@ -1069,9 +1069,9 @@ stat object:
 <p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:
 
 </p>
-<pre><code>fs.watchFile(&apos;message.text&apos;, function (curr, prev) {
-  console.log(&apos;the current mtime is: &apos; + curr.mtime);
-  console.log(&apos;the previous mtime was: &apos; + prev.mtime);
+<pre><code>fs.watchFile(&#39;message.text&#39;, function (curr, prev) {
+  console.log(&#39;the current mtime is: &#39; + curr.mtime);
+  console.log(&#39;the previous mtime was: &#39; + prev.mtime);
 });</code></pre>
 <!--
 These stat objects are instances of `fs.Stat`.
@@ -1137,7 +1137,7 @@ the event.
 
 </p>
 <p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。
-<code>event</code> は <code>&apos;rename&apos;</code> または <code>&apos;change&apos;</code>、そして <code>filename</code> はイベントを
+<code>event</code> は <code>&#39;rename&#39;</code> または <code>&#39;change&#39;</code>、そして <code>filename</code> はイベントを
 引き起こしたファイルの名前です。
 
 </p>
@@ -1207,12 +1207,12 @@ callback, and have some fallback logic if it is null.
 それが <code>null</code> だったときの代替手段を持つべきです。
 
 </p>
-<pre><code>fs.watch(&apos;somedir&apos;, function (event, filename) {
-  console.log(&apos;event is: &apos; + event);
+<pre><code>fs.watch(&#39;somedir&#39;, function (event, filename) {
+  console.log(&#39;event is: &#39; + event);
   if (filename) {
-    console.log(&apos;filename provided: &apos; + filename);
+    console.log(&#39;filename provided: &#39; + filename);
   } else {
-    console.log(&apos;filename not provided&apos;);
+    console.log(&#39;filename not provided&#39;);
   }
 });</code></pre>
 <h2>fs.exists(path, [callback])<span><a class="mark" href="#fs_fs_exists_path_callback" id="fs_fs_exists_path_callback">#</a></span></h2>
@@ -1226,8 +1226,8 @@ Then call the `callback` argument with either true or false.  Example:
 例:
 
 </p>
-<pre><code>fs.exists(&apos;/etc/passwd&apos;, function (exists) {
-  util.debug(exists ? &quot;it&apos;s there&quot; : &quot;no passwd!&quot;);
+<pre><code>fs.exists(&#39;/etc/passwd&#39;, function (exists) {
+  util.debug(exists ? &quot;it&#39;s there&quot; : &quot;no passwd!&quot;);
 });</code></pre>
 <h2>fs.existsSync(path)<span><a class="mark" href="#fs_fs_existssync_path" id="fs_fs_existssync_path">#</a></span></h2>
 <!--
@@ -1322,7 +1322,7 @@ Returns a new ReadStream object (See `Readable Stream`).
 <p><code>options</code> は以下のデフォルト値を持つオブジェクトです:
 
 </p>
-<pre><code>{ flags: &apos;r&apos;,
+<pre><code>{ flags: &#39;r&#39;,
   encoding: null,
   fd: null,
   mode: 0666,
@@ -1337,7 +1337,7 @@ start at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.
 <p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、
 <code>options</code> に <code>start</code> および <code>end</code> を含めることができます。
 <code>start</code> と <code>end</code> はどちらも包含的で0から始まります。
-<code>encoding</code> は <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、または <code>&apos;base64&apos;</code> です。
+<code>encoding</code> は <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、または <code>&#39;base64&#39;</code> です。
 
 </p>
 <!--
@@ -1347,7 +1347,7 @@ An example to read the last 10 bytes of a file which is 100 bytes long:
 <p>100 バイトの長さを持つファイルの最後の 10 バイトを読み込む例:
 
 </p>
-<pre><code>fs.createReadStream(&apos;sample.txt&apos;, {start: 90, end: 99});</code></pre>
+<pre><code>fs.createReadStream(&#39;sample.txt&#39;, {start: 90, end: 99});</code></pre>
 <h2>Class: fs.ReadStream<span><a class="mark" href="#fs_class_fs_readstream" id="fs_class_fs_readstream">#</a></span></h2>
 <!--
 `ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).
@@ -1356,7 +1356,7 @@ An example to read the last 10 bytes of a file which is 100 bytes long:
 <p><code>ReadStream</code> は <a href="stream.html#stream_readable_stream">Readable Stream</a> です。
 
 </p>
-<h3>Event: &apos;open&apos;<span><a class="mark" href="#fs_event_open" id="fs_event_open">#</a></span></h3>
+<h3>Event: &#39;open&#39;<span><a class="mark" href="#fs_event_open" id="fs_event_open">#</a></span></h3>
 <!--
 * `fd` {Integer} file descriptor used by the ReadStream.
 
@@ -1385,7 +1385,7 @@ Returns a new WriteStream object (See `Writable Stream`).
 <p><code>options</code> は以下のデフォルト値を持つオブジェクトです:
 
 </p>
-<pre><code>{ flags: &apos;w&apos;,
+<pre><code>{ flags: &#39;w&#39;,
   encoding: null,
   mode: 0666 }</code></pre>
 <!--
@@ -1409,7 +1409,7 @@ default mode `w`.
 <p><code>WriteStream</code> は <a href="stream.html#stream_writable_stream">Writable Stream</a> です。
 
 </p>
-<h3>Event: &apos;open&apos;<span><a class="mark" href="#fs_event_open_1" id="fs_event_open_1">#</a></span></h3>
+<h3>Event: &#39;open&#39;<span><a class="mark" href="#fs_event_open_1" id="fs_event_open_1">#</a></span></h3>
 <!--
 * `fd` {Integer} file descriptor used by the WriteStream.
 
@@ -1448,7 +1448,7 @@ Stop watching for changes on the given `fs.FSWatcher`.
 <p><code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。
 
 </p>
-<h3>Event: &apos;change&apos;<span><a class="mark" href="#fs_event_change" id="fs_event_change">#</a></span></h3>
+<h3>Event: &#39;change&#39;<span><a class="mark" href="#fs_event_change" id="fs_event_change">#</a></span></h3>
 <!--
 * `event` {String} The type of fs change
 * `filename` {String} The filename that changed (if relevant/available)
@@ -1468,7 +1468,7 @@ See more details in [fs.watch](#fs_fs_watch_filename_options_listener).
 を参照してください。
 
 </p>
-<h3>Event: &apos;error&apos;<span><a class="mark" href="#fs_event_error" id="fs_event_error">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#fs_event_error" id="fs_event_error">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>error</code> <span class="type">Error object</span></li>
 </div></ul>
@@ -1506,7 +1506,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
