@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.9.1 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.9.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -63,12 +63,14 @@
 <li><a href="#tls_tls_connect_port_host_options_secureconnectlistener">tls.connect(port, [host], [options], [secureConnectListener])</a></li>
 <li><a href="#tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a></li>
 <li><a href="#tls_class_securepair">Class: SecurePair</a><ul>
-<li><a href="#tls_event_secure">Event: &apos;secure&apos;</a></li>
+<li><a href="#tls_event_secure">Event: &#39;secure&#39;</a></li>
 </ul>
 </li>
 <li><a href="#tls_class_tls_server">Class: tls.Server</a><ul>
-<li><a href="#tls_event_secureconnection">Event: &apos;secureConnection&apos;</a></li>
-<li><a href="#tls_event_clienterror">Event: &apos;clientError&apos;</a></li>
+<li><a href="#tls_event_secureconnection">Event: &#39;secureConnection&#39;</a></li>
+<li><a href="#tls_event_clienterror">Event: &#39;clientError&#39;</a></li>
+<li><a href="#tls_event_newsession">Event: &#39;newSession&#39;</a></li>
+<li><a href="#tls_event_resumesession">Event: &#39;resumeSession&#39;</a></li>
 <li><a href="#tls_server_listen_port_host_callback">server.listen(port, [host], [callback])</a></li>
 <li><a href="#tls_server_close">server.close()</a></li>
 <li><a href="#tls_server_address">server.address()</a></li>
@@ -78,7 +80,7 @@
 </ul>
 </li>
 <li><a href="#tls_class_tls_cleartextstream">Class: tls.CleartextStream</a><ul>
-<li><a href="#tls_event_secureconnect">Event: &apos;secureConnect&apos;</a></li>
+<li><a href="#tls_event_secureconnect">Event: &#39;secureConnect&#39;</a></li>
 <li><a href="#tls_cleartextstream_authorized">cleartextStream.authorized</a></li>
 <li><a href="#tls_cleartextstream_authorizationerror">cleartextStream.authorizationError</a></li>
 <li><a href="#tls_cleartextstream_getpeercertificate">cleartextStream.getPeerCertificate()</a></li>
@@ -101,7 +103,7 @@
 Use `require('tls')` to access this module.
 -->
 
-<p><code>require(&apos;tls&apos;)</code> でこのモジュールにアクセスします。
+<p><code>require(&#39;tls&#39;)</code> でこのモジュールにアクセスします。
 
 </p>
 <!--
@@ -415,29 +417,29 @@ Here is a simple example echo server:
 <p>これはシンプルはエコーサーバの例です:
 
 </p>
-<pre><code>var tls = require(&apos;tls&apos;);
-var fs = require(&apos;fs&apos;);
+<pre><code>var tls = require(&#39;tls&#39;);
+var fs = require(&#39;fs&#39;);
 
 var options = {
-  key: fs.readFileSync(&apos;server-key.pem&apos;),
-  cert: fs.readFileSync(&apos;server-cert.pem&apos;),
+  key: fs.readFileSync(&#39;server-key.pem&#39;),
+  cert: fs.readFileSync(&#39;server-cert.pem&#39;),
 
   // This is necessary only if using the client certificate authentication.
   requestCert: true,
 
   // This is necessary only if the client uses the self-signed certificate.
-  ca: [ fs.readFileSync(&apos;client-cert.pem&apos;) ]
+  ca: [ fs.readFileSync(&#39;client-cert.pem&#39;) ]
 };
 
 var server = tls.createServer(options, function(cleartextStream) {
-  console.log(&apos;server connected&apos;,
-              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  console.log(&#39;server connected&#39;,
+              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);
   cleartextStream.write(&quot;welcome!\n&quot;);
-  cleartextStream.setEncoding(&apos;utf8&apos;);
+  cleartextStream.setEncoding(&#39;utf8&#39;);
   cleartextStream.pipe(cleartextStream);
 });
 server.listen(8000, function() {
-  console.log(&apos;server bound&apos;);
+  console.log(&#39;server bound&#39;);
 });</code></pre>
 <!--
 Or
@@ -446,11 +448,11 @@ Or
 <p>あるいは:
 
 </p>
-<pre><code>var tls = require(&apos;tls&apos;);
-var fs = require(&apos;fs&apos;);
+<pre><code>var tls = require(&#39;tls&#39;);
+var fs = require(&#39;fs&#39;);
 
 var options = {
-  pfx: fs.readFileSync(&apos;server.pfx&apos;),
+  pfx: fs.readFileSync(&#39;server.pfx&#39;),
 
   // This is necessary only if using the client certificate authentication.
   requestCert: true,
@@ -458,14 +460,14 @@ var options = {
 };
 
 var server = tls.createServer(options, function(cleartextStream) {
-  console.log(&apos;server connected&apos;,
-              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  console.log(&#39;server connected&#39;,
+              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);
   cleartextStream.write(&quot;welcome!\n&quot;);
-  cleartextStream.setEncoding(&apos;utf8&apos;);
+  cleartextStream.setEncoding(&#39;utf8&#39;);
   cleartextStream.pipe(cleartextStream);
 });
 server.listen(8000, function() {
-  console.log(&apos;server bound&apos;);
+  console.log(&#39;server bound&#39;);
 });</code></pre>
 <!--
 You can test this server by connecting to it with `openssl s_client`:
@@ -515,7 +517,7 @@ Creates a new client connection to the given `port` and `host` (old API) or
 
   - `rejectUnauthorized`: If `true`, the server certificate is verified against
     the list of supplied CAs. An `'error'` event is emitted if verification
-    fails. Default: `false`.
+    fails. Default: `true`.
 
   - `NPNProtocols`: An array of string or `Buffer` containing supported NPN
     protocols. `Buffer` should have following format: `0x05hello0x05world`,
@@ -550,15 +552,15 @@ Creates a new client connection to the given `port` and `host` (old API) or
 </li>
 <li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の
 リストによって検証されます。
-認証されなかった場合は <code>&apos;error&apos;</code> イベントが生成されます。
+認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。
 認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
-デフォルトは false です。</p>
+デフォルトは true です。</p>
 </li>
 <li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> 
 の配列です。
 <code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>
 最初のバイトは次のプロトコル名の長さです
-(通常、配列を渡す方がシンプルです: <code>[&apos;hello&apos;, &apos;world&apos;]</code>)。</p>
+(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>
 </li>
 <li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>
 </li>
@@ -572,7 +574,7 @@ The `secureConnectListener` parameter will be added as a listener for the
 Here is an example of a client of echo server as described previously:
 -->
 
-<p><code>secureConnectLister</code> 引数は <a href="#tls_event_secureconnect">&apos;secureConnect&apos;</a> イベントのリスナとして
+<p><code>secureConnectLister</code> 引数は <a href="#tls_event_secureconnect">&#39;secureConnect&#39;</a> イベントのリスナとして
 加えられます。
 
 </p>
@@ -582,29 +584,29 @@ Here is an example of a client of echo server as described previously:
 <p>これは前述のエコーサーバに接続するクライアントの例です:
 
 </p>
-<pre><code>var tls = require(&apos;tls&apos;);
-var fs = require(&apos;fs&apos;);
+<pre><code>var tls = require(&#39;tls&#39;);
+var fs = require(&#39;fs&#39;);
 
 var options = {
   // These are necessary only if using the client certificate authentication
-  key: fs.readFileSync(&apos;client-key.pem&apos;),
-  cert: fs.readFileSync(&apos;client-cert.pem&apos;),
+  key: fs.readFileSync(&#39;client-key.pem&#39;),
+  cert: fs.readFileSync(&#39;client-cert.pem&#39;),
 
   // This is necessary only if the server uses the self-signed certificate
-  ca: [ fs.readFileSync(&apos;server-cert.pem&apos;) ]
+  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]
 };
 
 var cleartextStream = tls.connect(8000, options, function() {
-  console.log(&apos;client connected&apos;,
-              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  console.log(&#39;client connected&#39;,
+              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);
   process.stdin.pipe(cleartextStream);
   process.stdin.resume();
 });
-cleartextStream.setEncoding(&apos;utf8&apos;);
-cleartextStream.on(&apos;data&apos;, function(data) {
+cleartextStream.setEncoding(&#39;utf8&#39;);
+cleartextStream.on(&#39;data&#39;, function(data) {
   console.log(data);
 });
-cleartextStream.on(&apos;end&apos;, function() {
+cleartextStream.on(&#39;end&#39;, function() {
   server.close();
 });</code></pre>
 <!--
@@ -614,24 +616,24 @@ Or
 <p>または:
 
 </p>
-<pre><code>var tls = require(&apos;tls&apos;);
-var fs = require(&apos;fs&apos;);
+<pre><code>var tls = require(&#39;tls&#39;);
+var fs = require(&#39;fs&#39;);
 
 var options = {
-  pfx: fs.readFileSync(&apos;client.pfx&apos;)
+  pfx: fs.readFileSync(&#39;client.pfx&#39;)
 };
 
 var cleartextStream = tls.connect(8000, options, function() {
-  console.log(&apos;client connected&apos;,
-              cleartextStream.authorized ? &apos;authorized&apos; : &apos;unauthorized&apos;);
+  console.log(&#39;client connected&#39;,
+              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);
   process.stdin.pipe(cleartextStream);
   process.stdin.resume();
 });
-cleartextStream.setEncoding(&apos;utf8&apos;);
-cleartextStream.on(&apos;data&apos;, function(data) {
+cleartextStream.setEncoding(&#39;utf8&#39;);
+cleartextStream.on(&#39;data&#39;, function(data) {
   console.log(data);
 });
-cleartextStream.on(&apos;end&apos;, function() {
+cleartextStream.on(&#39;end&#39;, function() {
   server.close();
 });</code></pre>
 <h2>tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])<span><a class="mark" href="#tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized" id="tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">#</a></span></h2>
@@ -690,7 +692,7 @@ Returned by tls.createSecurePair.
 <p><code>tls.createSecurePair</code> から返されます。
 
 </p>
-<h3>Event: &apos;secure&apos;<span><a class="mark" href="#tls_event_secure" id="tls_event_secure">#</a></span></h3>
+<h3>Event: &#39;secure&#39;<span><a class="mark" href="#tls_event_secure" id="tls_event_secure">#</a></span></h3>
 <!--
 The event is emitted from the SecurePair once the pair has successfully
 established a secure connection.
@@ -703,7 +705,7 @@ used properly authorized.
 <p>SecurePair オブジェクトのペアが安全な接続を確立した場合に発生します。
 
 </p>
-<p>サーバの <code>&apos;secureConnection&apos;</code> イベントと同様に、
+<p>サーバの <code>&#39;secureConnection&#39;</code> イベントと同様に、
 <code>pari.cleartext.authorized</code> によって接続相手の証明書を承認できたかどうかを
 チェックすることができます。
 
@@ -720,7 +722,7 @@ connections using TLS or SSL.
 TLS または SSL を使った暗号化されたコネクションを受け付けます。
 
 </p>
-<h3>Event: &apos;secureConnection&apos;<span><a class="mark" href="#tls_event_secureconnection" id="tls_event_secureconnection">#</a></span></h3>
+<h3>Event: &#39;secureConnection&#39;<span><a class="mark" href="#tls_event_secureconnection" id="tls_event_secureconnection">#</a></span></h3>
 <p><code>function (cleartextStream) {}</code>
 
 </p>
@@ -758,7 +760,7 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
 文字列です。
 
 </p>
-<h3>Event: &apos;clientError&apos;<span><a class="mark" href="#tls_event_clienterror" id="tls_event_clienterror">#</a></span></h3>
+<h3>Event: &#39;clientError&#39;<span><a class="mark" href="#tls_event_clienterror" id="tls_event_clienterror">#</a></span></h3>
 <p><code>function (exception) { }</code>
 
 </p>
@@ -768,7 +770,43 @@ established - it will be forwarded here.
 -->
 
 <p>セキュアコネクションが確立される前にクライアントコネクションが
-<code>&apos;error&apos;</code> イベントを発した場合 － ここに転送されます。
+<code>&#39;error&#39;</code> イベントを発した場合 － ここに転送されます。
+
+
+</p>
+<h3>Event: &#39;newSession&#39;<span><a class="mark" href="#tls_event_newsession" id="tls_event_newsession">#</a></span></h3>
+<p><code>function (sessionId, sessionData) { }</code>
+
+</p>
+<!--
+Emitted on creation of TLS session. May be used to store sessions in external
+storage.
+-->
+
+<p>TLS セッションが作成された場合に生成されます。
+セッションを外部ストレージに保存する場合に使えるでしょう。
+
+
+</p>
+<h3>Event: &#39;resumeSession&#39;<span><a class="mark" href="#tls_event_resumesession" id="tls_event_resumesession">#</a></span></h3>
+<p><code>function (sessionId, callback) { }</code>
+
+</p>
+<!--
+Emitted when client wants to resume previous TLS session. Event listener may
+perform lookup in external storage using given `sessionId`, and invoke
+`callback(null, sessionData)` once finished. If session can't be resumed
+(i.e. doesn't exist in storage) one may call `callback(null, null)`. Calling
+`callback(err)` will terminate incoming connection and destroy socket.
+-->
+
+<p>クライアントが以前の TLS セッションを再開を要求した場合に生成されます。
+イベントリスナは与えられた <code>sessionId</code> を使用して外部ストレージから
+セッションを見つけた場合、<code>callback(null, sessionData)</code> を一度呼び出すことが
+できます。
+セッションを再開できない場合 (すなわち、ストレージに存在しない場合)、
+<code>callback(null, null)</code> を呼ぶことができます。
+<code>callback(err)</code> を呼び出すと接続を終了し、ソケットを破棄します。
 
 
 </p>
@@ -808,7 +846,7 @@ event.
 -->
 
 <p>サーバが新しい接続を受け入れることを終了します。
-この関数は非同期で、サーバが最終的にクローズされるとサーバは <code>&apos;close&apos;</code> イベントを生成します。
+この関数は非同期で、サーバが最終的にクローズされるとサーバは <code>&#39;close&#39;</code> イベントを生成します。
 
 </p>
 <h3>server.address()<span><a class="mark" href="#tls_server_address" id="tls_server_address">#</a></span></h3>
@@ -871,7 +909,7 @@ common stream methods and events.
 <p>A ClearTextStream is the <code>clear</code> member of a SecurePair object.
 
 </p>
-<h3>Event: &apos;secureConnect&apos;<span><a class="mark" href="#tls_event_secureconnect" id="tls_event_secureconnect">#</a></span></h3>
+<h3>Event: &#39;secureConnect&#39;<span><a class="mark" href="#tls_event_secureconnect" id="tls_event_secureconnect">#</a></span></h3>
 <!--
 This event is emitted after a new connection has been successfully handshaked. 
 The listener will be called no matter if the server's certificate was
@@ -931,22 +969,22 @@ Example:
 
 </p>
 <pre><code>{ subject: 
-   { C: &apos;UK&apos;,
-     ST: &apos;Acknack Ltd&apos;,
-     L: &apos;Rhys Jones&apos;,
-     O: &apos;node.js&apos;,
-     OU: &apos;Test TLS Certificate&apos;,
-     CN: &apos;localhost&apos; },
+   { C: &#39;UK&#39;,
+     ST: &#39;Acknack Ltd&#39;,
+     L: &#39;Rhys Jones&#39;,
+     O: &#39;node.js&#39;,
+     OU: &#39;Test TLS Certificate&#39;,
+     CN: &#39;localhost&#39; },
   issuer: 
-   { C: &apos;UK&apos;,
-     ST: &apos;Acknack Ltd&apos;,
-     L: &apos;Rhys Jones&apos;,
-     O: &apos;node.js&apos;,
-     OU: &apos;Test TLS Certificate&apos;,
-     CN: &apos;localhost&apos; },
-  valid_from: &apos;Nov 11 09:52:22 2009 GMT&apos;,
-  valid_to: &apos;Nov  6 09:52:22 2029 GMT&apos;,
-  fingerprint: &apos;2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF&apos; }</code></pre>
+   { C: &#39;UK&#39;,
+     ST: &#39;Acknack Ltd&#39;,
+     L: &#39;Rhys Jones&#39;,
+     O: &#39;node.js&#39;,
+     OU: &#39;Test TLS Certificate&#39;,
+     CN: &#39;localhost&#39; },
+  valid_from: &#39;Nov 11 09:52:22 2009 GMT&#39;,
+  valid_to: &#39;Nov  6 09:52:22 2029 GMT&#39;,
+  fingerprint: &#39;2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF&#39; }</code></pre>
 <!--
 If the peer does not provide a certificate, it returns `null` or an empty
 object.
@@ -973,7 +1011,7 @@ Example:
 <p>例:
 
 </p>
-<pre><code>{ name: &apos;AES256-SHA&apos;, version: &apos;TLSv1/SSLv3&apos; }</code></pre>
+<pre><code>{ name: &#39;AES256-SHA&#39;, version: &#39;TLSv1/SSLv3&#39; }</code></pre>
 <!--
 See SSL_CIPHER_get_name() and SSL_CIPHER_get_version() in
 http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS for more
@@ -997,7 +1035,7 @@ object with three properties, e.g.
 <p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスと
 アドレスファミリ名、ポートを返します。
 返されるオブジェクトは二つのプロパティを持ちます。例:
-<code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
+<code>{ port: 12346, family: &#39;IPv4&#39;, address: &#39;127.0.0.1&#39; }</code>
 
 </p>
 <h3>cleartextStream.remoteAddress<span><a class="mark" href="#tls_cleartextstream_remoteaddress" id="tls_cleartextstream_remoteaddress">#</a></span></h3>
@@ -1007,7 +1045,7 @@ The string representation of the remote IP address. For example,
 -->
 
 <p>リモートの IP アドレスを表現する文字列です。
-例えば、<code>&apos;74.125.127.100&apos;</code> あるいは <code>&apos;2001:4860:a005::68&apos;</code>。
+例えば、<code>&#39;74.125.127.100&#39;</code> あるいは <code>&#39;2001:4860:a005::68&#39;</code>。
 
 </p>
 <h3>cleartextStream.remotePort<span><a class="mark" href="#tls_cleartextstream_remoteport" id="tls_cleartextstream_remoteport">#</a></span></h3>
@@ -1058,7 +1096,7 @@ The numeric representation of the remote port. For example, `443`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

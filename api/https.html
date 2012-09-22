@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTPS Node.js v0.9.1 Manual &amp; Documentation</title>
+  <title>HTTPS Node.js v0.9.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/https.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -59,6 +59,9 @@
 <li><a href="#https_class_https_server">Class: https.Server</a></li>
 <li><a href="#https_https_createserver_options_requestlistener">https.createServer(options, [requestListener])</a></li>
 <li><a href="#https_https_request_options_callback">https.request(options, callback)</a></li>
+</ul>
+</li>
+<li><a href="#https">&lt;!--</a><ul>
 <li><a href="#https_https_get_options_callback">https.get(options, callback)</a></li>
 <li><a href="#https_class_https_agent">Class: https.Agent</a></li>
 <li><a href="#https_https_globalagent">https.globalAgent</a></li>
@@ -99,7 +102,7 @@ automatically added to the `'request'` event.
 
 <p>新しい HTTPS Web サーバオブジェクトを返します。
 <code>option</code> は <a href="tls.html#tls_tls_createserver_options_secureconnectionlistener">tls.createServer()</a> と同じです。
-<code>requestListener</code> は関数で、 <code>&apos;request&apos;</code> イベントに自動的に追加されます。
+<code>requestListener</code> は関数で、 <code>&#39;request&#39;</code> イベントに自動的に追加されます。
 
 </p>
 <!--
@@ -110,12 +113,12 @@ Example:
 
 </p>
 <pre><code>// curl -k https://localhost:8000/
-var https = require(&apos;https&apos;);
-var fs = require(&apos;fs&apos;);
+var https = require(&#39;https&#39;);
+var fs = require(&#39;fs&#39;);
 
 var options = {
-  key: fs.readFileSync(&apos;test/fixtures/keys/agent2-key.pem&apos;),
-  cert: fs.readFileSync(&apos;test/fixtures/keys/agent2-cert.pem&apos;)
+  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),
+  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)
 };
 
 https.createServer(options, function (req, res) {
@@ -129,11 +132,11 @@ Or
 <p>または:
 
 </p>
-<pre><code>var https = require(&apos;https&apos;);
-var fs = require(&apos;fs&apos;);
+<pre><code>var https = require(&#39;https&#39;);
+var fs = require(&#39;fs&#39;);
 
 var options = {
-  pfx: fs.readFileSync(&apos;server.pfx&apos;)
+  pfx: fs.readFileSync(&#39;server.pfx&#39;)
 };
 
 https.createServer(options, function (req, res) {
@@ -172,26 +175,26 @@ Example:
 <p>例:
 
 </p>
-<pre><code>var https = require(&apos;https&apos;);
+<pre><code>var https = require(&#39;https&#39;);
 
 var options = {
-  host: &apos;encrypted.google.com&apos;,
+  host: &#39;encrypted.google.com&#39;,
   port: 443,
-  path: &apos;/&apos;,
-  method: &apos;GET&apos;
+  path: &#39;/&#39;,
+  method: &#39;GET&#39;
 };
 
 var req = https.request(options, function(res) {
   console.log(&quot;statusCode: &quot;, res.statusCode);
   console.log(&quot;headers: &quot;, res.headers);
 
-  res.on(&apos;data&apos;, function(d) {
+  res.on(&#39;data&#39;, function(d) {
     process.stdout.write(d);
   });
 });
 req.end();
 
-req.on(&apos;error&apos;, function(e) {
+req.on(&#39;error&#39;, function(e) {
   console.error(e);
 });</code></pre>
 <!--
@@ -227,15 +230,15 @@ The options argument has the following options
 
 <ul>
 <li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。
- デフォルトは <code>&apos;localhost&apos;</code> です。</li>
+ デフォルトは <code>&#39;localhost&#39;</code> です。</li>
 <li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li>
 <li><code>port</code>: リモートサーバのポート。デフォルトは 443 です。</li>
-<li><code>method</code>: HTTPS リクエストのメソッドの文字列。デフォルトは <code>&apos;GET&apos;</code> です。</li>
-<li><code>path</code>: リクエストのパス。デフォルトは <code>&apos;/&apos;</code> です。
+<li><code>method</code>: HTTPS リクエストのメソッドの文字列。デフォルトは <code>&#39;GET&#39;</code> です。</li>
+<li><code>path</code>: リクエストのパス。デフォルトは <code>&#39;/&#39;</code> です。
 必要なら問い合わせ文字列を含めるべきです．
-例 <code>&apos;/index.html?page=12&apos;</code></li>
+例 <code>&#39;/index.html?page=12&#39;</code></li>
 <li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>
-<li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>&apos;user:password&apos;</code>。</li>
+<li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>&#39;user:password&#39;</code>。</li>
 <li><code>agent</code>: <a href="#https_class_https_agent">Agent</a> の振る舞いを制御します。
 エージェントが使われる場合、<code>Connection:keep-alive</code> がデフォルトになります。
 可能な値は:<ul>
@@ -268,6 +271,7 @@ The following options from [tls.connect()][] can also be specified. However, a
 - `rejectUnauthorized`: If `true`, the server certificate is verified against
   the list of supplied CAs. An `'error'` event is emitted if verification
   fails. Verification happens at the connection level, *before* the HTTP
+<<<<<<< HEAD
   request is sent. Default `false`.
 -->
 
@@ -284,14 +288,33 @@ The following options from [tls.connect()][] can also be specified. However, a
 を参照してください。</li>
 <li><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の
 リストによって検証されます。
-認証されなかった場合は <code>&apos;error&apos;</code> イベントが生成されます。
+認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。
 認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
 デフォルトは false です。</li>
 </ul>
-<!--
-In order to specify these options, use a custom `Agent`.
--->
+<h1>&lt;!--<span><a class="mark" href="#https" id="https">#</a></span></h1>
+<p>  request is sent. Default <code>true</code>.
 
+</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>master
+In order to specify these options, use a custom <code>Agent</code>.
+--&gt;
+
+</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
 <p>これらのオプションを指定するには、カスタムエージェントを使用します。
 
 </p>
@@ -303,12 +326,12 @@ Example:
 
 </p>
 <pre><code>var options = {
-  host: &apos;encrypted.google.com&apos;,
+  host: &#39;encrypted.google.com&#39;,
   port: 443,
-  path: &apos;/&apos;,
-  method: &apos;GET&apos;,
-  key: fs.readFileSync(&apos;test/fixtures/keys/agent2-key.pem&apos;),
-  cert: fs.readFileSync(&apos;test/fixtures/keys/agent2-cert.pem&apos;)
+  path: &#39;/&#39;,
+  method: &#39;GET&#39;,
+  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),
+  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)
 };
 options.agent = new https.Agent(options);
 
@@ -330,12 +353,12 @@ Example:
 
 </p>
 <pre><code>var options = {
-  host: &apos;encrypted.google.com&apos;,
+  host: &#39;encrypted.google.com&#39;,
   port: 443,
-  path: &apos;/&apos;,
-  method: &apos;GET&apos;,
-  key: fs.readFileSync(&apos;test/fixtures/keys/agent2-key.pem&apos;),
-  cert: fs.readFileSync(&apos;test/fixtures/keys/agent2-cert.pem&apos;),
+  path: &#39;/&#39;,
+  method: &#39;GET&#39;,
+  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),
+  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;),
   agent: false
 };
 
@@ -367,17 +390,17 @@ Example:
 <p>例:
 
 </p>
-<pre><code>var https = require(&apos;https&apos;);
+<pre><code>var https = require(&#39;https&#39;);
 
-https.get(&apos;https://encrypted.google.com/&apos;, function(res) {
+https.get(&#39;https://encrypted.google.com/&#39;, function(res) {
   console.log(&quot;statusCode: &quot;, res.statusCode);
   console.log(&quot;headers: &quot;, res.headers);
 
-  res.on(&apos;data&apos;, function(d) {
+  res.on(&#39;data&#39;, function(d) {
     process.stdout.write(d);
   });
 
-}).on(&apos;error&apos;, function(e) {
+}).on(&#39;error&#39;, function(e) {
   console.error(e);
 });</code></pre>
 <h2>Class: https.Agent<span><a class="mark" href="#https_class_https_agent" id="https_class_https_agent">#</a></span></h2>
@@ -427,7 +450,7 @@ Global instance of [https.Agent][] for all HTTPS client requests.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

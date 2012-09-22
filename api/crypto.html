@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.9.1 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.9.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -126,7 +126,7 @@
 Use `require('crypto')` to access this module.
 -->
 
-<p>このモジュールにアクセスするには <code>require(&apos;crypto&apos;)</code> を使用します。
+<p>このモジュールにアクセスするには <code>require(&#39;crypto&#39;)</code> を使用します。
 
 </p>
 <!--
@@ -187,7 +187,7 @@ If no 'ca' details are given, then node.js will use the default publicly trusted
 <http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt>.
 -->
 
-<p>&apos;ca&apos; の詳細が与えられなかった場合、node.js はデフォルトとして
+<p>&#39;ca&#39; の詳細が与えられなかった場合、node.js はデフォルトとして
 </p>
 <p><a href="http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a>
 で与えられる、信頼できる認証局の公開されたリストを使用します。
@@ -212,7 +212,7 @@ On recent releases, `openssl list-message-digest-algorithms` will display the av
 
 <p><code>algorithm</code> は、プラットフォーム上の OpenSSL 
 のバージョンでサポートされている利用可能なアルゴリズムに依存します。
-例えば <code>&apos;sha1&apos;</code>、<code>&apos;md5&apos;</code>、<code>&apos;sha256&apos;</code>、<code>&apos;sha512&apos;</code>、などです。
+例えば <code>&#39;sha1&#39;</code>、<code>&#39;md5&#39;</code>、<code>&#39;sha256&#39;</code>、<code>&#39;sha512&#39;</code>、などです。
 最近のリリースでは、<code>openssl list-message-digest-algorithms</code>
 で利用可能なダイジェストアルゴリズムが表示されます。
 
@@ -225,19 +225,19 @@ Example: this program that takes the sha1 sum of a file
 
 </p>
 <pre><code>var filename = process.argv[2];
-var crypto = require(&apos;crypto&apos;);
-var fs = require(&apos;fs&apos;);
+var crypto = require(&#39;crypto&#39;);
+var fs = require(&#39;fs&#39;);
 
-var shasum = crypto.createHash(&apos;sha1&apos;);
+var shasum = crypto.createHash(&#39;sha1&#39;);
 
 var s = fs.ReadStream(filename);
-s.on(&apos;data&apos;, function(d) {
+s.on(&#39;data&#39;, function(d) {
   shasum.update(d);
 });
 
-s.on(&apos;end&apos;, function() {
-  var d = shasum.digest(&apos;hex&apos;);
-  console.log(d + &apos;  &apos; + filename);
+s.on(&#39;end&#39;, function() {
+  var d = shasum.digest(&#39;hex&#39;);
+  console.log(d + &#39;  &#39; + filename);
 });</code></pre>
 <h2>Class: Hash<span><a class="mark" href="#crypto_class_hash" id="crypto_class_hash">#</a></span></h2>
 <!--
@@ -261,9 +261,9 @@ This can be called many times with new data as it is streamed.
 -->
 
 <p>与えられた <code>data</code> でハッシュの内容を更新します。
-そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、
-または <code>&apos;binary&apos;</code> を指定することができます。
-デフォルトは <code>&apos;binary&apos;</code> です。
+そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、
+または <code>&#39;binary&#39;</code> を指定することができます。
+デフォルトは <code>&#39;binary&#39;</code> です。
 これは新しいデータがストリームに流される際に何度も呼び出されます。
 
 </p>
@@ -277,8 +277,8 @@ Note: `hash` object can not be used after `digest()` method been called.
 -->
 
 <p>渡された全てのデータがハッシュ化されたダイジェストを計算します。
-<code>encoding</code> は <code>&apos;hex&apos;</code>、<code>&apos;binary&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> 
@@ -336,8 +336,8 @@ Note: `hmac` object can not be used after `digest()` method been called.
 -->
 
 <p>渡された全てのデータが HMAC 化されたダイジェストを計算します。
-<code>encoding</code> は <code>&apos;hex&apos;</code>、<code>&apos;binary&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> 
@@ -357,11 +357,11 @@ string or a [buffer](buffer.html).
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。
-<code>algorithm</code> は、OpenSSL に依存します。例えば <code>&apos;aes192&apos;</code> などです。
+<code>algorithm</code> は、OpenSSL に依存します。例えば <code>&#39;aes192&#39;</code> などです。
 最近のリリースでは、<code>openssl list-cipher-algorithms</code>
 で利用可能な暗号アルゴリズムが表示されます。
 <code>password</code> はキーと IV の生成に使用されます。
-これは <code>&apos;binary&apos;</code> でエンコードされた文字列または <a href="buffer.html">buffer</a>
+これは <code>&#39;binary&#39;</code> でエンコードされた文字列または <a href="buffer.html">buffer</a>
 でなければなりません
 
 </p>
@@ -387,7 +387,7 @@ vector](http://en.wikipedia.org/wiki/Initialization_vector).
 vector</a> です。
 
 </p>
-<p><code>key</code> と <code>iv</code> は <code>&apos;binary&apos;</code> でエンコードされた文字列または
+<p><code>key</code> と <code>iv</code> は <code>&#39;binary&#39;</code> でエンコードされた文字列または
 <a href="buffer.html">buffers</a> でなければなりません
 
 </p>
@@ -415,13 +415,13 @@ and can be `'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.
 -->
 
 <p><code>data</code> で暗号を更新します。
-<code>input_encoding</code> で与えられるエンコーディングは <code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code>、<code>&apos;binary&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、
-<code>&apos;utf8&apos;</code>、<code>&apos;ascii&apos;</code> または <code>&apos;binary&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code> または <code>&#39;binary&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <!--
@@ -440,8 +440,8 @@ Note: `cipher` object can not be used after `final()` method been called.
 -->
 
 <p>暗号化されたコンテンツの残りを返します。
-<code>output_encoding</code> は次のいずれかです: <code>&apos;binary&apos;</code>、<code>&apos;base64&apos;</code> または <code>&apos;hex&apos;</code>。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>output_encoding</code> は次のいずれかです: <code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code>。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> 
@@ -508,13 +508,13 @@ The `output_decoding` specifies in what format to return the deciphered
 plaintext: `'binary'`, `'ascii'` or `'utf8'`. Defaults to `'binary'`.
 -->
 
-<p><code>&apos;binary&apos;</code>、<code>&apos;base64&apos;</code> または <code>&apos;hex&apos;</code> のいずれかでエンコードされた復号を
-<code>data</code> で更新します。デフォルトは <code>&apos;binary&apos;</code> です。
+<p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を
+<code>data</code> で更新します。デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、
-<code>&apos;binary&apos;</code>、<code>&apos;ascii&apos;</code> あるいは <code>&apos;utf8&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 
 </p>
@@ -528,8 +528,8 @@ Note: `decipher` object can not be used after `final()` method been called.
 -->
 
 <p>復号化されたプレーンテキストの残りを返します。
-<code>output_decoding</code> は <code>&apos;binary&apos;</code>、<code>&apos;ascii&apos;</code> あるいは <code>&apos;utf8&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+<code>output_decoding</code> は <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> 
@@ -558,7 +558,7 @@ the available signing algorithms. Examples are `'RSA-SHA256'`.
 
 <p>与えられたアルゴリズムで署名オブジェクトを作成して返します。
 最近のOpenSSLのリリースでは、<code>openssl list-public-key-algorithms</code>
-で利用可能な署名アルゴリズムの一覧が表示されます。例えば &apos;RSA-SHA256&apos;。
+で利用可能な署名アルゴリズムの一覧が表示されます。例えば &#39;RSA-SHA256&#39;。
 
 </p>
 <h2>Class: Signer<span><a class="mark" href="#crypto_class_signer" id="crypto_class_signer">#</a></span></h2>
@@ -601,8 +601,8 @@ Returns the signature in `output_format` which can be `'binary'`, `'hex'` or
 Note: `signer` object can not be used after `sign()` method been called.
 -->
 
-<p><code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、あるいは <code>&apos;base64&apos;</code> のいずれかを指定した <code>output_format</code>
-による署名を返します。デフォルトは <code>&apos;binary&apos;</code> です。
+<p><code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、あるいは <code>&#39;base64&#39;</code> のいずれかを指定した <code>output_format</code>
+による署名を返します。デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> 
@@ -655,8 +655,8 @@ signature for the data, in the `signature_format` which can be `'binary'`,
 <code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを
 PEM でエンコードしたオブジェクトです。
 <code>signature</code> は先に計算したデータの署名で、
-その <code>signature_format</code> は <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code>
-のいずれかです。デフォルトは <code>&apos;binary&apos;</code> です。
+その <code>signature_format</code> は <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code>
+のいずれかです。デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <!--
@@ -691,8 +691,8 @@ Defaults to `'binary'`.
 
 <p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。
 生成元は <code>2</code> です。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h2>Class: DiffieHellman<span><a class="mark" href="#crypto_class_diffiehellman" id="crypto_class_diffiehellman">#</a></span></h2>
@@ -719,8 +719,8 @@ Defaults to `'binary'`.
 <p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、
 指定の方法でエンコーディングされた公開鍵を返します。
 この鍵は相手側に渡されるものです。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h3>diffieHellman.computeSecret(other_public_key, [input_encoding], [output_encoding])<span><a class="mark" href="#crypto_diffiehellman_computesecret_other_public_key_input_encoding_output_encoding" id="crypto_diffiehellman_computesecret_other_public_key_input_encoding_output_encoding">#</a></span></h3>
@@ -736,8 +736,8 @@ If no output encoding is given, the input encoding is used as output encoding.
 <p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。
 与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、
 秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-入力エンコーディングのデフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+入力エンコーディングのデフォルトは <code>&#39;binary&#39;</code> です。
 出力のエンコーディングが与えられなかった場合は、入力のエンコーディングが
 出力エンコーディングとして使われます。
 
@@ -749,8 +749,8 @@ Returns the Diffie-Hellman prime in the specified encoding, which can be
 -->
 
 <p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h3>diffieHellman.getGenerator([encoding])<span><a class="mark" href="#crypto_diffiehellman_getgenerator_encoding" id="crypto_diffiehellman_getgenerator_encoding">#</a></span></h3>
@@ -760,8 +760,8 @@ Returns the Diffie-Hellman prime in the specified encoding, which can be
 -->
 
 <p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h3>diffieHellman.getPublicKey([encoding])<span><a class="mark" href="#crypto_diffiehellman_getpublickey_encoding" id="crypto_diffiehellman_getpublickey_encoding">#</a></span></h3>
@@ -771,8 +771,8 @@ be `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.
 -->
 
 <p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h3>diffieHellman.getPrivateKey([encoding])<span><a class="mark" href="#crypto_diffiehellman_getprivatekey_encoding" id="crypto_diffiehellman_getprivatekey_encoding">#</a></span></h3>
@@ -782,8 +782,8 @@ be `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.
 -->
 
 <p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。
-エンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h3>diffieHellman.setPublicKey(public_key, [encoding])<span><a class="mark" href="#crypto_diffiehellman_setpublickey_public_key_encoding" id="crypto_diffiehellman_setpublickey_public_key_encoding">#</a></span></h3>
@@ -793,8 +793,8 @@ or `'base64'`. Defaults to `'binary'`.
 -->
 
 <p>ディフィー・ヘルマン法による公開鍵を設定します。
-鍵のエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h3>diffieHellman.setPrivateKey(public_key, [encoding])<span><a class="mark" href="#crypto_diffiehellman_setprivatekey_public_key_encoding" id="crypto_diffiehellman_setprivatekey_public_key_encoding">#</a></span></h3>
@@ -804,8 +804,8 @@ or `'base64'`. Defaults to `'binary'`.
 -->
 
 <p>ディフィー・ヘルマン法による秘密鍵を設定します。
-鍵のエンコーディングは <code>&apos;binary&apos;</code>、<code>&apos;hex&apos;</code>、または <code>&apos;base64&apos;</code> のいずれかです。
-デフォルトは <code>&apos;binary&apos;</code> です。
+鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
+デフォルトは <code>&#39;binary&#39;</code> です。
 
 </p>
 <h2>crypto.getDiffieHellman(group_name)<span><a class="mark" href="#crypto_crypto_getdiffiehellman_group_name" id="crypto_crypto_getdiffiehellman_group_name">#</a></span></h2>
@@ -825,9 +825,9 @@ communication time.
 -->
 
 <p>事前に定義された Diffie-Hellman 鍵交換オブジェクトを作成します。
-サポートされるグループは、<code>&apos;modp1&apos;</code>, <code>&apos;modp2&apos;</code>, <code>&apos;modp5&apos;</code>
+サポートされるグループは、<code>&#39;modp1&#39;</code>, <code>&#39;modp2&#39;</code>, <code>&#39;modp5&#39;</code>
 (<a href="http://www.rfc-editor.org/rfc/rfc2412.txt">RFC 2412</a> で定義される)、
-および <code>&apos;modp14&apos;</code>, <code>&apos;modp15&apos;</code>, <code>&apos;modp16&apos;</code>, <code>&apos;modp17&apos;</code>, <code>&apos;modp18&apos;</code>
+および <code>&#39;modp14&#39;</code>, <code>&#39;modp15&#39;</code>, <code>&#39;modp16&#39;</code>, <code>&#39;modp17&#39;</code>, <code>&#39;modp18&#39;</code>
 (<a href="http://www.rfc-editor.org/rfc/rfc3526.txt">RFC 3526</a> で定義される) です。
 返されるオブジェクトは、前述の
 <a href="#crypto_crypto_creatediffiehellman_prime_encoding">crypto.createDiffieHellman()</a>
@@ -847,15 +847,15 @@ Example (obtaining a shared secret):
 <p>例 (共有鍵を取得):
 
 </p>
-<pre><code>var crypto = require(&apos;crypto&apos;);
-var alice = crypto.getDiffieHellman(&apos;modp5&apos;);
-var bob = crypto.getDiffieHellman(&apos;modp5&apos;);
+<pre><code>var crypto = require(&#39;crypto&#39;);
+var alice = crypto.getDiffieHellman(&#39;modp5&#39;);
+var bob = crypto.getDiffieHellman(&#39;modp5&#39;);
 
 alice.generateKeys();
 bob.generateKeys();
 
-var alice_secret = alice.computeSecret(bob.getPublicKey(), &apos;binary&apos;, &apos;hex&apos;);
-var bob_secret = bob.computeSecret(alice.getPublicKey(), &apos;binary&apos;, &apos;hex&apos;);
+var alice_secret = alice.computeSecret(bob.getPublicKey(), &#39;binary&#39;, &#39;hex&#39;);
+var bob_secret = bob.computeSecret(alice.getPublicKey(), &#39;binary&#39;, &#39;hex&#39;);
 
 /* alice_secret and bob_secret should be the same */
 console.log(alice_secret == bob_secret);</code></pre>
@@ -883,13 +883,13 @@ Generates cryptographically strong pseudo-random data. Usage:
 <pre><code>// async
 crypto.randomBytes(256, function(ex, buf) {
   if (ex) throw ex;
-  console.log(&apos;Have %d bytes of random data: %s&apos;, buf.length, buf);
+  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);
 });
 
 // sync
 try {
   var buf = crypto.randomBytes(256);
-  console.log(&apos;Have %d bytes of random data: %s&apos;, buf.length, buf);
+  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);
 } catch (ex) {
   // handle error
 }</code></pre>
@@ -921,7 +921,7 @@ try {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

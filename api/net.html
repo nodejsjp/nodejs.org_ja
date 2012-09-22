@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>net Node.js v0.9.1 Manual &amp; Documentation</title>
+  <title>net Node.js v0.9.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/net.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -73,10 +73,10 @@
 <li><a href="#net_server_ref">server.ref()</a></li>
 <li><a href="#net_server_maxconnections">server.maxConnections</a></li>
 <li><a href="#net_server_connections">server.connections</a></li>
-<li><a href="#net_event_listening">Event: &apos;listening&apos;</a></li>
-<li><a href="#net_event_connection">Event: &apos;connection&apos;</a></li>
-<li><a href="#net_event_close">Event: &apos;close&apos;</a></li>
-<li><a href="#net_event_error">Event: &apos;error&apos;</a></li>
+<li><a href="#net_event_listening">Event: &#39;listening&#39;</a></li>
+<li><a href="#net_event_connection">Event: &#39;connection&#39;</a></li>
+<li><a href="#net_event_close">Event: &#39;close&#39;</a></li>
+<li><a href="#net_event_error">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 <li><a href="#net_class_net_socket">Class: net.Socket</a><ul>
@@ -100,13 +100,13 @@
 <li><a href="#net_socket_remoteport">socket.remotePort</a></li>
 <li><a href="#net_socket_bytesread">socket.bytesRead</a></li>
 <li><a href="#net_socket_byteswritten">socket.bytesWritten</a></li>
-<li><a href="#net_event_connect">Event: &apos;connect&apos;</a></li>
-<li><a href="#net_event_data">Event: &apos;data&apos;</a></li>
-<li><a href="#net_event_end">Event: &apos;end&apos;</a></li>
-<li><a href="#net_event_timeout">Event: &apos;timeout&apos;</a></li>
-<li><a href="#net_event_drain">Event: &apos;drain&apos;</a></li>
-<li><a href="#net_event_error_1">Event: &apos;error&apos;</a></li>
-<li><a href="#net_event_close_1">Event: &apos;close&apos;</a></li>
+<li><a href="#net_event_connect">Event: &#39;connect&#39;</a></li>
+<li><a href="#net_event_data">Event: &#39;data&#39;</a></li>
+<li><a href="#net_event_end">Event: &#39;end&#39;</a></li>
+<li><a href="#net_event_timeout">Event: &#39;timeout&#39;</a></li>
+<li><a href="#net_event_drain">Event: &#39;drain&#39;</a></li>
+<li><a href="#net_event_error_1">Event: &#39;error&#39;</a></li>
+<li><a href="#net_event_close_1">Event: &#39;close&#39;</a></li>
 </ul>
 </li>
 <li><a href="#net_net_isip_input">net.isIP(input)</a></li>
@@ -141,7 +141,7 @@ automatically set as a listener for the ['connection'][] event.
 -->
 
 <p>新しい TCP サーバを作成します。
-<code>connectionListener</code> 引数は <a href="#net_event_connection">&apos;connection&apos;</a>
+<code>connectionListener</code> 引数は <a href="#net_event_connection">&#39;connection&#39;</a>
 イベントに対するリスナーとして自動的に加えられます。
 
 </p>
@@ -160,7 +160,7 @@ See ['end'][] event for more information.
 <p><code>allowHalfOpen</code> が <code>true</code> だと、反対側のソケットが FIN パケットを送信してきても自動的に FIN を送信しなくなります。
 ソケットは読み込み可能ではなくなりますが、書き込み可能のままです。
 明示的に <code>end()</code> を呼び出す必要があります。
-<a href="#net_event_end">&apos;end&apos;</a> イベントにより多くの情報があります。
+<a href="#net_event_end">&#39;end&#39;</a> イベントにより多くの情報があります。
 
 </p>
 <!--
@@ -171,17 +171,17 @@ on port 8124:
 <p>8124 番のポートへの接続を待ち受けるエコーサーバの例:
 
 </p>
-<pre><code>var net = require(&apos;net&apos;);
-var server = net.createServer(function(c) { //&apos;connection&apos; listener
-  console.log(&apos;server connected&apos;);
-  c.on(&apos;end&apos;, function() {
-    console.log(&apos;server disconnected&apos;);
+<pre><code>var net = require(&#39;net&#39;);
+var server = net.createServer(function(c) { //&#39;connection&#39; listener
+  console.log(&#39;server connected&#39;);
+  c.on(&#39;end&#39;, function() {
+    console.log(&#39;server disconnected&#39;);
   });
-  c.write(&apos;hello\r\n&apos;);
+  c.write(&#39;hello\r\n&#39;);
   c.pipe(c);
 });
-server.listen(8124, function() { //&apos;listening&apos; listener
-  console.log(&apos;server bound&apos;);
+server.listen(8124, function() { //&#39;listening&#39; listener
+  console.log(&#39;server bound&#39;);
 });</code></pre>
 <!--
 Test this by using `telnet`:
@@ -196,10 +196,10 @@ To listen on the socket `/tmp/echo.sock` the third line from the last would
 just be changed to
 -->
 
-<p><code>&apos;/tmp/echo.sock&apos;</code> へのソケットを待ち受けるには、最後から三行目をこのように変更します。
+<p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットを待ち受けるには、最後から三行目をこのように変更します。
 
 </p>
-<pre><code>server.listen(&apos;/tmp/echo.sock&apos;, function() { //&apos;listening&apos; listener</code></pre>
+<pre><code>server.listen(&#39;/tmp/echo.sock&#39;, function() { //&#39;listening&#39; listener</code></pre>
 <!--
 Use `nc` to connect to a UNIX domain socket server:
 -->
@@ -217,7 +217,7 @@ When the socket is established, the ['connect'][] event will be emitted.
 
 <p>新しいソケットオブジェクトを構築し、与えられたロケーションへのソケットを
 オープンします。
-ソケットが確立されると、<a href="#net_event_connect">&apos;connect&apos;</a> イベントが生成されます。
+ソケットが確立されると、<a href="#net_event_connect">&#39;connect&#39;</a> イベントが生成されます。
 
 </p>
 <!--
@@ -274,14 +274,14 @@ Common options are:
 <li><code>allowHalfOpen</code>: <code>true</code> の場合、反対側のソケットが FIN
 パケットを送信してきても自動的に FIN を送信しなくなります。
 デフォルトは <code>false</code> です。
-<a href="#net_event_end">&apos;end&apos;</a> イベントにより多くの情報があります。</li>
+<a href="#net_event_end">&#39;end&#39;</a> イベントにより多くの情報があります。</li>
 </ul>
 <!--
 The `connectListener` parameter will be added as an listener for the
 ['connect'][] event.
 -->
 
-<p><code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナとして追加されます。
+<p><code>connectListener</code> 引数は <a href="#net_event_connect">&#39;connect&#39;</a> イベントのリスナとして追加されます。
 
 </p>
 <!--
@@ -291,28 +291,28 @@ Here is an example of a client of echo server as described previously:
 <p>前述のエコーサーバに接続するクライアントの例:
 
 </p>
-<pre><code>var net = require(&apos;net&apos;);
+<pre><code>var net = require(&#39;net&#39;);
 var client = net.connect({port: 8124},
-    function() { //&apos;connect&apos; listener
-  console.log(&apos;client connected&apos;);
-  client.write(&apos;world!\r\n&apos;);
+    function() { //&#39;connect&#39; listener
+  console.log(&#39;client connected&#39;);
+  client.write(&#39;world!\r\n&#39;);
 });
-client.on(&apos;data&apos;, function(data) {
+client.on(&#39;data&#39;, function(data) {
   console.log(data.toString());
   client.end();
 });
-client.on(&apos;end&apos;, function() {
-  console.log(&apos;client disconnected&apos;);
+client.on(&#39;end&#39;, function() {
+  console.log(&#39;client disconnected&#39;);
 });</code></pre>
 <!--
 To connect on the socket `/tmp/echo.sock` the second line would just be
 changed to
 -->
 
-<p><code>&apos;/tmp/echo.sock&apos;</code> へのソケットに接続するには、2 行目をこのように変更します。
+<p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットに接続するには、2 行目をこのように変更します。
 
 </p>
-<pre><code>var client = net.connect({path: &apos;/tmp/echo.sock&apos;},</code></pre>
+<pre><code>var client = net.connect({path: &#39;/tmp/echo.sock&#39;},</code></pre>
 <h2>net.connect(port, [host], [connectListener])<span><a class="mark" href="#net_net_connect_port_host_connectlistener" id="net_net_connect_port_host_connectlistener">#</a></span></h2>
 <h2>net.createConnection(port, [host], [connectListener])<span><a class="mark" href="#net_net_createconnection_port_host_connectlistener" id="net_net_createconnection_port_host_connectlistener">#</a></span></h2>
 <!--
@@ -324,7 +324,7 @@ The `connectListener` parameter will be added as an listener for the
 
 <p><code>host</code> 上の <code>port</code> に対する TCP コネクションを作成します。
 <code>host</code> が省略されると <code>localhost</code> が仮定されます。
-<code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナとして追加されます。
+<code>connectListener</code> 引数は <a href="#net_event_connect">&#39;connect&#39;</a> イベントのリスナとして追加されます。
 
 </p>
 <h2>net.connect(path, [connectListener])<span><a class="mark" href="#net_net_connect_path_connectlistener" id="net_net_connect_path_connectlistener">#</a></span></h2>
@@ -336,7 +336,7 @@ The `connectListener` parameter will be added as an listener for the
 -->
 
 <p><code>path</code> に対する UNIX ドメインソケットを作成します。
-<code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナとして追加されます。
+<code>connectListener</code> 引数は <a href="#net_event_connect">&#39;connect&#39;</a> イベントのリスナとして追加されます。
 
 </p>
 <h2>Class: net.Server<span><a class="mark" href="#net_class_net_server" id="net_class_net_server">#</a></span></h2>
@@ -382,8 +382,8 @@ will be added as an listener for the ['listening'][] event.
 -->
 
 <p>この関数は非同期です。
-サーバがバインドされると、<a href="#net_event_listening">&apos;listening&apos;</a> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="#net_event_listening">&apos;listening&apos;</a> のリスナとして加えられます。
+サーバがバインドされると、<a href="#net_event_listening">&#39;listening&#39;</a> イベントが生成されます。
+最後の引数 <code>listeningListener</code> は <a href="#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
 <!--
@@ -398,9 +398,9 @@ would be to wait a second and then try again. This can be done with
 これは次のようになります
 
 </p>
-<pre><code>server.on(&apos;error&apos;, function (e) {
-  if (e.code == &apos;EADDRINUSE&apos;) {
-    console.log(&apos;Address in use, retrying...&apos;);
+<pre><code>server.on(&#39;error&#39;, function (e) {
+  if (e.code == &#39;EADDRINUSE&#39;) {
+    console.log(&#39;Address in use, retrying...&#39;);
     setTimeout(function () {
       server.close();
       server.listen(PORT, HOST);
@@ -430,8 +430,8 @@ will be added as an listener for the ['listening'][] event.
 -->
 
 <p>この関数は非同期です。
-サーバがバインドされると、<a href="#net_event_listening">&apos;listening&apos;</a> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="#net_event_listening">&apos;listening&apos;</a> のリスナとして加えられます。
+サーバがバインドされると、<a href="#net_event_listening">&#39;listening&#39;</a> イベントが生成されます。
+最後の引数 <code>listeningListener</code> は <a href="#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
 <h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#net_server_listen_handle_listeninglistener" id="net_server_listen_handle_listeninglistener">#</a></span></h3>
@@ -474,8 +474,8 @@ the last parameter `listeningListener` will be added as an listener for the
 -->
 
 <p>この関数は非同期です。
-サーバがバインドされると、<a href="#net_event_listening">&apos;listening&apos;</a> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="#net_event_listening">&apos;listening&apos;</a> のリスナとして加えられます。
+サーバがバインドされると、<a href="#net_event_listening">&#39;listening&#39;</a> イベントが生成されます。
+最後の引数 <code>listeningListener</code> は <a href="#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
 <h3>server.close([cb])<span><a class="mark" href="#net_server_close_cb" id="net_server_close_cb">#</a></span></h3>
@@ -489,8 +489,8 @@ event.
 
 <p>サーバが新しい接続を受け付けるのを終了しますが、既存の接続は維持します。
 この関数は非同期で、サーバは最終的に全ての接続が閉じられると
-<code>&apos;close&apos;</code> イベントを生成してクローズされます。
-オプションとして、<code>&apos;close&apos;</code> イベントに対するリスナを渡すことができます。
+<code>&#39;close&#39;</code> イベントを生成してクローズされます。
+オプションとして、<code>&#39;close&#39;</code> イベントに対するリスナを渡すことができます。
 
 </p>
 <h3>server.address()<span><a class="mark" href="#net_server_address" id="net_server_address">#</a></span></h3>
@@ -506,7 +506,7 @@ Returns an object with three properties, e.g.
 アドレスファミリ名、ポートを返します。
 OSによって割り当てられたアドレスが渡された時に、どのポートに割り当てられたものかを調べるのに便利です。
 返されるオブジェクトは 3 つのプロパティを持ちます。例:
-<code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
+<code>{ port: 12346, family: &#39;IPv4&#39;, address: &#39;127.0.0.1&#39; }</code>
 
 </p>
 <!--
@@ -529,7 +529,7 @@ server.listen(function() {
 Don't call `server.address()` until the `'listening'` event has been emitted.
 -->
 
-<p><code>&apos;listening&apos;</code> イベントが生成される前に <code>server.address()</code> を呼び出してはいけません。
+<p><code>&#39;listening&#39;</code> イベントが生成される前に <code>server.address()</code> を呼び出してはいけません。
 
 </p>
 <h3>server.unref()<span><a class="mark" href="#net_server_unref" id="net_server_unref">#</a></span></h3>
@@ -597,7 +597,7 @@ This becomes `null` when sending a socket to a child with `child_process.fork()`
 <p><code>net.Server</code> は以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
-<h3>Event: &apos;listening&apos;<span><a class="mark" href="#net_event_listening" id="net_event_listening">#</a></span></h3>
+<h3>Event: &#39;listening&#39;<span><a class="mark" href="#net_event_listening" id="net_event_listening">#</a></span></h3>
 <!--
 Emitted when the server has been bound after calling `server.listen`.
 -->
@@ -605,7 +605,7 @@ Emitted when the server has been bound after calling `server.listen`.
 <p><code>server.listen()</code> が呼ばれた後、サーバがバインドされると生成されます。
 
 </p>
-<h3>Event: &apos;connection&apos;<span><a class="mark" href="#net_event_connection" id="net_event_connection">#</a></span></h3>
+<h3>Event: &#39;connection&#39;<span><a class="mark" href="#net_event_connection" id="net_event_connection">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Socket object</span> The connection object</li>
 </div></ul>
@@ -618,7 +618,7 @@ Emitted when a new connection is made. `socket` is an instance of
 <code>socket</code> は <code>net.Socket</code> のインスタンスです。
 
 </p>
-<h3>Event: &apos;close&apos;<span><a class="mark" href="#net_event_close" id="net_event_close">#</a></span></h3>
+<h3>Event: &#39;close&#39;<span><a class="mark" href="#net_event_close" id="net_event_close">#</a></span></h3>
 <!--
 Emitted when the server closes. Note that if connections exist, this
 event is not emitted until all connections are ended.
@@ -629,7 +629,7 @@ event is not emitted until all connections are ended.
 生成されないことに注意してください。
 
 </p>
-<h3>Event: &apos;error&apos;<span><a class="mark" href="#net_event_error" id="net_event_error">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#net_event_error" id="net_event_error">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Error Object</span></li>
 </div></ul>
@@ -639,7 +639,7 @@ following this event.  See example in discussion of `server.listen`.
 -->
 
 <p>エラーが発生すると生成されます。
-このイベントに続いて <code>&apos;close&apos;</code> イベントが直接生成される場合があります。
+このイベントに続いて <code>&#39;close&#39;</code> イベントが直接生成される場合があります。
 <code>server.listen()</code> の例を参照してください。
 
 </p>
@@ -654,7 +654,7 @@ and passed to the user through the `'connection'` event of a server.
 <p>このオブジェクトは TCP または UNIX ドメインのソケットを抽象化したものです。
 <code>net.Socket</code> のインスタンスは双方向のストリームインタフェースを実装します。
 それらはユーザによって (<code>connect()</code> によって) 作成されてクライアントとして使われるか、
-Node によって作成されてサーバの <code>&apos;connection&apos;</code> イベントを通じてユーザに渡されます。
+Node によって作成されてサーバの <code>&#39;connection&#39;</code> イベントを通じてユーザに渡されます。
 
 </p>
 <h3>new net.Socket([options])<span><a class="mark" href="#net_new_net_socket_options" id="net_new_net_socket_options">#</a></span></h3>
@@ -684,8 +684,8 @@ About `allowHalfOpen`, refer to `createServer()` and `'end'` event.
 
 <p><code>fd</code> に既存のソケットのファイル記述子を指定することができます。
 <code>type</code> にはプロトコルを指定することができます。
-指定できるのは <code>&apos;tcp4&apos;</code>、<code>&apos;tcp6&apos;</code> または <code>&apos;unix&apos;</code> のいずれかです。
-<code>allowHalfOpen</code> については <code>createServer()</code> および <code>&apos;end&apos;</code> イベントを参照してください。
+指定できるのは <code>&#39;tcp4&#39;</code>、<code>&#39;tcp6&#39;</code> または <code>&#39;unix&#39;</code> のいずれかです。
+<code>allowHalfOpen</code> については <code>createServer()</code> および <code>&#39;end&#39;</code> イベントを参照してください。
 
 </p>
 <h3>socket.connect(port, [host], [connectListener])<span><a class="mark" href="#net_socket_connect_port_host_connectlistener" id="net_socket_connect_port_host_connectlistener">#</a></span></h3>
@@ -722,10 +722,10 @@ socket is established. If there is a problem connecting, the `'connect'` event
 will not be emitted, the `'error'` event will be emitted with the exception.
 -->
 
-<p>この関数は非同期です。ソケットが確立されると <a href="#net_event_connect">&apos;connect&apos;</a>
+<p>この関数は非同期です。ソケットが確立されると <a href="#net_event_connect">&#39;connect&#39;</a>
 イベントが生成されます。
-接続で問題があった場合は <code>&apos;connect&apos;</code> イベントは生成されず、
-例外とともに <code>&apos;error&apos;</code> イベントが生成されます。
+接続で問題があった場合は <code>&#39;connect&#39;</code> イベントは生成されず、
+例外とともに <code>&#39;error&#39;</code> イベントが生成されます。
 
 </p>
 <!--
@@ -733,7 +733,7 @@ The `connectListener` parameter will be added as an listener for the
 ['connect'][] event.
 -->
 
-<p><code>connectListener</code> 引数は <a href="#net_event_connect">&apos;connect&apos;</a> イベントのリスナに加えられます。
+<p><code>connectListener</code> 引数は <a href="#net_event_connect">&#39;connect&#39;</a> イベントのリスナに加えられます。
 
 
 </p>
@@ -799,7 +799,7 @@ buffer. Returns `false` if all or part of the data was queued in user memory.
 
 <p>データ全体のカーネルバッファへのフラッシュが成功すると <code>true</code> を返します。
 データ全体または一部がユーザメモリ内のキューに入れられた場合は <code>false</code> を返します。
-再びバッファが空いた場合は <code>&apos;drain&apos;</code> イベントが生成されます。
+再びバッファが空いた場合は <code>&#39;drain&#39;</code> イベントが生成されます。
 
 </p>
 <!--
@@ -846,7 +846,7 @@ Pauses the reading of data. That is, `'data'` events will not be emitted.
 Useful to throttle back an upload.
 -->
 
-<p>データの読み込みを中断します。つまり、<code>&apos;data&apos;</code> イベントは生成されません。
+<p>データの読み込みを中断します。つまり、<code>&#39;data&#39;</code> イベントは生成されません。
 アップロード速度を落とすために便利です。
 
 </p>
@@ -874,7 +874,7 @@ event but the connection will not be severed. The user must manually `end()`
 or `destroy()` the socket.
 -->
 
-<p>アイドルタイムアウトが引き起こされると、ソケットは <code>&apos;timeout&apos;</code> イベントを受信しますが、
+<p>アイドルタイムアウトが引き起こされると、ソケットは <code>&#39;timeout&#39;</code> イベントを受信しますが、
 コネクションは切断されません。
 ユーザは手動で <code>end()</code> または <code>destroy()</code> を呼び出す必要があります。
 
@@ -942,7 +942,7 @@ three properties, e.g.
 <p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスと
 アドレスファミリ名、ポートを返します。
 返されるオブジェクトは 3 つのプロパティを持ちます。例:
-<code>{ port: 12346, family: &apos;IPv4&apos;, address: &apos;127.0.0.1&apos; }</code>
+<code>{ port: 12346, family: &#39;IPv4&#39;, address: &#39;127.0.0.1&#39; }</code>
 
 </p>
 <h3>socket.unref()<span><a class="mark" href="#net_socket_unref" id="net_socket_unref">#</a></span></h3>
@@ -976,7 +976,7 @@ The string representation of the remote IP address. For example,
 -->
 
 <p>リモートの IP アドレスを表現する文字列です。
-例えば、<code>&apos;74.125.127.100&apos;</code> あるいは <code>&apos;2001:4860:a005::68&apos;</code>。
+例えば、<code>&#39;74.125.127.100&#39;</code> あるいは <code>&#39;2001:4860:a005::68&#39;</code>。
 
 </p>
 <!--
@@ -1019,7 +1019,7 @@ The amount of bytes sent.
 <p><code>net.Socket</code> のインスタンスは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
 
 </p>
-<h3>Event: &apos;connect&apos;<span><a class="mark" href="#net_event_connect" id="net_event_connect">#</a></span></h3>
+<h3>Event: &#39;connect&#39;<span><a class="mark" href="#net_event_connect" id="net_event_connect">#</a></span></h3>
 <!--
 Emitted when a socket connection is successfully established.
 See `connect()`.
@@ -1029,7 +1029,7 @@ See `connect()`.
 <code>connect()</code> を参照してください。
 
 </p>
-<h3>Event: &apos;data&apos;<span><a class="mark" href="#net_event_data" id="net_event_data">#</a></span></h3>
+<h3>Event: &#39;data&#39;<span><a class="mark" href="#net_event_data" id="net_event_data">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Buffer object</span></li>
 </div></ul>
@@ -1048,11 +1048,11 @@ emits a `'data'` event.
 (より詳しい情報は <a href="stream.html#stream_readable_stream">Readable Stream</a> を参照してください)。
 
 </p>
-<p><code>Socket</code> が <code>&apos;data&apos;</code> イベントを生成した時にリスナが存在しなければ、
+<p><code>Socket</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、
 <strong>データは失われる</strong>ことに注意してください。
 
 </p>
-<h3>Event: &apos;end&apos;<span><a class="mark" href="#net_event_end" id="net_event_end">#</a></span></h3>
+<h3>Event: &#39;end&#39;<span><a class="mark" href="#net_event_end" id="net_event_end">#</a></span></h3>
 <!--
 Emitted when the other end of the socket sends a FIN packet.
 -->
@@ -1076,7 +1076,7 @@ caveat that the user is required to `end()` their side now.
 
 
 </p>
-<h3>Event: &apos;timeout&apos;<span><a class="mark" href="#net_event_timeout" id="net_event_timeout">#</a></span></h3>
+<h3>Event: &#39;timeout&#39;<span><a class="mark" href="#net_event_timeout" id="net_event_timeout">#</a></span></h3>
 <!--
 Emitted if the socket times out from inactivity. This is only to notify that
 the socket has been idle. The user must manually close the connection.
@@ -1093,7 +1093,7 @@ See also: `socket.setTimeout()`
 
 
 </p>
-<h3>Event: &apos;drain&apos;<span><a class="mark" href="#net_event_drain" id="net_event_drain">#</a></span></h3>
+<h3>Event: &#39;drain&#39;<span><a class="mark" href="#net_event_drain" id="net_event_drain">#</a></span></h3>
 <!--
 Emitted when the write buffer becomes empty. Can be used to throttle uploads.
 
@@ -1106,7 +1106,7 @@ See also: the return values of `socket.write()`
 <p><code>socket.write()</code> の戻り値を参照してください。
 
 </p>
-<h3>Event: &apos;error&apos;<span><a class="mark" href="#net_event_error_1" id="net_event_error_1">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#net_event_error_1" id="net_event_error_1">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Error object</span></li>
 </div></ul>
@@ -1115,10 +1115,10 @@ Emitted when an error occurs.  The `'close'` event will be called directly
 following this event.
 -->
 
-<p>エラーが発生した場合に生成されます。<code>&apos;close&apos;</code> イベントはこのイベントの後に直接呼び出されます。
+<p>エラーが発生した場合に生成されます。<code>&#39;close&#39;</code> イベントはこのイベントの後に直接呼び出されます。
 
 </p>
-<h3>Event: &apos;close&apos;<span><a class="mark" href="#net_event_close_1" id="net_event_close_1">#</a></span></h3>
+<h3>Event: &#39;close&#39;<span><a class="mark" href="#net_event_close_1" id="net_event_close_1">#</a></span></h3>
 <!--
 * `had_error` {Boolean} true if the socket had a transmission error
 -->
@@ -1190,7 +1190,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

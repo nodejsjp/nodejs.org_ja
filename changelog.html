@@ -36,9 +36,54 @@
           </header>
 
           <div id="apicontent">
+<p><a id="v0.9.2"></a>
+</p>
+<h1>2012.09.17 Version 0.9.2 (Unstable)</h1>
+<ul>
+<li><p>http_parser: upgrade to ad3b631</p>
+</li>
+<li><p>openssl: upgrade 1.0.1c</p>
+</li>
+<li><p>darwin: use FSEvents to watch directory changes (Fedor Indutny)</p>
+</li>
+<li><p>unix: support missing API on NetBSD (Shigeki Ohtsu)</p>
+</li>
+<li><p>unix: fix EMFILE busy loop (Ben Noordhuis)</p>
+</li>
+<li><p>windows: un-break writable tty handles (Bert Belder)</p>
+</li>
+<li><p>windows: map WSAESHUTDOWN to UV_EPIPE (Bert Belder)</p>
+</li>
+<li><p>windows: make spawn with custom environment work again (Bert Belder)</p>
+</li>
+<li><p>windows: map ERROR_DIRECTORY to UV_ENOENT (Bert Belder)</p>
+</li>
+<li><p>tls, https: validate server certificate by default (Ben Noordhuis)</p>
+</li>
+<li><p>tls, https: throw exception on missing key/cert (Ben Noordhuis)</p>
+</li>
+<li><p>tls: async session storage (Fedor Indutny)</p>
+</li>
+<li><p>installer: don&#39;t install header files (Ben Noordhuis)</p>
+</li>
+<li><p>buffer: implement Buffer.prototype.toJSON() (Nathan Rajlich)</p>
+</li>
+<li><p>buffer: added support for writing NaN and Infinity (koichik)</p>
+</li>
+<li><p>http: make http.ServerResponse emit &#39;end&#39; (Ben Noordhuis)</p>
+</li>
+<li><p>build: ./configure --ninja (Ben Noordhuis, Timothy J Fontaine)</p>
+</li>
+<li><p>installer: fix --without-npm (Ben Noordhuis)</p>
+</li>
+<li><p>cli: make -p equivalent to -pe (Ben Noordhuis)</p>
+</li>
+<li><p>url: Go much faster by using Url class (isaacs)</p>
+</li>
+</ul>
 <p><a id="v0.9.1"></a>
 </p>
-<h1>2012.08.28 Version 0.9.1 (Unstable)</h1>
+<h1>2012.08.28 Version 0.9.1 (Unstable), <a href="https://github.com/joyent/node/commit/e6ce25">e6ce25</a></h1>
 <ul>
 <li><p>buffer: Add Buffer.isEncoding(enc) to test for valid encoding values (isaacs)</p>
 </li>
@@ -76,7 +121,7 @@
 </li>
 <li><p>net: support Server.listen(Pipe) (Andreas Madsen)</p>
 </li>
-<li><p>node: don&apos;t scan add-on for &quot;init&quot; symbol (Ben Noordhuis)</p>
+<li><p>node: don&#39;t scan add-on for &quot;init&quot; symbol (Ben Noordhuis)</p>
 </li>
 <li><p>remove process.uvCounters() (Ben Noordhuis)</p>
 </li>
@@ -92,7 +137,7 @@
 </li>
 <li><p>unix: remove dependency on ev_child (Ben Noordhuis)</p>
 </li>
-<li><p>unix: work around darwin bug, don&apos;t poll() on pipe (Fedor Indutny)</p>
+<li><p>unix: work around darwin bug, don&#39;t poll() on pipe (Fedor Indutny)</p>
 </li>
 <li><p>util: Formally deprecate util.pump() (Ben Noordhuis)</p>
 </li>
@@ -128,9 +173,56 @@
 <li><p>Fix <a href="https://github.com/joyent/node/issues/3521">#3521</a> Make process.env more like a regular Object (isaacs)</p>
 </li>
 </ul>
+<p><a id="v0.8.9"></a>
+</p>
+<h1>2012.09.11 Version 0.8.9 (Stable), <a href="https://github.com/joyent/node/commit/b88c39">b88c39</a></h1>
+<ul>
+<li><p>v8: upgrade to 3.11.10.22</p>
+</li>
+<li><p>GYP: upgrade to r1477</p>
+</li>
+<li><p>npm: Upgrade to 1.1.61</p>
+</li>
+<li><p>npm: Don&#39;t create world-writable files (isaacs)</p>
+</li>
+<li><p>windows: fix single-accept mode for shared server sockets (Bert Belder)</p>
+</li>
+<li><p>windows: fix uninitialized memory access in uv_update_time() (Bert Belder)</p>
+</li>
+<li><p>windows: don&#39;t throw when a signal handler is attached (Bert Belder)</p>
+</li>
+<li><p>unix: fix memory leak in udp (Ben Noordhuis)</p>
+</li>
+<li><p>unix: map errno ESPIPE (Ben Noordhuis)</p>
+</li>
+<li><p>unix, windows: fix memory corruption in fs-poll.c (Ben Noordhuis)</p>
+</li>
+<li><p>sunos: fix os.cpus() on x86_64 (Ben Noordhuis)</p>
+</li>
+<li><p>child process: fix processes with IPC channel don&#39;t emit &#39;close&#39; (Bert Belder)</p>
+</li>
+<li><p>build: add a &quot;--dest-os&quot; option to force a gyp &quot;flavor&quot; (Nathan Rajlich)</p>
+</li>
+<li><p>build: set <code>process.platform</code> to &quot;sunos&quot; on SunOS (Nathan Rajlich)</p>
+</li>
+<li><p>build: fix <code>make -j</code> fails after <code>make clean</code> (Bearice Ren)</p>
+</li>
+<li><p>build: fix openssl configuration for &quot;arm&quot; builds (Nathan Rajlich)</p>
+</li>
+<li><p>tls: support unix domain socket/named pipe in tls.connect (Shigeki Ohtsu)</p>
+</li>
+<li><p>https: make https.get() accept a URL (koichik)</p>
+</li>
+<li><p>http: respect HTTP/1.0 TE header (Ben Noordhuis)</p>
+</li>
+<li><p>crypto, tls: Domainify setSNICallback, pbkdf2, randomBytes (Ben Noordhuis)</p>
+</li>
+<li><p>stream.pipe: Don&#39;t call destroy() unless it&#39;s a function (isaacs)</p>
+</li>
+</ul>
 <p><a id="v0.8.8"></a>
 </p>
-<h1>2012.08.22 Version 0.8.8 (Stable)</h1>
+<h1>2012.08.22 Version 0.8.8 (Stable), <a href="https://github.com/joyent/node/commit/a299c9">a299c9</a></h1>
 <ul>
 <li><p>V8: upgrade to 3.11.10.19</p>
 </li>
@@ -175,7 +267,7 @@
 </li>
 <li><p>build: rework -fvisibility=hidden detection (Ben Noordhuis)</p>
 </li>
-<li><p>windows: don&apos;t duplicate invalid stdio handles (Bert Belder)</p>
+<li><p>windows: don&#39;t duplicate invalid stdio handles (Bert Belder)</p>
 </li>
 <li><p>windows: fix typos in process-stdio.c (Bert Belder)</p>
 </li>
@@ -186,11 +278,11 @@
 <ul>
 <li><p>npm: Upgrade to v1.1.48</p>
 </li>
-<li><p>Add &apos;make binary&apos; to build binary tarballs for all Unixes (Nathan Rajlich)</p>
+<li><p>Add &#39;make binary&#39; to build binary tarballs for all Unixes (Nathan Rajlich)</p>
 </li>
-<li><p>zlib: Emit &apos;close&apos; on destroy(). (Dominic Tarr)</p>
+<li><p>zlib: Emit &#39;close&#39; on destroy(). (Dominic Tarr)</p>
 </li>
-<li><p>child_process: Fix stdout=null when stdio=[&apos;pipe&apos;] (Tyler Neylon)</p>
+<li><p>child_process: Fix stdout=null when stdio=[&#39;pipe&#39;] (Tyler Neylon)</p>
 </li>
 <li><p>installer: prevent ETXTBSY errors (Ben Noordhuis)</p>
 </li>
@@ -215,7 +307,7 @@
 </li>
 <li><p>fs: fix readFileSync(&quot;/proc/cpuinfo&quot;) regression (Ben Noordhuis)</p>
 </li>
-<li><p>installer: don&apos;t assume bash is installed (Ben Noordhuis)</p>
+<li><p>installer: don&#39;t assume bash is installed (Ben Noordhuis)</p>
 </li>
 <li><p>Report errors properly from --eval and stdin (isaacs)</p>
 </li>
@@ -231,11 +323,11 @@
 </li>
 <li><p>sunos: work around OS bug to prevent fs.watch() from spinning (Bryan Cantrill)</p>
 </li>
-<li><p>linux: fix &apos;two watchers, one path&apos; segfault (Ben Noordhuis)</p>
+<li><p>linux: fix &#39;two watchers, one path&#39; segfault (Ben Noordhuis)</p>
 </li>
 <li><p>windows: fix memory leaks in many fs functions (Bert Belder)</p>
 </li>
-<li><p>windows: don&apos;t allow directories to be opened for writing/appending (Bert Belder)</p>
+<li><p>windows: don&#39;t allow directories to be opened for writing/appending (Bert Belder)</p>
 </li>
 <li><p>windows: make fork() work even when not all stdio handles are valid (Bert Belder)</p>
 </li>
@@ -260,7 +352,7 @@
 </li>
 <li><p>debugger: wake up the event loop when a debugger command is dispatched (Peter Rybin)</p>
 </li>
-<li><p>tls: verify server&apos;s identity (Fedor Indutny)</p>
+<li><p>tls: verify server&#39;s identity (Fedor Indutny)</p>
 </li>
 <li><p>net: ignore socket.setTimeout(Infinity or NaN) (Fedor Indutny)</p>
 </li>
@@ -306,9 +398,9 @@
 <ul>
 <li><p>npm: Upgrade to 1.1.36</p>
 </li>
-<li><p>readline: don&apos;t use Function#call() (Nathan Rajlich)</p>
+<li><p>readline: don&#39;t use Function#call() (Nathan Rajlich)</p>
 </li>
-<li><p>Code cleanup to pass &apos;use strict&apos; (Jonas Westerlund)</p>
+<li><p>Code cleanup to pass &#39;use strict&#39; (Jonas Westerlund)</p>
 </li>
 <li><p>module: add filename to require() json errors (TJ Holowaychuk)</p>
 </li>
@@ -330,7 +422,7 @@
 </li>
 <li><p>unix: fix memory corruption in freebsd.c (Ben Noordhuis)</p>
 </li>
-<li><p>unix: fix &apos;zero handles, one request&apos; busy loop (Ben Noordhuis)</p>
+<li><p>unix: fix &#39;zero handles, one request&#39; busy loop (Ben Noordhuis)</p>
 </li>
 <li><p>unix: fix busy loop on unexpected tcp message (Ben Noordhuis)</p>
 </li>
@@ -347,11 +439,11 @@
 <ul>
 <li>Support for parallel use of the cache folder</li>
 <li>Retry on registry timeouts or network failures (Trent Mick)</li>
-<li>Reduce &apos;engines&apos; failures to a warning</li>
+<li>Reduce &#39;engines&#39; failures to a warning</li>
 <li>Use new zsh completion if aviailable (Jeremy Cantrell)</li>
 </ul>
 </li>
-<li><p>Fix <a href="https://github.com/joyent/node/issues/3577">#3577</a> Un-break require(&apos;sys&apos;)</p>
+<li><p>Fix <a href="https://github.com/joyent/node/issues/3577">#3577</a> Un-break require(&#39;sys&#39;)</p>
 </li>
 <li><p>util: speed up formatting of large arrays/objects (Ben Noordhuis)</p>
 </li>
@@ -392,7 +484,7 @@
 </li>
 <li><p>windows: update icon (Bert Belder)</p>
 </li>
-<li><p>http: Hush &apos;MUST NOT have a body&apos; warnings to debug() (isaacs)</p>
+<li><p>http: Hush &#39;MUST NOT have a body&#39; warnings to debug() (isaacs)</p>
 </li>
 <li><p>Move blog.nodejs.org content into repository (isaacs)</p>
 </li>
@@ -415,8 +507,8 @@
 <ul>
 <li><p>npm: Upgrade to 1.1.30</p>
 <ul>
-<li>Improved &apos;npm init&apos;</li>
-<li>Fix the &apos;cb never called&apos; error from &apos;oudated&apos; and &apos;update&apos;</li>
+<li>Improved &#39;npm init&#39;</li>
+<li>Fix the &#39;cb never called&#39; error from &#39;oudated&#39; and &#39;update&#39;</li>
 <li>Add --save-bundle|-B config</li>
 <li>Fix <a href="https://github.com/isaacs/npm/issues/2465">isaacs/npm#2465</a>: Make npm script and windows shims cygwin-aware</li>
 <li>Fix <a href="https://github.com/isaacs/npm/issues/2452">isaacs/npm#2452</a> Use --save(-dev|-optional) in npm rm</li>
@@ -463,7 +555,7 @@
 </li>
 <li><p>Fix <a href="https://github.com/joyent/node/issues/3425">#3425</a>: removeAllListeners should delete array (Reid Burke)</p>
 </li>
-<li><p>cluster: don&apos;t silently drop messages when the write queue gets big (Bert Belder)</p>
+<li><p>cluster: don&#39;t silently drop messages when the write queue gets big (Bert Belder)</p>
 </li>
 <li><p>Add Buffer.concat method (isaacs)</p>
 </li>
@@ -475,7 +567,7 @@
 </li>
 <li><p>Windows: Enable ETW events on Windows for existing DTrace probes. (Igor Zinkovsky)</p>
 </li>
-<li><p>test: bundle node-weak in test/gc so that it doesn&apos;t need to be downloaded (Nathan Rajlich)</p>
+<li><p>test: bundle node-weak in test/gc so that it doesn&#39;t need to be downloaded (Nathan Rajlich)</p>
 </li>
 <li><p>Make many tests pass on Windows (Bert Belder)</p>
 </li>
@@ -512,7 +604,7 @@
 </li>
 <li><p>windows/msi: add start menu links when installing (Jeroen Janssen)</p>
 </li>
-<li><p>windows: don&apos;t install x64 version into the &apos;program files (x86)&apos; folder (Matt Gollob)</p>
+<li><p>windows: don&#39;t install x64 version into the &#39;program files (x86)&#39; folder (Matt Gollob)</p>
 </li>
 <li><p>domain: Fix <a href="https://github.com/joyent/node/issues/3379">#3379</a> domain.intercept no longer passes error arg to cb (Marc Harter)</p>
 </li>
@@ -550,7 +642,7 @@
 </li>
 <li><p>fs: 64bit offsets for fs calls (Igor Zinkovsky)</p>
 </li>
-<li><p>fs: add sync open flags &apos;rs&apos; and &apos;rs+&apos; (Kevin Bowman)</p>
+<li><p>fs: add sync open flags &#39;rs&#39; and &#39;rs+&#39; (Kevin Bowman)</p>
 </li>
 <li><p>windows: enable creating directory junctions with fs.symlink (Igor Zinkovsky, Bert Belder)</p>
 </li>
@@ -603,11 +695,11 @@
 </li>
 <li><p>typed arrays: unexport SizeOfArrayElementForType() (Aaron Jacobs)</p>
 </li>
-<li><p>net: honor &apos;enable&apos; flag in .setNoDelay() (Ben Noordhuis)</p>
+<li><p>net: honor &#39;enable&#39; flag in .setNoDelay() (Ben Noordhuis)</p>
 </li>
 <li><p>child_process: emit error when .kill fails (Andreas Madsen)</p>
 </li>
-<li><p>gyp: fix &apos;argument list too long&apos; build error (Ben Noordhuis)</p>
+<li><p>gyp: fix &#39;argument list too long&#39; build error (Ben Noordhuis)</p>
 </li>
 <li><p>fs.WriteStream: Handle modifications to fs.open (isaacs)</p>
 </li>
@@ -644,7 +736,7 @@
 </li>
 <li><p>cluster: add graceful disconnect support (Andreas Madsen)</p>
 </li>
-<li><p>child_process: Separate &apos;close&apos; event from &apos;exit&apos; (Charlie McConnell)</p>
+<li><p>child_process: Separate &#39;close&#39; event from &#39;exit&#39; (Charlie McConnell)</p>
 </li>
 <li><p>typed arrays: add Uint8ClampedArray (Mikael Bourges-Sevenier)</p>
 </li>
@@ -654,11 +746,11 @@
 </li>
 <li><p>Expose http parse error codes (Felix Geisendörfer)</p>
 </li>
-<li><p>events: don&apos;t delete the listeners array (Ben Noordhuis, Nathan Rajlich)</p>
+<li><p>events: don&#39;t delete the listeners array (Ben Noordhuis, Nathan Rajlich)</p>
 </li>
-<li><p>process: add process.config to view node&apos;s ./configure settings (Nathan Rajlich)</p>
+<li><p>process: add process.config to view node&#39;s ./configure settings (Nathan Rajlich)</p>
 </li>
-<li><p>process: process.execArgv to see node&apos;s arguments (Micheil Smith)</p>
+<li><p>process: process.execArgv to see node&#39;s arguments (Micheil Smith)</p>
 </li>
 <li><p>process: fix process.title setter (Ben Noordhuis)</p>
 </li>
@@ -680,11 +772,11 @@
 <li>Handle cases where an optionalDependency fails to build</li>
 </ul>
 </li>
-<li><p>events: newListener emit correct fn when using &apos;once&apos; (Roly Fentanes)</p>
+<li><p>events: newListener emit correct fn when using &#39;once&#39; (Roly Fentanes)</p>
 </li>
 <li><p>url: Ignore empty port component (Łukasz Walukiewicz)</p>
 </li>
-<li><p>module: replace &apos;children&apos; array (isaacs)</p>
+<li><p>module: replace &#39;children&#39; array (isaacs)</p>
 </li>
 <li><p>tls: parse multiple values of a key in ssl certificate (Sambasiva Suda)</p>
 </li>
@@ -743,7 +835,7 @@
 </li>
 <li><p>build: Make a fat binary for the OS X <code>make pkg</code>. (Nathan Rajlich)</p>
 </li>
-<li><p>jslint src/ and lib/ on &apos;make test&apos; (isaacs)</p>
+<li><p>jslint src/ and lib/ on &#39;make test&#39; (isaacs)</p>
 </li>
 </ul>
 <p><a id="v0.7.4"></a>
@@ -806,7 +898,7 @@
 </li>
 <li><p>fs: more specific error messages (Tj Holowaychuk)</p>
 </li>
-<li><p>tty: emit &apos;unknown&apos; key event if key sequence not found (Dan VerWeire, Nathan Rajlich)</p>
+<li><p>tty: emit &#39;unknown&#39; key event if key sequence not found (Dan VerWeire, Nathan Rajlich)</p>
 </li>
 <li><p>build: compile release build too if BUILDTYPE=Debug (Ben Noordhuis)</p>
 </li>
@@ -867,9 +959,9 @@
 </li>
 <li><p>core: use proper #include directives (Ben Noordhuis)</p>
 </li>
-<li><p>cluster: don&apos;t silently drop messages when the write queue gets big (Bert Belder)</p>
+<li><p>cluster: don&#39;t silently drop messages when the write queue gets big (Bert Belder)</p>
 </li>
-<li><p>windows: don&apos;t print error when GetConsoleTitleW returns an empty string (Bert Belder)</p>
+<li><p>windows: don&#39;t print error when GetConsoleTitleW returns an empty string (Bert Belder)</p>
 </li>
 </ul>
 <p><a id="v0.6.19"></a>
@@ -909,15 +1001,15 @@
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/3258">#3258</a>: fs.ReadStream.pause() emits duplicate data event (koichik)</p>
 </li>
-<li><p>pipe_wrap: don&apos;t assert() on pipe accept errors (Ben Noordhuis)</p>
+<li><p>pipe_wrap: don&#39;t assert() on pipe accept errors (Ben Noordhuis)</p>
 </li>
 <li><p>Better exception output for module load and process.nextTick (Felix Geisendörfer)</p>
 </li>
 <li><p>zlib: fix error reporting (Ben Noordhuis)</p>
 </li>
-<li><p>http: Don&apos;t destroy on timeout (isaacs)</p>
+<li><p>http: Don&#39;t destroy on timeout (isaacs)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/3231">#3231</a>: http: Don&apos;t try to emit error on a null&apos;ed req object (isaacs)</p>
+<li><p><a href="https://github.com/joyent/node/issues/3231">#3231</a>: http: Don&#39;t try to emit error on a null&#39;ed req object (isaacs)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/3236">#3236</a>: http: Refactor ClientRequest.onSocket (isaacs)</p>
 </li>
@@ -969,7 +1061,7 @@
 </li>
 <li><p>http_parser: Eat CRLF between requests, even on connection:close. (Ben Noordhuis)</p>
 </li>
-<li><p>don&apos;t check return value of unsetenv (Ben Noordhuis)</p>
+<li><p>don&#39;t check return value of unsetenv (Ben Noordhuis)</p>
 </li>
 </ul>
 <p><a id="v0.6.15"></a>
@@ -984,13 +1076,13 @@
 </li>
 <li><p>add 64bit offset fs functions (Igor Zinkovsky)</p>
 </li>
-<li><p>windows: don&apos;t report ENOTSOCK when attempting to bind an udp handle twice (Bert Belder)</p>
+<li><p>windows: don&#39;t report ENOTSOCK when attempting to bind an udp handle twice (Bert Belder)</p>
 </li>
 <li><p>windows: backport pipe-connect-to-file fixes from master (Bert Belder)</p>
 </li>
 <li><p>windows: never call fs event callbacks after closing the watcher (Bert Belder)</p>
 </li>
-<li><p>fs.readFile: don&apos;t make the callback before the fd is closed (Bert Belder)</p>
+<li><p>fs.readFile: don&#39;t make the callback before the fd is closed (Bert Belder)</p>
 </li>
 <li><p>windows: use 64bit offsets for uv_fs apis (Igor Zinkovsky)</p>
 </li>
@@ -1001,7 +1093,7 @@
 </p>
 <h1>2012.03.22 Version 0.6.14 (stable), <a href="https://github.com/joyent/node/commit/e513ff">e513ff</a></h1>
 <ul>
-<li><p>net: don&apos;t crash when queued write fails (Igor Zinkovsky)</p>
+<li><p>net: don&#39;t crash when queued write fails (Igor Zinkovsky)</p>
 </li>
 <li><p>sunos: fix EMFILE on process.memoryUsage() (Bryan Cantrill)</p>
 </li>
@@ -1017,9 +1109,9 @@
 <ul>
 <li>upgrade node-gyp to 0.3.7</li>
 <li>work around AV-locked directories on Windows</li>
-<li>Fix <a href="https://github.com/isaacs/npm/issues/2293">isaacs/npm#2293</a> Don&apos;t try to &apos;uninstall&apos; /</li>
+<li>Fix <a href="https://github.com/isaacs/npm/issues/2293">isaacs/npm#2293</a> Don&#39;t try to &#39;uninstall&#39; /</li>
 <li>Exclude symbolic links from packages.</li>
-<li>Fix <a href="https://github.com/isaacs/npm/issues/2275">isaacs/npm#2275</a> Spurious &apos;unresolvable cycle&apos; error.</li>
+<li>Fix <a href="https://github.com/isaacs/npm/issues/2275">isaacs/npm#2275</a> Spurious &#39;unresolvable cycle&#39; error.</li>
 <li>Exclude/include dot files as if they were normal files</li>
 </ul>
 </li>
@@ -1064,7 +1156,7 @@
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/2827">#2827</a> net: fix race write() before and after connect() (koichik)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/2554">#2554</a> <a href="https://github.com/joyent/node/issues/2567">#2567</a> throw if fs args for &apos;start&apos; or &apos;end&apos; are strings (AJ ONeal)</p>
+<li><p><a href="https://github.com/joyent/node/issues/2554">#2554</a> <a href="https://github.com/joyent/node/issues/2567">#2567</a> throw if fs args for &#39;start&#39; or &#39;end&#39; are strings (AJ ONeal)</p>
 </li>
 <li><p>punycode: Update to v1.0.0 (Mathias Bynens)</p>
 </li>
@@ -1091,7 +1183,7 @@
 <li>install: support --save with url install targets</li>
 <li>shrinkwrap: behave properly with url-installed modules</li>
 <li>support installing uncompressed tars or single file modules from urls etc.</li>
-<li>don&apos;t run make clean on rebuild</li>
+<li>don&#39;t run make clean on rebuild</li>
 <li>support HTTPS-over-HTTP proxy tunneling</li>
 </ul>
 </li>
@@ -1108,7 +1200,7 @@
 </li>
 <li><p>tls: mitigate session renegotiation attacks (Ben Noordhuis)</p>
 </li>
-<li><p>tcp, pipe: don&apos;t assert on uv_accept() errors (Ben Noordhuis)</p>
+<li><p>tcp, pipe: don&#39;t assert on uv_accept() errors (Ben Noordhuis)</p>
 </li>
 <li><p>tls: Allow establishing secure connection on the existing socket (koichik)</p>
 </li>
@@ -1128,7 +1220,7 @@
 </li>
 <li><p>dtrace: add missing translator (Dave Pacheco)</p>
 </li>
-<li><p>unix: don&apos;t flush tty on switch to raw mode (Ben Noordhuis)</p>
+<li><p>unix: don&#39;t flush tty on switch to raw mode (Ben Noordhuis)</p>
 </li>
 <li><p>windows: reset brightness when reverting to default text color (Bert Belder)</p>
 </li>
@@ -1136,7 +1228,7 @@
 <ul>
 <li>Update which, fstream, mkdirp, request, and rimraf</li>
 <li>Fix <a href="https://github.com/joyent/node/issues/2123">#2123</a> Set path properly for lifecycle scripts on windows</li>
-<li>Mark the root as seen, so we don&apos;t recurse into it. Fixes <a href="https://github.com/joyent/node/issues/1838">#1838</a>. (Martin Cooper)</li>
+<li>Mark the root as seen, so we don&#39;t recurse into it. Fixes <a href="https://github.com/joyent/node/issues/1838">#1838</a>. (Martin Cooper)</li>
 </ul>
 </li>
 </ul>
@@ -1199,7 +1291,7 @@
 </li>
 <li><p>path.extname bugfix with . and .. paths (Bert Belder)</p>
 </li>
-<li><p>cluster: don&apos;t always kill the master on uncaughtException (Ben Noordhuis)</p>
+<li><p>cluster: don&#39;t always kill the master on uncaughtException (Ben Noordhuis)</p>
 </li>
 <li><p>Update npm to 1.1.0-2 (isaacs)</p>
 </li>
@@ -1253,7 +1345,7 @@ Seong-Rak Choi, Shannen, Adam Malcontenti-Wilson, koichik)</p>
 </li>
 <li><p>crypto: rewrite HexDecode without snprintf (Roman Shtylman)</p>
 </li>
-<li><p>crypto: don&apos;t ignore DH init errors (Ben Noordhuis)</p>
+<li><p>crypto: don&#39;t ignore DH init errors (Ben Noordhuis)</p>
 </li>
 </ul>
 <p><a id="v0.6.6"></a>
@@ -1331,14 +1423,14 @@ Felix Geisendörfer)</p>
 </li>
 <li><p>TLS: expose more openssl SSL context options and constants. (Ben Noordhuis)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/2177">#2177</a> Windows: don&apos;t kill UDP socket when a packet fails to reach its
+<li><p><a href="https://github.com/joyent/node/issues/2177">#2177</a> Windows: don&#39;t kill UDP socket when a packet fails to reach its
 destination. (Bert Belder)</p>
 </li>
 <li><p>Windows: support paths longer than 260 characters. (Igor Zinkovsky)</p>
 </li>
 <li><p>Windows: correctly resolve drive-relative paths. (Bert Belder)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/2166">#2166</a> Don&apos;t leave file descriptor open after lchmod. (Isaac Schlueter)</p>
+<li><p><a href="https://github.com/joyent/node/issues/2166">#2166</a> Don&#39;t leave file descriptor open after lchmod. (Isaac Schlueter)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/2084">#2084</a> Add OS X .pkg build script to make file.</p>
 </li>
@@ -1353,7 +1445,7 @@ destination. (Bert Belder)</p>
 </li>
 <li><p>timers: remember extra setTimeout() arguments when timeout==0</p>
 </li>
-<li><p>punycode: use Mathias Bynens&apos;s punycode library, it&apos;s more compliant</p>
+<li><p>punycode: use Mathias Bynens&#39;s punycode library, it&#39;s more compliant</p>
 </li>
 <li><p>repl: improved tab completion (Ryan Emery)</p>
 </li>
@@ -1386,7 +1478,7 @@ destination. (Bert Belder)</p>
 </li>
 <li><p>make stdout and stderr non-destroyable (Igor Zinkovsky)</p>
 </li>
-<li><p>fs: don&apos;t close uninitialized fs.watch handle (Ben Noordhuis)</p>
+<li><p>fs: don&#39;t close uninitialized fs.watch handle (Ben Noordhuis)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/2026">#2026</a> fix man page install on BSDs (Ben Noordhuis)</p>
 </li>
@@ -1420,7 +1512,7 @@ Maciej Małecki, Jacob Kragh)</p>
 </li>
 <li><p>http.request(url.parse(x)) (seebees)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1929">#1929</a> zlib Respond to &apos;resume&apos; events properly (isaacs)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1929">#1929</a> zlib Respond to &#39;resume&#39; events properly (isaacs)</p>
 </li>
 <li><p>stream.pipe: Remove resume and pause events</p>
 </li>
@@ -1428,7 +1520,7 @@ Maciej Małecki, Jacob Kragh)</p>
 </li>
 <li><p>build system improvements (bnoordhuis)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1936">#1936</a> tls: does not emit &apos;end&apos; from EncryptedStream (koichik)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1936">#1936</a> tls: does not emit &#39;end&#39; from EncryptedStream (koichik)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/758">#758</a> tls: add address(), remoteAddress/remotePort</p>
 </li>
@@ -1481,7 +1573,7 @@ koichik, Maciej Małecki, Guglielmo Ferri, isaacs)</p>
 </li>
 <li><p>Use getaddrinfo instead of c-ares for dns.lookup</p>
 </li>
-<li><p>Emit &apos;end&apos; from crypto streams on close</p>
+<li><p>Emit &#39;end&#39; from crypto streams on close</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1902">#1902</a> buffer: use NO_NULL_TERMINATION flag (koichik)</p>
 </li>
@@ -1489,12 +1581,12 @@ koichik, Maciej Małecki, Guglielmo Ferri, isaacs)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1644">#1644</a> add GetCPUInfo on windows (Karl Skomski)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1484">#1484</a>, <a href="https://github.com/joyent/node/issues/1834">#1834</a>, <a href="https://github.com/joyent/node/issues/1482">#1482</a>, <a href="https://github.com/joyent/node/issues/771">#771</a> Don&apos;t use a separate context for the repl.
+<li><p><a href="https://github.com/joyent/node/issues/1484">#1484</a>, <a href="https://github.com/joyent/node/issues/1834">#1834</a>, <a href="https://github.com/joyent/node/issues/1482">#1482</a>, <a href="https://github.com/joyent/node/issues/771">#771</a> Don&#39;t use a separate context for the repl.
 (isaacs)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1882">#1882</a> zlib Update &apos;availOutBefore&apos; value, and test (isaacs)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1882">#1882</a> zlib Update &#39;availOutBefore&#39; value, and test (isaacs)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1888">#1888</a> child_process.fork: don&apos;t modify args (koichik)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1888">#1888</a> child_process.fork: don&#39;t modify args (koichik)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1516">#1516</a> tls: requestCert unusable with Firefox and Chrome (koichik)</p>
 </li>
@@ -1615,11 +1707,11 @@ Ben Noordhuis)</p>
 <li><p><a href="https://github.com/joyent/node/issues/1236">#1236</a>, <a href="https://github.com/joyent/node/issues/1438">#1438</a>, <a href="https://github.com/joyent/node/issues/1506">#1506</a>, <a href="https://github.com/joyent/node/issues/1513">#1513</a>, <a href="https://github.com/joyent/node/issues/1621">#1621</a>, <a href="https://github.com/joyent/node/issues/1640">#1640</a>, <a href="https://github.com/joyent/node/issues/1647">#1647</a> Libuv-related bugs fixed
 (Jorge Chamorro Bieling, Peter Bright, Luis Lavena, Igor Zinkovsky)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1296">#1296</a>, <a href="https://github.com/joyent/node/issues/1612">#1612</a> crypto: Fix BIO&apos;s usage. (Koichi Kobayashi)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1296">#1296</a>, <a href="https://github.com/joyent/node/issues/1612">#1612</a> crypto: Fix BIO&#39;s usage. (Koichi Kobayashi)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1345">#1345</a> Correctly set socket.remoteAddress with libuv backend (Bert Belder)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1429">#1429</a> Don&apos;t clobber quick edit mode on windows (Peter Bright)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1429">#1429</a> Don&#39;t clobber quick edit mode on windows (Peter Bright)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1503">#1503</a> Make libuv backend default on unix, override with <code>node --use-legacy</code></p>
 </li>
@@ -1633,7 +1725,7 @@ Ben Noordhuis)</p>
 dependency on windows (Igor Zinkovsky, Ben Noordhuis, Ryan Dahl,
 Isaac Schlueter)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1592">#1592</a> Don&apos;t load-time link against CreateSymbolicLink on windows
+<li><p><a href="https://github.com/joyent/node/issues/1592">#1592</a> Don&#39;t load-time link against CreateSymbolicLink on windows
 (Peter Bright)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1601">#1601</a> Improve API consistency when dealing with the socket underlying a HTTP
@@ -1643,7 +1735,7 @@ client request (Mikeal Rogers)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1617">#1617</a> Added some win32 os functions (Karl Skomski)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1624">#1624</a> avoid buffer overrun with &apos;binary&apos; encoding (Koichi Kobayashi)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1624">#1624</a> avoid buffer overrun with &#39;binary&#39; encoding (Koichi Kobayashi)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1633">#1633</a> make Buffer.write() always set _charsWritten (Koichi Kobayashi)</p>
 </li>
@@ -1651,7 +1743,7 @@ client request (Mikeal Rogers)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1651">#1651</a> improve inspection for sparse array (Koichi Kobayashi)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1672">#1672</a> set .code=&apos;ECONNRESET&apos; on socket hang up errors (Ben Noordhuis)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1672">#1672</a> set .code=&#39;ECONNRESET&#39; on socket hang up errors (Ben Noordhuis)</p>
 </li>
 <li><p>Add test case for foaf+ssl client certificate (Niclas Hoyer)</p>
 </li>
@@ -1663,7 +1755,7 @@ client request (Mikeal Rogers)</p>
 <li><p>Added additional properties to getPeerCertificate (Nathan Rixham,
 Niclas Hoyer)</p>
 </li>
-<li><p>Don&apos;t eval repl command twice when an error is thrown (Nathan Rajlich)</p>
+<li><p>Don&#39;t eval repl command twice when an error is thrown (Nathan Rajlich)</p>
 </li>
 <li><p>Improve util.isDate() (Nathan Rajlich)</p>
 </li>
@@ -1701,7 +1793,7 @@ Niclas Hoyer)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1447">#1447</a> remove deprecated http.cat() function (Mikeal Rogers)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1140">#1140</a> fix incorrect dispatch of vm.runInContext&apos;s filename argument
+<li><p><a href="https://github.com/joyent/node/issues/1140">#1140</a> fix incorrect dispatch of vm.runInContext&#39;s filename argument
 (Antranig Basman)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1140">#1140</a> document vm.runInContext() and vm.createContext() (Antranig Basman)</p>
@@ -1732,7 +1824,7 @@ Mikeal Rogers, Maciej Małecki, Antranig Basman, Mickaël Delahaye)</p>
 <li><p>Build on Microsoft Visual Studio via GYP. Use generate-projects.bat in the
 to build sln files. (Peter Bright, Igor Zinkovsky)</p>
 </li>
-<li><p>Make Mikeal&apos;s HTTP agent client the default. Use old HTTP client with
+<li><p>Make Mikeal&#39;s HTTP agent client the default. Use old HTTP client with
 --use-http1</p>
 </li>
 <li><p>Fixes https host header default port handling. (Mikeal Rogers)</p>
@@ -1768,11 +1860,11 @@ and 4231 (Stefan Bühler)</p>
 </li>
 <li><p>Add Socket::bytesRead, Socket::bytesWritten (Alexander Uvarov)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/572">#572</a> Don&apos;t print result of --eval in CLI (Ben Noordhuis)</p>
+<li><p><a href="https://github.com/joyent/node/issues/572">#572</a> Don&#39;t print result of --eval in CLI (Ben Noordhuis)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1223">#1223</a> Fix http.ClientRequest crashes if end() was called twice (koichik)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1383">#1383</a> Emit &apos;close&apos; after all connections have closed (Felix Geisendörfer)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1383">#1383</a> Emit &#39;close&#39; after all connections have closed (Felix Geisendörfer)</p>
 </li>
 <li><p>Add sprintf-like util.format() function (Ben Noordhuis)</p>
 </li>
@@ -1827,11 +1919,11 @@ and 4231 (Stefan Bühler)</p>
 <li><p><a href="https://github.com/joyent/node/issues/1149">#1149</a> IDNA and Punycode support in url.parse
 (Jeremy Selier, Ben Noordhuis, isaacs)</p>
 </li>
-<li><p>Export $CC and $CXX to uv and V8&apos;s build systems</p>
+<li><p>Export $CC and $CXX to uv and V8&#39;s build systems</p>
 </li>
 <li><p>Include pthread-win32 static libraries in build (Igor Zinkovsky)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1199">#1199</a>, <a href="https://github.com/joyent/node/issues/1094">#1094</a> Fix fs can&apos;t handle large file on 64bit platform (koichik)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1199">#1199</a>, <a href="https://github.com/joyent/node/issues/1094">#1094</a> Fix fs can&#39;t handle large file on 64bit platform (koichik)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1281">#1281</a> Make require a public member of module (isaacs)</p>
 </li>
@@ -1881,7 +1973,7 @@ SSL_OP_CRYPTOPRO_TLSEXT_BUG to TLS (Theo Schlossnagle)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/573">#573</a> Diffie-Hellman support to crypto module (Håvard Stranden)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/695">#695</a> add &apos;hex&apos; encoding to buffer (isaacs)</p>
+<li><p><a href="https://github.com/joyent/node/issues/695">#695</a> add &#39;hex&#39; encoding to buffer (isaacs)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/851">#851</a> Update how REPLServer uses contexts (Ben Weaver)</p>
 </li>
@@ -1915,7 +2007,7 @@ SSL_OP_CRYPTOPRO_TLSEXT_BUG to TLS (Theo Schlossnagle)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1610">#1610</a> Remove DigiNotar CA from trusted list (isaacs)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1624">#1624</a> buffer: Avoid overrun with &apos;binary&apos; encoding. (koichik)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1624">#1624</a> buffer: Avoid overrun with &#39;binary&#39; encoding. (koichik)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1633">#1633</a> buffer: write() should always set _charsWritten. (koichik)</p>
 </li>
@@ -1939,7 +2031,7 @@ SSL_OP_CRYPTOPRO_TLSEXT_BUG to TLS (Theo Schlossnagle)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1417">#1417</a> Fix http.ClientRequest crashes if end() was called twice</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1497">#1497</a> querystring: Replace &apos;in&apos; test with &apos;hasOwnProperty&apos; (isaacs)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1497">#1497</a> querystring: Replace &#39;in&#39; test with &#39;hasOwnProperty&#39; (isaacs)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1546">#1546</a> http perf improvement</p>
 </li>
@@ -1962,7 +2054,7 @@ SSL_OP_CRYPTOPRO_TLSEXT_BUG to TLS (Theo Schlossnagle)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/829">#829</a> Backport r8577 from V8 (Ben Noordhuis)</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/877">#877</a> Don&apos;t wait for HTTP Agent socket pool to establish connections.</p>
+<li><p><a href="https://github.com/joyent/node/issues/877">#877</a> Don&#39;t wait for HTTP Agent socket pool to establish connections.</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/915">#915</a> Find kqueue on FreeBSD correctly (Brett Kiefer)</p>
 </li>
@@ -1999,7 +2091,7 @@ SSL_OP_CRYPTOPRO_TLSEXT_BUG to TLS (Theo Schlossnagle)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1087">#1087</a> Disabling SSL compression disabled with early OpenSSLs.</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1144">#1144</a> debugger: don&apos;t allow users to input non-valid commands
+<li><p><a href="https://github.com/joyent/node/issues/1144">#1144</a> debugger: don&#39;t allow users to input non-valid commands
 (Siddharth Mahendraker)</p>
 </li>
 <li><p>Perf improvement for util.inherits</p>
@@ -2012,9 +2104,9 @@ nested project structures (Mathias Buus)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1203">#1203</a> Add missing scope.Close to fs.sendfileSync</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1187">#1187</a> Support multiple &apos;link&apos; headers</p>
+<li><p><a href="https://github.com/joyent/node/issues/1187">#1187</a> Support multiple &#39;link&#39; headers</p>
 </li>
-<li><p><a href="https://github.com/joyent/node/issues/1196">#1196</a> Fix -e/--eval can&apos;t load module from node_modules (Koichi Kobayashi)</p>
+<li><p><a href="https://github.com/joyent/node/issues/1196">#1196</a> Fix -e/--eval can&#39;t load module from node_modules (Koichi Kobayashi)</p>
 </li>
 <li><p>Upgrade V8 to 3.1.8.25, upgrade http-parser.</p>
 </li>
@@ -2031,7 +2123,7 @@ nested project structures (Mathias Buus)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1041">#1041</a> Fix event listener leak check timing (koichik)</p>
 </li>
-<li><h1>1038 Fix dns.resolve() with &apos;PTR&apos; throws Error: Unknown type &quot;PTR&quot;</h1>
+<li><h1>1038 Fix dns.resolve() with &#39;PTR&#39; throws Error: Unknown type &quot;PTR&quot;</h1>
 <p>(koichik)</p>
 </li>
 <li><p><a href="https://github.com/joyent/node/issues/1073">#1073</a> Share SSL context between server connections (Fedor Indutny)</p>
@@ -2044,9 +2136,9 @@ nested project structures (Mathias Buus)</p>
 </li>
 <li><p>Fix idle timeouts in HTTPS (Felix Geisendörfer)</p>
 </li>
-<li><p>SlowBuffer.write() with &apos;ucs2&apos; throws ReferenceError. (koichik)</p>
+<li><p>SlowBuffer.write() with &#39;ucs2&#39; throws ReferenceError. (koichik)</p>
 </li>
-<li><p>http.ServerRequest &apos;close&apos; sometimes gets an error argument
+<li><p>http.ServerRequest &#39;close&#39; sometimes gets an error argument
 (Felix Geisendörfer)</p>
 </li>
 <li><p>Doc improvements</p>
@@ -2065,14 +2157,14 @@ nested project structures (Mathias Buus)</p>
 </p>
 <h1>2011.04.22 Version 0.4.7 (stable)</h1>
 <ul>
-<li><p>Don&apos;t emit error on ECONNRESET from read() <a href="https://github.com/joyent/node/issues/670">#670</a></p>
+<li><p>Don&#39;t emit error on ECONNRESET from read() <a href="https://github.com/joyent/node/issues/670">#670</a></p>
 </li>
 <li><p>Fix: Multiple pipes to the same stream were broken <a href="https://github.com/joyent/node/issues/929">#929</a>
 (Felix Geisendörfer)</p>
 </li>
 <li><p>URL [parsing/formatting corrections [#954](<a href="https://github.com/joyent/node/issues/954)](https://github.com/parsing/formatting">https://github.com/joyent/node/issues/954)](https://github.com/parsing/formatting</a> corrections /issues/954) (isaacs)</p>
 </li>
-<li><p>make it possible to do repl.start(&apos;&apos;, stream) (Wade Simmons)</p>
+<li><p>make it possible to do repl.start(&#39;&#39;, stream) (Wade Simmons)</p>
 </li>
 <li><p>Add os.loadavg for SunOS (Robert Mustacchi)</p>
 </li>
@@ -2085,14 +2177,14 @@ nested project structures (Mathias Buus)</p>
 </p>
 <h1>2011.04.13 Version 0.4.6 (stable)</h1>
 <ul>
-<li><p>Don&apos;t error on ENOTCONN from shutdown() <a href="https://github.com/joyent/node/issues/670">#670</a></p>
+<li><p>Don&#39;t error on ENOTCONN from shutdown() <a href="https://github.com/joyent/node/issues/670">#670</a></p>
 </li>
 <li><p>Auto completion of built-in debugger suggests prefix match rather than
   partial match. (koichik)</p>
 </li>
 <li><p>circular reference in vm modules. <a href="https://github.com/joyent/node/issues/822">#822</a> (Jakub Lekstan)</p>
 </li>
-<li><p>http response.readable should be false after &apos;end&apos; <a href="https://github.com/joyent/node/issues/867">#867</a> (Abe Fettig)</p>
+<li><p>http response.readable should be false after &#39;end&#39; <a href="https://github.com/joyent/node/issues/867">#867</a> (Abe Fettig)</p>
 </li>
 <li><p>Implement os.cpus() and os.uptime() on Solaris (Scott McWhirter)</p>
 </li>
@@ -2106,7 +2198,7 @@ nested project structures (Mathias Buus)</p>
 </li>
 <li><p>TLS use RC4-SHA by default</p>
 </li>
-<li><p>Don&apos;t strangely drop out of event loop on HTTPS client uploads <a href="https://github.com/joyent/node/issues/892">#892</a></p>
+<li><p>Don&#39;t strangely drop out of event loop on HTTPS client uploads <a href="https://github.com/joyent/node/issues/892">#892</a></p>
 </li>
 <li><p>Doc improvements</p>
 </li>
@@ -2138,7 +2230,7 @@ nested project structures (Mathias Buus)</p>
 </p>
 <h1>2011.03.26 Version 0.4.4 (stable), <a href="https://github.com/joyent/node/commit/25122b">25122b</a></h1>
 <ul>
-<li><p>CryptoStream.end shouldn&apos;t throw if not writable GH-820</p>
+<li><p>CryptoStream.end shouldn&#39;t throw if not writable GH-820</p>
 </li>
 <li><p>Drop out if connection destroyed before connect() GH-819</p>
 </li>
@@ -2157,7 +2249,7 @@ nested project structures (Mathias Buus)</p>
 </p>
 <h1>2011.03.18 Version 0.4.3 (stable), <a href="https://github.com/joyent/node/commit/c095ce">c095ce</a></h1>
 <ul>
-<li><p>Don&apos;t decrease server connection counter again if destroy() is called more
+<li><p>Don&#39;t decrease server connection counter again if destroy() is called more
   than once GH-431 (Andreas Reich, Anders Conbere)</p>
 </li>
 <li><p>Documentation improvements (koichik)</p>
@@ -2175,7 +2267,7 @@ Noordhuis)</p>
 </li>
 <li><p>HTTP Agent bugs: GH-787, GH-784, GH-803.</p>
 </li>
-<li><p>Don&apos;t call GetMemoryUsage every 5 seconds.</p>
+<li><p>Don&#39;t call GetMemoryUsage every 5 seconds.</p>
 </li>
 <li><p>Upgrade V8 to 3.1.8.3</p>
 </li>
@@ -2190,7 +2282,7 @@ Noordhuis)</p>
 </li>
 <li><p>Pragma HTTP header comma separation</p>
 </li>
-<li><p>In addition to &apos;aborted&apos; emit &apos;close&apos; from incoming requests
+<li><p>In addition to &#39;aborted&#39; emit &#39;close&#39; from incoming requests
 (Felix Geisendörfer)</p>
 </li>
 <li><p>Fix memleak in vm.runInNewContext</p>
@@ -2199,11 +2291,11 @@ Noordhuis)</p>
 </li>
 <li><p>Build system changes for libnode (Aria Stewart)</p>
 </li>
-<li><p>Read up the prototype of the &apos;env&apos; object. (Nathan Rajlich)</p>
+<li><p>Read up the prototype of the &#39;env&#39; object. (Nathan Rajlich)</p>
 </li>
-<li><p>Add &apos;close&apos; and &apos;aborted&apos; events to Agent responses</p>
+<li><p>Add &#39;close&#39; and &#39;aborted&#39; events to Agent responses</p>
 </li>
-<li><p>http: fix missing &apos;drain&apos; events (Russell Haering)</p>
+<li><p>http: fix missing &#39;drain&#39; events (Russell Haering)</p>
 </li>
 <li><p>Fix process.stdout.end() throws ENOTSOCK error. (Koichi Kobayashi)</p>
 </li>
@@ -2247,7 +2339,7 @@ Noordhuis)</p>
 </li>
 <li><p>cmake improvements (Tom Hughes)</p>
 </li>
-<li><p>Fix: TLS sockets should not be writable after &apos;end&apos;</p>
+<li><p>Fix: TLS sockets should not be writable after &#39;end&#39;</p>
 </li>
 <li><p>Fix os.cpus() on cygwin (Brian White)</p>
 </li>
@@ -2263,7 +2355,7 @@ Noordhuis)</p>
 <li><p>require() improvements (isaacs)</p>
 <ul>
 <li>understand package.json (isaacs)</li>
-<li>look for &apos;node_modules&apos; dir</li>
+<li>look for &#39;node_modules&#39; dir</li>
 </ul>
 </li>
 <li><p>cmake fixes (Daniel Gröber)</p>
@@ -2284,7 +2376,7 @@ Noordhuis)</p>
 </li>
 <li><p>More DTrace probes (Bryan Cantrill,  Robert Mustacchi)</p>
 </li>
-<li><p>&apos;pipe&apos; event on pipe() (Mikeal Rogers)</p>
+<li><p>&#39;pipe&#39; event on pipe() (Mikeal Rogers)</p>
 </li>
 <li><p>CRL support in TLS (Theo Schlossnagle)</p>
 </li>
@@ -2300,7 +2392,7 @@ Noordhuis)</p>
 <li><p>Add req.abort() for client side requests.</p>
 </li>
 <li><p>Add exception.code for easy testing:
-Example: if (err.code == &apos;EADDRINUSE&apos;);</p>
+Example: if (err.code == &#39;EADDRINUSE&#39;);</p>
 </li>
 <li><p>Add process.stderr.</p>
 </li>
@@ -2324,7 +2416,7 @@ Example: if (err.code == &apos;EADDRINUSE&apos;);</p>
 <ul>
 <li><p>Expose agent in http and https client. (Mikeal Rogers)</p>
 </li>
-<li><p>Fix bug in http request&apos;s end method. (Ali Farhadi)</p>
+<li><p>Fix bug in http request&#39;s end method. (Ali Farhadi)</p>
 </li>
 <li><p>MinGW: better net support (Bert Belder)</p>
 </li>
@@ -2336,7 +2428,7 @@ Example: if (err.code == &apos;EADDRINUSE&apos;);</p>
 </li>
 <li><p>Fix many bugs with legacy http.Client interface</p>
 </li>
-<li><p>Deprecate process.assert. Use require(&apos;assert&apos;).ok</p>
+<li><p>Deprecate process.assert. Use require(&#39;assert&#39;).ok</p>
 </li>
 <li><p>Add callback parameter to socket.setTimeout(). (Ali Farhadi)</p>
 </li>
@@ -2383,7 +2475,7 @@ Example: if (err.code == &apos;EADDRINUSE&apos;);</p>
 <li><p>Allow third party hooks before main module load.
 (See <a href="https://github.com/joyent/node/commit/496be4">496be4</a>)</p>
 </li>
-<li><p>Don&apos;t stat() on cached modules. (Felix Geisendörfer)</p>
+<li><p>Don&#39;t stat() on cached modules. (Felix Geisendörfer)</p>
 </li>
 </ul>
 <p><a id="v0.3.4"></a>
@@ -2394,7 +2486,7 @@ Example: if (err.code == &apos;EADDRINUSE&apos;);</p>
 </li>
 <li><p>HTTPS server</p>
 </li>
-<li><p>Built in debugger &apos;node debug script.js&apos;</p>
+<li><p>Built in debugger &#39;node debug script.js&#39;</p>
 </li>
 <li><p>realpath files during module load (Mihai Călin Bazon)</p>
 </li>
@@ -2426,7 +2518,7 @@ evaluated.</p>
 </li>
 <li><p>Use process.stdin instead of process.openStdin().</p>
 </li>
-<li><p>Disable TLS tests when node doesn&apos;t have OpenSSL.</p>
+<li><p>Disable TLS tests when node doesn&#39;t have OpenSSL.</p>
 </li>
 </ul>
 <p><a id="v0.3.2"></a>
@@ -2436,7 +2528,7 @@ evaluated.</p>
 <li><p>Rip out the old (broken) TLS implementation introduce new tested
 implementation and API. See docs. HTTPS not supported in this release.</p>
 </li>
-<li><p>Introduce &apos;os&apos; and &apos;tty&apos; modules.</p>
+<li><p>Introduce &#39;os&#39; and &#39;tty&#39; modules.</p>
 </li>
 <li><p>Callback parameters for socket.write() and socket.connect().</p>
 </li>
@@ -2444,7 +2536,7 @@ implementation and API. See docs. HTTPS not supported in this release.</p>
 </li>
 <li><p>cmake support (Tom Hughes)</p>
 </li>
-<li><p>&apos;make lint&apos;</p>
+<li><p>&#39;make lint&#39;</p>
 </li>
 <li><p>oprofile support (./configure --oprofile)</p>
 </li>
@@ -2454,8 +2546,8 @@ implementation and API. See docs. HTTPS not supported in this release.</p>
 <li>buffer.slice(0, 0)</li>
 <li>Global variable leaks</li>
 <li>clearTimeouts calling multiple times (Michael W)</li>
-<li>utils.inspect&apos;s detection of circular structures (Tim Cooijmans)</li>
-<li>Apple&apos;s threaded write()s bug (Jorge Chamorro Bieling)</li>
+<li>utils.inspect&#39;s detection of circular structures (Tim Cooijmans)</li>
+<li>Apple&#39;s threaded write()s bug (Jorge Chamorro Bieling)</li>
 <li>Make sure raw mode is disabled when exiting a terminal-based REPL.
 (Brian White)</li>
 </ul>
@@ -2492,12 +2584,12 @@ implementation and API. See docs. HTTPS not supported in this release.</p>
 </li>
 <li><p>Handle cyclic links smarter in fs.realpath (isaacs)</p>
 </li>
-<li><p>Remove node-repl (just use &apos;node&apos; without args)</p>
+<li><p>Remove node-repl (just use &#39;node&#39; without args)</p>
 </li>
 <li><p>Rewrite libeio After callback to use req-&gt;result instead of req-&gt;errorno
 for error checking (Micheil Smith)</p>
 </li>
-<li><p>Remove warning about deprecating &apos;sys&apos; - too aggressive</p>
+<li><p>Remove warning about deprecating &#39;sys&#39; - too aggressive</p>
 </li>
 <li><p>Make writes to process.env update the real environment. (Ben Noordhuis)</p>
 </li>
@@ -2522,7 +2614,7 @@ could not be written to the file in a single write() call.</p>
 <li>Update url.resolve() to use new path.join behavior.</li>
 </ul>
 </li>
-<li><p>API: Move process.binding(&apos;evals&apos;) to require(&apos;vm&apos;)</p>
+<li><p>API: Move process.binding(&#39;evals&#39;) to require(&#39;vm&#39;)</p>
 </li>
 <li><p>Fix V8 build on Cygwin (Bert Belder)</p>
 </li>
@@ -2541,9 +2633,9 @@ could not be written to the file in a single write() call.</p>
 </li>
 <li><p>Improvements to readline.js (Trent Mick, Johan Euphrosine, Brian White)</p>
 </li>
-<li><p>Safe constructors (missing &apos;new&apos; doesn&apos;t segfault)</p>
+<li><p>Safe constructors (missing &#39;new&#39; doesn&#39;t segfault)</p>
 </li>
-<li><p>Fix process.nextTick so thrown errors don&apos;t confuse it.
+<li><p>Fix process.nextTick so thrown errors don&#39;t confuse it.
 (Benjamin Thomas)</p>
 </li>
 <li><p>Allow Strings for ports on net.Server.listen (Bradley Meck)</p>
@@ -2577,7 +2669,7 @@ could not be written to the file in a single write() call.</p>
 </li>
 <li><p>Commas last in sys.inspect</p>
 </li>
-<li><p>Constants moved from process object to require(&apos;constants&apos;)</p>
+<li><p>Constants moved from process object to require(&#39;constants&#39;)</p>
 </li>
 <li><p>Fix parsing of linux memory (Vitali Lovich)</p>
 </li>
@@ -2587,7 +2679,7 @@ could not be written to the file in a single write() call.</p>
 </li>
 <li><p>TCP clients now buffer writes before connection</p>
 </li>
-<li><p>Rename sys module to &apos;util&apos; (Micheil Smith)</p>
+<li><p>Rename sys module to &#39;util&#39; (Micheil Smith)</p>
 </li>
 <li><p>Properly set stdio handlers to blocking on SIGTERM and SIGINT
 (Tom Hughes)</p>
@@ -2650,7 +2742,7 @@ could not be written to the file in a single write() call.</p>
 </li>
 <li><p>Fix --debug-brk (Danny Coates)</p>
 </li>
-<li><p>Don&apos;t let path.normalize get above the root. (Isaac Schlueter)</p>
+<li><p>Don&#39;t let path.normalize get above the root. (Isaac Schlueter)</p>
 </li>
 <li><p>Allow signals to be used with process.on in addition to
 process.addListener. (Brian White)</p>
@@ -2744,7 +2836,7 @@ and now accepts Buffers (Aaron Heckmann)</p>
 </li>
 <li><p>Fix crypto memory leaks.</p>
 </li>
-<li><p>A replacement for decodeURIComponent that doesn&apos;t throw.
+<li><p>A replacement for decodeURIComponent that doesn&#39;t throw.
 (Isaac Schlueter)</p>
 </li>
 <li><p>Only concatenate some incoming HTTP headers. (Peter Griess)</p>
@@ -2763,7 +2855,7 @@ and now accepts Buffers (Aaron Heckmann)</p>
 <li><p>Simple, builtin readline library. REPL is now entered by
 executing &quot;node&quot; without arguments.</p>
 </li>
-<li><p>Add a parameter to spawn() that sets the child&apos;s stdio file
+<li><p>Add a parameter to spawn() that sets the child&#39;s stdio file
 descriptors. (Orlando Vazquez)</p>
 </li>
 <li><p>Upgrade V8 to 2.2.16, http-parser fixes, upgrade c-ares to 1.7.3.</p>
@@ -2773,7 +2865,7 @@ descriptors. (Orlando Vazquez)</p>
 </p>
 <h1>2010.05.29 Version 0.1.97, <a href="https://github.com/joyent/node/commit/0c1aa3">0c1aa3</a></h1>
 <ul>
-<li><p>HTTP throttling: outgoing messages emit &apos;drain&apos; and write() returns false
+<li><p>HTTP throttling: outgoing messages emit &#39;drain&#39; and write() returns false
 when send buffer is full.</p>
 </li>
 <li><p>API: readFileSync without encoding argument now returns a Buffer</p>
@@ -2814,11 +2906,11 @@ when send buffer is full.</p>
 <li><p>Bugfix: Safely decode a utf8 streams that are broken on a multbyte
 character (http and net). (Felix Geisendörfer)</p>
 </li>
-<li><p>Make Buffer&apos;s C++ constructor public.</p>
+<li><p>Make Buffer&#39;s C++ constructor public.</p>
 </li>
 <li><p>Deprecate sys.p()</p>
 </li>
-<li><p>FIX path.dirname(&apos;/tmp&apos;) =&gt; &apos;/&apos;. (Jonathan Rentzsch)</p>
+<li><p>FIX path.dirname(&#39;/tmp&#39;) =&gt; &#39;/&#39;. (Jonathan Rentzsch)</p>
 </li>
 </ul>
 <p><a id="v0.1.95"></a>
@@ -2851,7 +2943,7 @@ by default in HTTP servers.</p>
 </p>
 <h1>2010.05.06 Version 0.1.94, <a href="https://github.com/joyent/node/commit/f711d5">f711d5</a></h1>
 <ul>
-<li><p>Look in /usr/local/lib/node for modules, so that there&apos;s a way
+<li><p>Look in /usr/local/lib/node for modules, so that there&#39;s a way
 to install modules globally (Issac Schlueter)</p>
 </li>
 <li><p>SSL improvements (Rhys Jones, Paulo Matias)</p>
@@ -2862,9 +2954,9 @@ to install modules globally (Issac Schlueter)</p>
 </li>
 <li><p>HTTP upgrade improvements, docs (Micheil Smith)</p>
 </li>
-<li><p>HTTP server emits &apos;clientError&apos; instead of printing message</p>
+<li><p>HTTP server emits &#39;clientError&#39; instead of printing message</p>
 </li>
-<li><p>Bugfix: Don&apos;t emit &apos;error&apos; twice from http.Client</p>
+<li><p>Bugfix: Don&#39;t emit &#39;error&#39; twice from http.Client</p>
 </li>
 <li><p>Bugfix: Ignore SIGPIPE</p>
 </li>
@@ -2881,7 +2973,7 @@ free pool.  (Thomas Lee)</p>
 </p>
 <h1>2010.04.29 Version 0.1.93, <a href="https://github.com/joyent/node/commit/557ba6">557ba6</a></h1>
 <ul>
-<li><p>Fixed no &apos;end&apos; event on long chunked HTTP messages
+<li><p>Fixed no &#39;end&#39; event on long chunked HTTP messages
 <a href="https://github.com/joyent/node/issues/77">https://github.com/joyent/node/issues/77</a></p>
 </li>
 <li><p>Remove legacy modules http_old and tcp_old</p>
@@ -2904,9 +2996,9 @@ querystring.stringify (Thomas Lee)</p>
 <ul>
 <li><p>OpenSSL support. Still undocumented (see tests). (Rhys Jones)</p>
 </li>
-<li><p>API: Unhandled &apos;error&apos; events throw.</p>
+<li><p>API: Unhandled &#39;error&#39; events throw.</p>
 </li>
-<li><p>Script class with eval-function-family in binding(&apos;evals&apos;) plus tests.
+<li><p>Script class with eval-function-family in binding(&#39;evals&#39;) plus tests.
 (Herbert Vojcik)</p>
 </li>
 <li><p>stream.setKeepAlive (Julian Lamb)</p>
@@ -2926,7 +3018,7 @@ querystring.stringify (Thomas Lee)</p>
 </li>
 <li><p>REPL can be run from multiple different streams. (Matt Ranney)</p>
 </li>
-<li><p>After V8 heap is compact, don&apos;t use a timer every 2 seconds.</p>
+<li><p>After V8 heap is compact, don&#39;t use a timer every 2 seconds.</p>
 </li>
 <li><p>Improve nextTick implementation.</p>
 </li>
@@ -2950,7 +3042,7 @@ querystring.stringify (Thomas Lee)</p>
 <li>Support UNIX sockets, Pipes</li>
 <li>Uniform stream API</li>
 <li>Currently no SSL</li>
-<li>Legacy modules can be accessed at &apos;http_old&apos; and &apos;tcp_old&apos;</li>
+<li>Legacy modules can be accessed at &#39;http_old&#39; and &#39;tcp_old&#39;</li>
 </ul>
 </li>
 <li><p>Replace udns with c-ares. (Krishna Rajendran)</p>
@@ -2992,7 +3084,7 @@ querystring.stringify (Thomas Lee)</p>
 </li>
 <li><p>Deprecate process.mixin, process.unloop</p>
 </li>
-<li><p>Remove the &apos;Error: (no message)&apos; exceptions, print stack
+<li><p>Remove the &#39;Error: (no message)&#39; exceptions, print stack
 trace instead</p>
 </li>
 <li><p>INI parser bug fixes (Isaac Schlueter)</p>
@@ -3080,19 +3172,19 @@ writeHeader(). Now accepts reasonPhrase.</p>
 <ul>
 <li><p>Major API Changes</p>
 <ul>
-<li>Remove &apos;file&apos; module</li>
-<li>require(&apos;posix&apos;) -----------------&gt; require(&apos;fs&apos;)</li>
+<li>Remove &#39;file&#39; module</li>
+<li>require(&#39;posix&#39;) -----------------&gt; require(&#39;fs&#39;)</li>
 <li>fs.cat ---------------------------&gt; fs.readFile</li>
 <li>file.write -----------------------&gt; fs.writeFile</li>
-<li>TCP &apos;receive&apos; event --------------&gt; &apos;data&apos;</li>
-<li>TCP &apos;eof&apos; event ------------------&gt; &apos;end&apos;</li>
+<li>TCP &#39;receive&#39; event --------------&gt; &#39;data&#39;</li>
+<li>TCP &#39;eof&#39; event ------------------&gt; &#39;end&#39;</li>
 <li>TCP send() -----------------------&gt; write()</li>
 <li>HTTP sendBody() ------------------&gt; write()</li>
 <li>HTTP finish() --------------------&gt; close()</li>
-<li>HTTP &apos;body&apos; event ----------------&gt; &apos;data&apos;</li>
-<li>HTTP &apos;complete&apos; event ------------&gt; &apos;end&apos;</li>
+<li>HTTP &#39;body&#39; event ----------------&gt; &#39;data&#39;</li>
+<li>HTTP &#39;complete&#39; event ------------&gt; &#39;end&#39;</li>
 <li>http.Client.prototype.close() (formerly finish()) no longer
-takes an argument. Add the &apos;response&apos; listener manually.</li>
+takes an argument. Add the &#39;response&#39; listener manually.</li>
 <li>Allow strings for the flag argument to fs.open
 (&quot;r&quot;, &quot;r+&quot;, &quot;w&quot;, &quot;w+&quot;, &quot;a&quot;, &quot;a+&quot;)</li>
 </ul>
@@ -3123,7 +3215,7 @@ accessor methods. Was causing a crash with Eclipse debugger.
 </p>
 <h1>2010.02.09 Version 0.1.28, <a href="https://github.com/joyent/node/commit/49de41">49de41</a></h1>
 <ul>
-<li><p>Use Google&apos;s jsmin.py which can be used for evil.</p>
+<li><p>Use Google&#39;s jsmin.py which can be used for evil.</p>
 </li>
 <li><p>Add posix.truncate()</p>
 </li>
@@ -3184,7 +3276,7 @@ accessor methods. Was causing a crash with Eclipse debugger.
 </li>
 <li><p>Better error message on SyntaxError</p>
 </li>
-<li><p>API: Move Promise and EventEmitter into &apos;events&apos; module</p>
+<li><p>API: Move Promise and EventEmitter into &#39;events&#39; module</p>
 </li>
 <li><p>API: Add process.nextTick()</p>
 </li>
@@ -3212,10 +3304,10 @@ accessor methods. Was causing a crash with Eclipse debugger.
 <li><p>path module improvements (isaacs, Benjamin Thomas)</p>
 </li>
 <li><p>API: request.uri -&gt; request.url
-It is no longer an object, but a string. The &apos;url&apos; module
+It is no longer an object, but a string. The &#39;url&#39; module
 was addded to parse that string. That is, node no longer
 parses the request URL automatically.</p>
-<p>   require(&apos;url&apos;).parse(request.url)</p>
+<p>   require(&#39;url&#39;).parse(request.url)</p>
 <p>is roughly equivlent to the old request.uri object.
 (isaacs)</p>
 </li>
@@ -3232,12 +3324,12 @@ parses the request URL automatically.</p>
 </p>
 <h1>2009.12.31 Version 0.1.24, <a href="https://github.com/joyent/node/commit/642c27">642c27</a></h1>
 <ul>
-<li><p>Bugfix: don&apos;t chunk responses to HTTP/1.0 clients, even if
+<li><p>Bugfix: don&#39;t chunk responses to HTTP/1.0 clients, even if
 they send Connection: Keep-Alive (e.g. wget)</p>
 </li>
 <li><p>Bugfix: libeio race condition</p>
 </li>
-<li><p>Bugfix: Don&apos;t segfault on unknown http method</p>
+<li><p>Bugfix: Don&#39;t segfault on unknown http method</p>
 </li>
 <li><p>Simplify exception reporting</p>
 </li>
@@ -3293,9 +3385,9 @@ they send Connection: Keep-Alive (e.g. wget)</p>
 </li>
 <li><p>Bugfix: use --jobs=1 with WAF</p>
 </li>
-<li><p>Bugfix: Don&apos;t use chunked encoding for 1.0 requests</p>
+<li><p>Bugfix: Don&#39;t use chunked encoding for 1.0 requests</p>
 </li>
-<li><p>Bugfix: Duplicated header weren&apos;t handled correctly</p>
+<li><p>Bugfix: Duplicated header weren&#39;t handled correctly</p>
 </li>
 <li><p>Improve sys.inspect (Xavier Shay)</p>
 </li>
@@ -3329,7 +3421,7 @@ they send Connection: Keep-Alive (e.g. wget)</p>
 </li>
 <li><p>Bugfix: only detach timers when active.</p>
 </li>
-<li><p>Bugfix: lib/file.js write(), shouldn&apos;t always emit errors or success
+<li><p>Bugfix: lib/file.js write(), shouldn&#39;t always emit errors or success
 (onne@onnlucky.com)</p>
 </li>
 <li><p>Bugfix: Memory leak in fs.write
@@ -3354,7 +3446,7 @@ they send Connection: Keep-Alive (e.g. wget)</p>
 <li><p>Feature: &quot;uncaughtException&quot; event on process
 (Felix Geisendörfer)</p>
 </li>
-<li><p>Feature: &apos;drain&apos; event to tcp.Connection</p>
+<li><p>Feature: &#39;drain&#39; event to tcp.Connection</p>
 </li>
 <li><p>Bugfix: Promise.timeout() blocked the event loop
 (Felix Geisendörfer)</p>
@@ -3427,7 +3519,7 @@ process.kill() (Brandon Beacher)</p>
 </li>
 <li><p>API: Rename node.libraryPaths to require.paths</p>
 </li>
-<li><p>Bugfix: &apos;data&apos; event for stdio should emit a string</p>
+<li><p>Bugfix: &#39;data&#39; event for stdio should emit a string</p>
 </li>
 <li><p>Large file support</p>
 </li>
@@ -3448,13 +3540,13 @@ process.kill() (Brandon Beacher)</p>
 </li>
 <li><p>API: Rename library /utils.js to /sys.js</p>
 </li>
-<li><p>Clean up Node&apos;s build system</p>
+<li><p>Clean up Node&#39;s build system</p>
 </li>
-<li><p>Don&apos;t use parseUri for HTTP server</p>
+<li><p>Don&#39;t use parseUri for HTTP server</p>
 </li>
 <li><p>Remove node.pc</p>
 </li>
-<li><p>Don&apos;t use /bin/sh to create child process except with exec()</p>
+<li><p>Don&#39;t use /bin/sh to create child process except with exec()</p>
 </li>
 <li><p>API: Add __module to reference current module</p>
 </li>
@@ -3525,7 +3617,7 @@ whole files at once.</p>
 </li>
 <li><p>Bugfix: node.fs.write() was stack allocating buffer.</p>
 </li>
-<li><p>Bugfix: ReportException shouldn&apos;t forget the top frame.</p>
+<li><p>Bugfix: ReportException shouldn&#39;t forget the top frame.</p>
 </li>
 <li><p>Improve buffering for HTTP outgoing messages</p>
 </li>
@@ -3548,7 +3640,7 @@ to stats object.</p>
 <li><p>Bugfix: Internally use full paths when loading modules
 this fixes a shebang loading problem.</p>
 </li>
-<li><p>Bugfix: Add &apos;--&apos; command line argument for seperating v8
+<li><p>Bugfix: Add &#39;--&#39; command line argument for seperating v8
 args from program args.</p>
 </li>
 <li><p>Add man page.</p>
@@ -3594,7 +3686,7 @@ args from program args.</p>
 </p>
 <h1>2009.08.27 Version 0.1.7, <a href="https://github.com/joyent/node/commit/f7acef">f7acef</a></h1>
 <ul>
-<li><p>Feature: global &apos;process&apos; object. Emits &quot;exit&quot;.</p>
+<li><p>Feature: global &#39;process&#39; object. Emits &quot;exit&quot;.</p>
 </li>
 <li><p>Feature: promise.wait()</p>
 </li>
@@ -3658,11 +3750,11 @@ Upgrade v8 to 1.3.6</p>
 <li><p>Add connection.readPause() and connection.readResume()
 Add IncomingMessage.prototype.pause() and resume().</p>
 </li>
-<li><p>Fix http benchmark. Wasn&apos;t correctly dispatching.</p>
+<li><p>Fix http benchmark. Wasn&#39;t correctly dispatching.</p>
 </li>
 <li><p>Bugfix: response.setBodyEncoding(&quot;ascii&quot;) not working.</p>
 </li>
-<li><p>Bugfix: Negative ints in HTTP&apos;s on_body and node.fs.read()</p>
+<li><p>Bugfix: Negative ints in HTTP&#39;s on_body and node.fs.read()</p>
 </li>
 <li><p>Upgrade v8 to 1.3.4
 Upgrade libev to 3.8
@@ -3675,7 +3767,7 @@ Upgrade http_parser to v0.2</p>
 <ul>
 <li><p>Upgrade v8 to 1.3.2</p>
 </li>
-<li><p>Bugfix: node.http.ServerRequest.setBodyEncoding(&apos;ascii&apos;) not
+<li><p>Bugfix: node.http.ServerRequest.setBodyEncoding(&#39;ascii&#39;) not
 working</p>
 </li>
 <li><p>Bugfix: node.encodeUtf8 was broken. (Connor Dunn)</p>
@@ -3697,7 +3789,7 @@ working</p>
 <ul>
 <li><p>Add DNS API</p>
 </li>
-<li><p>node.tcp.Server&apos;s backlog option is now an argument to listen()</p>
+<li><p>node.tcp.Server&#39;s backlog option is now an argument to listen()</p>
 </li>
 <li><p>Upgrade V8 to 1.3.1</p>
 </li>
@@ -3738,7 +3830,7 @@ disconnect event.</p>
 <li><p>Bugfix: Server-side clients not attached between creation and
 on_connect.</p>
 </li>
-<li><p>Add &apos;close&apos; event to node.tcp.Server</p>
+<li><p>Add &#39;close&#39; event to node.tcp.Server</p>
 </li>
 <li><p>Simplify and clean up http.js. (Takes more advantage of event
 infrastructure.)</p>
@@ -3761,7 +3853,7 @@ infrastructure.)</p>
 </li>
 <li><p>Upgrade v8 to 1.2.10 and libev to 3.6</p>
 </li>
-<li><p>Bugfix: Timer::RepeatSetter wasn&apos;t working.</p>
+<li><p>Bugfix: Timer::RepeatSetter wasn&#39;t working.</p>
 </li>
 <li><p>Bugfix: Spawning many processes in a loop
 (reported by Felix Geisendörfer)</p>
@@ -3777,7 +3869,7 @@ infrastructure.)</p>
 </li>
 <li><p>New node.Process API</p>
 </li>
-<li><p>Clean up build tools, use v8&apos;s test runner.</p>
+<li><p>Clean up build tools, use v8&#39;s test runner.</p>
 </li>
 <li><p>Use ev_unref() instead of starting/stopping the eio thread
 pool watcher.</p>
@@ -3797,7 +3889,7 @@ pool watcher.</p>
 </li>
 <li><p>Bugfix: HTTP Client race</p>
 </li>
-<li><p>Bugfix: freeaddrinfo() wasn&apos;t getting called after
+<li><p>Bugfix: freeaddrinfo() wasn&#39;t getting called after
 getaddrinfo() for TCP servers</p>
 </li>
 <li><p>Add &quot;opening&quot; to TCP client readyState</p>
@@ -3853,7 +3945,7 @@ macintosh</p>
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="sh_main.js"></script>
