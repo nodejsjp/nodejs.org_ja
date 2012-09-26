@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.8.9 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.8.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -628,7 +628,6 @@
 <li><a href="#all_request_method">request.method</a></li>
 <li><a href="#all_request_url">request.url</a></li>
 <li><a href="#all_request_headers">request.headers</a></li>
-<li><a href="#all_request_trailers">request.trailers</a></li>
 <li><a href="#all_request_httpversion">request.httpVersion</a></li>
 <li><a href="#all_request_setencoding_encoding">request.setEncoding([encoding])</a></li>
 <li><a href="#all_request_pause">request.pause()</a></li>
@@ -692,13 +691,7 @@
 <li><a href="#all_class_https_server">Class: https.Server</a></li>
 <li><a href="#all_https_createserver_options_requestlistener">https.createServer(options, [requestListener])</a></li>
 <li><a href="#all_https_request_options_callback">https.request(options, callback)</a></li>
-</ul>
-</li>
-<li><a href="#all">--&gt;</a><ul>
 <li><a href="#all_https_get_options_callback">https.get(options, callback)</a></li>
-</ul>
-</li>
-<li><a href="#all_1">&lt;!--</a><ul>
 <li><a href="#all_class_https_agent">Class: https.Agent</a></li>
 <li><a href="#all_https_globalagent">https.globalAgent</a></li>
 </ul>
@@ -9171,7 +9164,7 @@ The synchronous version of `fs.appendFile`.
 
 </p>
 <h2>fs.watchFile(filename, [options], listener)<span><a class="mark" href="#all_fs_watchfile_filename_options_listener" id="all_fs_watchfile_filename_options_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if available.</code></pre>
+<pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if possible.</code></pre>
 <!--
 Watch for changes on `filename`. The callback `listener` will be called each
 time the file is accessed.
@@ -9244,7 +9237,7 @@ no-op, not an error.
 
 </p>
 <h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#all_fs_watch_filename_options_listener" id="all_fs_watch_filename_options_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.  Not available on all platforms.</code></pre>
+<pre><code>Stability: 2 - Unstable.</code></pre>
 <!--
 Watch for changes on `filename`, where `filename` is either a file or a
 directory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).
@@ -9295,22 +9288,19 @@ unavailable in some situations.
 <!--
 This feature depends on the underlying operating system providing a way
 to be notified of filesystem changes.
-
-* On Linux systems, this uses `inotify`.
-* On BSD systems (including OS X), this uses `kqueue`.
-* On SunOS systems (including Solaris and SmartOS), this uses `event ports`.
-* On Windows systems, this feature depends on `ReadDirectoryChangesW`.
-
-If the underlying functionality is not available for some reason, then
-`fs.watch` will not be able to function.  You can still use
-`fs.watchFile`, which uses stat polling, but it is slower and less
-reliable.
 -->
 
 <p>この機能は下層のオペレーティングシステムが提供するファイルシステム変更の
 通知に依存します。
 
 </p>
+<!--
+* On Linux systems, this uses `inotify`.
+* On BSD systems (including OS X), this uses `kqueue`.
+* On SunOS systems (including Solaris and SmartOS), this uses `event ports`.
+* On Windows systems, this feature depends on `ReadDirectoryChangesW`.
+-->
+
 <ul>
 <li>Linux システムでは <code>inotify</code> が使われます。</li>
 <li>BSD システム (OS X を含みます) では <code>kqueue</code> が使われます。</li>
@@ -9318,8 +9308,24 @@ reliable.
 が使われます。</li>
 <li>Windows システムでは、この機能は <code>ReadDirectoryChangesW</code> に依存します。</li>
 </ul>
-<p>何らかの理由で下層の機能が使えない場合、<code>fs.watch</code> は使えません。
-stat をポーリングする <code>fs.watchFile</code> を使うことはできますが、
+<!--
+If the underlying functionality is not available for some reason, then
+`fs.watch` will not be able to function.  For example, watching files or
+directories on network file systems (NFS, SMB, etc.) often doesn't work
+reliably or at all.
+-->
+
+<p>何らかの理由で下層の機能が使えない場合、<code>fs.watch()</code> は使えません。
+たとえば、ネットワークファイルシステム (NFS、SMB、その他) はしばしば
+信頼できないか全く動作しません。
+
+</p>
+<!--
+You can still use `fs.watchFile`, which uses stat polling, but it is slower and
+less reliable.
+-->
+
+<p>stat をポーリングする <code>fs.watchFile()</code> を使うことはできますが、
 それは遅くて信頼性はより低くなります。
 
 </p>
@@ -9932,7 +9938,7 @@ See ['end'][] event for more information.
 
 </p>
 <!--
-Here is an example of a echo server which listens for connections
+Here is an example of an echo server which listens for connections
 on port 8124:
 -->
 
@@ -12149,13 +12155,27 @@ you can use the `require('querystring').parse` function, or pass
   pathname: &#39;/status&#39; }</code></pre>
 <h3>request.headers<span><a class="mark" href="#all_request_headers" id="all_request_headers">#</a></span></h3>
 <!--
-Read only.
+Read only map of header names and values. Header names are lower-cased.
 -->
 
-<p>参照のみ可能です。
+<p>参照のみ可能な、ヘッダ名と値のマップです。
+ヘッダ名は小文字化されています。
 
 </p>
-<h3>request.trailers<span><a class="mark" href="#all_request_trailers" id="all_request_trailers">#</a></span></h3>
+<!--
+Example:
+-->
+例:
+
+    // Prints something like:
+    //
+    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
+    //   host: &#39;127.0.0.1:8000&#39;,
+    //   accept: &#39;<em>/</em>&#39; }
+    console.log(request.headers);
+
+### request.trailers
+
 <!--
 Read only; HTTP trailers (if present). Only populated after the 'end' event.
 -->
@@ -13421,40 +13441,28 @@ https.createServer(options, function (req, res) {
   res.end(&quot;hello world\n&quot;);
 }).listen(8000);</code></pre>
 <h2>https.request(options, callback)<span><a class="mark" href="#all_https_request_options_callback" id="all_https_request_options_callback">#</a></span></h2>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-&lt;!--
-Makes a request to a secure web server.  All options from <a href="http.html#http_http_request_options_callback">http.request()</a>
-are valid.
-</p>
-<h1>--&gt;<span><a class="mark" href="#all" id="all">#</a></span></h1>
-<p>Makes a request to a secure web server.
+<!--
+Makes a request to a secure web server.
+-->
 
-</p>
-<p><code>options</code> can be an object or a string. If <code>options</code> is a string, it is
-automatically parsed with <a href="url.html#url.parse">url.parse()</a>.
-
-</p>
-<p>All options from <a href="http.html#http_http_request_options_callback">http.request()</a> are valid.
-</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>v0.8
-
-</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 <p>セキュアな Web サーバへのリクエストを作成します。
-<a href="http.html#http_http_request_options_callback">http.request()</a> の全てと同様のオプションが指定できます。
+
+</p>
+<!--
+`options` can be an object or a string. If `options` is a string, it is
+automatically parsed with [url.parse()](url.html#url.parse).
+-->
+
+<p><code>options</code> はオブジェクトまたは文字列です。
+<code>options</code> が文字列なら、それは自動的に <a href="url.html#url.parse">url.parse()</a>
+によって解析されます。
+
+</p>
+<!--
+All options from [http.request()][] are valid.
+-->
+
+<p><a href="http.html#http_http_request_options_callback">http.request()</a> の全てと同様のオプションが指定できます。
 
 </p>
 <!--
@@ -13642,32 +13650,20 @@ Like `http.get()` but for HTTPS.
 <p><code>http.get()</code> と同様ですが HTTPS です。
 
 </p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-</p>
-<h1>&lt;!--<span><a class="mark" href="#all_1" id="all_1">#</a></span></h1>
-<p><code>options</code> can be an object or a string. If <code>options</code> is a string, it is
-automatically parsed with <a href="url.html#url.parse">url.parse()</a>.
+<!--
+`options` can be an object or a string. If `options` is a string, it is
+automatically parsed with [url.parse()](url.html#url.parse).
+-->
+
+<p><code>options</code> はオブジェクトまたは文字列です。
+<code>options</code> が文字列なら、それは自動的に <a href="url.html#url.parse">url.parse()</a>
+によって解析されます。
 
 </p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>v0.8
+<!--
 Example:
---&gt;
+-->
 
-</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 <p>例:
 
 </p>
@@ -15808,7 +15804,7 @@ The `child.js` could look like this:
 </p>
 <pre><code>process.on(&#39;message&#39;, function(m, socket) {
   if (m === &#39;socket&#39;) {
-    socket.end(&#39;You where handled as a &#39; + process.argv[2] + &#39; person&#39;);
+    socket.end(&#39;You were handled as a &#39; + process.argv[2] + &#39; person&#39;);
   }
 });</code></pre>
 <!--
@@ -17817,7 +17813,7 @@ This causes potentially surprising behavior in three edge cases:
    the worker to use the supplied handle, rather than talk to the master
    process.  If the worker already has the handle, then it's presumed
    that you know what you are doing.
-3. `server.listen(0)` Normally, this will case servers to listen on a
+3. `server.listen(0)` Normally, this will cause servers to listen on a
    random port.  However, in a cluster, each worker will receive the
    same "random" port each time they do `listen(0)`.  In essence, the
    port is random the first time, but predictable thereafter.  If you
@@ -18588,7 +18584,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
