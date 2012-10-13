@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.8.11 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.8.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -69,8 +69,8 @@
 <li><a href="#http_event_clienterror">Event: &#39;clientError&#39;</a></li>
 <li><a href="#http_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
 <li><a href="#http_server_listen_path_callback">server.listen(path, [callback])</a></li>
-<li><a href="#http_server_listen_handle_listeninglistener">server.listen(handle, [listeningListener])</a></li>
-<li><a href="#http_server_close_cb">server.close([cb])</a></li>
+<li><a href="#http_server_listen_handle_callback">server.listen(handle, [callback])</a></li>
+<li><a href="#http_server_close_callback">server.close([callback])</a></li>
 <li><a href="#http_server_maxheaderscount">server.maxHeadersCount</a></li>
 </ul>
 </li>
@@ -81,6 +81,7 @@
 <li><a href="#http_request_method">request.method</a></li>
 <li><a href="#http_request_url">request.url</a></li>
 <li><a href="#http_request_headers">request.headers</a></li>
+<li><a href="#http_request_trailers">request.trailers</a></li>
 <li><a href="#http_request_httpversion">request.httpVersion</a></li>
 <li><a href="#http_request_setencoding_encoding">request.setEncoding([encoding])</a></li>
 <li><a href="#http_request_pause">request.pause()</a></li>
@@ -461,7 +462,7 @@ a listener for the ['listening'][] event.  See also [net.Server.listen(port)][].
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
 <a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_port_host_backlog_listeninglistener">net.Server.listen(port)</a> を参照してください。
+詳細は <a href="net.html#net_server_listen_port_host_backlog_callback">net.Server.listen(port)</a> を参照してください。
 
 
 </p>
@@ -480,14 +481,14 @@ a listener for the ['listening'][] event.  See also [net.Server.listen(path)][].
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
 <a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+詳細は <a href="net.html#net_server_listen_path_callback">net.Server.listen(path)</a> を参照してください。
 
 
 </p>
-<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#http_server_listen_handle_listeninglistener" id="http_server_listen_handle_listeninglistener">#</a></span></h3>
+<h3>server.listen(handle, [callback])<span><a class="mark" href="#http_server_listen_handle_callback" id="http_server_listen_handle_callback">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>handle</code> <span class="type">Object</span></li>
-<li><code>listeningListener</code> <span class="type">Function</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
 </div></ul>
 <!--
 The `handle` object can be set to either a server or socket (anything
@@ -519,21 +520,22 @@ Listening on a file descriptor is not supported on Windows.
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
 a listener for the ['listening'](net.html#event_listening_) event.
-See also [net.Server.listen()](net.html#server.listen).
+See also [net.Server.listen()](net.html#net_server_listen_handle_callback).
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+<a href="net.html#event_listening_">&#39;listening&#39;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_handle_callback">net.Server.listen()</a>
+を参照してください。
 
 </p>
-<h3>server.close([cb])<span><a class="mark" href="#http_server_close_cb" id="http_server_close_cb">#</a></span></h3>
+<h3>server.close([callback])<span><a class="mark" href="#http_server_close_callback" id="http_server_close_callback">#</a></span></h3>
 <!--
 Stops the server from accepting new connections.  See [net.Server.close()][].
 -->
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。
-<a href="net.html#net_server_close_cb">net.Server.close()</a> を参照してください。
+<a href="net.html#net_server_close_callback">net.Server.close()</a> を参照してください。
 
 </p>
 <h3>server.maxHeadersCount<span><a class="mark" href="#http_server_maxheaderscount" id="http_server_maxheaderscount">#</a></span></h3>
@@ -719,17 +721,17 @@ Read only map of header names and values. Header names are lower-cased.
 <!--
 Example:
 -->
-例:
 
-    // Prints something like:
-    //
-    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
-    //   host: &#39;127.0.0.1:8000&#39;,
-    //   accept: &#39;<em>/</em>&#39; }
-    console.log(request.headers);
+<p>例:
 
-### request.trailers
-
+</p>
+<pre><code>// Prints something like:
+//
+// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
+//   host: &#39;127.0.0.1:8000&#39;,
+//   accept: &#39;*/*&#39; }
+console.log(request.headers);</code></pre>
+<h3>request.trailers<span><a class="mark" href="#http_request_trailers" id="http_request_trailers">#</a></span></h3>
 <!--
 Read only; HTTP trailers (if present). Only populated after the 'end' event.
 -->
@@ -1951,7 +1953,7 @@ Resumes a paused response.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
