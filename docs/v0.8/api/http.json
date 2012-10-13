@@ -289,7 +289,7 @@
               ]
             },
             {
-              "textRaw": "server.listen(handle, [listeningListener])",
+              "textRaw": "server.listen(handle, [callback])",
               "type": "method",
               "name": "listen",
               "signatures": [
@@ -301,8 +301,8 @@
                       "type": "Object"
                     },
                     {
-                      "textRaw": "`listeningListener` {Function} ",
-                      "name": "listeningListener",
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
                       "type": "Function",
                       "optional": true
                     }
@@ -314,16 +314,16 @@
                       "name": "handle"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
                 }
               ],
-              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#server.listen).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n[&#39;listening&#39;][] イベントのリスナとして加えられます。\n詳細は [net.Server.listen(path)][] を参照してください。\n\n</p>\n"
+              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#net_server_listen_handle_callback).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n<a href=\"net.html#event_listening_\">&#39;listening&#39;</a> イベントのリスナとして加えられます。\n詳細は <a href=\"net.html#net_server_listen_handle_callback\">net.Server.listen()</a>\nを参照してください。\n\n</p>\n"
             },
             {
-              "textRaw": "server.close([cb])",
+              "textRaw": "server.close([callback])",
               "type": "method",
               "name": "close",
               "desc": "<!--\nStops the server from accepting new connections.  See [net.Server.close()][].\n-->\n\n<p>サーバが新しいコネクションを受け付けるのを終了します。\n[net.Server.close()][] を参照してください。\n\n</p>\n",
@@ -331,7 +331,7 @@
                 {
                   "params": [
                     {
-                      "name": "cb",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -389,7 +389,12 @@
             {
               "textRaw": "request.headers",
               "name": "headers",
-              "desc": "<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n例:\n\n    // Prints something like:\n    //\n    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n    //   host: &#39;127.0.0.1:8000&#39;,\n    //   accept: &#39;<em>/</em>&#39; }\n    console.log(request.headers);\n\n### request.trailers\n\n<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
+              "desc": "<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// Prints something like:\n//\n// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n//   host: &#39;127.0.0.1:8000&#39;,\n//   accept: &#39;*/*&#39; }\nconsole.log(request.headers);</code></pre>\n"
+            },
+            {
+              "textRaw": "request.trailers",
+              "name": "trailers",
+              "desc": "<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
             },
             {
               "textRaw": "request.httpVersion",
