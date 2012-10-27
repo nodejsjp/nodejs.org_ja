@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.8.12 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.8.14 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.8.12 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.8.14 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -7390,7 +7390,7 @@ Buffer を Verify オブジェクトに渡すようになります。
 However, if you are doing things with the string data that will not
 work properly on Buffers (such as, concatenating them, storing in
 databases, etc.), or you are passing binary strings to the crypto
-functions without an encoding arguemnt, then you will need to start
+functions without an encoding argument, then you will need to start
 providing encoding arguments to specify which encoding you'd like to
 use.
 -->
@@ -9120,10 +9120,10 @@ Read data from the file specified by `fd`.
 
 </p>
 <!--
-`offset` is offset within the buffer where writing will start.
+`offset` is offset within the buffer where reading will start.
 -->
 
-<p><code>offset</code> は書き込みを開始するバッファ内のオフセットです。
+<p><code>offset</code> は読み込みを開始するバッファ内のオフセットです。
 
 </p>
 <!--
@@ -13387,26 +13387,46 @@ Note that the __data will be lost__ if there is no listener when a
 
 </p>
 <!--
-Emitted exactly once for each message. No arguments. After
-emitted no other events will be emitted on the response.
+Emitted exactly once for each response. After that, no more `'data'` events
+will be emitted on the response.
 -->
 
-<p>メッセージごとに厳密に一回だけ生成されます。
-このイベントが生成された後、このレスポンスはどんなイベントも生成しません。
+<p>レスポンスごとに厳密に一回だけ生成されます。
+その後、このレスポンス上では <code>&#39;data&#39;</code> イベントは生成されません。
+
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close_8" id="all_event_close_8">#</a></span></h3>
-<p><code>function (err) { }</code>
+<p><code>function () { }</code>
 
 </p>
 <!--
 Indicates that the underlaying connection was terminated before
-`end` event was emitted.
-See [http.ServerRequest][]'s `'close'` event for more information.
+`response.end()` was called or able to flush.
 -->
 
-<p><code>&#39;end&#39;</code> イベントが生成される前に下層の接続が切断されたことを示します。
+<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、
+下層の接続が切断されたことを示します。
+
+</p>
+<!--
+Just like `'end'`, this event occurs only once per response, and no more
+`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`
+event for more information.
+-->
+
+<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、
+<code>&#39;data&#39;</code> イベントはそれ以上生成されません。
 <a href="#http_class_http_serverrequest">http.ServerRequest</a> の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+
+</p>
+<!--
+Note: `'close'` can fire after `'end'`, but not vice versa.
+-->
+
+<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> よりも後に生成されますが、
+常にというわけではありません。
+
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#all_response_statuscode_1" id="all_response_statuscode_1">#</a></span></h3>
@@ -15973,6 +15993,8 @@ there is no IPC channel keeping it alive. When calling this method the
     for stdio.  (See below)
   * `env` {Object} Environment key-value pairs
   * `detached` {Boolean} The child will be a process group leader.  (See below)
+  * `uid` {Number} Sets the user identity of the process. (See setuid(2).)
+  * `gid` {Number} Sets the group identity of the process. (See setgid(2).)
 * return: {ChildProcess object}
 -->
 
@@ -15987,6 +16009,10 @@ there is no IPC channel keeping it alive. When calling this method the
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>detached</code> {Boolean} 子プロセスがプロセスグループのリーダになるかどうか
 (後述)。</li>
+<li><code>uid</code> {Number} プロセスのユーザ ID を設定します
+(setuid(2) を参照してください)。</li>
+<li><code>gid</code> {Number} プロセスのグループ ID を設定します
+(setgid(2) を参照してください)。</li>
 </ul>
 </li>
 <li>return: {ChildProcess object}</li>
@@ -18706,7 +18732,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.12/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.8.14/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
