@@ -131,7 +131,7 @@
               "textRaw": "Event: 'drain'",
               "type": "event",
               "name": "drain",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nAfter a `write()` method returned `false`, this event is emitted to\nindicate that it is safe to write again.\n-->\n\n<p><code>write()</code> メソッドが <code>false</code> でリターンした後、\n再び安全に書き込むことができるようになったことを示すために、\nこのイベントは生成されます。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the stream's write queue empties and it's safe to write without\nbuffering again. Listen for it when `stream.write()` returns `false`.\n-->\n\n<p>ストリームの書き込みキューが空になり、バッファリングされることなく\n再び安全に書き込みができるようになった場合に生成されます。\n<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。\n\n</p>\n<!--\nThe `'drain'` event can happen at *any* time, regardless of whether or not\n`stream.write()` has previously returned `false`. To avoid receiving unwanted\n`'drain'` events, listen using `stream.once()`.\n-->\n\n<p><code>stream.write()</code> が以前に <code>false</code> を返したかどうかにかかわらず、\n<code>&#39;drain&#39;</code> イベントは <em>いつでも</em> 発生します。\n意図しない <code>&#39;drain&#39;</code> イベントを受信しないようにするには、<code>stream.once()</code>\nを使って監視してください。\n\n</p>\n",
               "params": []
             },
             {
@@ -165,10 +165,10 @@
           ],
           "methods": [
             {
-              "textRaw": "stream.write(string, [encoding], [fd])",
+              "textRaw": "stream.write(string, [encoding])",
               "type": "method",
               "name": "write",
-              "desc": "<!--\nWrites `string` with the given `encoding` to the stream.  Returns `true`\nif the string has been flushed to the kernel buffer.  Returns `false` to\nindicate that the kernel buffer is full, and the data will be sent out\nin the future. The `'drain'` event will indicate when the kernel buffer\nis empty again. The `encoding` defaults to `'utf8'`.\n-->\n\n<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。\n文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。\nカーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、\n<code>false</code> が返ります。\n<code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。\n<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n<!--\nIf the optional `fd` parameter is specified, it is interpreted as an\nintegral file descriptor to be sent over the stream. This is only\nsupported for UNIX streams, and is silently ignored otherwise. When\nwriting a file descriptor in this manner, closing the descriptor before\nthe stream drains risks sending an invalid (closed) FD.\n-->\n\n<p>オプションの <code>fd</code> 引数が指定されると、\nストリームに送信するための基礎となるファイル記述子として解釈されます。\nこれは UNIX ストリームでのみサポートされており、その他では黙って無視されます。\nこのようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、\nデータが不正な (クローズされた) ファイル記述子に送られるリスクがあります。\n\n</p>\n",
+              "desc": "<!--\nWrites `string` with the given `encoding` to the stream.  Returns `true`\nif the string has been flushed to the kernel buffer.  Returns `false` to\nindicate that the kernel buffer is full, and the data will be sent out\nin the future. The `'drain'` event will indicate when the kernel buffer\nis empty again. The `encoding` defaults to `'utf8'`.\n-->\n\n<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。\n文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。\nカーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、\n<code>false</code> が返ります。\n<code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。\n<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -177,10 +177,6 @@
                     },
                     {
                       "name": "encoding",
-                      "optional": true
-                    },
-                    {
-                      "name": "fd",
                       "optional": true
                     }
                   ]
