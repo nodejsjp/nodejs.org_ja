@@ -35,14 +35,14 @@
               "textRaw": "Event: 'end'",
               "type": "event",
               "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each message. No arguments. After\nemitted no other events will be emitted on the response.\n-->\n\n<p>メッセージごとに厳密に一回だけ生成されます。\nこのイベントが生成された後、このレスポンスはどんなイベントも生成しません。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each response. After that, no more `'data'` events\nwill be emitted on the response.\n-->\n\n<p>レスポンスごとに厳密に一回生成されます。\nその後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。\n\n\n</p>\n",
               "params": []
             },
             {
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function (err) { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`end` event was emitted.\nSee [http.ServerRequest][]'s `'close'` event for more information.\n-->\n\n<p><code>&#39;end&#39;</code> イベントが生成される前に下層の接続が切断されたことを示します。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。\nその逆もあります。\n\n\n</p>\n",
               "params": []
             }
           ],
@@ -237,7 +237,7 @@
               "textRaw": "Event: 'clientError'",
               "type": "event",
               "name": "clientError",
-              "desc": "<p><code>function (exception) { }</code>\n\n</p>\n<!--\nIf a client connection emits an 'error' event - it will forwarded here.\n-->\n\n<p>クライアントコネクションが &#39;error&#39; イベントを発した場合 － ここに転送されます。\n\n</p>\n",
+              "desc": "<p><code>function (exception, socket) { }</code>\n\n</p>\n<!--\nIf a client connection emits an 'error' event - it will forwarded here.\n-->\n\n<p>クライアントコネクションが &#39;error&#39; イベントを発した場合 － ここに転送されます。\n\n</p>\n<!--\n`socket` is the `net.Socket` object that the error originated from.\n-->\n\n<p><code>socket</code> はエラーが発生した <code>net.Socket</code> オブジェクトです。\n\n\n</p>\n",
               "params": []
             }
           ],
@@ -289,7 +289,7 @@
               ]
             },
             {
-              "textRaw": "server.listen(handle, [listeningListener])",
+              "textRaw": "server.listen(handle, [callback])",
               "type": "method",
               "name": "listen",
               "signatures": [
@@ -301,8 +301,8 @@
                       "type": "Object"
                     },
                     {
-                      "textRaw": "`listeningListener` {Function} ",
-                      "name": "listeningListener",
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
                       "type": "Function",
                       "optional": true
                     }
@@ -314,16 +314,16 @@
                       "name": "handle"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
                 }
               ],
-              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#server.listen).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n[&#39;listening&#39;][] イベントのリスナとして加えられます。\n詳細は [net.Server.listen(path)][] を参照してください。\n\n</p>\n"
+              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#net_server_listen_handle_callback).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n<a href=\"net.html#event_listening_\">&#39;listening&#39;</a> イベントのリスナとして加えられます。\n詳細は <a href=\"net.html#net_server_listen_handle_callback\">net.Server.listen()</a>\nを参照してください。\n\n</p>\n"
             },
             {
-              "textRaw": "server.close([cb])",
+              "textRaw": "server.close([callback])",
               "type": "method",
               "name": "close",
               "desc": "<!--\nStops the server from accepting new connections.  See [net.Server.close()][].\n-->\n\n<p>サーバが新しいコネクションを受け付けるのを終了します。\n[net.Server.close()][] を参照してください。\n\n</p>\n",
@@ -331,7 +331,7 @@
                 {
                   "params": [
                     {
-                      "name": "cb",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -389,7 +389,12 @@
             {
               "textRaw": "request.headers",
               "name": "headers",
-              "desc": "<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n</p>\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n例:\n\n    // Prints something like:\n    //\n    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n    //   host: &#39;127.0.0.1:8000&#39;,\n    //   accept: &#39;<em>/</em>&#39; }\n    console.log(request.headers);\n\n### request.trailers\n\n<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
+              "desc": "<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// Prints something like:\n//\n// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n//   host: &#39;127.0.0.1:8000&#39;,\n//   accept: &#39;*/*&#39; }\nconsole.log(request.headers);</code></pre>\n"
+            },
+            {
+              "textRaw": "request.trailers",
+              "name": "trailers",
+              "desc": "<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
             },
             {
               "textRaw": "request.httpVersion",
@@ -449,13 +454,6 @@
           "name": "http.ServerResponse",
           "desc": "<!--\nThis object is created internally by a HTTP server--not by the user. It is\npassed as the second parameter to the `'request'` event.\n\nThe response implements the [Writable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。\n<code>&#39;request&#39;</code> リスナーの第 2 引数として渡されます。\n\n</p>\n<p>レスポンスは [Writable  Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n",
           "events": [
-            {
-              "textRaw": "Event: 'end'",
-              "type": "event",
-              "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the response has been sent. More specifically, this event is\nemitted when the last segment of the response headers and body have been\nhanded off to the operating system for transmission over the network. It\ndoes not imply that the client has received anything yet.\n-->\n\n<p>レスポンスが送信された場合に生成されます。\nより具体的には、このイベントはレスポンスヘッダおよびボディの最後の\nセグメントが、ネットワークに転送されるためにオペレーティングシステムに\n渡された後に生成されます。\nそれはクライアントが全て受信したことを意味しません。\n\n</p>\n<!--\nAfter this event, no more events will be emitted on the response object.\n-->\n\n<p>このイベントより後では、レスポンスオブジェクトはイベントを生成しません。\n\n</p>\n",
-              "params": []
-            },
             {
               "textRaw": "Event: 'close'",
               "type": "event",
@@ -607,6 +605,11 @@
               "textRaw": "response.statusCode",
               "name": "statusCode",
               "desc": "<!--\nWhen using implicit headers (not calling `response.writeHead()` explicitly), this property\ncontrols the status code that will be sent to the client when the headers get\nflushed.\n-->\n\n<p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>response.statusCode = 404;</code></pre>\n<!--\nAfter response header was sent to the client, this property indicates the\nstatus code which was sent out.\n-->\n\n<p>レスポンスヘッダがクライアントに送信された後、\nこのプロパティは送信されたステータスコードを示します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "response.headersSent",
+              "name": "headersSent",
+              "desc": "<!--\nBoolean (read-only). True if headers were sent, false otherwise.\n-->\n\n<p>(読み込み専用の) Boolean。\nヘッダが送信済みなら true、それ以外は false です。\n\n</p>\n"
             },
             {
               "textRaw": "response.sendDate",

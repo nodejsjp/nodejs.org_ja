@@ -518,7 +518,7 @@
               "textRaw": "process.hrtime()",
               "type": "method",
               "name": "hrtime",
-              "desc": "<!--\nReturns the current high-resolution real time in a `[seconds, nanoseconds]`\ntuple Array. It is relative to an arbitrary time in the past. It is not\nrelated to the time of day and therefore not subject to clock drift. The\nprimary use is for measuring performance between intervals.\n\nYou may pass in the result of a previous call to `process.hrtime()` to get\na diff reading, useful for benchmarks and measuring intervals:\n-->\n\n<p>高分解能な現在時刻を <code>[seconds, nanoseconds]</code> の配列で返します。\n過去の任意の時間との比較することができます。\nそれは一日における時刻には関連が無いため、クロックドリフトに影響されません。\n主な用途はベンチマークやインターバルの測定です。\n\n</p>\n<p>以前に <code>process.hrtime()</code> を呼び出した結果を渡すことにより、\n差分を得ることができます。これはベンチマークやインターバルの測定に便利です。\n\n</p>\n<pre><code>var t = process.hrtime();\n// [ 1800216, 927643717 ]\n\nsetTimeout(function() {\n  t = process.hrtime(t);\n  // [ 1, 6962306 ]\n\n  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;, t[0], t[1]);\n  // benchmark took 1 seconds and 6962306 nanoseconds\n}, 1000);</code></pre>\n",
+              "desc": "<!--\nReturns the current high-resolution real time in a `[seconds, nanoseconds]`\ntuple Array. It is relative to an arbitrary time in the past. It is not\nrelated to the time of day and therefore not subject to clock drift. The\nprimary use is for measuring performance between intervals.\n\nYou may pass in the result of a previous call to `process.hrtime()` to get\na diff reading, useful for benchmarks and measuring intervals:\n-->\n\n<p>高分解能な現在時刻を <code>[seconds, nanoseconds]</code> の配列で返します。\n過去の任意の時間との比較することができます。\nそれは一日における時刻には関連が無いため、クロックドリフトに影響されません。\n主な用途はベンチマークやインターバルの測定です。\n\n</p>\n<p>以前に <code>process.hrtime()</code> を呼び出した結果を渡すことにより、\n差分を得ることができます。これはベンチマークやインターバルの測定に便利です。\n\n</p>\n<pre><code>var time = process.hrtime();\n// [ 1800216, 927643717 ]\n\nsetTimeout(function() {\n  var diff = process.hrtime(time);\n  // [ 1, 6962306 ]\n\n  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;,\n              diff[0], diff[1]);\n  // benchmark took 1 seconds and 6962306 nanoseconds\n}, 1000);</code></pre>\n",
               "signatures": [
                 {
                   "params": []
@@ -1190,7 +1190,7 @@
           "textRaw": "process.hrtime()",
           "type": "method",
           "name": "hrtime",
-          "desc": "<!--\nReturns the current high-resolution real time in a `[seconds, nanoseconds]`\ntuple Array. It is relative to an arbitrary time in the past. It is not\nrelated to the time of day and therefore not subject to clock drift. The\nprimary use is for measuring performance between intervals.\n\nYou may pass in the result of a previous call to `process.hrtime()` to get\na diff reading, useful for benchmarks and measuring intervals:\n-->\n\n<p>高分解能な現在時刻を <code>[seconds, nanoseconds]</code> の配列で返します。\n過去の任意の時間との比較することができます。\nそれは一日における時刻には関連が無いため、クロックドリフトに影響されません。\n主な用途はベンチマークやインターバルの測定です。\n\n</p>\n<p>以前に <code>process.hrtime()</code> を呼び出した結果を渡すことにより、\n差分を得ることができます。これはベンチマークやインターバルの測定に便利です。\n\n</p>\n<pre><code>var t = process.hrtime();\n// [ 1800216, 927643717 ]\n\nsetTimeout(function() {\n  t = process.hrtime(t);\n  // [ 1, 6962306 ]\n\n  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;, t[0], t[1]);\n  // benchmark took 1 seconds and 6962306 nanoseconds\n}, 1000);</code></pre>\n",
+          "desc": "<!--\nReturns the current high-resolution real time in a `[seconds, nanoseconds]`\ntuple Array. It is relative to an arbitrary time in the past. It is not\nrelated to the time of day and therefore not subject to clock drift. The\nprimary use is for measuring performance between intervals.\n\nYou may pass in the result of a previous call to `process.hrtime()` to get\na diff reading, useful for benchmarks and measuring intervals:\n-->\n\n<p>高分解能な現在時刻を <code>[seconds, nanoseconds]</code> の配列で返します。\n過去の任意の時間との比較することができます。\nそれは一日における時刻には関連が無いため、クロックドリフトに影響されません。\n主な用途はベンチマークやインターバルの測定です。\n\n</p>\n<p>以前に <code>process.hrtime()</code> を呼び出した結果を渡すことにより、\n差分を得ることができます。これはベンチマークやインターバルの測定に便利です。\n\n</p>\n<pre><code>var time = process.hrtime();\n// [ 1800216, 927643717 ]\n\nsetTimeout(function() {\n  var diff = process.hrtime(time);\n  // [ 1, 6962306 ]\n\n  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;,\n              diff[0], diff[1]);\n  // benchmark took 1 seconds and 6962306 nanoseconds\n}, 1000);</code></pre>\n",
           "signatures": [
             {
               "params": []
@@ -1779,15 +1779,15 @@
           ]
         },
         {
-          "textRaw": "util.inspect(object, [showHidden], [depth], [colors])",
+          "textRaw": "util.inspect(object, [options])",
           "type": "method",
           "name": "inspect",
-          "desc": "<!--\nReturn a string representation of `object`, which is useful for debugging.\n-->\n\n<p>デバッグで有用な、<code>object</code> の文字列表現を返します。\n\n</p>\n<!--\nIf `showHidden` is `true`, then the object's non-enumerable properties will be\nshown too. Defaults to `false`.\n-->\n\n<p><code>showHidden</code> が <code>true</code> の場合、\nオブジェクトの Enumerable でないプロパティも表示されます。\nデフォルトは <code>false</code> です。\n\n</p>\n<!--\nIf `depth` is provided, it tells `inspect` how many times to recurse while\nformatting the object. This is useful for inspecting large complicated objects.\n-->\n\n<p><code>depth</code> が与えられた場合、\nオブジェクトをフォーマットするために何回再帰するかを <code>inspect</code> に伝えます。\nこれは巨大で複雑なオブジェクトを調査する場合に便利です。\n\n</p>\n<!--\nThe default is to only recurse twice.  To make it recurse indefinitely, pass\nin `null` for `depth`.\n-->\n\n<p>デフォルトでは 2 回だけ再帰します。\n無限に再帰するには、<code>depth</code> に <code>null</code> を渡します。\n\n</p>\n<!--\nIf `colors` is `true`, the output will be styled with ANSI color codes.\nDefaults to `false`.\nColors are customizable, see below.\n-->\n\n<p><code>colors</code> が <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。\nデフォルトは <code>false</code> です。\n後述するように、色はカスタマイズ可能です。\n\n</p>\n<!--\nExample of inspecting all properties of the `util` object:\n-->\n\n<p><code>util</code> オブジェクトの全てのプロパティを調査する例:\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nconsole.log(util.inspect(util, true, null));</code></pre>\n",
+          "desc": "<!--\nReturn a string representation of `object`, which is useful for debugging.\n-->\n\n<p>デバッグで有用な、<code>object</code> の文字列表現を返します。\n\n</p>\n<!--\nAn optional *options* object may be passed that alters certain aspects of the\nformatted string:\n-->\n\n<p>オプションの <em>options</em> オブジェクトは、フォーマット化された文字列の\n特定の側面を変更するために渡すことができます。\n\n</p>\n<!--\n - `showHidden` - if `true` then the object's non-enumerable properties will be\n   shown too. Defaults to `false`.\n-->\n\n<ul>\n<li><code>showHidden</code> - <code>true</code> の場合、\nオブジェクトの Enumerable でないプロパティも表示されます。\nデフォルトは <code>false</code> です。</li>\n</ul>\n<!--\n - `depth` - tells `inspect` how many times to recurse while formatting the\n   object. This is useful for inspecting large complicated objects. Defaults to\n   `2`. To make it recurse indefinitely pass `null`.\n-->\n\n<ul>\n<li><code>depth</code> - オブジェクトをフォーマットするために何回再帰するかを\n<code>inspect</code> に伝えます。\nこれは巨大で複雑なオブジェクトを調査する場合に便利です。\nデフォルトは <code>2</code> です。\n無限に再帰するには、<code>null</code> を渡します。</li>\n</ul>\n<!--\n - `colors` - if `true`, then the output will be styled with ANSI color codes.\n   Defaults to `false`. Colors are customizable, see below.\n-->\n\n<ul>\n<li><code>colors</code> - <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。\nデフォルトは <code>false</code> です。\n後述するように、色はカスタマイズ可能です。</li>\n</ul>\n<!--\n - `customInspect` - if `false`, then custom `inspect()` functions defined on the\n   objects being inspected won't be called. Defaults to `true`.\n-->\n\n<ul>\n<li><code>customInspect</code> - <code>false</code> の場合、オブジェクト独自の <code>inspect()</code> 関数は\n呼び出されません。デフォルトは <code>false</code> です。</li>\n</ul>\n<!--\nExample of inspecting all properties of the `util` object:\n-->\n\n<p><code>util</code> オブジェクトの全てのプロパティを調査する例:\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nconsole.log(util.inspect(util, { showHidden: true, depth: null }));</code></pre>\n",
           "modules": [
             {
               "textRaw": "Customizing `util.inspect` colors",
               "name": "customizing_`util.inspect`_colors",
-              "desc": "<!--\nColor output (if enabled) of `util.inspect` is customizable globally\nvia `util.inspect.styles` and `util.inspect.colors` objects.\n-->\n\n<p><code>util.inspect</code> が出力する色は、(有効であれば) <code>util.inspect.styles</code> および\n<code>util.inspect.colors</code> オブジェクトを通じてグローバルにカスタマイズすることが\n可能です。\n\n</p>\n<!--\n`util.inspect.styles` is a map assigning each style a color\nfrom `util.inspect.colors`.\nHighlighted styles and their default values are:\n-->\n\n<p><code>util.inspect.styles</code> は各スタイルと <code>util.inspect.colors</code> に\n定義された色を割り当てたマッピングです。\n強調されるスタイルとそれらのデフォルト値は:\n\n</p>\n<!--\n * `number` (yellow)\n * `boolean` (yellow)\n * `string` (green)\n * `date` (magenta)\n * `regexp` (red)\n * `null` (bold)\n * `undefined` (grey)\n * `special` - only function at this time (cyan)\n * `name` (intentionally no styling)\n-->\n\n<ul>\n<li><code>number</code> (黄)</li>\n<li><code>boolean</code> (黄)</li>\n<li><code>string</code> (緑)</li>\n<li><code>date</code> (紫)</li>\n<li><code>regexp</code> (赤)</li>\n<li><code>null</code> (太字)</li>\n<li><code>undefined</code> (灰)</li>\n<li><code>special</code> - only function at this time (水色)</li>\n<li><code>name</code> (意図的にスタイル無し)</li>\n</ul>\n<!--\nPredefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, \n`green`, `magenta`, `red` and `yellow`.\nThere are also `bold`, `italic`, `underline` and `inverse` codes.\n-->\n\n<p>事前に定義された色は: <code>white</code>、<code>grey</code>、<code>black</code>、<code>blue</code>、<code>cyan</code>、\n<code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。\n<code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。\n\n\n</p>\n",
+              "desc": "<!--\nColor output (if enabled) of `util.inspect` is customizable globally\nvia `util.inspect.styles` and `util.inspect.colors` objects.\n-->\n\n<p><code>util.inspect</code> が出力する色は、(有効であれば) <code>util.inspect.styles</code> および\n<code>util.inspect.colors</code> オブジェクトを通じてグローバルにカスタマイズすることが\n可能です。\n\n</p>\n<!--\n`util.inspect.styles` is a map assigning each style a color\nfrom `util.inspect.colors`.\nHighlighted styles and their default values are:\n-->\n\n<p><code>util.inspect.styles</code> は各スタイルと <code>util.inspect.colors</code> に\n定義された色を割り当てたマッピングです。\n強調されるスタイルとそれらのデフォルト値は:\n\n</p>\n<!--\n * `number` (yellow)\n * `boolean` (yellow)\n * `string` (green)\n * `date` (magenta)\n * `regexp` (red)\n * `null` (bold)\n * `undefined` (grey)\n * `special` - only function at this time (cyan)\n * `name` (intentionally no styling)\n-->\n\n<ul>\n<li><code>number</code> (黄)</li>\n<li><code>boolean</code> (黄)</li>\n<li><code>string</code> (緑)</li>\n<li><code>date</code> (紫)</li>\n<li><code>regexp</code> (赤)</li>\n<li><code>null</code> (太字)</li>\n<li><code>undefined</code> (灰)</li>\n<li><code>special</code> - only function at this time (水色)</li>\n<li><code>name</code> (意図的にスタイル無し)</li>\n</ul>\n<!--\nPredefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, \n`green`, `magenta`, `red` and `yellow`.\nThere are also `bold`, `italic`, `underline` and `inverse` codes.\n-->\n\n<p>事前に定義された色は: <code>white</code>、<code>grey</code>、<code>black</code>、<code>blue</code>、<code>cyan</code>、\n<code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。\n<code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。\n\n</p>\n<!--\nObjects also may define their own `inspect(depth)` function which `util.inspect()`\nwill invoke and use the result of when inspecting the object:\n-->\n\n<p>オブジェクトは <code>util.inspect()</code> から呼び出される自前の <code>inspect(depth)</code>\n関数を持つことができ、その結果はオブジェクトを調査するために使われます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nvar obj = { name: &#39;nate&#39; };\nobj.inspect = function(depth) {\n  return &#39;{&#39; + this.name + &#39;}&#39;;\n};\n\nutil.inspect(obj);\n  // &quot;{nate}&quot;</code></pre>\n",
               "type": "module",
               "displayName": "Customizing `util.inspect` colors"
             }
@@ -1799,15 +1799,7 @@
                   "name": "object"
                 },
                 {
-                  "name": "showHidden",
-                  "optional": true
-                },
-                {
-                  "name": "depth",
-                  "optional": true
-                },
-                {
-                  "name": "colors",
+                  "name": "options",
                   "optional": true
                 }
               ]
@@ -1930,7 +1922,7 @@
           "textRaw": "Class: events.EventEmitter",
           "type": "class",
           "name": "events.EventEmitter",
-          "desc": "<!--\nTo access the EventEmitter class, `require('events').EventEmitter`.\n-->\n\n<p>EventEmitterクラスにアクセスするには、<code>require(&#39;events&#39;).EventEmitter</code> を使います。\n\n</p>\n<!--\nWhen an `EventEmitter` instance experiences an error, the typical action is\nto emit an `'error'` event.  Error events are treated as a special case in node.\nIf there is no listener for it, then the default action is to print a stack\ntrace and exit the program.\n-->\n\n<p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、\n典型的な動作は <code>&#39;error&#39;</code> イベントを生成することです。\nnode ではエラーイベントは特別に扱われます．\nもしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。\n\n</p>\n<!--\nAll EventEmitters emit the event `'newListener'` when new listeners are\nadded.\n-->\n\n<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&#39;newListener&#39;</code> を生成します。\n\n</p>\n",
+          "desc": "<!--\nTo access the EventEmitter class, `require('events').EventEmitter`.\n-->\n\n<p>EventEmitterクラスにアクセスするには、<code>require(&#39;events&#39;).EventEmitter</code> を使います。\n\n</p>\n<!--\nWhen an `EventEmitter` instance experiences an error, the typical action is\nto emit an `'error'` event.  Error events are treated as a special case in node.\nIf there is no listener for it, then the default action is to print a stack\ntrace and exit the program.\n-->\n\n<p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、\n典型的な動作は <code>&#39;error&#39;</code> イベントを生成することです。\nnode ではエラーイベントは特別に扱われます．\nもしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。\n\n</p>\n<!--\nAll EventEmitters emit the event `'newListener'` when new listeners are\nadded and `'removeListener'` when a listener is removed.\n-->\n\n<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&#39;newListener&#39;</code> を生成し、リスナーが削除されると <code>&#39;removeListener&#39;</code> を生成します。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "emitter.addListener(event, listener)",
@@ -2209,30 +2201,30 @@
               ]
             },
             {
-              "textRaw": "domain.bind(cb)",
+              "textRaw": "domain.bind(callback)",
               "type": "method",
               "name": "bind",
-              "desc": "<!--\n* `cb` {Function} The callback function\n* return: {Function} The bound function\n-->\n\n<ul>\n<li><code>cb</code> {Function} コールバック関数</li>\n<li>return: {Function} 束縛された関数</li>\n</ul>\n<!--\nThe returned function will be a wrapper around the supplied callback\nfunction.  When the returned function is called, any errors that are\nthrown will be routed to the domain's `error` event.\n-->\n\n<p>返される関数は与えられたコールバック関数のラッパーです。\n返された関数が呼び出されると、スローされたエラーはドメインの <code>&#39;error&#39;</code>\nイベントにルーティングされます。\n\n</p>\n<h4>Example</h4>\n<pre><code>var d = domain.create();\n\nfunction readSomeFile(filename, cb) {\n  fs.readFile(filename, &#39;utf8&#39;, d.bind(function(er, data) {\n    // if this throws, it will also be passed to the domain\n    return cb(er, data ? JSON.parse(data) : null);\n  }));\n}\n\nd.on(&#39;error&#39;, function(er) {\n  // an error occurred somewhere.\n  // if we throw it now, it will crash the program\n  // with the normal line number and stack message.\n});</code></pre>\n",
+              "desc": "<!--\n* `callback` {Function} The callback function\n* return: {Function} The bound function\n-->\n\n<ul>\n<li><code>callback</code> {Function} コールバック関数</li>\n<li>return: {Function} 束縛された関数</li>\n</ul>\n<!--\nThe returned function will be a wrapper around the supplied callback\nfunction.  When the returned function is called, any errors that are\nthrown will be routed to the domain's `error` event.\n-->\n\n<p>返される関数は与えられたコールバック関数のラッパーです。\n返された関数が呼び出されると、スローされたエラーはドメインの <code>&#39;error&#39;</code>\nイベントにルーティングされます。\n\n</p>\n<h4>Example</h4>\n<pre><code>var d = domain.create();\n\nfunction readSomeFile(filename, cb) {\n  fs.readFile(filename, &#39;utf8&#39;, d.bind(function(er, data) {\n    // if this throws, it will also be passed to the domain\n    return cb(er, data ? JSON.parse(data) : null);\n  }));\n}\n\nd.on(&#39;error&#39;, function(er) {\n  // an error occurred somewhere.\n  // if we throw it now, it will crash the program\n  // with the normal line number and stack message.\n});</code></pre>\n",
               "signatures": [
                 {
                   "params": [
                     {
-                      "name": "cb"
+                      "name": "callback"
                     }
                   ]
                 }
               ]
             },
             {
-              "textRaw": "domain.intercept(cb)",
+              "textRaw": "domain.intercept(callback)",
               "type": "method",
               "name": "intercept",
-              "desc": "<!--\n* `cb` {Function} The callback function\n* return: {Function} The intercepted function\n-->\n\n<ul>\n<li><code>cb</code> {Function} コールバック関数</li>\n<li>return: {Function} インターセプトされた関数</li>\n</ul>\n<!--\nThis method is almost identical to `domain.bind(cb)`.  However, in\naddition to catching thrown errors, it will also intercept `Error`\nobjects sent as the first argument to the function.\n-->\n\n<p>このメソッドはほとんど <code>domain.bind(cb)</code> と同じです。\nただし、スローされたエラーを捕まえることに加えて、関数に渡される最初の引数が\n<code>Error</code> オブジェクトの場合もインターセプトします。\n\n</p>\n<!--\nIn this way, the common `if (er) return cb(er);` pattern can be replaced\nwith a single error handler in a single place.\n-->\n\n<p>これは、一般的な <code>if (er) return cb(er);</code> パターンを一カ所で単一の\nエラーハンドラに置き換えることができます。\n\n</p>\n<h4>Example</h4>\n<pre><code>var d = domain.create();\n\nfunction readSomeFile(filename, cb) {\n  fs.readFile(filename, &#39;utf8&#39;, d.intercept(function(data) {\n    // note, the first argument is never passed to the\n    // callback since it is assumed to be the &#39;Error&#39; argument\n    // and thus intercepted by the domain.\n\n    // if this throws, it will also be passed to the domain\n    // so the error-handling logic can be moved to the &#39;error&#39;\n    // event on the domain instead of being repeated throughout\n    // the program.\n    return cb(null, JSON.parse(data));\n  }));\n}\n\nd.on(&#39;error&#39;, function(er) {\n  // an error occurred somewhere.\n  // if we throw it now, it will crash the program\n  // with the normal line number and stack message.\n});</code></pre>\n",
+              "desc": "<!--\n* `callback` {Function} The callback function\n* return: {Function} The intercepted function\n-->\n\n<ul>\n<li><code>callback</code> {Function} コールバック関数</li>\n<li>return: {Function} インターセプトされた関数</li>\n</ul>\n<!--\nThis method is almost identical to `domain.bind(callback)`.  However, in\naddition to catching thrown errors, it will also intercept `Error`\nobjects sent as the first argument to the function.\n-->\n\n<p>このメソッドはほとんど <code>domain.bind(callback)</code> と同じです。\nただし、スローされたエラーを捕まえることに加えて、関数に渡される最初の引数が\n<code>Error</code> オブジェクトの場合もインターセプトします。\n\n</p>\n<!--\nIn this way, the common `if (er) return callback(er);` pattern can be replaced\nwith a single error handler in a single place.\n-->\n\n<p>これは、一般的な <code>if (er) return callback(er);</code> パターンを一カ所で単一の\nエラーハンドラに置き換えることができます。\n\n</p>\n<h4>Example</h4>\n<pre><code>var d = domain.create();\n\nfunction readSomeFile(filename, cb) {\n  fs.readFile(filename, &#39;utf8&#39;, d.intercept(function(data) {\n    // note, the first argument is never passed to the\n    // callback since it is assumed to be the &#39;Error&#39; argument\n    // and thus intercepted by the domain.\n\n    // if this throws, it will also be passed to the domain\n    // so the error-handling logic can be moved to the &#39;error&#39;\n    // event on the domain instead of being repeated throughout\n    // the program.\n    return cb(null, JSON.parse(data));\n  }));\n}\n\nd.on(&#39;error&#39;, function(er) {\n  // an error occurred somewhere.\n  // if we throw it now, it will crash the program\n  // with the normal line number and stack message.\n});</code></pre>\n",
               "signatures": [
                 {
                   "params": [
                     {
-                      "name": "cb"
+                      "name": "callback"
                     }
                   ]
                 }
@@ -4066,7 +4058,7 @@
               "textRaw": "Event: 'drain'",
               "type": "event",
               "name": "drain",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nAfter a `write()` method returned `false`, this event is emitted to\nindicate that it is safe to write again.\n-->\n\n<p><code>write()</code> メソッドが <code>false</code> でリターンした後、\n再び安全に書き込むことができるようになったことを示すために、\nこのイベントは生成されます。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the stream's write queue empties and it's safe to write without\nbuffering again. Listen for it when `stream.write()` returns `false`.\n-->\n\n<p>ストリームの書き込みキューが空になり、バッファリングされることなく\n再び安全に書き込みができるようになった場合に生成されます。\n<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。\n\n</p>\n<!--\nThe `'drain'` event can happen at *any* time, regardless of whether or not\n`stream.write()` has previously returned `false`. To avoid receiving unwanted\n`'drain'` events, listen using `stream.once()`.\n-->\n\n<p><code>stream.write()</code> が以前に <code>false</code> を返したかどうかにかかわらず、\n<code>&#39;drain&#39;</code> イベントは <em>いつでも</em> 発生します。\n意図しない <code>&#39;drain&#39;</code> イベントを受信しないようにするには、<code>stream.once()</code>\nを使って監視してください。\n\n</p>\n",
               "params": []
             },
             {
@@ -4100,10 +4092,10 @@
           ],
           "methods": [
             {
-              "textRaw": "stream.write(string, [encoding], [fd])",
+              "textRaw": "stream.write(string, [encoding])",
               "type": "method",
               "name": "write",
-              "desc": "<!--\nWrites `string` with the given `encoding` to the stream.  Returns `true`\nif the string has been flushed to the kernel buffer.  Returns `false` to\nindicate that the kernel buffer is full, and the data will be sent out\nin the future. The `'drain'` event will indicate when the kernel buffer\nis empty again. The `encoding` defaults to `'utf8'`.\n-->\n\n<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。\n文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。\nカーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、\n<code>false</code> が返ります。\n<code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。\n<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n<!--\nIf the optional `fd` parameter is specified, it is interpreted as an\nintegral file descriptor to be sent over the stream. This is only\nsupported for UNIX streams, and is silently ignored otherwise. When\nwriting a file descriptor in this manner, closing the descriptor before\nthe stream drains risks sending an invalid (closed) FD.\n-->\n\n<p>オプションの <code>fd</code> 引数が指定されると、\nストリームに送信するための基礎となるファイル記述子として解釈されます。\nこれは UNIX ストリームでのみサポートされており、その他では黙って無視されます。\nこのようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、\nデータが不正な (クローズされた) ファイル記述子に送られるリスクがあります。\n\n</p>\n",
+              "desc": "<!--\nWrites `string` with the given `encoding` to the stream.  Returns `true`\nif the string has been flushed to the kernel buffer.  Returns `false` to\nindicate that the kernel buffer is full, and the data will be sent out\nin the future. The `'drain'` event will indicate when the kernel buffer\nis empty again. The `encoding` defaults to `'utf8'`.\n-->\n\n<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。\n文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。\nカーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、\n<code>false</code> が返ります。\n<code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。\n<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4112,10 +4104,6 @@
                     },
                     {
                       "name": "encoding",
-                      "optional": true
-                    },
-                    {
-                      "name": "fd",
                       "optional": true
                     }
                   ]
@@ -4212,15 +4200,35 @@
     {
       "textRaw": "Crypto",
       "name": "crypto",
-      "stability": 3,
-      "stabilityText": "Stable",
-      "desc": "<!--\nUse `require('crypto')` to access this module.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&#39;crypto&#39;)</code> を使用します。\n\n</p>\n<!--\nThe crypto module requires OpenSSL to be available on the underlying platform.\nIt offers a way of encapsulating secure credentials to be used as part\nof a secure HTTPS net or http connection.\n-->\n\n<p>暗号化モジュールは下層のプラットフォームで OpenSSL が有効であることを\n必要とします。\nそれは安全な HTTPS ネットワークや http コネクションの一部として使われる、\n安全な認証情報をカプセル化する方法を提供します。\n\n</p>\n<!--\nIt also offers a set of wrappers for OpenSSL's hash, hmac, cipher, decipher, sign and verify methods.\n-->\n\n<p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。\n\n</p>\n",
+      "desc": "<!--\n    Stability: 2 - Unstable; API changes are being discussed for\n    future versions.  Breaking changes will be minimized.  See below.\n-->\n\n<pre><code>Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が\n議論されています。互換性を損なう変更は最小限になる予定です。\n後述します。</code></pre>\n<!--\nUse `require('crypto')` to access this module.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&#39;crypto&#39;)</code> を使用します。\n\n</p>\n<!--\nThe crypto module offers a way of encapsulating secure credentials to be\nused as part of a secure HTTPS net or http connection.\n-->\n\n<p>暗号化モジュールは安全な HTTPS ネットワークや http\nコネクションの一部として使われる、\n安全な認証情報をカプセル化する方法を提供します。\n\n</p>\n<!--\nIt also offers a set of wrappers for OpenSSL's hash, hmac, cipher,\ndecipher, sign and verify methods.\n-->\n\n<p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。\n\n\n</p>\n",
       "methods": [
+        {
+          "textRaw": "crypto.getCiphers()",
+          "type": "method",
+          "name": "getCiphers",
+          "desc": "<!--\nReturns an array with the names of the supported ciphers.\n-->\n\n<p>サポートされている暗号の名前からなる配列を返します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var ciphers = crypto.getCiphers();\nconsole.log(ciphers); // [&#39;AES128-SHA&#39;, &#39;AES256-SHA&#39;, ...]</code></pre>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.getHashes()",
+          "type": "method",
+          "name": "getHashes",
+          "desc": "<!--\nReturns an array with the names of the supported hash algorithms.\n-->\n\n<p>サポートされているハッシュアルゴリズムの名前からなる配列を返します。\n\n</p>\n<!--\nExample:\n-->\n\n<pre><code>var hashes = crypto.getHashes();\nconsole.log(hashes); // [&#39;sha&#39;, &#39;sha1&#39;, &#39;sha1WithRSAEncryption&#39;, ...]</code></pre>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
         {
           "textRaw": "crypto.createCredentials(details)",
           "type": "method",
           "name": "createCredentials",
-          "desc": "<!--\nCreates a credentials object, with the optional details being a dictionary with keys:\n-->\n\n<p>認証情報オブジェクトを作成します。オプションの <code>details</code> は以下のキーを持つ辞書です:\n\n</p>\n<!--\n* `pfx` : A string or buffer holding the PFX or PKCS12 encoded private key, certificate and CA certificates\n* `key` : A string holding the PEM encoded private key\n* `passphrase` : A string of passphrase for the private key or pfx\n* `cert` : A string holding the PEM encoded certificate\n* `ca` : Either a string or list of strings of PEM encoded CA certificates to trust.\n* `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)\n* `ciphers`: A string describing the ciphers to use or exclude. Consult\n  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for details\n  on the format.\n-->\n\n<ul>\n<li><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、および CA の\n証明書を含む文字列またはバッファ。</li>\n<li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列。</li>\n<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズ。</li>\n<li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列。</li>\n<li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または\n文字列の配列。</li>\n<li><code>crl</code> : PEM でエンコードされた CRL (Certificate Revocation List、\n失効した証明書の一覧) の文字列または文字列の配列。</li>\n<li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。</li>\n</ul>\n<!--\nIf no 'ca' details are given, then node.js will use the default publicly trusted list of CAs as given in\n<http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt>.\n-->\n\n<p>&#39;ca&#39; の詳細が与えられなかった場合、node.js はデフォルトとして\n</p>\n<p><a href=\"http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt\">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a>\nで与えられる、信頼できる認証局の公開されたリストを使用します。\n\n\n</p>\n",
+          "desc": "<!--\nCreates a credentials object, with the optional details being a\ndictionary with keys:\n-->\n\n<p>認証情報オブジェクトを作成します。オプションの <code>details</code>\nは以下のキーを持つ辞書です:\n\n</p>\n<!--\n* `pfx` : A string or buffer holding the PFX or PKCS12 encoded private\n  key, certificate and CA certificates\n* `key` : A string holding the PEM encoded private key\n* `passphrase` : A string of passphrase for the private key or pfx\n* `cert` : A string holding the PEM encoded certificate\n* `ca` : Either a string or list of strings of PEM encoded CA\n  certificates to trust.\n* `crl` : Either a string or list of strings of PEM encoded CRLs\n  (Certificate Revocation List)\n* `ciphers`: A string describing the ciphers to use or exclude.\n  Consult\n  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT>\n  for details on the format.\n-->\n\n<ul>\n<li><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、および CA の\n証明書を含む文字列またはバッファ。</li>\n<li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列。</li>\n<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズ。</li>\n<li><code>cert</code> : PEM でエンコードされた証明書を保持する文字列。</li>\n<li><code>ca</code> : 信頼できる認証局の証明書が PEM でエンコードされた文字列または\n文字列の配列。</li>\n<li><code>crl</code> : PEM でエンコードされた CRL (Certificate Revocation List、\n失効した証明書の一覧) の文字列または文字列の配列。</li>\n<li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。</li>\n</ul>\n<!--\nIf no 'ca' details are given, then node.js will use the default\npublicly trusted list of CAs as given in\n<http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt>.\n-->\n\n<p>&#39;ca&#39; の詳細が与えられなかった場合、node.js はデフォルトとして\n</p>\n<p><a href=\"http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt\">http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt</a>\nで与えられる、信頼できる認証局の公開されたリストを使用します。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4235,7 +4243,7 @@
           "textRaw": "crypto.createHash(algorithm)",
           "type": "method",
           "name": "createHash",
-          "desc": "<!--\nCreates and returns a hash object, a cryptographic hash with the given algorithm\nwhich can be used to generate hash digests.\n-->\n\n<p>ハッシュオブジェクトを生成して返します。\n与えられたアルゴリズムによる暗号ハッシュ関数はダイジェストの生成に使われます。\n\n</p>\n<!--\n`algorithm` is dependent on the available algorithms supported by the version\nof OpenSSL on the platform. Examples are `'sha1'`, `'md5'`, `'sha256'`, `'sha512'`, etc.\nOn recent releases, `openssl list-message-digest-algorithms` will display the available digest algorithms.\n-->\n\n<p><code>algorithm</code> は、プラットフォーム上の OpenSSL \nのバージョンでサポートされている利用可能なアルゴリズムに依存します。\n例えば <code>&#39;sha1&#39;</code>、<code>&#39;md5&#39;</code>、<code>&#39;sha256&#39;</code>、<code>&#39;sha512&#39;</code>、などです。\n最近のリリースでは、<code>openssl list-message-digest-algorithms</code>\nで利用可能なダイジェストアルゴリズムが表示されます。\n\n</p>\n<!--\nExample: this program that takes the sha1 sum of a file\n-->\n\n<p>例: このプログラムはファイルのsha1ハッシュ値を求めます。\n\n</p>\n<pre><code>var filename = process.argv[2];\nvar crypto = require(&#39;crypto&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar shasum = crypto.createHash(&#39;sha1&#39;);\n\nvar s = fs.ReadStream(filename);\ns.on(&#39;data&#39;, function(d) {\n  shasum.update(d);\n});\n\ns.on(&#39;end&#39;, function() {\n  var d = shasum.digest(&#39;hex&#39;);\n  console.log(d + &#39;  &#39; + filename);\n});</code></pre>\n",
+          "desc": "<!--\nCreates and returns a hash object, a cryptographic hash with the given\nalgorithm which can be used to generate hash digests.\n-->\n\n<p>ハッシュオブジェクトを生成して返します。\n与えられたアルゴリズムによる暗号ハッシュ関数はダイジェストの生成に使われます。\n\n</p>\n<!--\n`algorithm` is dependent on the available algorithms supported by the\nversion of OpenSSL on the platform. Examples are `'sha1'`, `'md5'`,\n`'sha256'`, `'sha512'`, etc.  On recent releases, `openssl\nlist-message-digest-algorithms` will display the available digest\nalgorithms.\n-->\n\n<p><code>algorithm</code> は、プラットフォーム上の OpenSSL \nのバージョンでサポートされている利用可能なアルゴリズムに依存します。\n例えば <code>&#39;sha1&#39;</code>、<code>&#39;md5&#39;</code>、<code>&#39;sha256&#39;</code>、<code>&#39;sha512&#39;</code>、などです。\n最近のリリースでは、<code>openssl list-message-digest-algorithms</code>\nで利用可能なダイジェストアルゴリズムが表示されます。\n\n</p>\n<!--\nExample: this program that takes the sha1 sum of a file\n-->\n\n<p>例: このプログラムはファイルのsha1ハッシュ値を求めます。\n\n</p>\n<pre><code>var filename = process.argv[2];\nvar crypto = require(&#39;crypto&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar shasum = crypto.createHash(&#39;sha1&#39;);\n\nvar s = fs.ReadStream(filename);\ns.on(&#39;data&#39;, function(d) {\n  shasum.update(d);\n});\n\ns.on(&#39;end&#39;, function() {\n  var d = shasum.digest(&#39;hex&#39;);\n  console.log(d + &#39;  &#39; + filename);\n});</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -4250,7 +4258,7 @@
           "textRaw": "crypto.createHmac(algorithm, key)",
           "type": "method",
           "name": "createHmac",
-          "desc": "<!--\nCreates and returns a hmac object, a cryptographic hmac with the given algorithm and key.\n-->\n\n<p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。\n\n</p>\n<!--\n`algorithm` is dependent on the available algorithms supported by OpenSSL - see createHash above.\n`key` is the hmac key to be used.\n-->\n\n<p><code>algorithm</code> は OpenSSL でサポートされているアルゴリズムに依存します － \n前述の <code>createHash</code> を参照してください。\n\n</p>\n",
+          "desc": "<!--\nCreates and returns a hmac object, a cryptographic hmac with the given\nalgorithm and key.\n-->\n\n<p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。\n\n</p>\n<!--\n`algorithm` is dependent on the available algorithms supported by\nOpenSSL - see createHash above.  `key` is the hmac key to be used.\n-->\n\n<p><code>algorithm</code> は OpenSSL でサポートされているアルゴリズムに依存します － \n前述の <code>createHash</code> を参照してください。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4268,7 +4276,7 @@
           "textRaw": "crypto.createCipher(algorithm, password)",
           "type": "method",
           "name": "createCipher",
-          "desc": "<!--\nCreates and returns a cipher object, with the given algorithm and password.\n\n`algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.\nOn recent releases, `openssl list-cipher-algorithms` will display the\navailable cipher algorithms.\n`password` is used to derive key and IV, which must be a `'binary'` encoded\nstring or a [buffer](buffer.html).\n-->\n\n<p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。\n<code>algorithm</code> は、OpenSSL に依存します。例えば <code>&#39;aes192&#39;</code> などです。\n最近のリリースでは、<code>openssl list-cipher-algorithms</code>\nで利用可能な暗号アルゴリズムが表示されます。\n<code>password</code> はキーと IV の生成に使用されます。\nこれは <code>&#39;binary&#39;</code> でエンコードされた文字列または <a href=\"buffer.html\">buffer</a>\nでなければなりません\n\n</p>\n",
+          "desc": "<!--\nCreates and returns a cipher object, with the given algorithm and\npassword.\n-->\n\n<p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。\n<!--\n`algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.  On\nrecent releases, `openssl list-cipher-algorithms` will display the\navailable cipher algorithms.  `password` is used to derive key and IV,\nwhich must be a `'binary'` encoded string or a [buffer](buffer.html).\n-->\n\n</p>\n<p><code>algorithm</code> は、OpenSSL に依存します。例えば <code>&#39;aes192&#39;</code> などです。\n最近のリリースでは、<code>openssl list-cipher-algorithms</code>\nで利用可能な暗号アルゴリズムが表示されます。\n<code>password</code> はキーと IV の生成に使用されます。\nこれは <code>&#39;binary&#39;</code> でエンコードされた文字列または <a href=\"buffer.html\">buffer</a>\nでなければなりません\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4286,7 +4294,7 @@
           "textRaw": "crypto.createCipheriv(algorithm, key, iv)",
           "type": "method",
           "name": "createCipheriv",
-          "desc": "<!--\nCreates and returns a cipher object, with the given algorithm, key and iv.\n\n`algorithm` is the same as the argument to `createCipher()`.\n`key` is the raw key used by the algorithm.\n`iv` is an [initialization\nvector](http://en.wikipedia.org/wiki/Initialization_vector).\n\n`key` and `iv` must be `'binary'` encoded strings or [buffers](buffer.html).\n-->\n\n<p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して\n返します。\n\n</p>\n<p><code>algorithm</code> は <code>createCipher()</code> の引数と同じです。\n<code>key</code> はアルゴリズムで使用される生のキーです。\n<code>iv</code> は<a href=\"http://en.wikipedia.org/wiki/Initialization_vector\">initialization\nvector</a> です。\n\n</p>\n<p><code>key</code> と <code>iv</code> は <code>&#39;binary&#39;</code> でエンコードされた文字列または\n<a href=\"buffer.html\">buffers</a> でなければなりません\n\n</p>\n",
+          "desc": "<!--\nCreates and returns a cipher object, with the given algorithm, key and\niv.\n-->\n\n<p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して\n返します。\n\n</p>\n<!--\n`algorithm` is the same as the argument to `createCipher()`.  `key` is\nthe raw key used by the algorithm.  `iv` is an [initialization\nvector](http://en.wikipedia.org/wiki/Initialization_vector).\n-->\n\n<p><code>algorithm</code> は <code>createCipher()</code> の引数と同じです。\n<code>key</code> はアルゴリズムで使用される生のキーです。\n<code>iv</code> は<a href=\"http://en.wikipedia.org/wiki/Initialization_vector\">initialization\nvector</a> です。\n\n</p>\n<!--\n`key` and `iv` must be `'binary'` encoded strings or\n[buffers](buffer.html).\n-->\n\n<p><code>key</code> と <code>iv</code> は <code>&#39;binary&#39;</code> でエンコードされた文字列または\n<a href=\"buffer.html\">buffers</a> でなければなりません\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4307,7 +4315,7 @@
           "textRaw": "crypto.createDecipher(algorithm, password)",
           "type": "method",
           "name": "createDecipher",
-          "desc": "<!--\nCreates and returns a decipher object, with the given algorithm and key.\nThis is the mirror of the [createCipher()][] above.\n-->\n\n<p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。\nこれは前述の [createCipher()][] の鏡写しです。\n\n</p>\n",
+          "desc": "<!--\nCreates and returns a decipher object, with the given algorithm and\nkey.  This is the mirror of the [createCipher()][] above.\n-->\n\n<p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。\nこれは前述の [createCipher()][] の鏡写しです。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4325,7 +4333,7 @@
           "textRaw": "crypto.createDecipheriv(algorithm, key, iv)",
           "type": "method",
           "name": "createDecipheriv",
-          "desc": "<!--\nCreates and returns a decipher object, with the given algorithm, key and iv.\nThis is the mirror of the [createCipheriv()][] above.\n-->\n\n<p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。\nこれは前述の [createCipheriv()][] の鏡写しです。\n\n</p>\n",
+          "desc": "<!--\nCreates and returns a decipher object, with the given algorithm, key\nand iv.  This is the mirror of the [createCipheriv()][] above.\n-->\n\n<p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。\nこれは前述の [createCipheriv()][] の鏡写しです。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4346,7 +4354,7 @@
           "textRaw": "crypto.createSign(algorithm)",
           "type": "method",
           "name": "createSign",
-          "desc": "<!--\nCreates and returns a signing object, with the given algorithm.\nOn recent OpenSSL releases, `openssl list-public-key-algorithms` will display\nthe available signing algorithms. Examples are `'RSA-SHA256'`.\n-->\n\n<p>与えられたアルゴリズムで署名オブジェクトを作成して返します。\n最近のOpenSSLのリリースでは、<code>openssl list-public-key-algorithms</code>\nで利用可能な署名アルゴリズムの一覧が表示されます。例えば &#39;RSA-SHA256&#39;。\n\n</p>\n",
+          "desc": "<!--\nCreates and returns a signing object, with the given algorithm.  On\nrecent OpenSSL releases, `openssl list-public-key-algorithms` will\ndisplay the available signing algorithms. Examples are `'RSA-SHA256'`.\n-->\n\n<p>与えられたアルゴリズムで署名オブジェクトを作成して返します。\n最近のOpenSSLのリリースでは、<code>openssl list-public-key-algorithms</code>\nで利用可能な署名アルゴリズムの一覧が表示されます。例えば &#39;RSA-SHA256&#39;。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4376,7 +4384,7 @@
           "textRaw": "crypto.createDiffieHellman(prime_length)",
           "type": "method",
           "name": "createDiffieHellman",
-          "desc": "<!--\nCreates a Diffie-Hellman key exchange object and generates a prime of the\ngiven bit length. The generator used is `2`.\n-->\n\n<p>ディフィー・ヘルマン鍵共有オブジェクトを作成し、\n与えられた長さの素数を生成します。生成元は <code>2</code> です。\n\n</p>\n",
+          "desc": "<!--\nCreates a Diffie-Hellman key exchange object and generates a prime of\nthe given bit length. The generator used is `2`.\n-->\n\n<p>ディフィー・ヘルマン鍵共有オブジェクトを作成し、\n与えられた長さの素数を生成します。生成元は <code>2</code> です。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4391,7 +4399,7 @@
           "textRaw": "crypto.createDiffieHellman(prime, [encoding])",
           "type": "method",
           "name": "createDiffieHellman",
-          "desc": "<!--\nCreates a Diffie-Hellman key exchange object using the supplied prime. The\ngenerator used is `2`. Encoding can be `'binary'`, `'hex'`, or `'base64'`.\nDefaults to `'binary'`.\n-->\n\n<p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。\n生成元は <code>2</code> です。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+          "desc": "<!--\nCreates a Diffie-Hellman key exchange object using the supplied prime.\nThe generator used is `2`. Encoding can be `'binary'`, `'hex'`, or\n`'base64'`.  If no encoding is specified, then a buffer is expected.\n-->\n\n<p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。\n生成元は <code>2</code> です。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4410,7 +4418,7 @@
           "textRaw": "crypto.getDiffieHellman(group_name)",
           "type": "method",
           "name": "getDiffieHellman",
-          "desc": "<!--\nCreates a predefined Diffie-Hellman key exchange object.\nThe supported groups are: `'modp1'`, `'modp2'`, `'modp5'`\n(defined in [RFC 2412][])\nand `'modp14'`, `'modp15'`, `'modp16'`, `'modp17'`, `'modp18'`\n(defined in [RFC 3526][]).\nThe returned object mimics the interface of objects created by\n[crypto.createDiffieHellman()][] above, but\nwill not allow to change the keys (with\n[diffieHellman.setPublicKey()][] for example).\nThe advantage of using this routine is that the parties don't have to\ngenerate nor exchange group modulus beforehand, saving both processor and\ncommunication time.\n-->\n\n<p>事前に定義された Diffie-Hellman 鍵交換オブジェクトを作成します。\nサポートされるグループは、<code>&#39;modp1&#39;</code>, <code>&#39;modp2&#39;</code>, <code>&#39;modp5&#39;</code>\n([RFC 2412][] で定義される)、\nおよび <code>&#39;modp14&#39;</code>, <code>&#39;modp15&#39;</code>, <code>&#39;modp16&#39;</code>, <code>&#39;modp17&#39;</code>, <code>&#39;modp18&#39;</code>\n([RFC 3526][] で定義される) です。\n返されるオブジェクトは、前述の\n[crypto.createDiffieHellman()][]\nによって作成されたオブジェクトのインタフェースを模倣します。\nしかし、\n(たとえば [diffieHellman.setPublicKey()][] で)\n鍵を交換することはできません。\nこのルーチンを使うことによるアドバンテージは、\n事前にグループ係数を生成することも交換する必要もないため、\n処理と通信の時間を共に節約できることです。\n\n</p>\n<!--\nExample (obtaining a shared secret):\n-->\n\n<p>例 (共有鍵を取得):\n\n</p>\n<pre><code>var crypto = require(&#39;crypto&#39;);\nvar alice = crypto.getDiffieHellman(&#39;modp5&#39;);\nvar bob = crypto.getDiffieHellman(&#39;modp5&#39;);\n\nalice.generateKeys();\nbob.generateKeys();\n\nvar alice_secret = alice.computeSecret(bob.getPublicKey(), &#39;binary&#39;, &#39;hex&#39;);\nvar bob_secret = bob.computeSecret(alice.getPublicKey(), &#39;binary&#39;, &#39;hex&#39;);\n\n/* alice_secret and bob_secret should be the same */\nconsole.log(alice_secret == bob_secret);</code></pre>\n",
+          "desc": "<!--\nCreates a predefined Diffie-Hellman key exchange object.  The\nsupported groups are: `'modp1'`, `'modp2'`, `'modp5'` (defined in [RFC\n2412][]) and `'modp14'`, `'modp15'`, `'modp16'`, `'modp17'`,\n`'modp18'` (defined in [RFC 3526][]).  The returned object mimics the\ninterface of objects created by [crypto.createDiffieHellman()][]\nabove, but will not allow to change the keys (with\n[diffieHellman.setPublicKey()][] for example).  The advantage of using\nthis routine is that the parties don't have to generate nor exchange\ngroup modulus beforehand, saving both processor and communication\ntime.\n-->\n\n<p>事前に定義された Diffie-Hellman 鍵交換オブジェクトを作成します。\nサポートされるグループは、<code>&#39;modp1&#39;</code>, <code>&#39;modp2&#39;</code>, <code>&#39;modp5&#39;</code>\n([RFC 2412][] で定義される)、\nおよび <code>&#39;modp14&#39;</code>, <code>&#39;modp15&#39;</code>, <code>&#39;modp16&#39;</code>, <code>&#39;modp17&#39;</code>, <code>&#39;modp18&#39;</code>\n([RFC 3526][] で定義される) です。\n返されるオブジェクトは、前述の\n[crypto.createDiffieHellman()][]\nによって作成されたオブジェクトのインタフェースを模倣します。\nしかし、\n(たとえば [diffieHellman.setPublicKey()][] で)\n鍵を交換することはできません。\nこのルーチンを使うことによるアドバンテージは、\n事前にグループ係数を生成することも交換する必要もないため、\n処理と通信の時間を共に節約できることです。\n\n</p>\n<!--\nExample (obtaining a shared secret):\n-->\n\n<p>例 (共有鍵を取得):\n\n</p>\n<pre><code>var crypto = require(&#39;crypto&#39;);\nvar alice = crypto.getDiffieHellman(&#39;modp5&#39;);\nvar bob = crypto.getDiffieHellman(&#39;modp5&#39;);\n\nalice.generateKeys();\nbob.generateKeys();\n\nvar alice_secret = alice.computeSecret(bob.getPublicKey(), null, &#39;hex&#39;);\nvar bob_secret = bob.computeSecret(alice.getPublicKey(), null, &#39;hex&#39;);\n\n/* alice_secret and bob_secret should be the same */\nconsole.log(alice_secret == bob_secret);</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -4449,6 +4457,30 @@
           ]
         },
         {
+          "textRaw": "crypto.pbkdf2Sync(password, salt, iterations, keylen)",
+          "type": "method",
+          "name": "pbkdf2Sync",
+          "desc": "<!--\nSynchronous PBKDF2 function.  Returns derivedKey or throws error.\n-->\n\n<p>同期版の PBKDF2 関数。\n生成された鍵を返すか、例外をスローします。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "password"
+                },
+                {
+                  "name": "salt"
+                },
+                {
+                  "name": "iterations"
+                },
+                {
+                  "name": "keylen"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "textRaw": "crypto.randomBytes(size, [callback])",
           "type": "method",
           "name": "randomBytes",
@@ -4479,7 +4511,7 @@
               "textRaw": "hash.update(data, [input_encoding])",
               "type": "method",
               "name": "update",
-              "desc": "<!--\nUpdates the hash content with the given `data`, the encoding of which is given\nin `input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.\nDefaults to `'binary'`.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> でハッシュの内容を更新します。\nそのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、\nまたは <code>&#39;binary&#39;</code> を指定することができます。\nデフォルトは <code>&#39;binary&#39;</code> です。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "desc": "<!--\nUpdates the hash content with the given `data`, the encoding of which\nis given in `input_encoding` and can be `'utf8'`, `'ascii'` or\n`'binary'`.  If no encoding is provided, then a buffer is expected.\n-->\n\n<p>与えられた <code>data</code> でハッシュの内容を更新します。\nそのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、\nまたは <code>&#39;binary&#39;</code> を指定することができます。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4498,7 +4530,7 @@
               "textRaw": "hash.digest([encoding])",
               "type": "method",
               "name": "digest",
-              "desc": "<!--\nCalculates the digest of all of the passed data to be hashed.\nThe `encoding` can be `'hex'`, `'binary'` or `'base64'`.\nDefaults to `'binary'`.\n\nNote: `hash` object can not be used after `digest()` method been called.\n-->\n\n<p>渡された全てのデータがハッシュ化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "desc": "<!--\nCalculates the digest of all of the passed data to be hashed.  The\n`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding\nis provided, then a buffer is returned.\n-->\n\n<p>渡された全てのデータがハッシュ化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `hash` object can not be used after `digest()` method been\ncalled.\n-->\n\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4522,7 +4554,7 @@
               "textRaw": "hmac.update(data)",
               "type": "method",
               "name": "update",
-              "desc": "<!--\nUpdate the hmac content with the given `data`.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> で HMAC の内容を更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "desc": "<!--\nUpdate the hmac content with the given `data`.  This can be called\nmany times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> で HMAC の内容を更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4537,7 +4569,7 @@
               "textRaw": "hmac.digest([encoding])",
               "type": "method",
               "name": "digest",
-              "desc": "<!--\nCalculates the digest of all of the passed data to the hmac.\nThe `encoding` can be `'hex'`, `'binary'` or `'base64'`.\nDefaults to `'binary'`.\n\nNote: `hmac` object can not be used after `digest()` method been called.\n-->\n\n<p>渡された全てのデータが HMAC 化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "desc": "<!--\nCalculates the digest of all of the passed data to the hmac.  The\n`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding\nis provided, then a buffer is returned.\n-->\n\n<p>渡された全てのデータが HMAC 化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `hmac` object can not be used after `digest()` method been\ncalled.\n-->\n\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4555,13 +4587,13 @@
           "textRaw": "Class: Cipher",
           "type": "class",
           "name": "Cipher",
-          "desc": "<!--\nClass for encrypting data.\n\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n",
+          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "cipher.update(data, [input_encoding], [output_encoding])",
               "type": "method",
               "name": "update",
-              "desc": "<!--\nUpdates the cipher with `data`, the encoding of which is given in\n`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.\nDefaults to `'binary'`.\n\nThe `output_encoding` specifies the output format of the enciphered data,\nand can be `'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.\n-->\n\n<p><code>data</code> で暗号を更新します。\n<code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、\n<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code> または <code>&#39;binary&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<!--\nReturns the enciphered contents, and can be called many times with new data as it is streamed.\n-->\n\n<p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "desc": "<!--\nUpdates the cipher with `data`, the encoding of which is given in\n`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no\nencoding is provided, then a buffer is expected.\n-->\n\n<p><code>data</code> で暗号を更新します。\n<code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<p>The <code>output_encoding</code> specifies the output format of the enciphered\ndata, and can be <code>&#39;binary&#39;</code>, <code>&#39;base64&#39;</code> or <code>&#39;hex&#39;</code>.  If no encoding is\nprovided, then a buffer iis returned.\n--&gt;\n\n</p>\n<p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、\n<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code> または <code>&#39;binary&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nReturns the enciphered contents, and can be called many times with new\ndata as it is streamed.\n-->\n\n<p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4584,7 +4616,7 @@
               "textRaw": "cipher.final([output_encoding])",
               "type": "method",
               "name": "final",
-              "desc": "<!--\nReturns any remaining enciphered contents, with `output_encoding` being one of:\n`'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.\n\nNote: `cipher` object can not be used after `final()` method been called.\n-->\n\n<p>暗号化されたコンテンツの残りを返します。\n<code>output_encoding</code> は次のいずれかです: <code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code>。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "desc": "<!--\nReturns any remaining enciphered contents, with `output_encoding`\nbeing one of: `'binary'`, `'base64'` or `'hex'`.  If no encoding is\nprovided, then a buffer is returned.\n-->\n\n<p>暗号化されたコンテンツの残りを返します。\n<code>output_encoding</code> は次のいずれかです: <code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code>。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `cipher` object can not be used after `final()` method been\ncalled.\n-->\n\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4600,7 +4632,7 @@
               "textRaw": "cipher.setAutoPadding(auto_padding=true)",
               "type": "method",
               "name": "setAutoPadding",
-              "desc": "<!--\nYou can disable automatic padding of the input data to block size. If `auto_padding` is false,\nthe length of the entire input data must be a multiple of the cipher's block size or `final` will fail.\nUseful for non-standard padding, e.g. using `0x0` instead of PKCS padding. You must call this before `cipher.final`.\n-->\n\n<p>入力データが自動的にブロックサイズにパディングされることを\n抑止することができます。\n<code>auto_padding</code> が <code>false</code> の場合、入力データ全体の長さは\n暗号ブロックサイズの倍数でなければなりません。\nでなければ、<code>final()</code> は失敗します。\nこれは非標準のパディング、たとえば PKCS パディングの代わりに\n<code>0x0</code> を使う場合に便利です。\n<code>cipher.final()</code> の前に呼び出す必要があります。\n\n\n</p>\n",
+              "desc": "<!--\nYou can disable automatic padding of the input data to block size. If\n`auto_padding` is false, the length of the entire input data must be a\nmultiple of the cipher's block size or `final` will fail.  Useful for\nnon-standard padding, e.g. using `0x0` instead of PKCS padding. You\nmust call this before `cipher.final`.\n-->\n\n<p>入力データが自動的にブロックサイズにパディングされることを\n抑止することができます。\n<code>auto_padding</code> が <code>false</code> の場合、入力データ全体の長さは\n暗号ブロックサイズの倍数でなければなりません。\nでなければ、<code>final()</code> は失敗します。\nこれは非標準のパディング、たとえば PKCS パディングの代わりに\n<code>0x0</code> を使う場合に便利です。\n<code>cipher.final()</code> の前に呼び出す必要があります。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4624,7 +4656,7 @@
               "textRaw": "decipher.update(data, [input_encoding], [output_encoding])",
               "type": "method",
               "name": "update",
-              "desc": "<!--\nUpdates the decipher with `data`, which is encoded in `'binary'`, `'base64'`\nor `'hex'`. Defaults to `'binary'`.\n\nThe `output_decoding` specifies in what format to return the deciphered\nplaintext: `'binary'`, `'ascii'` or `'utf8'`. Defaults to `'binary'`.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を\n<code>data</code> で更新します。デフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、\n<code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n\n</p>\n",
+              "desc": "<!--\nUpdates the decipher with `data`, which is encoded in `'binary'`,\n`'base64'` or `'hex'`.  If no encoding is provided, then a buffer is\nexpected.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を\n<code>data</code> で更新します。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nThe `output_decoding` specifies in what format to return the\ndeciphered plaintext: `'binary'`, `'ascii'` or `'utf8'`.  If no\nencoding is provided, then a buffer is returned.\n-->\n\n<p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、\n<code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4647,7 +4679,7 @@
               "textRaw": "decipher.final([output_encoding])",
               "type": "method",
               "name": "final",
-              "desc": "<!--\nReturns any remaining plaintext which is deciphered,\nwith `output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.\nDefaults to `'binary'`.\n\nNote: `decipher` object can not be used after `final()` method been called.\n-->\n\n<p>復号化されたプレーンテキストの残りを返します。\n<code>output_decoding</code> は <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "desc": "<!--\nReturns any remaining plaintext which is deciphered, with\n`output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.  If\nno encoding is provided, then a buffer is returned.\n-->\n\n<p>復号化されたプレーンテキストの残りを返します。\n<code>output_decoding</code> は <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `decipher` object can not be used after `final()` method been\ncalled.\n-->\n\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4663,7 +4695,7 @@
               "textRaw": "decipher.setAutoPadding(auto_padding=true)",
               "type": "method",
               "name": "setAutoPadding",
-              "desc": "<!--\nYou can disable auto padding if the data has been encrypted without standard block padding to prevent\n`decipher.final` from checking and removing it. Can only work if the input data's length is a multiple of the\nciphers block size. You must call this before streaming data to `decipher.update`.\n-->\n\n<p>データブロックが非標準のパディングで暗号化されている場合、\n<code>decipher.final()</code> によるチェックを無効にすることができます。\n入力データの長さが暗号ブロックサイズの倍数の場合のみ動作します。\n<code>decipher.update()</code> の前に呼び出す必要があります。\n\n</p>\n",
+              "desc": "<!--\nYou can disable auto padding if the data has been encrypted without\nstandard block padding to prevent `decipher.final` from checking and\nremoving it. Can only work if the input data's length is a multiple of\nthe ciphers block size. You must call this before streaming data to\n`decipher.update`.\n-->\n\n<p>データブロックが非標準のパディングで暗号化されている場合、\n<code>decipher.final()</code> によるチェックを無効にすることができます。\n入力データの長さが暗号ブロックサイズの倍数の場合のみ動作します。\n<code>decipher.update()</code> の前に呼び出す必要があります。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4687,7 +4719,7 @@
               "textRaw": "signer.update(data)",
               "type": "method",
               "name": "update",
-              "desc": "<!--\nUpdates the signer object with data.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>署名オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "desc": "<!--\nUpdates the signer object with data.  This can be called many times\nwith new data as it is streamed.\n-->\n\n<p>署名オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4702,7 +4734,7 @@
               "textRaw": "signer.sign(private_key, [output_format])",
               "type": "method",
               "name": "sign",
-              "desc": "<!--\nCalculates the signature on all the updated data passed through the signer.\n`private_key` is a string containing the PEM encoded private key for signing.\n-->\n\n<p>署名オブジェクトに渡された全ての更新データで署名を計算します。\n<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。\n\n</p>\n<!--\nReturns the signature in `output_format` which can be `'binary'`, `'hex'` or\n`'base64'`. Defaults to `'binary'`.\n\nNote: `signer` object can not be used after `sign()` method been called.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、あるいは <code>&#39;base64&#39;</code> のいずれかを指定した <code>output_format</code>\nによる署名を返します。デフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "desc": "<!--\nCalculates the signature on all the updated data passed through the\nsigner.  `private_key` is a string containing the PEM encoded private\nkey for signing.\n-->\n\n<p>署名オブジェクトに渡された全ての更新データで署名を計算します。\n<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。\n\n</p>\n<!--\nReturns the signature in `output_format` which can be `'binary'`,\n`'hex'` or `'base64'`. If no encoding is provided, then a buffer is\nreturned.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、あるいは <code>&#39;base64&#39;</code> のいずれかを指定した <code>output_format</code>\nによる署名を返します。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `signer` object can not be used after `sign()` method been\ncalled.\n-->\n\n<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4729,7 +4761,7 @@
               "textRaw": "verifier.update(data)",
               "type": "method",
               "name": "update",
-              "desc": "<!--\nUpdates the verifier object with data.\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>検証オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "desc": "<!--\nUpdates the verifier object with data.  This can be called many times\nwith new data as it is streamed.\n-->\n\n<p>検証オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4744,7 +4776,7 @@
               "textRaw": "verifier.verify(object, signature, [signature_format])",
               "type": "method",
               "name": "verify",
-              "desc": "<!--\nVerifies the signed data by using the `object` and `signature`. `object` is  a\nstring containing a PEM encoded object, which can be one of RSA public key,\nDSA public key, or X.509 certificate. `signature` is the previously calculated\nsignature for the data, in the `signature_format` which can be `'binary'`,\n`'hex'` or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。\n<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを\nPEM でエンコードしたオブジェクトです。\n<code>signature</code> は先に計算したデータの署名で、\nその <code>signature_format</code> は <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code>\nのいずれかです。デフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n<!--\nReturns true or false depending on the validity of the signature for the data and public key.\n\nNote: `verifier` object can not be used after `verify()` method been called.\n-->\n\n<p>署名されたデータと公開鍵による検証の結果によって true または false を返します。\n\n</p>\n<p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "desc": "<!--\nVerifies the signed data by using the `object` and `signature`.\n`object` is  a string containing a PEM encoded object, which can be\none of RSA public key, DSA public key, or X.509 certificate.\n`signature` is the previously calculated signature for the data, in\nthe `signature_format` which can be `'binary'`, `'hex'` or `'base64'`.\nIf no encoding is specified, then a buffer is expected.\n-->\n\n<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。\n<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを\nPEM でエンコードしたオブジェクトです。\n<code>signature</code> は先に計算したデータの署名で、\nその <code>signature_format</code> は <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code>\nのいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nReturns true or false depending on the validity of the signature for\nthe data and public key.\n-->\n\n<p>署名されたデータと公開鍵による検証の結果によって true または false を返します。\n\n</p>\n<!--\nNote: `verifier` object can not be used after `verify()` method been\ncalled.\n-->\n\n<p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4774,7 +4806,7 @@
               "textRaw": "diffieHellman.generateKeys([encoding])",
               "type": "method",
               "name": "generateKeys",
-              "desc": "<!--\nGenerates private and public Diffie-Hellman key values, and returns the\npublic key in the specified encoding. This key should be transferred to the\nother party. Encoding can be `'binary'`, `'hex'`, or `'base64'`.\nDefaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、\n指定の方法でエンコーディングされた公開鍵を返します。\nこの鍵は相手側に渡されるものです。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nGenerates private and public Diffie-Hellman key values, and returns\nthe public key in the specified encoding. This key should be\ntransferred to the other party. Encoding can be `'binary'`, `'hex'`,\nor `'base64'`.  If no encoding is provided, then a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、\n指定の方法でエンコーディングされた公開鍵を返します。\nこの鍵は相手側に渡されるものです。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4790,7 +4822,7 @@
               "textRaw": "diffieHellman.computeSecret(other_public_key, [input_encoding], [output_encoding])",
               "type": "method",
               "name": "computeSecret",
-              "desc": "<!--\nComputes the shared secret using `other_public_key` as the other party's\npublic key and returns the computed shared secret. Supplied key is\ninterpreted using specified `input_encoding`, and secret is encoded using\nspecified `output_encoding`. Encodings can be `'binary'`, `'hex'`, or\n`'base64'`. The input encoding defaults to `'binary'`.\nIf no output encoding is given, the input encoding is used as output encoding.\n-->\n\n<p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。\n与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、\n秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\n入力エンコーディングのデフォルトは <code>&#39;binary&#39;</code> です。\n出力のエンコーディングが与えられなかった場合は、入力のエンコーディングが\n出力エンコーディングとして使われます。\n\n</p>\n",
+              "desc": "<!--\nComputes the shared secret using `other_public_key` as the other\nparty's public key and returns the computed shared secret. Supplied\nkey is interpreted using specified `input_encoding`, and secret is\nencoded using specified `output_encoding`. Encodings can be\n`'binary'`, `'hex'`, or `'base64'`. If the input encoding is not\nprovided, then a buffer is expected.\n-->\n\n<p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。\n与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、\n秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\n入力のエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nIf no output encoding is given, then a buffer is returned.\n-->\n\n<p>出力のエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4813,7 +4845,7 @@
               "textRaw": "diffieHellman.getPrime([encoding])",
               "type": "method",
               "name": "getPrime",
-              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can be\n`'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,\nthen a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4829,7 +4861,7 @@
               "textRaw": "diffieHellman.getGenerator([encoding])",
               "type": "method",
               "name": "getGenerator",
-              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can be\n`'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,\nthen a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4845,7 +4877,7 @@
               "textRaw": "diffieHellman.getPublicKey([encoding])",
               "type": "method",
               "name": "getPublicKey",
-              "desc": "<!--\nReturns the Diffie-Hellman public key in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nReturns the Diffie-Hellman public key in the specified encoding, which\ncan be `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,\nthen a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4861,7 +4893,7 @@
               "textRaw": "diffieHellman.getPrivateKey([encoding])",
               "type": "method",
               "name": "getPrivateKey",
-              "desc": "<!--\nReturns the Diffie-Hellman private key in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nReturns the Diffie-Hellman private key in the specified encoding,\nwhich can be `'binary'`, `'hex'`, or `'base64'`. If no encoding is\nprovided, then a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4877,7 +4909,7 @@
               "textRaw": "diffieHellman.setPublicKey(public_key, [encoding])",
               "type": "method",
               "name": "setPublicKey",
-              "desc": "<!--\nSets the Diffie-Hellman public key. Key encoding can be `'binary'`, `'hex'`,\nor `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による公開鍵を設定します。\n鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nSets the Diffie-Hellman public key. Key encoding can be `'binary'`,\n`'hex'` or `'base64'`. If no encoding is provided, then a buffer is\nexpected.\n-->\n\n<p>ディフィー・ヘルマン法による公開鍵を設定します。\n鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4896,7 +4928,7 @@
               "textRaw": "diffieHellman.setPrivateKey(public_key, [encoding])",
               "type": "method",
               "name": "setPrivateKey",
-              "desc": "<!--\nSets the Diffie-Hellman private key. Key encoding can be `'binary'`, `'hex'`,\nor `'base64'`. Defaults to `'binary'`.\n-->\n\n<p>ディフィー・ヘルマン法による秘密鍵を設定します。\n鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nデフォルトは <code>&#39;binary&#39;</code> です。\n\n</p>\n",
+              "desc": "<!--\nSets the Diffie-Hellman private key. Key encoding can be `'binary'`,\n`'hex'` or `'base64'`. If no encoding is provided, then a buffer is\nexpected.\n-->\n\n<p>ディフィー・ヘルマン法による秘密鍵を設定します。\n鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4912,6 +4944,22 @@
               ]
             }
           ]
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "crypto.DEFAULT_ENCODING",
+          "name": "DEFAULT_ENCODING",
+          "desc": "<!--\nThe default encoding to use for functions that can take either strings\nor buffers.  The default value is `'buffer'`, which makes it default\nto using Buffer objects.  This is here to make the crypto module more\neasily compatible with legacy programs that expected `'binary'` to be\nthe default encoding.\n-->\n\n<p>関数が使用するエンコーディングのデフォルトは、文字列かバッファの\nいずれかにすることができます。\n\n</p>\n<!--\nNote that new programs will probably expect buffers, so only use this\nas a temporary measure.\n-->\n\n<p>新しいプログラムはおそらくバッファを期待することに注意してください。\nこれは一時的な手段としてのみ使用してください。\n\n</p>\n"
+        }
+      ],
+      "modules": [
+        {
+          "textRaw": "Recent API Changes",
+          "name": "recent_api_changes",
+          "desc": "<!--\nThe Crypto module was added to Node before there was the concept of a\nunified Stream API, and before there were Buffer objects for handling\nbinary data.\n-->\n\n<p>Crypto モジュールは、統合されたストリーム API やバイトデータを扱う Buffer\nオブジェクトよりも先に Node に追加されました。\n\n</p>\n<!--\nAs such, the streaming classes don't have the typical methods found on\nother Node classes, and many methods accepted and returned\nBinary-encoded strings by default rather than Buffers.  This was\nchanged to use Buffers by default instead.\n-->\n\n<p>そのため、このストリーミングなクラスは他の Node のクラスに見られる\n典型的なメソッドを持たず、多くのメソッドは引数や戻り値に\nBuffer ではなくバイナリエンコードされた文字列を使います。\n\n</p>\n<!--\nThis is a breaking change for some use cases, but not all.\n-->\n\n<p>これはあるユースケースにおいては互換性を損ないますが、\n全てのケースではありません。\n\n</p>\n<!--\nFor example, if you currently use the default arguments to the Sign\nclass, and then pass the results to the Verify class, without ever\ninspecting the data, then it will continue to work as before.  Where\nyou once got a binary string and then presented the binary string to\nthe Verify object, you'll now get a Buffer, and present the Buffer to\nthe Verify object.\n-->\n\n<p>たとえば、Sign クラスをデフォルト引数で使っていて、\nその結果を全く調べずに Verify クラスに渡している場合、\nそれは以前と同じように動くでしょう。\nそれは、現時点ではバイナリ文字列を受け取ってそのバイナリ文字列を\nVeriy オブジェクトに渡しますが、将来は Buffer を受け取ってその\nBuffer を Verify オブジェクトに渡すようになります。\n\n</p>\n<!--\nHowever, if you were doing things with the string data that will not\nwork properly on Buffers (such as, concatenating them, storing in\ndatabases, etc.), or you are passing binary strings to the crypto\nfunctions without an encoding argument, then you will need to start\nproviding encoding arguments to specify which encoding you'd like to\nuse.  To switch to the previous style of using binary strings by\ndefault, set the `crypto.DEFAULT_ENCODING` field to 'binary'.  Note\nthat new programs will probably expect buffers, so only use this as a\ntemporary measure.\n-->\n\n<p>しかしながら、Buffer が文字列と正確に同じようには動かない何かをしている場合\n(例えば、それらを連結したり、データベースに保存したりするなど)、\nあるいはバイナリ文字列を Crypto の関数にエンコーディング引数無しで\n渡している場合、エンコーディング引数を与えてどのエンコーディングを\n使用しているかを指定する必要があります。\n以前のようにデフォルトでバイナリ文字列を使うように切り替えるには、\n<code>crypto.DEFAULT_ENCODING</code> フィールドに <code>binary</code> を設定します。\n新しいプログラムはおそらくバッファを期待することに注意してください。\nこれは一時的な手段としてのみ使用してください。\n\n</p>\n<!--\nAlso, a Streaming API will be provided, but this will be done in such\na way as to preserve the legacy API surface.\n-->\n\n<p>同時に、ストリーミング API も提供されますが、それはレガシーな API\nを維持する方法でなされます。\n\n\n</p>\n",
+          "type": "module",
+          "displayName": "Recent API Changes"
         }
       ],
       "type": "module",
@@ -4958,10 +5006,10 @@
           ]
         },
         {
-          "textRaw": "tls.connect(options, [secureConnectListener])",
+          "textRaw": "tls.connect(options, [callback])",
           "type": "method",
           "name": "connect",
-          "desc": "<!--\nCreates a new client connection to the given `port` and `host` (old API) or\n`options.port` and `options.host`. (If `host` is omitted, it defaults to\n`localhost`.) `options` should be an object which specifies:\n-->\n\n<p>与えられた <code>port</code> と <code>host</code> (旧 API) または <code>options.port</code> と <code>options.host</code>\nで新しいクライアントコネクションを作成します\n(<code>host</code> が省略された場合、デフォルトは <code>localhost</code> です)。\n<code>options</code> は以下を指定したオブジェクトです:\n\n</p>\n<!--\n  - `host`: Host the client should connect to\n\n  - `port`: Port the client should connect to\n\n  - `socket`: Establish secure connection on a given socket rather than\n    creating a new socket. If this option is specified, `host` and `port`\n    are ignored.\n\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format.\n\n  - `key`: A string or `Buffer` containing the private key of the client in\n    PEM format.\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the client in\n    PEM format.\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `rejectUnauthorized`: If `true`, the server certificate is verified against\n    the list of supplied CAs. An `'error'` event is emitted if verification\n    fails. Default: `true`.\n\n  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN\n    protocols. `Buffer` should have following format: `0x05hello0x05world`,\n    where first byte is next protocol name's length. (Passing array should\n    usually be much simpler: `['hello', 'world']`.)\n\n  - `servername`: Servername for SNI (Server Name Indication) TLS extension.\n-->\n\n<ul>\n<li><p><code>host</code>: クライアントが接続するホスト。</p>\n</li>\n<li><p><code>port</code>: クライアントが接続するポート番号。</p>\n</li>\n<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で\nセキュアな接続を確立します。\nこのオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>\n</li>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、\nおよびサーバに対する CA の証明書を含む文字列またはバッファ。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または\n<code>Buffer</code> です。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは true です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> \nの配列です。\n<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>\n最初のバイトは次のプロトコル名の長さです\n(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>\n</li>\n<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>\n</li>\n</ul>\n<!--\nThe `secureConnectListener` parameter will be added as a listener for the\n['secureConnect'][] event.\n\n`tls.connect()` returns a [CleartextStream][] object.\n\nHere is an example of a client of echo server as described previously:\n-->\n\n<p><code>secureConnectLister</code> 引数は [&#39;secureConnect&#39;][] イベントのリスナとして\n加えられます。\n\n</p>\n<p><code>tls.connect()</code> は [CleartextStream][] オブジェクトを返します。\n\n</p>\n<p>これは前述のエコーサーバに接続するクライアントの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  // These are necessary only if using the client certificate authentication\n  key: fs.readFileSync(&#39;client-key.pem&#39;),\n  cert: fs.readFileSync(&#39;client-cert.pem&#39;),\n\n  // This is necessary only if the server uses the self-signed certificate\n  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;client.pfx&#39;)\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n",
+          "desc": "<!--\nCreates a new client connection to the given `port` and `host` (old API) or\n`options.port` and `options.host`. (If `host` is omitted, it defaults to\n`localhost`.) `options` should be an object which specifies:\n-->\n\n<p>与えられた <code>port</code> と <code>host</code> (旧 API) または <code>options.port</code> と <code>options.host</code>\nで新しいクライアントコネクションを作成します\n(<code>host</code> が省略された場合、デフォルトは <code>localhost</code> です)。\n<code>options</code> は以下を指定したオブジェクトです:\n\n</p>\n<!--\n  - `host`: Host the client should connect to\n\n  - `port`: Port the client should connect to\n\n  - `socket`: Establish secure connection on a given socket rather than\n    creating a new socket. If this option is specified, `host` and `port`\n    are ignored.\n\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format.\n\n  - `key`: A string or `Buffer` containing the private key of the client in\n    PEM format.\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the client in\n    PEM format.\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `rejectUnauthorized`: If `true`, the server certificate is verified against\n    the list of supplied CAs. An `'error'` event is emitted if verification\n    fails. Default: `true`.\n\n  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN\n    protocols. `Buffer` should have following format: `0x05hello0x05world`,\n    where first byte is next protocol name's length. (Passing array should\n    usually be much simpler: `['hello', 'world']`.)\n\n  - `servername`: Servername for SNI (Server Name Indication) TLS extension.\n-->\n\n<ul>\n<li><p><code>host</code>: クライアントが接続するホスト。</p>\n</li>\n<li><p><code>port</code>: クライアントが接続するポート番号。</p>\n</li>\n<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で\nセキュアな接続を確立します。\nこのオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>\n</li>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、\nおよびサーバに対する CA の証明書を含む文字列またはバッファ。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または\n<code>Buffer</code> です。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは true です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> \nの配列です。\n<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>\n最初のバイトは次のプロトコル名の長さです\n(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>\n</li>\n<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>\n</li>\n</ul>\n<!--\nThe `callback` parameter will be added as a listener for the\n['secureConnect'][] event.\n\n`tls.connect()` returns a [CleartextStream][] object.\n\nHere is an example of a client of echo server as described previously:\n-->\n\n<p><code>callback</code> 引数は [&#39;secureConnect&#39;][] イベントのリスナとして\n加えられます。\n\n</p>\n<p><code>tls.connect()</code> は [CleartextStream][] オブジェクトを返します。\n\n</p>\n<p>これは前述のエコーサーバに接続するクライアントの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  // These are necessary only if using the client certificate authentication\n  key: fs.readFileSync(&#39;client-key.pem&#39;),\n  cert: fs.readFileSync(&#39;client-cert.pem&#39;),\n\n  // This is necessary only if the server uses the self-signed certificate\n  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;client.pfx&#39;)\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -4977,7 +5025,7 @@
                   "optional": true
                 },
                 {
-                  "name": "secureConnectListener",
+                  "name": "callback",
                   "optional": true
                 }
               ]
@@ -4988,7 +5036,7 @@
                   "name": "options"
                 },
                 {
-                  "name": "secureConnectListener",
+                  "name": "callback",
                   "optional": true
                 }
               ]
@@ -4996,10 +5044,10 @@
           ]
         },
         {
-          "textRaw": "tls.connect(port, [host], [options], [secureConnectListener])",
+          "textRaw": "tls.connect(port, [host], [options], [callback])",
           "type": "method",
           "name": "connect",
-          "desc": "<!--\nCreates a new client connection to the given `port` and `host` (old API) or\n`options.port` and `options.host`. (If `host` is omitted, it defaults to\n`localhost`.) `options` should be an object which specifies:\n-->\n\n<p>与えられた <code>port</code> と <code>host</code> (旧 API) または <code>options.port</code> と <code>options.host</code>\nで新しいクライアントコネクションを作成します\n(<code>host</code> が省略された場合、デフォルトは <code>localhost</code> です)。\n<code>options</code> は以下を指定したオブジェクトです:\n\n</p>\n<!--\n  - `host`: Host the client should connect to\n\n  - `port`: Port the client should connect to\n\n  - `socket`: Establish secure connection on a given socket rather than\n    creating a new socket. If this option is specified, `host` and `port`\n    are ignored.\n\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format.\n\n  - `key`: A string or `Buffer` containing the private key of the client in\n    PEM format.\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the client in\n    PEM format.\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `rejectUnauthorized`: If `true`, the server certificate is verified against\n    the list of supplied CAs. An `'error'` event is emitted if verification\n    fails. Default: `true`.\n\n  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN\n    protocols. `Buffer` should have following format: `0x05hello0x05world`,\n    where first byte is next protocol name's length. (Passing array should\n    usually be much simpler: `['hello', 'world']`.)\n\n  - `servername`: Servername for SNI (Server Name Indication) TLS extension.\n-->\n\n<ul>\n<li><p><code>host</code>: クライアントが接続するホスト。</p>\n</li>\n<li><p><code>port</code>: クライアントが接続するポート番号。</p>\n</li>\n<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で\nセキュアな接続を確立します。\nこのオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>\n</li>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、\nおよびサーバに対する CA の証明書を含む文字列またはバッファ。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または\n<code>Buffer</code> です。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは true です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> \nの配列です。\n<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>\n最初のバイトは次のプロトコル名の長さです\n(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>\n</li>\n<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>\n</li>\n</ul>\n<!--\nThe `secureConnectListener` parameter will be added as a listener for the\n['secureConnect'][] event.\n\n`tls.connect()` returns a [CleartextStream][] object.\n\nHere is an example of a client of echo server as described previously:\n-->\n\n<p><code>secureConnectLister</code> 引数は [&#39;secureConnect&#39;][] イベントのリスナとして\n加えられます。\n\n</p>\n<p><code>tls.connect()</code> は [CleartextStream][] オブジェクトを返します。\n\n</p>\n<p>これは前述のエコーサーバに接続するクライアントの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  // These are necessary only if using the client certificate authentication\n  key: fs.readFileSync(&#39;client-key.pem&#39;),\n  cert: fs.readFileSync(&#39;client-cert.pem&#39;),\n\n  // This is necessary only if the server uses the self-signed certificate\n  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;client.pfx&#39;)\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n",
+          "desc": "<!--\nCreates a new client connection to the given `port` and `host` (old API) or\n`options.port` and `options.host`. (If `host` is omitted, it defaults to\n`localhost`.) `options` should be an object which specifies:\n-->\n\n<p>与えられた <code>port</code> と <code>host</code> (旧 API) または <code>options.port</code> と <code>options.host</code>\nで新しいクライアントコネクションを作成します\n(<code>host</code> が省略された場合、デフォルトは <code>localhost</code> です)。\n<code>options</code> は以下を指定したオブジェクトです:\n\n</p>\n<!--\n  - `host`: Host the client should connect to\n\n  - `port`: Port the client should connect to\n\n  - `socket`: Establish secure connection on a given socket rather than\n    creating a new socket. If this option is specified, `host` and `port`\n    are ignored.\n\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format.\n\n  - `key`: A string or `Buffer` containing the private key of the client in\n    PEM format.\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the client in\n    PEM format.\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `rejectUnauthorized`: If `true`, the server certificate is verified against\n    the list of supplied CAs. An `'error'` event is emitted if verification\n    fails. Default: `true`.\n\n  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN\n    protocols. `Buffer` should have following format: `0x05hello0x05world`,\n    where first byte is next protocol name's length. (Passing array should\n    usually be much simpler: `['hello', 'world']`.)\n\n  - `servername`: Servername for SNI (Server Name Indication) TLS extension.\n-->\n\n<ul>\n<li><p><code>host</code>: クライアントが接続するホスト。</p>\n</li>\n<li><p><code>port</code>: クライアントが接続するポート番号。</p>\n</li>\n<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で\nセキュアな接続を確立します。\nこのオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>\n</li>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、\nおよびサーバに対する CA の証明書を含む文字列またはバッファ。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または\n<code>Buffer</code> です。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは true です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> \nの配列です。\n<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>\n最初のバイトは次のプロトコル名の長さです\n(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>\n</li>\n<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>\n</li>\n</ul>\n<!--\nThe `callback` parameter will be added as a listener for the\n['secureConnect'][] event.\n\n`tls.connect()` returns a [CleartextStream][] object.\n\nHere is an example of a client of echo server as described previously:\n-->\n\n<p><code>callback</code> 引数は [&#39;secureConnect&#39;][] イベントのリスナとして\n加えられます。\n\n</p>\n<p><code>tls.connect()</code> は [CleartextStream][] オブジェクトを返します。\n\n</p>\n<p>これは前述のエコーサーバに接続するクライアントの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  // These are necessary only if using the client certificate authentication\n  key: fs.readFileSync(&#39;client-key.pem&#39;),\n  cert: fs.readFileSync(&#39;client-cert.pem&#39;),\n\n  // This is necessary only if the server uses the self-signed certificate\n  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;client.pfx&#39;)\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -5015,7 +5063,7 @@
                   "optional": true
                 },
                 {
-                  "name": "secureConnectListener",
+                  "name": "callback",
                   "optional": true
                 }
               ]
@@ -5084,7 +5132,7 @@
               "textRaw": "Event: 'clientError'",
               "type": "event",
               "name": "clientError",
-              "desc": "<p><code>function (exception) { }</code>\n\n</p>\n<!--\nWhen a client connection emits an 'error' event before secure connection is\nestablished - it will be forwarded here.\n-->\n\n<p>セキュアコネクションが確立される前にクライアントコネクションが\n<code>&#39;error&#39;</code> イベントを発した場合 － ここに転送されます。\n\n\n</p>\n",
+              "desc": "<p><code>function (exception, securePair) { }</code>\n\n</p>\n<!--\nWhen a client connection emits an 'error' event before secure connection is\nestablished - it will be forwarded here.\n-->\n\n<p>セキュアコネクションが確立される前にクライアントコネクションが\n<code>&#39;error&#39;</code> イベントを発した場合 － ここに転送されます。\n\n</p>\n<!--\n`securePair` is the `tls.SecurePair` that the error originated from.\n-->\n\n<p><code>securePair</code> はエラーが発生した <code>tls.SecurePair</code> です。\n\n\n</p>\n",
               "params": []
             },
             {
@@ -5271,7 +5319,7 @@
           "desc": "<!--\nAccepts a single argument, `encoding` which defaults to `utf8`.\n-->\n\n<p>文字列の引数 <code>encoding</code> を受け取ります。デフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n",
           "methods": [
             {
-              "textRaw": "StringDecoder.write(buffer)",
+              "textRaw": "decoder.write(buffer)",
               "type": "method",
               "name": "write",
               "desc": "<!--\nReturns a decoded string.\n-->\n\n<p>デコードされた文字列を返します。\n\n</p>\n",
@@ -5282,6 +5330,17 @@
                       "name": "buffer"
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "textRaw": "decoder.end()",
+              "type": "method",
+              "name": "end",
+              "desc": "<!--\nReturns any trailing bytes that were left in the buffer.\n-->\n\n<p>バッファに残った終端のバイト列を返します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
                 }
               ]
             }
@@ -6123,7 +6182,7 @@
           "textRaw": "fs.open(path, flags, [mode], [callback])",
           "type": "method",
           "name": "open",
-          "desc": "<!--\nAsynchronous file open. See open(2). `flags` can be:\n\n* `'r'` - Open file for reading.\nAn exception occurs if the file does not exist.\n\n* `'r+'` - Open file for reading and writing.\nAn exception occurs if the file does not exist.\n\n* `'rs'` - Open file for reading in synchronous mode. Instructs the operating\n  system to bypass the local file system cache.\n\n  This is primarily useful for opening files on NFS mounts as it allows you to\n  skip the potentially stale local cache. It has a very real impact on I/O\n  performance so don't use this mode unless you need it.\n\n  Note that this doesn't turn `fs.open()` into a synchronous blocking call.\n  If that's what you want then you should be using `fs.openSync()`\n\n* `'rs+'` - Open file for reading and writing, telling the OS to open it\n  synchronously. See notes for `'rs'` about using this with caution.\n\n* `'w'` - Open file for writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx'` - Like `'w'` but opens the file in exclusive mode.\n\n* `'w+'` - Open file for reading and writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx+'` - Like `'w+'` but opens the file in exclusive mode.\n\n* `'a'` - Open file for appending.\nThe file is created if it does not exist.\n\n* `'ax'` - Like `'a'` but opens the file in exclusive mode.\n\n* `'a+'` - Open file for reading and appending.\nThe file is created if it does not exist.\n\n* `'ax+'` - Like `'a+'` but opens the file in exclusive mode.\n\n`mode` defaults to `0666`. The callback gets two arguments `(err, fd)`.\n\nExclusive mode (`O_EXCL`) ensures that `path` is newly created. `fs.open()`\nfails if a file by that name already exists. On POSIX systems, symlinks are\nnot followed. Exclusive mode may or may not work with network file systems.\n-->\n\n<p>非同期のファイルオープン。open(2) を参照してください。\nフラグは以下になります:\n\n</p>\n<ul>\n<li><p><code>&#39;r&#39;</code> - ファイルを読み込み専用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;r+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;rs&#39;</code> - ファイルを同期モードで読み込むためにオープンします。\nオペレーティングシステムにローカルファイルシステムのキャッシュを\nバイパスするように指示します。</p>\n<p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い\nローカルキャッシュをスキップするのに役立ちます。\nこれはI/O パフォーマンスにとても深刻な影響を与えるため、必要でない限り\n使用しないでください。</p>\n<p>これは <code>fs.open()</code> を同期的なブロッキング呼び出しにするわけではないことに\n注意してください。\nそれが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>\n</li>\n<li><p><code>&#39;rs+&#39;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように\n伝えます。これを使用する際の警告は <code>&#39;rs&#39;</code> の注意を参照してください。</p>\n</li>\n<li><p><code>&#39;w&#39;</code> - ファイルを書き込み専用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx&#39;</code> - <code>&#39;w&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;w+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a&#39;</code> - ファイルを追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax&#39;</code> - <code>&#39;a&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a+&#39;</code> - ファイルを読み込みおよび追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax+&#39;</code> - <code>&#39;a+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n</ul>\n<p><code>mode</code> のデフォルトは 0666 です。\nコールバックは 2 つの引数を受け取る <code>(err, fd)</code>です。\n\n</p>\n<p>排他モード (<code>O_EXCL</code>) は、<code>path</code> が新しいファイルとして作成されることを\n確実にします。 指定された名前のファイルが既に存在する場合、\n<code>fs.open()</code> は失敗します。\nPOSIX システムでは、シンボリックリンクは辿られません。\n排他モードはネットワークファイルシステムでは動くかもしれませんし、\n動かないかもしれません。\n\n</p>\n",
+          "desc": "<!--\nAsynchronous file open. See open(2). `flags` can be:\n\n* `'r'` - Open file for reading.\nAn exception occurs if the file does not exist.\n\n* `'r+'` - Open file for reading and writing.\nAn exception occurs if the file does not exist.\n\n* `'rs'` - Open file for reading in synchronous mode. Instructs the operating\n  system to bypass the local file system cache.\n\n  This is primarily useful for opening files on NFS mounts as it allows you to\n  skip the potentially stale local cache. It has a very real impact on I/O\n  performance so don't use this mode unless you need it.\n\n  Note that this doesn't turn `fs.open()` into a synchronous blocking call.\n  If that's what you want then you should be using `fs.openSync()`\n\n* `'rs+'` - Open file for reading and writing, telling the OS to open it\n  synchronously. See notes for `'rs'` about using this with caution.\n\n* `'w'` - Open file for writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx'` - Like `'w'` but opens the file in exclusive mode.\n\n* `'w+'` - Open file for reading and writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx+'` - Like `'w+'` but opens the file in exclusive mode.\n\n* `'a'` - Open file for appending.\nThe file is created if it does not exist.\n\n* `'ax'` - Like `'a'` but opens the file in exclusive mode.\n\n* `'a+'` - Open file for reading and appending.\nThe file is created if it does not exist.\n\n* `'ax+'` - Like `'a+'` but opens the file in exclusive mode.\n\n`mode` defaults to `0666`. The callback gets two arguments `(err, fd)`.\n\nExclusive mode (`O_EXCL`) ensures that `path` is newly created. `fs.open()`\nfails if a file by that name already exists. On POSIX systems, symlinks are\nnot followed. Exclusive mode may or may not work with network file systems.\n-->\n\n<p>非同期のファイルオープン。open(2) を参照してください。\nフラグは以下になります:\n\n</p>\n<ul>\n<li><p><code>&#39;r&#39;</code> - ファイルを読み込み専用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;r+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;rs&#39;</code> - ファイルを同期モードで読み込むためにオープンします。\nオペレーティングシステムにローカルファイルシステムのキャッシュを\nバイパスするように指示します。</p>\n<p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い\nローカルキャッシュをスキップするのに役立ちます。\nこれはI/O パフォーマンスにとても深刻な影響を与えるため、必要でない限り\n使用しないでください。</p>\n<p>これは <code>fs.open()</code> を同期的なブロッキング呼び出しにするわけではないことに\n注意してください。\nそれが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>\n</li>\n<li><p><code>&#39;rs+&#39;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように\n伝えます。これを使用する際の警告は <code>&#39;rs&#39;</code> の注意を参照してください。</p>\n</li>\n<li><p><code>&#39;w&#39;</code> - ファイルを書き込み専用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx&#39;</code> - <code>&#39;w&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;w+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx+&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a&#39;</code> - ファイルを追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax&#39;</code> - <code>&#39;a&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a+&#39;</code> - ファイルを読み込みおよび追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax+&#39;</code> - <code>&#39;a+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n</ul>\n<p><code>mode</code> のデフォルトは 0666 です。\nコールバックは 2 つの引数を受け取る <code>(err, fd)</code>です。\n\n</p>\n<p>排他モード (<code>O_EXCL</code>) は、<code>path</code> が新しいファイルとして作成されることを\n確実にします。 指定された名前のファイルが既に存在する場合、\n<code>fs.open()</code> は失敗します。\nPOSIX システムでは、シンボリックリンクは辿られません。\n排他モードはネットワークファイルシステムでは動くかもしれませんし、\n動かないかもしれません。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -6381,7 +6440,7 @@
           "textRaw": "fs.read(fd, buffer, offset, length, position, [callback])",
           "type": "method",
           "name": "read",
-          "desc": "<!--\nRead data from the file specified by `fd`.\n-->\n\n<p><code>fd</code> で指定されたファイルからデータを読み込みます。\n\n</p>\n<!--\n`buffer` is the buffer that the data will be written to.\n-->\n\n<p><code>buffer</code> はデータが書き込まれるバッファです。\n\n</p>\n<!--\n`offset` is offset within the buffer where writing will start.\n-->\n\n<p><code>offset</code> は書き込みを開始するバッファ内のオフセットです。\n\n</p>\n<!--\n`length` is an integer specifying the number of bytes to read.\n-->\n\n<p><code>length</code> は読み込むバイト数を指定する整数です。\n\n</p>\n<!--\n`position` is an integer specifying where to begin reading from in the file.\nIf `position` is `null`, data will be read from the current file position.\n-->\n\n<p><code>position</code> はファイルの読み込みを開始する位置を指定する整数です。\n<code>position</code> が <code>null</code> の場合、データは現在の位置から読み込まれます。\n\n</p>\n<!--\nThe callback is given the three arguments, `(err, bytesRead, buffer)`.\n-->\n\n<p>コールバックは3つの引数が与えられる <code>(err, bytesRead, buffer)</code> です。\n\n</p>\n",
+          "desc": "<!--\nRead data from the file specified by `fd`.\n-->\n\n<p><code>fd</code> で指定されたファイルからデータを読み込みます。\n\n</p>\n<!--\n`buffer` is the buffer that the data will be written to.\n-->\n\n<p><code>buffer</code> はデータが書き込まれるバッファです。\n\n</p>\n<!--\n`offset` is offset within the buffer where reading will start.\n-->\n\n<p><code>offset</code> は読み込みを開始するバッファ内のオフセットです。\n\n</p>\n<!--\n`length` is an integer specifying the number of bytes to read.\n-->\n\n<p><code>length</code> は読み込むバイト数を指定する整数です。\n\n</p>\n<!--\n`position` is an integer specifying where to begin reading from in the file.\nIf `position` is `null`, data will be read from the current file position.\n-->\n\n<p><code>position</code> はファイルの読み込みを開始する位置を指定する整数です。\n<code>position</code> が <code>null</code> の場合、データは現在の位置から読み込まれます。\n\n</p>\n<!--\nThe callback is given the three arguments, `(err, bytesRead, buffer)`.\n-->\n\n<p>コールバックは3つの引数が与えられる <code>(err, bytesRead, buffer)</code> です。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -6833,7 +6892,7 @@
           "textRaw": "path.normalize(p)",
           "type": "method",
           "name": "normalize",
-          "desc": "<!--\nNormalize a string path, taking care of `'..'` and `'.'` parts.\n->\n\n文字列によるパスを正規化します。`'..'` と `'.'` の要素には注意してください。\n\n<!--\nWhen multiple slashes are found, they're replaced by a single one;\nwhen the path contains a trailing slash, it is preserved.\nOn windows backslashes are used. \n-->\n\n<p>複数のスラッシュが見つかると、それらは一つに置換されます;\nパスの最後にスラッシュが含まれていると、それは維持されます。\nWindows ではバックスラッシュが使われます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.normalize(&#39;/foo/bar//baz/asdf/quux/..&#39;)\n// returns\n&#39;/foo/bar/baz/asdf&#39;</code></pre>\n",
+          "desc": "<!--\nNormalize a string path, taking care of `'..'` and `'.'` parts.\n->\n\n文字列によるパスを正規化します。`'..'` と `'.'` の要素には注意してください。\n\n<!--\nWhen multiple slashes are found, they're replaced by a single one;\nwhen the path contains a trailing slash, it is preserved.\nOn Windows backslashes are used.\n-->\n\n<p>複数のスラッシュが見つかると、それらは一つに置換されます;\nパスの最後にスラッシュが含まれていると、それは維持されます。\nWindows ではバックスラッシュが使われます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.normalize(&#39;/foo/bar//baz/asdf/quux/..&#39;)\n// returns\n&#39;/foo/bar/baz/asdf&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -6872,7 +6931,7 @@
           "textRaw": "path.resolve([from ...], to)",
           "type": "method",
           "name": "resolve",
-          "desc": "<!--\nResolves `to` to an absolute path.\n-->\n\n<p><code>to</code> の絶対パスを解決します。\n\n</p>\n<!--\nIf `to` isn't already absolute `from` arguments are prepended in right to left\norder, until an absolute path is found. If after using all `from` paths still\nno absolute path is found, the current working directory is used as well. The\nresulting path is normalized, and trailing slashes are removed unless the path \ngets resolved to the root directory. Non-string arguments are ignored.\n-->\n\n<p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。\n全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。\n結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。\n文字列でない引数は無視されます。\n\n</p>\n<!--\nAnother way to think of it is as a sequence of `cd` commands in a shell.\n-->\n\n<p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。\n\n</p>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.resolve(&#39;foo/bar&#39;, &#39;/tmp/file/&#39;, &#39;..&#39;, &#39;a/../subfile&#39;)</code></pre>\n<!--\nIs similar to:\n-->\n\n<p>これは以下と同様です。\n\n</p>\n<pre><code>cd foo/bar\ncd /tmp/file/\ncd ..\ncd a/../subfile\npwd</code></pre>\n<!--\nThe difference is that the different paths don't need to exist and may also be\nfiles.\n-->\n\n<p>いは、それぞれのパスが必ずしも存在する必要がないことと、ファイルでも構わないことです。\n\n</p>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.resolve(&#39;/foo/bar&#39;, &#39;./baz&#39;)\n// returns\n&#39;/foo/bar/baz&#39;\n\npath.resolve(&#39;/foo/bar&#39;, &#39;/tmp/file/&#39;)\n// returns\n&#39;/tmp/file&#39;\n\npath.resolve(&#39;wwwroot&#39;, &#39;static_files/png/&#39;, &#39;../gif/image.gif&#39;)\n// if currently in /home/myself/node, it returns\n&#39;/home/myself/node/wwwroot/static_files/gif/image.gif&#39;</code></pre>\n",
+          "desc": "<!--\nResolves `to` to an absolute path.\n-->\n\n<p><code>to</code> の絶対パスを解決します。\n\n</p>\n<!--\nIf `to` isn't already absolute `from` arguments are prepended in right to left\norder, until an absolute path is found. If after using all `from` paths still\nno absolute path is found, the current working directory is used as well. The\nresulting path is normalized, and trailing slashes are removed unless the path\ngets resolved to the root directory. Non-string arguments are ignored.\n-->\n\n<p>もし <code>to</code> が既に絶対パスでなければ、絶対パスが見つかるまで <code>from</code> 引数を右から左の順で先頭に加えます。\n全ての <code>from</code> を加えた後、パスがまだ絶対パスでなければ、カレントワーキングディレクトリが同様に使われます。\n結果のパスは正規化され、解決されたパスがルートディレクトリでない限り末尾のスラッシュは削除されます。\n文字列でない引数は無視されます。\n\n</p>\n<!--\nAnother way to think of it is as a sequence of `cd` commands in a shell.\n-->\n\n<p>それはシェルにおける <code>cd</code> コマンドの列だと考えることができます。\n\n</p>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.resolve(&#39;foo/bar&#39;, &#39;/tmp/file/&#39;, &#39;..&#39;, &#39;a/../subfile&#39;)</code></pre>\n<!--\nIs similar to:\n-->\n\n<p>これは以下と同様です。\n\n</p>\n<pre><code>cd foo/bar\ncd /tmp/file/\ncd ..\ncd a/../subfile\npwd</code></pre>\n<!--\nThe difference is that the different paths don't need to exist and may also be\nfiles.\n-->\n\n<p>いは、それぞれのパスが必ずしも存在する必要がないことと、ファイルでも構わないことです。\n\n</p>\n<!--\nExamples:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.resolve(&#39;/foo/bar&#39;, &#39;./baz&#39;)\n// returns\n&#39;/foo/bar/baz&#39;\n\npath.resolve(&#39;/foo/bar&#39;, &#39;/tmp/file/&#39;)\n// returns\n&#39;/tmp/file&#39;\n\npath.resolve(&#39;wwwroot&#39;, &#39;static_files/png/&#39;, &#39;../gif/image.gif&#39;)\n// if currently in /home/myself/node, it returns\n&#39;/home/myself/node/wwwroot/static_files/gif/image.gif&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -6959,7 +7018,12 @@
         {
           "textRaw": "path.sep",
           "name": "sep",
-          "desc": "<!--\nThe platform-specific file separator. `'\\\\'` or `'/'`.\n-->\n\n<p>プラットフォーム固有のファイルセパレータ。 <code>&#39;\\\\&#39;</code> または <code>&#39;/&#39;</code>。\n\n</p>\n<!--\nAn example on linux:\n-->\n\n<p>Linux での例:\n\n</p>\n<pre><code>&#39;foo/bar/baz&#39;.split(path.sep)\n// returns\n[&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</code></pre>\n<!--\nAn example on windows:\n-->\n\n<p>Windows での例:\n\n</p>\n<pre><code>&#39;foo\\\\bar\\\\baz&#39;.split(path.sep)\n// returns\n[&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</code></pre>\n"
+          "desc": "<!--\nThe platform-specific file separator. `'\\\\'` or `'/'`.\n-->\n\n<p>プラットフォーム固有のファイルセパレータ。 <code>&#39;\\\\&#39;</code> または <code>&#39;/&#39;</code>。\n\n</p>\n<!--\nAn example on *nix:\n-->\n\n<p>*nix での例:\n\n</p>\n<pre><code>&#39;foo/bar/baz&#39;.split(path.sep)\n// returns\n[&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</code></pre>\n<!--\nAn example on Windows:\n-->\n\n<p>Windows での例:\n\n</p>\n<pre><code>&#39;foo\\\\bar\\\\baz&#39;.split(path.sep)\n// returns\n[&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</code></pre>\n"
+        },
+        {
+          "textRaw": "path.delimiter",
+          "name": "delimiter",
+          "desc": "<!--\nThe platform-specific path delimiter, `;` or `':'`.\n-->\n\n<p>プラットフォーム固有のパス区切り文字、<code>&#39;;&#39;</code> または <code>&#39;:&#39;</code>。\n\n</p>\n<!--\nAn example on *nix:\n-->\n\n<p>*nix での例:\n\n</p>\n<pre><code>console.log(process.env.PATH)\n// &#39;/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin&#39;\n\nprocess.env.PATH.split(path.delimiter)\n// returns\n[&#39;/usr/bin&#39;, &#39;/bin&#39;, &#39;/usr/sbin&#39;, &#39;/sbin&#39;, &#39;/usr/local/bin&#39;]</code></pre>\n<!--\nAn example on Windows:\n-->\n\n<p>Windows での例:\n\n</p>\n<pre><code>console.log(process.env.PATH)\n// &#39;C:\\Windows\\system32;C:\\Windows;C:\\Program Files\\nodejs\\&#39;\n\nprocess.env.PATH.split(path.delimiter)\n// returns\n[&#39;C:\\Windows\\system32&#39;, &#39;C:\\Windows&#39;, &#39;C:\\Program Files\\nodejs\\&#39;]</code></pre>\n"
         }
       ],
       "type": "module",
@@ -6976,7 +7040,7 @@
           "textRaw": "net.createServer([options], [connectionListener])",
           "type": "method",
           "name": "createServer",
-          "desc": "<!--\nCreates a new TCP server. The `connectionListener` argument is\nautomatically set as a listener for the ['connection'][] event.\n\n`options` is an object with the following defaults:\n-->\n\n<p>新しい TCP サーバを作成します。\n<code>connectionListener</code> 引数は [&#39;connection&#39;][]\nイベントに対するリスナーとして自動的に加えられます。\n\n</p>\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ allowHalfOpen: false\n}</code></pre>\n<!--\nIf `allowHalfOpen` is `true`, then the socket won't automatically send a FIN\npacket when the other end of the socket sends a FIN packet. The socket becomes\nnon-readable, but still writable. You should call the `end()` method explicitly.\nSee ['end'][] event for more information.\n-->\n\n<p><code>allowHalfOpen</code> が <code>true</code> だと、反対側のソケットが FIN パケットを送信してきても自動的に FIN を送信しなくなります。\nソケットは読み込み可能ではなくなりますが、書き込み可能のままです。\n明示的に <code>end()</code> を呼び出す必要があります。\n[&#39;end&#39;][] イベントにより多くの情報があります。\n\n</p>\n<!--\nHere is an example of a echo server which listens for connections\non port 8124:\n-->\n\n<p>8124 番のポートへの接続を待ち受けるエコーサーバの例:\n\n</p>\n<pre><code>var net = require(&#39;net&#39;);\nvar server = net.createServer(function(c) { //&#39;connection&#39; listener\n  console.log(&#39;server connected&#39;);\n  c.on(&#39;end&#39;, function() {\n    console.log(&#39;server disconnected&#39;);\n  });\n  c.write(&#39;hello\\r\\n&#39;);\n  c.pipe(c);\n});\nserver.listen(8124, function() { //&#39;listening&#39; listener\n  console.log(&#39;server bound&#39;);\n});</code></pre>\n<!--\nTest this by using `telnet`:\n-->\n\n<p><code>telnet</code> を使ってテストします:\n\n</p>\n<pre><code>telnet localhost 8124</code></pre>\n<!--\nTo listen on the socket `/tmp/echo.sock` the third line from the last would\njust be changed to\n-->\n\n<p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットを待ち受けるには、最後から三行目をこのように変更します。\n\n</p>\n<pre><code>server.listen(&#39;/tmp/echo.sock&#39;, function() { //&#39;listening&#39; listener</code></pre>\n<!--\nUse `nc` to connect to a UNIX domain socket server:\n-->\n\n<p><code>nc</code> を使って UNIX ドメインソケットサーバへ接続します:\n\n</p>\n<pre><code>nc -U /tmp/echo.sock</code></pre>\n",
+          "desc": "<!--\nCreates a new TCP server. The `connectionListener` argument is\nautomatically set as a listener for the ['connection'][] event.\n\n`options` is an object with the following defaults:\n-->\n\n<p>新しい TCP サーバを作成します。\n<code>connectionListener</code> 引数は [&#39;connection&#39;][]\nイベントに対するリスナーとして自動的に加えられます。\n\n</p>\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ allowHalfOpen: false\n}</code></pre>\n<!--\nIf `allowHalfOpen` is `true`, then the socket won't automatically send a FIN\npacket when the other end of the socket sends a FIN packet. The socket becomes\nnon-readable, but still writable. You should call the `end()` method explicitly.\nSee ['end'][] event for more information.\n-->\n\n<p><code>allowHalfOpen</code> が <code>true</code> だと、反対側のソケットが FIN パケットを送信してきても自動的に FIN を送信しなくなります。\nソケットは読み込み可能ではなくなりますが、書き込み可能のままです。\n明示的に <code>end()</code> を呼び出す必要があります。\n[&#39;end&#39;][] イベントにより多くの情報があります。\n\n</p>\n<!--\nHere is an example of an echo server which listens for connections\non port 8124:\n-->\n\n<p>8124 番のポートへの接続を待ち受けるエコーサーバの例:\n\n</p>\n<pre><code>var net = require(&#39;net&#39;);\nvar server = net.createServer(function(c) { //&#39;connection&#39; listener\n  console.log(&#39;server connected&#39;);\n  c.on(&#39;end&#39;, function() {\n    console.log(&#39;server disconnected&#39;);\n  });\n  c.write(&#39;hello\\r\\n&#39;);\n  c.pipe(c);\n});\nserver.listen(8124, function() { //&#39;listening&#39; listener\n  console.log(&#39;server bound&#39;);\n});</code></pre>\n<!--\nTest this by using `telnet`:\n-->\n\n<p><code>telnet</code> を使ってテストします:\n\n</p>\n<pre><code>telnet localhost 8124</code></pre>\n<!--\nTo listen on the socket `/tmp/echo.sock` the third line from the last would\njust be changed to\n-->\n\n<p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットを待ち受けるには、最後から三行目をこのように変更します。\n\n</p>\n<pre><code>server.listen(&#39;/tmp/echo.sock&#39;, function() { //&#39;listening&#39; listener</code></pre>\n<!--\nUse `nc` to connect to a UNIX domain socket server:\n-->\n\n<p><code>nc</code> を使って UNIX ドメインソケットサーバへ接続します:\n\n</p>\n<pre><code>nc -U /tmp/echo.sock</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -7205,10 +7269,10 @@
           "desc": "<!--\nThis class is used to create a TCP or UNIX server.\nA server is a `net.Socket` that can listen for new incoming connections.\n-->\n\n<p>このクラスは TCP または UNIX ドメインのサーバを作成するために使われます。\nサーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。\n\n</p>\n",
           "methods": [
             {
-              "textRaw": "server.listen(port, [host], [backlog], [listeningListener])",
+              "textRaw": "server.listen(port, [host], [backlog], [callback])",
               "type": "method",
               "name": "listen",
-              "desc": "<!--\nBegin accepting connections on the specified `port` and `host`.  If the\n`host` is omitted, the server will accept connections directed to any\nIPv4 address (`INADDR_ANY`). A port value of zero will assign a random port.\n-->\n\n<p>指定された <code>port</code> と <code>host</code> でコネクションの受け入れを開始します。\n<code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます\n(<code>INADDR_ANY</code>)。\nポート番号に 0 を指定すると、ランダムなポートが割り当てられます。\n\n</p>\n<!--\nBacklog is the maximum length of the queue of pending connections.\nThe actual length will be determined by your OS through sysctl settings such as\n`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this\nparameter is 511 (not 512).\n-->\n\n<p>バックログは保留された接続のキューの最大長です。\n実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、\nsysctl の設定を通じて OS によって決定されます。\nこのパラメータのデフォルト値は 511 (512 ではありません) です。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `listeningListener`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>listeningListener</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n<!--\nOne issue some users run into is getting `EADDRINUSE` errors. This means that\nanother server is already running on the requested port. One way of handling this\nwould be to wait a second and then try again. This can be done with\n-->\n\n<p>一部のユーザが陥る問題の一つは、<code>EADDRINUSE</code> エラーです。\nこれは、他のサーバが要求されたポートを使っていることを意味します。\nこれに対照する方法の一つは、1秒待機してからリトライすることです。\nこれは次のようになります\n\n</p>\n<pre><code>server.on(&#39;error&#39;, function (e) {\n  if (e.code == &#39;EADDRINUSE&#39;) {\n    console.log(&#39;Address in use, retrying...&#39;);\n    setTimeout(function () {\n      server.close();\n      server.listen(PORT, HOST);\n    }, 1000);\n  }\n});</code></pre>\n<!--\n(Note: All sockets in Node set `SO_REUSEADDR` already)\n-->\n\n<p>注意: Node の全てのソケットは <code>SO_REUSEADDR</code> が設定されます)\n\n\n</p>\n",
+              "desc": "<!--\nBegin accepting connections on the specified `port` and `host`.  If the\n`host` is omitted, the server will accept connections directed to any\nIPv4 address (`INADDR_ANY`). A port value of zero will assign a random port.\n-->\n\n<p>指定された <code>port</code> と <code>host</code> でコネクションの受け入れを開始します。\n<code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます\n(<code>INADDR_ANY</code>)。\nポート番号に 0 を指定すると、ランダムなポートが割り当てられます。\n\n</p>\n<!--\nBacklog is the maximum length of the queue of pending connections.\nThe actual length will be determined by your OS through sysctl settings such as\n`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this\nparameter is 511 (not 512).\n-->\n\n<p>バックログは保留された接続のキューの最大長です。\n実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、\nsysctl の設定を通じて OS によって決定されます。\nこのパラメータのデフォルト値は 511 (512 ではありません) です。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `callback`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>callback</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n<!--\nOne issue some users run into is getting `EADDRINUSE` errors. This means that\nanother server is already running on the requested port. One way of handling this\nwould be to wait a second and then try again. This can be done with\n-->\n\n<p>一部のユーザが陥る問題の一つは、<code>EADDRINUSE</code> エラーです。\nこれは、他のサーバが要求されたポートを使っていることを意味します。\nこれに対照する方法の一つは、1秒待機してからリトライすることです。\nこれは次のようになります\n\n</p>\n<pre><code>server.on(&#39;error&#39;, function (e) {\n  if (e.code == &#39;EADDRINUSE&#39;) {\n    console.log(&#39;Address in use, retrying...&#39;);\n    setTimeout(function () {\n      server.close();\n      server.listen(PORT, HOST);\n    }, 1000);\n  }\n});</code></pre>\n<!--\n(Note: All sockets in Node set `SO_REUSEADDR` already)\n-->\n\n<p>注意: Node の全てのソケットは <code>SO_REUSEADDR</code> が設定されます)\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -7224,7 +7288,7 @@
                       "optional": true
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -7232,10 +7296,10 @@
               ]
             },
             {
-              "textRaw": "server.listen(path, [listeningListener])",
+              "textRaw": "server.listen(path, [callback])",
               "type": "method",
               "name": "listen",
-              "desc": "<!--\nStart a UNIX socket server listening for connections on the given `path`.\n-->\n\n<p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `listeningListener`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>listeningListener</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n",
+              "desc": "<!--\nStart a UNIX socket server listening for connections on the given `path`.\n-->\n\n<p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `callback`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>callback</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -7243,7 +7307,7 @@
                       "name": "path"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -7251,7 +7315,7 @@
               ]
             },
             {
-              "textRaw": "server.listen(handle, [listeningListener])",
+              "textRaw": "server.listen(handle, [callback])",
               "type": "method",
               "name": "listen",
               "signatures": [
@@ -7263,8 +7327,8 @@
                       "type": "Object"
                     },
                     {
-                      "textRaw": "`listeningListener` {Function} ",
-                      "name": "listeningListener",
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
                       "type": "Function",
                       "optional": true
                     }
@@ -7276,16 +7340,16 @@
                       "name": "handle"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
                 }
               ],
-              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'](#event_listening_) event will be emitted.\nthe last parameter `listeningListener` will be added as an listener for the\n['listening'](#event_listening_) event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>listeningListener</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n"
+              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'](#event_listening_) event will be emitted.\nthe last parameter `callback` will be added as an listener for the\n['listening'](#event_listening_) event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>callback</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n"
             },
             {
-              "textRaw": "server.close([cb])",
+              "textRaw": "server.close([callback])",
               "type": "method",
               "name": "close",
               "desc": "<!--\nStops the server from accepting new connections and keeps existing\nconnections. This function is asynchronous, the server is finally\nclosed when all connections are ended and the server emits a `'close'`\nevent. Optionally, you can pass a callback to listen for the `'close'`\nevent.\n-->\n\n<p>サーバが新しい接続を受け付けるのを終了しますが、既存の接続は維持します。\nこの関数は非同期で、サーバは最終的に全ての接続が閉じられると\n<code>&#39;close&#39;</code> イベントを生成してクローズされます。\nオプションとして、<code>&#39;close&#39;</code> イベントに対するリスナを渡すことができます。\n\n</p>\n",
@@ -7293,7 +7357,7 @@
                 {
                   "params": [
                     {
-                      "name": "cb",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -8303,14 +8367,14 @@
               "textRaw": "Event: 'end'",
               "type": "event",
               "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each message. No arguments. After\nemitted no other events will be emitted on the response.\n-->\n\n<p>メッセージごとに厳密に一回だけ生成されます。\nこのイベントが生成された後、このレスポンスはどんなイベントも生成しません。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each response. After that, no more `'data'` events\nwill be emitted on the response.\n-->\n\n<p>レスポンスごとに厳密に一回生成されます。\nその後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。\n\n\n</p>\n",
               "params": []
             },
             {
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function (err) { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`end` event was emitted.\nSee [http.ServerRequest][]'s `'close'` event for more information.\n-->\n\n<p><code>&#39;end&#39;</code> イベントが生成される前に下層の接続が切断されたことを示します。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。\nその逆もあります。\n\n\n</p>\n",
               "params": []
             }
           ],
@@ -8505,7 +8569,7 @@
               "textRaw": "Event: 'clientError'",
               "type": "event",
               "name": "clientError",
-              "desc": "<p><code>function (exception) { }</code>\n\n</p>\n<!--\nIf a client connection emits an 'error' event - it will forwarded here.\n-->\n\n<p>クライアントコネクションが &#39;error&#39; イベントを発した場合 － ここに転送されます。\n\n</p>\n",
+              "desc": "<p><code>function (exception, socket) { }</code>\n\n</p>\n<!--\nIf a client connection emits an 'error' event - it will forwarded here.\n-->\n\n<p>クライアントコネクションが &#39;error&#39; イベントを発した場合 － ここに転送されます。\n\n</p>\n<!--\n`socket` is the `net.Socket` object that the error originated from.\n-->\n\n<p><code>socket</code> はエラーが発生した <code>net.Socket</code> オブジェクトです。\n\n\n</p>\n",
               "params": []
             }
           ],
@@ -8557,7 +8621,7 @@
               ]
             },
             {
-              "textRaw": "server.listen(handle, [listeningListener])",
+              "textRaw": "server.listen(handle, [callback])",
               "type": "method",
               "name": "listen",
               "signatures": [
@@ -8569,8 +8633,8 @@
                       "type": "Object"
                     },
                     {
-                      "textRaw": "`listeningListener` {Function} ",
-                      "name": "listeningListener",
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
                       "type": "Function",
                       "optional": true
                     }
@@ -8582,16 +8646,16 @@
                       "name": "handle"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
                 }
               ],
-              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#server.listen).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n[&#39;listening&#39;][] イベントのリスナとして加えられます。\n詳細は [net.Server.listen(path)][] を参照してください。\n\n</p>\n"
+              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be added as\na listener for the ['listening'](net.html#event_listening_) event.\nSee also [net.Server.listen()](net.html#net_server_listen_handle_callback).\n-->\n\n<p>この関数は非同期です。最後の引数の <code>callback</code> は\n<a href=\"net.html#event_listening_\">&#39;listening&#39;</a> イベントのリスナとして加えられます。\n詳細は <a href=\"net.html#net_server_listen_handle_callback\">net.Server.listen()</a>\nを参照してください。\n\n</p>\n"
             },
             {
-              "textRaw": "server.close([cb])",
+              "textRaw": "server.close([callback])",
               "type": "method",
               "name": "close",
               "desc": "<!--\nStops the server from accepting new connections.  See [net.Server.close()][].\n-->\n\n<p>サーバが新しいコネクションを受け付けるのを終了します。\n[net.Server.close()][] を参照してください。\n\n</p>\n",
@@ -8599,7 +8663,7 @@
                 {
                   "params": [
                     {
-                      "name": "cb",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -8657,7 +8721,12 @@
             {
               "textRaw": "request.headers",
               "name": "headers",
-              "desc": "<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n</p>\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n例:\n\n    // Prints something like:\n    //\n    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n    //   host: &#39;127.0.0.1:8000&#39;,\n    //   accept: &#39;<em>/</em>&#39; }\n    console.log(request.headers);\n\n### request.trailers\n\n<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
+              "desc": "<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// Prints something like:\n//\n// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n//   host: &#39;127.0.0.1:8000&#39;,\n//   accept: &#39;*/*&#39; }\nconsole.log(request.headers);</code></pre>\n"
+            },
+            {
+              "textRaw": "request.trailers",
+              "name": "trailers",
+              "desc": "<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
             },
             {
               "textRaw": "request.httpVersion",
@@ -8717,13 +8786,6 @@
           "name": "http.ServerResponse",
           "desc": "<!--\nThis object is created internally by a HTTP server--not by the user. It is\npassed as the second parameter to the `'request'` event.\n\nThe response implements the [Writable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成されます。\n<code>&#39;request&#39;</code> リスナーの第 2 引数として渡されます。\n\n</p>\n<p>レスポンスは [Writable  Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n",
           "events": [
-            {
-              "textRaw": "Event: 'end'",
-              "type": "event",
-              "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted when the response has been sent. More specifically, this event is\nemitted when the last segment of the response headers and body have been\nhanded off to the operating system for transmission over the network. It\ndoes not imply that the client has received anything yet.\n-->\n\n<p>レスポンスが送信された場合に生成されます。\nより具体的には、このイベントはレスポンスヘッダおよびボディの最後の\nセグメントが、ネットワークに転送されるためにオペレーティングシステムに\n渡された後に生成されます。\nそれはクライアントが全て受信したことを意味しません。\n\n</p>\n<!--\nAfter this event, no more events will be emitted on the response object.\n-->\n\n<p>このイベントより後では、レスポンスオブジェクトはイベントを生成しません。\n\n</p>\n",
-              "params": []
-            },
             {
               "textRaw": "Event: 'close'",
               "type": "event",
@@ -8875,6 +8937,11 @@
               "textRaw": "response.statusCode",
               "name": "statusCode",
               "desc": "<!--\nWhen using implicit headers (not calling `response.writeHead()` explicitly), this property\ncontrols the status code that will be sent to the client when the headers get\nflushed.\n-->\n\n<p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>response.statusCode = 404;</code></pre>\n<!--\nAfter response header was sent to the client, this property indicates the\nstatus code which was sent out.\n-->\n\n<p>レスポンスヘッダがクライアントに送信された後、\nこのプロパティは送信されたステータスコードを示します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "response.headersSent",
+              "name": "headersSent",
+              "desc": "<!--\nBoolean (read-only). True if headers were sent, false otherwise.\n-->\n\n<p>(読み込み専用の) Boolean。\nヘッダが送信済みなら true、それ以外は false です。\n\n</p>\n"
             },
             {
               "textRaw": "response.sendDate",
@@ -9072,6 +9139,12 @@
           "type": "class",
           "name": "https.Server",
           "desc": "<!--\nThis class is a subclass of `tls.Server` and emits events same as\n`http.Server`. See `http.Server` for more information.\n-->\n\n<p>このクラスは <code>tls.Server</code> のサブクラスで、<code>http.Server</code> と同様のイベントを生成します。\nより詳しくは <code>http.Server</code> を参照してください。\n\n</p>\n"
+        },
+        {
+          "textRaw": "Class: https.Agent",
+          "type": "class",
+          "name": "https.Agent",
+          "desc": "<!--\nAn Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]\nfor more information.\n-->\n\n<p>HTTPS 用の Agent オブジェクトで，[http.Agent][] と同様です。\n詳細は [https.request()][] を参照してください。\n\n</p>\n"
         }
       ],
       "methods": [
@@ -9080,6 +9153,73 @@
           "type": "method",
           "name": "createServer",
           "desc": "<!--\nReturns a new HTTPS web server object. The `options` is similar to\n[tls.createServer()][].  The `requestListener` is a function which is\nautomatically added to the `'request'` event.\n-->\n\n<p>新しい HTTPS Web サーバオブジェクトを返します。\n<code>option</code> は [tls.createServer()][] と同じです。\n<code>requestListener</code> は関数で、 <code>&#39;request&#39;</code> イベントに自動的に追加されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// curl -k https://localhost:8000/\nvar https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;server.pfx&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n",
+          "methods": [
+            {
+              "textRaw": "server.listen(path, [callback])",
+              "type": "method",
+              "name": "listen",
+              "desc": "<!--\nSee [http.listen()][] for details.\n-->\n\n<p>詳細は [http.listen()][] を参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "handle"
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "path"
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "server.listen(handle, [callback])",
+              "type": "method",
+              "name": "listen",
+              "desc": "<!--\nSee [http.listen()][] for details.\n-->\n\n<p>詳細は [http.listen()][] を参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "handle"
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "server.close([callback])",
+              "type": "method",
+              "name": "close",
+              "desc": "<!--\nSee [http.close()][] for details.\n-->\n\n<p>詳細は [http.close()][] を参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
           "signatures": [
             {
               "params": [
@@ -9098,7 +9238,7 @@
           "textRaw": "https.request(options, callback)",
           "type": "method",
           "name": "request",
-          "desc": "<!--\nMakes a request to a secure web server.\n-->\n\n<p>セキュアな Web サーバへのリクエストを作成します。\n\n</p>\n<!--\n`options` can be an object or a string. If `options` is a string, it is\nautomatically parsed with [url.parse()](url.html#url.parse).\n-->\n\n<p><code>options</code> はオブジェクトまたは文字列です。\n<code>options</code> が文字列なら、それは自動的に <a href=\"url.html#url.parse\">url.parse()</a>\nによって解析されます。\n\n</p>\n<!--\nAll options from [http.request()][] are valid.\n-->\n\n<p>[http.request()][] の全てと同様のオプションが指定できます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\n\nvar options = {\n  host: &#39;encrypted.google.com&#39;,\n  port: 443,\n  path: &#39;/&#39;,\n  method: &#39;GET&#39;\n};\n\nvar req = https.request(options, function(res) {\n  console.log(&quot;statusCode: &quot;, res.statusCode);\n  console.log(&quot;headers: &quot;, res.headers);\n\n  res.on(&#39;data&#39;, function(d) {\n    process.stdout.write(d);\n  });\n});\nreq.end();\n\nreq.on(&#39;error&#39;, function(e) {\n  console.error(e);\n});</code></pre>\n<!--\nThe options argument has the following options\n-->\n\n<p><code>options</code> 引数は以下のオプションを持ちます。\n\n</p>\n<!--\n- host: IP or domain of host to make request to. Defaults to `'localhost'`.\n- port: port of host to request to. Defaults to 443.\n- path: Path to request. Default `'/'`.\n- method: HTTP request method. Default `'GET'`.\n\n- `host`: A domain name or IP address of the server to issue the request to.\n  Defaults to `'localhost'`.\n- `hostname`: To support `url.parse()` `hostname` is preferred over `host`\n- `port`: Port of remote server. Defaults to 443.\n- `method`: A string specifying the HTTP request method. Defaults to `'GET'`.\n- `path`: Request path. Defaults to `'/'`. Should include query string if any.\n  E.G. `'/index.html?page=12'`\n- `headers`: An object containing request headers.\n- `auth`: Basic authentication i.e. `'user:password'` to compute an\n  Authorization header.\n- `agent`: Controls [Agent][] behavior. When an Agent is used request will\n  default to `Connection: keep-alive`. Possible values:\n - `undefined` (default): use [globalAgent][] for this host and port.\n - `Agent` object: explicitly use the passed in `Agent`.\n - `false`: opts out of connection pooling with an Agent, defaults request to\n   `Connection: close`.\n-->\n\n<ul>\n<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。\n デフォルトは <code>&#39;localhost&#39;</code> です。</li>\n<li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li>\n<li><code>port</code>: リモートサーバのポート。デフォルトは 443 です。</li>\n<li><code>method</code>: HTTPS リクエストのメソッドの文字列。デフォルトは <code>&#39;GET&#39;</code> です。</li>\n<li><code>path</code>: リクエストのパス。デフォルトは <code>&#39;/&#39;</code> です。\n必要なら問い合わせ文字列を含めるべきです．\n例 <code>&#39;/index.html?page=12&#39;</code></li>\n<li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>\n<li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>&#39;user:password&#39;</code>。</li>\n<li><code>agent</code>: [Agent][] の振る舞いを制御します。\nエージェントが使われる場合、<code>Connection:keep-alive</code> がデフォルトになります。\n可能な値は:<ul>\n<li><code>undefined</code> (デフォルト): ホストとポートで [globalAgent][] を使用します。</li>\n<li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>\n<li><code>false</code>: Agent によるコネクションプーリングを使用しません。\n<code>Connection:close</code> の場合のデフォルトです。</li>\n</ul>\n</li>\n</ul>\n<!--\nThe following options from [tls.connect()][] can also be specified. However, a\n[globalAgent][] silently ignores these.\n-->\n\n<p>以下の [tls.connect()][] 由来のオプションを指定することもできますが、\nグローバル [globalAgent][] はこれらを無視します。\n\n</p>\n<!--\n- `pfx`: Certificate, Private key and CA certificates to use for SSL. Default `null`.\n- `key`: Private key to use for SSL. Default `null`.\n- `passphrase`: A string of passphrase for the private key or pfx. Default `null`.\n- `cert`: Public x509 certificate to use. Default `null`.\n- `ca`: An authority certificate or array of authority certificates to check\n  the remote host against.\n- `ciphers`: A string describing the ciphers to use or exclude. Consult\n  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for\n  details on the format.\n- `rejectUnauthorized`: If `true`, the server certificate is verified against\n  the list of supplied CAs. An `'error'` event is emitted if verification\n  fails. Verification happens at the connection level, *before* the HTTP\n<<<<<<< HEAD\n  request is sent. Default `false`.\n-->\n\n<ul>\n<li><code>pfx</code>: SSL で使用する証明書、秘密鍵、認証局の証明書。\n デフォルトは <code>null</code> です。</li>\n<li><code>key</code>: SSL で使用する秘密鍵。デフォルトは <code>null</code> です。</li>\n<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列。\n デフォルトは <code>null</code> です。</li>\n<li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li>\n<li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li>\n<li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。</li>\n<li><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは false です。</li>\n</ul>\n",
+          "desc": "<!--\nMakes a request to a secure web server.\n-->\n\n<p>セキュアな Web サーバへのリクエストを作成します。\n\n</p>\n<!--\n`options` can be an object or a string. If `options` is a string, it is\nautomatically parsed with [url.parse()](url.html#url.parse).\n-->\n\n<p><code>options</code> はオブジェクトまたは文字列です。\n<code>options</code> が文字列なら、それは自動的に <a href=\"url.html#url.parse\">url.parse()</a>\nによって解析されます。\n\n</p>\n<!--\nAll options from [http.request()][] are valid.\n-->\n\n<p>[http.request()][] の全てと同様のオプションが指定できます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\n\nvar options = {\n  host: &#39;encrypted.google.com&#39;,\n  port: 443,\n  path: &#39;/&#39;,\n  method: &#39;GET&#39;\n};\n\nvar req = https.request(options, function(res) {\n  console.log(&quot;statusCode: &quot;, res.statusCode);\n  console.log(&quot;headers: &quot;, res.headers);\n\n  res.on(&#39;data&#39;, function(d) {\n    process.stdout.write(d);\n  });\n});\nreq.end();\n\nreq.on(&#39;error&#39;, function(e) {\n  console.error(e);\n});</code></pre>\n<!--\nThe options argument has the following options\n-->\n\n<p><code>options</code> 引数は以下のオプションを持ちます。\n\n</p>\n<!--\n- host: IP or domain of host to make request to. Defaults to `'localhost'`.\n- port: port of host to request to. Defaults to 443.\n- path: Path to request. Default `'/'`.\n- method: HTTP request method. Default `'GET'`.\n\n- `host`: A domain name or IP address of the server to issue the request to.\n  Defaults to `'localhost'`.\n- `hostname`: To support `url.parse()` `hostname` is preferred over `host`\n- `port`: Port of remote server. Defaults to 443.\n- `method`: A string specifying the HTTP request method. Defaults to `'GET'`.\n- `path`: Request path. Defaults to `'/'`. Should include query string if any.\n  E.G. `'/index.html?page=12'`\n- `headers`: An object containing request headers.\n- `auth`: Basic authentication i.e. `'user:password'` to compute an\n  Authorization header.\n- `agent`: Controls [Agent][] behavior. When an Agent is used request will\n  default to `Connection: keep-alive`. Possible values:\n - `undefined` (default): use [globalAgent][] for this host and port.\n - `Agent` object: explicitly use the passed in `Agent`.\n - `false`: opts out of connection pooling with an Agent, defaults request to\n   `Connection: close`.\n-->\n\n<ul>\n<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。\n デフォルトは <code>&#39;localhost&#39;</code> です。</li>\n<li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li>\n<li><code>port</code>: リモートサーバのポート。デフォルトは 443 です。</li>\n<li><code>method</code>: HTTPS リクエストのメソッドの文字列。デフォルトは <code>&#39;GET&#39;</code> です。</li>\n<li><code>path</code>: リクエストのパス。デフォルトは <code>&#39;/&#39;</code> です。\n必要なら問い合わせ文字列を含めるべきです．\n例 <code>&#39;/index.html?page=12&#39;</code></li>\n<li><code>headers</code>: リクエストヘッダを含むオブジェクト。</li>\n<li><code>auth</code>: べーしく認証すなわち Authorization ヘッダのための <code>&#39;user:password&#39;</code>。</li>\n<li><code>agent</code>: [Agent][] の振る舞いを制御します。\nエージェントが使われる場合、<code>Connection:keep-alive</code> がデフォルトになります。\n可能な値は:<ul>\n<li><code>undefined</code> (デフォルト): ホストとポートで [globalAgent][] を使用します。</li>\n<li><code>Agent</code> オブジェクト: 明示的に渡された <code>Agent</code> を使用します。</li>\n<li><code>false</code>: Agent によるコネクションプーリングを使用しません。\n<code>Connection:close</code> の場合のデフォルトです。</li>\n</ul>\n</li>\n</ul>\n<!--\nThe following options from [tls.connect()][] can also be specified. However, a\n[globalAgent][] silently ignores these.\n-->\n\n<p>以下の [tls.connect()][] 由来のオプションを指定することもできますが、\nグローバル [globalAgent][] はこれらを無視します。\n\n</p>\n<!--\n- `pfx`: Certificate, Private key and CA certificates to use for SSL. Default `null`.\n- `key`: Private key to use for SSL. Default `null`.\n- `passphrase`: A string of passphrase for the private key or pfx. Default `null`.\n- `cert`: Public x509 certificate to use. Default `null`.\n- `ca`: An authority certificate or array of authority certificates to check\n  the remote host against.\n- `ciphers`: A string describing the ciphers to use or exclude. Consult\n  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for\n  details on the format.\n- `rejectUnauthorized`: If `true`, the server certificate is verified against\n  the list of supplied CAs. An `'error'` event is emitted if verification\n  fails. Verification happens at the connection level, *before* the HTTP\n  request is sent. Default `true`.\n-->\n\n<ul>\n<li><code>pfx</code>: SSL で使用する証明書、秘密鍵、認証局の証明書。\n デフォルトは <code>null</code> です。</li>\n<li><code>key</code>: SSL で使用する秘密鍵。デフォルトは <code>null</code> です。</li>\n<li><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列。\n デフォルトは <code>null</code> です。</li>\n<li><code>cert</code>: x509公開証明書。デフォルトは <code>null</code> です。</li>\n<li><code>ca</code>: リモートホストをチェックする信頼できる認証局または認証局の配列。</li>\n<li><code>ciphers</code>: 使用または除外する暗号を記述した文字列。\n詳細は <a href=\"http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\">http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT</a>\nを参照してください。</li>\n<li><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは <code>true</code> です。</li>\n</ul>\n<!--\nIn order to specify these options, use a custom `Agent`.\n-->\n\n<p>これらのオプションを指定するには、カスタムエージェントを使用します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var options = {\n  host: &#39;encrypted.google.com&#39;,\n  port: 443,\n  path: &#39;/&#39;,\n  method: &#39;GET&#39;,\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\noptions.agent = new https.Agent(options);\n\nvar req = https.request(options, function(res) {\n  ...\n}</code></pre>\n<!--\nOr does not use an `Agent`.\n-->\n\n<p>あるいは、エージェントを使用しません。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var options = {\n  host: &#39;encrypted.google.com&#39;,\n  port: 443,\n  path: &#39;/&#39;,\n  method: &#39;GET&#39;,\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;),\n  agent: false\n};\n\nvar req = https.request(options, function(res) {\n  ...\n}</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -9111,16 +9251,7 @@
               ]
             }
           ]
-        }
-      ],
-      "type": "module",
-      "displayName": "HTTPS"
-    },
-    {
-      "textRaw": "<!--",
-      "name": "<!--",
-      "desc": "<p>  request is sent. Default <code>true</code>.\n\n</p>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<p>master\nIn order to specify these options, use a custom <code>Agent</code>.\n--&gt;\n\n</p>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n<p>これらのオプションを指定するには、カスタムエージェントを使用します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var options = {\n  host: &#39;encrypted.google.com&#39;,\n  port: 443,\n  path: &#39;/&#39;,\n  method: &#39;GET&#39;,\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\noptions.agent = new https.Agent(options);\n\nvar req = https.request(options, function(res) {\n  ...\n}</code></pre>\n<!--\nOr does not use an `Agent`.\n-->\n\n<p>あるいは、エージェントを使用しません。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var options = {\n  host: &#39;encrypted.google.com&#39;,\n  port: 443,\n  path: &#39;/&#39;,\n  method: &#39;GET&#39;,\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;),\n  agent: false\n};\n\nvar req = https.request(options, function(res) {\n  ...\n}</code></pre>\n",
-      "methods": [
+        },
         {
           "textRaw": "https.get(options, callback)",
           "type": "method",
@@ -9140,14 +9271,6 @@
           ]
         }
       ],
-      "classes": [
-        {
-          "textRaw": "Class: https.Agent",
-          "type": "class",
-          "name": "https.Agent",
-          "desc": "<!--\nAn Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]\nfor more information.\n-->\n\n<p>HTTPS 用の Agent オブジェクトで，[http.Agent][] と同様です。\n詳細は [https.request()][] を参照してください。\n\n</p>\n"
-        }
-      ],
       "properties": [
         {
           "textRaw": "https.globalAgent",
@@ -9156,7 +9279,7 @@
         }
       ],
       "type": "module",
-      "displayName": "<!--"
+      "displayName": "HTTPS"
     },
     {
       "textRaw": "URL",
@@ -9936,7 +10059,7 @@
                   ]
                 }
               ],
-              "desc": "<!--\nWhen using `child_process.fork()` you can write to the child using\n`child.send(message, [sendHandle])` and messages are received by\na `'message'` event on the child.\n-->\n\n<p><code>child_process.fork()</code> を使うと、<code>child.send(message, [sendHandle])</code> を\n使って子プロセスにメッセージを送信し、子プロセスではそれを <code>&#39;message&#39;</code>\nイベントによって受け取ることができます。\n\n</p>\n<!--\nFor example:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var cp = require(&#39;child_process&#39;);\n\nvar n = cp.fork(__dirname + &#39;/sub.js&#39;);\n\nn.on(&#39;message&#39;, function(m) {\n  console.log(&#39;PARENT got message:&#39;, m);\n});\n\nn.send({ hello: &#39;world&#39; });</code></pre>\n<!--\nAnd then the child script, `'sub.js'` might look like this:\n-->\n\n<p>子プロセスの <code>&#39;sub.js&#39;</code> は次のようになります:\n\n</p>\n<pre><code>process.on(&#39;message&#39;, function(m) {\n  console.log(&#39;CHILD got message:&#39;, m);\n});\n\nprocess.send({ foo: &#39;bar&#39; });</code></pre>\n<!--\nIn the child the `process` object will have a `send()` method, and `process`\nwill emit objects each time it receives a message on its channel.\n-->\n\n<p>子プロセスでは <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、\nそのチャネル上でメッセージを受信するたびにイベントを生成します。\n\n</p>\n<!--\nThere is a special case when sending a `{cmd: 'NODE_foo'}` message. All messages\ncontaining a `NODE_` prefix in its `cmd` property will not be emitted in\nthe `message` event, since they are internal messages used by node core.\nMessages containing the prefix are emitted in the `internalMessage` event, you\nshould by all means avoid using this feature, it is subject to change without notice.\n-->\n\n<p>特別なケースとして、<code>{cmd: &#39;NODE_foo&#39;}</code> のようなメッセージを\n送信する場合があります。\n<code>cmd</code> プロパティが接頭辞 <code>NODE_</code> を含む全てのメッセージは node のコアで\n使われる内部的なメッセージであるため、<code>&#39;message&#39;</code> イベントを生成しません。\nこの接頭辞を含むメッセージは <code>&#39;internalMessage&#39;</code> イベントを生成しますが、\nそれを使用すべきではありません。それは保証なしに変更される可能性があります。\n\n</p>\n<!--\nThe `sendHandle` option to `child.send()` is for sending a TCP server or\nsocket object to another process. The child will receive the object as its\nsecond argument to the `message` event.\n-->\n\n<p><code>child.send()</code> の <code>sendHandle</code> オプションは TCP サーバまたは\nソケットオブジェクトを他のプロセスに送信するためのものです。\n子プロセスはそれを <code>&#39;message&#39;</code> イベントの第 2 引数として受信します。\n\n</p>\n<!--\n**send server object**\n-->\n\n<p><strong>サーバオブジェクトを送信する</strong>\n\n</p>\n<!--\nHere is an example of sending a server:\n-->\n\n<p>サーバを送信する例:\n\n</p>\n<pre><code>var child = require(&#39;child_process&#39;).fork(&#39;child.js&#39;);\n\n// Open up the server object and send the handle.\nvar server = require(&#39;net&#39;).createServer();\nserver.on(&#39;connection&#39;, function (socket) {\n  socket.end(&#39;handled by parent&#39;);\n});\nserver.listen(1337, function() {\n  child.send(&#39;server&#39;, server);\n});</code></pre>\n<!--\nAnd the child would the receive the server object as:\n-->\n\n<p>サーバオブジェクトを受信する子プロセス:\n\n</p>\n<pre><code>process.on(&#39;message&#39;, function(m, server) {\n  if (m === &#39;server&#39;) {\n    server.on(&#39;connection&#39;, function (socket) {\n      socket.end(&#39;handled by child&#39;);\n    });\n  }\n});</code></pre>\n<!--\nNote that the server is now shared between the parent and child, this means\nthat some connections will be handled by the parent and some by the child.\n-->\n\n<p>サーバは親プロセスと子プロセスで共有されることに注意してください。\nこれはコネクションが時には親あるいは子で処理されることを意味します。\n\n</p>\n<!--\n**send socket object**\n-->\n\n<p><strong>ソケットオブジェクトを送信する</strong>\n\n</p>\n<!--\nHere is an example of sending a socket. It will spawn two children and handle\nconnections with the remote address `74.125.127.100` as VIP by sending the\nsocket to a \"special\" child process. Other sockets will go to a \"normal\" process.\n-->\n\n<p>これはソケットを送信する例です。\nこれは二つの子プロセスを起動し、コネクションのリモートアドレスが VIP\n(<code>74.125.127.100</code>) ならソケットを &quot;special&quot; 子プロセスに送信します。\nその他のソケットは &quot;normal&quot; プロセスに送られます。\n\n</p>\n<pre><code>var normal = require(&#39;child_process&#39;).fork(&#39;child.js&#39;, [&#39;normal&#39;]);\nvar special = require(&#39;child_process&#39;).fork(&#39;child.js&#39;, [&#39;special&#39;]);\n\n// Open up the server and send sockets to child\nvar server = require(&#39;net&#39;).createServer();\nserver.on(&#39;connection&#39;, function (socket) {\n\n  // if this is a VIP\n  if (socket.remoteAddress === &#39;74.125.127.100&#39;) {\n    special.send(&#39;socket&#39;, socket);\n    return;\n  }\n  // just the usual dudes\n  normal.send(&#39;socket&#39;, socket);\n});\nserver.listen(1337);</code></pre>\n<!--\nThe `child.js` could look like this:\n-->\n\n<p><code>chold.js</code> は次のようになります:\n\n</p>\n<pre><code>process.on(&#39;message&#39;, function(m, socket) {\n  if (m === &#39;socket&#39;) {\n    socket.end(&#39;You where handled as a &#39; + process.argv[2] + &#39; person&#39;);\n  }\n});</code></pre>\n<!--\nNote that once a single socket has been sent to a child the parent can no\nlonger keep track of when the socket is destroyed. To indicate this condition\nthe `.connections` property becomes `null`.\nIt is also recommended not to use `.maxConnections` in this condition.\n-->\n\n<p>一度ソケットが子プロセスに送信されると、親プロセスはもうソケットがいつ\n破棄されるか知ることができないことに注意してください。\nこの状態を示すために，<code>.connections</code> プロパティは <code>null</code> になります。\nこの状態では、<code>.maxConnections</code> も使わないことを推奨します。\n\n</p>\n"
+              "desc": "<!--\nWhen using `child_process.fork()` you can write to the child using\n`child.send(message, [sendHandle])` and messages are received by\na `'message'` event on the child.\n-->\n\n<p><code>child_process.fork()</code> を使うと、<code>child.send(message, [sendHandle])</code> を\n使って子プロセスにメッセージを送信し、子プロセスではそれを <code>&#39;message&#39;</code>\nイベントによって受け取ることができます。\n\n</p>\n<!--\nFor example:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var cp = require(&#39;child_process&#39;);\n\nvar n = cp.fork(__dirname + &#39;/sub.js&#39;);\n\nn.on(&#39;message&#39;, function(m) {\n  console.log(&#39;PARENT got message:&#39;, m);\n});\n\nn.send({ hello: &#39;world&#39; });</code></pre>\n<!--\nAnd then the child script, `'sub.js'` might look like this:\n-->\n\n<p>子プロセスの <code>&#39;sub.js&#39;</code> は次のようになります:\n\n</p>\n<pre><code>process.on(&#39;message&#39;, function(m) {\n  console.log(&#39;CHILD got message:&#39;, m);\n});\n\nprocess.send({ foo: &#39;bar&#39; });</code></pre>\n<!--\nIn the child the `process` object will have a `send()` method, and `process`\nwill emit objects each time it receives a message on its channel.\n-->\n\n<p>子プロセスでは <code>process</code> オブジェクトは <code>send()</code> メソッドを持ち、\nそのチャネル上でメッセージを受信するたびにイベントを生成します。\n\n</p>\n<!--\nThere is a special case when sending a `{cmd: 'NODE_foo'}` message. All messages\ncontaining a `NODE_` prefix in its `cmd` property will not be emitted in\nthe `message` event, since they are internal messages used by node core.\nMessages containing the prefix are emitted in the `internalMessage` event, you\nshould by all means avoid using this feature, it is subject to change without notice.\n-->\n\n<p>特別なケースとして、<code>{cmd: &#39;NODE_foo&#39;}</code> のようなメッセージを\n送信する場合があります。\n<code>cmd</code> プロパティが接頭辞 <code>NODE_</code> を含む全てのメッセージは node のコアで\n使われる内部的なメッセージであるため、<code>&#39;message&#39;</code> イベントを生成しません。\nこの接頭辞を含むメッセージは <code>&#39;internalMessage&#39;</code> イベントを生成しますが、\nそれを使用すべきではありません。それは保証なしに変更される可能性があります。\n\n</p>\n<!--\nThe `sendHandle` option to `child.send()` is for sending a TCP server or\nsocket object to another process. The child will receive the object as its\nsecond argument to the `message` event.\n-->\n\n<p><code>child.send()</code> の <code>sendHandle</code> オプションは TCP サーバまたは\nソケットオブジェクトを他のプロセスに送信するためのものです。\n子プロセスはそれを <code>&#39;message&#39;</code> イベントの第 2 引数として受信します。\n\n</p>\n<!--\n**send server object**\n-->\n\n<p><strong>サーバオブジェクトを送信する</strong>\n\n</p>\n<!--\nHere is an example of sending a server:\n-->\n\n<p>サーバを送信する例:\n\n</p>\n<pre><code>var child = require(&#39;child_process&#39;).fork(&#39;child.js&#39;);\n\n// Open up the server object and send the handle.\nvar server = require(&#39;net&#39;).createServer();\nserver.on(&#39;connection&#39;, function (socket) {\n  socket.end(&#39;handled by parent&#39;);\n});\nserver.listen(1337, function() {\n  child.send(&#39;server&#39;, server);\n});</code></pre>\n<!--\nAnd the child would the receive the server object as:\n-->\n\n<p>サーバオブジェクトを受信する子プロセス:\n\n</p>\n<pre><code>process.on(&#39;message&#39;, function(m, server) {\n  if (m === &#39;server&#39;) {\n    server.on(&#39;connection&#39;, function (socket) {\n      socket.end(&#39;handled by child&#39;);\n    });\n  }\n});</code></pre>\n<!--\nNote that the server is now shared between the parent and child, this means\nthat some connections will be handled by the parent and some by the child.\n-->\n\n<p>サーバは親プロセスと子プロセスで共有されることに注意してください。\nこれはコネクションが時には親あるいは子で処理されることを意味します。\n\n</p>\n<!--\n**send socket object**\n-->\n\n<p><strong>ソケットオブジェクトを送信する</strong>\n\n</p>\n<!--\nHere is an example of sending a socket. It will spawn two children and handle\nconnections with the remote address `74.125.127.100` as VIP by sending the\nsocket to a \"special\" child process. Other sockets will go to a \"normal\" process.\n-->\n\n<p>これはソケットを送信する例です。\nこれは二つの子プロセスを起動し、コネクションのリモートアドレスが VIP\n(<code>74.125.127.100</code>) ならソケットを &quot;special&quot; 子プロセスに送信します。\nその他のソケットは &quot;normal&quot; プロセスに送られます。\n\n</p>\n<pre><code>var normal = require(&#39;child_process&#39;).fork(&#39;child.js&#39;, [&#39;normal&#39;]);\nvar special = require(&#39;child_process&#39;).fork(&#39;child.js&#39;, [&#39;special&#39;]);\n\n// Open up the server and send sockets to child\nvar server = require(&#39;net&#39;).createServer();\nserver.on(&#39;connection&#39;, function (socket) {\n\n  // if this is a VIP\n  if (socket.remoteAddress === &#39;74.125.127.100&#39;) {\n    special.send(&#39;socket&#39;, socket);\n    return;\n  }\n  // just the usual dudes\n  normal.send(&#39;socket&#39;, socket);\n});\nserver.listen(1337);</code></pre>\n<!--\nThe `child.js` could look like this:\n-->\n\n<p><code>chold.js</code> は次のようになります:\n\n</p>\n<pre><code>process.on(&#39;message&#39;, function(m, socket) {\n  if (m === &#39;socket&#39;) {\n    socket.end(&#39;You were handled as a &#39; + process.argv[2] + &#39; person&#39;);\n  }\n});</code></pre>\n<!--\nNote that once a single socket has been sent to a child the parent can no\nlonger keep track of when the socket is destroyed. To indicate this condition\nthe `.connections` property becomes `null`.\nIt is also recommended not to use `.maxConnections` in this condition.\n-->\n\n<p>一度ソケットが子プロセスに送信されると、親プロセスはもうソケットがいつ\n破棄されるか知ることができないことに注意してください。\nこの状態を示すために，<code>.connections</code> プロパティは <code>null</code> になります。\nこの状態では、<code>.maxConnections</code> も使わないことを推奨します。\n\n</p>\n"
             },
             {
               "textRaw": "child.disconnect()",
@@ -10653,6 +10776,40 @@
       ],
       "classes": [
         {
+          "textRaw": "Class: zlib.Zlib",
+          "type": "class",
+          "name": "zlib.Zlib",
+          "desc": "<!--\nNot exported by the `zlib` module. It is documented here because it is the base\nclass of the compressor/decompressor classes.\n-->\n\n<p><code>zlib</code> モジュールによって公開されてはいません。\nここで文書化するのは圧縮／解凍クラスのベースクラスだからです。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "zlib.flush(callback)",
+              "type": "method",
+              "name": "flush",
+              "desc": "<!--\nFlush pending data. Don't call this frivolously, premature flushes negatively\nimpact the effectiveness of the compression algorithm.\n-->\n\n<p>保留中のデータをフラッシュします。\nこれを気軽に呼び出さないでください、性急なフラッシュは圧縮アルゴリズムに\nネガティブな影響を与えます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "zlib.reset()",
+              "type": "method",
+              "name": "reset",
+              "desc": "<!--\nReset the compressor/decompressor to factory defaults. Only applicable to\nthe inflate and deflate algorithms.\n-->\n\n<p>圧縮／解凍をファクトリのデフォルトにリセットします。\ninfrate および defrate アルゴリズムにのみ効果があります。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ]
+        },
+        {
           "textRaw": "Class: zlib.Gzip",
           "type": "class",
           "name": "zlib.Gzip",
@@ -10889,7 +11046,7 @@
           "textRaw": "How It Works",
           "name": "How It Works",
           "type": "misc",
-          "desc": "<!--\nThe worker processes are spawned using the `child_process.fork` method,\nso that they can communicate with the parent via IPC and pass server\nhandles back and forth.\n-->\n\n<p>ワーカプロセスは <code>child_process.fork</code> メソッドを使って起動されるため、\n親プロセスと IPC で通信したり、サーバハンドルをやり取りしたりすることが\nできます。\n\n</p>\n<!--\nWhen you call `server.listen(...)` in a worker, it serializes the\narguments and passes the request to the master process.  If the master\nprocess already has a listening server matching the worker's\nrequirements, then it passes the handle to the worker.  If it does not\nalready have a listening server matching that requirement, then it will\ncreate one, and pass the handle to the child.\n-->\n\n<p>ワーカが <code>server.listen(...)</code> を呼び出すと、引数がシリアライズされて\nマスタプロセスにリクエストが渡されます。\nマスタプロセスは、ワーカのリクエストにマッチするリスニングサーバが既に\n存在すればそのハンドルをワーカに渡します。\nリクエストにマッチするリスニングサーバが存在しなければ、それが作成されて\n子プロセスに渡されます。\n\n</p>\n<!--\nThis causes potentially surprising behavior in three edge cases:\n-->\n\n<p>これは三つの極端なケースで驚くような振る舞いを引き起こすかもしれません。\n\n</p>\n<!--\n1. `server.listen({fd: 7})` Because the message is passed to the master,\n   file descriptor 7 **in the parent** will be listened on, and the\n   handle passed to the worker, rather than listening to the worker's\n   idea of what the number 7 file descriptor references.\n2. `server.listen(handle)` Listening on handles explicitly will cause\n   the worker to use the supplied handle, rather than talk to the master\n   process.  If the worker already has the handle, then it's presumed\n   that you know what you are doing.\n3. `server.listen(0)` Normally, this will case servers to listen on a\n   random port.  However, in a cluster, each worker will receive the\n   same \"random\" port each time they do `listen(0)`.  In essence, the\n   port is random the first time, but predictable thereafter.  If you\n   want to listen on a unique port, generate a port number based on the\n   cluster worker ID.\n-->\n\n<ol>\n<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、\nワーカのファイル記述子 7 が参照するものではなく、\n<strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに\n渡されます。</li>\n<li><code>server.listen(handle)</code> 明示的なハンドルをリスニングするとマスタプロセスは\n関与することなく、ワーカは与えられたハンドルを使うことになります。\nワーカがすでにハンドルを持っているなら、何をしようとしているか\nあなたは分かっているでしょう。</li>\n<li><code>&#39;server.listen(0)</code> 通常、これはサーバがランダムなポートをリッスンすることを\n意味します。しかしながらクラスタでは、各ワーカは <code>listen(0)</code> によって\n同じ &quot;ランダムな&quot; ポートを受信します。\nすなわち、初回はポートはランダムになりますが、その後はそうではありません。\nもしユニークなポートをリッスンしたければ、クラスタのワーカ ID に基づいて\nポート番号を生成してください。</li>\n</ol>\n<!--\nWhen multiple processes are all `accept()`ing on the same underlying\nresource, the operating system load-balances across them very\nefficiently.  There is no routing logic in Node.js, or in your program,\nand no shared state between the workers.  Therefore, it is important to\ndesign your program such that it does not rely too heavily on in-memory\ndata objects for things like sessions and login.\n-->\n\n<p>複数のプロセスが同じリソースを <code>accept()</code> する時、オペレーティングシステムは\nとても効率的にそれら全体をロードバランスします。\nNode.js にもあなたのプログラムにも、ルーティングのためのロジックや\nワーカ間で共有される状態はありません。\nしたがって、あなたのプログラムがセッションやログインのためにメモリ内の\nデータオブジェクトに過度に頼らないように設計することが重要です。\n\n</p>\n<!--\nBecause workers are all separate processes, they can be killed or\nre-spawned depending on your program's needs, without affecting other\nworkers.  As long as there are some workers still alive, the server will\ncontinue to accept connections.  Node does not automatically manage the\nnumber of workers for you, however.  It is your responsibility to manage\nthe worker pool for your application's needs.\n-->\n\n<p>全てのワーカは独立したプロセスなので、他のワーカに影響を与えることなく\nプログラムのニーズに応じてそれらを殺したり再起動したりすることができます。\nいくつかのワーカが生きている限り、サーバは接続を受け付け続けます。\nしかしながら、Node はワーカの数を自動的に管理することはありません。\nアプリケーションのニーズに応じてワーカのプールを管理することは、\nあなたの責務です。\n\n</p>\n"
+          "desc": "<!--\nThe worker processes are spawned using the `child_process.fork` method,\nso that they can communicate with the parent via IPC and pass server\nhandles back and forth.\n-->\n\n<p>ワーカプロセスは <code>child_process.fork</code> メソッドを使って起動されるため、\n親プロセスと IPC で通信したり、サーバハンドルをやり取りしたりすることが\nできます。\n\n</p>\n<!--\nWhen you call `server.listen(...)` in a worker, it serializes the\narguments and passes the request to the master process.  If the master\nprocess already has a listening server matching the worker's\nrequirements, then it passes the handle to the worker.  If it does not\nalready have a listening server matching that requirement, then it will\ncreate one, and pass the handle to the child.\n-->\n\n<p>ワーカが <code>server.listen(...)</code> を呼び出すと、引数がシリアライズされて\nマスタプロセスにリクエストが渡されます。\nマスタプロセスは、ワーカのリクエストにマッチするリスニングサーバが既に\n存在すればそのハンドルをワーカに渡します。\nリクエストにマッチするリスニングサーバが存在しなければ、それが作成されて\n子プロセスに渡されます。\n\n</p>\n<!--\nThis causes potentially surprising behavior in three edge cases:\n-->\n\n<p>これは三つの極端なケースで驚くような振る舞いを引き起こすかもしれません。\n\n</p>\n<!--\n1. `server.listen({fd: 7})` Because the message is passed to the master,\n   file descriptor 7 **in the parent** will be listened on, and the\n   handle passed to the worker, rather than listening to the worker's\n   idea of what the number 7 file descriptor references.\n2. `server.listen(handle)` Listening on handles explicitly will cause\n   the worker to use the supplied handle, rather than talk to the master\n   process.  If the worker already has the handle, then it's presumed\n   that you know what you are doing.\n3. `server.listen(0)` Normally, this will cause servers to listen on a\n   random port.  However, in a cluster, each worker will receive the\n   same \"random\" port each time they do `listen(0)`.  In essence, the\n   port is random the first time, but predictable thereafter.  If you\n   want to listen on a unique port, generate a port number based on the\n   cluster worker ID.\n-->\n\n<ol>\n<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、\nワーカのファイル記述子 7 が参照するものではなく、\n<strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに\n渡されます。</li>\n<li><code>server.listen(handle)</code> 明示的なハンドルをリスニングするとマスタプロセスは\n関与することなく、ワーカは与えられたハンドルを使うことになります。\nワーカがすでにハンドルを持っているなら、何をしようとしているか\nあなたは分かっているでしょう。</li>\n<li><code>&#39;server.listen(0)</code> 通常、これはサーバがランダムなポートをリッスンすることを\n意味します。しかしながらクラスタでは、各ワーカは <code>listen(0)</code> によって\n同じ &quot;ランダムな&quot; ポートを受信します。\nすなわち、初回はポートはランダムになりますが、その後はそうではありません。\nもしユニークなポートをリッスンしたければ、クラスタのワーカ ID に基づいて\nポート番号を生成してください。</li>\n</ol>\n<!--\nWhen multiple processes are all `accept()`ing on the same underlying\nresource, the operating system load-balances across them very\nefficiently.  There is no routing logic in Node.js, or in your program,\nand no shared state between the workers.  Therefore, it is important to\ndesign your program such that it does not rely too heavily on in-memory\ndata objects for things like sessions and login.\n-->\n\n<p>複数のプロセスが同じリソースを <code>accept()</code> する時、オペレーティングシステムは\nとても効率的にそれら全体をロードバランスします。\nNode.js にもあなたのプログラムにも、ルーティングのためのロジックや\nワーカ間で共有される状態はありません。\nしたがって、あなたのプログラムがセッションやログインのためにメモリ内の\nデータオブジェクトに過度に頼らないように設計することが重要です。\n\n</p>\n<!--\nBecause workers are all separate processes, they can be killed or\nre-spawned depending on your program's needs, without affecting other\nworkers.  As long as there are some workers still alive, the server will\ncontinue to accept connections.  Node does not automatically manage the\nnumber of workers for you, however.  It is your responsibility to manage\nthe worker pool for your application's needs.\n-->\n\n<p>全てのワーカは独立したプロセスなので、他のワーカに影響を与えることなく\nプログラムのニーズに応じてそれらを殺したり再起動したりすることができます。\nいくつかのワーカが生きている限り、サーバは接続を受け付け続けます。\nしかしながら、Node はワーカの数を自動的に管理することはありません。\nアプリケーションのニーズに応じてワーカのプールを管理することは、\nあなたの責務です。\n\n</p>\n"
         }
       ],
       "properties": [

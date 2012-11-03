@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.9.2 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.9.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -69,8 +69,8 @@
 <li><a href="#http_event_clienterror">Event: &#39;clientError&#39;</a></li>
 <li><a href="#http_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
 <li><a href="#http_server_listen_path_callback">server.listen(path, [callback])</a></li>
-<li><a href="#http_server_listen_handle_listeninglistener">server.listen(handle, [listeningListener])</a></li>
-<li><a href="#http_server_close_cb">server.close([cb])</a></li>
+<li><a href="#http_server_listen_handle_callback">server.listen(handle, [callback])</a></li>
+<li><a href="#http_server_close_callback">server.close([callback])</a></li>
 <li><a href="#http_server_maxheaderscount">server.maxHeadersCount</a></li>
 </ul>
 </li>
@@ -81,6 +81,7 @@
 <li><a href="#http_request_method">request.method</a></li>
 <li><a href="#http_request_url">request.url</a></li>
 <li><a href="#http_request_headers">request.headers</a></li>
+<li><a href="#http_request_trailers">request.trailers</a></li>
 <li><a href="#http_request_httpversion">request.httpVersion</a></li>
 <li><a href="#http_request_setencoding_encoding">request.setEncoding([encoding])</a></li>
 <li><a href="#http_request_pause">request.pause()</a></li>
@@ -89,12 +90,12 @@
 </ul>
 </li>
 <li><a href="#http_class_http_serverresponse">Class: http.ServerResponse</a><ul>
-<li><a href="#http_event_end_1">Event: &#39;end&#39;</a></li>
 <li><a href="#http_event_close_2">Event: &#39;close&#39;</a></li>
 <li><a href="#http_response_writecontinue">response.writeContinue()</a></li>
 <li><a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li>
 <li><a href="#http_response_statuscode">response.statusCode</a></li>
 <li><a href="#http_response_setheader_name_value">response.setHeader(name, value)</a></li>
+<li><a href="#http_response_headerssent">response.headersSent</a></li>
 <li><a href="#http_response_senddate">response.sendDate</a></li>
 <li><a href="#http_response_getheader_name">response.getHeader(name)</a></li>
 <li><a href="#http_response_removeheader_name">response.removeHeader(name)</a></li>
@@ -128,7 +129,7 @@
 </li>
 <li><a href="#http_http_clientresponse">http.ClientResponse</a><ul>
 <li><a href="#http_event_data_1">Event: &#39;data&#39;</a></li>
-<li><a href="#http_event_end_2">Event: &#39;end&#39;</a></li>
+<li><a href="#http_event_end_1">Event: &#39;end&#39;</a></li>
 <li><a href="#http_event_close_3">Event: &#39;close&#39;</a></li>
 <li><a href="#http_response_statuscode_1">response.statusCode</a></li>
 <li><a href="#http_response_httpversion">response.httpVersion</a></li>
@@ -414,7 +415,7 @@ sent to the server on that socket.
 
 </p>
 <h3>Event: &#39;clientError&#39;<span><a class="mark" href="#http_event_clienterror" id="http_event_clienterror">#</a></span></h3>
-<p><code>function (exception) { }</code>
+<p><code>function (exception, socket) { }</code>
 
 </p>
 <!--
@@ -422,6 +423,14 @@ If a client connection emits an 'error' event - it will forwarded here.
 -->
 
 <p>クライアントコネクションが &#39;error&#39; イベントを発した場合 － ここに転送されます。
+
+</p>
+<!--
+`socket` is the `net.Socket` object that the error originated from.
+-->
+
+<p><code>socket</code> はエラーが発生した <code>net.Socket</code> オブジェクトです。
+
 
 </p>
 <h3>server.listen(port, [hostname], [backlog], [callback])<span><a class="mark" href="#http_server_listen_port_hostname_backlog_callback" id="http_server_listen_port_hostname_backlog_callback">#</a></span></h3>
@@ -462,7 +471,7 @@ a listener for the ['listening'][] event.  See also [net.Server.listen(port)][].
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
 <a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_port_host_backlog_listeninglistener">net.Server.listen(port)</a> を参照してください。
+詳細は <a href="net.html#net_server_listen_port_host_backlog_callback">net.Server.listen(port)</a> を参照してください。
 
 
 </p>
@@ -481,14 +490,14 @@ a listener for the ['listening'][] event.  See also [net.Server.listen(path)][].
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
 <a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+詳細は <a href="net.html#net_server_listen_path_callback">net.Server.listen(path)</a> を参照してください。
 
 
 </p>
-<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#http_server_listen_handle_listeninglistener" id="http_server_listen_handle_listeninglistener">#</a></span></h3>
+<h3>server.listen(handle, [callback])<span><a class="mark" href="#http_server_listen_handle_callback" id="http_server_listen_handle_callback">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>handle</code> <span class="type">Object</span></li>
-<li><code>listeningListener</code> <span class="type">Function</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
 </div></ul>
 <!--
 The `handle` object can be set to either a server or socket (anything
@@ -520,21 +529,22 @@ Listening on a file descriptor is not supported on Windows.
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
 a listener for the ['listening'](net.html#event_listening_) event.
-See also [net.Server.listen()](net.html#server.listen).
+See also [net.Server.listen()](net.html#net_server_listen_handle_callback).
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+<a href="net.html#event_listening_">&#39;listening&#39;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_handle_callback">net.Server.listen()</a>
+を参照してください。
 
 </p>
-<h3>server.close([cb])<span><a class="mark" href="#http_server_close_cb" id="http_server_close_cb">#</a></span></h3>
+<h3>server.close([callback])<span><a class="mark" href="#http_server_close_callback" id="http_server_close_callback">#</a></span></h3>
 <!--
 Stops the server from accepting new connections.  See [net.Server.close()][].
 -->
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。
-<a href="net.html#net_server_close_cb">net.Server.close()</a> を参照してください。
+<a href="net.html#net_server_close_callback">net.Server.close()</a> を参照してください。
 
 </p>
 <h3>server.maxHeadersCount<span><a class="mark" href="#http_server_maxheaderscount" id="http_server_maxheaderscount">#</a></span></h3>
@@ -709,12 +719,10 @@ you can use the `require('querystring').parse` function, or pass
   query: { name: &#39;ryan&#39; },
   pathname: &#39;/status&#39; }</code></pre>
 <h3>request.headers<span><a class="mark" href="#http_request_headers" id="http_request_headers">#</a></span></h3>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 <!--
 Read only map of header names and values. Header names are lower-cased.
 -->
 
-</p>
 <p>参照のみ可能な、ヘッダ名と値のマップです。
 ヘッダ名は小文字化されています。
 
@@ -722,17 +730,17 @@ Read only map of header names and values. Header names are lower-cased.
 <!--
 Example:
 -->
-例:
 
-    // Prints something like:
-    //
-    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
-    //   host: &#39;127.0.0.1:8000&#39;,
-    //   accept: &#39;<em>/</em>&#39; }
-    console.log(request.headers);
+<p>例:
 
-### request.trailers
-
+</p>
+<pre><code>// Prints something like:
+//
+// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
+//   host: &#39;127.0.0.1:8000&#39;,
+//   accept: &#39;*/*&#39; }
+console.log(request.headers);</code></pre>
+<h3>request.trailers<span><a class="mark" href="#http_request_trailers" id="http_request_trailers">#</a></span></h3>
 <!--
 Read only; HTTP trailers (if present). Only populated after the 'end' event.
 -->
@@ -819,31 +827,6 @@ The response implements the [Writable Stream][] interface. This is an
 </p>
 <p>レスポンスは <a href="stream.html#stream_writable_stream">Writable  Stream</a> インタフェースを実装します。
 これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
-
-</p>
-<h3>Event: &#39;end&#39;<span><a class="mark" href="#http_event_end_1" id="http_event_end_1">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
-<!--
-Emitted when the response has been sent. More specifically, this event is
-emitted when the last segment of the response headers and body have been
-handed off to the operating system for transmission over the network. It
-does not imply that the client has received anything yet.
--->
-
-<p>レスポンスが送信された場合に生成されます。
-より具体的には、このイベントはレスポンスヘッダおよびボディの最後の
-セグメントが、ネットワークに転送されるためにオペレーティングシステムに
-渡された後に生成されます。
-それはクライアントが全て受信したことを意味しません。
-
-</p>
-<!--
-After this event, no more events will be emitted on the response object.
--->
-
-<p>このイベントより後では、レスポンスオブジェクトはイベントを生成しません。
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#http_event_close_2" id="http_event_close_2">#</a></span></h3>
@@ -982,6 +965,15 @@ or
 
 </p>
 <pre><code>response.setHeader(&quot;Set-Cookie&quot;, [&quot;type=ninja&quot;, &quot;language=javascript&quot;]);</code></pre>
+<h3>response.headersSent<span><a class="mark" href="#http_response_headerssent" id="http_response_headerssent">#</a></span></h3>
+<!--
+Boolean (read-only). True if headers were sent, false otherwise.
+-->
+
+<p>(読み込み専用の) Boolean。
+ヘッダが送信済みなら true、それ以外は false です。
+
+</p>
 <h3>response.sendDate<span><a class="mark" href="#http_response_senddate" id="http_response_senddate">#</a></span></h3>
 <!--
 When true, the Date header will be automatically generated and sent in 
@@ -1859,31 +1851,51 @@ Note that the __data will be lost__ if there is no listener when a
 <strong>データは失われる</strong>ことに注意してください。
 
 </p>
-<h3>Event: &#39;end&#39;<span><a class="mark" href="#http_event_end_2" id="http_event_end_2">#</a></span></h3>
+<h3>Event: &#39;end&#39;<span><a class="mark" href="#http_event_end_1" id="http_event_end_1">#</a></span></h3>
 <p><code>function () { }</code>
 
 </p>
 <!--
-Emitted exactly once for each message. No arguments. After
-emitted no other events will be emitted on the response.
+Emitted exactly once for each response. After that, no more `'data'` events
+will be emitted on the response.
 -->
 
-<p>メッセージごとに厳密に一回だけ生成されます。
-このイベントが生成された後、このレスポンスはどんなイベントも生成しません。
+<p>レスポンスごとに厳密に一回生成されます。
+その後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。
+
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#http_event_close_3" id="http_event_close_3">#</a></span></h3>
-<p><code>function (err) { }</code>
+<p><code>function () { }</code>
 
 </p>
 <!--
 Indicates that the underlaying connection was terminated before
-`end` event was emitted.
-See [http.ServerRequest][]'s `'close'` event for more information.
+`response.end()` was called or able to flush.
 -->
 
-<p><code>&#39;end&#39;</code> イベントが生成される前に下層の接続が切断されたことを示します。
+<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、
+下層の接続が切断されたことを示します。
+
+</p>
+<!--
+Just like `'end'`, this event occurs only once per response, and no more
+`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`
+event for more information.
+-->
+
+<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、
+<code>&#39;data&#39;</code> イベントはそれ以上生成されません。
 <a href="#http_class_http_serverrequest">http.ServerRequest</a> の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+
+</p>
+<!--
+Note: `'close'` can fire after `'end'`, but not vice versa.
+-->
+
+<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。
+その逆もあります。
+
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#http_response_statuscode_1" id="http_response_statuscode_1">#</a></span></h3>
@@ -1979,7 +1991,7 @@ Resumes a paused response.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
