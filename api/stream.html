@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.9.2 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.9.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -75,7 +75,7 @@
 <li><a href="#stream_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#stream_event_pipe">Event: &#39;pipe&#39;</a></li>
 <li><a href="#stream_stream_writable">stream.writable</a></li>
-<li><a href="#stream_stream_write_string_encoding_fd">stream.write(string, [encoding], [fd])</a></li>
+<li><a href="#stream_stream_write_string_encoding">stream.write(string, [encoding])</a></li>
 <li><a href="#stream_stream_write_buffer">stream.write(buffer)</a></li>
 <li><a href="#stream_stream_end">stream.end()</a></li>
 <li><a href="#stream_stream_end_string_encoding">stream.end(string, encoding)</a></li>
@@ -325,13 +325,25 @@ A `Writable Stream` has the following methods, members, and events.
 
 </p>
 <!--
-After a `write()` method returned `false`, this event is emitted to
-indicate that it is safe to write again.
+Emitted when the stream's write queue empties and it's safe to write without
+buffering again. Listen for it when `stream.write()` returns `false`.
 -->
 
-<p><code>write()</code> メソッドが <code>false</code> でリターンした後、
-再び安全に書き込むことができるようになったことを示すために、
-このイベントは生成されます。
+<p>ストリームの書き込みキューが空になり、バッファリングされることなく
+再び安全に書き込みができるようになった場合に生成されます。
+<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。
+
+</p>
+<!--
+The `'drain'` event can happen at *any* time, regardless of whether or not
+`stream.write()` has previously returned `false`. To avoid receiving unwanted
+`'drain'` events, listen using `stream.once()`.
+-->
+
+<p><code>stream.write()</code> が以前に <code>false</code> を返したかどうかにかかわらず、
+<code>&#39;drain&#39;</code> イベントは <em>いつでも</em> 発生します。
+意図しない <code>&#39;drain&#39;</code> イベントを受信しないようにするには、<code>stream.once()</code>
+を使って監視してください。
 
 </p>
 <h3>Event: &#39;error&#39;<span><a class="mark" href="#stream_event_error_1" id="stream_event_error_1">#</a></span></h3>
@@ -377,7 +389,7 @@ A boolean that is `true` by default, but turns `false` after an
 <code>end()</code> / <code>destroy()</code> が呼ばれた後で <code>false</code> に設定される boolean です。
 
 </p>
-<h3>stream.write(string, [encoding], [fd])<span><a class="mark" href="#stream_stream_write_string_encoding_fd" id="stream_stream_write_string_encoding_fd">#</a></span></h3>
+<h3>stream.write(string, [encoding])<span><a class="mark" href="#stream_stream_write_string_encoding" id="stream_stream_write_string_encoding">#</a></span></h3>
 <!--
 Writes `string` with the given `encoding` to the stream.  Returns `true`
 if the string has been flushed to the kernel buffer.  Returns `false` to
@@ -392,21 +404,6 @@ is empty again. The `encoding` defaults to `'utf8'`.
 <code>false</code> が返ります。
 <code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。
 <code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。
-
-</p>
-<!--
-If the optional `fd` parameter is specified, it is interpreted as an
-integral file descriptor to be sent over the stream. This is only
-supported for UNIX streams, and is silently ignored otherwise. When
-writing a file descriptor in this manner, closing the descriptor before
-the stream drains risks sending an invalid (closed) FD.
--->
-
-<p>オプションの <code>fd</code> 引数が指定されると、
-ストリームに送信するための基礎となるファイル記述子として解釈されます。
-これは UNIX ストリームでのみサポートされており、その他では黙って無視されます。
-このようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、
-データが不正な (クローズされた) ファイル記述子に送られるリスクがあります。
 
 </p>
 <h3>stream.write(buffer)<span><a class="mark" href="#stream_stream_write_buffer" id="stream_stream_write_buffer">#</a></span></h3>
@@ -500,7 +497,7 @@ data left in the queue for writes.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

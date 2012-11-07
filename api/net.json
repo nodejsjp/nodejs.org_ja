@@ -12,7 +12,7 @@
           "textRaw": "net.createServer([options], [connectionListener])",
           "type": "method",
           "name": "createServer",
-          "desc": "<!--\nCreates a new TCP server. The `connectionListener` argument is\nautomatically set as a listener for the ['connection'][] event.\n\n`options` is an object with the following defaults:\n-->\n\n<p>新しい TCP サーバを作成します。\n<code>connectionListener</code> 引数は [&#39;connection&#39;][]\nイベントに対するリスナーとして自動的に加えられます。\n\n</p>\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ allowHalfOpen: false\n}</code></pre>\n<!--\nIf `allowHalfOpen` is `true`, then the socket won't automatically send a FIN\npacket when the other end of the socket sends a FIN packet. The socket becomes\nnon-readable, but still writable. You should call the `end()` method explicitly.\nSee ['end'][] event for more information.\n-->\n\n<p><code>allowHalfOpen</code> が <code>true</code> だと、反対側のソケットが FIN パケットを送信してきても自動的に FIN を送信しなくなります。\nソケットは読み込み可能ではなくなりますが、書き込み可能のままです。\n明示的に <code>end()</code> を呼び出す必要があります。\n[&#39;end&#39;][] イベントにより多くの情報があります。\n\n</p>\n<!--\nHere is an example of a echo server which listens for connections\non port 8124:\n-->\n\n<p>8124 番のポートへの接続を待ち受けるエコーサーバの例:\n\n</p>\n<pre><code>var net = require(&#39;net&#39;);\nvar server = net.createServer(function(c) { //&#39;connection&#39; listener\n  console.log(&#39;server connected&#39;);\n  c.on(&#39;end&#39;, function() {\n    console.log(&#39;server disconnected&#39;);\n  });\n  c.write(&#39;hello\\r\\n&#39;);\n  c.pipe(c);\n});\nserver.listen(8124, function() { //&#39;listening&#39; listener\n  console.log(&#39;server bound&#39;);\n});</code></pre>\n<!--\nTest this by using `telnet`:\n-->\n\n<p><code>telnet</code> を使ってテストします:\n\n</p>\n<pre><code>telnet localhost 8124</code></pre>\n<!--\nTo listen on the socket `/tmp/echo.sock` the third line from the last would\njust be changed to\n-->\n\n<p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットを待ち受けるには、最後から三行目をこのように変更します。\n\n</p>\n<pre><code>server.listen(&#39;/tmp/echo.sock&#39;, function() { //&#39;listening&#39; listener</code></pre>\n<!--\nUse `nc` to connect to a UNIX domain socket server:\n-->\n\n<p><code>nc</code> を使って UNIX ドメインソケットサーバへ接続します:\n\n</p>\n<pre><code>nc -U /tmp/echo.sock</code></pre>\n",
+          "desc": "<!--\nCreates a new TCP server. The `connectionListener` argument is\nautomatically set as a listener for the ['connection'][] event.\n\n`options` is an object with the following defaults:\n-->\n\n<p>新しい TCP サーバを作成します。\n<code>connectionListener</code> 引数は [&#39;connection&#39;][]\nイベントに対するリスナーとして自動的に加えられます。\n\n</p>\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ allowHalfOpen: false\n}</code></pre>\n<!--\nIf `allowHalfOpen` is `true`, then the socket won't automatically send a FIN\npacket when the other end of the socket sends a FIN packet. The socket becomes\nnon-readable, but still writable. You should call the `end()` method explicitly.\nSee ['end'][] event for more information.\n-->\n\n<p><code>allowHalfOpen</code> が <code>true</code> だと、反対側のソケットが FIN パケットを送信してきても自動的に FIN を送信しなくなります。\nソケットは読み込み可能ではなくなりますが、書き込み可能のままです。\n明示的に <code>end()</code> を呼び出す必要があります。\n[&#39;end&#39;][] イベントにより多くの情報があります。\n\n</p>\n<!--\nHere is an example of an echo server which listens for connections\non port 8124:\n-->\n\n<p>8124 番のポートへの接続を待ち受けるエコーサーバの例:\n\n</p>\n<pre><code>var net = require(&#39;net&#39;);\nvar server = net.createServer(function(c) { //&#39;connection&#39; listener\n  console.log(&#39;server connected&#39;);\n  c.on(&#39;end&#39;, function() {\n    console.log(&#39;server disconnected&#39;);\n  });\n  c.write(&#39;hello\\r\\n&#39;);\n  c.pipe(c);\n});\nserver.listen(8124, function() { //&#39;listening&#39; listener\n  console.log(&#39;server bound&#39;);\n});</code></pre>\n<!--\nTest this by using `telnet`:\n-->\n\n<p><code>telnet</code> を使ってテストします:\n\n</p>\n<pre><code>telnet localhost 8124</code></pre>\n<!--\nTo listen on the socket `/tmp/echo.sock` the third line from the last would\njust be changed to\n-->\n\n<p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットを待ち受けるには、最後から三行目をこのように変更します。\n\n</p>\n<pre><code>server.listen(&#39;/tmp/echo.sock&#39;, function() { //&#39;listening&#39; listener</code></pre>\n<!--\nUse `nc` to connect to a UNIX domain socket server:\n-->\n\n<p><code>nc</code> を使って UNIX ドメインソケットサーバへ接続します:\n\n</p>\n<pre><code>nc -U /tmp/echo.sock</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -241,10 +241,10 @@
           "desc": "<!--\nThis class is used to create a TCP or UNIX server.\nA server is a `net.Socket` that can listen for new incoming connections.\n-->\n\n<p>このクラスは TCP または UNIX ドメインのサーバを作成するために使われます。\nサーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。\n\n</p>\n",
           "methods": [
             {
-              "textRaw": "server.listen(port, [host], [backlog], [listeningListener])",
+              "textRaw": "server.listen(port, [host], [backlog], [callback])",
               "type": "method",
               "name": "listen",
-              "desc": "<!--\nBegin accepting connections on the specified `port` and `host`.  If the\n`host` is omitted, the server will accept connections directed to any\nIPv4 address (`INADDR_ANY`). A port value of zero will assign a random port.\n-->\n\n<p>指定された <code>port</code> と <code>host</code> でコネクションの受け入れを開始します。\n<code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます\n(<code>INADDR_ANY</code>)。\nポート番号に 0 を指定すると、ランダムなポートが割り当てられます。\n\n</p>\n<!--\nBacklog is the maximum length of the queue of pending connections.\nThe actual length will be determined by your OS through sysctl settings such as\n`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this\nparameter is 511 (not 512).\n-->\n\n<p>バックログは保留された接続のキューの最大長です。\n実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、\nsysctl の設定を通じて OS によって決定されます。\nこのパラメータのデフォルト値は 511 (512 ではありません) です。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `listeningListener`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>listeningListener</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n<!--\nOne issue some users run into is getting `EADDRINUSE` errors. This means that\nanother server is already running on the requested port. One way of handling this\nwould be to wait a second and then try again. This can be done with\n-->\n\n<p>一部のユーザが陥る問題の一つは、<code>EADDRINUSE</code> エラーです。\nこれは、他のサーバが要求されたポートを使っていることを意味します。\nこれに対照する方法の一つは、1秒待機してからリトライすることです。\nこれは次のようになります\n\n</p>\n<pre><code>server.on(&#39;error&#39;, function (e) {\n  if (e.code == &#39;EADDRINUSE&#39;) {\n    console.log(&#39;Address in use, retrying...&#39;);\n    setTimeout(function () {\n      server.close();\n      server.listen(PORT, HOST);\n    }, 1000);\n  }\n});</code></pre>\n<!--\n(Note: All sockets in Node set `SO_REUSEADDR` already)\n-->\n\n<p>注意: Node の全てのソケットは <code>SO_REUSEADDR</code> が設定されます)\n\n\n</p>\n",
+              "desc": "<!--\nBegin accepting connections on the specified `port` and `host`.  If the\n`host` is omitted, the server will accept connections directed to any\nIPv4 address (`INADDR_ANY`). A port value of zero will assign a random port.\n-->\n\n<p>指定された <code>port</code> と <code>host</code> でコネクションの受け入れを開始します。\n<code>host</code> が省略されると、サーバはどんな IPv4 アドレスへの接続も受け入れます\n(<code>INADDR_ANY</code>)。\nポート番号に 0 を指定すると、ランダムなポートが割り当てられます。\n\n</p>\n<!--\nBacklog is the maximum length of the queue of pending connections.\nThe actual length will be determined by your OS through sysctl settings such as\n`tcp_max_syn_backlog` and `somaxconn` on linux. The default value of this\nparameter is 511 (not 512).\n-->\n\n<p>バックログは保留された接続のキューの最大長です。\n実際の長さは Linux では <code>tcp_max_syn_backlog</code> や <code>somaxconn</code> など、\nsysctl の設定を通じて OS によって決定されます。\nこのパラメータのデフォルト値は 511 (512 ではありません) です。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `callback`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>callback</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n<!--\nOne issue some users run into is getting `EADDRINUSE` errors. This means that\nanother server is already running on the requested port. One way of handling this\nwould be to wait a second and then try again. This can be done with\n-->\n\n<p>一部のユーザが陥る問題の一つは、<code>EADDRINUSE</code> エラーです。\nこれは、他のサーバが要求されたポートを使っていることを意味します。\nこれに対照する方法の一つは、1秒待機してからリトライすることです。\nこれは次のようになります\n\n</p>\n<pre><code>server.on(&#39;error&#39;, function (e) {\n  if (e.code == &#39;EADDRINUSE&#39;) {\n    console.log(&#39;Address in use, retrying...&#39;);\n    setTimeout(function () {\n      server.close();\n      server.listen(PORT, HOST);\n    }, 1000);\n  }\n});</code></pre>\n<!--\n(Note: All sockets in Node set `SO_REUSEADDR` already)\n-->\n\n<p>注意: Node の全てのソケットは <code>SO_REUSEADDR</code> が設定されます)\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -260,7 +260,7 @@
                       "optional": true
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -268,10 +268,10 @@
               ]
             },
             {
-              "textRaw": "server.listen(path, [listeningListener])",
+              "textRaw": "server.listen(path, [callback])",
               "type": "method",
               "name": "listen",
-              "desc": "<!--\nStart a UNIX socket server listening for connections on the given `path`.\n-->\n\n<p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `listeningListener`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>listeningListener</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n",
+              "desc": "<!--\nStart a UNIX socket server listening for connections on the given `path`.\n-->\n\n<p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'][] event will be emitted.  The last parameter `callback`\nwill be added as an listener for the ['listening'][] event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>callback</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -279,7 +279,7 @@
                       "name": "path"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
@@ -287,7 +287,7 @@
               ]
             },
             {
-              "textRaw": "server.listen(handle, [listeningListener])",
+              "textRaw": "server.listen(handle, [callback])",
               "type": "method",
               "name": "listen",
               "signatures": [
@@ -299,8 +299,8 @@
                       "type": "Object"
                     },
                     {
-                      "textRaw": "`listeningListener` {Function} ",
-                      "name": "listeningListener",
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
                       "type": "Function",
                       "optional": true
                     }
@@ -312,16 +312,16 @@
                       "name": "handle"
                     },
                     {
-                      "name": "listeningListener",
+                      "name": "callback",
                       "optional": true
                     }
                   ]
                 }
               ],
-              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'](#event_listening_) event will be emitted.\nthe last parameter `listeningListener` will be added as an listener for the\n['listening'](#event_listening_) event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>listeningListener</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n"
+              "desc": "<!--\nThe `handle` object can be set to either a server or socket (anything\nwith an underlying `_handle` member), or a `{fd: <n>}` object.\n-->\n\n<p><code>handle</code> オブジェクトには、サーバまたはソケット (下層の <code>_handle</code> メンバなら\nなんでも) または、 <code>{fd: &lt;n&gt;}</code> オブジェクトを設定することができます。\n\n</p>\n<!--\nThis will cause the server to accept connections on the specified\nhandle, but it is presumed that the file descriptor or handle has\nalready been bound to a port or domain socket.\n-->\n\n<p>これによりサーバは指定したハンドルへの接続を受け付けることになりますが、\nファイル記述子またはハンドルは既にポートまたはドメインソケットに\nバインドされているものと見なされます。\n\n</p>\n<!--\nListening on a file descriptor is not supported on Windows.\n-->\n\n<p>ファイル記述子へのリスニングは Windows ではサポートされません。\n\n</p>\n<!--\nThis function is asynchronous.  When the server has been bound,\n['listening'](#event_listening_) event will be emitted.\nthe last parameter `callback` will be added as an listener for the\n['listening'](#event_listening_) event.\n-->\n\n<p>この関数は非同期です。\nサーバがバインドされると、[&#39;listening&#39;][] イベントが生成されます。\n最後の引数 <code>callback</code> は [&#39;listening&#39;][] のリスナとして加えられます。\n\n</p>\n"
             },
             {
-              "textRaw": "server.close([cb])",
+              "textRaw": "server.close([callback])",
               "type": "method",
               "name": "close",
               "desc": "<!--\nStops the server from accepting new connections and keeps existing\nconnections. This function is asynchronous, the server is finally\nclosed when all connections are ended and the server emits a `'close'`\nevent. Optionally, you can pass a callback to listen for the `'close'`\nevent.\n-->\n\n<p>サーバが新しい接続を受け付けるのを終了しますが、既存の接続は維持します。\nこの関数は非同期で、サーバは最終的に全ての接続が閉じられると\n<code>&#39;close&#39;</code> イベントを生成してクローズされます。\nオプションとして、<code>&#39;close&#39;</code> イベントに対するリスナを渡すことができます。\n\n</p>\n",
@@ -329,7 +329,7 @@
                 {
                   "params": [
                     {
-                      "name": "cb",
+                      "name": "callback",
                       "optional": true
                     }
                   ]

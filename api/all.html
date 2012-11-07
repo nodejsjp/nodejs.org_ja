@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.2 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -186,7 +186,7 @@
 <li><a href="#all_util_puts">util.puts([...])</a></li>
 <li><a href="#all_util_print">util.print([...])</a></li>
 <li><a href="#all_util_log_string">util.log(string)</a></li>
-<li><a href="#all_util_inspect_object_showhidden_depth_colors">util.inspect(object, [showHidden], [depth], [colors])</a><ul>
+<li><a href="#all_util_inspect_object_options">util.inspect(object, [options])</a><ul>
 <li><a href="#all_customizing_util_inspect_colors">Customizing <code>util.inspect</code> colors</a></li>
 </ul>
 </li>
@@ -223,11 +223,11 @@
 <li><a href="#all_domain_members">domain.members</a></li>
 <li><a href="#all_domain_add_emitter">domain.add(emitter)</a></li>
 <li><a href="#all_domain_remove_emitter">domain.remove(emitter)</a></li>
-<li><a href="#all_domain_bind_cb">domain.bind(cb)</a><ul>
+<li><a href="#all_domain_bind_callback">domain.bind(callback)</a><ul>
 <li><a href="#all_example">Example</a></li>
 </ul>
 </li>
-<li><a href="#all_domain_intercept_cb">domain.intercept(cb)</a><ul>
+<li><a href="#all_domain_intercept_callback">domain.intercept(callback)</a><ul>
 <li><a href="#all_example_1">Example</a></li>
 </ul>
 </li>
@@ -307,7 +307,7 @@
 <li><a href="#all_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#all_event_pipe">Event: &#39;pipe&#39;</a></li>
 <li><a href="#all_stream_writable">stream.writable</a></li>
-<li><a href="#all_stream_write_string_encoding_fd">stream.write(string, [encoding], [fd])</a></li>
+<li><a href="#all_stream_write_string_encoding">stream.write(string, [encoding])</a></li>
 <li><a href="#all_stream_write_buffer">stream.write(buffer)</a></li>
 <li><a href="#all_stream_end">stream.end()</a></li>
 <li><a href="#all_stream_end_string_encoding">stream.end(string, encoding)</a></li>
@@ -319,6 +319,8 @@
 </ul>
 </li>
 <li><a href="#all_crypto">Crypto</a><ul>
+<li><a href="#all_crypto_getciphers">crypto.getCiphers()</a></li>
+<li><a href="#all_crypto_gethashes">crypto.getHashes()</a></li>
 <li><a href="#all_crypto_createcredentials_details">crypto.createCredentials(details)</a></li>
 <li><a href="#all_crypto_createhash_algorithm">crypto.createHash(algorithm)</a></li>
 <li><a href="#all_class_hash">Class: Hash</a><ul>
@@ -375,15 +377,18 @@
 </li>
 <li><a href="#all_crypto_getdiffiehellman_group_name">crypto.getDiffieHellman(group_name)</a></li>
 <li><a href="#all_crypto_pbkdf2_password_salt_iterations_keylen_callback">crypto.pbkdf2(password, salt, iterations, keylen, callback)</a></li>
+<li><a href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
 <li><a href="#all_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
+<li><a href="#all_crypto_default_encoding">crypto.DEFAULT_ENCODING</a></li>
+<li><a href="#all_recent_api_changes">Recent API Changes</a></li>
 </ul>
 </li>
 <li><a href="#all_tls_ssl">TLS (SSL)</a><ul>
 <li><a href="#all_client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a></li>
 <li><a href="#all_npn_and_sni">NPN and SNI</a></li>
 <li><a href="#all_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
-<li><a href="#all_tls_connect_options_secureconnectlistener">tls.connect(options, [secureConnectListener])</a></li>
-<li><a href="#all_tls_connect_port_host_options_secureconnectlistener">tls.connect(port, [host], [options], [secureConnectListener])</a></li>
+<li><a href="#all_tls_connect_options_callback">tls.connect(options, [callback])</a></li>
+<li><a href="#all_tls_connect_port_host_options_callback">tls.connect(port, [host], [options], [callback])</a></li>
 <li><a href="#all_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a></li>
 <li><a href="#all_class_securepair">Class: SecurePair</a><ul>
 <li><a href="#all_event_secure">Event: &#39;secure&#39;</a></li>
@@ -417,7 +422,8 @@
 </li>
 <li><a href="#all_stringdecoder">StringDecoder</a><ul>
 <li><a href="#all_class_stringdecoder">Class: StringDecoder</a><ul>
-<li><a href="#all_stringdecoder_write_buffer">StringDecoder.write(buffer)</a></li>
+<li><a href="#all_decoder_write_buffer">decoder.write(buffer)</a></li>
+<li><a href="#all_decoder_end">decoder.end()</a></li>
 </ul>
 </li>
 </ul>
@@ -524,6 +530,7 @@
 <li><a href="#all_path_basename_p_ext">path.basename(p, [ext])</a></li>
 <li><a href="#all_path_extname_p">path.extname(p)</a></li>
 <li><a href="#all_path_sep">path.sep</a></li>
+<li><a href="#all_path_delimiter">path.delimiter</a></li>
 </ul>
 </li>
 <li><a href="#all_net">net</a><ul>
@@ -535,10 +542,10 @@
 <li><a href="#all_net_connect_path_connectlistener">net.connect(path, [connectListener])</a></li>
 <li><a href="#all_net_createconnection_path_connectlistener">net.createConnection(path, [connectListener])</a></li>
 <li><a href="#all_class_net_server">Class: net.Server</a><ul>
-<li><a href="#all_server_listen_port_host_backlog_listeninglistener">server.listen(port, [host], [backlog], [listeningListener])</a></li>
-<li><a href="#all_server_listen_path_listeninglistener">server.listen(path, [listeningListener])</a></li>
-<li><a href="#all_server_listen_handle_listeninglistener">server.listen(handle, [listeningListener])</a></li>
-<li><a href="#all_server_close_cb">server.close([cb])</a></li>
+<li><a href="#all_server_listen_port_host_backlog_callback">server.listen(port, [host], [backlog], [callback])</a></li>
+<li><a href="#all_server_listen_path_callback">server.listen(path, [callback])</a></li>
+<li><a href="#all_server_listen_handle_callback">server.listen(handle, [callback])</a></li>
+<li><a href="#all_server_close_callback">server.close([callback])</a></li>
 <li><a href="#all_server_address_1">server.address()</a></li>
 <li><a href="#all_server_unref">server.unref()</a></li>
 <li><a href="#all_server_ref">server.ref()</a></li>
@@ -635,9 +642,9 @@
 <li><a href="#all_event_upgrade">Event: &#39;upgrade&#39;</a></li>
 <li><a href="#all_event_clienterror_1">Event: &#39;clientError&#39;</a></li>
 <li><a href="#all_server_listen_port_hostname_backlog_callback">server.listen(port, [hostname], [backlog], [callback])</a></li>
-<li><a href="#all_server_listen_path_callback">server.listen(path, [callback])</a></li>
-<li><a href="#all_server_listen_handle_listeninglistener_1">server.listen(handle, [listeningListener])</a></li>
-<li><a href="#all_server_close_cb_1">server.close([cb])</a></li>
+<li><a href="#all_server_listen_path_callback_1">server.listen(path, [callback])</a></li>
+<li><a href="#all_server_listen_handle_callback_1">server.listen(handle, [callback])</a></li>
+<li><a href="#all_server_close_callback_1">server.close([callback])</a></li>
 <li><a href="#all_server_maxheaderscount">server.maxHeadersCount</a></li>
 </ul>
 </li>
@@ -648,6 +655,7 @@
 <li><a href="#all_request_method">request.method</a></li>
 <li><a href="#all_request_url">request.url</a></li>
 <li><a href="#all_request_headers">request.headers</a></li>
+<li><a href="#all_request_trailers">request.trailers</a></li>
 <li><a href="#all_request_httpversion">request.httpVersion</a></li>
 <li><a href="#all_request_setencoding_encoding">request.setEncoding([encoding])</a></li>
 <li><a href="#all_request_pause">request.pause()</a></li>
@@ -656,12 +664,12 @@
 </ul>
 </li>
 <li><a href="#all_class_http_serverresponse">Class: http.ServerResponse</a><ul>
-<li><a href="#all_event_end_3">Event: &#39;end&#39;</a></li>
 <li><a href="#all_event_close_7">Event: &#39;close&#39;</a></li>
 <li><a href="#all_response_writecontinue">response.writeContinue()</a></li>
 <li><a href="#all_response_writehead_statuscode_reasonphrase_headers">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li>
 <li><a href="#all_response_statuscode">response.statusCode</a></li>
 <li><a href="#all_response_setheader_name_value">response.setHeader(name, value)</a></li>
+<li><a href="#all_response_headerssent">response.headersSent</a></li>
 <li><a href="#all_response_senddate">response.sendDate</a></li>
 <li><a href="#all_response_getheader_name">response.getHeader(name)</a></li>
 <li><a href="#all_response_removeheader_name">response.removeHeader(name)</a></li>
@@ -695,7 +703,7 @@
 </li>
 <li><a href="#all_http_clientresponse">http.ClientResponse</a><ul>
 <li><a href="#all_event_data_3">Event: &#39;data&#39;</a></li>
-<li><a href="#all_event_end_4">Event: &#39;end&#39;</a></li>
+<li><a href="#all_event_end_3">Event: &#39;end&#39;</a></li>
 <li><a href="#all_event_close_8">Event: &#39;close&#39;</a></li>
 <li><a href="#all_response_statuscode_1">response.statusCode</a></li>
 <li><a href="#all_response_httpversion">response.httpVersion</a></li>
@@ -710,11 +718,14 @@
 </li>
 <li><a href="#all_https">HTTPS</a><ul>
 <li><a href="#all_class_https_server">Class: https.Server</a></li>
-<li><a href="#all_https_createserver_options_requestlistener">https.createServer(options, [requestListener])</a></li>
-<li><a href="#all_https_request_options_callback">https.request(options, callback)</a></li>
+<li><a href="#all_https_createserver_options_requestlistener">https.createServer(options, [requestListener])</a><ul>
+<li><a href="#all_server_listen_port_host_backlog_callback_1">server.listen(port, [host], [backlog], [callback])</a></li>
+<li><a href="#all_server_listen_path_callback_2">server.listen(path, [callback])</a></li>
+<li><a href="#all_server_listen_handle_callback_2">server.listen(handle, [callback])</a></li>
+<li><a href="#all_server_close_callback_2">server.close([callback])</a></li>
 </ul>
 </li>
-<li><a href="#all">&lt;!--</a><ul>
+<li><a href="#all_https_request_options_callback">https.request(options, callback)</a></li>
 <li><a href="#all_https_get_options_callback">https.get(options, callback)</a></li>
 <li><a href="#all_class_https_agent">Class: https.Agent</a></li>
 <li><a href="#all_https_globalagent">https.globalAgent</a></li>
@@ -857,6 +868,11 @@
 <li><a href="#all_zlib_createdeflateraw_options">zlib.createDeflateRaw([options])</a></li>
 <li><a href="#all_zlib_createinflateraw_options">zlib.createInflateRaw([options])</a></li>
 <li><a href="#all_zlib_createunzip_options">zlib.createUnzip([options])</a></li>
+<li><a href="#all_class_zlib_zlib">Class: zlib.Zlib</a><ul>
+<li><a href="#all_zlib_flush_callback">zlib.flush(callback)</a></li>
+<li><a href="#all_zlib_reset">zlib.reset()</a></li>
+</ul>
+</li>
 <li><a href="#all_class_zlib_gzip">Class: zlib.Gzip</a></li>
 <li><a href="#all_class_zlib_gunzip">Class: zlib.Gunzip</a></li>
 <li><a href="#all_class_zlib_deflate">Class: zlib.Deflate</a></li>
@@ -4170,14 +4186,15 @@ a diff reading, useful for benchmarks and measuring intervals:
 差分を得ることができます。これはベンチマークやインターバルの測定に便利です。
 
 </p>
-<pre><code>var t = process.hrtime();
+<pre><code>var time = process.hrtime();
 // [ 1800216, 927643717 ]
 
 setTimeout(function() {
-  t = process.hrtime(t);
+  var diff = process.hrtime(time);
   // [ 1, 6962306 ]
 
-  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;, t[0], t[1]);
+  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;,
+              diff[0], diff[1]);
   // benchmark took 1 seconds and 6962306 nanoseconds
 }, 1000);</code></pre>
 <h1>util<span><a class="mark" href="#all_util" id="all_util">#</a></span></h1>
@@ -4308,7 +4325,7 @@ Output with timestamp on `stdout`.
 
 </p>
 <pre><code>require(&#39;util&#39;).log(&#39;Timestamped message.&#39;);</code></pre>
-<h2>util.inspect(object, [showHidden], [depth], [colors])<span><a class="mark" href="#all_util_inspect_object_showhidden_depth_colors" id="all_util_inspect_object_showhidden_depth_colors">#</a></span></h2>
+<h2>util.inspect(object, [options])<span><a class="mark" href="#all_util_inspect_object_options" id="all_util_inspect_object_options">#</a></span></h2>
 <!--
 Return a string representation of `object`, which is useful for debugging.
 -->
@@ -4317,45 +4334,56 @@ Return a string representation of `object`, which is useful for debugging.
 
 </p>
 <!--
-If `showHidden` is `true`, then the object's non-enumerable properties will be
-shown too. Defaults to `false`.
+An optional *options* object may be passed that alters certain aspects of the
+formatted string:
 -->
 
-<p><code>showHidden</code> が <code>true</code> の場合、
+<p>オプションの <em>options</em> オブジェクトは、フォーマット化された文字列の
+特定の側面を変更するために渡すことができます。
+
+</p>
+<!--
+ - `showHidden` - if `true` then the object's non-enumerable properties will be
+   shown too. Defaults to `false`.
+-->
+
+<ul>
+<li><code>showHidden</code> - <code>true</code> の場合、
 オブジェクトの Enumerable でないプロパティも表示されます。
-デフォルトは <code>false</code> です。
-
-</p>
+デフォルトは <code>false</code> です。</li>
+</ul>
 <!--
-If `depth` is provided, it tells `inspect` how many times to recurse while
-formatting the object. This is useful for inspecting large complicated objects.
+ - `depth` - tells `inspect` how many times to recurse while formatting the
+   object. This is useful for inspecting large complicated objects. Defaults to
+   `2`. To make it recurse indefinitely pass `null`.
 -->
 
-<p><code>depth</code> が与えられた場合、
-オブジェクトをフォーマットするために何回再帰するかを <code>inspect</code> に伝えます。
+<ul>
+<li><code>depth</code> - オブジェクトをフォーマットするために何回再帰するかを
+<code>inspect</code> に伝えます。
 これは巨大で複雑なオブジェクトを調査する場合に便利です。
-
-</p>
+デフォルトは <code>2</code> です。
+無限に再帰するには、<code>null</code> を渡します。</li>
+</ul>
 <!--
-The default is to only recurse twice.  To make it recurse indefinitely, pass
-in `null` for `depth`.
+ - `colors` - if `true`, then the output will be styled with ANSI color codes.
+   Defaults to `false`. Colors are customizable, see below.
 -->
 
-<p>デフォルトでは 2 回だけ再帰します。
-無限に再帰するには、<code>depth</code> に <code>null</code> を渡します。
-
-</p>
-<!--
-If `colors` is `true`, the output will be styled with ANSI color codes.
-Defaults to `false`.
-Colors are customizable, see below.
--->
-
-<p><code>colors</code> が <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。
+<ul>
+<li><code>colors</code> - <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。
 デフォルトは <code>false</code> です。
-後述するように、色はカスタマイズ可能です。
+後述するように、色はカスタマイズ可能です。</li>
+</ul>
+<!--
+ - `customInspect` - if `false`, then custom `inspect()` functions defined on the
+   objects being inspected won't be called. Defaults to `true`.
+-->
 
-</p>
+<ul>
+<li><code>customInspect</code> - <code>false</code> の場合、オブジェクト独自の <code>inspect()</code> 関数は
+呼び出されません。デフォルトは <code>false</code> です。</li>
+</ul>
 <!--
 Example of inspecting all properties of the `util` object:
 -->
@@ -4365,7 +4393,7 @@ Example of inspecting all properties of the `util` object:
 </p>
 <pre><code>var util = require(&#39;util&#39;);
 
-console.log(util.inspect(util, true, null));</code></pre>
+console.log(util.inspect(util, { showHidden: true, depth: null }));</code></pre>
 <h3>Customizing <code>util.inspect</code> colors<span><a class="mark" href="#all_customizing_util_inspect_colors" id="all_customizing_util_inspect_colors">#</a></span></h3>
 <!--
 Color output (if enabled) of `util.inspect` is customizable globally
@@ -4421,8 +4449,25 @@ There are also `bold`, `italic`, `underline` and `inverse` codes.
 <code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。
 <code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。
 
+</p>
+<!--
+Objects also may define their own `inspect(depth)` function which `util.inspect()`
+will invoke and use the result of when inspecting the object:
+-->
+
+<p>オブジェクトは <code>util.inspect()</code> から呼び出される自前の <code>inspect(depth)</code>
+関数を持つことができ、その結果はオブジェクトを調査するために使われます。
 
 </p>
+<pre><code>var util = require(&#39;util&#39;);
+
+var obj = { name: &#39;nate&#39; };
+obj.inspect = function(depth) {
+  return &#39;{&#39; + this.name + &#39;}&#39;;
+};
+
+util.inspect(obj);
+  // &quot;{nate}&quot;</code></pre>
 <h2>util.isArray(object)<span><a class="mark" href="#all_util_isarray_object" id="all_util_isarray_object">#</a></span></h2>
 <!--
 Returns `true` if the given "object" is an `Array`. `false` otherwise.
@@ -4614,10 +4659,10 @@ node ではエラーイベントは特別に扱われます．
 </p>
 <!--
 All EventEmitters emit the event `'newListener'` when new listeners are
-added.
+added and `'removeListener'` when a listener is removed.
 -->
 
-<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&#39;newListener&#39;</code> を生成します。
+<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&#39;newListener&#39;</code> を生成し、リスナーが削除されると <code>&#39;removeListener&#39;</code> を生成します。
 
 </p>
 <h3>emitter.addListener(event, listener)<span><a class="mark" href="#all_emitter_addlistener_event_listener" id="all_emitter_addlistener_event_listener">#</a></span></h3>
@@ -5080,14 +5125,14 @@ specified emitter.
 ドメインから削除します。
 
 </p>
-<h3>domain.bind(cb)<span><a class="mark" href="#all_domain_bind_cb" id="all_domain_bind_cb">#</a></span></h3>
+<h3>domain.bind(callback)<span><a class="mark" href="#all_domain_bind_callback" id="all_domain_bind_callback">#</a></span></h3>
 <!--
-* `cb` {Function} The callback function
+* `callback` {Function} The callback function
 * return: {Function} The bound function
 -->
 
 <ul>
-<li><code>cb</code> {Function} コールバック関数</li>
+<li><code>callback</code> {Function} コールバック関数</li>
 <li>return: {Function} 束縛された関数</li>
 </ul>
 <!--
@@ -5116,33 +5161,33 @@ d.on(&#39;error&#39;, function(er) {
   // if we throw it now, it will crash the program
   // with the normal line number and stack message.
 });</code></pre>
-<h3>domain.intercept(cb)<span><a class="mark" href="#all_domain_intercept_cb" id="all_domain_intercept_cb">#</a></span></h3>
+<h3>domain.intercept(callback)<span><a class="mark" href="#all_domain_intercept_callback" id="all_domain_intercept_callback">#</a></span></h3>
 <!--
-* `cb` {Function} The callback function
+* `callback` {Function} The callback function
 * return: {Function} The intercepted function
 -->
 
 <ul>
-<li><code>cb</code> {Function} コールバック関数</li>
+<li><code>callback</code> {Function} コールバック関数</li>
 <li>return: {Function} インターセプトされた関数</li>
 </ul>
 <!--
-This method is almost identical to `domain.bind(cb)`.  However, in
+This method is almost identical to `domain.bind(callback)`.  However, in
 addition to catching thrown errors, it will also intercept `Error`
 objects sent as the first argument to the function.
 -->
 
-<p>このメソッドはほとんど <code>domain.bind(cb)</code> と同じです。
+<p>このメソッドはほとんど <code>domain.bind(callback)</code> と同じです。
 ただし、スローされたエラーを捕まえることに加えて、関数に渡される最初の引数が
 <code>Error</code> オブジェクトの場合もインターセプトします。
 
 </p>
 <!--
-In this way, the common `if (er) return cb(er);` pattern can be replaced
+In this way, the common `if (er) return callback(er);` pattern can be replaced
 with a single error handler in a single place.
 -->
 
-<p>これは、一般的な <code>if (er) return cb(er);</code> パターンを一カ所で単一の
+<p>これは、一般的な <code>if (er) return callback(er);</code> パターンを一カ所で単一の
 エラーハンドラに置き換えることができます。
 
 </p>
@@ -6669,13 +6714,25 @@ A `Writable Stream` has the following methods, members, and events.
 
 </p>
 <!--
-After a `write()` method returned `false`, this event is emitted to
-indicate that it is safe to write again.
+Emitted when the stream's write queue empties and it's safe to write without
+buffering again. Listen for it when `stream.write()` returns `false`.
 -->
 
-<p><code>write()</code> メソッドが <code>false</code> でリターンした後、
-再び安全に書き込むことができるようになったことを示すために、
-このイベントは生成されます。
+<p>ストリームの書き込みキューが空になり、バッファリングされることなく
+再び安全に書き込みができるようになった場合に生成されます。
+<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。
+
+</p>
+<!--
+The `'drain'` event can happen at *any* time, regardless of whether or not
+`stream.write()` has previously returned `false`. To avoid receiving unwanted
+`'drain'` events, listen using `stream.once()`.
+-->
+
+<p><code>stream.write()</code> が以前に <code>false</code> を返したかどうかにかかわらず、
+<code>&#39;drain&#39;</code> イベントは <em>いつでも</em> 発生します。
+意図しない <code>&#39;drain&#39;</code> イベントを受信しないようにするには、<code>stream.once()</code>
+を使って監視してください。
 
 </p>
 <h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_1" id="all_event_error_1">#</a></span></h3>
@@ -6721,7 +6778,7 @@ A boolean that is `true` by default, but turns `false` after an
 <code>end()</code> / <code>destroy()</code> が呼ばれた後で <code>false</code> に設定される boolean です。
 
 </p>
-<h3>stream.write(string, [encoding], [fd])<span><a class="mark" href="#all_stream_write_string_encoding_fd" id="all_stream_write_string_encoding_fd">#</a></span></h3>
+<h3>stream.write(string, [encoding])<span><a class="mark" href="#all_stream_write_string_encoding" id="all_stream_write_string_encoding">#</a></span></h3>
 <!--
 Writes `string` with the given `encoding` to the stream.  Returns `true`
 if the string has been flushed to the kernel buffer.  Returns `false` to
@@ -6736,21 +6793,6 @@ is empty again. The `encoding` defaults to `'utf8'`.
 <code>false</code> が返ります。
 <code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。
 <code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。
-
-</p>
-<!--
-If the optional `fd` parameter is specified, it is interpreted as an
-integral file descriptor to be sent over the stream. This is only
-supported for UNIX streams, and is silently ignored otherwise. When
-writing a file descriptor in this manner, closing the descriptor before
-the stream drains risks sending an invalid (closed) FD.
--->
-
-<p>オプションの <code>fd</code> 引数が指定されると、
-ストリームに送信するための基礎となるファイル記述子として解釈されます。
-これは UNIX ストリームでのみサポートされており、その他では黙って無視されます。
-このようにファイル記述子に書き込む場合、ストリームが流れきる前にファイル記述子をクローズすると、
-データが不正な (クローズされた) ファイル記述子に送られるリスクがあります。
 
 </p>
 <h3>stream.write(buffer)<span><a class="mark" href="#all_stream_write_buffer" id="all_stream_write_buffer">#</a></span></h3>
@@ -6817,7 +6859,14 @@ data left in the queue for writes.
 
 </p>
 <h1>Crypto<span><a class="mark" href="#all_crypto" id="all_crypto">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
+<!--
+    Stability: 2 - Unstable; API changes are being discussed for
+    future versions.  Breaking changes will be minimized.  See below.
+-->
+
+<pre><code>Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
+議論されています。互換性を損なう変更は最小限になる予定です。
+後述します。</code></pre>
 <!--
 Use `require('crypto')` to access this module.
 -->
@@ -6826,42 +6875,79 @@ Use `require('crypto')` to access this module.
 
 </p>
 <!--
-The crypto module requires OpenSSL to be available on the underlying platform.
-It offers a way of encapsulating secure credentials to be used as part
-of a secure HTTPS net or http connection.
+The crypto module offers a way of encapsulating secure credentials to be
+used as part of a secure HTTPS net or http connection.
 -->
 
-<p>暗号化モジュールは下層のプラットフォームで OpenSSL が有効であることを
-必要とします。
-それは安全な HTTPS ネットワークや http コネクションの一部として使われる、
+<p>暗号化モジュールは安全な HTTPS ネットワークや http
+コネクションの一部として使われる、
 安全な認証情報をカプセル化する方法を提供します。
 
 </p>
 <!--
-It also offers a set of wrappers for OpenSSL's hash, hmac, cipher, decipher, sign and verify methods.
+It also offers a set of wrappers for OpenSSL's hash, hmac, cipher,
+decipher, sign and verify methods.
 -->
 
 <p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。
 
+
 </p>
-<h2>crypto.createCredentials(details)<span><a class="mark" href="#all_crypto_createcredentials_details" id="all_crypto_createcredentials_details">#</a></span></h2>
+<h2>crypto.getCiphers()<span><a class="mark" href="#all_crypto_getciphers" id="all_crypto_getciphers">#</a></span></h2>
 <!--
-Creates a credentials object, with the optional details being a dictionary with keys:
+Returns an array with the names of the supported ciphers.
 -->
 
-<p>認証情報オブジェクトを作成します。オプションの <code>details</code> は以下のキーを持つ辞書です:
+<p>サポートされている暗号の名前からなる配列を返します。
 
 </p>
 <!--
-* `pfx` : A string or buffer holding the PFX or PKCS12 encoded private key, certificate and CA certificates
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var ciphers = crypto.getCiphers();
+console.log(ciphers); // [&#39;AES128-SHA&#39;, &#39;AES256-SHA&#39;, ...]</code></pre>
+<h2>crypto.getHashes()<span><a class="mark" href="#all_crypto_gethashes" id="all_crypto_gethashes">#</a></span></h2>
+<!--
+Returns an array with the names of the supported hash algorithms.
+-->
+
+<p>サポートされているハッシュアルゴリズムの名前からなる配列を返します。
+
+</p>
+<!--
+Example:
+-->
+
+<pre><code>var hashes = crypto.getHashes();
+console.log(hashes); // [&#39;sha&#39;, &#39;sha1&#39;, &#39;sha1WithRSAEncryption&#39;, ...]</code></pre>
+<h2>crypto.createCredentials(details)<span><a class="mark" href="#all_crypto_createcredentials_details" id="all_crypto_createcredentials_details">#</a></span></h2>
+<!--
+Creates a credentials object, with the optional details being a
+dictionary with keys:
+-->
+
+<p>認証情報オブジェクトを作成します。オプションの <code>details</code>
+は以下のキーを持つ辞書です:
+
+</p>
+<!--
+* `pfx` : A string or buffer holding the PFX or PKCS12 encoded private
+  key, certificate and CA certificates
 * `key` : A string holding the PEM encoded private key
 * `passphrase` : A string of passphrase for the private key or pfx
 * `cert` : A string holding the PEM encoded certificate
-* `ca` : Either a string or list of strings of PEM encoded CA certificates to trust.
-* `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
-* `ciphers`: A string describing the ciphers to use or exclude. Consult
-  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT> for details
-  on the format.
+* `ca` : Either a string or list of strings of PEM encoded CA
+  certificates to trust.
+* `crl` : Either a string or list of strings of PEM encoded CRLs
+  (Certificate Revocation List)
+* `ciphers`: A string describing the ciphers to use or exclude.
+  Consult
+  <http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT>
+  for details on the format.
 -->
 
 <ul>
@@ -6879,7 +6965,8 @@ Creates a credentials object, with the optional details being a dictionary with 
 を参照してください。</li>
 </ul>
 <!--
-If no 'ca' details are given, then node.js will use the default publicly trusted list of CAs as given in
+If no 'ca' details are given, then node.js will use the default
+publicly trusted list of CAs as given in
 <http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt>.
 -->
 
@@ -6892,8 +6979,8 @@ If no 'ca' details are given, then node.js will use the default publicly trusted
 </p>
 <h2>crypto.createHash(algorithm)<span><a class="mark" href="#all_crypto_createhash_algorithm" id="all_crypto_createhash_algorithm">#</a></span></h2>
 <!--
-Creates and returns a hash object, a cryptographic hash with the given algorithm
-which can be used to generate hash digests.
+Creates and returns a hash object, a cryptographic hash with the given
+algorithm which can be used to generate hash digests.
 -->
 
 <p>ハッシュオブジェクトを生成して返します。
@@ -6901,9 +6988,11 @@ which can be used to generate hash digests.
 
 </p>
 <!--
-`algorithm` is dependent on the available algorithms supported by the version
-of OpenSSL on the platform. Examples are `'sha1'`, `'md5'`, `'sha256'`, `'sha512'`, etc.
-On recent releases, `openssl list-message-digest-algorithms` will display the available digest algorithms.
+`algorithm` is dependent on the available algorithms supported by the
+version of OpenSSL on the platform. Examples are `'sha1'`, `'md5'`,
+`'sha256'`, `'sha512'`, etc.  On recent releases, `openssl
+list-message-digest-algorithms` will display the available digest
+algorithms.
 -->
 
 <p><code>algorithm</code> は、プラットフォーム上の OpenSSL 
@@ -6950,33 +7039,41 @@ Returned by `crypto.createHash`.
 </p>
 <h3>hash.update(data, [input_encoding])<span><a class="mark" href="#all_hash_update_data_input_encoding" id="all_hash_update_data_input_encoding">#</a></span></h3>
 <!--
-Updates the hash content with the given `data`, the encoding of which is given
-in `input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.
-Defaults to `'binary'`.
-This can be called many times with new data as it is streamed.
+Updates the hash content with the given `data`, the encoding of which
+is given in `input_encoding` and can be `'utf8'`, `'ascii'` or
+`'binary'`.  If no encoding is provided, then a buffer is expected.
 -->
 
 <p>与えられた <code>data</code> でハッシュの内容を更新します。
 そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、
 または <code>&#39;binary&#39;</code> を指定することができます。
-デフォルトは <code>&#39;binary&#39;</code> です。
-これは新しいデータがストリームに流される際に何度も呼び出されます。
+エンコーディングが与えられなかった場合はバッファが期待されます。
+
+</p>
+<!--
+This can be called many times with new data as it is streamed.
+-->
+
+<p>これは新しいデータがストリームに流される際に何度も呼び出されます。
 
 </p>
 <h3>hash.digest([encoding])<span><a class="mark" href="#all_hash_digest_encoding" id="all_hash_digest_encoding">#</a></span></h3>
 <!--
-Calculates the digest of all of the passed data to be hashed.
-The `encoding` can be `'hex'`, `'binary'` or `'base64'`.
-Defaults to `'binary'`.
-
-Note: `hash` object can not be used after `digest()` method been called.
+Calculates the digest of all of the passed data to be hashed.  The
+`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding
+is provided, then a buffer is returned.
 -->
 
 <p>渡された全てのデータがハッシュ化されたダイジェストを計算します。
 <code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
+<!--
+Note: `hash` object can not be used after `digest()` method been
+called.
+-->
+
 <p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> 
 オブジェクトを使うことはできません。
 
@@ -6984,15 +7081,16 @@ Note: `hash` object can not be used after `digest()` method been called.
 </p>
 <h2>crypto.createHmac(algorithm, key)<span><a class="mark" href="#all_crypto_createhmac_algorithm_key" id="all_crypto_createhmac_algorithm_key">#</a></span></h2>
 <!--
-Creates and returns a hmac object, a cryptographic hmac with the given algorithm and key.
+Creates and returns a hmac object, a cryptographic hmac with the given
+algorithm and key.
 -->
 
 <p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。
 
 </p>
 <!--
-`algorithm` is dependent on the available algorithms supported by OpenSSL - see createHash above.
-`key` is the hmac key to be used.
+`algorithm` is dependent on the available algorithms supported by
+OpenSSL - see createHash above.  `key` is the hmac key to be used.
 -->
 
 <p><code>algorithm</code> は OpenSSL でサポートされているアルゴリズムに依存します － 
@@ -7014,8 +7112,8 @@ Returned by `crypto.createHmac`.
 </p>
 <h3>hmac.update(data)<span><a class="mark" href="#all_hmac_update_data" id="all_hmac_update_data">#</a></span></h3>
 <!--
-Update the hmac content with the given `data`.
-This can be called many times with new data as it is streamed.
+Update the hmac content with the given `data`.  This can be called
+many times with new data as it is streamed.
 -->
 
 <p>与えられた <code>data</code> で HMAC の内容を更新します。
@@ -7024,18 +7122,21 @@ This can be called many times with new data as it is streamed.
 </p>
 <h3>hmac.digest([encoding])<span><a class="mark" href="#all_hmac_digest_encoding" id="all_hmac_digest_encoding">#</a></span></h3>
 <!--
-Calculates the digest of all of the passed data to the hmac.
-The `encoding` can be `'hex'`, `'binary'` or `'base64'`.
-Defaults to `'binary'`.
-
-Note: `hmac` object can not be used after `digest()` method been called.
+Calculates the digest of all of the passed data to the hmac.  The
+`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding
+is provided, then a buffer is returned.
 -->
 
 <p>渡された全てのデータが HMAC 化されたダイジェストを計算します。
 <code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
+<!--
+Note: `hmac` object can not be used after `digest()` method been
+called.
+-->
+
 <p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> 
 オブジェクトを使うことはできません。
 
@@ -7043,17 +7144,20 @@ Note: `hmac` object can not be used after `digest()` method been called.
 </p>
 <h2>crypto.createCipher(algorithm, password)<span><a class="mark" href="#all_crypto_createcipher_algorithm_password" id="all_crypto_createcipher_algorithm_password">#</a></span></h2>
 <!--
-Creates and returns a cipher object, with the given algorithm and password.
-
-`algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.
-On recent releases, `openssl list-cipher-algorithms` will display the
-available cipher algorithms.
-`password` is used to derive key and IV, which must be a `'binary'` encoded
-string or a [buffer](buffer.html).
+Creates and returns a cipher object, with the given algorithm and
+password.
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する暗号オブジェクトを作成して返します。
-<code>algorithm</code> は、OpenSSL に依存します。例えば <code>&#39;aes192&#39;</code> などです。
+<!--
+`algorithm` is dependent on OpenSSL, examples are `'aes192'`, etc.  On
+recent releases, `openssl list-cipher-algorithms` will display the
+available cipher algorithms.  `password` is used to derive key and IV,
+which must be a `'binary'` encoded string or a [buffer](buffer.html).
+-->
+
+</p>
+<p><code>algorithm</code> は、OpenSSL に依存します。例えば <code>&#39;aes192&#39;</code> などです。
 最近のリリースでは、<code>openssl list-cipher-algorithms</code>
 で利用可能な暗号アルゴリズムが表示されます。
 <code>password</code> はキーと IV の生成に使用されます。
@@ -7063,26 +7167,31 @@ string or a [buffer](buffer.html).
 </p>
 <h2>crypto.createCipheriv(algorithm, key, iv)<span><a class="mark" href="#all_crypto_createcipheriv_algorithm_key_iv" id="all_crypto_createcipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
-Creates and returns a cipher object, with the given algorithm, key and iv.
-
-`algorithm` is the same as the argument to `createCipher()`.
-`key` is the raw key used by the algorithm.
-`iv` is an [initialization
-vector](http://en.wikipedia.org/wiki/Initialization_vector).
-
-`key` and `iv` must be `'binary'` encoded strings or [buffers](buffer.html).
+Creates and returns a cipher object, with the given algorithm, key and
+iv.
 -->
 
 <p>与えられたアルゴリズムとキーおよび IV を使用する暗号オブジェクトを作成して
 返します。
 
 </p>
+<!--
+`algorithm` is the same as the argument to `createCipher()`.  `key` is
+the raw key used by the algorithm.  `iv` is an [initialization
+vector](http://en.wikipedia.org/wiki/Initialization_vector).
+-->
+
 <p><code>algorithm</code> は <code>createCipher()</code> の引数と同じです。
 <code>key</code> はアルゴリズムで使用される生のキーです。
 <code>iv</code> は<a href="http://en.wikipedia.org/wiki/Initialization_vector">initialization
 vector</a> です。
 
 </p>
+<!--
+`key` and `iv` must be `'binary'` encoded strings or
+[buffers](buffer.html).
+-->
+
 <p><code>key</code> と <code>iv</code> は <code>&#39;binary&#39;</code> でエンコードされた文字列または
 <a href="buffer.html">buffers</a> でなければなりません
 
@@ -7090,38 +7199,44 @@ vector</a> です。
 <h2>Class: Cipher<span><a class="mark" href="#all_class_cipher" id="all_class_cipher">#</a></span></h2>
 <!--
 Class for encrypting data.
-
-Returned by `crypto.createCipher` and `crypto.createCipheriv`.
 -->
 
 <p>データを暗号化するためのクラスです。
 
 </p>
+<!--
+Returned by `crypto.createCipher` and `crypto.createCipheriv`.
+-->
+
 <p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。
 
 </p>
 <h3>cipher.update(data, [input_encoding], [output_encoding])<span><a class="mark" href="#all_cipher_update_data_input_encoding_output_encoding" id="all_cipher_update_data_input_encoding_output_encoding">#</a></span></h3>
 <!--
 Updates the cipher with `data`, the encoding of which is given in
-`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.
-Defaults to `'binary'`.
-
-The `output_encoding` specifies the output format of the enciphered data,
-and can be `'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.
+`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no
+encoding is provided, then a buffer is expected.
 -->
 
 <p><code>data</code> で暗号を更新します。
 <code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが期待されます。
+
+</p>
+<p>The <code>output_encoding</code> specifies the output format of the enciphered
+data, and can be <code>&#39;binary&#39;</code>, <code>&#39;base64&#39;</code> or <code>&#39;hex&#39;</code>.  If no encoding is
+provided, then a buffer iis returned.
+--&gt;
 
 </p>
 <p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、
 <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code> または <code>&#39;binary&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <!--
-Returns the enciphered contents, and can be called many times with new data as it is streamed.
+Returns the enciphered contents, and can be called many times with new
+data as it is streamed.
 -->
 
 <p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。
@@ -7129,26 +7244,32 @@ Returns the enciphered contents, and can be called many times with new data as i
 </p>
 <h3>cipher.final([output_encoding])<span><a class="mark" href="#all_cipher_final_output_encoding" id="all_cipher_final_output_encoding">#</a></span></h3>
 <!--
-Returns any remaining enciphered contents, with `output_encoding` being one of:
-`'binary'`, `'base64'` or `'hex'`. Defaults to `'binary'`.
-
-Note: `cipher` object can not be used after `final()` method been called.
+Returns any remaining enciphered contents, with `output_encoding`
+being one of: `'binary'`, `'base64'` or `'hex'`.  If no encoding is
+provided, then a buffer is returned.
 -->
 
 <p>暗号化されたコンテンツの残りを返します。
 <code>output_encoding</code> は次のいずれかです: <code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code>。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
+<!--
+Note: `cipher` object can not be used after `final()` method been
+called.
+-->
+
 <p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> 
 オブジェクトを使うことはできません。
 
 </p>
 <h3>cipher.setAutoPadding(auto_padding=true)<span><a class="mark" href="#all_cipher_setautopadding_auto_padding_true" id="all_cipher_setautopadding_auto_padding_true">#</a></span></h3>
 <!--
-You can disable automatic padding of the input data to block size. If `auto_padding` is false,
-the length of the entire input data must be a multiple of the cipher's block size or `final` will fail.
-Useful for non-standard padding, e.g. using `0x0` instead of PKCS padding. You must call this before `cipher.final`.
+You can disable automatic padding of the input data to block size. If
+`auto_padding` is false, the length of the entire input data must be a
+multiple of the cipher's block size or `final` will fail.  Useful for
+non-standard padding, e.g. using `0x0` instead of PKCS padding. You
+must call this before `cipher.final`.
 -->
 
 <p>入力データが自動的にブロックサイズにパディングされることを
@@ -7164,8 +7285,8 @@ Useful for non-standard padding, e.g. using `0x0` instead of PKCS padding. You m
 </p>
 <h2>crypto.createDecipher(algorithm, password)<span><a class="mark" href="#all_crypto_createdecipher_algorithm_password" id="all_crypto_createdecipher_algorithm_password">#</a></span></h2>
 <!--
-Creates and returns a decipher object, with the given algorithm and key.
-This is the mirror of the [createCipher()][] above.
+Creates and returns a decipher object, with the given algorithm and
+key.  This is the mirror of the [createCipher()][] above.
 -->
 
 <p>与えられたアルゴリズムとパスワードを使用する復号オブジェクトを作成して返します。
@@ -7174,8 +7295,8 @@ This is the mirror of the [createCipher()][] above.
 </p>
 <h2>crypto.createDecipheriv(algorithm, key, iv)<span><a class="mark" href="#all_crypto_createdecipheriv_algorithm_key_iv" id="all_crypto_createdecipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
-Creates and returns a decipher object, with the given algorithm, key and iv.
-This is the mirror of the [createCipheriv()][] above.
+Creates and returns a decipher object, with the given algorithm, key
+and iv.  This is the mirror of the [createCipheriv()][] above.
 -->
 
 <p>与えられたアルゴリズムとキー、IV を使用する復号オブジェクトを作成して返します。
@@ -7197,46 +7318,56 @@ Returned by `crypto.createDecipher` and `crypto.createDecipheriv`.
 </p>
 <h3>decipher.update(data, [input_encoding], [output_encoding])<span><a class="mark" href="#all_decipher_update_data_input_encoding_output_encoding" id="all_decipher_update_data_input_encoding_output_encoding">#</a></span></h3>
 <!--
-Updates the decipher with `data`, which is encoded in `'binary'`, `'base64'`
-or `'hex'`. Defaults to `'binary'`.
-
-The `output_decoding` specifies in what format to return the deciphered
-plaintext: `'binary'`, `'ascii'` or `'utf8'`. Defaults to `'binary'`.
+Updates the decipher with `data`, which is encoded in `'binary'`,
+`'base64'` or `'hex'`.  If no encoding is provided, then a buffer is
+expected.
 -->
 
 <p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を
-<code>data</code> で更新します。デフォルトは <code>&#39;binary&#39;</code> です。
+<code>data</code> で更新します。
+エンコーディングが与えられなかった場合はバッファが期待されます。
 
 </p>
+<!--
+The `output_decoding` specifies in what format to return the
+deciphered plaintext: `'binary'`, `'ascii'` or `'utf8'`.  If no
+encoding is provided, then a buffer is returned.
+-->
+
 <p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、
 <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 
 </p>
 <h3>decipher.final([output_encoding])<span><a class="mark" href="#all_decipher_final_output_encoding" id="all_decipher_final_output_encoding">#</a></span></h3>
 <!--
-Returns any remaining plaintext which is deciphered,
-with `output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.
-Defaults to `'binary'`.
-
-Note: `decipher` object can not be used after `final()` method been called.
+Returns any remaining plaintext which is deciphered, with
+`output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.  If
+no encoding is provided, then a buffer is returned.
 -->
 
 <p>復号化されたプレーンテキストの残りを返します。
 <code>output_decoding</code> は <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
+<!--
+Note: `decipher` object can not be used after `final()` method been
+called.
+-->
+
 <p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> 
 オブジェクトを使うことはできません。
 
 </p>
 <h3>decipher.setAutoPadding(auto_padding=true)<span><a class="mark" href="#all_decipher_setautopadding_auto_padding_true" id="all_decipher_setautopadding_auto_padding_true">#</a></span></h3>
 <!--
-You can disable auto padding if the data has been encrypted without standard block padding to prevent
-`decipher.final` from checking and removing it. Can only work if the input data's length is a multiple of the
-ciphers block size. You must call this before streaming data to `decipher.update`.
+You can disable auto padding if the data has been encrypted without
+standard block padding to prevent `decipher.final` from checking and
+removing it. Can only work if the input data's length is a multiple of
+the ciphers block size. You must call this before streaming data to
+`decipher.update`.
 -->
 
 <p>データブロックが非標準のパディングで暗号化されている場合、
@@ -7247,9 +7378,9 @@ ciphers block size. You must call this before streaming data to `decipher.update
 </p>
 <h2>crypto.createSign(algorithm)<span><a class="mark" href="#all_crypto_createsign_algorithm" id="all_crypto_createsign_algorithm">#</a></span></h2>
 <!--
-Creates and returns a signing object, with the given algorithm.
-On recent OpenSSL releases, `openssl list-public-key-algorithms` will display
-the available signing algorithms. Examples are `'RSA-SHA256'`.
+Creates and returns a signing object, with the given algorithm.  On
+recent OpenSSL releases, `openssl list-public-key-algorithms` will
+display the available signing algorithms. Examples are `'RSA-SHA256'`.
 -->
 
 <p>与えられたアルゴリズムで署名オブジェクトを作成して返します。
@@ -7272,8 +7403,8 @@ Returned by `crypto.createSign`.
 </p>
 <h3>signer.update(data)<span><a class="mark" href="#all_signer_update_data" id="all_signer_update_data">#</a></span></h3>
 <!--
-Updates the signer object with data.
-This can be called many times with new data as it is streamed.
+Updates the signer object with data.  This can be called many times
+with new data as it is streamed.
 -->
 
 <p>署名オブジェクトをデータで更新します。
@@ -7282,8 +7413,9 @@ This can be called many times with new data as it is streamed.
 </p>
 <h3>signer.sign(private_key, [output_format])<span><a class="mark" href="#all_signer_sign_private_key_output_format" id="all_signer_sign_private_key_output_format">#</a></span></h3>
 <!--
-Calculates the signature on all the updated data passed through the signer.
-`private_key` is a string containing the PEM encoded private key for signing.
+Calculates the signature on all the updated data passed through the
+signer.  `private_key` is a string containing the PEM encoded private
+key for signing.
 -->
 
 <p>署名オブジェクトに渡された全ての更新データで署名を計算します。
@@ -7291,19 +7423,23 @@ Calculates the signature on all the updated data passed through the signer.
 
 </p>
 <!--
-Returns the signature in `output_format` which can be `'binary'`, `'hex'` or
-`'base64'`. Defaults to `'binary'`.
-
-Note: `signer` object can not be used after `sign()` method been called.
+Returns the signature in `output_format` which can be `'binary'`,
+`'hex'` or `'base64'`. If no encoding is provided, then a buffer is
+returned.
 -->
 
 <p><code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、あるいは <code>&#39;base64&#39;</code> のいずれかを指定した <code>output_format</code>
-による署名を返します。デフォルトは <code>&#39;binary&#39;</code> です。
+による署名を返します。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
+<!--
+Note: `signer` object can not be used after `sign()` method been
+called.
+-->
+
 <p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> 
 オブジェクトを使うことはできません。
-
 
 </p>
 <h2>crypto.createVerify(algorithm)<span><a class="mark" href="#all_crypto_createverify_algorithm" id="all_crypto_createverify_algorithm">#</a></span></h2>
@@ -7330,8 +7466,8 @@ Returned by `crypto.createVerify`.
 </p>
 <h3>verifier.update(data)<span><a class="mark" href="#all_verifier_update_data" id="all_verifier_update_data">#</a></span></h3>
 <!--
-Updates the verifier object with data.
-This can be called many times with new data as it is streamed.
+Updates the verifier object with data.  This can be called many times
+with new data as it is streamed.
 -->
 
 <p>検証オブジェクトをデータで更新します。
@@ -7340,11 +7476,12 @@ This can be called many times with new data as it is streamed.
 </p>
 <h3>verifier.verify(object, signature, [signature_format])<span><a class="mark" href="#all_verifier_verify_object_signature_signature_format" id="all_verifier_verify_object_signature_signature_format">#</a></span></h3>
 <!--
-Verifies the signed data by using the `object` and `signature`. `object` is  a
-string containing a PEM encoded object, which can be one of RSA public key,
-DSA public key, or X.509 certificate. `signature` is the previously calculated
-signature for the data, in the `signature_format` which can be `'binary'`,
-`'hex'` or `'base64'`. Defaults to `'binary'`.
+Verifies the signed data by using the `object` and `signature`.
+`object` is  a string containing a PEM encoded object, which can be
+one of RSA public key, DSA public key, or X.509 certificate.
+`signature` is the previously calculated signature for the data, in
+the `signature_format` which can be `'binary'`, `'hex'` or `'base64'`.
+If no encoding is specified, then a buffer is expected.
 -->
 
 <p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。
@@ -7352,26 +7489,31 @@ signature for the data, in the `signature_format` which can be `'binary'`,
 PEM でエンコードしたオブジェクトです。
 <code>signature</code> は先に計算したデータの署名で、
 その <code>signature_format</code> は <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code>
-のいずれかです。デフォルトは <code>&#39;binary&#39;</code> です。
+のいずれかです。
+エンコーディングが与えられなかった場合はバッファが期待されます。
 
 </p>
 <!--
-Returns true or false depending on the validity of the signature for the data and public key.
-
-Note: `verifier` object can not be used after `verify()` method been called.
+Returns true or false depending on the validity of the signature for
+the data and public key.
 -->
 
 <p>署名されたデータと公開鍵による検証の結果によって true または false を返します。
 
 </p>
+<!--
+Note: `verifier` object can not be used after `verify()` method been
+called.
+-->
+
 <p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> 
 オブジェクトを使うことはできません。
 
 </p>
 <h2>crypto.createDiffieHellman(prime_length)<span><a class="mark" href="#all_crypto_creatediffiehellman_prime_length" id="all_crypto_creatediffiehellman_prime_length">#</a></span></h2>
 <!--
-Creates a Diffie-Hellman key exchange object and generates a prime of the
-given bit length. The generator used is `2`.
+Creates a Diffie-Hellman key exchange object and generates a prime of
+the given bit length. The generator used is `2`.
 -->
 
 <p>ディフィー・ヘルマン鍵共有オブジェクトを作成し、
@@ -7380,15 +7522,15 @@ given bit length. The generator used is `2`.
 </p>
 <h2>crypto.createDiffieHellman(prime, [encoding])<span><a class="mark" href="#all_crypto_creatediffiehellman_prime_encoding" id="all_crypto_creatediffiehellman_prime_encoding">#</a></span></h2>
 <!--
-Creates a Diffie-Hellman key exchange object using the supplied prime. The
-generator used is `2`. Encoding can be `'binary'`, `'hex'`, or `'base64'`.
-Defaults to `'binary'`.
+Creates a Diffie-Hellman key exchange object using the supplied prime.
+The generator used is `2`. Encoding can be `'binary'`, `'hex'`, or
+`'base64'`.  If no encoding is specified, then a buffer is expected.
 -->
 
 <p>与えられた素数からディフィー・ヘルマン鍵共有オブジェクトを作成します。
 生成元は <code>2</code> です。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h2>Class: DiffieHellman<span><a class="mark" href="#all_class_diffiehellman" id="all_class_diffiehellman">#</a></span></h2>
@@ -7406,118 +7548,127 @@ Returned by `crypto.createDiffieHellman`.
 </p>
 <h3>diffieHellman.generateKeys([encoding])<span><a class="mark" href="#all_diffiehellman_generatekeys_encoding" id="all_diffiehellman_generatekeys_encoding">#</a></span></h3>
 <!--
-Generates private and public Diffie-Hellman key values, and returns the
-public key in the specified encoding. This key should be transferred to the
-other party. Encoding can be `'binary'`, `'hex'`, or `'base64'`.
-Defaults to `'binary'`.
+Generates private and public Diffie-Hellman key values, and returns
+the public key in the specified encoding. This key should be
+transferred to the other party. Encoding can be `'binary'`, `'hex'`,
+or `'base64'`.  If no encoding is provided, then a buffer is returned.
 -->
 
 <p>ディフィー・ヘルマン法で秘密および公開鍵を作成し、
 指定の方法でエンコーディングされた公開鍵を返します。
 この鍵は相手側に渡されるものです。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h3>diffieHellman.computeSecret(other_public_key, [input_encoding], [output_encoding])<span><a class="mark" href="#all_diffiehellman_computesecret_other_public_key_input_encoding_output_encoding" id="all_diffiehellman_computesecret_other_public_key_input_encoding_output_encoding">#</a></span></h3>
 <!--
-Computes the shared secret using `other_public_key` as the other party's
-public key and returns the computed shared secret. Supplied key is
-interpreted using specified `input_encoding`, and secret is encoded using
-specified `output_encoding`. Encodings can be `'binary'`, `'hex'`, or
-`'base64'`. The input encoding defaults to `'binary'`.
-If no output encoding is given, the input encoding is used as output encoding.
+Computes the shared secret using `other_public_key` as the other
+party's public key and returns the computed shared secret. Supplied
+key is interpreted using specified `input_encoding`, and secret is
+encoded using specified `output_encoding`. Encodings can be
+`'binary'`, `'hex'`, or `'base64'`. If the input encoding is not
+provided, then a buffer is expected.
 -->
 
 <p><code>other_public_key</code> を相手側の公開鍵として共有の秘密鍵を計算して返します。
 与えられた公開鍵は指定の <code>input_encoding</code> を使って解釈され、
 秘密鍵は <code>output_encoding</code> で指定された方法でエンコードされます。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-入力エンコーディングのデフォルトは <code>&#39;binary&#39;</code> です。
-出力のエンコーディングが与えられなかった場合は、入力のエンコーディングが
-出力エンコーディングとして使われます。
+入力のエンコーディングが与えられなかった場合はバッファが期待されます。
+
+</p>
+<!--
+If no output encoding is given, then a buffer is returned.
+-->
+
+<p>出力のエンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h3>diffieHellman.getPrime([encoding])<span><a class="mark" href="#all_diffiehellman_getprime_encoding" id="all_diffiehellman_getprime_encoding">#</a></span></h3>
 <!--
-Returns the Diffie-Hellman prime in the specified encoding, which can be
-`'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.
+Returns the Diffie-Hellman prime in the specified encoding, which can
+be `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,
+then a buffer is returned.
 -->
 
 <p>ディフィー・ヘルマン法の素数を指定のエンコーディングで返します。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h3>diffieHellman.getGenerator([encoding])<span><a class="mark" href="#all_diffiehellman_getgenerator_encoding" id="all_diffiehellman_getgenerator_encoding">#</a></span></h3>
 <!--
-Returns the Diffie-Hellman prime in the specified encoding, which can be
-`'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.
+Returns the Diffie-Hellman prime in the specified encoding, which can
+be `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,
+then a buffer is returned.
 -->
 
 <p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h3>diffieHellman.getPublicKey([encoding])<span><a class="mark" href="#all_diffiehellman_getpublickey_encoding" id="all_diffiehellman_getpublickey_encoding">#</a></span></h3>
 <!--
-Returns the Diffie-Hellman public key in the specified encoding, which can
-be `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.
+Returns the Diffie-Hellman public key in the specified encoding, which
+can be `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,
+then a buffer is returned.
 -->
 
 <p>ディフィー・ヘルマン法による公開鍵を指定のエンコーディングで返します。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h3>diffieHellman.getPrivateKey([encoding])<span><a class="mark" href="#all_diffiehellman_getprivatekey_encoding" id="all_diffiehellman_getprivatekey_encoding">#</a></span></h3>
 <!--
-Returns the Diffie-Hellman private key in the specified encoding, which can
-be `'binary'`, `'hex'`, or `'base64'`. Defaults to `'binary'`.
+Returns the Diffie-Hellman private key in the specified encoding,
+which can be `'binary'`, `'hex'`, or `'base64'`. If no encoding is
+provided, then a buffer is returned.
 -->
 
 <p>ディフィー・ヘルマン法による秘密鍵を指定のエンコーディングで返します。
 エンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが返されます。
 
 </p>
 <h3>diffieHellman.setPublicKey(public_key, [encoding])<span><a class="mark" href="#all_diffiehellman_setpublickey_public_key_encoding" id="all_diffiehellman_setpublickey_public_key_encoding">#</a></span></h3>
 <!--
-Sets the Diffie-Hellman public key. Key encoding can be `'binary'`, `'hex'`,
-or `'base64'`. Defaults to `'binary'`.
+Sets the Diffie-Hellman public key. Key encoding can be `'binary'`,
+`'hex'` or `'base64'`. If no encoding is provided, then a buffer is
+expected.
 -->
 
 <p>ディフィー・ヘルマン法による公開鍵を設定します。
 鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが期待されます。
 
 </p>
 <h3>diffieHellman.setPrivateKey(public_key, [encoding])<span><a class="mark" href="#all_diffiehellman_setprivatekey_public_key_encoding" id="all_diffiehellman_setprivatekey_public_key_encoding">#</a></span></h3>
 <!--
-Sets the Diffie-Hellman private key. Key encoding can be `'binary'`, `'hex'`,
-or `'base64'`. Defaults to `'binary'`.
+Sets the Diffie-Hellman private key. Key encoding can be `'binary'`,
+`'hex'` or `'base64'`. If no encoding is provided, then a buffer is
+expected.
 -->
 
 <p>ディフィー・ヘルマン法による秘密鍵を設定します。
 鍵のエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。
-デフォルトは <code>&#39;binary&#39;</code> です。
+エンコーディングが与えられなかった場合はバッファが期待されます。
 
 </p>
 <h2>crypto.getDiffieHellman(group_name)<span><a class="mark" href="#all_crypto_getdiffiehellman_group_name" id="all_crypto_getdiffiehellman_group_name">#</a></span></h2>
 <!--
-Creates a predefined Diffie-Hellman key exchange object.
-The supported groups are: `'modp1'`, `'modp2'`, `'modp5'`
-(defined in [RFC 2412][])
-and `'modp14'`, `'modp15'`, `'modp16'`, `'modp17'`, `'modp18'`
-(defined in [RFC 3526][]).
-The returned object mimics the interface of objects created by
-[crypto.createDiffieHellman()][] above, but
-will not allow to change the keys (with
-[diffieHellman.setPublicKey()][] for example).
-The advantage of using this routine is that the parties don't have to
-generate nor exchange group modulus beforehand, saving both processor and
-communication time.
+Creates a predefined Diffie-Hellman key exchange object.  The
+supported groups are: `'modp1'`, `'modp2'`, `'modp5'` (defined in [RFC
+2412][]) and `'modp14'`, `'modp15'`, `'modp16'`, `'modp17'`,
+`'modp18'` (defined in [RFC 3526][]).  The returned object mimics the
+interface of objects created by [crypto.createDiffieHellman()][]
+above, but will not allow to change the keys (with
+[diffieHellman.setPublicKey()][] for example).  The advantage of using
+this routine is that the parties don't have to generate nor exchange
+group modulus beforehand, saving both processor and communication
+time.
 -->
 
 <p>事前に定義された Diffie-Hellman 鍵交換オブジェクトを作成します。
@@ -7550,8 +7701,8 @@ var bob = crypto.getDiffieHellman(&#39;modp5&#39;);
 alice.generateKeys();
 bob.generateKeys();
 
-var alice_secret = alice.computeSecret(bob.getPublicKey(), &#39;binary&#39;, &#39;hex&#39;);
-var bob_secret = bob.computeSecret(alice.getPublicKey(), &#39;binary&#39;, &#39;hex&#39;);
+var alice_secret = alice.computeSecret(bob.getPublicKey(), null, &#39;hex&#39;);
+var bob_secret = bob.computeSecret(alice.getPublicKey(), null, &#39;hex&#39;);
 
 /* alice_secret and bob_secret should be the same */
 console.log(alice_secret == bob_secret);</code></pre>
@@ -7566,6 +7717,15 @@ The callback gets two arguments `(err, derivedKey)`.
 (ランダムなバイト値)、および繰り返しから、指定された長さの鍵を生成する、
 非同期の PBKDF2 です。
 コールバック関数は二つの引数を受け取る <code>(err, derivedKey)</code> です。
+
+</p>
+<h2>crypto.pbkdf2Sync(password, salt, iterations, keylen)<span><a class="mark" href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen" id="all_crypto_pbkdf2sync_password_salt_iterations_keylen">#</a></span></h2>
+<!--
+Synchronous PBKDF2 function.  Returns derivedKey or throws error.
+-->
+
+<p>同期版の PBKDF2 関数。
+生成された鍵を返すか、例外をスローします。
 
 </p>
 <h2>crypto.randomBytes(size, [callback])<span><a class="mark" href="#all_crypto_randombytes_size_callback" id="all_crypto_randombytes_size_callback">#</a></span></h2>
@@ -7589,6 +7749,109 @@ try {
 } catch (ex) {
   // handle error
 }</code></pre>
+<h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#all_crypto_default_encoding" id="all_crypto_default_encoding">#</a></span></h2>
+<!--
+The default encoding to use for functions that can take either strings
+or buffers.  The default value is `'buffer'`, which makes it default
+to using Buffer objects.  This is here to make the crypto module more
+easily compatible with legacy programs that expected `'binary'` to be
+the default encoding.
+-->
+
+<p>関数が使用するエンコーディングのデフォルトは、文字列かバッファの
+いずれかにすることができます。
+
+</p>
+<!--
+Note that new programs will probably expect buffers, so only use this
+as a temporary measure.
+-->
+
+<p>新しいプログラムはおそらくバッファを期待することに注意してください。
+これは一時的な手段としてのみ使用してください。
+
+</p>
+<h2>Recent API Changes<span><a class="mark" href="#all_recent_api_changes" id="all_recent_api_changes">#</a></span></h2>
+<!--
+The Crypto module was added to Node before there was the concept of a
+unified Stream API, and before there were Buffer objects for handling
+binary data.
+-->
+
+<p>Crypto モジュールは、統合されたストリーム API やバイトデータを扱う Buffer
+オブジェクトよりも先に Node に追加されました。
+
+</p>
+<!--
+As such, the streaming classes don't have the typical methods found on
+other Node classes, and many methods accepted and returned
+Binary-encoded strings by default rather than Buffers.  This was
+changed to use Buffers by default instead.
+-->
+
+<p>そのため、このストリーミングなクラスは他の Node のクラスに見られる
+典型的なメソッドを持たず、多くのメソッドは引数や戻り値に
+Buffer ではなくバイナリエンコードされた文字列を使います。
+
+</p>
+<!--
+This is a breaking change for some use cases, but not all.
+-->
+
+<p>これはあるユースケースにおいては互換性を損ないますが、
+全てのケースではありません。
+
+</p>
+<!--
+For example, if you currently use the default arguments to the Sign
+class, and then pass the results to the Verify class, without ever
+inspecting the data, then it will continue to work as before.  Where
+you once got a binary string and then presented the binary string to
+the Verify object, you'll now get a Buffer, and present the Buffer to
+the Verify object.
+-->
+
+<p>たとえば、Sign クラスをデフォルト引数で使っていて、
+その結果を全く調べずに Verify クラスに渡している場合、
+それは以前と同じように動くでしょう。
+それは、現時点ではバイナリ文字列を受け取ってそのバイナリ文字列を
+Veriy オブジェクトに渡しますが、将来は Buffer を受け取ってその
+Buffer を Verify オブジェクトに渡すようになります。
+
+</p>
+<!--
+However, if you were doing things with the string data that will not
+work properly on Buffers (such as, concatenating them, storing in
+databases, etc.), or you are passing binary strings to the crypto
+functions without an encoding argument, then you will need to start
+providing encoding arguments to specify which encoding you'd like to
+use.  To switch to the previous style of using binary strings by
+default, set the `crypto.DEFAULT_ENCODING` field to 'binary'.  Note
+that new programs will probably expect buffers, so only use this as a
+temporary measure.
+-->
+
+<p>しかしながら、Buffer が文字列と正確に同じようには動かない何かをしている場合
+(例えば、それらを連結したり、データベースに保存したりするなど)、
+あるいはバイナリ文字列を Crypto の関数にエンコーディング引数無しで
+渡している場合、エンコーディング引数を与えてどのエンコーディングを
+使用しているかを指定する必要があります。
+以前のようにデフォルトでバイナリ文字列を使うように切り替えるには、
+<code>crypto.DEFAULT_ENCODING</code> フィールドに <code>binary</code> を設定します。
+新しいプログラムはおそらくバッファを期待することに注意してください。
+これは一時的な手段としてのみ使用してください。
+
+</p>
+<!--
+Also, a Streaming API will be provided, but this will be done in such
+a way as to preserve the legacy API surface.
+-->
+
+<p>同時に、ストリーミング API も提供されますが、それはレガシーな API
+を維持する方法でなされます。
+
+
+</p>
 <h1>TLS (SSL)<span><a class="mark" href="#all_tls_ssl" id="all_tls_ssl">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!--
@@ -7969,8 +8232,8 @@ You can test this server by connecting to it with `openssl s_client`:
 
 </p>
 <pre><code>openssl s_client -connect 127.0.0.1:8000</code></pre>
-<h2>tls.connect(options, [secureConnectListener])<span><a class="mark" href="#all_tls_connect_options_secureconnectlistener" id="all_tls_connect_options_secureconnectlistener">#</a></span></h2>
-<h2>tls.connect(port, [host], [options], [secureConnectListener])<span><a class="mark" href="#all_tls_connect_port_host_options_secureconnectlistener" id="all_tls_connect_port_host_options_secureconnectlistener">#</a></span></h2>
+<h2>tls.connect(options, [callback])<span><a class="mark" href="#all_tls_connect_options_callback" id="all_tls_connect_options_callback">#</a></span></h2>
+<h2>tls.connect(port, [host], [options], [callback])<span><a class="mark" href="#all_tls_connect_port_host_options_callback" id="all_tls_connect_port_host_options_callback">#</a></span></h2>
 <!--
 Creates a new client connection to the given `port` and `host` (old API) or
 `options.port` and `options.host`. (If `host` is omitted, it defaults to
@@ -8058,7 +8321,7 @@ Creates a new client connection to the given `port` and `host` (old API) or
 </li>
 </ul>
 <!--
-The `secureConnectListener` parameter will be added as a listener for the
+The `callback` parameter will be added as a listener for the
 ['secureConnect'][] event.
 
 `tls.connect()` returns a [CleartextStream][] object.
@@ -8066,7 +8329,7 @@ The `secureConnectListener` parameter will be added as a listener for the
 Here is an example of a client of echo server as described previously:
 -->
 
-<p><code>secureConnectLister</code> 引数は <a href="#tls_event_secureconnect">&#39;secureConnect&#39;</a> イベントのリスナとして
+<p><code>callback</code> 引数は <a href="#tls_event_secureconnect">&#39;secureConnect&#39;</a> イベントのリスナとして
 加えられます。
 
 </p>
@@ -8253,7 +8516,7 @@ TLS サーバの設定に依存しますが、認証されていないコネク�
 
 </p>
 <h3>Event: &#39;clientError&#39;<span><a class="mark" href="#all_event_clienterror" id="all_event_clienterror">#</a></span></h3>
-<p><code>function (exception) { }</code>
+<p><code>function (exception, securePair) { }</code>
 
 </p>
 <!--
@@ -8263,6 +8526,13 @@ established - it will be forwarded here.
 
 <p>セキュアコネクションが確立される前にクライアントコネクションが
 <code>&#39;error&#39;</code> イベントを発した場合 － ここに転送されます。
+
+</p>
+<!--
+`securePair` is the `tls.SecurePair` that the error originated from.
+-->
+
+<p><code>securePair</code> はエラーが発生した <code>tls.SecurePair</code> です。
 
 
 </p>
@@ -8590,12 +8860,20 @@ Accepts a single argument, `encoding` which defaults to `utf8`.
 <p>文字列の引数 <code>encoding</code> を受け取ります。デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
-<h3>StringDecoder.write(buffer)<span><a class="mark" href="#all_stringdecoder_write_buffer" id="all_stringdecoder_write_buffer">#</a></span></h3>
+<h3>decoder.write(buffer)<span><a class="mark" href="#all_decoder_write_buffer" id="all_decoder_write_buffer">#</a></span></h3>
 <!--
 Returns a decoded string.
 -->
 
 <p>デコードされた文字列を返します。
+
+</p>
+<h3>decoder.end()<span><a class="mark" href="#all_decoder_end" id="all_decoder_end">#</a></span></h3>
+<!--
+Returns any trailing bytes that were left in the buffer.
+-->
+
+<p>バッファに残った終端のバイト列を返します。
 
 </p>
 <h1>File System<span><a class="mark" href="#all_file_system" id="all_file_system">#</a></span></h1>
@@ -9210,7 +9488,7 @@ not followed. Exclusive mode may or may not work with network file systems.
 ファイルは作成される (存在しない場合) または長さ 0 に切り詰められます
 (存在する場合)。</p>
 </li>
-<li><p><code>&#39;wx&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
+<li><p><code>&#39;wx+&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>
 </li>
 <li><p><code>&#39;a&#39;</code> - ファイルを追記用でオープンします。
 ファイルが存在しない場合は作成されます。</p>
@@ -9352,10 +9630,10 @@ Read data from the file specified by `fd`.
 
 </p>
 <!--
-`offset` is offset within the buffer where writing will start.
+`offset` is offset within the buffer where reading will start.
 -->
 
-<p><code>offset</code> は書き込みを開始するバッファ内のオフセットです。
+<p><code>offset</code> は読み込みを開始するバッファ内のオフセットです。
 
 </p>
 <!--
@@ -9986,7 +10264,7 @@ Normalize a string path, taking care of `'..'` and `'.'` parts.
 <!--
 When multiple slashes are found, they're replaced by a single one;
 when the path contains a trailing slash, it is preserved.
-On windows backslashes are used. 
+On Windows backslashes are used.
 -->
 
 <p>複数のスラッシュが見つかると、それらは一つに置換されます;
@@ -10040,7 +10318,7 @@ Resolves `to` to an absolute path.
 If `to` isn't already absolute `from` arguments are prepended in right to left
 order, until an absolute path is found. If after using all `from` paths still
 no absolute path is found, the current working directory is used as well. The
-resulting path is normalized, and trailing slashes are removed unless the path 
+resulting path is normalized, and trailing slashes are removed unless the path
 gets resolved to the root directory. Non-string arguments are ignored.
 -->
 
@@ -10210,17 +10488,17 @@ The platform-specific file separator. `'\\'` or `'/'`.
 
 </p>
 <!--
-An example on linux:
+An example on *nix:
 -->
 
-<p>Linux での例:
+<p>*nix での例:
 
 </p>
 <pre><code>&#39;foo/bar/baz&#39;.split(path.sep)
 // returns
 [&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</code></pre>
 <!--
-An example on windows:
+An example on Windows:
 -->
 
 <p>Windows での例:
@@ -10229,6 +10507,40 @@ An example on windows:
 <pre><code>&#39;foo\\bar\\baz&#39;.split(path.sep)
 // returns
 [&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</code></pre>
+<h2>path.delimiter<span><a class="mark" href="#all_path_delimiter" id="all_path_delimiter">#</a></span></h2>
+<!--
+The platform-specific path delimiter, `;` or `':'`.
+-->
+
+<p>プラットフォーム固有のパス区切り文字、<code>&#39;;&#39;</code> または <code>&#39;:&#39;</code>。
+
+</p>
+<!--
+An example on *nix:
+-->
+
+<p>*nix での例:
+
+</p>
+<pre><code>console.log(process.env.PATH)
+// &#39;/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin&#39;
+
+process.env.PATH.split(path.delimiter)
+// returns
+[&#39;/usr/bin&#39;, &#39;/bin&#39;, &#39;/usr/sbin&#39;, &#39;/sbin&#39;, &#39;/usr/local/bin&#39;]</code></pre>
+<!--
+An example on Windows:
+-->
+
+<p>Windows での例:
+
+</p>
+<pre><code>console.log(process.env.PATH)
+// &#39;C:\Windows\system32;C:\Windows;C:\Program Files\nodejs\&#39;
+
+process.env.PATH.split(path.delimiter)
+// returns
+[&#39;C:\Windows\system32&#39;, &#39;C:\Windows&#39;, &#39;C:\Program Files\nodejs\&#39;]</code></pre>
 <h1>net<span><a class="mark" href="#all_net" id="all_net">#</a></span></h1>
 <pre><code>Stability: 3 - Stable</code></pre>
 <!--
@@ -10274,7 +10586,7 @@ See ['end'][] event for more information.
 
 </p>
 <!--
-Here is an example of a echo server which listens for connections
+Here is an example of an echo server which listens for connections
 on port 8124:
 -->
 
@@ -10459,7 +10771,7 @@ A server is a `net.Socket` that can listen for new incoming connections.
 サーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。
 
 </p>
-<h3>server.listen(port, [host], [backlog], [listeningListener])<span><a class="mark" href="#all_server_listen_port_host_backlog_listeninglistener" id="all_server_listen_port_host_backlog_listeninglistener">#</a></span></h3>
+<h3>server.listen(port, [host], [backlog], [callback])<span><a class="mark" href="#all_server_listen_port_host_backlog_callback" id="all_server_listen_port_host_backlog_callback">#</a></span></h3>
 <!--
 Begin accepting connections on the specified `port` and `host`.  If the
 `host` is omitted, the server will accept connections directed to any
@@ -10487,13 +10799,13 @@ sysctl の設定を通じて OS によって決定されます。
 </p>
 <!--
 This function is asynchronous.  When the server has been bound,
-['listening'][] event will be emitted.  The last parameter `listeningListener`
+['listening'][] event will be emitted.  The last parameter `callback`
 will be added as an listener for the ['listening'][] event.
 -->
 
 <p>この関数は非同期です。
 サーバがバインドされると、<a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="net.html#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
+最後の引数 <code>callback</code> は <a href="net.html#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
 <!--
@@ -10525,7 +10837,7 @@ would be to wait a second and then try again. This can be done with
 
 
 </p>
-<h3>server.listen(path, [listeningListener])<span><a class="mark" href="#all_server_listen_path_listeninglistener" id="all_server_listen_path_listeninglistener">#</a></span></h3>
+<h3>server.listen(path, [callback])<span><a class="mark" href="#all_server_listen_path_callback" id="all_server_listen_path_callback">#</a></span></h3>
 <!--
 Start a UNIX socket server listening for connections on the given `path`.
 -->
@@ -10535,19 +10847,19 @@ Start a UNIX socket server listening for connections on the given `path`.
 </p>
 <!--
 This function is asynchronous.  When the server has been bound,
-['listening'][] event will be emitted.  The last parameter `listeningListener`
+['listening'][] event will be emitted.  The last parameter `callback`
 will be added as an listener for the ['listening'][] event.
 -->
 
 <p>この関数は非同期です。
 サーバがバインドされると、<a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="net.html#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
+最後の引数 <code>callback</code> は <a href="net.html#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
-<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#all_server_listen_handle_listeninglistener" id="all_server_listen_handle_listeninglistener">#</a></span></h3>
+<h3>server.listen(handle, [callback])<span><a class="mark" href="#all_server_listen_handle_callback" id="all_server_listen_handle_callback">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>handle</code> <span class="type">Object</span></li>
-<li><code>listeningListener</code> <span class="type">Function</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
 </div></ul>
 <!--
 The `handle` object can be set to either a server or socket (anything
@@ -10579,16 +10891,16 @@ Listening on a file descriptor is not supported on Windows.
 <!--
 This function is asynchronous.  When the server has been bound,
 ['listening'](#event_listening_) event will be emitted.
-the last parameter `listeningListener` will be added as an listener for the
+the last parameter `callback` will be added as an listener for the
 ['listening'](#event_listening_) event.
 -->
 
 <p>この関数は非同期です。
 サーバがバインドされると、<a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントが生成されます。
-最後の引数 <code>listeningListener</code> は <a href="net.html#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
+最後の引数 <code>callback</code> は <a href="net.html#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
-<h3>server.close([cb])<span><a class="mark" href="#all_server_close_cb" id="all_server_close_cb">#</a></span></h3>
+<h3>server.close([callback])<span><a class="mark" href="#all_server_close_callback" id="all_server_close_callback">#</a></span></h3>
 <!--
 Stops the server from accepting new connections and keeps existing
 connections. This function is asynchronous, the server is finally
@@ -12267,7 +12579,7 @@ sent to the server on that socket.
 
 </p>
 <h3>Event: &#39;clientError&#39;<span><a class="mark" href="#all_event_clienterror_1" id="all_event_clienterror_1">#</a></span></h3>
-<p><code>function (exception) { }</code>
+<p><code>function (exception, socket) { }</code>
 
 </p>
 <!--
@@ -12275,6 +12587,14 @@ If a client connection emits an 'error' event - it will forwarded here.
 -->
 
 <p>クライアントコネクションが &#39;error&#39; イベントを発した場合 － ここに転送されます。
+
+</p>
+<!--
+`socket` is the `net.Socket` object that the error originated from.
+-->
+
+<p><code>socket</code> はエラーが発生した <code>net.Socket</code> オブジェクトです。
+
 
 </p>
 <h3>server.listen(port, [hostname], [backlog], [callback])<span><a class="mark" href="#all_server_listen_port_hostname_backlog_callback" id="all_server_listen_port_hostname_backlog_callback">#</a></span></h3>
@@ -12315,11 +12635,11 @@ a listener for the ['listening'][] event.  See also [net.Server.listen(port)][].
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
 <a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_port_host_backlog_listeninglistener">net.Server.listen(port)</a> を参照してください。
+詳細は <a href="net.html#net_server_listen_port_host_backlog_callback">net.Server.listen(port)</a> を参照してください。
 
 
 </p>
-<h3>server.listen(path, [callback])<span><a class="mark" href="#all_server_listen_path_callback" id="all_server_listen_path_callback">#</a></span></h3>
+<h3>server.listen(path, [callback])<span><a class="mark" href="#all_server_listen_path_callback_1" id="all_server_listen_path_callback_1">#</a></span></h3>
 <!--
 Start a UNIX socket server listening for connections on the given `path`.
 -->
@@ -12334,14 +12654,14 @@ a listener for the ['listening'][] event.  See also [net.Server.listen(path)][].
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
 <a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+詳細は <a href="net.html#net_server_listen_path_callback">net.Server.listen(path)</a> を参照してください。
 
 
 </p>
-<h3>server.listen(handle, [listeningListener])<span><a class="mark" href="#all_server_listen_handle_listeninglistener_1" id="all_server_listen_handle_listeninglistener_1">#</a></span></h3>
+<h3>server.listen(handle, [callback])<span><a class="mark" href="#all_server_listen_handle_callback_1" id="all_server_listen_handle_callback_1">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>handle</code> <span class="type">Object</span></li>
-<li><code>listeningListener</code> <span class="type">Function</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
 </div></ul>
 <!--
 The `handle` object can be set to either a server or socket (anything
@@ -12373,21 +12693,22 @@ Listening on a file descriptor is not supported on Windows.
 <!--
 This function is asynchronous. The last parameter `callback` will be added as
 a listener for the ['listening'](net.html#event_listening_) event.
-See also [net.Server.listen()](net.html#server.listen).
+See also [net.Server.listen()](net.html#net_server_listen_handle_callback).
 -->
 
 <p>この関数は非同期です。最後の引数の <code>callback</code> は
-<a href="net.html#net_event_listening">&#39;listening&#39;</a> イベントのリスナとして加えられます。
-詳細は <a href="net.html#net_server_listen_path_listeninglistener">net.Server.listen(path)</a> を参照してください。
+<a href="net.html#event_listening_">&#39;listening&#39;</a> イベントのリスナとして加えられます。
+詳細は <a href="net.html#net_server_listen_handle_callback">net.Server.listen()</a>
+を参照してください。
 
 </p>
-<h3>server.close([cb])<span><a class="mark" href="#all_server_close_cb_1" id="all_server_close_cb_1">#</a></span></h3>
+<h3>server.close([callback])<span><a class="mark" href="#all_server_close_callback_1" id="all_server_close_callback_1">#</a></span></h3>
 <!--
 Stops the server from accepting new connections.  See [net.Server.close()][].
 -->
 
 <p>サーバが新しいコネクションを受け付けるのを終了します。
-<a href="net.html#net_server_close_cb">net.Server.close()</a> を参照してください。
+<a href="net.html#net_server_close_callback">net.Server.close()</a> を参照してください。
 
 </p>
 <h3>server.maxHeadersCount<span><a class="mark" href="#all_server_maxheaderscount" id="all_server_maxheaderscount">#</a></span></h3>
@@ -12562,12 +12883,10 @@ you can use the `require('querystring').parse` function, or pass
   query: { name: &#39;ryan&#39; },
   pathname: &#39;/status&#39; }</code></pre>
 <h3>request.headers<span><a class="mark" href="#all_request_headers" id="all_request_headers">#</a></span></h3>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
 <!--
 Read only map of header names and values. Header names are lower-cased.
 -->
 
-</p>
 <p>参照のみ可能な、ヘッダ名と値のマップです。
 ヘッダ名は小文字化されています。
 
@@ -12575,17 +12894,17 @@ Read only map of header names and values. Header names are lower-cased.
 <!--
 Example:
 -->
-例:
 
-    // Prints something like:
-    //
-    // { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
-    //   host: &#39;127.0.0.1:8000&#39;,
-    //   accept: &#39;<em>/</em>&#39; }
-    console.log(request.headers);
+<p>例:
 
-### request.trailers
-
+</p>
+<pre><code>// Prints something like:
+//
+// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,
+//   host: &#39;127.0.0.1:8000&#39;,
+//   accept: &#39;*/*&#39; }
+console.log(request.headers);</code></pre>
+<h3>request.trailers<span><a class="mark" href="#all_request_trailers" id="all_request_trailers">#</a></span></h3>
 <!--
 Read only; HTTP trailers (if present). Only populated after the 'end' event.
 -->
@@ -12672,31 +12991,6 @@ The response implements the [Writable Stream][] interface. This is an
 </p>
 <p>レスポンスは <a href="stream.html#stream_writable_stream">Writable  Stream</a> インタフェースを実装します。
 これは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
-
-</p>
-<h3>Event: &#39;end&#39;<span><a class="mark" href="#all_event_end_3" id="all_event_end_3">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
-<!--
-Emitted when the response has been sent. More specifically, this event is
-emitted when the last segment of the response headers and body have been
-handed off to the operating system for transmission over the network. It
-does not imply that the client has received anything yet.
--->
-
-<p>レスポンスが送信された場合に生成されます。
-より具体的には、このイベントはレスポンスヘッダおよびボディの最後の
-セグメントが、ネットワークに転送されるためにオペレーティングシステムに
-渡された後に生成されます。
-それはクライアントが全て受信したことを意味しません。
-
-</p>
-<!--
-After this event, no more events will be emitted on the response object.
--->
-
-<p>このイベントより後では、レスポンスオブジェクトはイベントを生成しません。
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close_7" id="all_event_close_7">#</a></span></h3>
@@ -12835,6 +13129,15 @@ or
 
 </p>
 <pre><code>response.setHeader(&quot;Set-Cookie&quot;, [&quot;type=ninja&quot;, &quot;language=javascript&quot;]);</code></pre>
+<h3>response.headersSent<span><a class="mark" href="#all_response_headerssent" id="all_response_headerssent">#</a></span></h3>
+<!--
+Boolean (read-only). True if headers were sent, false otherwise.
+-->
+
+<p>(読み込み専用の) Boolean。
+ヘッダが送信済みなら true、それ以外は false です。
+
+</p>
 <h3>response.sendDate<span><a class="mark" href="#all_response_senddate" id="all_response_senddate">#</a></span></h3>
 <!--
 When true, the Date header will be automatically generated and sent in 
@@ -13712,31 +14015,51 @@ Note that the __data will be lost__ if there is no listener when a
 <strong>データは失われる</strong>ことに注意してください。
 
 </p>
-<h3>Event: &#39;end&#39;<span><a class="mark" href="#all_event_end_4" id="all_event_end_4">#</a></span></h3>
+<h3>Event: &#39;end&#39;<span><a class="mark" href="#all_event_end_3" id="all_event_end_3">#</a></span></h3>
 <p><code>function () { }</code>
 
 </p>
 <!--
-Emitted exactly once for each message. No arguments. After
-emitted no other events will be emitted on the response.
+Emitted exactly once for each response. After that, no more `'data'` events
+will be emitted on the response.
 -->
 
-<p>メッセージごとに厳密に一回だけ生成されます。
-このイベントが生成された後、このレスポンスはどんなイベントも生成しません。
+<p>レスポンスごとに厳密に一回生成されます。
+その後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。
+
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close_8" id="all_event_close_8">#</a></span></h3>
-<p><code>function (err) { }</code>
+<p><code>function () { }</code>
 
 </p>
 <!--
 Indicates that the underlaying connection was terminated before
-`end` event was emitted.
-See [http.ServerRequest][]'s `'close'` event for more information.
+`response.end()` was called or able to flush.
 -->
 
-<p><code>&#39;end&#39;</code> イベントが生成される前に下層の接続が切断されたことを示します。
+<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、
+下層の接続が切断されたことを示します。
+
+</p>
+<!--
+Just like `'end'`, this event occurs only once per response, and no more
+`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`
+event for more information.
+-->
+
+<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、
+<code>&#39;data&#39;</code> イベントはそれ以上生成されません。
 <a href="#http_class_http_serverrequest">http.ServerRequest</a> の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+
+</p>
+<!--
+Note: `'close'` can fire after `'end'`, but not vice versa.
+-->
+
+<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。
+その逆もあります。
+
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#all_response_statuscode_1" id="all_response_statuscode_1">#</a></span></h3>
@@ -13875,6 +14198,24 @@ https.createServer(options, function (req, res) {
   res.writeHead(200);
   res.end(&quot;hello world\n&quot;);
 }).listen(8000);</code></pre>
+<h3>server.listen(port, [host], [backlog], [callback])<span><a class="mark" href="#all_server_listen_port_host_backlog_callback_1" id="all_server_listen_port_host_backlog_callback_1">#</a></span></h3>
+<h3>server.listen(path, [callback])<span><a class="mark" href="#all_server_listen_path_callback_2" id="all_server_listen_path_callback_2">#</a></span></h3>
+<h3>server.listen(handle, [callback])<span><a class="mark" href="#all_server_listen_handle_callback_2" id="all_server_listen_handle_callback_2">#</a></span></h3>
+<!--
+See [http.listen()][] for details.
+-->
+
+<p>詳細は <a href="http.html#http_server_listen_port_hostname_backlog_callback">http.listen()</a> を参照してください。
+
+</p>
+<h3>server.close([callback])<span><a class="mark" href="#all_server_close_callback_2" id="all_server_close_callback_2">#</a></span></h3>
+<!--
+See [http.close()][] for details.
+-->
+
+<p>詳細は <a href="http.html#http_server_close_callback">http.close()</a> を参照してください。
+
+</p>
 <h2>https.request(options, callback)<span><a class="mark" href="#all_https_request_options_callback" id="all_https_request_options_callback">#</a></span></h2>
 <!--
 Makes a request to a secure web server.
@@ -14003,8 +14344,7 @@ The following options from [tls.connect()][] can also be specified. However, a
 - `rejectUnauthorized`: If `true`, the server certificate is verified against
   the list of supplied CAs. An `'error'` event is emitted if verification
   fails. Verification happens at the connection level, *before* the HTTP
-<<<<<<< HEAD
-  request is sent. Default `false`.
+  request is sent. Default `true`.
 -->
 
 <ul>
@@ -14022,31 +14362,12 @@ The following options from [tls.connect()][] can also be specified. However, a
 リストによって検証されます。
 認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。
 認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
-デフォルトは false です。</li>
+デフォルトは <code>true</code> です。</li>
 </ul>
-<h1>&lt;!--<span><a class="mark" href="#all" id="all">#</a></span></h1>
-<p>  request is sent. Default <code>true</code>.
+<!--
+In order to specify these options, use a custom `Agent`.
+-->
 
-</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>master
-In order to specify these options, use a custom <code>Agent</code>.
---&gt;
-
-</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 <p>これらのオプションを指定するには、カスタムエージェントを使用します。
 
 </p>
@@ -16259,7 +16580,7 @@ The `child.js` could look like this:
 </p>
 <pre><code>process.on(&#39;message&#39;, function(m, socket) {
   if (m === &#39;socket&#39;) {
-    socket.end(&#39;You where handled as a &#39; + process.argv[2] + &#39; person&#39;);
+    socket.end(&#39;You were handled as a &#39; + process.argv[2] + &#39; person&#39;);
   }
 });</code></pre>
 <!--
@@ -17358,6 +17679,37 @@ Returns a new [Unzip](#zlib_class_zlib_unzip) object with an
 
 
 </p>
+<h2>Class: zlib.Zlib<span><a class="mark" href="#all_class_zlib_zlib" id="all_class_zlib_zlib">#</a></span></h2>
+<!--
+Not exported by the `zlib` module. It is documented here because it is the base
+class of the compressor/decompressor classes.
+-->
+
+<p><code>zlib</code> モジュールによって公開されてはいません。
+ここで文書化するのは圧縮／解凍クラスのベースクラスだからです。
+
+</p>
+<h3>zlib.flush(callback)<span><a class="mark" href="#all_zlib_flush_callback" id="all_zlib_flush_callback">#</a></span></h3>
+<!--
+Flush pending data. Don't call this frivolously, premature flushes negatively
+impact the effectiveness of the compression algorithm.
+-->
+
+<p>保留中のデータをフラッシュします。
+これを気軽に呼び出さないでください、性急なフラッシュは圧縮アルゴリズムに
+ネガティブな影響を与えます。
+
+</p>
+<h3>zlib.reset()<span><a class="mark" href="#all_zlib_reset" id="all_zlib_reset">#</a></span></h3>
+<!--
+Reset the compressor/decompressor to factory defaults. Only applicable to
+the inflate and deflate algorithms.
+-->
+
+<p>圧縮／解凍をファクトリのデフォルトにリセットします。
+infrate および defrate アルゴリズムにのみ効果があります。
+
+</p>
 <h2>Class: zlib.Gzip<span><a class="mark" href="#all_class_zlib_gzip" id="all_class_zlib_gzip">#</a></span></h2>
 <!--
 Compress data using gzip.
@@ -18268,7 +18620,7 @@ This causes potentially surprising behavior in three edge cases:
    the worker to use the supplied handle, rather than talk to the master
    process.  If the worker already has the handle, then it's presumed
    that you know what you are doing.
-3. `server.listen(0)` Normally, this will case servers to listen on a
+3. `server.listen(0)` Normally, this will cause servers to listen on a
    random port.  However, in a cluster, each worker will receive the
    same "random" port each time they do `listen(0)`.  In essence, the
    port is random the first time, but predictable thereafter.  If you
@@ -19039,7 +19391,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
