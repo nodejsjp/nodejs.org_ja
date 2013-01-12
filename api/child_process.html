@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Child Process Node.js v0.9.3 Manual &amp; Documentation</title>
+  <title>Child Process Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/child_process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -82,8 +82,7 @@
 
           <div id="apicontent">
             <h1>Child Process<span><a class="mark" href="#child_process_child_process" id="child_process_child_process">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Node provides a tri-directional `popen(3)` facility through the
 `child_process` module.
 -->
@@ -560,6 +559,8 @@ there is no IPC channel keeping it alive. When calling this method the
     for stdio.  (See below)
   * `env` {Object} Environment key-value pairs
   * `detached` {Boolean} The child will be a process group leader.  (See below)
+  * `uid` {Number} Sets the user identity of the process. (See setuid(2).)
+  * `gid` {Number} Sets the group identity of the process. (See setgid(2).)
 * return: {ChildProcess object}
 -->
 
@@ -574,6 +575,10 @@ there is no IPC channel keeping it alive. When calling this method the
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>detached</code> {Boolean} 子プロセスがプロセスグループのリーダになるかどうか
 (後述)。</li>
+<li><code>uid</code> {Number} このプロセスのユーザ識別子を設定します
+ (setuid(2) を参照)。</li>
+<li><code>gid</code> {Number} このプロセスのグループ識別子を設定します
+(setgid(2) を参照)。</li>
 </ul>
 </li>
 <li>return: {ChildProcess object}</li>
@@ -1056,6 +1061,7 @@ leaner than `child_process.exec`. It has the same options.
   * `cwd` {String} Current working directory of the child process
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
+  * `execPath` {String} Executable used to create the child process
 * Return: ChildProcess object
 -->
 
@@ -1066,6 +1072,7 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
+<li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -1116,6 +1123,21 @@ thousands of them.
 つまり、数千の子プロセスを作ることは出来ません。
 
 </p>
+<!--
+The `execPath` property in the `options` object allows for a process to be
+created for the child rather than the current `node` executable. This should be
+done with care and by default will talk over the fd represented an
+environmental variable `NODE_CHANNEL_FD` on the child process. The input and
+output on this fd is expected to be line delimited JSON objects.
+-->
+
+<p><code>options</code> オブジェクト中の <code>execPath</code> プロパティは、
+現在の <code>node</code> 実行ファイルではない子プロセスの作成を可能にします。
+デフォルトでは、子プロセスの環境変数 <code>NODE_CHANNEL_FD</code> によって示される
+ファイル記述子を通じて対話することに注意しなければなりません。
+このファイル記述子における入力と出力は、改行で区切られた JSON オブジェクトです。
+
+</p>
 
           </div>
         </div>
@@ -1144,7 +1166,7 @@ thousands of them.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

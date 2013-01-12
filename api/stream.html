@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.9.3 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,34 +56,48 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#stream_stream">Stream</a><ul>
-<li><a href="#stream_readable_stream">Readable Stream</a><ul>
-<li><a href="#stream_event_data">Event: &#39;data&#39;</a></li>
+<li><a href="#stream_compatibility">Compatibility</a></li>
+<li><a href="#stream_class_stream_readable">Class: stream.Readable</a><ul>
+<li><a href="#stream_new_stream_readable_options">new stream.Readable([options])</a></li>
+<li><a href="#stream_readable_read_size_callback">readable._read(size, callback)</a></li>
+<li><a href="#stream_readable_push_chunk">readable.push(chunk)</a></li>
+<li><a href="#stream_readable_wrap_stream">readable.wrap(stream)</a></li>
+<li><a href="#stream_event_readable">Event: &#39;readable&#39;</a></li>
 <li><a href="#stream_event_end">Event: &#39;end&#39;</a></li>
+<li><a href="#stream_event_data">Event: &#39;data&#39;</a></li>
 <li><a href="#stream_event_error">Event: &#39;error&#39;</a></li>
 <li><a href="#stream_event_close">Event: &#39;close&#39;</a></li>
-<li><a href="#stream_stream_readable">stream.readable</a></li>
-<li><a href="#stream_stream_setencoding_encoding">stream.setEncoding([encoding])</a></li>
-<li><a href="#stream_stream_pause">stream.pause()</a></li>
-<li><a href="#stream_stream_resume">stream.resume()</a></li>
-<li><a href="#stream_stream_destroy">stream.destroy()</a></li>
-<li><a href="#stream_stream_pipe_destination_options">stream.pipe(destination, [options])</a></li>
+<li><a href="#stream_readable_setencoding_encoding">readable.setEncoding(encoding)</a></li>
+<li><a href="#stream_readable_read_size">readable.read([size])</a></li>
+<li><a href="#stream_readable_pipe_destination_options">readable.pipe(destination, [options])</a></li>
+<li><a href="#stream_readable_unpipe_destination">readable.unpipe([destination])</a></li>
+<li><a href="#stream_readable_pause">readable.pause()</a></li>
+<li><a href="#stream_readable_resume">readable.resume()</a></li>
 </ul>
 </li>
-<li><a href="#stream_writable_stream">Writable Stream</a><ul>
+<li><a href="#stream_class_stream_writable">Class: stream.Writable</a><ul>
+<li><a href="#stream_new_stream_writable_options">new stream.Writable([options])</a></li>
+<li><a href="#stream_writable_write_chunk_callback">writable._write(chunk, callback)</a></li>
+<li><a href="#stream_writable_write_chunk_encoding_callback">writable.write(chunk, [encoding], [callback])</a></li>
+<li><a href="#stream_writable_end_chunk_encoding">writable.end([chunk], [encoding])</a></li>
 <li><a href="#stream_event_drain">Event: &#39;drain&#39;</a></li>
-<li><a href="#stream_event_error_1">Event: &#39;error&#39;</a></li>
 <li><a href="#stream_event_close_1">Event: &#39;close&#39;</a></li>
+<li><a href="#stream_event_finish">Event: &#39;finish&#39;</a></li>
 <li><a href="#stream_event_pipe">Event: &#39;pipe&#39;</a></li>
-<li><a href="#stream_stream_writable">stream.writable</a></li>
-<li><a href="#stream_stream_write_string_encoding">stream.write(string, [encoding])</a></li>
-<li><a href="#stream_stream_write_buffer">stream.write(buffer)</a></li>
-<li><a href="#stream_stream_end">stream.end()</a></li>
-<li><a href="#stream_stream_end_string_encoding">stream.end(string, encoding)</a></li>
-<li><a href="#stream_stream_end_buffer">stream.end(buffer)</a></li>
-<li><a href="#stream_stream_destroy_1">stream.destroy()</a></li>
-<li><a href="#stream_stream_destroysoon">stream.destroySoon()</a></li>
+<li><a href="#stream_event_unpipe">Event &#39;unpipe&#39;</a></li>
 </ul>
 </li>
+<li><a href="#stream_class_stream_duplex">Class: stream.Duplex</a><ul>
+<li><a href="#stream_new_stream_duplex_options">new stream.Duplex(options)</a></li>
+</ul>
+</li>
+<li><a href="#stream_class_stream_transform">Class: stream.Transform</a><ul>
+<li><a href="#stream_new_stream_transform_options">new stream.Transform([options])</a></li>
+<li><a href="#stream_transform_transform_chunk_outputfn_callback">transform._transform(chunk, outputFn, callback)</a></li>
+<li><a href="#stream_transform_flush_outputfn_callback">transform._flush(outputFn, callback)</a></li>
+</ul>
+</li>
+<li><a href="#stream_class_stream_passthrough">Class: stream.PassThrough</a></li>
 </ul>
 </li>
 </ul>
@@ -92,14 +106,11 @@
 
           <div id="apicontent">
             <h1>Stream<span><a class="mark" href="#stream_stream" id="stream_stream">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 A stream is an abstract interface implemented by various objects in
 Node.  For example a request to an HTTP server is a stream, as is
 stdout. Streams are readable, writable, or both. All streams are
 instances of [EventEmitter][]
-
-You can load up the Stream base class by doing `require('stream')`.
 -->
 
 <p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。
@@ -108,10 +119,142 @@ You can load up the Stream base class by doing `require('stream')`.
 全てのストリームは <a href="events.html#events_class_events_eventemitter">EventEmitter</a> のインスタンスです。
 
 </p>
+<!--
+You can load the Stream base classes by doing `require('stream')`.
+There are base classes provided for Readable streams, Writable
+streams, Duplex streams, and Transform streams.
+-->
+
 <p>Stream のベースクラスは <code>require(&#39;stream&#39;)</code> でロードすることができます。
+Readable ストリーム、Writable ストリーム、Duplex ストリーム、Transform
+ストリームのベースクラスが提供されます。
 
 </p>
-<h2>Readable Stream<span><a class="mark" href="#stream_readable_stream" id="stream_readable_stream">#</a></span></h2>
+<h2>Compatibility<span><a class="mark" href="#stream_compatibility" id="stream_compatibility">#</a></span></h2>
+<!--
+In earlier versions of Node, the Readable stream interface was
+simpler, but also less powerful and less useful.
+-->
+
+<p>以前のバージョンの Node では、読み込み可能なストリームのインタフェースは
+よりシンプルでしたが、強力ではなく使いやすくもありませんでした。
+
+</p>
+<!--
+* Rather than waiting for you to call the `read()` method, `'data'`
+  events would start emitting immediately.  If you needed to do some
+  I/O to decide how to handle data, then you had to store the chunks
+  in some kind of buffer so that they would not be lost.
+* The `pause()` method was advisory, rather than guaranteed.  This
+  meant that you still had to be prepared to receive `'data'` events
+  even when the stream was in a paused state.
+-->
+
+<ul>
+<li><code>read()</code> メソッドを呼び出すのを待つのではなく、
+<code>&#39;data&#39;</code> イベントがすぐに生成され始めます。
+もしデータを処理する方法を決定するためにいくらかの I/O をする
+必要がある場合、データが失われないようにするためには
+チャンクを何らかのバッファに保存しなければなりませんでした。</li>
+<li><code>pause()</code> は保証というよりはむしろ助言です。
+それはストリームが中断された状態であったとしても、
+<code>&#39;data&#39;</code> イベントを受け取る準備が必要だということを意味します。</li>
+</ul>
+<!--
+In Node v0.10, the Readable class described below was added.  For
+backwards compatibility with older Node programs, Readable streams
+switch into "old mode" when a `'data'` event handler is added, or when
+the `pause()` or `resume()` methods are called.  The effect is that,
+even if you are not using the new `read()` method and `'readable'`
+event, you no longer have to worry about losing `'data'` chunks.
+-->
+
+<p>Node v0.10 から、以下で説明する Readable クラスが追加されました。
+古い Node プログラムとの後方互換性のために、Readable ストリームは
+<code>&#39;data&#39;</code> イベントのハンドラが加えられた場合や、<code>pause()</code> または
+<code>resume()</code> メソッドが読み出されると、「旧モード」に切り替わります。
+その結果として、新しい <code>read()</code> メソッドや <code>&#39;readable&#39;</code> イベントを
+使用していなくても、もう <code>&#39;data&#39;</code> イベントのチャンクが失われることを
+心配する必要はありません。
+
+</p>
+<!--
+Most programs will continue to function normally.  However, this
+introduces an edge case in the following conditions:
+-->
+
+<p>ほとんどのプログラムはこれまで通りに機能するでしょう。
+しかしながら、以下の条件でエッジケースが存在します。
+
+</p>
+<!--
+* No `'data'` event handler is added.
+* The `pause()` and `resume()` methods are never called.
+-->
+
+<ul>
+<li><code>&#39;data&#39;</code> イベントハンドラが登録されていない。</li>
+<li><code>pause()</code> および <code>resume()</code> メソッドが呼び出されていない。</li>
+</ul>
+<!--
+For example, consider the following code:
+-->
+
+<p>例えば、以下のコードを考えてみてください:
+
+</p>
+<pre><code class="javascript">// WARNING!  BROKEN!
+net.createServer(function(socket) {
+
+  // we add an &#39;end&#39; method, but never consume the data
+  socket.on(&#39;end&#39;, function() {
+    // It will never get here.
+    socket.end(&#39;I got your message (but didnt read it)\n&#39;);
+  });
+
+}).listen(1337);</code></pre>
+<!--
+In versions of node prior to v0.10, the incoming message data would be
+simply discarded.  However, in Node v0.10 and beyond, the socket will
+remain paused forever.
+-->
+
+<p>v0.10 より前の Node では、入ってきたデータは単純に破棄されていました。
+しかしながら、Node v0.10 以降では、ソケットは中断したままとなります。
+
+</p>
+<!--
+The workaround in this situation is to call the `resume()` method to
+trigger "old mode" behavior:
+-->
+
+<p>この状況の回避策は、「旧モード」の振る舞いへのトリガーとして
+<code>resume()</code> メソッドを呼び出すことです。
+
+</p>
+<pre><code class="javascript">// Workaround
+net.createServer(function(socket) {
+
+  socket.on(&#39;end&#39;, function() {
+    socket.end(&#39;I got your message (but didnt read it)\n&#39;);
+  });
+
+  // start the flow of data, discarding it.
+  socket.resume();
+
+}).listen(1337);</code></pre>
+<!--
+In addition to new Readable streams switching into old-mode, pre-v0.10
+style streams can be wrapped in a Readable class using the `wrap()`
+method.
+-->
+
+<p>新しい Readable ストリームを旧モードに切り替えられることに加えて、
+<code>warp()</code> メソッドを使って v0.10 より前のスタイルのストリームを
+Readable クラスでラップすることもできます。
+
+</p>
+<h2>Class: stream.Readable<span><a class="mark" href="#stream_class_stream_readable" id="stream_class_stream_readable">#</a></span></h2>
 <!--type=class-->
 
 <!--
@@ -121,30 +264,229 @@ A `Readable Stream` has the following methods, members, and events.
 <p><code>Readable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。
 
 </p>
-<h3>Event: &#39;data&#39;<span><a class="mark" href="#stream_event_data" id="stream_event_data">#</a></span></h3>
-<p><code>function (data) { }</code>
+<!--
+Note that `stream.Readable` is an abstract class designed to be
+extended with an underlying implementation of the `_read(size, cb)`
+method. (See below.)
+-->
+
+<p><code>stream.Readable</code> は下層の実装である <code>_read(size, cb)</code> メソッド (後述)
+によって拡張されるように設計された抽象クラスであることに注意してください。
+
+</p>
+<h3>new stream.Readable([options])<span><a class="mark" href="#stream_new_stream_readable_options" id="stream_new_stream_readable_options">#</a></span></h3>
+<!--
+* `options` {Object}
+  * `bufferSize` {Number} The size of the chunks to consume from the
+    underlying resource. Default=16kb
+  * `lowWaterMark` {Number} The minimum number of bytes to store in
+    the internal buffer before emitting `readable`.  Default=0
+  * `highWaterMark` {Number} The maximum number of bytes to store in
+    the internal buffer before ceasing to read from the underlying
+    resource.  Default=16kb
+  * `encoding` {String} If specified, then buffers will be decoded to
+    strings using the specified encoding.  Default=null
+-->
+
+<ul>
+<li><code>options</code> {Object} (任意)<ul>
+<li><code>bufferSize</code> {Number} 下層のリソースによって消費される
+チャンクのサイズです。デフォルトは 16kb。</li>
+<li><code>lowWaterMark</code> {Number} <code>readable</code> イベントが生成されるまで
+内部バッファに貯めておくバイト数の最小値。デフォルトは 0。</li>
+<li><code>highWaterMark</code> {Number} 下層のリソースから読み込むのを中断するまで
+内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
+<li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
+デコードされます。デフォルトは <code>null</code>。</li>
+</ul>
+</li>
+</ul>
+<!--
+In classes that extend the Readable class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Readable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
+
+</p>
+<h3>readable._read(size, callback)<span><a class="mark" href="#stream_readable_read_size_callback" id="stream_readable_read_size_callback">#</a></span></h3>
+<!--
+* `size` {Number} Number of bytes to read asynchronously
+* `callback` {Function} Called with an error or with data
+-->
+
+<ul>
+<li><code>size</code> {Number} 非同期に読み込むバイト数</li>
+<li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>
+</ul>
+<!--
+All Readable stream implementations must provide a `_read` method
+to fetch data from the underlying resource.
+-->
+
+<p>全ての Readable ストリームは、下層のリソースからデータを
+取得するために <code>_read</code> メソッドを提供しなければなりません。
 
 </p>
 <!--
-The `'data'` event emits either a `Buffer` (by default) or a string if
-`setEncoding()` was used.
-
-Note that the __data will be lost__ if there is no listener when a
-`Readable Stream` emits a `'data'` event.
+Note: **This function MUST NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Readable
+class methods only.
 -->
 
-<p><code>&#39;data&#39;</code> イベントは <code>Buffer</code> (デフォルト) または、
-<code>setEncoding()</code> された場合は文字列のどちらかを生成します
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるべきであり、Readable クラスの内部からのみ
+呼び出されるべきです。
 
 </p>
-<p><code>Readable Stream</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、
-<strong>データは失われる</strong>ことに注意してください。
+<!--
+Call the callback using the standard `callback(error, data)` pattern.
+When no more data can be fetched, call `callback(null, null)` to
+signal the EOF.
+-->
+
+<p>コールバックは標準的な <code>callback(error, data)</code>
+パターンを使って呼び出します。
+データをそれ以上取得できなくなった場合は、EOF を伝えるために
+<code>callback(null, null)</code> で呼び出します。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+</p>
+<h3>readable.push(chunk)<span><a class="mark" href="#stream_readable_push_chunk" id="stream_readable_push_chunk">#</a></span></h3>
+<!--
+* `chunk` {Buffer | null | String} Chunk of data to push into the read queue
+* return {Boolean} Whether or not more pushes should be performed
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、
+データのチャンク</li>
+<li>return {Boolean} まだプッシュしてもいいかどうか</li>
+</ul>
+<!--
+The `Readable` class works by putting data into a read queue to be
+pulled out later by calling the `read()` method when the `'readable'`
+event fires.
+-->
+
+<p><code>&#39;readable&#39;</code> イベントが生成された時、後で <code>read()</code> メソッドを呼び出して
+取得されるデータを読み込みキューに入れておくことによって
+<code>Readable</code> クラスは機能します。
+
+</p>
+<!--
+The `push()` method will explicitly insert some data into the read
+queue.  If it is called with `null` then it will signal the end of the
+data.
+-->
+
+<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。
+もし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。
+
+</p>
+<!--
+In some cases, you may be wrapping a lower-level source which has some
+sort of pause/resume mechanism, and a data callback.  In those cases,
+you could wrap the low-level source object by doing something like
+this:
+-->
+
+<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ
+低水準のソースをラップするかもしれません。
+それらのケースでは、次のように低水準なソースオブジェクトを
+ラップすることができます:
+
+</p>
+<pre><code class="javascript">// source is an object with readStop() and readStart() methods,
+// and an `ondata` member that gets called when it has data, and
+// an `onend` member that gets called when the data is over.
+
+var stream = new Readable();
+
+source.ondata = function(chunk) {
+  // if push() returns false, then we need to stop reading from source
+  if (!stream.push(chunk))
+    source.readStop();
+};
+
+source.onend = function() {
+  stream.push(null);
+};
+
+// _read will be called when the stream wants to pull more data in
+stream._read = function(size, cb) {
+  source.readStart();
+};</code></pre>
+<h3>readable.wrap(stream)<span><a class="mark" href="#stream_readable_wrap_stream" id="stream_readable_wrap_stream">#</a></span></h3>
+<!--
+* `stream` {Stream} An "old style" readable stream
+-->
+
+<ul>
+<li><code>stream</code> {Stream} 「古いスタイル」の読み込み可能なストリーム</li>
+</ul>
+<!--
+If you are using an older Node library that emits `'data'` events and
+has a `pause()` method that is advisory only, then you can use the
+`wrap()` method to create a Readable stream that uses the old stream
+as its data source.
+-->
+
+<p>もし <code>&#39;data&#39;</code> イベントを生成し、アドバイスだけを行う <code>pause()</code>
+メソッドを持つ、古い Node ライブラリを使っているなら、
+`wrap()`` メソッドは古いストリームをデータソースとして使用する
+Readable ストリームを作成します。
+
+</p>
+<!--
+For example:
+-->
+
+<p>例:
+
+</p>
+<pre><code class="javascript">var OldReader = require(&#39;./old-api-module.js&#39;).OldReader;
+var oreader = new OldReader;
+var Readable = require(&#39;stream&#39;).Readable;
+var myReader = new Readable().wrap(oreader);
+
+myReader.on(&#39;readable&#39;, function() {
+  myReader.read(); // etc.
+});</code></pre>
+<h3>Event: &#39;readable&#39;<span><a class="mark" href="#stream_event_readable" id="stream_event_readable">#</a></span></h3>
+<!--
+When there is data ready to be consumed, this event will fire.  The
+number of bytes that are required to be considered "readable" depends
+on the `lowWaterMark` option set in the constructor.
+-->
+
+<p>データが消費される準備ができた時、このイベントが生成されます。
+「読み込み可能である」とみなされるために必要なバイト数は、
+コンストラクタで設定された <code>lowWaterMark</code> に依存します。
+
+</p>
+<!--
+When this event emits, call the `read()` method to consume the data.
+-->
+
+<p>このイベントが生成された場合、<code>read()</code> を呼んでデータを消費してください。
 
 </p>
 <h3>Event: &#39;end&#39;<span><a class="mark" href="#stream_event_end" id="stream_event_end">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
 <!--
 Emitted when the stream has received an EOF (FIN in TCP terminology).
 Indicates that no more `'data'` events will happen. If the stream is
@@ -153,13 +495,33 @@ also writable, it may be possible to continue writing.
 
 <p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。
 <code>&#39;data&#39;</code> イベントがもう発生しないことを示します。
-ストリームがもし書き込み可能でもあるなら、書き込みを続けることは可能かもしれません。
+もしストリームが書き込み可能でもあるなら、
+書き込みを続けることは可能かもしれません。
+
+</p>
+<h3>Event: &#39;data&#39;<span><a class="mark" href="#stream_event_data" id="stream_event_data">#</a></span></h3>
+<!--
+The `'data'` event emits either a `Buffer` (by default) or a string if
+`setEncoding()` was used.
+-->
+
+<p><code>&#39;data&#39;</code> イベントは <code>Buffer</code> (デフォルト) または、<code>setEncoding()</code>
+された場合は文字列のどちらかを生成します。
+
+</p>
+<!--
+Note that adding a `'data'` event listener will switch the Readable
+stream into "old mode", where data is emitted as soon as it is
+available, rather than waiting for you to call `read()` to consume it.
+-->
+
+<p><code>&#39;data&#39;</code> イベントリスナが加えられた場合のみ、Readable ストリームは
+「旧モード」に切り替わることに注意してください。
+データを消費するために <code>read()</code> メソッドが呼び出されるまで待つ代わりに、
+データが利用可能になるとすぐにイベントが生成されます。
 
 </p>
 <h3>Event: &#39;error&#39;<span><a class="mark" href="#stream_event_error" id="stream_event_error">#</a></span></h3>
-<p><code>function (exception) { }</code>
-
-</p>
 <!--
 Emitted if there was an error receiving data.
 -->
@@ -168,9 +530,6 @@ Emitted if there was an error receiving data.
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#stream_event_close" id="stream_event_close">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
 <!--
 Emitted when the underlying resource (for example, the backing file
 descriptor) has been closed. Not all streams will emit this.
@@ -180,111 +539,112 @@ descriptor) has been closed. Not all streams will emit this.
 全てのストリームがこのイベントを発生するわけではありません。
 
 </p>
-<h3>stream.readable<span><a class="mark" href="#stream_stream_readable" id="stream_stream_readable">#</a></span></h3>
-<!--
-A boolean that is `true` by default, but turns `false` after an
-`'error'` occurred, the stream came to an `'end'`, or `destroy()` was
-called.
--->
-
-<p>デフォルトでは <code>true</code> ですが、<code>&#39;error&#39;</code> が発生した後、
-ストリームが <code>&#39;end&#39;</code> に達した後、または <code>destroy()</code> が呼ばれた後で、
-<code>false</code> に設定される boolean です。
-
-</p>
-<h3>stream.setEncoding([encoding])<span><a class="mark" href="#stream_stream_setencoding_encoding" id="stream_stream_setencoding_encoding">#</a></span></h3>
+<h3>readable.setEncoding(encoding)<span><a class="mark" href="#stream_readable_setencoding_encoding" id="stream_readable_setencoding_encoding">#</a></span></h3>
 <!--
 Makes the `'data'` event emit a string instead of a `Buffer`. `encoding`
-can be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults
-to `'utf8'`.
+can be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`.
 -->
 
 <p><code>&#39;data&#39;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
 <code>encoding</code> には <code>&#39;utf8&#39;</code>、<code>&#39;utf16le&#39;</code> (<code>&#39;ucs2&#39;</code>)、<code>&#39;ascii&#39;</code>、
 または <code>&#39;hex&#39;</code> を指定することができます。
-デフォルトは <code>&#39;utf8&#39;</code> です。
-
-</p>
-<h3>stream.pause()<span><a class="mark" href="#stream_stream_pause" id="stream_stream_pause">#</a></span></h3>
-<!--
-Issues an advisory signal to the underlying communication layer,
-requesting that no further data be sent until `resume()` is called.
--->
-
-<p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
-データが送られないように要求します。
 
 </p>
 <!--
-Note that, due to the advisory nature, certain streams will not be
-paused immediately, and so `'data'` events may be emitted for some
-indeterminate period of time even after `pause()` is called. You may
-wish to buffer such `'data'` events.
+The encoding can also be set by specifying an `encoding` field to the
+constructor.
 -->
 
-<p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
-および <code>pause()</code> を呼び出してから不特定の時間 <code>&#39;data&#39;</code> イベントが
-生成されるかもしれないことに注意してください。
-<code>&#39;data&#39;</code> イベントをバッファリングするのもいいでしょう。
+<p>エンコーディングはコンストラクタに渡す <code>encoding</code>
+フィールドでも指定することができます。
 
 </p>
-<h3>stream.resume()<span><a class="mark" href="#stream_stream_resume" id="stream_stream_resume">#</a></span></h3>
+<h3>readable.read([size])<span><a class="mark" href="#stream_readable_read_size" id="stream_readable_read_size">#</a></span></h3>
 <!--
-Resumes the incoming `'data'` events after a `pause()`.
+* `size` {Number | null} Optional number of bytes to read.
+* Return: {Buffer | String | null}
 -->
 
-<p><code>pause()</code> の後で <code>&#39;data&#39;</code> イベントの到着を再開します。
-
-</p>
-<h3>stream.destroy()<span><a class="mark" href="#stream_stream_destroy" id="stream_stream_destroy">#</a></span></h3>
+<ul>
+<li><code>size</code> {Number | null} 読み込むバイト数 (任意)</li>
+<li>Return: {Buffer | String | null}</li>
+</ul>
 <!--
-Closes the underlying file descriptor. Stream is no longer `writable`
-nor `readable`.  The stream will not emit any more 'data', or 'end'
-events. Any queued write data will not be sent.  The stream should emit
-'close' event once its resources have been disposed of.
+Call this method to consume data once the `'readable'` event is
+emitted.
 -->
 
-<p>下層のファイル記述子をクローズします。
-ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
-ストリームはそれ以上 <code>&#39;data&#39;</code> あるいは <code>&#39;end&#39;</code> イベントを生成しなくなります。
-キューイングされたデータは送信されません。
-ストリームはそのリソースが破棄されたときに <code>&#39;close&#39;</code> イベントを生成すべきです。
-
-</p>
-<h3>stream.pipe(destination, [options])<span><a class="mark" href="#stream_stream_pipe_destination_options" id="stream_stream_pipe_destination_options">#</a></span></h3>
-<!--
-This is a `Stream.prototype` method available on all `Stream`s.
--->
-
-<p>これは全ての <code>Stream</code> で利用可能な <code>Stream.prototype</code> メソッドです。
+<p><code>&#39;readable&#39;</code> イベントが生成した後にデータを消費するために呼び出してください。
 
 </p>
 <!--
-Connects this read stream to `destination` WriteStream. Incoming data on
-this stream gets written to `destination`. The destination and source
-streams are kept in sync by pausing and resuming as necessary.
+The `size` argument will set a minimum number of bytes that you are
+interested in.  If not set, then the entire content of the internal
+buffer is returned.
 -->
 
-<p>読み込みストリームを <code>destination</code> の書き込みストリームに接続します。
-このストリームに入ってきたデータは <code>destination</code> に書き込まれます。
-接続先と接続元のストリームは、必要に応じて中断と再開することで同期を保ちます。
+<p><code>size</code> 引数は、必要な最小のバイト数を指定します。
+指定しなかった場合、内部バッファ全体の内容が返されます。
 
 </p>
+<!--
+If there is no data to consume, or if there are fewer bytes in the
+internal buffer than the `size` argument, then `null` is returned, and
+a future `'readable'` event will be emitted when more is available.
+-->
+
+<p>もし消費できるデータがなかったり、内部バッファに <code>size</code>
+引数で指定されたよりも少ないバイト数しかデータがなかったりした場合は、
+<code>null</code> が返されます。
+その後、より多くのデータが利用可能になると <code>&#39;readable&#39;</code> イベントが生成されます。
+
+</p>
+<!--
+Note that calling `stream.read(0)` will always return `null`, and will
+trigger a refresh of the internal buffer, but otherwise be a no-op.
+-->
+
+<p><code>stream.read(0)</code> は常に <code>null</code> を返すことに注意してください。
+それは内部バッファをリフレッシュしますが、それ以外の処理はしません。
+
+</p>
+<h3>readable.pipe(destination, [options])<span><a class="mark" href="#stream_readable_pipe_destination_options" id="stream_readable_pipe_destination_options">#</a></span></h3>
+<!--
+* `destination` {Writable Stream}
+* `options` {Object} Optional
+  * `end` {Boolean} Default=true
+-->
+
+<ul>
+<li><code>destination</code> {Writable Stream}</li>
+<li><code>options</code> {Object} (任意)<ul>
+<li><code>end</code> {Boolean} デフォルトは <code>true</code></li>
+</ul>
+</li>
+</ul>
+<!--
+Connects this readable stream to `destination` WriteStream. Incoming
+data on this stream gets written to `destination`.  Properly manages
+back-pressure so that a slow destination will not be overwhelmed by a
+fast readable stream.
+
+読み込み可能なストリームを `destination` の書き込みストリームに接続します。
+このストリームに入ってきたデータは `destination` に書き込まれます。
+遅い出力先が速い読み込み可能なストリームに圧倒されないよう、
+背圧を適切に管理します。
+
 <!--
 This function returns the `destination` stream.
 -->
 
-<p>この関数は <code>destination</code> ストリームを返します。
-
-</p>
 <!--
-Emulating the Unix `cat` command:
+For example, emulating the Unix `cat` command:
 -->
 
-<p>Unix の <code>cat</code> コマンドのエミュレート:
+<p>Unix の <code>cat</code> コマンドのエミュレートする例:
 
 </p>
-<pre><code>process.stdin.resume(); process.stdin.pipe(process.stdout);</code></pre>
+<pre><code>process.stdin.pipe(process.stdout);</code></pre>
 <!--
 By default `end()` is called on the destination when the source stream
 emits `end`, so that `destination` is no longer writable. Pass `{ end:
@@ -297,36 +657,271 @@ false }` as `options` to keep the destination stream open.
 
 </p>
 <!--
-This keeps `process.stdout` open so that "Goodbye" can be written at the
+This keeps `writer` open so that "Goodbye" can be written at the
 end.
 -->
 
-<p>これは <code>process.stdout</code> をオープンしたままにして最後に &quot;Goodbye&quot; と出力します。
+<p>これは <code>writer</code> をオープンしたままにして、最後に &quot;Goodbye&quot; と出力します。
 
 </p>
-<pre><code>process.stdin.resume();
+<pre><code>reader.pipe(writer, { end: false });
+reader.on(&quot;end&quot;, function() {
+  writer.end(&quot;Goodbye\n&quot;);
+});</code></pre>
+<!--
+Note that `process.stderr` and `process.stdout` are never closed until
+the process exits, regardless of the specified options.
+-->
 
-process.stdin.pipe(process.stdout, { end: false });
+<p>オプションの指定にかかわらず、<code>process.stderr</code> および <code>process.stdou</code>
+はプロセスが終了するまで決してクローズされないことに注意してください。
 
-process.stdin.on(&quot;end&quot;, function() {
-process.stdout.write(&quot;Goodbye\n&quot;); });</code></pre>
-<h2>Writable Stream<span><a class="mark" href="#stream_writable_stream" id="stream_writable_stream">#</a></span></h2>
+</p>
+<h3>readable.unpipe([destination])<span><a class="mark" href="#stream_readable_unpipe_destination" id="stream_readable_unpipe_destination">#</a></span></h3>
+<!--
+* `destination` {Writable Stream} Optional
+-->
+
+<ul>
+<li><code>destination</code> {Writable Stream} (任意)</li>
+</ul>
+<!--
+Undo a previously established `pipe()`.  If no destination is
+provided, then all previously established pipes are removed.
+-->
+
+<p>以前に構築した <code>pipe()</code> を取り消します。
+もし接続先が与えられなかった場合は、
+以前に構築された全てのパイプが削除されます。
+
+</p>
+<h3>readable.pause()<span><a class="mark" href="#stream_readable_pause" id="stream_readable_pause">#</a></span></h3>
+<!--
+Switches the readable stream into "old mode", where data is emitted
+using a `'data'` event rather than being buffered for consumption via
+the `read()` method.
+-->
+
+<p>読み込み可能なストリームを「旧モード」に切り替えます。
+データはバッファリングされて <code>read()</code> メソッドによって消費される代わりに、
+<code>&#39;data&#39;</code> イベントによって生成されます。
+
+</p>
+<!--
+Ceases the flow of data.  No `'data'` events are emitted while the
+stream is in a paused state.
+-->
+
+<p>データの流れは中断します。
+ストリームが中断状態にある限り、<code>&#39;data&#39;</code> イベントは生成されません。
+
+</p>
+<h3>readable.resume()<span><a class="mark" href="#stream_readable_resume" id="stream_readable_resume">#</a></span></h3>
+<!--
+Switches the readable stream into "old mode", where data is emitted
+using a `'data'` event rather than being buffered for consumption via
+the `read()` method.
+-->
+
+<p>読み込み可能なストリームを「旧モード」に切り替えます。
+データはバッファリングされて <code>read()</code> メソッドによって消費される代わりに、
+<code>&#39;data&#39;</code> イベントによって生成されます。
+
+</p>
+<!--
+Resumes the incoming `'data'` events after a `pause()`.
+-->
+
+<p><code>pause()</code> の後で中断されていた <code>&#39;data&#39;</code> イベントを再開します。
+
+</p>
+<h2>Class: stream.Writable<span><a class="mark" href="#stream_class_stream_writable" id="stream_class_stream_writable">#</a></span></h2>
 <!--type=class-->
 
 <!--
-A `Writable Stream` has the following methods, members, and events.
+A `Writable` Stream has the following methods, members, and events.
 -->
 
-<p><code>Writable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。
-
-</p>
-<h3>Event: &#39;drain&#39;<span><a class="mark" href="#stream_event_drain" id="stream_event_drain">#</a></span></h3>
-<p><code>function () { }</code>
+<p><code>Writable</code> ストリームには以下のメソッド、メンバー、そしてイベントがあります。
 
 </p>
 <!--
-Emitted when the stream's write queue empties and it's safe to write without
-buffering again. Listen for it when `stream.write()` returns `false`.
+Note that `stream.Writable` is an abstract class designed to be
+extended with an underlying implementation of the `_write(chunk, cb)`
+method. (See below.)
+-->
+
+<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, cb)</code> メソッド (後述)
+によって拡張されるように設計された抽象クラスであることに注意してください。
+
+</p>
+<h3>new stream.Writable([options])<span><a class="mark" href="#stream_new_stream_writable_options" id="stream_new_stream_writable_options">#</a></span></h3>
+<!--
+* `options` {Object}
+  * `highWaterMark` {Number} Buffer level when `write()` starts
+    returning false. Default=16kb
+  * `lowWaterMark` {Number} The buffer level when `'drain'` is
+    emitted.  Default=0
+  * `decodeStrings` {Boolean} Whether or not to decode strings into
+    Buffers before passing them to `_write()`.  Default=true
+-->
+
+<ul>
+<li><code>options</code> {Object} (任意)<ul>
+<li><code>highWaterMark</code> {Number} <code>write()</code> が <code>false</code> を返し始めるバッファレベル。
+デフォルトは 16kb。</li>
+<li><code>lowWaterMark</code> {Number} <code>&#39;drain&#39;</code> が生成されるバッファレベル。
+デフォルトは 0。</li>
+<li><code>decodeStrings</code> {Boolean} 文字列が <code>_write()</code> に渡される前に
+バッファにデコードするかどうか。デフォルトは <code>true</code>。</li>
+</ul>
+</li>
+</ul>
+<!--
+In classes that extend the Writable class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Writable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
+
+</p>
+<h3>writable._write(chunk, callback)<span><a class="mark" href="#stream_writable_write_chunk_callback" id="stream_writable_write_chunk_callback">#</a></span></h3>
+<!--
+* `chunk` {Buffer | Array} The data to be written
+* `callback` {Function} Called with an error, or null when finished
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。</li>
+<li><code>callback</code> {Function} 終了後にエラーまたは <code>null</code>
+と共に呼び出されるコールバック</li>
+</ul>
+<!--
+All Writable stream implementations must provide a `_write` method to
+send data to the underlying resource.
+-->
+
+<p>全ての Writable ストリームは、下層のリソースにデータを
+送るために <code>_write</code> メソッドを提供しなければなりません。
+
+</p>
+<!--
+Note: **This function MUST NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Writable
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるべきであり、Writable クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
+Call the callback using the standard `callback(error)` pattern to
+signal that the write completed successfully or with an error.
+-->
+
+<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、
+標準的な <code>callback(error)</code> パターンを使って呼び出します。
+
+</p>
+<!--
+If the `decodeStrings` flag is set in the constructor options, then
+`chunk` will be an array rather than a Buffer.  This is to support
+implementations that have an optimized handling for certain string
+data encodings.
+-->
+
+<p>コンストラクタオプションの <code>decodeString</code> フラグがセットされると、
+<code>chunk</code> は Buffer ではなく配列になります。
+これは、実装が文字列データのエンコーディングを最適化できるようにするためです。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+
+</p>
+<h3>writable.write(chunk, [encoding], [callback])<span><a class="mark" href="#stream_writable_write_chunk_encoding_callback" id="stream_writable_write_chunk_encoding_callback">#</a></span></h3>
+<!--
+* `chunk` {Buffer | String} Data to be written
+* `encoding` {String} Optional.  If `chunk` is a string, then encoding
+  defaults to `'utf8'`
+* `callback` {Function} Optional.  Called when this chunk is
+  successfully written.
+* Returns {Boolean}
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | String} 書き込まれるデータ</li>
+<li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。
+デフォルトは <code>&#39;utf8&#39;</code>。</li>
+<li><code>callback</code> {Function} チャンクが正常に書き込まれた場合に呼び出される (任意)。</li>
+<li>Returns {Boolean}</li>
+</ul>
+<!--
+Writes `chunk` to the stream.  Returns `true` if the data has been
+flushed to the underlying resource.  Returns `false` to indicate that
+the buffer is full, and the data will be sent out in the future. The
+`'drain'` event will indicate when the buffer is empty again.
+-->
+
+<p><code>chunk</code> をストリームに書き込みます。
+データが下層のリソースに書き込まれると <code>true</code> を返します。
+バッファが一杯であることを伝えるために <code>false</code> が返され、
+データは将来送り出されます。
+<code>&#39;drain&#39;</code> イベントはバッファが再び空になったことを伝えます。
+
+</p>
+<!--
+The specifics of when `write()` will return false, and when a
+subsequent `'drain'` event will be emitted, are determined by the
+`highWaterMark` and `lowWaterMark` options provided to the
+constructor.
+-->
+
+<p><code>write()</code> がいつ <code>false</code> を返し、後続の <code>&#39;drain&#39;</code> イベントがいつ
+生成されるかは、コンストラクタに与えられる
+<code>highWaterMark</code> および <code>lowWaterMark</code> オプションによって決定されます。
+
+</p>
+<h3>writable.end([chunk], [encoding])<span><a class="mark" href="#stream_writable_end_chunk_encoding" id="stream_writable_end_chunk_encoding">#</a></span></h3>
+<!--
+* `chunk` {Buffer | String} Optional final data to be written
+* `encoding` {String} Optional.  If `chunk` is a string, then encoding
+  defaults to `'utf8'`
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | String} 書き込まれる最後のデータ (任意)。</li>
+<li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。
+デフォルトは <code>&#39;utf8&#39;</code>。</li>
+</ul>
+<!--
+Call this method to signal the end of the data being written to the
+stream.
+-->
+
+<p>ストリームに書き込まれるデータが終わることを合図するために、
+このメソッドを呼び出してください。
+
+</p>
+<h3>Event: &#39;drain&#39;<span><a class="mark" href="#stream_event_drain" id="stream_event_drain">#</a></span></h3>
+<!--
+Emitted when the stream's write queue empties and it's safe to write
+without buffering again. Listen for it when `stream.write()` returns
+`false`.
 -->
 
 <p>ストリームの書き込みキューが空になり、バッファリングされることなく
@@ -334,44 +929,31 @@ buffering again. Listen for it when `stream.write()` returns `false`.
 <code>stream.write()</code> が <code>false</code> を返した場合に監視してください。
 
 </p>
-<!--
-The `'drain'` event can happen at *any* time, regardless of whether or not
-`stream.write()` has previously returned `false`. To avoid receiving unwanted
-`'drain'` events, listen using `stream.once()`.
--->
-
-<p><code>stream.write()</code> が以前に <code>false</code> を返したかどうかにかかわらず、
-<code>&#39;drain&#39;</code> イベントは <em>いつでも</em> 発生します。
-意図しない <code>&#39;drain&#39;</code> イベントを受信しないようにするには、<code>stream.once()</code>
-を使って監視してください。
-
-</p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#stream_event_error_1" id="stream_event_error_1">#</a></span></h3>
-<p><code>function (exception) { }</code>
-
-</p>
-<!--
-Emitted on error with the exception `exception`.
--->
-
-<p><code>exception</code> 例外によるエラーについて生成されます。
-
-</p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#stream_event_close_1" id="stream_event_close_1">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
 <!--
-Emitted when the underlying file descriptor has been closed.
+Emitted when the underlying resource (for example, the backing file
+descriptor) has been closed. Not all streams will emit this.
 -->
 
-<p>下層でファイル記述子がクローズされた時に生成されます。
+<p>下層のリソース (たとえば、背後のファイル記述子)
+がクローズされた時に生成されます。
+全てのストリームがこれを生成するわけではありません。
+
+</p>
+<h3>Event: &#39;finish&#39;<span><a class="mark" href="#stream_event_finish" id="stream_event_finish">#</a></span></h3>
+<!--
+When `end()` is called and there are no more chunks to write, this
+event is emitted.
+-->
+
+<p><code>end()</code> が呼び出されてそれ以上書き込まれるチャンクがない場合、
+このイベントが生成されます。
 
 </p>
 <h3>Event: &#39;pipe&#39;<span><a class="mark" href="#stream_event_pipe" id="stream_event_pipe">#</a></span></h3>
-<p><code>function (src) { }</code>
-
-</p>
+<div class="signature"><ul>
+<li><code>source</code> <span class="type">Readable Stream</span></li>
+</div></ul>
 <!--
 Emitted when the stream is passed to a readable stream's pipe method.
 -->
@@ -379,94 +961,297 @@ Emitted when the stream is passed to a readable stream's pipe method.
 <p>このストリームが読み込み可能ストリームの pipe メソッドに渡された時に生成されます。
 
 </p>
-<h3>stream.writable<span><a class="mark" href="#stream_stream_writable" id="stream_stream_writable">#</a></span></h3>
+<h3>Event &#39;unpipe&#39;<span><a class="mark" href="#stream_event_unpipe" id="stream_event_unpipe">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>source</code> <span class="type">Readable Stream</span></li>
+</div></ul>
 <!--
-A boolean that is `true` by default, but turns `false` after an
-`'error'` occurred or `end()` / `destroy()` was called.
+Emitted when a previously established `pipe()` is removed using the
+source Readable stream's `unpipe()` method.
 -->
 
-<p>デフォルトでは <code>true</code> ですが、<code>&#39;error&#39;</code> が発生した後、
-<code>end()</code> / <code>destroy()</code> が呼ばれた後で <code>false</code> に設定される boolean です。
+<p>以前に構築された <code>pipe()</code> が、接続元である Readable ストリームの
+<code>unpipe()</code> メソッドによって取り除かれた場合に生成されます。
 
 </p>
-<h3>stream.write(string, [encoding])<span><a class="mark" href="#stream_stream_write_string_encoding" id="stream_stream_write_string_encoding">#</a></span></h3>
+<h2>Class: stream.Duplex<span><a class="mark" href="#stream_class_stream_duplex" id="stream_class_stream_duplex">#</a></span></h2>
+<!--type=class-->
+
 <!--
-Writes `string` with the given `encoding` to the stream.  Returns `true`
-if the string has been flushed to the kernel buffer.  Returns `false` to
-indicate that the kernel buffer is full, and the data will be sent out
-in the future. The `'drain'` event will indicate when the kernel buffer
-is empty again. The `encoding` defaults to `'utf8'`.
+A "duplex" stream is one that is both Readable and Writable, such as a
+TCP socket connection.
 -->
 
-<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。
-文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。
-カーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、
-<code>false</code> が返ります。
-<code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。
-<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。
+<p>&quot;duplex&quot; ストリームは、TCP ソケットコネクションのように
+Readable であり Writable でもあるストリームの一種です。
 
 </p>
-<h3>stream.write(buffer)<span><a class="mark" href="#stream_stream_write_buffer" id="stream_stream_write_buffer">#</a></span></h3>
 <!--
-Same as the above except with a raw buffer.
+Note that `stream.Duplex` is an abstract class designed to be
+extended with an underlying implementation of the `_read(size, cb)`
+and `_write(chunk, callback)` methods as you would with a Readable or
+Writable stream class.
 -->
 
-<p>生のバッファを使うこと以外は上記と同じです。
+<p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、
+下層の実装である <code>_read(size, cb)</code> および <code>_write(chunk, callback)</code>
+メソッドによって拡張されるように設計された抽象クラスであることに
+注意してください。
 
 </p>
-<h3>stream.end()<span><a class="mark" href="#stream_stream_end" id="stream_stream_end">#</a></span></h3>
 <!--
-Terminates the stream with EOF or FIN.  This call will allow queued
-write data to be sent before closing the stream.
+Since JavaScript doesn't have multiple prototypal inheritance, this
+class prototypally inherits from Readable, and then parasitically from
+Writable.  It is thus up to the user to implement both the lowlevel
+`_read(n,cb)` method as well as the lowlevel `_write(chunk,cb)` method
+on extension duplex classes.
 -->
 
-<p>ストリームを EOF または FIN で終了します。
-この呼び出しは、ストリームがクローズされる前にキューイングされたデータが
-送信されることを許します。
+<p>JavaScript は複数のプロトタイプ継承を持つことができないため、
+このクラスは Readable からプロトタイプを継承したうえで、
+Writable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。
+低水準の <code>_read(n,cb)</code> および <code>_write(chunk,cb)</code> を実装することは、
+Duplex クラスを拡張するユーザの責務です。
 
 </p>
-<h3>stream.end(string, encoding)<span><a class="mark" href="#stream_stream_end_string_encoding" id="stream_stream_end_string_encoding">#</a></span></h3>
+<h3>new stream.Duplex(options)<span><a class="mark" href="#stream_new_stream_duplex_options" id="stream_new_stream_duplex_options">#</a></span></h3>
 <!--
-Sends `string` with the given `encoding` and terminates the stream with
-EOF or FIN. This is useful to reduce the number of packets sent.
+* `options` {Object} Passed to both Writable and Readable
+  constructors. Also has the following fields:
+  * `allowHalfOpen` {Boolean} Default=true.  If set to `false`, then
+    the stream will automatically end the readable side when the
+    writable side ends and vice versa.
 -->
 
-<p>与えられた <code>encoding</code> で <code>string</code> を送信してからEOFまたはFINでストリームを終了します。
-これは送信するパケットの数を減らすために便利です。
+<ul>
+<li><code>options</code> {Object} Writable および Readable のコンストラクタに渡されます。
+以下のフィールドを持つこともできます:<ul>
+<li><code>allowHalfOpen</code> {Boolean} デフォルトは <code>true</code>。
+もし <code>false</code> に設定された場合、読み込み側が閉じられると
+自動的に書き込み側も閉じられます。</li>
+</ul>
+</li>
+</ul>
+<!--
+In classes that extend the Duplex class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Duplex</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
 
 </p>
-<h3>stream.end(buffer)<span><a class="mark" href="#stream_stream_end_buffer" id="stream_stream_end_buffer">#</a></span></h3>
+<h2>Class: stream.Transform<span><a class="mark" href="#stream_class_stream_transform" id="stream_class_stream_transform">#</a></span></h2>
 <!--
-Same as above but with a `buffer`.
+A "transform" stream is a duplex stream where the output is causally
+connected in some way to the input, such as a zlib stream or a crypto
+stream.
 -->
 
-<p><code>buffer</code> であること以外は上記と同じです。
+<p>&quot;transform&quot; ストリームは、zlib ストリームや暗号化ストリームのように、
+入力が何らかの方法で出力の元となっているような双方向ストリームです。
 
 </p>
-<h3>stream.destroy()<span><a class="mark" href="#stream_stream_destroy_1" id="stream_stream_destroy_1">#</a></span></h3>
 <!--
-Closes the underlying file descriptor. Stream is no longer `writable`
-nor `readable`.  The stream will not emit any more 'data', or 'end'
-events. Any queued write data will not be sent.  The stream should emit
-'close' event once its resources have been disposed of.
+There is no requirement that the output be the same size as the input,
+the same number of chunks, or arrive at the same time.  For example, a
+Hash stream will only ever have a single chunk of output which is
+provided when the input is ended.  A zlib stream will either produce
+much smaller or much larger than its input.
 -->
 
-<p>下層のファイル記述子をクローズします。
-ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
-ストリームはそれ以上 <code>&#39;data&#39;</code> あるいは <code>&#39;end&#39;</code> イベントを生成しなくなります。
-キューイングされたデータは送信されません。
-ストリームはそのリソースが破棄されたときに <code>&#39;close&#39;</code> イベントを生成すべきです。
+<p>出力は、入力と同じサイズ、同じ数のチャンク、同時に到着することを
+要求されません。
+たとえば、Hash ストリームは入力が終了すると一つだけのチャンクを出力します。
+zlib ストリームは、入力より小さいか、またはより大きい出力を生成します。
 
 </p>
-<h3>stream.destroySoon()<span><a class="mark" href="#stream_stream_destroysoon" id="stream_stream_destroysoon">#</a></span></h3>
 <!--
-After the write queue is drained, close the file descriptor.
-`destroySoon()` can still destroy straight away, as long as there is no
-data left in the queue for writes.
+Rather than implement the `_read()` and `_write()` methods, Transform
+classes must implement the `_transform()` method, and may optionally
+also implement the `_flush()` method.  (See below.)
 -->
 
-<p>出力キューが空になった後、ファイル記述子をクローズします。
-出力キューにデータが存在しない場合、<code>destroySoon()</code> はすぐに破棄します。
+<p><code>_read()</code> および <code>_write()</code> メソッドの代わりに、Transform クラスでは
+<code>_transform()</code> メソッドを実装しなければなりません。
+また、任意で <code>_flush()</code> メソッドを実装することもできます (後述)。
+
+</p>
+<h3>new stream.Transform([options])<span><a class="mark" href="#stream_new_stream_transform_options" id="stream_new_stream_transform_options">#</a></span></h3>
+<!--
+* `options` {Object} Passed to both Writable and Readable
+  constructors.
+-->
+
+<ul>
+<li><code>options</code> {Object} Writable および Readable のコンストラクタに渡されます。</li>
+</ul>
+<!--
+In classes that extend the Transform class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Transform</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
+
+</p>
+<h3>transform._transform(chunk, outputFn, callback)<span><a class="mark" href="#stream_transform_transform_chunk_outputfn_callback" id="stream_transform_transform_chunk_outputfn_callback">#</a></span></h3>
+<!--
+* `chunk` {Buffer} The chunk to be transformed.
+* `outputFn` {Function} Call this function with any output data to be
+  passed to the readable interface.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when you are done processing the supplied chunk.
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer} 変換されるチャンク。</li>
+<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために
+データと共に呼び出してください。</li>
+<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、
+(任意のエラー引数と共に) この関数を呼び出してください。</li>
+</ul>
+<!--
+All Transform stream implementations must provide a `_transform`
+method to accept input and produce output.
+-->
+
+<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために
+<code>_transform</code> メソッドを提供しなければなりません。
+
+</p>
+<!--
+Note: **This function MUST NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Transform
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるべきであり、Transform クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
+`_transform` should do whatever has to be done in this specific
+Transform class, to handle the bytes being written, and pass them off
+to the readable portion of the interface.  Do asynchronous I/O,
+process things, and so on.
+-->
+
+<p>書き込まれるバイトを処理し、読み込み可能なインタフェースに渡すなど、
+Transform クラスでしなければならないことは全て <code>_transform</code>
+で行わなければなりません。非同期 I/O、何かの処理、その他。
+
+</p>
+<!--
+Call the callback function only when the current chunk is completely
+consumed.  Note that this may mean that you call the `outputFn` zero
+or more times, depending on how much data you want to output as a
+result of this chunk.
+-->
+
+<p>現在のチャンクの処理が完全に終了した場合のみ、コールバック関数を呼び出します。
+<code>outputFn</code> を何度 (0 回以上) 呼び出すかは、このチャンクからどれだけのデータを
+出力した以下に依存することに注意してください。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+</p>
+<h3>transform._flush(outputFn, callback)<span><a class="mark" href="#stream_transform_flush_outputfn_callback" id="stream_transform_flush_outputfn_callback">#</a></span></h3>
+<!--
+* `outputFn` {Function} Call this function with any output data to be
+  passed to the readable interface.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when you are done flushing any remaining data.
+-->
+
+<ul>
+<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために
+データと共に呼び出してください。</li>
+<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、
+(任意のエラー引数と共に) この関数を呼び出してください。</li>
+</ul>
+<!--
+Note: **This function MUST NOT be called directly.**  It MAY be implemented
+by child classes, and if so, will be called by the internal Transform
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
+In some cases, your transform operation may need to emit a bit more
+data at the end of the stream.  For example, a `Zlib` compression
+stream will store up some internal state so that it can optimally
+compress the output.  At the end, however, it needs to do the best it
+can with what is left, so that the data will be complete.
+-->
+
+<p>場合によっては、変換操作はストリームの終端でより多くのデータを
+生成する必要があります。
+たとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、
+いくつかの内部状態を持ちます。
+一方、終端ではデータが完全なものになるように、
+残されたものに最善を尽くす必要があります。
+
+</p>
+<!--
+In those cases, you can implement a `_flush` method, which will be
+called at the very end, after all the written data is consumed, but
+before emitting `end` to signal the end of the readable side.  Just
+like with `_transform`, call `outputFn` zero or more times, as
+appropriate, and call `callback` when the flush operation is complete.
+-->
+
+<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、
+ただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される
+<code>_flush</code> メソッドを実装することができます。
+<code>_transform</code> と同様、<code>outputFn</code> は何度 (0 回以上) でも適切に呼び出し、
+フラッシュ操作が完了した時に <code>callback</code> を呼び出します。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+</p>
+<h2>Class: stream.PassThrough<span><a class="mark" href="#stream_class_stream_passthrough" id="stream_class_stream_passthrough">#</a></span></h2>
+<!--
+This is a trivial implementation of a `Transform` stream that simply
+passes the input bytes across to the output.  Its purpose is mainly
+for examples and testing, but there are occasionally use cases where
+it can come in handy.
+-->
+
+<p>これは入力したバイト列を出力に単純に渡すだけの、
+<code>Transform</code> のつまらない実装です。
+これの主な目的はサンプル及びテストですが、何かと便利となるユースケースが
+時折存在します。
+
 
 </p>
 
@@ -497,7 +1282,7 @@ data left in the queue for writes.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

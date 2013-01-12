@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.9.3 Manual &amp; Documentation</title>
+  <title>process Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -73,6 +73,9 @@
 <li><a href="#process_process_setgid_id">process.setgid(id)</a></li>
 <li><a href="#process_process_getuid">process.getuid()</a></li>
 <li><a href="#process_process_setuid_id">process.setuid(id)</a></li>
+<li><a href="#process_process_getgroups">process.getgroups()</a></li>
+<li><a href="#process_process_setgroups_groups">process.setgroups(groups)</a></li>
+<li><a href="#process_process_initgroups_user_extra_group">process.initgroups(user, extra_group)</a></li>
 <li><a href="#process_process_version">process.version</a></li>
 <li><a href="#process_process_versions">process.versions</a></li>
 <li><a href="#process_process_config">process.config</a></li>
@@ -548,6 +551,92 @@ blocks while resolving it to a numerical ID.
     console.log(&#39;Failed to set uid: &#39; + err);
   }
 }</code></pre>
+<h2>process.getgroups()<span><a class="mark" href="#process_process_getgroups" id="process_process_getgroups">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIC プラットフォーム (つまり Windows 以外)
+でのみ利用可能です。
+
+</p>
+<!--
+Returns an array with the supplementary group IDs. POSIX leaves it unspecified
+if the effective group ID is included but node.js ensures it always is.
+-->
+
+<p>補助グループ ID の配列を返します。
+POSIX は実効グループ ID が含まれることを明示していませんが、
+Node.js では常にそれが含まれることを保証します。
+
+
+</p>
+<h2>process.setgroups(groups)<span><a class="mark" href="#process_process_setgroups_groups" id="process_process_setgroups_groups">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIC プラットフォーム (つまり Windows 以外)
+でのみ利用可能です。
+
+</p>
+<!--
+Sets the supplementary group IDs. This is a privileged operation, meaning you
+need to be root or have the CAP_SETGID capability.
+-->
+
+<p>補助グループ ID を設定します。
+これは特権オペレーションであり、ルートであるか、または CAP_SETGID ケーパビリティを持つ必要があります。
+
+</p>
+<!--
+The list can contain group IDs, group names or both.
+-->
+
+<p>リストはグループ ID、グループ名、または両方を含むことができます。
+
+
+</p>
+<h2>process.initgroups(user, extra_group)<span><a class="mark" href="#process_process_initgroups_user_extra_group" id="process_process_initgroups_user_extra_group">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIC プラットフォーム (つまり Windows 以外)
+でのみ利用可能です。
+
+</p>
+<!--
+Reads /etc/group and initializes the group access list, using all groups of
+which the user is a member. This is a privileged operation, meaning you need
+to be root or have the CAP_SETGID capability.
+-->
+
+<p><code>/etc/group</code> を読み込んでグループアクセスリストを初期化し、
+user がメンバーである全てのグループを使用します。
+これは特権オペレーションであり、ルートであるか、または CAP_SETGID ケーパビリティを持つ必要があります。
+
+</p>
+<!--
+`user` is a user name or user ID. `extra_group` is a group name or group ID.
+-->
+
+<p><code>user</code> はユーザ名またはユーザ ID、
+<code>extra_group</code> はグループ名またはグループ ID です。
+
+</p>
+<!--
+Some care needs to be taken when dropping privileges. Example:
+-->
+
+<p>特権を落とす際は、いくつか注意すべき事があります。例:
+
+</p>
+<pre><code>console.log(process.getgroups());         // [ 0 ]
+process.initgroups(&#39;bnoordhuis&#39;, 1000);   // switch user
+console.log(process.getgroups());         // [ 27, 30, 46, 1000, 0 ]
+process.setgid(1000);                     // drop root gid
+console.log(process.getgroups());         // [ 27, 30, 46, 1000 ]</code></pre>
 <h2>process.version<span><a class="mark" href="#process_process_version" id="process_process_version">#</a></span></h2>
 <!--
 A compiled-in property that exposes `NODE_VERSION`.
@@ -606,6 +695,9 @@ JavaScript で表現したオブジェクトを保持します。
    { host_arch: &#39;x64&#39;,
      node_install_npm: &#39;true&#39;,
      node_prefix: &#39;&#39;,
+     node_shared_cares: &#39;false&#39;,
+     node_shared_http_parser: &#39;false&#39;,
+     node_shared_libuv: &#39;false&#39;,
      node_shared_v8: &#39;false&#39;,
      node_shared_zlib: &#39;false&#39;,
      node_use_dtrace: &#39;false&#39;,
@@ -912,15 +1004,14 @@ a diff reading, useful for benchmarks and measuring intervals:
 
 </p>
 <pre><code>var time = process.hrtime();
-// [ 1800216, 927643717 ]
+// [ 1800216, 25 ]
 
 setTimeout(function() {
   var diff = process.hrtime(time);
-  // [ 1, 6962306 ]
+  // [ 1, 552 ]
 
-  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;,
-              diff[0], diff[1]);
-  // benchmark took 1 seconds and 6962306 nanoseconds
+  console.log(&#39;benchmark took %d nanoseconds&#39;, diff[0] * 1e9 + diff[1]);
+  // benchmark took 1000000527 nanoseconds
 }, 1000);</code></pre>
 
           </div>
@@ -950,7 +1041,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
