@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.4 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.4 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.5 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -316,6 +316,7 @@
 <li><a href="#all_writable_end_chunk_encoding">writable.end([chunk], [encoding])</a></li>
 <li><a href="#all_event_drain">Event: &#39;drain&#39;</a></li>
 <li><a href="#all_event_close_1">Event: &#39;close&#39;</a></li>
+<li><a href="#all_event_finish">Event: &#39;finish&#39;</a></li>
 <li><a href="#all_event_pipe">Event: &#39;pipe&#39;</a></li>
 <li><a href="#all_event_unpipe">Event &#39;unpipe&#39;</a></li>
 </ul>
@@ -1029,8 +1030,6 @@ matures, certain parts are more reliable than others.  Some are so
 proven, and so relied upon, that they are unlikely to ever change at
 all.  Others are brand new and experimental, or known to be hazardous
 and in the process of being redesigned.
-
-The notices look like this:
 -->
 
 <p>ドキュメント全体を通して、セクションの安定度に関する目安を見ることが
@@ -1042,81 +1041,95 @@ Node.js の API はまだ少し変更されます。
 その他は新しくて実験的か、危険が知られていたり、再実装が始まっていたりします。
 
 </p>
-<p>通知は次のようです:
-
-</p>
-<pre><code>Stability: 1 Experimental</code></pre>
 <!--
 The stability indices are as follows:
 -->
 
-<p>安定度は以下を示します:
+<p>Stability (安定度) を以下のように示します:
 
 </p>
 <!--
-* **0 - Deprecated**  This feature is known to be problematic, and changes are
+```
+Stability: 0 - Deprecated
+This feature is known to be problematic, and changes are
 planned.  Do not rely on it.  Use of the feature may cause warnings.  Backwards
 compatibility should not be expected.
+```
+-->
 
-* **1 - Experimental**  This feature was introduced recently, and may change
+<pre class="api_stability_0">Stability: 0 - 廃止予定
+この機能には問題があることが知られていて、変更が計画されています。
+これに依存しないでください。この機能を使用すると警告が出されるでしょう。
+後方互換性を期待すべきではありません。</pre><!--
+```
+Stability: 1 - Experimental
+This feature was introduced recently, and may change
 or be removed in future versions.  Please try it out and provide feedback.
 If it addresses a use-case that is important to you, tell the node core team.
+```
+-->
 
-* **2 - Unstable**  The API is in the process of settling, but has not yet had
+<pre class="api_stability_1">Stability: 1 - 実験的
+この機能は最近導入され、将来のバージョンで変更されるか削除されるかもしれません。
+それを試してフィードバックをしてください。
+重要なユースケースで使われるなら、node コアチームに教えてください。</pre><!--
+```
+Stability: 2 - Unstable
+The API is in the process of settling, but has not yet had
 sufficient real-world testing to be considered stable. Backwards-compatibility
 will be maintained if reasonable.
+```
+-->
 
-* **3 - Stable**  The API has proven satisfactory, but cleanup in the underlying
+<pre class="api_stability_2">Stability: 2 - 不安定
+API は安定化の途中ですが、まだ安定していると考えられるほどには
+現実世界でテストされていません。
+もし合理的なら後方互換性が維持されるでしょう。</pre><!--
+```
+Stability: 3 - Stable
+The API has proven satisfactory, but cleanup in the underlying
 code may cause minor changes.  Backwards-compatibility is guaranteed.
+```
+-->
 
-* **4 - API Frozen**  This API has been tested extensively in production and is
+<pre class="api_stability_3">Stability: 3 - 安定
+API は要求を満たすことがわかりましたが、実装コードをクリーンナップするために
+小さな変更が行われるかもしれません。
+後方互換性は保証されます。</pre><!--
+```
+Stability: 4 - API Frozen
+This API has been tested extensively in production and is
 unlikely to ever have to change.
+```
+-->
 
-* **5 - Locked**  Unless serious bugs are found, this code will not ever
+<pre class="api_stability_4">Stability: 4 - API 凍結
+API は実運用で広範囲にテストされており、おそらく変更されることはありません。</pre><!--
+```
+Stability: 5 - API Locked
+Unless serious bugs are found, this code will not ever
 change.  Please do not suggest changes in this area; they will be refused.
 -->
 
-<ul>
-<li><strong>0 - 廃止予定</strong>  この機能には問題があることが知られていて、
-変更が計画されています。これに依存しないでください。
-この機能を使用すると警告が出されるでしょう。
-後方互換性を期待すべきではありません。</li>
-</ul>
-<ul>
-<li><strong>1 - 実験的 </strong>  この機能は最近導入され、将来のバージョンで変更されるか
-削除されるかもしれません。それを試してフィードバックをしてください。
-重要なユースケースで使われるなら、node コアチームに教えてください。</li>
-</ul>
-<ul>
-<li><strong>2 - 不安定</strong>  API は安定化の途中ですが、まだ安定していると考えられるほどには
-現実世界でテストされていません。
-もし合理的なら後方互換性が維持されるでしょう。</li>
-</ul>
-<ul>
-<li><strong>3 - 安定</strong>  API は要求を満たすことがわかりましたが、実装コードを
-クリーンナップするために小さな変更が行われるかもしれません。
-後方互換性は保証されます。</li>
-</ul>
-<ul>
-<li><strong>4 - API 凍結</strong>  API は実運用で広範囲にテストされており、
-おそらく変更されることはありません。</li>
-</ul>
-<ul>
-<li><strong>5 - 固定 </strong>  深刻なバグが見つからない限り、コードは変更されません。
-このエリアの変更を提案しないでください; そえは拒否されます。</li>
-</ul>
-<h2>JSON Output<span><a class="mark" href="#all_json_output" id="all_json_output">#</a></span></h2>
-<pre><code>Stability: 1 - Experimental</code></pre>
+<pre class="api_stability_5">Stability: 5 - 固定
+深刻なバグが見つからない限り、コードは変更されません。
+このエリアの変更を提案しないでください; そえは拒否されます。</pre><h2>JSON Output<span><a class="mark" href="#all_json_output" id="all_json_output">#</a></span></h2>
 <!--
+    Stability: 1 - Experimental
+-->
+
+<pre class="api_stability_1">Stability: 1 - 実験的</pre><!--
 Every HTML file in the markdown has a corresponding JSON file with the
 same data.
-
-This feature is new as of node v0.6.12.  It is experimental.
 -->
 
 <p>markdown から作られる全ての HTML ファイルは、対応する JSON ファイルを持ちます。
 
 </p>
+<!--
+This feature is new as of node v0.6.12.  It is experimental.
+-->
+
 <p>これは v0.6.12 からの新機能で、実験的です。
 
 </p>
@@ -1499,10 +1512,9 @@ The timer functions are global variables. See the [timers][] section.
 -->
 
 <h1>console<span><a class="mark" href="#all_console_1" id="all_console_1">#</a></span></h1>
-<pre><code>Stability: 4 - API Frozen</code></pre>
-<ul>
-<li>{Object}</li>
-</ul>
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
 <!--type=global-->
 
 <!--
@@ -1608,8 +1620,7 @@ AssertionError with `message`.
 
 </p>
 <h1>Timers<span><a class="mark" href="#all_timers" id="all_timers">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
 All of the timer functions are globals.  You do not need to `require()`
 this module in order to use them.
 -->
@@ -1751,8 +1762,7 @@ Stops an immediate from triggering.
 
 </p>
 <h1>Modules<span><a class="mark" href="#all_modules" id="all_modules">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--name=module-->
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--name=module-->
 
 <!--
 Node has a simple module loading system.  In Node, files and modules are in
@@ -4291,8 +4301,7 @@ setTimeout(function() {
   // benchmark took 1 seconds and 6962306 nanoseconds
 }, 1000);</code></pre>
 <h1>util<span><a class="mark" href="#all_util" id="all_util">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
 These functions are in the module `'util'`. Use `require('util')` to access
 them.
 -->
@@ -4630,8 +4639,7 @@ util.isError({ name: &#39;Error&#39;, message: &#39;an error occurred&#39; })
     Stability: 0 - Deprecated: Use readableStream.pipe(writableStream)
 -->
 
-<pre><code>Stability: 0 - Deprecated: `readableStream.pipe(writableStream)` を使ってください。</code></pre>
-<!--
+<pre class="api_stability_0">Stability: 0 - Deprecated: <code>readableStream.pipe(writableStream)</code> を使ってください。</pre><!--
 Read the data from `readableStream` and send it to the `writableStream`.
 When `writableStream.write(data)` returns `false` `readableStream` will be
 paused until the `drain` event occurs on the `writableStream`. `callback` gets
@@ -4693,8 +4701,7 @@ stream.on(&quot;data&quot;, function(data) {
 })
 stream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;</code></pre>
 <h1>Events<span><a class="mark" href="#all_events" id="all_events">#</a></span></h1>
-<pre><code>Stability: 4 - API Frozen</code></pre>
-<!--type=module-->
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><!--type=module-->
 
 <!--
 Many objects in Node emit events: a `net.Server` emits an event each time
@@ -4856,8 +4863,7 @@ This event is emitted any time someone adds a new listener.
 
 </p>
 <h1>Domain<span><a class="mark" href="#all_domain" id="all_domain">#</a></span></h1>
-<pre><code>Stability: 1 - Experimental</code></pre>
-<!--
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
 Domains provide a way to handle multiple different IO operations as a
 single group.  If any of the event emitters or callbacks registered to a
 domain emit an `error` event, or throw an error, then the domain object
@@ -4915,21 +4921,21 @@ are added to it.
 </p>
 <!--
 * `error.domain` The domain that first handled the error.
-* `error.domain_emitter` The event emitter that emitted an 'error' event
+* `error.domainEmitter` The event emitter that emitted an 'error' event
   with the error object.
-* `error.domain_bound` The callback function which was bound to the
+* `error.domainBound` The callback function which was bound to the
   domain, and passed an error as its first argument.
-* `error.domain_thrown` A boolean indicating whether the error was
+* `error.domainThrown` A boolean indicating whether the error was
   thrown, emitted, or passed to a bound callback function.
 -->
 
 <ul>
 <li><code>error.domain</code> このエラーを最初に捕まえたドメイン。</li>
-<li><code>error.domain_emitter</code> このエラーオブジェクトと共に <code>error</code> イベントを
+<li><code>error.domainEmitter</code> このエラーオブジェクトと共に <code>error</code> イベントを
 生成した EventEmitter。</li>
-<li><code>error.domain_bound</code> ドメインに束縛されたコールバック関数で、
+<li><code>error.domainBound</code> ドメインに束縛されたコールバック関数で、
 その第 1 引数にエラーが渡されたもの。</li>
-<li><code>error.domain_throw</code> エラーがスローされたか、EventEmitter から生成されたか、
+<li><code>error.domainThrown</code> エラーがスローされたか、EventEmitter から生成されたか、
 それとも束縛されたコールバック関数に渡されたかを示す boolean 値。</li>
 </ul>
 <h2>Implicit Binding<span><a class="mark" href="#all_implicit_binding" id="all_implicit_binding">#</a></span></h2>
@@ -5354,8 +5360,7 @@ Node.js はそれらとコミュニケートしません。
 
 </p>
 <h1>Buffer<span><a class="mark" href="#all_buffer" id="all_buffer">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Pure JavaScript is Unicode friendly but not nice to binary data.  When
 dealing with TCP streams or the file system, it's necessary to handle octet
 streams. Node has several strategies for manipulating, creating, and
@@ -6595,8 +6600,7 @@ then Node will allocate a SlowBuffer slab for it directly.
 
 </p>
 <h1>Stream<span><a class="mark" href="#all_stream" id="all_stream">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 A stream is an abstract interface implemented by various objects in
 Node.  For example a request to an HTTP server is a stream, as is
 stdout. Streams are readable, writable, or both. All streams are
@@ -7366,6 +7370,16 @@ descriptor) has been closed. Not all streams will emit this.
 全てのストリームがこれを生成するわけではありません。
 
 </p>
+<h3>Event: &#39;finish&#39;<span><a class="mark" href="#all_event_finish" id="all_event_finish">#</a></span></h3>
+<!--
+When `end()` is called and there are no more chunks to write, this
+event is emitted.
+-->
+
+<p><code>end()</code> が呼び出されてそれ以上書き込まれるチャンクがない場合、
+このイベントが生成されます。
+
+</p>
 <h3>Event: &#39;pipe&#39;<span><a class="mark" href="#all_event_pipe" id="all_event_pipe">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>source</code> <span class="type">Readable Stream</span></li>
@@ -7676,10 +7690,9 @@ it can come in handy.
     future versions.  Breaking changes will be minimized.  See below.
 -->
 
-<pre><code>Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
+<pre class="api_stability_2">Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
 議論されています。互換性を損なう変更は最小限になる予定です。
-後述します。</code></pre>
-<!--
+後述します。</pre><!--
 Use `require('crypto')` to access this module.
 -->
 
@@ -8756,8 +8769,7 @@ temporary measure.
 
 </p>
 <h1>TLS (SSL)<span><a class="mark" href="#all_tls_ssl" id="all_tls_ssl">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Use `require('tls')` to access this module.
 -->
 
@@ -9746,8 +9758,7 @@ The numeric representation of the remote port. For example, `443`.
 -->
 
 <h1>StringDecoder<span><a class="mark" href="#all_stringdecoder" id="all_stringdecoder">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 To use this module, do `require('string_decoder')`. StringDecoder decodes a
 buffer to a string. It is a simple interface to `buffer.toString()` but provides
 additional support for utf8.
@@ -9792,8 +9803,7 @@ Returns any trailing bytes that were left in the buffer.
 
 </p>
 <h1>File System<span><a class="mark" href="#all_file_system" id="all_file_system">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--name=fs-->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--name=fs-->
 
 <!--
 File I/O is provided by simple wrappers around standard POSIX functions.  To
@@ -10722,8 +10732,7 @@ The synchronous version of `fs.appendFile`.
 
 </p>
 <h2>fs.watchFile(filename, [options], listener)<span><a class="mark" href="#all_fs_watchfile_filename_options_listener" id="all_fs_watchfile_filename_options_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if possible.</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable.  Use fs.watch instead, if possible.</pre><!--
 Watch for changes on `filename`. The callback `listener` will be called each
 time the file is accessed.
 -->
@@ -10774,8 +10783,7 @@ you need to compare `curr.mtime` and `prev.mtime`.
 
 </p>
 <h2>fs.unwatchFile(filename, [listener])<span><a class="mark" href="#all_fs_unwatchfile_filename_listener" id="all_fs_unwatchfile_filename_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if available.</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable.  Use fs.watch instead, if available.</pre><!--
 Stop watching for changes on `filename`. If `listener` is specified, only that
 particular listener is removed. Otherwise, *all* listeners are removed and you
 have effectively stopped watching `filename`.
@@ -10795,8 +10803,7 @@ no-op, not an error.
 
 </p>
 <h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#all_fs_watch_filename_options_listener" id="all_fs_watch_filename_options_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable.</pre><!--
 Watch for changes on `filename`, where `filename` is either a file or a
 directory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).
 
@@ -11196,8 +11203,7 @@ Emitted when an error occurs.
 
 </p>
 <h1>Path<span><a class="mark" href="#all_path" id="all_path">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 This module contains utilities for handling and transforming file
 paths.  Almost all these methods perform only string transformations.
 The file system is not consulted to check whether paths are valid.
@@ -11502,8 +11508,7 @@ process.env.PATH.split(path.delimiter)
 // returns
 [&#39;C:\Windows\system32&#39;, &#39;C:\Windows&#39;, &#39;C:\Program Files\nodejs\&#39;]</code></pre>
 <h1>net<span><a class="mark" href="#all_net" id="all_net">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 The `net` module provides you with an asynchronous network wrapper. It contains
 methods for creating both servers and clients (called streams). You can include
 this module with `require('net');`
@@ -12545,8 +12550,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
 
 </p>
 <h1>UDP / Datagram Sockets<span><a class="mark" href="#all_udp_datagram_sockets" id="all_udp_datagram_sockets">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!-- name=dgram -->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!-- name=dgram -->
 
 <!--
 Datagram sockets are available through `require('dgram')`.
@@ -12970,8 +12974,7 @@ the socket is `ref`d calling `ref` again will have no effect.
 
 </p>
 <h1>DNS<span><a class="mark" href="#all_dns" id="all_dns">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Use `require('dns')` to access this module. All methods in the dns module
 use C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread
 pool. C-Ares is much faster than `getaddrinfo` but the system resolver is
@@ -13272,8 +13275,7 @@ Each DNS query can return one of the following error codes:
 <li><code>dns.CANCELLED</code>: DNS 問い合わせがキャンセルされた。</li>
 </ul>
 <h1>HTTP<span><a class="mark" href="#all_http" id="all_http">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 To use the HTTP server and client one must `require('http')`.
 -->
 
@@ -15088,8 +15090,7 @@ Resumes a paused response.
 
 </p>
 <h1>HTTPS<span><a class="mark" href="#all_https" id="all_https">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 HTTPS is the HTTP protocol over TLS/SSL. In Node this is implemented as a
 separate module.
 -->
@@ -15430,8 +15431,7 @@ Global instance of [https.Agent][] for all HTTPS client requests.
 
 </p>
 <h1>URL<span><a class="mark" href="#all_url" id="all_url">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 This module has utilities for URL resolution and parsing.
 Call `require('url')` to use it.
 -->
@@ -15631,8 +15631,7 @@ an anchor tag.
 
 </p>
 <h1>Query String<span><a class="mark" href="#all_query_string" id="all_query_string">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--name=querystring-->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--name=querystring-->
 
 <!--
 This module provides utilities for dealing with query strings.
@@ -15717,8 +15716,7 @@ provided so that it could be overridden if necessary.
 
 </p>
 <h1>punycode<span><a class="mark" href="#all_punycode" id="all_punycode">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 [Punycode.js](http://mths.be/punycode) is bundled with Node.js v0.6.2+. Use
 `require('punycode')` to access it. (To use it with other Node.js versions,
 use npm to install the `punycode` module first.)
@@ -15825,8 +15823,7 @@ A string representing the current Punycode.js version number.
 
 </p>
 <h1>Readline<span><a class="mark" href="#all_readline" id="all_readline">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 To use this module, do `require('readline')`. Readline allows reading of a
 stream (such as `process.stdin`) on a line-by-line basis.
 -->
@@ -16694,8 +16691,7 @@ The following key combinations in the REPL have these special effects:
 <li><code>&lt;ctrl&gt;D</code> - <code>.exit</code> キーワードと同様です。</li>
 </ul>
 <h1>Executing JavaScript<span><a class="mark" href="#all_executing_javascript" id="all_executing_javascript">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable. See Caveats, below.</code></pre>
-<!--name=vm-->
+<pre class="api_stability_2">Stability: 2 - Unstable. See Caveats, below.</pre><!--name=vm-->
 
 <!--
 You can access this module with:
@@ -17103,8 +17099,7 @@ requires a separate process.
 
 </p>
 <h1>Child Process<span><a class="mark" href="#all_child_process" id="all_child_process">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Node provides a tri-directional `popen(3)` facility through the
 `child_process` module.
 -->
@@ -18144,8 +18139,7 @@ thousands of them.
 
 </p>
 <h1>Assert<span><a class="mark" href="#all_assert" id="all_assert">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
 This module is used for writing unit tests for your applications, you can
 access it with `require('assert')`.
 -->
@@ -18294,8 +18288,7 @@ testing the first argument, `error` in callbacks.
 
 </p>
 <h1>TTY<span><a class="mark" href="#all_tty" id="all_tty">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 The `tty` module houses the `tty.ReadStream` and `tty.WriteStream` classes. In
 most cases, you will not need to use this module directly.
 -->
@@ -18429,8 +18422,7 @@ has changed.
   console.log(process.stdout.columns + &#39;x&#39; + process.stdout.rows);
 });</code></pre>
 <h1>Zlib<span><a class="mark" href="#all_zlib" id="all_zlib">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 You can access this module with:
 -->
 
@@ -19040,8 +19032,7 @@ For initializing zalloc, zfree, opaque.
 <li><code>zlib.Z_NULL</code></li>
 </ul>
 <h1>os<span><a class="mark" href="#all_os" id="all_os">#</a></span></h1>
-<pre><code>Stability: 4 - API Frozen</code></pre>
-<!--
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><!--
 Provides a few basic operating-system related utility functions.
 -->
 オペレーティングシステムに関連する基本的なユーティリティ関数を提供します。
@@ -19250,8 +19241,7 @@ A constant defining the appropriate End-of-line marker for the operating system.
 
 </p>
 <h1>Debugger<span><a class="mark" href="#all_debugger" id="all_debugger">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!-- type=misc -->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!-- type=misc -->
 
 <!--
 V8 comes with an extensive debugger which is accessible out-of-process via a
@@ -19471,8 +19461,7 @@ with `SIGUSR1`.
 
 </p>
 <h1>Cluster<span><a class="mark" href="#all_cluster" id="all_cluster">#</a></span></h1>
-<pre><code>Stability: 1 - Experimental</code></pre>
-<!--
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
 A single instance of Node runs in a single thread. To take advantage of
 multi-core systems the user will sometimes want to launch a cluster of Node
 processes to handle the load.
@@ -20360,7 +20349,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.4/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.5/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
