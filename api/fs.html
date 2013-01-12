@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.9.3 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.9.4 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.4 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -250,8 +250,8 @@ In busy processes, the programmer is _strongly encouraged_ to use the
 asynchronous versions of these calls. The synchronous versions will block
 the entire process until they complete--halting all connections.
 
-Relative path to filename can be used, remember however that this path will be relative
-to `process.cwd()`.
+Relative path to filename can be used, remember however that this path will be
+relative to `process.cwd()`.
 -->
 
 <p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。
@@ -262,6 +262,35 @@ to `process.cwd()`.
 <code>process.cwd()</code> からの相対パスであることを思い出してください。
 
 </p>
+<!--
+Most fs functions let you omit the callback argument. If you do, a default
+callback is used that rethrows errors. To get a trace to the original call
+site, set the NODE_DEBUG environment variable:
+-->
+
+<p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。
+そうすると、エラーを再スローするコールバックがデフォルトとして使用されます。
+本来の呼び出し元のトレースを取得するには、<code>NODE_DEBUG</code>
+環境変数を設定してください:
+
+</p>
+<pre><code>$ cat script.js
+function bad() {
+  require(&#39;fs&#39;).readFile(&#39;/&#39;);
+}
+bad();
+
+$ env NODE_DEBUG=fs node script.js
+fs.js:66
+        throw err;
+              ^
+Error: EISDIR, read
+    at rethrow (fs.js:61:21)
+    at maybeCallback (fs.js:79:42)
+    at Object.fs.readFile (fs.js:153:18)
+    at bad (/path/to/script.js:2:17)
+    at Object.&lt;anonymous&gt; (/path/to/script.js:5:1)
+    &lt;etc.&gt;</code></pre>
 <h2>fs.rename(oldPath, newPath, [callback])<span><a class="mark" href="#fs_fs_rename_oldpath_newpath_callback" id="fs_fs_rename_oldpath_newpath_callback">#</a></span></h2>
 <!--
 Asynchronous rename(2). No arguments other than a possible exception are given
@@ -1359,7 +1388,8 @@ Returns a new ReadStream object (See `Readable Stream`).
   encoding: null,
   fd: null,
   mode: 0666,
-  bufferSize: 64 * 1024
+  bufferSize: 64 * 1024,
+  autoClose: true
 }</code></pre>
 <!--
 `options` can include `start` and `end` values to read a range of bytes from
@@ -1371,6 +1401,21 @@ start at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.
 <code>options</code> に <code>start</code> および <code>end</code> を含めることができます。
 <code>start</code> と <code>end</code> はどちらも包含的で0から始まります。
 <code>encoding</code> は <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、または <code>&#39;base64&#39;</code> です。
+
+</p>
+<!--
+If `autoClose` is false, then the file descriptor won't be closed, even if
+there's an error.  It is your responsiblity to close it and make sure
+there's no file descriptor leak.  If `autoClose` is set to true (default
+behavior), on `error` or `end` the file descriptor will be closed
+automatically.
+-->
+
+<p><code>autoClose</code> が <code>false</code> の場合、エラーが発生しない限りファイル記述子は
+クローズされません。ファイルをクローズし、ファイル記述子が
+リークしないようにするのはあなたの責務です。
+<code>autoClose</code> が <code>true</code> に設定されると (デフォルトの振る舞いです)、
+<code>error</code> または <code>end</code> によってファイル記述子は自動的にクローズされます。
 
 </p>
 <!--
@@ -1539,7 +1584,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.4/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
