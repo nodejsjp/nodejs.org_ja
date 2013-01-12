@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.5 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.5 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -295,6 +295,7 @@
 <li><a href="#all_class_stream_readable">Class: stream.Readable</a><ul>
 <li><a href="#all_new_stream_readable_options">new stream.Readable([options])</a></li>
 <li><a href="#all_readable_read_size_callback">readable._read(size, callback)</a></li>
+<li><a href="#all_readable_push_chunk">readable.push(chunk)</a></li>
 <li><a href="#all_readable_wrap_stream">readable.wrap(stream)</a></li>
 <li><a href="#all_event_readable">Event: &#39;readable&#39;</a></li>
 <li><a href="#all_event_end">Event: &#39;end&#39;</a></li>
@@ -592,6 +593,8 @@
 <li><a href="#all_socket_ref">socket.ref()</a></li>
 <li><a href="#all_socket_remoteaddress">socket.remoteAddress</a></li>
 <li><a href="#all_socket_remoteport">socket.remotePort</a></li>
+<li><a href="#all_socket_localaddress">socket.localAddress</a></li>
+<li><a href="#all_socket_localport">socket.localPort</a></li>
 <li><a href="#all_socket_bytesread">socket.bytesRead</a></li>
 <li><a href="#all_socket_byteswritten">socket.bytesWritten</a></li>
 <li><a href="#all_event_connect">Event: &#39;connect&#39;</a></li>
@@ -4290,15 +4293,14 @@ a diff reading, useful for benchmarks and measuring intervals:
 
 </p>
 <pre><code>var time = process.hrtime();
-// [ 1800216, 927643717 ]
+// [ 1800216, 25 ]
 
 setTimeout(function() {
   var diff = process.hrtime(time);
-  // [ 1, 6962306 ]
+  // [ 1, 552 ]
 
-  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;,
-              diff[0], diff[1]);
-  // benchmark took 1 seconds and 6962306 nanoseconds
+  console.log(&#39;benchmark took %d nanoseconds&#39;, diff[0] * 1e9 + diff[1]);
+  // benchmark took 1000000527 nanoseconds
 }, 1000);</code></pre>
 <h1>util<span><a class="mark" href="#all_util" id="all_util">#</a></span></h1>
 <pre class="api_stability_5">Stability: 5 - Locked</pre><!--
@@ -6859,8 +6861,72 @@ your own extension classes.
 しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
 求められて<strong>います</strong>。
 
+</p>
+<h3>readable.push(chunk)<span><a class="mark" href="#all_readable_push_chunk" id="all_readable_push_chunk">#</a></span></h3>
+<!--
+* `chunk` {Buffer | null | String} Chunk of data to push into the read queue
+* return {Boolean} Whether or not more pushes should be performed
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、
+データのチャンク</li>
+<li>return {Boolean} まだプッシュしてもいいかどうか</li>
+</ul>
+<!--
+The `Readable` class works by putting data into a read queue to be
+pulled out later by calling the `read()` method when the `'readable'`
+event fires.
+-->
+
+<p><code>&#39;readable&#39;</code> イベントが生成された時、後で <code>read()</code> メソッドを呼び出して
+取得されるデータを読み込みキューに入れておくことによって
+<code>Readable</code> クラスは機能します。
 
 </p>
+<!--
+The `push()` method will explicitly insert some data into the read
+queue.  If it is called with `null` then it will signal the end of the
+data.
+-->
+
+<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。
+もし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。
+
+</p>
+<!--
+In some cases, you may be wrapping a lower-level source which has some
+sort of pause/resume mechanism, and a data callback.  In those cases,
+you could wrap the low-level source object by doing something like
+this:
+-->
+
+<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ
+低水準のソースをラップするかもしれません。
+それらのケースでは、次のように低水準なソースオブジェクトを
+ラップすることができます:
+
+</p>
+<pre><code class="javascript">// source is an object with readStop() and readStart() methods,
+// and an `ondata` member that gets called when it has data, and
+// an `onend` member that gets called when the data is over.
+
+var stream = new Readable();
+
+source.ondata = function(chunk) {
+  // if push() returns false, then we need to stop reading from source
+  if (!stream.push(chunk))
+    source.readStop();
+};
+
+source.onend = function() {
+  stream.push(null);
+};
+
+// _read will be called when the stream wants to pull more data in
+stream._read = function(size, cb) {
+  source.readStart();
+};</code></pre>
 <h3>readable.wrap(stream)<span><a class="mark" href="#all_readable_wrap_stream" id="all_readable_wrap_stream">#</a></span></h3>
 <!--
 * `stream` {Stream} An "old style" readable stream
@@ -12380,6 +12446,28 @@ The numeric representation of the remote port. For example,
 -->
 
 <p>リモートポートの数値表現です。
+たとえば、<code>80</code> や <code>21</code>。
+
+</p>
+<h3>socket.localAddress<span><a class="mark" href="#all_socket_localaddress" id="all_socket_localaddress">#</a></span></h3>
+<!--
+The string representation of the local IP address the remote client is
+connecting on. For example, if you are listening on `'0.0.0.0'` and the
+client connects on `'192.168.1.1'`, the value would be `'192.168.1.1'`.
+-->
+
+<p>リモートクライアントが接続しているローカル IP アドレスを表現する文字列です。
+たとえば、 <code>&#39;0.0.0.0&#39;</code> をリッスンしていて、クライアントが <code>&#39;192.168.1.1&#39;</code>
+に接続した場合、この値は <code>&#39;192.168.1.1&#39;</code> になります。
+
+</p>
+<h3>socket.localPort<span><a class="mark" href="#all_socket_localport" id="all_socket_localport">#</a></span></h3>
+<!--
+The numeric representation of the local port. For example,
+`80` or `21`.
+-->
+
+<p>ローカルポートの数値表現です。
 たとえば、<code>80</code> や <code>21</code>。
 
 </p>
@@ -18078,6 +18166,7 @@ leaner than `child_process.exec`. It has the same options.
   * `cwd` {String} Current working directory of the child process
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
+  * `execPath` {String} Executable used to create the child process
 * Return: ChildProcess object
 -->
 
@@ -18088,6 +18177,7 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
+<li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -18136,6 +18226,21 @@ thousands of them.
 新しい Node ごとに少なくとも 30 ミリ秒の起動時間と 
 10MB のメモリを前提としてください。
 つまり、数千の子プロセスを作ることは出来ません。
+
+</p>
+<!--
+The `execPath` property in the `options` object allows for a process to be
+created for the child rather than the current `node` executable. This should be
+done with care and by default will talk over the fd represented an
+environmental variable `NODE_CHANNEL_FD` on the child process. The input and
+output on this fd is expected to be line delimited JSON objects.
+-->
+
+<p><code>options</code> オブジェクト中の <code>execPath</code> プロパティは、
+現在の <code>node</code> 実行ファイルではない子プロセスの作成を可能にします。
+デフォルトでは、子プロセスの環境変数 <code>NODE_CHANNEL_FD</code> によって示される
+ファイル記述子を通じて対話することに注意しなければなりません。
+このファイル記述子における入力と出力は、改行で区切られた JSON オブジェクトです。
 
 </p>
 <h1>Assert<span><a class="mark" href="#all_assert" id="all_assert">#</a></span></h1>
@@ -19135,11 +19240,13 @@ Returns the amount of free system memory in bytes.
 </p>
 <h2>os.cpus()<span><a class="mark" href="#all_os_cpus" id="all_os_cpus">#</a></span></h2>
 <!--
-Returns an array of objects containing information about each CPU/core installed: model, speed (in MHz), and times (an object containing the number of CPU ticks spent in: user, nice, sys, idle, and irq).
+Returns an array of objects containing information about each CPU/core
+installed: model, speed (in MHz), and times (an object containing the number of
+milliseconds the CPU/core spent in: user, nice, sys, idle, and irq).
 -->
 
 <p>インストールされている CPU/ コアごとの情報を含んだオブジェクトの配列を返します。
-情報はモデル、スピード (MHz)、そして時間 (CPU が使用した user, nice, sys, idle, irq 時間を含んだオブジェクト) です。
+情報はモデル、スピード (MHz)、そして時間 (CPU/コア が使用した user, nice, sys, idle, irq のミリ秒を含んだオブジェクト) です。
 
 </p>
 <!--
@@ -20349,7 +20456,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.5/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

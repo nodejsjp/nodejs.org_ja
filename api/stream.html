@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.9.5 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.5 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -60,6 +60,7 @@
 <li><a href="#stream_class_stream_readable">Class: stream.Readable</a><ul>
 <li><a href="#stream_new_stream_readable_options">new stream.Readable([options])</a></li>
 <li><a href="#stream_readable_read_size_callback">readable._read(size, callback)</a></li>
+<li><a href="#stream_readable_push_chunk">readable.push(chunk)</a></li>
 <li><a href="#stream_readable_wrap_stream">readable.wrap(stream)</a></li>
 <li><a href="#stream_event_readable">Event: &#39;readable&#39;</a></li>
 <li><a href="#stream_event_end">Event: &#39;end&#39;</a></li>
@@ -364,8 +365,72 @@ your own extension classes.
 しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
 求められて<strong>います</strong>。
 
+</p>
+<h3>readable.push(chunk)<span><a class="mark" href="#stream_readable_push_chunk" id="stream_readable_push_chunk">#</a></span></h3>
+<!--
+* `chunk` {Buffer | null | String} Chunk of data to push into the read queue
+* return {Boolean} Whether or not more pushes should be performed
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、
+データのチャンク</li>
+<li>return {Boolean} まだプッシュしてもいいかどうか</li>
+</ul>
+<!--
+The `Readable` class works by putting data into a read queue to be
+pulled out later by calling the `read()` method when the `'readable'`
+event fires.
+-->
+
+<p><code>&#39;readable&#39;</code> イベントが生成された時、後で <code>read()</code> メソッドを呼び出して
+取得されるデータを読み込みキューに入れておくことによって
+<code>Readable</code> クラスは機能します。
 
 </p>
+<!--
+The `push()` method will explicitly insert some data into the read
+queue.  If it is called with `null` then it will signal the end of the
+data.
+-->
+
+<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。
+もし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。
+
+</p>
+<!--
+In some cases, you may be wrapping a lower-level source which has some
+sort of pause/resume mechanism, and a data callback.  In those cases,
+you could wrap the low-level source object by doing something like
+this:
+-->
+
+<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ
+低水準のソースをラップするかもしれません。
+それらのケースでは、次のように低水準なソースオブジェクトを
+ラップすることができます:
+
+</p>
+<pre><code class="javascript">// source is an object with readStop() and readStart() methods,
+// and an `ondata` member that gets called when it has data, and
+// an `onend` member that gets called when the data is over.
+
+var stream = new Readable();
+
+source.ondata = function(chunk) {
+  // if push() returns false, then we need to stop reading from source
+  if (!stream.push(chunk))
+    source.readStop();
+};
+
+source.onend = function() {
+  stream.push(null);
+};
+
+// _read will be called when the stream wants to pull more data in
+stream._read = function(size, cb) {
+  source.readStart();
+};</code></pre>
 <h3>readable.wrap(stream)<span><a class="mark" href="#stream_readable_wrap_stream" id="stream_readable_wrap_stream">#</a></span></h3>
 <!--
 * `stream` {Stream} An "old style" readable stream
@@ -1217,7 +1282,7 @@ it can come in handy.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.5/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

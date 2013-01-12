@@ -81,7 +81,7 @@
               "textRaw": "readable.\\_read(size, callback)",
               "type": "method",
               "name": "\\_read",
-              "desc": "<!--\n* `size` {Number} Number of bytes to read asynchronously\n* `callback` {Function} Called with an error or with data\n-->\n\n<ul>\n<li><code>size</code> {Number} 非同期に読み込むバイト数</li>\n<li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>\n</ul>\n<!--\nAll Readable stream implementations must provide a `_read` method\nto fetch data from the underlying resource.\n-->\n\n<p>全ての Readable ストリームは、下層のリソースからデータを\n取得するために <code>_read</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Readable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Readable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error, data)` pattern.\nWhen no more data can be fetched, call `callback(null, null)` to\nsignal the EOF.\n-->\n\n<p>コールバックは標準的な <code>callback(error, data)</code>\nパターンを使って呼び出します。\nデータをそれ以上取得できなくなった場合は、EOF を伝えるために\n<code>callback(null, null)</code> で呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n\n</p>\n",
+              "desc": "<!--\n* `size` {Number} Number of bytes to read asynchronously\n* `callback` {Function} Called with an error or with data\n-->\n\n<ul>\n<li><code>size</code> {Number} 非同期に読み込むバイト数</li>\n<li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>\n</ul>\n<!--\nAll Readable stream implementations must provide a `_read` method\nto fetch data from the underlying resource.\n-->\n\n<p>全ての Readable ストリームは、下層のリソースからデータを\n取得するために <code>_read</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Readable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Readable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error, data)` pattern.\nWhen no more data can be fetched, call `callback(null, null)` to\nsignal the EOF.\n-->\n\n<p>コールバックは標準的な <code>callback(error, data)</code>\nパターンを使って呼び出します。\nデータをそれ以上取得できなくなった場合は、EOF を伝えるために\n<code>callback(null, null)</code> で呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -90,6 +90,21 @@
                     },
                     {
                       "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.push(chunk)",
+              "type": "method",
+              "name": "push",
+              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to push into the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、\nデータのチャンク</li>\n<li>return {Boolean} まだプッシュしてもいいかどうか</li>\n</ul>\n<!--\nThe `Readable` class works by putting data into a read queue to be\npulled out later by calling the `read()` method when the `'readable'`\nevent fires.\n-->\n\n<p><code>&#39;readable&#39;</code> イベントが生成された時、後で <code>read()</code> メソッドを呼び出して\n取得されるデータを読み込みキューに入れておくことによって\n<code>Readable</code> クラスは機能します。\n\n</p>\n<!--\nThe `push()` method will explicitly insert some data into the read\nqueue.  If it is called with `null` then it will signal the end of the\ndata.\n-->\n\n<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。\nもし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。\n\n</p>\n<!--\nIn some cases, you may be wrapping a lower-level source which has some\nsort of pause/resume mechanism, and a data callback.  In those cases,\nyou could wrap the low-level source object by doing something like\nthis:\n-->\n\n<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ\n低水準のソースをラップするかもしれません。\nそれらのケースでは、次のように低水準なソースオブジェクトを\nラップすることができます:\n\n</p>\n<pre><code class=\"javascript\">// source is an object with readStop() and readStart() methods,\n// and an `ondata` member that gets called when it has data, and\n// an `onend` member that gets called when the data is over.\n\nvar stream = new Readable();\n\nsource.ondata = function(chunk) {\n  // if push() returns false, then we need to stop reading from source\n  if (!stream.push(chunk))\n    source.readStop();\n};\n\nsource.onend = function() {\n  stream.push(null);\n};\n\n// _read will be called when the stream wants to pull more data in\nstream._read = function(size, cb) {\n  source.readStart();\n};</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
                     }
                   ]
                 }
