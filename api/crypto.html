@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.9.3 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -88,9 +88,9 @@
 </ul>
 </li>
 <li><a href="#crypto_crypto_createsign_algorithm">crypto.createSign(algorithm)</a></li>
-<li><a href="#crypto_class_signer">Class: Signer</a><ul>
-<li><a href="#crypto_signer_update_data">signer.update(data)</a></li>
-<li><a href="#crypto_signer_sign_private_key_output_format">signer.sign(private_key, [output_format])</a></li>
+<li><a href="#crypto_class_sign">Class: Sign</a><ul>
+<li><a href="#crypto_sign_update_data">sign.update(data)</a></li>
+<li><a href="#crypto_sign_sign_private_key_output_format">sign.sign(private_key, [output_format])</a></li>
 </ul>
 </li>
 <li><a href="#crypto_crypto_createverify_algorithm">crypto.createVerify(algorithm)</a></li>
@@ -109,7 +109,7 @@
 <li><a href="#crypto_diffiehellman_getpublickey_encoding">diffieHellman.getPublicKey([encoding])</a></li>
 <li><a href="#crypto_diffiehellman_getprivatekey_encoding">diffieHellman.getPrivateKey([encoding])</a></li>
 <li><a href="#crypto_diffiehellman_setpublickey_public_key_encoding">diffieHellman.setPublicKey(public_key, [encoding])</a></li>
-<li><a href="#crypto_diffiehellman_setprivatekey_public_key_encoding">diffieHellman.setPrivateKey(public_key, [encoding])</a></li>
+<li><a href="#crypto_diffiehellman_setprivatekey_private_key_encoding">diffieHellman.setPrivateKey(private_key, [encoding])</a></li>
 </ul>
 </li>
 <li><a href="#crypto_crypto_getdiffiehellman_group_name">crypto.getDiffieHellman(group_name)</a></li>
@@ -131,10 +131,9 @@
     future versions.  Breaking changes will be minimized.  See below.
 -->
 
-<pre><code>Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
+<pre class="api_stability_2">Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
 議論されています。互換性を損なう変更は最小限になる予定です。
-後述します。</code></pre>
-<!--
+後述します。</pre><!--
 Use `require('crypto')` to access this module.
 -->
 
@@ -294,13 +293,29 @@ s.on(&#39;end&#39;, function() {
 <h2>Class: Hash<span><a class="mark" href="#crypto_class_hash" id="crypto_class_hash">#</a></span></h2>
 <!--
 The class for creating hash digests of data.
-
-Returned by `crypto.createHash`.
 -->
 
 <p>データのハッシュダイジェストを作成するためのクラスです。
 
 </p>
+<!--
+It is a [stream](stream.html) that is both readable and writable.  The
+written data is used to compute the hash.  Once the writable side of
+the stream is ended, use the `read()` method to get the computed hash
+digest.  The legacy `update` and `digest` methods are also supported.
+-->
+
+<p>これは読み込みと書き込みの両方が可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータはハッシュを計算するために使われます。
+一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを
+読み出すために <code>read()</code> メソッドを使うことができます。
+レガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。
+
+</p>
+<!--
+Returned by `crypto.createHash`.
+-->
+
 <p><code>crypto.createHash()</code> から返されます。
 
 </p>
@@ -353,6 +368,20 @@ algorithm and key.
 -->
 
 <p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。
+
+</p>
+<!--
+It is a [stream](stream.html) that is both readable and writable.  The
+written data is used to compute the hmac.  Once the writable side of
+the stream is ended, use the `read()` method to get the computed
+digest.  The legacy `update` and `digest` methods are also supported.
+-->
+
+<p>これは読み込みと書き込みの両方が可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータはハッシュを計算するために使われます。
+一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを
+読み出すために <code>read()</code> メソッドを使うことができます。
+レガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。
 
 </p>
 <!--
@@ -432,6 +461,20 @@ which must be a `'binary'` encoded string or a [buffer](buffer.html).
 でなければなりません
 
 </p>
+<!--
+It is a [stream](stream.html) that is both readable and writable.  The
+written data is used to compute the hash.  Once the writable side of
+the stream is ended, use the `read()` method to get the computed hash
+digest.  The legacy `update` and `digest` methods are also supported.
+-->
+
+<p>これは読み込みと書き込みの両方が可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータはハッシュを計算するために使われます。
+一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを
+読み出すために <code>read()</code> メソッドを使うことができます。
+レガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。
+
+</p>
 <h2>crypto.createCipheriv(algorithm, key, iv)<span><a class="mark" href="#crypto_crypto_createcipheriv_algorithm_key_iv" id="crypto_crypto_createcipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
 Creates and returns a cipher object, with the given algorithm, key and
@@ -476,6 +519,20 @@ Returned by `crypto.createCipher` and `crypto.createCipheriv`.
 -->
 
 <p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。
+
+</p>
+<!--
+Cipher objects are [streams](stream.html) that are both readable and
+writable.  The written plain text data is used to produce the
+encrypted data on the the readable side.  The legacy `update` and
+`final` methods are also supported.
+-->
+
+<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な
+<a href="stream.html">ストリーム</a> です。
+書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを
+生成するために使われます。
+レガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。
 
 </p>
 <h3>cipher.update(data, [input_encoding], [output_encoding])<span><a class="mark" href="#crypto_cipher_update_data_input_encoding_output_encoding" id="crypto_cipher_update_data_input_encoding_output_encoding">#</a></span></h3>
@@ -583,6 +640,20 @@ Returned by `crypto.createDecipher` and `crypto.createDecipheriv`.
 <p><code>crypto.createDecipher</code> および <code>crypto.createDecipheriv</code> から返されます。
 
 </p>
+<!--
+Decipher objects are [streams](stream.html) that are both readable and
+writable.  The written enciphered data is used to produce the
+plain-text data on the the readable side.  The legacy `update` and
+`final` methods are also supported.
+-->
+
+<p>復号化オブジェクトは読み込みと書き込みの両方が可能な
+<a href="stream.html">ストリーム</a> です。
+書き込まれた暗号化データは、読み込み側にプレーンテキストデータを
+生成するために使われます。
+レガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。
+
+</p>
 <h3>decipher.update(data, [input_encoding], [output_encoding])<span><a class="mark" href="#crypto_decipher_update_data_input_encoding_output_encoding" id="crypto_decipher_update_data_input_encoding_output_encoding">#</a></span></h3>
 <!--
 Updates the decipher with `data`, which is encoded in `'binary'`,
@@ -655,7 +726,7 @@ display the available signing algorithms. Examples are `'RSA-SHA256'`.
 で利用可能な署名アルゴリズムの一覧が表示されます。例えば &#39;RSA-SHA256&#39;。
 
 </p>
-<h2>Class: Signer<span><a class="mark" href="#crypto_class_signer" id="crypto_class_signer">#</a></span></h2>
+<h2>Class: Sign<span><a class="mark" href="#crypto_class_sign" id="crypto_class_sign">#</a></span></h2>
 <!--
 Class for generating signatures.
 
@@ -668,9 +739,22 @@ Returned by `crypto.createSign`.
 <p><code>crypto.createSign</code> から返されます。
 
 </p>
-<h3>signer.update(data)<span><a class="mark" href="#crypto_signer_update_data" id="crypto_signer_update_data">#</a></span></h3>
 <!--
-Updates the signer object with data.  This can be called many times
+Sign objects are writable [streams](stream.html).  The written data is
+used to generate the signature.  Once all of the data has been
+written, the `sign` method will return the signature.  The legacy
+`update` method is also supported.
+-->
+
+<p>署名オブジェクトは書き込み可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータは署名を生成するために使われます。
+全てのデータが書き込まれると、<code>sign()</code> メソッドはその署名を返します。
+レガシーな <code>update()</code> メソッドもサポートされます。
+
+</p>
+<h3>sign.update(data)<span><a class="mark" href="#crypto_sign_update_data" id="crypto_sign_update_data">#</a></span></h3>
+<!--
+Updates the sign object with data.  This can be called many times
 with new data as it is streamed.
 -->
 
@@ -678,10 +762,10 @@ with new data as it is streamed.
 これは新しいデータがストリームに流される際に何度も呼び出されます。
 
 </p>
-<h3>signer.sign(private_key, [output_format])<span><a class="mark" href="#crypto_signer_sign_private_key_output_format" id="crypto_signer_sign_private_key_output_format">#</a></span></h3>
+<h3>sign.sign(private_key, [output_format])<span><a class="mark" href="#crypto_sign_sign_private_key_output_format" id="crypto_sign_sign_private_key_output_format">#</a></span></h3>
 <!--
 Calculates the signature on all the updated data passed through the
-signer.  `private_key` is a string containing the PEM encoded private
+sign.  `private_key` is a string containing the PEM encoded private
 key for signing.
 -->
 
@@ -701,11 +785,11 @@ returned.
 
 </p>
 <!--
-Note: `signer` object can not be used after `sign()` method been
+Note: `sign` object can not be used after `sign()` method been
 called.
 -->
 
-<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> 
+<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>sign</code> 
 オブジェクトを使うことはできません。
 
 </p>
@@ -729,6 +813,21 @@ Returned by `crypto.createVerify`.
 
 </p>
 <p><code>crypto.createVerify</code> から返されます。
+
+</p>
+<!--
+Verify objects are writable [streams](stream.html).  The written data
+is used to validate against the supplied signature.  Once all of the
+data has been written, the `verify` method will return true if the
+supplied signature is valid.  The legacy `update` method is also
+supported.
+-->
+
+<p>検証オブジェクトは書き込み可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータは与えられた署名を検証するために使われます。
+全てのデータが書き込まれると、<code>verify()</code> メソッドは与えられた署名が正しければ
+<code>true</code> を返します。
+レガシーな <code>update()</code> メソッドもサポートされます。
 
 </p>
 <h3>verifier.update(data)<span><a class="mark" href="#crypto_verifier_update_data" id="crypto_verifier_update_data">#</a></span></h3>
@@ -912,7 +1011,7 @@ expected.
 エンコーディングが与えられなかった場合はバッファが期待されます。
 
 </p>
-<h3>diffieHellman.setPrivateKey(public_key, [encoding])<span><a class="mark" href="#crypto_diffiehellman_setprivatekey_public_key_encoding" id="crypto_diffiehellman_setprivatekey_public_key_encoding">#</a></span></h3>
+<h3>diffieHellman.setPrivateKey(private_key, [encoding])<span><a class="mark" href="#crypto_diffiehellman_setprivatekey_private_key_encoding" id="crypto_diffiehellman_setprivatekey_private_key_encoding">#</a></span></h3>
 <!--
 Sets the Diffie-Hellman private key. Key encoding can be `'binary'`,
 `'hex'` or `'base64'`. If no encoding is provided, then a buffer is
@@ -1108,15 +1207,6 @@ temporary measure.
 新しいプログラムはおそらくバッファを期待することに注意してください。
 これは一時的な手段としてのみ使用してください。
 
-</p>
-<!--
-Also, a Streaming API will be provided, but this will be done in such
-a way as to preserve the legacy API surface.
--->
-
-<p>同時に、ストリーミング API も提供されますが、それはレガシーな API
-を維持する方法でなされます。
-
 
 </p>
 
@@ -1147,7 +1237,7 @@ a way as to preserve the legacy API surface.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

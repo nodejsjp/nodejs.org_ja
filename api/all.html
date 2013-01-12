@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.3 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -163,6 +163,9 @@
 <li><a href="#all_process_setgid_id">process.setgid(id)</a></li>
 <li><a href="#all_process_getuid">process.getuid()</a></li>
 <li><a href="#all_process_setuid_id">process.setuid(id)</a></li>
+<li><a href="#all_process_getgroups">process.getgroups()</a></li>
+<li><a href="#all_process_setgroups_groups">process.setgroups(groups)</a></li>
+<li><a href="#all_process_initgroups_user_extra_group">process.initgroups(user, extra_group)</a></li>
 <li><a href="#all_process_version">process.version</a></li>
 <li><a href="#all_process_versions">process.versions</a></li>
 <li><a href="#all_process_config">process.config</a></li>
@@ -288,34 +291,48 @@
 </ul>
 </li>
 <li><a href="#all_stream">Stream</a><ul>
-<li><a href="#all_readable_stream">Readable Stream</a><ul>
-<li><a href="#all_event_data">Event: &#39;data&#39;</a></li>
+<li><a href="#all_compatibility">Compatibility</a></li>
+<li><a href="#all_class_stream_readable">Class: stream.Readable</a><ul>
+<li><a href="#all_new_stream_readable_options">new stream.Readable([options])</a></li>
+<li><a href="#all_readable_read_size_callback">readable._read(size, callback)</a></li>
+<li><a href="#all_readable_push_chunk">readable.push(chunk)</a></li>
+<li><a href="#all_readable_wrap_stream">readable.wrap(stream)</a></li>
+<li><a href="#all_event_readable">Event: &#39;readable&#39;</a></li>
 <li><a href="#all_event_end">Event: &#39;end&#39;</a></li>
+<li><a href="#all_event_data">Event: &#39;data&#39;</a></li>
 <li><a href="#all_event_error">Event: &#39;error&#39;</a></li>
 <li><a href="#all_event_close">Event: &#39;close&#39;</a></li>
-<li><a href="#all_stream_readable">stream.readable</a></li>
-<li><a href="#all_stream_setencoding_encoding">stream.setEncoding([encoding])</a></li>
-<li><a href="#all_stream_pause">stream.pause()</a></li>
-<li><a href="#all_stream_resume">stream.resume()</a></li>
-<li><a href="#all_stream_destroy">stream.destroy()</a></li>
-<li><a href="#all_stream_pipe_destination_options">stream.pipe(destination, [options])</a></li>
+<li><a href="#all_readable_setencoding_encoding">readable.setEncoding(encoding)</a></li>
+<li><a href="#all_readable_read_size">readable.read([size])</a></li>
+<li><a href="#all_readable_pipe_destination_options">readable.pipe(destination, [options])</a></li>
+<li><a href="#all_readable_unpipe_destination">readable.unpipe([destination])</a></li>
+<li><a href="#all_readable_pause">readable.pause()</a></li>
+<li><a href="#all_readable_resume">readable.resume()</a></li>
 </ul>
 </li>
-<li><a href="#all_writable_stream">Writable Stream</a><ul>
+<li><a href="#all_class_stream_writable">Class: stream.Writable</a><ul>
+<li><a href="#all_new_stream_writable_options">new stream.Writable([options])</a></li>
+<li><a href="#all_writable_write_chunk_callback">writable._write(chunk, callback)</a></li>
+<li><a href="#all_writable_write_chunk_encoding_callback">writable.write(chunk, [encoding], [callback])</a></li>
+<li><a href="#all_writable_end_chunk_encoding">writable.end([chunk], [encoding])</a></li>
 <li><a href="#all_event_drain">Event: &#39;drain&#39;</a></li>
-<li><a href="#all_event_error_1">Event: &#39;error&#39;</a></li>
 <li><a href="#all_event_close_1">Event: &#39;close&#39;</a></li>
+<li><a href="#all_event_finish">Event: &#39;finish&#39;</a></li>
 <li><a href="#all_event_pipe">Event: &#39;pipe&#39;</a></li>
-<li><a href="#all_stream_writable">stream.writable</a></li>
-<li><a href="#all_stream_write_string_encoding">stream.write(string, [encoding])</a></li>
-<li><a href="#all_stream_write_buffer">stream.write(buffer)</a></li>
-<li><a href="#all_stream_end">stream.end()</a></li>
-<li><a href="#all_stream_end_string_encoding">stream.end(string, encoding)</a></li>
-<li><a href="#all_stream_end_buffer">stream.end(buffer)</a></li>
-<li><a href="#all_stream_destroy_1">stream.destroy()</a></li>
-<li><a href="#all_stream_destroysoon">stream.destroySoon()</a></li>
+<li><a href="#all_event_unpipe">Event &#39;unpipe&#39;</a></li>
 </ul>
 </li>
+<li><a href="#all_class_stream_duplex">Class: stream.Duplex</a><ul>
+<li><a href="#all_new_stream_duplex_options">new stream.Duplex(options)</a></li>
+</ul>
+</li>
+<li><a href="#all_class_stream_transform">Class: stream.Transform</a><ul>
+<li><a href="#all_new_stream_transform_options">new stream.Transform([options])</a></li>
+<li><a href="#all_transform_transform_chunk_outputfn_callback">transform._transform(chunk, outputFn, callback)</a></li>
+<li><a href="#all_transform_flush_outputfn_callback">transform._flush(outputFn, callback)</a></li>
+</ul>
+</li>
+<li><a href="#all_class_stream_passthrough">Class: stream.PassThrough</a></li>
 </ul>
 </li>
 <li><a href="#all_crypto">Crypto</a><ul>
@@ -351,9 +368,9 @@
 </ul>
 </li>
 <li><a href="#all_crypto_createsign_algorithm">crypto.createSign(algorithm)</a></li>
-<li><a href="#all_class_signer">Class: Signer</a><ul>
-<li><a href="#all_signer_update_data">signer.update(data)</a></li>
-<li><a href="#all_signer_sign_private_key_output_format">signer.sign(private_key, [output_format])</a></li>
+<li><a href="#all_class_sign">Class: Sign</a><ul>
+<li><a href="#all_sign_update_data">sign.update(data)</a></li>
+<li><a href="#all_sign_sign_private_key_output_format">sign.sign(private_key, [output_format])</a></li>
 </ul>
 </li>
 <li><a href="#all_crypto_createverify_algorithm">crypto.createVerify(algorithm)</a></li>
@@ -372,7 +389,7 @@
 <li><a href="#all_diffiehellman_getpublickey_encoding">diffieHellman.getPublicKey([encoding])</a></li>
 <li><a href="#all_diffiehellman_getprivatekey_encoding">diffieHellman.getPrivateKey([encoding])</a></li>
 <li><a href="#all_diffiehellman_setpublickey_public_key_encoding">diffieHellman.setPublicKey(public_key, [encoding])</a></li>
-<li><a href="#all_diffiehellman_setprivatekey_public_key_encoding">diffieHellman.setPrivateKey(public_key, [encoding])</a></li>
+<li><a href="#all_diffiehellman_setprivatekey_private_key_encoding">diffieHellman.setPrivateKey(private_key, [encoding])</a></li>
 </ul>
 </li>
 <li><a href="#all_crypto_getdiffiehellman_group_name">crypto.getDiffieHellman(group_name)</a></li>
@@ -516,7 +533,7 @@
 <li><a href="#all_class_fs_fswatcher">Class: fs.FSWatcher</a><ul>
 <li><a href="#all_watcher_close">watcher.close()</a></li>
 <li><a href="#all_event_change">Event: &#39;change&#39;</a></li>
-<li><a href="#all_event_error_2">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_1">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 </ul>
@@ -554,7 +571,7 @@
 <li><a href="#all_event_listening">Event: &#39;listening&#39;</a></li>
 <li><a href="#all_event_connection">Event: &#39;connection&#39;</a></li>
 <li><a href="#all_event_close_2">Event: &#39;close&#39;</a></li>
-<li><a href="#all_event_error_3">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_2">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 <li><a href="#all_class_net_socket">Class: net.Socket</a><ul>
@@ -576,6 +593,8 @@
 <li><a href="#all_socket_ref">socket.ref()</a></li>
 <li><a href="#all_socket_remoteaddress">socket.remoteAddress</a></li>
 <li><a href="#all_socket_remoteport">socket.remotePort</a></li>
+<li><a href="#all_socket_localaddress">socket.localAddress</a></li>
+<li><a href="#all_socket_localport">socket.localPort</a></li>
 <li><a href="#all_socket_bytesread">socket.bytesRead</a></li>
 <li><a href="#all_socket_byteswritten">socket.bytesWritten</a></li>
 <li><a href="#all_event_connect">Event: &#39;connect&#39;</a></li>
@@ -583,7 +602,7 @@
 <li><a href="#all_event_end_1">Event: &#39;end&#39;</a></li>
 <li><a href="#all_event_timeout">Event: &#39;timeout&#39;</a></li>
 <li><a href="#all_event_drain_1">Event: &#39;drain&#39;</a></li>
-<li><a href="#all_event_error_4">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_3">Event: &#39;error&#39;</a></li>
 <li><a href="#all_event_close_3">Event: &#39;close&#39;</a></li>
 </ul>
 </li>
@@ -598,7 +617,7 @@
 <li><a href="#all_event_message">Event: &#39;message&#39;</a></li>
 <li><a href="#all_event_listening_1">Event: &#39;listening&#39;</a></li>
 <li><a href="#all_event_close_4">Event: &#39;close&#39;</a></li>
-<li><a href="#all_event_error_5">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_4">Event: &#39;error&#39;</a></li>
 <li><a href="#all_dgram_send_buf_offset_length_port_address_callback">dgram.send(buf, offset, length, port, address, [callback])</a></li>
 <li><a href="#all_dgram_bind_port_address">dgram.bind(port, [address])</a></li>
 <li><a href="#all_dgram_close">dgram.close()</a></li>
@@ -895,6 +914,7 @@
 </li>
 <li><a href="#all_os">os</a><ul>
 <li><a href="#all_os_tmpdir">os.tmpDir()</a></li>
+<li><a href="#all_os_endianness">os.endianness()</a></li>
 <li><a href="#all_os_hostname">os.hostname()</a></li>
 <li><a href="#all_os_type">os.type()</a></li>
 <li><a href="#all_os_platform">os.platform()</a></li>
@@ -1013,8 +1033,6 @@ matures, certain parts are more reliable than others.  Some are so
 proven, and so relied upon, that they are unlikely to ever change at
 all.  Others are brand new and experimental, or known to be hazardous
 and in the process of being redesigned.
-
-The notices look like this:
 -->
 
 <p>ドキュメント全体を通して、セクションの安定度に関する目安を見ることが
@@ -1026,81 +1044,95 @@ Node.js の API はまだ少し変更されます。
 その他は新しくて実験的か、危険が知られていたり、再実装が始まっていたりします。
 
 </p>
-<p>通知は次のようです:
-
-</p>
-<pre><code>Stability: 1 Experimental</code></pre>
 <!--
 The stability indices are as follows:
 -->
 
-<p>安定度は以下を示します:
+<p>Stability (安定度) を以下のように示します:
 
 </p>
 <!--
-* **0 - Deprecated**  This feature is known to be problematic, and changes are
+```
+Stability: 0 - Deprecated
+This feature is known to be problematic, and changes are
 planned.  Do not rely on it.  Use of the feature may cause warnings.  Backwards
 compatibility should not be expected.
+```
+-->
 
-* **1 - Experimental**  This feature was introduced recently, and may change
+<pre class="api_stability_0">Stability: 0 - 廃止予定
+この機能には問題があることが知られていて、変更が計画されています。
+これに依存しないでください。この機能を使用すると警告が出されるでしょう。
+後方互換性を期待すべきではありません。</pre><!--
+```
+Stability: 1 - Experimental
+This feature was introduced recently, and may change
 or be removed in future versions.  Please try it out and provide feedback.
 If it addresses a use-case that is important to you, tell the node core team.
+```
+-->
 
-* **2 - Unstable**  The API is in the process of settling, but has not yet had
+<pre class="api_stability_1">Stability: 1 - 実験的
+この機能は最近導入され、将来のバージョンで変更されるか削除されるかもしれません。
+それを試してフィードバックをしてください。
+重要なユースケースで使われるなら、node コアチームに教えてください。</pre><!--
+```
+Stability: 2 - Unstable
+The API is in the process of settling, but has not yet had
 sufficient real-world testing to be considered stable. Backwards-compatibility
 will be maintained if reasonable.
+```
+-->
 
-* **3 - Stable**  The API has proven satisfactory, but cleanup in the underlying
+<pre class="api_stability_2">Stability: 2 - 不安定
+API は安定化の途中ですが、まだ安定していると考えられるほどには
+現実世界でテストされていません。
+もし合理的なら後方互換性が維持されるでしょう。</pre><!--
+```
+Stability: 3 - Stable
+The API has proven satisfactory, but cleanup in the underlying
 code may cause minor changes.  Backwards-compatibility is guaranteed.
+```
+-->
 
-* **4 - API Frozen**  This API has been tested extensively in production and is
+<pre class="api_stability_3">Stability: 3 - 安定
+API は要求を満たすことがわかりましたが、実装コードをクリーンナップするために
+小さな変更が行われるかもしれません。
+後方互換性は保証されます。</pre><!--
+```
+Stability: 4 - API Frozen
+This API has been tested extensively in production and is
 unlikely to ever have to change.
+```
+-->
 
-* **5 - Locked**  Unless serious bugs are found, this code will not ever
+<pre class="api_stability_4">Stability: 4 - API 凍結
+API は実運用で広範囲にテストされており、おそらく変更されることはありません。</pre><!--
+```
+Stability: 5 - API Locked
+Unless serious bugs are found, this code will not ever
 change.  Please do not suggest changes in this area; they will be refused.
 -->
 
-<ul>
-<li><strong>0 - 廃止予定</strong>  この機能には問題があることが知られていて、
-変更が計画されています。これに依存しないでください。
-この機能を使用すると警告が出されるでしょう。
-後方互換性を期待すべきではありません。</li>
-</ul>
-<ul>
-<li><strong>1 - 実験的 </strong>  この機能は最近導入され、将来のバージョンで変更されるか
-削除されるかもしれません。それを試してフィードバックをしてください。
-重要なユースケースで使われるなら、node コアチームに教えてください。</li>
-</ul>
-<ul>
-<li><strong>2 - 不安定</strong>  API は安定化の途中ですが、まだ安定していると考えられるほどには
-現実世界でテストされていません。
-もし合理的なら後方互換性が維持されるでしょう。</li>
-</ul>
-<ul>
-<li><strong>3 - 安定</strong>  API は要求を満たすことがわかりましたが、実装コードを
-クリーンナップするために小さな変更が行われるかもしれません。
-後方互換性は保証されます。</li>
-</ul>
-<ul>
-<li><strong>4 - API 凍結</strong>  API は実運用で広範囲にテストされており、
-おそらく変更されることはありません。</li>
-</ul>
-<ul>
-<li><strong>5 - 固定 </strong>  深刻なバグが見つからない限り、コードは変更されません。
-このエリアの変更を提案しないでください; そえは拒否されます。</li>
-</ul>
-<h2>JSON Output<span><a class="mark" href="#all_json_output" id="all_json_output">#</a></span></h2>
-<pre><code>Stability: 1 - Experimental</code></pre>
+<pre class="api_stability_5">Stability: 5 - 固定
+深刻なバグが見つからない限り、コードは変更されません。
+このエリアの変更を提案しないでください; そえは拒否されます。</pre><h2>JSON Output<span><a class="mark" href="#all_json_output" id="all_json_output">#</a></span></h2>
 <!--
+    Stability: 1 - Experimental
+-->
+
+<pre class="api_stability_1">Stability: 1 - 実験的</pre><!--
 Every HTML file in the markdown has a corresponding JSON file with the
 same data.
-
-This feature is new as of node v0.6.12.  It is experimental.
 -->
 
 <p>markdown から作られる全ての HTML ファイルは、対応する JSON ファイルを持ちます。
 
 </p>
+<!--
+This feature is new as of node v0.6.12.  It is experimental.
+-->
+
 <p>これは v0.6.12 からの新機能で、実験的です。
 
 </p>
@@ -1274,18 +1306,6 @@ Process files with the extension `.sjs` as `.js`:
 
 </p>
 <pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>
-<!--
-Write your own extension handler:
--->
-
-<p>独自の拡張子ハンドラを記述するには:
-
-</p>
-<pre><code>require.extensions[&#39;.sjs&#39;] = function(module, filename) {
-  var content = fs.readFileSync(filename, &#39;utf8&#39;);
-  // Parse the file content and give to module.exports
-  module.exports = content;
-};</code></pre>
 <h2>__filename<span><a class="mark" href="#all_filename" id="all_filename">#</a></span></h2>
 <!-- type=var -->
 
@@ -1495,10 +1515,9 @@ The timer functions are global variables. See the [timers][] section.
 -->
 
 <h1>console<span><a class="mark" href="#all_console_1" id="all_console_1">#</a></span></h1>
-<pre><code>Stability: 4 - API Frozen</code></pre>
-<ul>
-<li>{Object}</li>
-</ul>
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
 <!--type=global-->
 
 <!--
@@ -1604,8 +1623,7 @@ AssertionError with `message`.
 
 </p>
 <h1>Timers<span><a class="mark" href="#all_timers" id="all_timers">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
 All of the timer functions are globals.  You do not need to `require()`
 this module in order to use them.
 -->
@@ -1747,8 +1765,7 @@ Stops an immediate from triggering.
 
 </p>
 <h1>Modules<span><a class="mark" href="#all_modules" id="all_modules">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--name=module-->
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--name=module-->
 
 <!--
 Node has a simple module loading system.  In Node, files and modules are in
@@ -3823,6 +3840,92 @@ blocks while resolving it to a numerical ID.
     console.log(&#39;Failed to set uid: &#39; + err);
   }
 }</code></pre>
+<h2>process.getgroups()<span><a class="mark" href="#all_process_getgroups" id="all_process_getgroups">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIC プラットフォーム (つまり Windows 以外)
+でのみ利用可能です。
+
+</p>
+<!--
+Returns an array with the supplementary group IDs. POSIX leaves it unspecified
+if the effective group ID is included but node.js ensures it always is.
+-->
+
+<p>補助グループ ID の配列を返します。
+POSIX は実効グループ ID が含まれることを明示していませんが、
+Node.js では常にそれが含まれることを保証します。
+
+
+</p>
+<h2>process.setgroups(groups)<span><a class="mark" href="#all_process_setgroups_groups" id="all_process_setgroups_groups">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIC プラットフォーム (つまり Windows 以外)
+でのみ利用可能です。
+
+</p>
+<!--
+Sets the supplementary group IDs. This is a privileged operation, meaning you
+need to be root or have the CAP_SETGID capability.
+-->
+
+<p>補助グループ ID を設定します。
+これは特権オペレーションであり、ルートであるか、または CAP_SETGID ケーパビリティを持つ必要があります。
+
+</p>
+<!--
+The list can contain group IDs, group names or both.
+-->
+
+<p>リストはグループ ID、グループ名、または両方を含むことができます。
+
+
+</p>
+<h2>process.initgroups(user, extra_group)<span><a class="mark" href="#all_process_initgroups_user_extra_group" id="all_process_initgroups_user_extra_group">#</a></span></h2>
+<!--
+Note: this function is only available on POSIX platforms (i.e. not Windows)
+-->
+
+<p>注意: この関数は POSIC プラットフォーム (つまり Windows 以外)
+でのみ利用可能です。
+
+</p>
+<!--
+Reads /etc/group and initializes the group access list, using all groups of
+which the user is a member. This is a privileged operation, meaning you need
+to be root or have the CAP_SETGID capability.
+-->
+
+<p><code>/etc/group</code> を読み込んでグループアクセスリストを初期化し、
+user がメンバーである全てのグループを使用します。
+これは特権オペレーションであり、ルートであるか、または CAP_SETGID ケーパビリティを持つ必要があります。
+
+</p>
+<!--
+`user` is a user name or user ID. `extra_group` is a group name or group ID.
+-->
+
+<p><code>user</code> はユーザ名またはユーザ ID、
+<code>extra_group</code> はグループ名またはグループ ID です。
+
+</p>
+<!--
+Some care needs to be taken when dropping privileges. Example:
+-->
+
+<p>特権を落とす際は、いくつか注意すべき事があります。例:
+
+</p>
+<pre><code>console.log(process.getgroups());         // [ 0 ]
+process.initgroups(&#39;bnoordhuis&#39;, 1000);   // switch user
+console.log(process.getgroups());         // [ 27, 30, 46, 1000, 0 ]
+process.setgid(1000);                     // drop root gid
+console.log(process.getgroups());         // [ 27, 30, 46, 1000 ]</code></pre>
 <h2>process.version<span><a class="mark" href="#all_process_version" id="all_process_version">#</a></span></h2>
 <!--
 A compiled-in property that exposes `NODE_VERSION`.
@@ -3881,6 +3984,9 @@ JavaScript で表現したオブジェクトを保持します。
    { host_arch: &#39;x64&#39;,
      node_install_npm: &#39;true&#39;,
      node_prefix: &#39;&#39;,
+     node_shared_cares: &#39;false&#39;,
+     node_shared_http_parser: &#39;false&#39;,
+     node_shared_libuv: &#39;false&#39;,
      node_shared_v8: &#39;false&#39;,
      node_shared_zlib: &#39;false&#39;,
      node_use_dtrace: &#39;false&#39;,
@@ -4187,19 +4293,17 @@ a diff reading, useful for benchmarks and measuring intervals:
 
 </p>
 <pre><code>var time = process.hrtime();
-// [ 1800216, 927643717 ]
+// [ 1800216, 25 ]
 
 setTimeout(function() {
   var diff = process.hrtime(time);
-  // [ 1, 6962306 ]
+  // [ 1, 552 ]
 
-  console.log(&#39;benchmark took %d seconds and %d nanoseconds&#39;,
-              diff[0], diff[1]);
-  // benchmark took 1 seconds and 6962306 nanoseconds
+  console.log(&#39;benchmark took %d nanoseconds&#39;, diff[0] * 1e9 + diff[1]);
+  // benchmark took 1000000527 nanoseconds
 }, 1000);</code></pre>
 <h1>util<span><a class="mark" href="#all_util" id="all_util">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
-<!--
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
 These functions are in the module `'util'`. Use `require('util')` to access
 them.
 -->
@@ -4537,8 +4641,7 @@ util.isError({ name: &#39;Error&#39;, message: &#39;an error occurred&#39; })
     Stability: 0 - Deprecated: Use readableStream.pipe(writableStream)
 -->
 
-<pre><code>Stability: 0 - Deprecated: `readableStream.pipe(writableStream)` を使ってください。</code></pre>
-<!--
+<pre class="api_stability_0">Stability: 0 - Deprecated: <code>readableStream.pipe(writableStream)</code> を使ってください。</pre><!--
 Read the data from `readableStream` and send it to the `writableStream`.
 When `writableStream.write(data)` returns `false` `readableStream` will be
 paused until the `drain` event occurs on the `writableStream`. `callback` gets
@@ -4600,8 +4703,7 @@ stream.on(&quot;data&quot;, function(data) {
 })
 stream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;</code></pre>
 <h1>Events<span><a class="mark" href="#all_events" id="all_events">#</a></span></h1>
-<pre><code>Stability: 4 - API Frozen</code></pre>
-<!--type=module-->
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><!--type=module-->
 
 <!--
 Many objects in Node emit events: a `net.Server` emits an event each time
@@ -4763,8 +4865,7 @@ This event is emitted any time someone adds a new listener.
 
 </p>
 <h1>Domain<span><a class="mark" href="#all_domain" id="all_domain">#</a></span></h1>
-<pre><code>Stability: 1 - Experimental</code></pre>
-<!--
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
 Domains provide a way to handle multiple different IO operations as a
 single group.  If any of the event emitters or callbacks registered to a
 domain emit an `error` event, or throw an error, then the domain object
@@ -4822,21 +4923,21 @@ are added to it.
 </p>
 <!--
 * `error.domain` The domain that first handled the error.
-* `error.domain_emitter` The event emitter that emitted an 'error' event
+* `error.domainEmitter` The event emitter that emitted an 'error' event
   with the error object.
-* `error.domain_bound` The callback function which was bound to the
+* `error.domainBound` The callback function which was bound to the
   domain, and passed an error as its first argument.
-* `error.domain_thrown` A boolean indicating whether the error was
+* `error.domainThrown` A boolean indicating whether the error was
   thrown, emitted, or passed to a bound callback function.
 -->
 
 <ul>
 <li><code>error.domain</code> このエラーを最初に捕まえたドメイン。</li>
-<li><code>error.domain_emitter</code> このエラーオブジェクトと共に <code>error</code> イベントを
+<li><code>error.domainEmitter</code> このエラーオブジェクトと共に <code>error</code> イベントを
 生成した EventEmitter。</li>
-<li><code>error.domain_bound</code> ドメインに束縛されたコールバック関数で、
+<li><code>error.domainBound</code> ドメインに束縛されたコールバック関数で、
 その第 1 引数にエラーが渡されたもの。</li>
-<li><code>error.domain_throw</code> エラーがスローされたか、EventEmitter から生成されたか、
+<li><code>error.domainThrown</code> エラーがスローされたか、EventEmitter から生成されたか、
 それとも束縛されたコールバック関数に渡されたかを示す boolean 値。</li>
 </ul>
 <h2>Implicit Binding<span><a class="mark" href="#all_implicit_binding" id="all_implicit_binding">#</a></span></h2>
@@ -5261,8 +5362,7 @@ Node.js はそれらとコミュニケートしません。
 
 </p>
 <h1>Buffer<span><a class="mark" href="#all_buffer" id="all_buffer">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Pure JavaScript is Unicode friendly but not nice to binary data.  When
 dealing with TCP streams or the file system, it's necessary to handle octet
 streams. Node has several strategies for manipulating, creating, and
@@ -5354,6 +5454,27 @@ Unicode 文字。
 <li><p><code>&#39;hex&#39;</code> - 各バイトを 2 桁の16進数文字列でエンコードします。</p>
 </li>
 </ul>
+<!--
+`Buffer` can also be used with Typed Array Views and DataViews.
+-->
+
+<p><code>Buffer</code> は Typed Array のビューおよびデータビューとして使うことができます。
+
+</p>
+<pre><code>var buff = new Buffer(4);
+var ui16 = new Uint16Array(buff);
+var view = new DataView(buff);
+
+ui16[0] = 1;
+ui16[1] = 2;
+console.log(buff);
+
+view.setInt16(0, 1);       // set big-endian int16 at byte offset 0
+view.setInt16(2, 2, true); // set little-endian int16 at byte offset 2
+console.log(buff);
+
+// &lt;Buffer 01 00 02 00&gt;
+// &lt;Buffer 00 01 02 00&gt;</code></pre>
 <h2>Class: Buffer<span><a class="mark" href="#all_class_buffer_1" id="all_class_buffer_1">#</a></span></h2>
 <!--
 The Buffer class is a global type for dealing with binary data directly.
@@ -6481,14 +6602,11 @@ then Node will allocate a SlowBuffer slab for it directly.
 
 </p>
 <h1>Stream<span><a class="mark" href="#all_stream" id="all_stream">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 A stream is an abstract interface implemented by various objects in
 Node.  For example a request to an HTTP server is a stream, as is
 stdout. Streams are readable, writable, or both. All streams are
 instances of [EventEmitter][]
-
-You can load up the Stream base class by doing `require('stream')`.
 -->
 
 <p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。
@@ -6497,10 +6615,142 @@ You can load up the Stream base class by doing `require('stream')`.
 全てのストリームは <a href="events.html#events_class_events_eventemitter">EventEmitter</a> のインスタンスです。
 
 </p>
+<!--
+You can load the Stream base classes by doing `require('stream')`.
+There are base classes provided for Readable streams, Writable
+streams, Duplex streams, and Transform streams.
+-->
+
 <p>Stream のベースクラスは <code>require(&#39;stream&#39;)</code> でロードすることができます。
+Readable ストリーム、Writable ストリーム、Duplex ストリーム、Transform
+ストリームのベースクラスが提供されます。
 
 </p>
-<h2>Readable Stream<span><a class="mark" href="#all_readable_stream" id="all_readable_stream">#</a></span></h2>
+<h2>Compatibility<span><a class="mark" href="#all_compatibility" id="all_compatibility">#</a></span></h2>
+<!--
+In earlier versions of Node, the Readable stream interface was
+simpler, but also less powerful and less useful.
+-->
+
+<p>以前のバージョンの Node では、読み込み可能なストリームのインタフェースは
+よりシンプルでしたが、強力ではなく使いやすくもありませんでした。
+
+</p>
+<!--
+* Rather than waiting for you to call the `read()` method, `'data'`
+  events would start emitting immediately.  If you needed to do some
+  I/O to decide how to handle data, then you had to store the chunks
+  in some kind of buffer so that they would not be lost.
+* The `pause()` method was advisory, rather than guaranteed.  This
+  meant that you still had to be prepared to receive `'data'` events
+  even when the stream was in a paused state.
+-->
+
+<ul>
+<li><code>read()</code> メソッドを呼び出すのを待つのではなく、
+<code>&#39;data&#39;</code> イベントがすぐに生成され始めます。
+もしデータを処理する方法を決定するためにいくらかの I/O をする
+必要がある場合、データが失われないようにするためには
+チャンクを何らかのバッファに保存しなければなりませんでした。</li>
+<li><code>pause()</code> は保証というよりはむしろ助言です。
+それはストリームが中断された状態であったとしても、
+<code>&#39;data&#39;</code> イベントを受け取る準備が必要だということを意味します。</li>
+</ul>
+<!--
+In Node v0.10, the Readable class described below was added.  For
+backwards compatibility with older Node programs, Readable streams
+switch into "old mode" when a `'data'` event handler is added, or when
+the `pause()` or `resume()` methods are called.  The effect is that,
+even if you are not using the new `read()` method and `'readable'`
+event, you no longer have to worry about losing `'data'` chunks.
+-->
+
+<p>Node v0.10 から、以下で説明する Readable クラスが追加されました。
+古い Node プログラムとの後方互換性のために、Readable ストリームは
+<code>&#39;data&#39;</code> イベントのハンドラが加えられた場合や、<code>pause()</code> または
+<code>resume()</code> メソッドが読み出されると、「旧モード」に切り替わります。
+その結果として、新しい <code>read()</code> メソッドや <code>&#39;readable&#39;</code> イベントを
+使用していなくても、もう <code>&#39;data&#39;</code> イベントのチャンクが失われることを
+心配する必要はありません。
+
+</p>
+<!--
+Most programs will continue to function normally.  However, this
+introduces an edge case in the following conditions:
+-->
+
+<p>ほとんどのプログラムはこれまで通りに機能するでしょう。
+しかしながら、以下の条件でエッジケースが存在します。
+
+</p>
+<!--
+* No `'data'` event handler is added.
+* The `pause()` and `resume()` methods are never called.
+-->
+
+<ul>
+<li><code>&#39;data&#39;</code> イベントハンドラが登録されていない。</li>
+<li><code>pause()</code> および <code>resume()</code> メソッドが呼び出されていない。</li>
+</ul>
+<!--
+For example, consider the following code:
+-->
+
+<p>例えば、以下のコードを考えてみてください:
+
+</p>
+<pre><code class="javascript">// WARNING!  BROKEN!
+net.createServer(function(socket) {
+
+  // we add an &#39;end&#39; method, but never consume the data
+  socket.on(&#39;end&#39;, function() {
+    // It will never get here.
+    socket.end(&#39;I got your message (but didnt read it)\n&#39;);
+  });
+
+}).listen(1337);</code></pre>
+<!--
+In versions of node prior to v0.10, the incoming message data would be
+simply discarded.  However, in Node v0.10 and beyond, the socket will
+remain paused forever.
+-->
+
+<p>v0.10 より前の Node では、入ってきたデータは単純に破棄されていました。
+しかしながら、Node v0.10 以降では、ソケットは中断したままとなります。
+
+</p>
+<!--
+The workaround in this situation is to call the `resume()` method to
+trigger "old mode" behavior:
+-->
+
+<p>この状況の回避策は、「旧モード」の振る舞いへのトリガーとして
+<code>resume()</code> メソッドを呼び出すことです。
+
+</p>
+<pre><code class="javascript">// Workaround
+net.createServer(function(socket) {
+
+  socket.on(&#39;end&#39;, function() {
+    socket.end(&#39;I got your message (but didnt read it)\n&#39;);
+  });
+
+  // start the flow of data, discarding it.
+  socket.resume();
+
+}).listen(1337);</code></pre>
+<!--
+In addition to new Readable streams switching into old-mode, pre-v0.10
+style streams can be wrapped in a Readable class using the `wrap()`
+method.
+-->
+
+<p>新しい Readable ストリームを旧モードに切り替えられることに加えて、
+<code>warp()</code> メソッドを使って v0.10 より前のスタイルのストリームを
+Readable クラスでラップすることもできます。
+
+</p>
+<h2>Class: stream.Readable<span><a class="mark" href="#all_class_stream_readable" id="all_class_stream_readable">#</a></span></h2>
 <!--type=class-->
 
 <!--
@@ -6510,30 +6760,229 @@ A `Readable Stream` has the following methods, members, and events.
 <p><code>Readable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。
 
 </p>
-<h3>Event: &#39;data&#39;<span><a class="mark" href="#all_event_data" id="all_event_data">#</a></span></h3>
-<p><code>function (data) { }</code>
+<!--
+Note that `stream.Readable` is an abstract class designed to be
+extended with an underlying implementation of the `_read(size, cb)`
+method. (See below.)
+-->
+
+<p><code>stream.Readable</code> は下層の実装である <code>_read(size, cb)</code> メソッド (後述)
+によって拡張されるように設計された抽象クラスであることに注意してください。
+
+</p>
+<h3>new stream.Readable([options])<span><a class="mark" href="#all_new_stream_readable_options" id="all_new_stream_readable_options">#</a></span></h3>
+<!--
+* `options` {Object}
+  * `bufferSize` {Number} The size of the chunks to consume from the
+    underlying resource. Default=16kb
+  * `lowWaterMark` {Number} The minimum number of bytes to store in
+    the internal buffer before emitting `readable`.  Default=0
+  * `highWaterMark` {Number} The maximum number of bytes to store in
+    the internal buffer before ceasing to read from the underlying
+    resource.  Default=16kb
+  * `encoding` {String} If specified, then buffers will be decoded to
+    strings using the specified encoding.  Default=null
+-->
+
+<ul>
+<li><code>options</code> {Object} (任意)<ul>
+<li><code>bufferSize</code> {Number} 下層のリソースによって消費される
+チャンクのサイズです。デフォルトは 16kb。</li>
+<li><code>lowWaterMark</code> {Number} <code>readable</code> イベントが生成されるまで
+内部バッファに貯めておくバイト数の最小値。デフォルトは 0。</li>
+<li><code>highWaterMark</code> {Number} 下層のリソースから読み込むのを中断するまで
+内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
+<li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
+デコードされます。デフォルトは <code>null</code>。</li>
+</ul>
+</li>
+</ul>
+<!--
+In classes that extend the Readable class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Readable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
+
+</p>
+<h3>readable._read(size, callback)<span><a class="mark" href="#all_readable_read_size_callback" id="all_readable_read_size_callback">#</a></span></h3>
+<!--
+* `size` {Number} Number of bytes to read asynchronously
+* `callback` {Function} Called with an error or with data
+-->
+
+<ul>
+<li><code>size</code> {Number} 非同期に読み込むバイト数</li>
+<li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>
+</ul>
+<!--
+All Readable stream implementations must provide a `_read` method
+to fetch data from the underlying resource.
+-->
+
+<p>全ての Readable ストリームは、下層のリソースからデータを
+取得するために <code>_read</code> メソッドを提供しなければなりません。
 
 </p>
 <!--
-The `'data'` event emits either a `Buffer` (by default) or a string if
-`setEncoding()` was used.
-
-Note that the __data will be lost__ if there is no listener when a
-`Readable Stream` emits a `'data'` event.
+Note: **This function MUST NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Readable
+class methods only.
 -->
 
-<p><code>&#39;data&#39;</code> イベントは <code>Buffer</code> (デフォルト) または、
-<code>setEncoding()</code> された場合は文字列のどちらかを生成します
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるべきであり、Readable クラスの内部からのみ
+呼び出されるべきです。
 
 </p>
-<p><code>Readable Stream</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、
-<strong>データは失われる</strong>ことに注意してください。
+<!--
+Call the callback using the standard `callback(error, data)` pattern.
+When no more data can be fetched, call `callback(null, null)` to
+signal the EOF.
+-->
+
+<p>コールバックは標準的な <code>callback(error, data)</code>
+パターンを使って呼び出します。
+データをそれ以上取得できなくなった場合は、EOF を伝えるために
+<code>callback(null, null)</code> で呼び出します。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+</p>
+<h3>readable.push(chunk)<span><a class="mark" href="#all_readable_push_chunk" id="all_readable_push_chunk">#</a></span></h3>
+<!--
+* `chunk` {Buffer | null | String} Chunk of data to push into the read queue
+* return {Boolean} Whether or not more pushes should be performed
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、
+データのチャンク</li>
+<li>return {Boolean} まだプッシュしてもいいかどうか</li>
+</ul>
+<!--
+The `Readable` class works by putting data into a read queue to be
+pulled out later by calling the `read()` method when the `'readable'`
+event fires.
+-->
+
+<p><code>&#39;readable&#39;</code> イベントが生成された時、後で <code>read()</code> メソッドを呼び出して
+取得されるデータを読み込みキューに入れておくことによって
+<code>Readable</code> クラスは機能します。
+
+</p>
+<!--
+The `push()` method will explicitly insert some data into the read
+queue.  If it is called with `null` then it will signal the end of the
+data.
+-->
+
+<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。
+もし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。
+
+</p>
+<!--
+In some cases, you may be wrapping a lower-level source which has some
+sort of pause/resume mechanism, and a data callback.  In those cases,
+you could wrap the low-level source object by doing something like
+this:
+-->
+
+<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ
+低水準のソースをラップするかもしれません。
+それらのケースでは、次のように低水準なソースオブジェクトを
+ラップすることができます:
+
+</p>
+<pre><code class="javascript">// source is an object with readStop() and readStart() methods,
+// and an `ondata` member that gets called when it has data, and
+// an `onend` member that gets called when the data is over.
+
+var stream = new Readable();
+
+source.ondata = function(chunk) {
+  // if push() returns false, then we need to stop reading from source
+  if (!stream.push(chunk))
+    source.readStop();
+};
+
+source.onend = function() {
+  stream.push(null);
+};
+
+// _read will be called when the stream wants to pull more data in
+stream._read = function(size, cb) {
+  source.readStart();
+};</code></pre>
+<h3>readable.wrap(stream)<span><a class="mark" href="#all_readable_wrap_stream" id="all_readable_wrap_stream">#</a></span></h3>
+<!--
+* `stream` {Stream} An "old style" readable stream
+-->
+
+<ul>
+<li><code>stream</code> {Stream} 「古いスタイル」の読み込み可能なストリーム</li>
+</ul>
+<!--
+If you are using an older Node library that emits `'data'` events and
+has a `pause()` method that is advisory only, then you can use the
+`wrap()` method to create a Readable stream that uses the old stream
+as its data source.
+-->
+
+<p>もし <code>&#39;data&#39;</code> イベントを生成し、アドバイスだけを行う <code>pause()</code>
+メソッドを持つ、古い Node ライブラリを使っているなら、
+`wrap()`` メソッドは古いストリームをデータソースとして使用する
+Readable ストリームを作成します。
+
+</p>
+<!--
+For example:
+-->
+
+<p>例:
+
+</p>
+<pre><code class="javascript">var OldReader = require(&#39;./old-api-module.js&#39;).OldReader;
+var oreader = new OldReader;
+var Readable = require(&#39;stream&#39;).Readable;
+var myReader = new Readable().wrap(oreader);
+
+myReader.on(&#39;readable&#39;, function() {
+  myReader.read(); // etc.
+});</code></pre>
+<h3>Event: &#39;readable&#39;<span><a class="mark" href="#all_event_readable" id="all_event_readable">#</a></span></h3>
+<!--
+When there is data ready to be consumed, this event will fire.  The
+number of bytes that are required to be considered "readable" depends
+on the `lowWaterMark` option set in the constructor.
+-->
+
+<p>データが消費される準備ができた時、このイベントが生成されます。
+「読み込み可能である」とみなされるために必要なバイト数は、
+コンストラクタで設定された <code>lowWaterMark</code> に依存します。
+
+</p>
+<!--
+When this event emits, call the `read()` method to consume the data.
+-->
+
+<p>このイベントが生成された場合、<code>read()</code> を呼んでデータを消費してください。
 
 </p>
 <h3>Event: &#39;end&#39;<span><a class="mark" href="#all_event_end" id="all_event_end">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
 <!--
 Emitted when the stream has received an EOF (FIN in TCP terminology).
 Indicates that no more `'data'` events will happen. If the stream is
@@ -6542,13 +6991,33 @@ also writable, it may be possible to continue writing.
 
 <p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。
 <code>&#39;data&#39;</code> イベントがもう発生しないことを示します。
-ストリームがもし書き込み可能でもあるなら、書き込みを続けることは可能かもしれません。
+もしストリームが書き込み可能でもあるなら、
+書き込みを続けることは可能かもしれません。
+
+</p>
+<h3>Event: &#39;data&#39;<span><a class="mark" href="#all_event_data" id="all_event_data">#</a></span></h3>
+<!--
+The `'data'` event emits either a `Buffer` (by default) or a string if
+`setEncoding()` was used.
+-->
+
+<p><code>&#39;data&#39;</code> イベントは <code>Buffer</code> (デフォルト) または、<code>setEncoding()</code>
+された場合は文字列のどちらかを生成します。
+
+</p>
+<!--
+Note that adding a `'data'` event listener will switch the Readable
+stream into "old mode", where data is emitted as soon as it is
+available, rather than waiting for you to call `read()` to consume it.
+-->
+
+<p><code>&#39;data&#39;</code> イベントリスナが加えられた場合のみ、Readable ストリームは
+「旧モード」に切り替わることに注意してください。
+データを消費するために <code>read()</code> メソッドが呼び出されるまで待つ代わりに、
+データが利用可能になるとすぐにイベントが生成されます。
 
 </p>
 <h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error" id="all_event_error">#</a></span></h3>
-<p><code>function (exception) { }</code>
-
-</p>
 <!--
 Emitted if there was an error receiving data.
 -->
@@ -6557,9 +7026,6 @@ Emitted if there was an error receiving data.
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close" id="all_event_close">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
 <!--
 Emitted when the underlying resource (for example, the backing file
 descriptor) has been closed. Not all streams will emit this.
@@ -6569,111 +7035,112 @@ descriptor) has been closed. Not all streams will emit this.
 全てのストリームがこのイベントを発生するわけではありません。
 
 </p>
-<h3>stream.readable<span><a class="mark" href="#all_stream_readable" id="all_stream_readable">#</a></span></h3>
-<!--
-A boolean that is `true` by default, but turns `false` after an
-`'error'` occurred, the stream came to an `'end'`, or `destroy()` was
-called.
--->
-
-<p>デフォルトでは <code>true</code> ですが、<code>&#39;error&#39;</code> が発生した後、
-ストリームが <code>&#39;end&#39;</code> に達した後、または <code>destroy()</code> が呼ばれた後で、
-<code>false</code> に設定される boolean です。
-
-</p>
-<h3>stream.setEncoding([encoding])<span><a class="mark" href="#all_stream_setencoding_encoding" id="all_stream_setencoding_encoding">#</a></span></h3>
+<h3>readable.setEncoding(encoding)<span><a class="mark" href="#all_readable_setencoding_encoding" id="all_readable_setencoding_encoding">#</a></span></h3>
 <!--
 Makes the `'data'` event emit a string instead of a `Buffer`. `encoding`
-can be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`. Defaults
-to `'utf8'`.
+can be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`.
 -->
 
 <p><code>&#39;data&#39;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。
 <code>encoding</code> には <code>&#39;utf8&#39;</code>、<code>&#39;utf16le&#39;</code> (<code>&#39;ucs2&#39;</code>)、<code>&#39;ascii&#39;</code>、
 または <code>&#39;hex&#39;</code> を指定することができます。
-デフォルトは <code>&#39;utf8&#39;</code> です。
-
-</p>
-<h3>stream.pause()<span><a class="mark" href="#all_stream_pause" id="all_stream_pause">#</a></span></h3>
-<!--
-Issues an advisory signal to the underlying communication layer,
-requesting that no further data be sent until `resume()` is called.
--->
-
-<p>アドバイス的なシグナルを下層の通信レイヤに発し、<code>resume()</code> が呼ばれるまで
-データが送られないように要求します。
 
 </p>
 <!--
-Note that, due to the advisory nature, certain streams will not be
-paused immediately, and so `'data'` events may be emitted for some
-indeterminate period of time even after `pause()` is called. You may
-wish to buffer such `'data'` events.
+The encoding can also be set by specifying an `encoding` field to the
+constructor.
 -->
 
-<p>アドバイス的な性質のために、ストリームによっては即座に中断しないこと、
-および <code>pause()</code> を呼び出してから不特定の時間 <code>&#39;data&#39;</code> イベントが
-生成されるかもしれないことに注意してください。
-<code>&#39;data&#39;</code> イベントをバッファリングするのもいいでしょう。
+<p>エンコーディングはコンストラクタに渡す <code>encoding</code>
+フィールドでも指定することができます。
 
 </p>
-<h3>stream.resume()<span><a class="mark" href="#all_stream_resume" id="all_stream_resume">#</a></span></h3>
+<h3>readable.read([size])<span><a class="mark" href="#all_readable_read_size" id="all_readable_read_size">#</a></span></h3>
 <!--
-Resumes the incoming `'data'` events after a `pause()`.
+* `size` {Number | null} Optional number of bytes to read.
+* Return: {Buffer | String | null}
 -->
 
-<p><code>pause()</code> の後で <code>&#39;data&#39;</code> イベントの到着を再開します。
-
-</p>
-<h3>stream.destroy()<span><a class="mark" href="#all_stream_destroy" id="all_stream_destroy">#</a></span></h3>
+<ul>
+<li><code>size</code> {Number | null} 読み込むバイト数 (任意)</li>
+<li>Return: {Buffer | String | null}</li>
+</ul>
 <!--
-Closes the underlying file descriptor. Stream is no longer `writable`
-nor `readable`.  The stream will not emit any more 'data', or 'end'
-events. Any queued write data will not be sent.  The stream should emit
-'close' event once its resources have been disposed of.
+Call this method to consume data once the `'readable'` event is
+emitted.
 -->
 
-<p>下層のファイル記述子をクローズします。
-ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
-ストリームはそれ以上 <code>&#39;data&#39;</code> あるいは <code>&#39;end&#39;</code> イベントを生成しなくなります。
-キューイングされたデータは送信されません。
-ストリームはそのリソースが破棄されたときに <code>&#39;close&#39;</code> イベントを生成すべきです。
-
-</p>
-<h3>stream.pipe(destination, [options])<span><a class="mark" href="#all_stream_pipe_destination_options" id="all_stream_pipe_destination_options">#</a></span></h3>
-<!--
-This is a `Stream.prototype` method available on all `Stream`s.
--->
-
-<p>これは全ての <code>Stream</code> で利用可能な <code>Stream.prototype</code> メソッドです。
+<p><code>&#39;readable&#39;</code> イベントが生成した後にデータを消費するために呼び出してください。
 
 </p>
 <!--
-Connects this read stream to `destination` WriteStream. Incoming data on
-this stream gets written to `destination`. The destination and source
-streams are kept in sync by pausing and resuming as necessary.
+The `size` argument will set a minimum number of bytes that you are
+interested in.  If not set, then the entire content of the internal
+buffer is returned.
 -->
 
-<p>読み込みストリームを <code>destination</code> の書き込みストリームに接続します。
-このストリームに入ってきたデータは <code>destination</code> に書き込まれます。
-接続先と接続元のストリームは、必要に応じて中断と再開することで同期を保ちます。
+<p><code>size</code> 引数は、必要な最小のバイト数を指定します。
+指定しなかった場合、内部バッファ全体の内容が返されます。
 
 </p>
+<!--
+If there is no data to consume, or if there are fewer bytes in the
+internal buffer than the `size` argument, then `null` is returned, and
+a future `'readable'` event will be emitted when more is available.
+-->
+
+<p>もし消費できるデータがなかったり、内部バッファに <code>size</code>
+引数で指定されたよりも少ないバイト数しかデータがなかったりした場合は、
+<code>null</code> が返されます。
+その後、より多くのデータが利用可能になると <code>&#39;readable&#39;</code> イベントが生成されます。
+
+</p>
+<!--
+Note that calling `stream.read(0)` will always return `null`, and will
+trigger a refresh of the internal buffer, but otherwise be a no-op.
+-->
+
+<p><code>stream.read(0)</code> は常に <code>null</code> を返すことに注意してください。
+それは内部バッファをリフレッシュしますが、それ以外の処理はしません。
+
+</p>
+<h3>readable.pipe(destination, [options])<span><a class="mark" href="#all_readable_pipe_destination_options" id="all_readable_pipe_destination_options">#</a></span></h3>
+<!--
+* `destination` {Writable Stream}
+* `options` {Object} Optional
+  * `end` {Boolean} Default=true
+-->
+
+<ul>
+<li><code>destination</code> {Writable Stream}</li>
+<li><code>options</code> {Object} (任意)<ul>
+<li><code>end</code> {Boolean} デフォルトは <code>true</code></li>
+</ul>
+</li>
+</ul>
+<!--
+Connects this readable stream to `destination` WriteStream. Incoming
+data on this stream gets written to `destination`.  Properly manages
+back-pressure so that a slow destination will not be overwhelmed by a
+fast readable stream.
+
+読み込み可能なストリームを `destination` の書き込みストリームに接続します。
+このストリームに入ってきたデータは `destination` に書き込まれます。
+遅い出力先が速い読み込み可能なストリームに圧倒されないよう、
+背圧を適切に管理します。
+
 <!--
 This function returns the `destination` stream.
 -->
 
-<p>この関数は <code>destination</code> ストリームを返します。
-
-</p>
 <!--
-Emulating the Unix `cat` command:
+For example, emulating the Unix `cat` command:
 -->
 
-<p>Unix の <code>cat</code> コマンドのエミュレート:
+<p>Unix の <code>cat</code> コマンドのエミュレートする例:
 
 </p>
-<pre><code>process.stdin.resume(); process.stdin.pipe(process.stdout);</code></pre>
+<pre><code>process.stdin.pipe(process.stdout);</code></pre>
 <!--
 By default `end()` is called on the destination when the source stream
 emits `end`, so that `destination` is no longer writable. Pass `{ end:
@@ -6686,36 +7153,271 @@ false }` as `options` to keep the destination stream open.
 
 </p>
 <!--
-This keeps `process.stdout` open so that "Goodbye" can be written at the
+This keeps `writer` open so that "Goodbye" can be written at the
 end.
 -->
 
-<p>これは <code>process.stdout</code> をオープンしたままにして最後に &quot;Goodbye&quot; と出力します。
+<p>これは <code>writer</code> をオープンしたままにして、最後に &quot;Goodbye&quot; と出力します。
 
 </p>
-<pre><code>process.stdin.resume();
+<pre><code>reader.pipe(writer, { end: false });
+reader.on(&quot;end&quot;, function() {
+  writer.end(&quot;Goodbye\n&quot;);
+});</code></pre>
+<!--
+Note that `process.stderr` and `process.stdout` are never closed until
+the process exits, regardless of the specified options.
+-->
 
-process.stdin.pipe(process.stdout, { end: false });
+<p>オプションの指定にかかわらず、<code>process.stderr</code> および <code>process.stdou</code>
+はプロセスが終了するまで決してクローズされないことに注意してください。
 
-process.stdin.on(&quot;end&quot;, function() {
-process.stdout.write(&quot;Goodbye\n&quot;); });</code></pre>
-<h2>Writable Stream<span><a class="mark" href="#all_writable_stream" id="all_writable_stream">#</a></span></h2>
+</p>
+<h3>readable.unpipe([destination])<span><a class="mark" href="#all_readable_unpipe_destination" id="all_readable_unpipe_destination">#</a></span></h3>
+<!--
+* `destination` {Writable Stream} Optional
+-->
+
+<ul>
+<li><code>destination</code> {Writable Stream} (任意)</li>
+</ul>
+<!--
+Undo a previously established `pipe()`.  If no destination is
+provided, then all previously established pipes are removed.
+-->
+
+<p>以前に構築した <code>pipe()</code> を取り消します。
+もし接続先が与えられなかった場合は、
+以前に構築された全てのパイプが削除されます。
+
+</p>
+<h3>readable.pause()<span><a class="mark" href="#all_readable_pause" id="all_readable_pause">#</a></span></h3>
+<!--
+Switches the readable stream into "old mode", where data is emitted
+using a `'data'` event rather than being buffered for consumption via
+the `read()` method.
+-->
+
+<p>読み込み可能なストリームを「旧モード」に切り替えます。
+データはバッファリングされて <code>read()</code> メソッドによって消費される代わりに、
+<code>&#39;data&#39;</code> イベントによって生成されます。
+
+</p>
+<!--
+Ceases the flow of data.  No `'data'` events are emitted while the
+stream is in a paused state.
+-->
+
+<p>データの流れは中断します。
+ストリームが中断状態にある限り、<code>&#39;data&#39;</code> イベントは生成されません。
+
+</p>
+<h3>readable.resume()<span><a class="mark" href="#all_readable_resume" id="all_readable_resume">#</a></span></h3>
+<!--
+Switches the readable stream into "old mode", where data is emitted
+using a `'data'` event rather than being buffered for consumption via
+the `read()` method.
+-->
+
+<p>読み込み可能なストリームを「旧モード」に切り替えます。
+データはバッファリングされて <code>read()</code> メソッドによって消費される代わりに、
+<code>&#39;data&#39;</code> イベントによって生成されます。
+
+</p>
+<!--
+Resumes the incoming `'data'` events after a `pause()`.
+-->
+
+<p><code>pause()</code> の後で中断されていた <code>&#39;data&#39;</code> イベントを再開します。
+
+</p>
+<h2>Class: stream.Writable<span><a class="mark" href="#all_class_stream_writable" id="all_class_stream_writable">#</a></span></h2>
 <!--type=class-->
 
 <!--
-A `Writable Stream` has the following methods, members, and events.
+A `Writable` Stream has the following methods, members, and events.
 -->
 
-<p><code>Writable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。
-
-</p>
-<h3>Event: &#39;drain&#39;<span><a class="mark" href="#all_event_drain" id="all_event_drain">#</a></span></h3>
-<p><code>function () { }</code>
+<p><code>Writable</code> ストリームには以下のメソッド、メンバー、そしてイベントがあります。
 
 </p>
 <!--
-Emitted when the stream's write queue empties and it's safe to write without
-buffering again. Listen for it when `stream.write()` returns `false`.
+Note that `stream.Writable` is an abstract class designed to be
+extended with an underlying implementation of the `_write(chunk, cb)`
+method. (See below.)
+-->
+
+<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, cb)</code> メソッド (後述)
+によって拡張されるように設計された抽象クラスであることに注意してください。
+
+</p>
+<h3>new stream.Writable([options])<span><a class="mark" href="#all_new_stream_writable_options" id="all_new_stream_writable_options">#</a></span></h3>
+<!--
+* `options` {Object}
+  * `highWaterMark` {Number} Buffer level when `write()` starts
+    returning false. Default=16kb
+  * `lowWaterMark` {Number} The buffer level when `'drain'` is
+    emitted.  Default=0
+  * `decodeStrings` {Boolean} Whether or not to decode strings into
+    Buffers before passing them to `_write()`.  Default=true
+-->
+
+<ul>
+<li><code>options</code> {Object} (任意)<ul>
+<li><code>highWaterMark</code> {Number} <code>write()</code> が <code>false</code> を返し始めるバッファレベル。
+デフォルトは 16kb。</li>
+<li><code>lowWaterMark</code> {Number} <code>&#39;drain&#39;</code> が生成されるバッファレベル。
+デフォルトは 0。</li>
+<li><code>decodeStrings</code> {Boolean} 文字列が <code>_write()</code> に渡される前に
+バッファにデコードするかどうか。デフォルトは <code>true</code>。</li>
+</ul>
+</li>
+</ul>
+<!--
+In classes that extend the Writable class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Writable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
+
+</p>
+<h3>writable._write(chunk, callback)<span><a class="mark" href="#all_writable_write_chunk_callback" id="all_writable_write_chunk_callback">#</a></span></h3>
+<!--
+* `chunk` {Buffer | Array} The data to be written
+* `callback` {Function} Called with an error, or null when finished
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。</li>
+<li><code>callback</code> {Function} 終了後にエラーまたは <code>null</code>
+と共に呼び出されるコールバック</li>
+</ul>
+<!--
+All Writable stream implementations must provide a `_write` method to
+send data to the underlying resource.
+-->
+
+<p>全ての Writable ストリームは、下層のリソースにデータを
+送るために <code>_write</code> メソッドを提供しなければなりません。
+
+</p>
+<!--
+Note: **This function MUST NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Writable
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるべきであり、Writable クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
+Call the callback using the standard `callback(error)` pattern to
+signal that the write completed successfully or with an error.
+-->
+
+<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、
+標準的な <code>callback(error)</code> パターンを使って呼び出します。
+
+</p>
+<!--
+If the `decodeStrings` flag is set in the constructor options, then
+`chunk` will be an array rather than a Buffer.  This is to support
+implementations that have an optimized handling for certain string
+data encodings.
+-->
+
+<p>コンストラクタオプションの <code>decodeString</code> フラグがセットされると、
+<code>chunk</code> は Buffer ではなく配列になります。
+これは、実装が文字列データのエンコーディングを最適化できるようにするためです。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+
+</p>
+<h3>writable.write(chunk, [encoding], [callback])<span><a class="mark" href="#all_writable_write_chunk_encoding_callback" id="all_writable_write_chunk_encoding_callback">#</a></span></h3>
+<!--
+* `chunk` {Buffer | String} Data to be written
+* `encoding` {String} Optional.  If `chunk` is a string, then encoding
+  defaults to `'utf8'`
+* `callback` {Function} Optional.  Called when this chunk is
+  successfully written.
+* Returns {Boolean}
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | String} 書き込まれるデータ</li>
+<li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。
+デフォルトは <code>&#39;utf8&#39;</code>。</li>
+<li><code>callback</code> {Function} チャンクが正常に書き込まれた場合に呼び出される (任意)。</li>
+<li>Returns {Boolean}</li>
+</ul>
+<!--
+Writes `chunk` to the stream.  Returns `true` if the data has been
+flushed to the underlying resource.  Returns `false` to indicate that
+the buffer is full, and the data will be sent out in the future. The
+`'drain'` event will indicate when the buffer is empty again.
+-->
+
+<p><code>chunk</code> をストリームに書き込みます。
+データが下層のリソースに書き込まれると <code>true</code> を返します。
+バッファが一杯であることを伝えるために <code>false</code> が返され、
+データは将来送り出されます。
+<code>&#39;drain&#39;</code> イベントはバッファが再び空になったことを伝えます。
+
+</p>
+<!--
+The specifics of when `write()` will return false, and when a
+subsequent `'drain'` event will be emitted, are determined by the
+`highWaterMark` and `lowWaterMark` options provided to the
+constructor.
+-->
+
+<p><code>write()</code> がいつ <code>false</code> を返し、後続の <code>&#39;drain&#39;</code> イベントがいつ
+生成されるかは、コンストラクタに与えられる
+<code>highWaterMark</code> および <code>lowWaterMark</code> オプションによって決定されます。
+
+</p>
+<h3>writable.end([chunk], [encoding])<span><a class="mark" href="#all_writable_end_chunk_encoding" id="all_writable_end_chunk_encoding">#</a></span></h3>
+<!--
+* `chunk` {Buffer | String} Optional final data to be written
+* `encoding` {String} Optional.  If `chunk` is a string, then encoding
+  defaults to `'utf8'`
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | String} 書き込まれる最後のデータ (任意)。</li>
+<li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。
+デフォルトは <code>&#39;utf8&#39;</code>。</li>
+</ul>
+<!--
+Call this method to signal the end of the data being written to the
+stream.
+-->
+
+<p>ストリームに書き込まれるデータが終わることを合図するために、
+このメソッドを呼び出してください。
+
+</p>
+<h3>Event: &#39;drain&#39;<span><a class="mark" href="#all_event_drain" id="all_event_drain">#</a></span></h3>
+<!--
+Emitted when the stream's write queue empties and it's safe to write
+without buffering again. Listen for it when `stream.write()` returns
+`false`.
 -->
 
 <p>ストリームの書き込みキューが空になり、バッファリングされることなく
@@ -6723,44 +7425,31 @@ buffering again. Listen for it when `stream.write()` returns `false`.
 <code>stream.write()</code> が <code>false</code> を返した場合に監視してください。
 
 </p>
-<!--
-The `'drain'` event can happen at *any* time, regardless of whether or not
-`stream.write()` has previously returned `false`. To avoid receiving unwanted
-`'drain'` events, listen using `stream.once()`.
--->
-
-<p><code>stream.write()</code> が以前に <code>false</code> を返したかどうかにかかわらず、
-<code>&#39;drain&#39;</code> イベントは <em>いつでも</em> 発生します。
-意図しない <code>&#39;drain&#39;</code> イベントを受信しないようにするには、<code>stream.once()</code>
-を使って監視してください。
-
-</p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_1" id="all_event_error_1">#</a></span></h3>
-<p><code>function (exception) { }</code>
-
-</p>
-<!--
-Emitted on error with the exception `exception`.
--->
-
-<p><code>exception</code> 例外によるエラーについて生成されます。
-
-</p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close_1" id="all_event_close_1">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
 <!--
-Emitted when the underlying file descriptor has been closed.
+Emitted when the underlying resource (for example, the backing file
+descriptor) has been closed. Not all streams will emit this.
 -->
 
-<p>下層でファイル記述子がクローズされた時に生成されます。
+<p>下層のリソース (たとえば、背後のファイル記述子)
+がクローズされた時に生成されます。
+全てのストリームがこれを生成するわけではありません。
+
+</p>
+<h3>Event: &#39;finish&#39;<span><a class="mark" href="#all_event_finish" id="all_event_finish">#</a></span></h3>
+<!--
+When `end()` is called and there are no more chunks to write, this
+event is emitted.
+-->
+
+<p><code>end()</code> が呼び出されてそれ以上書き込まれるチャンクがない場合、
+このイベントが生成されます。
 
 </p>
 <h3>Event: &#39;pipe&#39;<span><a class="mark" href="#all_event_pipe" id="all_event_pipe">#</a></span></h3>
-<p><code>function (src) { }</code>
-
-</p>
+<div class="signature"><ul>
+<li><code>source</code> <span class="type">Readable Stream</span></li>
+</div></ul>
 <!--
 Emitted when the stream is passed to a readable stream's pipe method.
 -->
@@ -6768,94 +7457,297 @@ Emitted when the stream is passed to a readable stream's pipe method.
 <p>このストリームが読み込み可能ストリームの pipe メソッドに渡された時に生成されます。
 
 </p>
-<h3>stream.writable<span><a class="mark" href="#all_stream_writable" id="all_stream_writable">#</a></span></h3>
+<h3>Event &#39;unpipe&#39;<span><a class="mark" href="#all_event_unpipe" id="all_event_unpipe">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>source</code> <span class="type">Readable Stream</span></li>
+</div></ul>
 <!--
-A boolean that is `true` by default, but turns `false` after an
-`'error'` occurred or `end()` / `destroy()` was called.
+Emitted when a previously established `pipe()` is removed using the
+source Readable stream's `unpipe()` method.
 -->
 
-<p>デフォルトでは <code>true</code> ですが、<code>&#39;error&#39;</code> が発生した後、
-<code>end()</code> / <code>destroy()</code> が呼ばれた後で <code>false</code> に設定される boolean です。
+<p>以前に構築された <code>pipe()</code> が、接続元である Readable ストリームの
+<code>unpipe()</code> メソッドによって取り除かれた場合に生成されます。
 
 </p>
-<h3>stream.write(string, [encoding])<span><a class="mark" href="#all_stream_write_string_encoding" id="all_stream_write_string_encoding">#</a></span></h3>
+<h2>Class: stream.Duplex<span><a class="mark" href="#all_class_stream_duplex" id="all_class_stream_duplex">#</a></span></h2>
+<!--type=class-->
+
 <!--
-Writes `string` with the given `encoding` to the stream.  Returns `true`
-if the string has been flushed to the kernel buffer.  Returns `false` to
-indicate that the kernel buffer is full, and the data will be sent out
-in the future. The `'drain'` event will indicate when the kernel buffer
-is empty again. The `encoding` defaults to `'utf8'`.
+A "duplex" stream is one that is both Readable and Writable, such as a
+TCP socket connection.
 -->
 
-<p>与えられた <code>encoding</code> で <code>string</code> を書き込みます。
-文字列がカーネルバッファにフラッシュされた場合は <code>true</code> が返ります。
-カーネルバッファがいっぱいの場合は、データが将来カーネルバッファに送られることを示すために、
-<code>false</code> が返ります。
-<code>&#39;drain&#39;</code> イベントがカーネルバッファが再び空いたことを示します。
-<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。
+<p>&quot;duplex&quot; ストリームは、TCP ソケットコネクションのように
+Readable であり Writable でもあるストリームの一種です。
 
 </p>
-<h3>stream.write(buffer)<span><a class="mark" href="#all_stream_write_buffer" id="all_stream_write_buffer">#</a></span></h3>
 <!--
-Same as the above except with a raw buffer.
+Note that `stream.Duplex` is an abstract class designed to be
+extended with an underlying implementation of the `_read(size, cb)`
+and `_write(chunk, callback)` methods as you would with a Readable or
+Writable stream class.
 -->
 
-<p>生のバッファを使うこと以外は上記と同じです。
+<p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、
+下層の実装である <code>_read(size, cb)</code> および <code>_write(chunk, callback)</code>
+メソッドによって拡張されるように設計された抽象クラスであることに
+注意してください。
 
 </p>
-<h3>stream.end()<span><a class="mark" href="#all_stream_end" id="all_stream_end">#</a></span></h3>
 <!--
-Terminates the stream with EOF or FIN.  This call will allow queued
-write data to be sent before closing the stream.
+Since JavaScript doesn't have multiple prototypal inheritance, this
+class prototypally inherits from Readable, and then parasitically from
+Writable.  It is thus up to the user to implement both the lowlevel
+`_read(n,cb)` method as well as the lowlevel `_write(chunk,cb)` method
+on extension duplex classes.
 -->
 
-<p>ストリームを EOF または FIN で終了します。
-この呼び出しは、ストリームがクローズされる前にキューイングされたデータが
-送信されることを許します。
+<p>JavaScript は複数のプロトタイプ継承を持つことができないため、
+このクラスは Readable からプロトタイプを継承したうえで、
+Writable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。
+低水準の <code>_read(n,cb)</code> および <code>_write(chunk,cb)</code> を実装することは、
+Duplex クラスを拡張するユーザの責務です。
 
 </p>
-<h3>stream.end(string, encoding)<span><a class="mark" href="#all_stream_end_string_encoding" id="all_stream_end_string_encoding">#</a></span></h3>
+<h3>new stream.Duplex(options)<span><a class="mark" href="#all_new_stream_duplex_options" id="all_new_stream_duplex_options">#</a></span></h3>
 <!--
-Sends `string` with the given `encoding` and terminates the stream with
-EOF or FIN. This is useful to reduce the number of packets sent.
+* `options` {Object} Passed to both Writable and Readable
+  constructors. Also has the following fields:
+  * `allowHalfOpen` {Boolean} Default=true.  If set to `false`, then
+    the stream will automatically end the readable side when the
+    writable side ends and vice versa.
 -->
 
-<p>与えられた <code>encoding</code> で <code>string</code> を送信してからEOFまたはFINでストリームを終了します。
-これは送信するパケットの数を減らすために便利です。
+<ul>
+<li><code>options</code> {Object} Writable および Readable のコンストラクタに渡されます。
+以下のフィールドを持つこともできます:<ul>
+<li><code>allowHalfOpen</code> {Boolean} デフォルトは <code>true</code>。
+もし <code>false</code> に設定された場合、読み込み側が閉じられると
+自動的に書き込み側も閉じられます。</li>
+</ul>
+</li>
+</ul>
+<!--
+In classes that extend the Duplex class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Duplex</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
 
 </p>
-<h3>stream.end(buffer)<span><a class="mark" href="#all_stream_end_buffer" id="all_stream_end_buffer">#</a></span></h3>
+<h2>Class: stream.Transform<span><a class="mark" href="#all_class_stream_transform" id="all_class_stream_transform">#</a></span></h2>
 <!--
-Same as above but with a `buffer`.
+A "transform" stream is a duplex stream where the output is causally
+connected in some way to the input, such as a zlib stream or a crypto
+stream.
 -->
 
-<p><code>buffer</code> であること以外は上記と同じです。
+<p>&quot;transform&quot; ストリームは、zlib ストリームや暗号化ストリームのように、
+入力が何らかの方法で出力の元となっているような双方向ストリームです。
 
 </p>
-<h3>stream.destroy()<span><a class="mark" href="#all_stream_destroy_1" id="all_stream_destroy_1">#</a></span></h3>
 <!--
-Closes the underlying file descriptor. Stream is no longer `writable`
-nor `readable`.  The stream will not emit any more 'data', or 'end'
-events. Any queued write data will not be sent.  The stream should emit
-'close' event once its resources have been disposed of.
+There is no requirement that the output be the same size as the input,
+the same number of chunks, or arrive at the same time.  For example, a
+Hash stream will only ever have a single chunk of output which is
+provided when the input is ended.  A zlib stream will either produce
+much smaller or much larger than its input.
 -->
 
-<p>下層のファイル記述子をクローズします。
-ストリームはもう <code>writable</code> でも <code>readable</code> でもなくなります。
-ストリームはそれ以上 <code>&#39;data&#39;</code> あるいは <code>&#39;end&#39;</code> イベントを生成しなくなります。
-キューイングされたデータは送信されません。
-ストリームはそのリソースが破棄されたときに <code>&#39;close&#39;</code> イベントを生成すべきです。
+<p>出力は、入力と同じサイズ、同じ数のチャンク、同時に到着することを
+要求されません。
+たとえば、Hash ストリームは入力が終了すると一つだけのチャンクを出力します。
+zlib ストリームは、入力より小さいか、またはより大きい出力を生成します。
 
 </p>
-<h3>stream.destroySoon()<span><a class="mark" href="#all_stream_destroysoon" id="all_stream_destroysoon">#</a></span></h3>
 <!--
-After the write queue is drained, close the file descriptor.
-`destroySoon()` can still destroy straight away, as long as there is no
-data left in the queue for writes.
+Rather than implement the `_read()` and `_write()` methods, Transform
+classes must implement the `_transform()` method, and may optionally
+also implement the `_flush()` method.  (See below.)
 -->
 
-<p>出力キューが空になった後、ファイル記述子をクローズします。
-出力キューにデータが存在しない場合、<code>destroySoon()</code> はすぐに破棄します。
+<p><code>_read()</code> および <code>_write()</code> メソッドの代わりに、Transform クラスでは
+<code>_transform()</code> メソッドを実装しなければなりません。
+また、任意で <code>_flush()</code> メソッドを実装することもできます (後述)。
+
+</p>
+<h3>new stream.Transform([options])<span><a class="mark" href="#all_new_stream_transform_options" id="all_new_stream_transform_options">#</a></span></h3>
+<!--
+* `options` {Object} Passed to both Writable and Readable
+  constructors.
+-->
+
+<ul>
+<li><code>options</code> {Object} Writable および Readable のコンストラクタに渡されます。</li>
+</ul>
+<!--
+In classes that extend the Transform class, make sure to call the
+constructor so that the buffering settings can be properly
+initialized.
+-->
+
+<p><code>Transform</code> クラスを拡張するクラスでは、バッファリングの設定を確実に
+初期化することができるように、必ずコンストラクタを呼び出してください。
+
+</p>
+<h3>transform._transform(chunk, outputFn, callback)<span><a class="mark" href="#all_transform_transform_chunk_outputfn_callback" id="all_transform_transform_chunk_outputfn_callback">#</a></span></h3>
+<!--
+* `chunk` {Buffer} The chunk to be transformed.
+* `outputFn` {Function} Call this function with any output data to be
+  passed to the readable interface.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when you are done processing the supplied chunk.
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer} 変換されるチャンク。</li>
+<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために
+データと共に呼び出してください。</li>
+<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、
+(任意のエラー引数と共に) この関数を呼び出してください。</li>
+</ul>
+<!--
+All Transform stream implementations must provide a `_transform`
+method to accept input and produce output.
+-->
+
+<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために
+<code>_transform</code> メソッドを提供しなければなりません。
+
+</p>
+<!--
+Note: **This function MUST NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Transform
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるべきであり、Transform クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
+`_transform` should do whatever has to be done in this specific
+Transform class, to handle the bytes being written, and pass them off
+to the readable portion of the interface.  Do asynchronous I/O,
+process things, and so on.
+-->
+
+<p>書き込まれるバイトを処理し、読み込み可能なインタフェースに渡すなど、
+Transform クラスでしなければならないことは全て <code>_transform</code>
+で行わなければなりません。非同期 I/O、何かの処理、その他。
+
+</p>
+<!--
+Call the callback function only when the current chunk is completely
+consumed.  Note that this may mean that you call the `outputFn` zero
+or more times, depending on how much data you want to output as a
+result of this chunk.
+-->
+
+<p>現在のチャンクの処理が完全に終了した場合のみ、コールバック関数を呼び出します。
+<code>outputFn</code> を何度 (0 回以上) 呼び出すかは、このチャンクからどれだけのデータを
+出力した以下に依存することに注意してください。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+</p>
+<h3>transform._flush(outputFn, callback)<span><a class="mark" href="#all_transform_flush_outputfn_callback" id="all_transform_flush_outputfn_callback">#</a></span></h3>
+<!--
+* `outputFn` {Function} Call this function with any output data to be
+  passed to the readable interface.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when you are done flushing any remaining data.
+-->
+
+<ul>
+<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために
+データと共に呼び出してください。</li>
+<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、
+(任意のエラー引数と共に) この関数を呼び出してください。</li>
+</ul>
+<!--
+Note: **This function MUST NOT be called directly.**  It MAY be implemented
+by child classes, and if so, will be called by the internal Transform
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
+これはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
+In some cases, your transform operation may need to emit a bit more
+data at the end of the stream.  For example, a `Zlib` compression
+stream will store up some internal state so that it can optimally
+compress the output.  At the end, however, it needs to do the best it
+can with what is left, so that the data will be complete.
+-->
+
+<p>場合によっては、変換操作はストリームの終端でより多くのデータを
+生成する必要があります。
+たとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、
+いくつかの内部状態を持ちます。
+一方、終端ではデータが完全なものになるように、
+残されたものに最善を尽くす必要があります。
+
+</p>
+<!--
+In those cases, you can implement a `_flush` method, which will be
+called at the very end, after all the written data is consumed, but
+before emitting `end` to signal the end of the readable side.  Just
+like with `_transform`, call `outputFn` zero or more times, as
+appropriate, and call `callback` when the flush operation is complete.
+-->
+
+<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、
+ただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される
+<code>_flush</code> メソッドを実装することができます。
+<code>_transform</code> と同様、<code>outputFn</code> は何度 (0 回以上) でも適切に呼び出し、
+フラッシュ操作が完了した時に <code>callback</code> を呼び出します。
+
+</p>
+<!--
+This method is prefixed with an underscore because it is internal to
+the class that defines it, and should not be called directly by user
+programs.  However, you **are** expected to override this method in
+your own extension classes.
+-->
+
+<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから
+直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。
+しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
+求められて<strong>います</strong>。
+
+</p>
+<h2>Class: stream.PassThrough<span><a class="mark" href="#all_class_stream_passthrough" id="all_class_stream_passthrough">#</a></span></h2>
+<!--
+This is a trivial implementation of a `Transform` stream that simply
+passes the input bytes across to the output.  Its purpose is mainly
+for examples and testing, but there are occasionally use cases where
+it can come in handy.
+-->
+
+<p>これは入力したバイト列を出力に単純に渡すだけの、
+<code>Transform</code> のつまらない実装です。
+これの主な目的はサンプル及びテストですが、何かと便利となるユースケースが
+時折存在します。
+
 
 </p>
 <h1>Crypto<span><a class="mark" href="#all_crypto" id="all_crypto">#</a></span></h1>
@@ -6864,10 +7756,9 @@ data left in the queue for writes.
     future versions.  Breaking changes will be minimized.  See below.
 -->
 
-<pre><code>Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
+<pre class="api_stability_2">Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が
 議論されています。互換性を損なう変更は最小限になる予定です。
-後述します。</code></pre>
-<!--
+後述します。</pre><!--
 Use `require('crypto')` to access this module.
 -->
 
@@ -7027,13 +7918,29 @@ s.on(&#39;end&#39;, function() {
 <h2>Class: Hash<span><a class="mark" href="#all_class_hash" id="all_class_hash">#</a></span></h2>
 <!--
 The class for creating hash digests of data.
-
-Returned by `crypto.createHash`.
 -->
 
 <p>データのハッシュダイジェストを作成するためのクラスです。
 
 </p>
+<!--
+It is a [stream](stream.html) that is both readable and writable.  The
+written data is used to compute the hash.  Once the writable side of
+the stream is ended, use the `read()` method to get the computed hash
+digest.  The legacy `update` and `digest` methods are also supported.
+-->
+
+<p>これは読み込みと書き込みの両方が可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータはハッシュを計算するために使われます。
+一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを
+読み出すために <code>read()</code> メソッドを使うことができます。
+レガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。
+
+</p>
+<!--
+Returned by `crypto.createHash`.
+-->
+
 <p><code>crypto.createHash()</code> から返されます。
 
 </p>
@@ -7086,6 +7993,20 @@ algorithm and key.
 -->
 
 <p>与えられたアルゴリズムとキーで HMAC を計算する、HMAC オブジェクトを作成して返します。
+
+</p>
+<!--
+It is a [stream](stream.html) that is both readable and writable.  The
+written data is used to compute the hmac.  Once the writable side of
+the stream is ended, use the `read()` method to get the computed
+digest.  The legacy `update` and `digest` methods are also supported.
+-->
+
+<p>これは読み込みと書き込みの両方が可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータはハッシュを計算するために使われます。
+一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを
+読み出すために <code>read()</code> メソッドを使うことができます。
+レガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。
 
 </p>
 <!--
@@ -7165,6 +8086,20 @@ which must be a `'binary'` encoded string or a [buffer](buffer.html).
 でなければなりません
 
 </p>
+<!--
+It is a [stream](stream.html) that is both readable and writable.  The
+written data is used to compute the hash.  Once the writable side of
+the stream is ended, use the `read()` method to get the computed hash
+digest.  The legacy `update` and `digest` methods are also supported.
+-->
+
+<p>これは読み込みと書き込みの両方が可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータはハッシュを計算するために使われます。
+一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを
+読み出すために <code>read()</code> メソッドを使うことができます。
+レガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。
+
+</p>
 <h2>crypto.createCipheriv(algorithm, key, iv)<span><a class="mark" href="#all_crypto_createcipheriv_algorithm_key_iv" id="all_crypto_createcipheriv_algorithm_key_iv">#</a></span></h2>
 <!--
 Creates and returns a cipher object, with the given algorithm, key and
@@ -7209,6 +8144,20 @@ Returned by `crypto.createCipher` and `crypto.createCipheriv`.
 -->
 
 <p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。
+
+</p>
+<!--
+Cipher objects are [streams](stream.html) that are both readable and
+writable.  The written plain text data is used to produce the
+encrypted data on the the readable side.  The legacy `update` and
+`final` methods are also supported.
+-->
+
+<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な
+<a href="stream.html">ストリーム</a> です。
+書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを
+生成するために使われます。
+レガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。
 
 </p>
 <h3>cipher.update(data, [input_encoding], [output_encoding])<span><a class="mark" href="#all_cipher_update_data_input_encoding_output_encoding" id="all_cipher_update_data_input_encoding_output_encoding">#</a></span></h3>
@@ -7316,6 +8265,20 @@ Returned by `crypto.createDecipher` and `crypto.createDecipheriv`.
 <p><code>crypto.createDecipher</code> および <code>crypto.createDecipheriv</code> から返されます。
 
 </p>
+<!--
+Decipher objects are [streams](stream.html) that are both readable and
+writable.  The written enciphered data is used to produce the
+plain-text data on the the readable side.  The legacy `update` and
+`final` methods are also supported.
+-->
+
+<p>復号化オブジェクトは読み込みと書き込みの両方が可能な
+<a href="stream.html">ストリーム</a> です。
+書き込まれた暗号化データは、読み込み側にプレーンテキストデータを
+生成するために使われます。
+レガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。
+
+</p>
 <h3>decipher.update(data, [input_encoding], [output_encoding])<span><a class="mark" href="#all_decipher_update_data_input_encoding_output_encoding" id="all_decipher_update_data_input_encoding_output_encoding">#</a></span></h3>
 <!--
 Updates the decipher with `data`, which is encoded in `'binary'`,
@@ -7388,7 +8351,7 @@ display the available signing algorithms. Examples are `'RSA-SHA256'`.
 で利用可能な署名アルゴリズムの一覧が表示されます。例えば &#39;RSA-SHA256&#39;。
 
 </p>
-<h2>Class: Signer<span><a class="mark" href="#all_class_signer" id="all_class_signer">#</a></span></h2>
+<h2>Class: Sign<span><a class="mark" href="#all_class_sign" id="all_class_sign">#</a></span></h2>
 <!--
 Class for generating signatures.
 
@@ -7401,9 +8364,22 @@ Returned by `crypto.createSign`.
 <p><code>crypto.createSign</code> から返されます。
 
 </p>
-<h3>signer.update(data)<span><a class="mark" href="#all_signer_update_data" id="all_signer_update_data">#</a></span></h3>
 <!--
-Updates the signer object with data.  This can be called many times
+Sign objects are writable [streams](stream.html).  The written data is
+used to generate the signature.  Once all of the data has been
+written, the `sign` method will return the signature.  The legacy
+`update` method is also supported.
+-->
+
+<p>署名オブジェクトは書き込み可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータは署名を生成するために使われます。
+全てのデータが書き込まれると、<code>sign()</code> メソッドはその署名を返します。
+レガシーな <code>update()</code> メソッドもサポートされます。
+
+</p>
+<h3>sign.update(data)<span><a class="mark" href="#all_sign_update_data" id="all_sign_update_data">#</a></span></h3>
+<!--
+Updates the sign object with data.  This can be called many times
 with new data as it is streamed.
 -->
 
@@ -7411,10 +8387,10 @@ with new data as it is streamed.
 これは新しいデータがストリームに流される際に何度も呼び出されます。
 
 </p>
-<h3>signer.sign(private_key, [output_format])<span><a class="mark" href="#all_signer_sign_private_key_output_format" id="all_signer_sign_private_key_output_format">#</a></span></h3>
+<h3>sign.sign(private_key, [output_format])<span><a class="mark" href="#all_sign_sign_private_key_output_format" id="all_sign_sign_private_key_output_format">#</a></span></h3>
 <!--
 Calculates the signature on all the updated data passed through the
-signer.  `private_key` is a string containing the PEM encoded private
+sign.  `private_key` is a string containing the PEM encoded private
 key for signing.
 -->
 
@@ -7434,11 +8410,11 @@ returned.
 
 </p>
 <!--
-Note: `signer` object can not be used after `sign()` method been
+Note: `sign` object can not be used after `sign()` method been
 called.
 -->
 
-<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>signer</code> 
+<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>sign</code> 
 オブジェクトを使うことはできません。
 
 </p>
@@ -7462,6 +8438,21 @@ Returned by `crypto.createVerify`.
 
 </p>
 <p><code>crypto.createVerify</code> から返されます。
+
+</p>
+<!--
+Verify objects are writable [streams](stream.html).  The written data
+is used to validate against the supplied signature.  Once all of the
+data has been written, the `verify` method will return true if the
+supplied signature is valid.  The legacy `update` method is also
+supported.
+-->
+
+<p>検証オブジェクトは書き込み可能な <a href="stream.html">ストリーム</a> です。
+書き込まれたデータは与えられた署名を検証するために使われます。
+全てのデータが書き込まれると、<code>verify()</code> メソッドは与えられた署名が正しければ
+<code>true</code> を返します。
+レガシーな <code>update()</code> メソッドもサポートされます。
 
 </p>
 <h3>verifier.update(data)<span><a class="mark" href="#all_verifier_update_data" id="all_verifier_update_data">#</a></span></h3>
@@ -7645,7 +8636,7 @@ expected.
 エンコーディングが与えられなかった場合はバッファが期待されます。
 
 </p>
-<h3>diffieHellman.setPrivateKey(public_key, [encoding])<span><a class="mark" href="#all_diffiehellman_setprivatekey_public_key_encoding" id="all_diffiehellman_setprivatekey_public_key_encoding">#</a></span></h3>
+<h3>diffieHellman.setPrivateKey(private_key, [encoding])<span><a class="mark" href="#all_diffiehellman_setprivatekey_private_key_encoding" id="all_diffiehellman_setprivatekey_private_key_encoding">#</a></span></h3>
 <!--
 Sets the Diffie-Hellman private key. Key encoding can be `'binary'`,
 `'hex'` or `'base64'`. If no encoding is provided, then a buffer is
@@ -7841,20 +8832,10 @@ temporary measure.
 新しいプログラムはおそらくバッファを期待することに注意してください。
 これは一時的な手段としてのみ使用してください。
 
-</p>
-<!--
-Also, a Streaming API will be provided, but this will be done in such
-a way as to preserve the legacy API surface.
--->
-
-<p>同時に、ストリーミング API も提供されますが、それはレガシーな API
-を維持する方法でなされます。
-
 
 </p>
 <h1>TLS (SSL)<span><a class="mark" href="#all_tls_ssl" id="all_tls_ssl">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Use `require('tls')` to access this module.
 -->
 
@@ -8062,6 +9043,12 @@ automatically set as a listener for the [secureConnection][] event.  The
     acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
     susceptible to BEAST attacks. Do *not* use it.
 
+  - `handshakeTimeout`: Abort the connection if the SSL/TLS handshake does not
+    finish in this many milliseconds. The default is 120 seconds.
+
+    A `'clientError'` is emitted on the `tls.Server` object whenever a handshake
+    times out.
+
   - `honorCipherOrder` : When choosing a cipher, use the server's preferences
     instead of the client preferences.
 
@@ -8131,6 +9118,12 @@ RC4 は安全なフォールバックとして使われます。</p>
 受け入れ可能な暗号であるかのように示していました。
 残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって BEAST
 攻撃には弱いです。</p>
+</li>
+<li><p><code>handshakeTimeout</code>: SSL/TLS ハンドシェークがこの時間 (ミリ秒)
+以内に終了しなかった場合は接続をアボートします。
+デフォルトは 120 秒です。</p>
+<p>ハンドシェークがタイムアウトすると、<code>tls.Server</code> オブジェクトで
+<code>&#39;clientError&#39;</code> イベントが生成されます。</p>
 </li>
 <li><p><code>honorCipherOrder</code> :
 暗号を選択する際に、クライアントではなくサーバの設定を使用します。</p>
@@ -8831,8 +9824,7 @@ The numeric representation of the remote port. For example, `443`.
 -->
 
 <h1>StringDecoder<span><a class="mark" href="#all_stringdecoder" id="all_stringdecoder">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 To use this module, do `require('string_decoder')`. StringDecoder decodes a
 buffer to a string. It is a simple interface to `buffer.toString()` but provides
 additional support for utf8.
@@ -8877,8 +9869,7 @@ Returns any trailing bytes that were left in the buffer.
 
 </p>
 <h1>File System<span><a class="mark" href="#all_file_system" id="all_file_system">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--name=fs-->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--name=fs-->
 
 <!--
 File I/O is provided by simple wrappers around standard POSIX functions.  To
@@ -8973,8 +9964,8 @@ In busy processes, the programmer is _strongly encouraged_ to use the
 asynchronous versions of these calls. The synchronous versions will block
 the entire process until they complete--halting all connections.
 
-Relative path to filename can be used, remember however that this path will be relative
-to `process.cwd()`.
+Relative path to filename can be used, remember however that this path will be
+relative to `process.cwd()`.
 -->
 
 <p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。
@@ -8985,6 +9976,35 @@ to `process.cwd()`.
 <code>process.cwd()</code> からの相対パスであることを思い出してください。
 
 </p>
+<!--
+Most fs functions let you omit the callback argument. If you do, a default
+callback is used that rethrows errors. To get a trace to the original call
+site, set the NODE_DEBUG environment variable:
+-->
+
+<p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。
+そうすると、エラーを再スローするコールバックがデフォルトとして使用されます。
+本来の呼び出し元のトレースを取得するには、<code>NODE_DEBUG</code>
+環境変数を設定してください:
+
+</p>
+<pre><code>$ cat script.js
+function bad() {
+  require(&#39;fs&#39;).readFile(&#39;/&#39;);
+}
+bad();
+
+$ env NODE_DEBUG=fs node script.js
+fs.js:66
+        throw err;
+              ^
+Error: EISDIR, read
+    at rethrow (fs.js:61:21)
+    at maybeCallback (fs.js:79:42)
+    at Object.fs.readFile (fs.js:153:18)
+    at bad (/path/to/script.js:2:17)
+    at Object.&lt;anonymous&gt; (/path/to/script.js:5:1)
+    &lt;etc.&gt;</code></pre>
 <h2>fs.rename(oldPath, newPath, [callback])<span><a class="mark" href="#all_fs_rename_oldpath_newpath_callback" id="all_fs_rename_oldpath_newpath_callback">#</a></span></h2>
 <!--
 Asynchronous rename(2). No arguments other than a possible exception are given
@@ -9778,8 +10798,7 @@ The synchronous version of `fs.appendFile`.
 
 </p>
 <h2>fs.watchFile(filename, [options], listener)<span><a class="mark" href="#all_fs_watchfile_filename_options_listener" id="all_fs_watchfile_filename_options_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if possible.</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable.  Use fs.watch instead, if possible.</pre><!--
 Watch for changes on `filename`. The callback `listener` will be called each
 time the file is accessed.
 -->
@@ -9830,8 +10849,7 @@ you need to compare `curr.mtime` and `prev.mtime`.
 
 </p>
 <h2>fs.unwatchFile(filename, [listener])<span><a class="mark" href="#all_fs_unwatchfile_filename_listener" id="all_fs_unwatchfile_filename_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.  Use fs.watch instead, if available.</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable.  Use fs.watch instead, if available.</pre><!--
 Stop watching for changes on `filename`. If `listener` is specified, only that
 particular listener is removed. Otherwise, *all* listeners are removed and you
 have effectively stopped watching `filename`.
@@ -9851,8 +10869,7 @@ no-op, not an error.
 
 </p>
 <h2>fs.watch(filename, [options], [listener])<span><a class="mark" href="#all_fs_watch_filename_options_listener" id="all_fs_watch_filename_options_listener">#</a></span></h2>
-<pre><code>Stability: 2 - Unstable.</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable.</pre><!--
 Watch for changes on `filename`, where `filename` is either a file or a
 directory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).
 
@@ -10082,7 +11099,8 @@ Returns a new ReadStream object (See `Readable Stream`).
   encoding: null,
   fd: null,
   mode: 0666,
-  bufferSize: 64 * 1024
+  bufferSize: 64 * 1024,
+  autoClose: true
 }</code></pre>
 <!--
 `options` can include `start` and `end` values to read a range of bytes from
@@ -10094,6 +11112,21 @@ start at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.
 <code>options</code> に <code>start</code> および <code>end</code> を含めることができます。
 <code>start</code> と <code>end</code> はどちらも包含的で0から始まります。
 <code>encoding</code> は <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、または <code>&#39;base64&#39;</code> です。
+
+</p>
+<!--
+If `autoClose` is false, then the file descriptor won't be closed, even if
+there's an error.  It is your responsiblity to close it and make sure
+there's no file descriptor leak.  If `autoClose` is set to true (default
+behavior), on `error` or `end` the file descriptor will be closed
+automatically.
+-->
+
+<p><code>autoClose</code> が <code>false</code> の場合、エラーが発生しない限りファイル記述子は
+クローズされません。ファイルをクローズし、ファイル記述子が
+リークしないようにするのはあなたの責務です。
+<code>autoClose</code> が <code>true</code> に設定されると (デフォルトの振る舞いです)、
+<code>error</code> または <code>end</code> によってファイル記述子は自動的にクローズされます。
 
 </p>
 <!--
@@ -10224,7 +11257,7 @@ See more details in [fs.watch](#fs_fs_watch_filename_options_listener).
 を参照してください。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_2" id="all_event_error_2">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_1" id="all_event_error_1">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>error</code> <span class="type">Error object</span></li>
 </div></ul>
@@ -10236,8 +11269,7 @@ Emitted when an error occurs.
 
 </p>
 <h1>Path<span><a class="mark" href="#all_path" id="all_path">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 This module contains utilities for handling and transforming file
 paths.  Almost all these methods perform only string transformations.
 The file system is not consulted to check whether paths are valid.
@@ -10542,8 +11574,7 @@ process.env.PATH.split(path.delimiter)
 // returns
 [&#39;C:\Windows\system32&#39;, &#39;C:\Windows&#39;, &#39;C:\Program Files\nodejs\&#39;]</code></pre>
 <h1>net<span><a class="mark" href="#all_net" id="all_net">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 The `net` module provides you with an asynchronous network wrapper. It contains
 methods for creating both servers and clients (called streams). You can include
 this module with `require('net');`
@@ -11051,7 +12082,7 @@ event is not emitted until all connections are ended.
 生成されないことに注意してください。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_3" id="all_event_error_3">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_2" id="all_event_error_2">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Error Object</span></li>
 </div></ul>
@@ -11418,6 +12449,28 @@ The numeric representation of the remote port. For example,
 たとえば、<code>80</code> や <code>21</code>。
 
 </p>
+<h3>socket.localAddress<span><a class="mark" href="#all_socket_localaddress" id="all_socket_localaddress">#</a></span></h3>
+<!--
+The string representation of the local IP address the remote client is
+connecting on. For example, if you are listening on `'0.0.0.0'` and the
+client connects on `'192.168.1.1'`, the value would be `'192.168.1.1'`.
+-->
+
+<p>リモートクライアントが接続しているローカル IP アドレスを表現する文字列です。
+たとえば、 <code>&#39;0.0.0.0&#39;</code> をリッスンしていて、クライアントが <code>&#39;192.168.1.1&#39;</code>
+に接続した場合、この値は <code>&#39;192.168.1.1&#39;</code> になります。
+
+</p>
+<h3>socket.localPort<span><a class="mark" href="#all_socket_localport" id="all_socket_localport">#</a></span></h3>
+<!--
+The numeric representation of the local port. For example,
+`80` or `21`.
+-->
+
+<p>ローカルポートの数値表現です。
+たとえば、<code>80</code> や <code>21</code>。
+
+</p>
 <h3>socket.bytesRead<span><a class="mark" href="#all_socket_bytesread" id="all_socket_bytesread">#</a></span></h3>
 <!--
 The amount of received bytes.
@@ -11528,7 +12581,7 @@ See also: the return values of `socket.write()`
 <p><code>socket.write()</code> の戻り値を参照してください。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_4" id="all_event_error_4">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_3" id="all_event_error_3">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Error object</span></li>
 </div></ul>
@@ -11585,8 +12638,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
 
 </p>
 <h1>UDP / Datagram Sockets<span><a class="mark" href="#all_udp_datagram_sockets" id="all_udp_datagram_sockets">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!-- name=dgram -->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!-- name=dgram -->
 
 <!--
 Datagram sockets are available through `require('dgram')`.
@@ -11684,7 +12736,7 @@ on this socket.
 このソケットでは新しい <code>message</code> イベントは生成されなくなります。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_5" id="all_event_error_5">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_4" id="all_event_error_4">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>exception</code> Error object</li>
 </div></ul>
@@ -12010,8 +13062,7 @@ the socket is `ref`d calling `ref` again will have no effect.
 
 </p>
 <h1>DNS<span><a class="mark" href="#all_dns" id="all_dns">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Use `require('dns')` to access this module. All methods in the dns module
 use C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread
 pool. C-Ares is much faster than `getaddrinfo` but the system resolver is
@@ -12312,8 +13363,7 @@ Each DNS query can return one of the following error codes:
 <li><code>dns.CANCELLED</code>: DNS 問い合わせがキャンセルされた。</li>
 </ul>
 <h1>HTTP<span><a class="mark" href="#all_http" id="all_http">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 To use the HTTP server and client one must `require('http')`.
 -->
 
@@ -13404,7 +14454,7 @@ Example:
 
 </p>
 <pre><code>var options = {
-  host: &#39;www.google.com&#39;,
+  hostname: &#39;www.google.com&#39;,
   port: 80,
   path: &#39;/upload&#39;,
   method: &#39;POST&#39;
@@ -13566,7 +14616,7 @@ Alternatively, you could just opt out of pooling entirely using `agent:false`:
 プーリングを使用しないこともできます:
 
 </p>
-<pre><code>http.get({host:&#39;localhost&#39;, port:80, path:&#39;/&#39;, agent:false}, function (res) {
+<pre><code>http.get({hostname:&#39;localhost&#39;, port:80, path:&#39;/&#39;, agent:false}, function (res) {
   // Do stuff
 })</code></pre>
 <h3>agent.maxSockets<span><a class="mark" href="#all_agent_maxsockets" id="all_agent_maxsockets">#</a></span></h3>
@@ -13789,7 +14839,7 @@ proxy.listen(1337, &#39;127.0.0.1&#39;, function() {
   // make a request to a tunneling proxy
   var options = {
     port: 1337,
-    host: &#39;127.0.0.1&#39;,
+    hostname: &#39;127.0.0.1&#39;,
     method: &#39;CONNECT&#39;,
     path: &#39;www.google.com:80&#39;
   };
@@ -13856,7 +14906,7 @@ srv.listen(1337, &#39;127.0.0.1&#39;, function() {
   // make a request
   var options = {
     port: 1337,
-    host: &#39;127.0.0.1&#39;,
+    hostname: &#39;127.0.0.1&#39;,
     headers: {
       &#39;Connection&#39;: &#39;Upgrade&#39;,
       &#39;Upgrade&#39;: &#39;websocket&#39;
@@ -14128,8 +15178,7 @@ Resumes a paused response.
 
 </p>
 <h1>HTTPS<span><a class="mark" href="#all_https" id="all_https">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 HTTPS is the HTTP protocol over TLS/SSL. In Node this is implemented as a
 separate module.
 -->
@@ -14209,10 +15258,9 @@ See [http.listen()][] for details.
 
 </p>
 <h3>server.close([callback])<span><a class="mark" href="#all_server_close_callback_2" id="all_server_close_callback_2">#</a></span></h3>
-<!--
-See [http.close()][] for details.
--->
+<p>See <a href="http.html#http_server_close_callback">http.close()</a> for details.
 
+</p>
 <p>詳細は <a href="http.html#http_server_close_callback">http.close()</a> を参照してください。
 
 </p>
@@ -14251,7 +15299,7 @@ Example:
 <pre><code>var https = require(&#39;https&#39;);
 
 var options = {
-  host: &#39;encrypted.google.com&#39;,
+  hostname: &#39;encrypted.google.com&#39;,
   port: 443,
   path: &#39;/&#39;,
   method: &#39;GET&#39;
@@ -14278,11 +15326,6 @@ The options argument has the following options
 
 </p>
 <!--
-- host: IP or domain of host to make request to. Defaults to `'localhost'`.
-- port: port of host to request to. Defaults to 443.
-- path: Path to request. Default `'/'`.
-- method: HTTP request method. Default `'GET'`.
-
 - `host`: A domain name or IP address of the server to issue the request to.
   Defaults to `'localhost'`.
 - `hostname`: To support `url.parse()` `hostname` is preferred over `host`
@@ -14302,9 +15345,9 @@ The options argument has the following options
 -->
 
 <ul>
-<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。
- デフォルトは <code>&#39;localhost&#39;</code> です。</li>
-<li><code>hostname</code>: <code>url.parse()</code> サポート。<code>hostname</code> は <code>host</code> を上書きします。</li>
+<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li>
+<li><code>hostname</code>: <code>url.parse()</code> で扱える文字列をサポートします。
+<code>hostname</code> は <code>host</code> を上書きします。</li>
 <li><code>port</code>: リモートサーバのポート。デフォルトは 443 です。</li>
 <li><code>method</code>: HTTPS リクエストのメソッドの文字列。デフォルトは <code>&#39;GET&#39;</code> です。</li>
 <li><code>path</code>: リクエストのパス。デフォルトは <code>&#39;/&#39;</code> です。
@@ -14379,7 +15422,7 @@ Example:
 
 </p>
 <pre><code>var options = {
-  host: &#39;encrypted.google.com&#39;,
+  hostname: &#39;encrypted.google.com&#39;,
   port: 443,
   path: &#39;/&#39;,
   method: &#39;GET&#39;,
@@ -14406,7 +15449,7 @@ Example:
 
 </p>
 <pre><code>var options = {
-  host: &#39;encrypted.google.com&#39;,
+  hostname: &#39;encrypted.google.com&#39;,
   port: 443,
   path: &#39;/&#39;,
   method: &#39;GET&#39;,
@@ -14463,7 +15506,7 @@ for more information.
 -->
 
 <p>HTTPS 用の Agent オブジェクトで，<a href="http.html#http_class_http_agent">http.Agent</a> と同様です。
-詳細は [https.request()][] を参照してください。
+詳細は <a href="#https_https_request_options_callback">https.request()</a> を参照してください。
 
 </p>
 <h2>https.globalAgent<span><a class="mark" href="#all_https_globalagent" id="all_https_globalagent">#</a></span></h2>
@@ -14476,8 +15519,7 @@ Global instance of [https.Agent][] for all HTTPS client requests.
 
 </p>
 <h1>URL<span><a class="mark" href="#all_url" id="all_url">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 This module has utilities for URL resolution and parsing.
 Call `require('url')` to use it.
 -->
@@ -14677,8 +15719,7 @@ an anchor tag.
 
 </p>
 <h1>Query String<span><a class="mark" href="#all_query_string" id="all_query_string">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--name=querystring-->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--name=querystring-->
 
 <!--
 This module provides utilities for dealing with query strings.
@@ -14763,8 +15804,7 @@ provided so that it could be overridden if necessary.
 
 </p>
 <h1>punycode<span><a class="mark" href="#all_punycode" id="all_punycode">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 [Punycode.js](http://mths.be/punycode) is bundled with Node.js v0.6.2+. Use
 `require('punycode')` to access it. (To use it with other Node.js versions,
 use npm to install the `punycode` module first.)
@@ -14871,8 +15911,7 @@ A string representing the current Punycode.js version number.
 
 </p>
 <h1>Readline<span><a class="mark" href="#all_readline" id="all_readline">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 To use this module, do `require('readline')`. Readline allows reading of a
 stream (such as `process.stdin`) on a line-by-line basis.
 -->
@@ -15740,8 +16779,7 @@ The following key combinations in the REPL have these special effects:
 <li><code>&lt;ctrl&gt;D</code> - <code>.exit</code> キーワードと同様です。</li>
 </ul>
 <h1>Executing JavaScript<span><a class="mark" href="#all_executing_javascript" id="all_executing_javascript">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable. See Caveats, below.</code></pre>
-<!--name=vm-->
+<pre class="api_stability_2">Stability: 2 - Unstable. See Caveats, below.</pre><!--name=vm-->
 
 <!--
 You can access this module with:
@@ -16149,8 +17187,7 @@ requires a separate process.
 
 </p>
 <h1>Child Process<span><a class="mark" href="#all_child_process" id="all_child_process">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 Node provides a tri-directional `popen(3)` facility through the
 `child_process` module.
 -->
@@ -16627,6 +17664,8 @@ there is no IPC channel keeping it alive. When calling this method the
     for stdio.  (See below)
   * `env` {Object} Environment key-value pairs
   * `detached` {Boolean} The child will be a process group leader.  (See below)
+  * `uid` {Number} Sets the user identity of the process. (See setuid(2).)
+  * `gid` {Number} Sets the group identity of the process. (See setgid(2).)
 * return: {ChildProcess object}
 -->
 
@@ -16641,6 +17680,10 @@ there is no IPC channel keeping it alive. When calling this method the
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>detached</code> {Boolean} 子プロセスがプロセスグループのリーダになるかどうか
 (後述)。</li>
+<li><code>uid</code> {Number} このプロセスのユーザ識別子を設定します
+ (setuid(2) を参照)。</li>
+<li><code>gid</code> {Number} このプロセスのグループ識別子を設定します
+(setgid(2) を参照)。</li>
 </ul>
 </li>
 <li>return: {ChildProcess object}</li>
@@ -17123,6 +18166,7 @@ leaner than `child_process.exec`. It has the same options.
   * `cwd` {String} Current working directory of the child process
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
+  * `execPath` {String} Executable used to create the child process
 * Return: ChildProcess object
 -->
 
@@ -17133,6 +18177,7 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
+<li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -17183,9 +18228,23 @@ thousands of them.
 つまり、数千の子プロセスを作ることは出来ません。
 
 </p>
-<h1>Assert<span><a class="mark" href="#all_assert" id="all_assert">#</a></span></h1>
-<pre><code>Stability: 5 - Locked</code></pre>
 <!--
+The `execPath` property in the `options` object allows for a process to be
+created for the child rather than the current `node` executable. This should be
+done with care and by default will talk over the fd represented an
+environmental variable `NODE_CHANNEL_FD` on the child process. The input and
+output on this fd is expected to be line delimited JSON objects.
+-->
+
+<p><code>options</code> オブジェクト中の <code>execPath</code> プロパティは、
+現在の <code>node</code> 実行ファイルではない子プロセスの作成を可能にします。
+デフォルトでは、子プロセスの環境変数 <code>NODE_CHANNEL_FD</code> によって示される
+ファイル記述子を通じて対話することに注意しなければなりません。
+このファイル記述子における入力と出力は、改行で区切られた JSON オブジェクトです。
+
+</p>
+<h1>Assert<span><a class="mark" href="#all_assert" id="all_assert">#</a></span></h1>
+<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
 This module is used for writing unit tests for your applications, you can
 access it with `require('assert')`.
 -->
@@ -17334,8 +18393,7 @@ testing the first argument, `error` in callbacks.
 
 </p>
 <h1>TTY<span><a class="mark" href="#all_tty" id="all_tty">#</a></span></h1>
-<pre><code>Stability: 2 - Unstable</code></pre>
-<!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 The `tty` module houses the `tty.ReadStream` and `tty.WriteStream` classes. In
 most cases, you will not need to use this module directly.
 -->
@@ -17469,8 +18527,7 @@ has changed.
   console.log(process.stdout.columns + &#39;x&#39; + process.stdout.rows);
 });</code></pre>
 <h1>Zlib<span><a class="mark" href="#all_zlib" id="all_zlib">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 You can access this module with:
 -->
 
@@ -18080,8 +19137,7 @@ For initializing zalloc, zfree, opaque.
 <li><code>zlib.Z_NULL</code></li>
 </ul>
 <h1>os<span><a class="mark" href="#all_os" id="all_os">#</a></span></h1>
-<pre><code>Stability: 4 - API Frozen</code></pre>
-<!--
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><!--
 Provides a few basic operating-system related utility functions.
 -->
 オペレーティングシステムに関連する基本的なユーティリティ関数を提供します。
@@ -18099,6 +19155,15 @@ Returns the operating system's default directory for temp files.
 -->
 
 <p>一時ファイルのためのデフォルトディレクトリを返します。
+
+</p>
+<h2>os.endianness()<span><a class="mark" href="#all_os_endianness" id="all_os_endianness">#</a></span></h2>
+<!--
+Returns the endianness of the CPU. Possible values are `"BE"` or `"LE"`.
+-->
+
+<p>CPU のエンディアン (バイトオーダー) を返します。
+あり得る値は <code>&quot;BE&quot;</code> または <code>&quot;LE&quot;</code> です。
 
 </p>
 <h2>os.hostname()<span><a class="mark" href="#all_os_hostname" id="all_os_hostname">#</a></span></h2>
@@ -18175,11 +19240,13 @@ Returns the amount of free system memory in bytes.
 </p>
 <h2>os.cpus()<span><a class="mark" href="#all_os_cpus" id="all_os_cpus">#</a></span></h2>
 <!--
-Returns an array of objects containing information about each CPU/core installed: model, speed (in MHz), and times (an object containing the number of CPU ticks spent in: user, nice, sys, idle, and irq).
+Returns an array of objects containing information about each CPU/core
+installed: model, speed (in MHz), and times (an object containing the number of
+milliseconds the CPU/core spent in: user, nice, sys, idle, and irq).
 -->
 
 <p>インストールされている CPU/ コアごとの情報を含んだオブジェクトの配列を返します。
-情報はモデル、スピード (MHz)、そして時間 (CPU が使用した user, nice, sys, idle, irq 時間を含んだオブジェクト) です。
+情報はモデル、スピード (MHz)、そして時間 (CPU/コア が使用した user, nice, sys, idle, irq のミリ秒を含んだオブジェクト) です。
 
 </p>
 <!--
@@ -18281,8 +19348,7 @@ A constant defining the appropriate End-of-line marker for the operating system.
 
 </p>
 <h1>Debugger<span><a class="mark" href="#all_debugger" id="all_debugger">#</a></span></h1>
-<pre><code>Stability: 3 - Stable</code></pre>
-<!-- type=misc -->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!-- type=misc -->
 
 <!--
 V8 comes with an extensive debugger which is accessible out-of-process via a
@@ -18502,8 +19568,7 @@ with `SIGUSR1`.
 
 </p>
 <h1>Cluster<span><a class="mark" href="#all_cluster" id="all_cluster">#</a></span></h1>
-<pre><code>Stability: 1 - Experimental</code></pre>
-<!--
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
 A single instance of Node runs in a single thread. To take advantage of
 multi-core systems the user will sometimes want to launch a cluster of Node
 processes to handle the load.
@@ -19391,7 +20456,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
