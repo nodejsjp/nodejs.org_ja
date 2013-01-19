@@ -368,6 +368,21 @@
                   "params": []
                 }
               ]
+            },
+            {
+              "textRaw": "server.getConnections(callback)",
+              "type": "method",
+              "name": "getConnections",
+              "desc": "<!--\nAsynchronously get the number of concurrent connections on the server. Works\nwhen sockets were sent to forks.\n-->\n\n<p>サーバ上の並行コネクオションの数を非同期に取得します。\nソケットが fork した子プロセスに送られても動作します。\n\n</p>\n<!--\nCallback should take two arguments `err` and `count`.\n-->\n\n<p>コールバックは <code>err</code> と <code>count</code> の二つの引数を取るべきです。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
             }
           ],
           "properties": [
@@ -379,7 +394,7 @@
             {
               "textRaw": "server.connections",
               "name": "connections",
-              "desc": "<!--\nThe number of concurrent connections on the server.\n-->\n\n<p>このサーバ上の並行コネクションの数です。\n\n</p>\n<!--\nThis becomes `null` when sending a socket to a child with `child_process.fork()`.\n-->\n\n<p>ソケットが <code>child_process.fork()</code> によって子プロセスに送られると、\nこれは <code>null</code> になります。\n\n</p>\n<!--\n`net.Server` is an [EventEmitter][] with the following events:\n-->\n\n<p><code>net.Server</code> は以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n"
+              "desc": "<!--\nThis function is **deprecated**; please use [server.getConnections()][] instead.\n-->\n\n<p>この関数は <strong>廃止予定</strong> です;\n代わりに [server.getConnections()][] を使ってください。\n\n</p>\n<!--\nThe number of concurrent connections on the server.\n-->\n\n<p>このサーバ上の並行コネクションの数です。\n\n</p>\n<!--\nThis becomes `null` when sending a socket to a child with\n`child_process.fork()`. To poll forks and get current number of active\nconnections use asynchronous `server.getConnections` instead.\n-->\n\n<p>ソケットが <code>child_process.fork()</code> によって子プロセスに送られると、\nこれは <code>null</code> になります。\nfork した子プロセスにポーリングして現在のアクティブな接続を得る代わりに、\n非同期の <code>server.getConnections</code> を使用してください。\n\n</p>\n<!--\n`net.Server` is an [EventEmitter][] with the following events:\n-->\n\n<p><code>net.Server</code> は以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n"
             }
           ],
           "events": [
