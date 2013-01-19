@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.6 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -568,6 +568,7 @@
 <li><a href="#all_server_ref">server.ref()</a></li>
 <li><a href="#all_server_maxconnections_1">server.maxConnections</a></li>
 <li><a href="#all_server_connections_1">server.connections</a></li>
+<li><a href="#all_server_getconnections_callback">server.getConnections(callback)</a></li>
 <li><a href="#all_event_listening">Event: &#39;listening&#39;</a></li>
 <li><a href="#all_event_connection">Event: &#39;connection&#39;</a></li>
 <li><a href="#all_event_close_2">Event: &#39;close&#39;</a></li>
@@ -838,7 +839,11 @@
 <li><a href="#all_child_stderr">child.stderr</a></li>
 <li><a href="#all_child_pid">child.pid</a></li>
 <li><a href="#all_child_kill_signal">child.kill([signal])</a></li>
-<li><a href="#all_child_send_message_sendhandle">child.send(message, [sendHandle])</a></li>
+<li><a href="#all_child_send_message_sendhandle">child.send(message, [sendHandle])</a><ul>
+<li><a href="#all_example_sending_server_object">Example: sending server object</a></li>
+<li><a href="#all_example_sending_socket_object">Example: sending socket object</a></li>
+</ul>
+</li>
 <li><a href="#all_child_disconnect">child.disconnect()</a></li>
 </ul>
 </li>
@@ -1109,7 +1114,7 @@ unlikely to ever have to change.
 <pre class="api_stability_4">Stability: 4 - API 凍結
 API は実運用で広範囲にテストされており、おそらく変更されることはありません。</pre><!--
 ```
-Stability: 5 - API Locked
+Stability: 5 - Locked
 Unless serious bugs are found, this code will not ever
 change.  Please do not suggest changes in this area; they will be refused.
 -->
@@ -12029,6 +12034,14 @@ with `child_process.fork()`.
 </p>
 <h3>server.connections<span><a class="mark" href="#all_server_connections_1" id="all_server_connections_1">#</a></span></h3>
 <!--
+This function is **deprecated**; please use [server.getConnections()][] instead.
+-->
+
+<p>この関数は <strong>廃止予定</strong> です;
+代わりに [server.getConnections()][] を使ってください。
+
+</p>
+<!--
 The number of concurrent connections on the server.
 -->
 
@@ -12036,11 +12049,15 @@ The number of concurrent connections on the server.
 
 </p>
 <!--
-This becomes `null` when sending a socket to a child with `child_process.fork()`.
+This becomes `null` when sending a socket to a child with
+`child_process.fork()`. To poll forks and get current number of active
+connections use asynchronous `server.getConnections` instead.
 -->
 
 <p>ソケットが <code>child_process.fork()</code> によって子プロセスに送られると、
 これは <code>null</code> になります。
+fork した子プロセスにポーリングして現在のアクティブな接続を得る代わりに、
+非同期の <code>server.getConnections</code> を使用してください。
 
 </p>
 <!--
@@ -12048,6 +12065,23 @@ This becomes `null` when sending a socket to a child with `child_process.fork()`
 -->
 
 <p><code>net.Server</code> は以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
+
+</p>
+<h3>server.getConnections(callback)<span><a class="mark" href="#all_server_getconnections_callback" id="all_server_getconnections_callback">#</a></span></h3>
+<!--
+Asynchronously get the number of concurrent connections on the server. Works
+when sockets were sent to forks.
+-->
+
+<p>サーバ上の並行コネクオションの数を非同期に取得します。
+ソケットが fork した子プロセスに送られても動作します。
+
+</p>
+<!--
+Callback should take two arguments `err` and `count`.
+-->
+
+<p>コールバックは <code>err</code> と <code>count</code> の二つの引数を取るべきです。
 
 </p>
 <h3>Event: &#39;listening&#39;<span><a class="mark" href="#all_event_listening" id="all_event_listening">#</a></span></h3>
@@ -16209,7 +16243,7 @@ user hits enter, or return. This is a good hook to listen for user input.
 
 <p><code>input</code> ストリームから <code>\n</code> を読み込むごとに生成されます。
 通常、ユーザがエンターまたはリターンを打つごとに受信します。
-これはユーザ入浴のよいフックとなります。
+これはユーザ入力のよいフックとなります。
 
 </p>
 <!--
@@ -17526,13 +17560,7 @@ second argument to the `message` event.
 子プロセスはそれを <code>&#39;message&#39;</code> イベントの第 2 引数として受信します。
 
 </p>
-<!--
-**send server object**
--->
-
-<p><strong>サーバオブジェクトを送信する</strong>
-
-</p>
+<h4>Example: sending server object<span><a class="mark" href="#all_example_sending_server_object" id="all_example_sending_server_object">#</a></span></h4>
 <!--
 Here is an example of sending a server:
 -->
@@ -17573,13 +17601,7 @@ that some connections will be handled by the parent and some by the child.
 これはコネクションが時には親あるいは子で処理されることを意味します。
 
 </p>
-<!--
-**send socket object**
--->
-
-<p><strong>ソケットオブジェクトを送信する</strong>
-
-</p>
+<h4>Example: sending socket object<span><a class="mark" href="#all_example_sending_socket_object" id="all_example_sending_socket_object">#</a></span></h4>
 <!--
 Here is an example of sending a socket. It will spawn two children and handle
 connections with the remote address `74.125.127.100` as VIP by sending the
@@ -20456,7 +20478,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
