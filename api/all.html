@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.7 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -404,6 +404,7 @@
 <li><a href="#all_client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a></li>
 <li><a href="#all_npn_and_sni">NPN and SNI</a></li>
 <li><a href="#all_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
+<li><a href="#all_tls_slab_buffer_size">tls.SLAB_BUFFER_SIZE</a></li>
 <li><a href="#all_tls_connect_options_callback">tls.connect(options, [callback])</a></li>
 <li><a href="#all_tls_connect_port_host_options_callback">tls.connect(port, [host], [options], [callback])</a></li>
 <li><a href="#all_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a></li>
@@ -6459,7 +6460,7 @@ complement signed integer into `buffer`.
 </ul>
 <!--
 Writes `value` to the buffer at the specified offset with specified endian
-format. Note, `value` must be a valid 32 bit float.
+format. Note, behavior is unspecified if `value` is not a 32 bit float.
 
 Set `noAssert` to true to skip validation of `value` and `offset`. This means
 that `value` may be too large for the specific function and `offset` may be
@@ -6469,7 +6470,8 @@ should not be used unless you are certain of correctness. Defaults to `false`.
 
 <p><code>value</code> を 32bit 浮動小数点数としてバッファの指定された位置に、
 指定されたエンディアンで書き込みます。
-<code>value</code> は妥当な 32bit 浮動小数点数でなければならないことに注意してください。
+<code>value</code> が 32bit 浮動小数点数でない場合の振る舞いは未定義であることに
+注意してください。
 
 </p>
 <p>もし <code>noAssert</code> が <code>true</code> なら，<code>value</code> と <code>offset</code> の検証をスキップします。
@@ -6787,6 +6789,9 @@ method. (See below.)
     resource.  Default=16kb
   * `encoding` {String} If specified, then buffers will be decoded to
     strings using the specified encoding.  Default=null
+  * `objectMode` {Boolean} Whether this stream should behave
+    as a stream of objects. Meaning that stream.read(n) returns
+    a single value instead of a Buffer of size n
 -->
 
 <ul>
@@ -6799,6 +6804,9 @@ method. (See below.)
 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
 <li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
 デコードされます。デフォルトは <code>null</code>。</li>
+<li><code>objectMode</code> {Boolean} このストリームがオブジェクトストリームとして
+振る舞うべきかどうか。これは <code>stream.read(n)</code> がサイズ n のバッファではなく
+一つの値を返すことを意味します。</li>
 </ul>
 </li>
 </ul>
@@ -9230,6 +9238,26 @@ You can test this server by connecting to it with `openssl s_client`:
 
 </p>
 <pre><code>openssl s_client -connect 127.0.0.1:8000</code></pre>
+<h2>tls.SLAB_BUFFER_SIZE<span><a class="mark" href="#all_tls_slab_buffer_size" id="all_tls_slab_buffer_size">#</a></span></h2>
+<!--
+Size of slab buffer used by all tls servers and clients.
+Default: `10 * 1024 * 1024`.
+-->
+
+<p>全ての TLS サーバ及びクライアントで使用されるスラブバッファのサイズ。
+デフォルトは: <code>10 * 1024 * 1024</code>。
+
+
+</p>
+<!--
+Don't change the defaults unless you know what you are doing.
+-->
+
+<p>あなたがしようとしていることを理解していない限り、
+デフォルトを変更しないでください。
+
+
+</p>
 <h2>tls.connect(options, [callback])<span><a class="mark" href="#all_tls_connect_options_callback" id="all_tls_connect_options_callback">#</a></span></h2>
 <h2>tls.connect(port, [host], [options], [callback])<span><a class="mark" href="#all_tls_connect_port_host_options_callback" id="all_tls_connect_port_host_options_callback">#</a></span></h2>
 <!--
@@ -19638,9 +19666,11 @@ Running node will now share port 8000 between the workers:
 <p>node は 8000 番ポートをワーカ間で共有します。
 
 </p>
-<pre><code>% node server.js
-Worker 2438 online
-Worker 2437 online</code></pre>
+<pre><code>% NODE_DEBUG=cluster node server.js
+23521,Master Worker 23524 online
+23521,Master Worker 23526 online
+23521,Master Worker 23523 online
+23521,Master Worker 23528 online</code></pre>
 <!--
 This feature was introduced recently, and may change in future versions.
 Please try it out and provide feedback.
@@ -20388,7 +20418,7 @@ on the specified worker.
 </p>
 <pre><code>cluster.fork().on(&#39;online&#39;, function() {
   // Worker is online
-};</code></pre>
+});</code></pre>
 <h3>Event: &#39;listening&#39;<span><a class="mark" href="#all_event_listening_3" id="all_event_listening_3">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>address</code> <span class="type">Object</span></li>
@@ -20404,7 +20434,7 @@ on the specified worker.
 </p>
 <pre><code>cluster.fork().on(&#39;listening&#39;, function(address) {
   // Worker is listening
-};</code></pre>
+});</code></pre>
 <h3>Event: &#39;disconnect&#39;<span><a class="mark" href="#all_event_disconnect_2" id="all_event_disconnect_2">#</a></span></h3>
 <!--
 Same as the `cluster.on('disconnect')` event, but emits only when the state change
@@ -20417,7 +20447,7 @@ on the specified worker.
 </p>
 <pre><code>cluster.fork().on(&#39;disconnect&#39;, function() {
   // Worker has disconnected
-};</code></pre>
+});</code></pre>
 <h3>Event: &#39;exit&#39;<span><a class="mark" href="#all_event_exit_4" id="all_event_exit_4">#</a></span></h3>
 <!--
 * `code` {Number} the exit code, if it exited normally.
@@ -20449,7 +20479,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
   } else {
     console.log(&quot;worker success!&quot;);
   }
-};</code></pre>
+});</code></pre>
 
           </div>
         </div>
@@ -20478,7 +20508,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
