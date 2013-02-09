@@ -20,60 +20,75 @@
           "desc": "<!--\nGlobal instance of Agent which is used as the default for all http client\nrequests.\n-->\n\n<p>全ての HTTP クライアントリクエストで使用される、デフォルトの Agent のインスタンスです。\n\n\n</p>\n"
         },
         {
-          "textRaw": "http.ClientResponse",
-          "name": "ClientResponse",
-          "desc": "<!--\nThis object is created when making a request with `http.request()`. It is\npassed to the `'response'` event of the request object.\n-->\n\n<p>このオブジェクトは <code>http.request()</code> によってリクエストと一緒に作成されます。\nこれはリクエストオブジェクトの <code>&#39;response&#39;</code> イベントに渡されます。\n\n</p>\n<!--\nThe response implements the [Readable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>レスポンスは [Readable Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n",
+          "textRaw": "http.IncomingMessage",
+          "name": "IncomingMessage",
+          "desc": "<!--\nAn `IncomingMessage` object is created by `http.Server` or `http.ClientRequest`\nand passed as the first argument to the `'request'` and `'response'` event\nrespectively. It may be used to access response status, headers and data.\n-->\n\n<p><code>IncomingMessage</code> オブジェクトは <code>http.Server</code> または <code>http.ClientRequest()</code>\nによって作成され、<code>&#39;request&#39;</code> および <code>&#39;response&#39;</code> イベントそれぞれの\n最初の引数として渡されます。\nそれはステータス、ヘッダ、およびデータにアクセスするために使われます。\n\n</p>\n<!--\nIt implements the [Readable Stream][] interface. `http.IncomingMessage` is an\n[EventEmitter][] with the following events:\n-->\n\n<p>これは [Readable Stream][] インタフェースを実装します。\n<code>http.IncomingMessage</code> はは以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event: 'data'",
               "type": "event",
               "name": "data",
-              "desc": "<p><code>function (chunk) { }</code>\n\n</p>\n<!--\nEmitted when a piece of the message body is received.\n\nNote that the __data will be lost__ if there is no listener when a\n`ClientResponse` emits a `'data'` event.\n-->\n\n<p>メッセージボディの断片を受信した場合に生成されます。\n\n</p>\n<p><code>ServerRequest</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n",
+              "desc": "<p><code>function (chunk) { }</code>\n\n</p>\n<!--\nEmitted when a piece of the message body is received. The chunk is a string if\nan encoding has been set with `message.setEncoding()`, otherwise it's\na [Buffer][].\n-->\n\n<p>メッセージボディの断片を受信した場合に生成されます。\n<code>message.setEncoding()</code> によってエンコーディングが設定されている場合、\nチャンクは文字列です。それ以外の場合は [Buffer][] です。\n\n</p>\n<!--\nNote that the __data will be lost__ if there is no listener when a\n`IncomingMessage` emits a `'data'` event.\n-->\n\n<p><code>IncomingMessage</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n",
               "params": []
             },
             {
               "textRaw": "Event: 'end'",
               "type": "event",
               "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each response. After that, no more `'data'` events\nwill be emitted on the response.\n-->\n\n<p>レスポンスごとに厳密に一回生成されます。\nその後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。\n\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each response. After that, no more `'data'` events\nwill be emitted on the response.\n-->\n\n<p>レスポンスごとに厳密に一回生成されます。\nその後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。\n\n</p>\n",
               "params": []
             },
             {
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。\nその逆もあります。\n\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。\nその逆もあります。\n\n</p>\n",
               "params": []
             }
           ],
           "properties": [
             {
-              "textRaw": "response.statusCode",
-              "name": "statusCode",
-              "desc": "<!--\nThe 3-digit HTTP response status code. E.G. `404`.\n-->\n\n<p>3 桁の数字によるレスポンスのステータスコードです。例えば <code>404</code>。\n\n</p>\n"
-            },
-            {
-              "textRaw": "response.httpVersion",
+              "textRaw": "message.httpVersion",
               "name": "httpVersion",
-              "desc": "<!--\nThe HTTP version of the connected-to server. Probably either\n`'1.1'` or `'1.0'`.\nAlso `response.httpVersionMajor` is the first integer and\n`response.httpVersionMinor` is the second.\n-->\n\n<p>接続しているサーバとの HTTP のバージョンです。\nおそらく <code>&#39;1.1&#39;</code> または <code>&#39;1.0&#39;</code> のどちらかです。\n同様に <code>response.httpVersionMajor</code> は最初の整数、\n<code>response.httpVersionMinor</code> は 2 番目の整数です。\n\n</p>\n"
+              "desc": "<!--\nIn case of server request, the HTTP version sent by the client. In the case of\nclient response, the HTTP version of the connected-to server.\nProbably either `'1.1'` or `'1.0'`.\n-->\n\n<p>サーバリクエストの場合、クライアントが送信した HTTP バージョンです。\nクライアントレスポンスの場合、接続したサーバの HTTP バージョンです。\nいずれの場合も <code>&#39;1.1&#39;</code> または <code>&#39;1.0&#39;</code> です。\n\n</p>\n<!--\nAlso `response.httpVersionMajor` is the first integer and\n`response.httpVersionMinor` is the second.\n-->\n\n<p>同様に <code>response.httpVersionMajor</code> は最初の整数、\n<code>response.httpVersionMinor</code> は 2 番目の整数です。\n\n\n</p>\n"
             },
             {
-              "textRaw": "response.headers",
+              "textRaw": "message.headers",
               "name": "headers",
-              "desc": "<!--\nThe response headers object.\n-->\n\n<p>レスポンスヘッダオブジェクトです。\n\n</p>\n"
+              "desc": "<!--\nThe request/response headers object.\n-->\n\n<p>リクエスト／レスポンスヘッダオブジェクトです。\n\n</p>\n<!--\nRead only map of header names and values. Header names are lower-cased.\nExample:\n-->\n\n<p>ヘッダ名と値のリードオンリーなマップです。ヘッダ名は小文字です。\n例:\n\n</p>\n<pre><code>// Prints something like:\n//\n// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n//   host: &#39;127.0.0.1:8000&#39;,\n//   accept: &#39;*/*&#39; }\nconsole.log(request.headers);</code></pre>\n"
             },
             {
-              "textRaw": "response.trailers",
+              "textRaw": "message.trailers",
               "name": "trailers",
-              "desc": "<!--\nThe response trailers object. Only populated after the 'end' event.\n-->\n\n<p>レスポンスのトレーラオブジェクトです。\n&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
+              "desc": "<!--\nThe request/response trailers object. Only populated after the 'end' event.\n-->\n\n<p>リクエスト／レスポンスのトレーラオブジェクトです。\n<code>&#39;end&#39;</code> イベントの後にだけ発生します。\n\n</p>\n"
+            },
+            {
+              "textRaw": "message.method",
+              "name": "method",
+              "desc": "<!--\n**Only valid for request obtained from `http.Server`.**\n-->\n\n<p><strong> <code>http.Server</code> から得たリクエストでのみ有効です </strong>\n\n</p>\n<!--\nThe request method as a string. Read only. Example:\n`'GET'`, `'DELETE'`.\n-->\n\n<p>リクエストメソッドを表す文字列です。参照のみ可能です。\n例: <code>&#39;GET&#39;</code>、<code>&#39;DELETE&#39;</code>\n\n</p>\n"
+            },
+            {
+              "textRaw": "message.url",
+              "name": "url",
+              "desc": "<!--\n**Only valid for request obtained from `http.Server`.**\n-->\n\n<p><strong> <code>http.Server</code> から得たリクエストでのみ有効です </strong>\n\n</p>\n<!--\nRequest URL string. This contains only the URL that is\npresent in the actual HTTP request. If the request is:\n-->\n\n<p>リクエスト URL を表す文字列です。\nこれは実際の HTTP リクエストに存在する URL だけを含みます。\nもしリクエストが:\n\n</p>\n<pre><code>GET /status?name=ryan HTTP/1.1\\r\\n\nAccept: text/plain\\r\\n\n\\r\\n</code></pre>\n<!--\nThen `request.url` will be:\n-->\n\n<p>この場合の <code>request.url</code> はこうなります:\n\n</p>\n<pre><code>&#39;/status?name=ryan&#39;</code></pre>\n<!--\nIf you would like to parse the URL into its parts, you can use\n`require('url').parse(request.url)`.  Example:\n-->\n\n<p>URL の要素を解析したい場合は、\n<code>require(&#39;url&#39;).parse(request.url)</code> を参照してください。例:\n\n</p>\n<pre><code>node&gt; require(&#39;url&#39;).parse(&#39;/status?name=ryan&#39;)\n{ href: &#39;/status?name=ryan&#39;,\n  search: &#39;?name=ryan&#39;,\n  query: &#39;name=ryan&#39;,\n  pathname: &#39;/status&#39; }</code></pre>\n<!--\nIf you would like to extract the params from the query string,\nyou can use the `require('querystring').parse` function, or pass\n`true` as the second argument to `require('url').parse`.  Example:\n-->\n\n<p>問い合わせ文字列からパラメータを取り出したい場合は、\n<code>require(&#39;querystring&#39;).parse</code> 関数を参照するか、\n<code>require(&#39;url&#39;).parse</code> の第 2 引数に <code>true</code> を渡してください。例:\n\n</p>\n<pre><code>node&gt; require(&#39;url&#39;).parse(&#39;/status?name=ryan&#39;, true)\n{ href: &#39;/status?name=ryan&#39;,\n  search: &#39;?name=ryan&#39;,\n  query: { name: &#39;ryan&#39; },\n  pathname: &#39;/status&#39; }</code></pre>\n"
+            },
+            {
+              "textRaw": "message.statusCode",
+              "name": "statusCode",
+              "desc": "<!--\n**Only valid for response obtained from `http.ClientRequest`.**\n-->\n\n<p><strong> <code>http.ClientRequest</code> から得たレスポンスでのみ有効です </strong>\n\n</p>\n<!--\nThe 3-digit HTTP response status code. E.G. `404`.\n-->\n\n<p>3 桁の数字によるレスポンスのステータスコードです。例えば <code>404</code>。\n\n</p>\n"
+            },
+            {
+              "textRaw": "message.socket",
+              "name": "socket",
+              "desc": "<!--\nThe `net.Socket` object associated with the connection.\n-->\n\n<p>コネクションに関連づけられた <code>net.Socket</code> オブジェクトです。\n\n</p>\n<!--\nWith HTTPS support, use request.connection.verifyPeer() and\nrequest.connection.getPeerCertificate() to obtain the client's\nauthentication details.\n-->\n\n<p>HTTPS では <code>request.connection.verifyPeer()</code> と\n<code>request.connection.getPeerCertificate()</code> で\nクライアントの認証の詳細を取得できます。\n\n</p>\n"
             }
           ],
           "methods": [
             {
-              "textRaw": "response.setEncoding([encoding])",
+              "textRaw": "message.setEncoding([encoding])",
               "type": "method",
               "name": "setEncoding",
-              "desc": "<!--\nSet the encoding for the response body. See [stream.setEncoding()][] for more\ninformation.\n-->\n\n<p>レスポンスボディのエンコーディングを設定します。詳細は\n[stream.setEncoding()][] を参照してください。\n\n</p>\n",
+              "desc": "<!--\nSet the encoding for data emitted by the `'data'` event. See [stream.setEncoding()][] for more\ninformation.\n-->\n\n<p><code>&#39;data&#39;</code> イベントによって生成されるデータのエンコーディングを設定します。\n詳細は [stream.setEncoding()][] を参照してください。\n\n</p>\n<!--\nShould be set before any `'data'` events have been emitted.\n-->\n\n<p>あらゆる <code>&#39;data&#39;</code> イベントが生成されるよりも前に設定されなければなりません。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -86,10 +101,10 @@
               ]
             },
             {
-              "textRaw": "response.pause()",
+              "textRaw": "message.pause()",
               "type": "method",
               "name": "pause",
-              "desc": "<!--\nPauses response from emitting events.  Useful to throttle back a download.\n-->\n\n<p>イベントの生成によるレスポンスを中断します。ダウンロード速度を落とすのに便利です。\n\n</p>\n",
+              "desc": "<!--\nPauses request/response from emitting events.  Useful to throttle back a download.\n-->\n\n<p>リクエスト／レスポンスによるイベントの生成を中断します。\nダウンロード速度を落とすのに便利です。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -97,10 +112,10 @@
               ]
             },
             {
-              "textRaw": "response.resume()",
+              "textRaw": "message.resume()",
               "type": "method",
               "name": "resume",
-              "desc": "<!--\nResumes a paused response.\n-->\n\n<p>中断されていたレスポンスを再開します。\n\n</p>\n",
+              "desc": "<!--\nResumes a paused request/response.\n-->\n\n<p>中断されたリクエスト／レスポンスを再開します。\n\n</p>\n",
               "signatures": [
                 {
                   "params": []
@@ -195,7 +210,7 @@
               "textRaw": "Event: 'request'",
               "type": "event",
               "name": "request",
-              "desc": "<p><code>function (request, response) { }</code>\n\n</p>\n<!--\nEmitted each time there is a request. Note that there may be multiple requests\nper connection (in the case of keep-alive connections).\n-->\n\n<p>リクエストの度に生成されます。\nコネクションごとに複数のリクエストがあるかもしれないことに注意してください\n(Keep Alive なコネクションの場合)。\n\n</p>\n<!--\n `request` is an instance of `http.ServerRequest` and `response` is\n an instance of `http.ServerResponse`\n-->\n\n<p><code>request</code> は <code>http.ServerRequest</code> のインスタンス、\n<code>response</code> は <code>http.ServerResponse</code> のインスタンスです。\n\n</p>\n",
+              "desc": "<p><code>function (request, response) { }</code>\n\n</p>\n<!--\nEmitted each time there is a request. Note that there may be multiple requests\nper connection (in the case of keep-alive connections).\n-->\n\n<p>リクエストの度に生成されます。\nコネクションごとに複数のリクエストがあるかもしれないことに注意してください\n(Keep Alive なコネクションの場合)。\n\n</p>\n<!--\n `request` is an instance of `http.IncomingMessage` and `response` is\n an instance of `http.ServerResponse`\n-->\n\n<p><code>request</code> は <code>http.IncomingMessage</code> のインスタンス、\n<code>response</code> は <code>http.ServerResponse</code> のインスタンスです。\n\n</p>\n",
               "params": []
             },
             {
@@ -343,108 +358,7 @@
             {
               "textRaw": "server.maxHeadersCount",
               "name": "maxHeadersCount",
-              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n\n</p>\n"
-            }
-          ]
-        },
-        {
-          "textRaw": "Class: http.ServerRequest",
-          "type": "class",
-          "name": "http.ServerRequest",
-          "desc": "<!--\nThis object is created internally by a HTTP server -- not by\nthe user -- and passed as the first argument to a `'request'` listener.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部 － ユーザではなく － で作成され、\n<code>&#39;request&#39;</code> リスナーの第1引数として渡されます。\n\n</p>\n<!--\nThe request implements the [Readable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>リクエストは [Readable Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n",
-          "events": [
-            {
-              "textRaw": "Event: 'data'",
-              "type": "event",
-              "name": "data",
-              "desc": "<p><code>function (chunk) { }</code>\n\n</p>\n<!--\nEmitted when a piece of the message body is received. The chunk is a string if\nan encoding has been set with `request.setEncoding()`, otherwise it's a\n[Buffer][].\n-->\n\n<p>メッセージボディの断片を受信した場合に生成されます。\n<code>request.setEncoding()</code> によってエンコーディングが設定された場合、\n<code>chunk</code> は文字列です。それ以外の場合は [Buffer][] です。\n\n</p>\n<!--\nExample: A chunk of the body is given as the single\nargument. The transfer-encoding has been decoded.  The\nbody chunk is a string.  The body encoding is set with\n`request.setEncoding()`.\n\nNote that the __data will be lost__ if there is no listener when a\n`ServerRequest` emits a `'data'` event.\n-->\n\n<p>例: 一つの引数としてボディのチャンクが与えられます。\n転送エンコーディングでデコードされます。\nボディのチャンクは文字列です。\nボディのエンコーディングは <code>request.setBodyEncoding()</code> で設定されます。\n\n</p>\n<p><code>ServerRequest</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n",
-              "params": []
-            },
-            {
-              "textRaw": "Event: 'end'",
-              "type": "event",
-              "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each request. After that, no more `'data'` events\nwill be emitted on the request.\n-->\n\n<p>リクエストごとに厳密に一回生成されます。\nその後、このリクエストで <code>&#39;data&#39;</code> イベントが生成されることはありません。\n\n</p>\n",
-              "params": []
-            },
-            {
-              "textRaw": "Event: 'close'",
-              "type": "event",
-              "name": "close",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼び出されたりフラッシュされる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per request, and no more `'data'`\nevents will fire afterwards.\n-->\n\n<p><code>&#39;end&#39;</code> と同様、このイベントはリクエスト上で一度だけ発生し、その後ではもう\n<code>&#39;data&#39;</code> イベントが発生することはありません。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後で発生することがあります。\nその逆もあります。\n\n</p>\n",
-              "params": []
-            }
-          ],
-          "properties": [
-            {
-              "textRaw": "request.method",
-              "name": "method",
-              "desc": "<!--\nThe request method as a string. Read only. Example:\n`'GET'`, `'DELETE'`.\n-->\n\n<p>リクエストメソッドを表す文字列です。参照のみ可能です。\n例: <code>&#39;GET&#39;</code>、<code>&#39;DELETE&#39;</code>\n\n\n</p>\n"
-            },
-            {
-              "textRaw": "request.url",
-              "name": "url",
-              "desc": "<!--\nRequest URL string. This contains only the URL that is\npresent in the actual HTTP request. If the request is:\n-->\n\n<p>リクエスト URL を表す文字列です。\nこれは実際の HTTP リクエストに存在する URL だけを含みます。\nリクエストがこうなら:\n\n</p>\n<pre><code>GET /status?name=ryan HTTP/1.1\\r\\n\nAccept: text/plain\\r\\n\n\\r\\n</code></pre>\n<!--\nThen `request.url` will be:\n-->\n\n<p>この場合の <code>request.url</code> はこうなります:\n\n</p>\n<pre><code>&#39;/status?name=ryan&#39;</code></pre>\n<!--\nIf you would like to parse the URL into its parts, you can use\n`require('url').parse(request.url)`.  Example:\n-->\n\n<p>URL の要素を解析したい場合は、\n<code>require(&#39;url&#39;).parse(request.url)</code> を参照してください。例:\n\n</p>\n<pre><code>node&gt; require(&#39;url&#39;).parse(&#39;/status?name=ryan&#39;)\n{ href: &#39;/status?name=ryan&#39;,\n  search: &#39;?name=ryan&#39;,\n  query: &#39;name=ryan&#39;,\n  pathname: &#39;/status&#39; }</code></pre>\n<!--\nIf you would like to extract the params from the query string,\nyou can use the `require('querystring').parse` function, or pass\n`true` as the second argument to `require('url').parse`.  Example:\n-->\n\n<p>問い合わせ文字列からパラメータを取り出したい場合は、\n<code>require(&#39;querystring&#39;).parse</code> 関数を参照するか、\n<code>require(&#39;url&#39;).parse</code> の第 2 引数に <code>true</code> を渡してください。例:\n\n</p>\n<pre><code>node&gt; require(&#39;url&#39;).parse(&#39;/status?name=ryan&#39;, true)\n{ href: &#39;/status?name=ryan&#39;,\n  search: &#39;?name=ryan&#39;,\n  query: { name: &#39;ryan&#39; },\n  pathname: &#39;/status&#39; }</code></pre>\n"
-            },
-            {
-              "textRaw": "request.headers",
-              "name": "headers",
-              "desc": "<!--\nRead only map of header names and values. Header names are lower-cased.\n-->\n\n<p>参照のみ可能な、ヘッダ名と値のマップです。\nヘッダ名は小文字化されています。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// Prints something like:\n//\n// { &#39;user-agent&#39;: &#39;curl/7.22.0&#39;,\n//   host: &#39;127.0.0.1:8000&#39;,\n//   accept: &#39;*/*&#39; }\nconsole.log(request.headers);</code></pre>\n"
-            },
-            {
-              "textRaw": "request.trailers",
-              "name": "trailers",
-              "desc": "<!--\nRead only; HTTP trailers (if present). Only populated after the 'end' event.\n-->\n\n<p>参照のみ可能です; HTTP のトレーラです (もしあれば)。&#39;end&#39; イベントの後にだけ発生します。\n\n</p>\n"
-            },
-            {
-              "textRaw": "request.httpVersion",
-              "name": "httpVersion",
-              "desc": "<!--\nThe HTTP protocol version as a string. Read only. Examples:\n`'1.1'`, `'1.0'`.\nAlso `request.httpVersionMajor` is the first integer and\n`request.httpVersionMinor` is the second.\n-->\n\n<p>HTTP プロトコルのバージョンを表す文字列です。参照のみ可能です。例:\n<code>&#39;1.1&#39;</code>、<code>&#39;1.0&#39;</code>。\n同様に <code>request.httpVersionMajor</code> は最初の整数、\n<code>request.httpVersionMinor</code> は 2 番目の整数です。\n\n\n</p>\n"
-            },
-            {
-              "textRaw": "request.connection",
-              "name": "connection",
-              "desc": "<!--\nThe `net.Socket` object associated with the connection.\n-->\n\n<p>コネクションに関連づけられた <code>net.Socket</code> オブジェクトです。\n\n\n</p>\n<!--\nWith HTTPS support, use request.connection.verifyPeer() and\nrequest.connection.getPeerCertificate() to obtain the client's\nauthentication details.\n-->\n\n<p>HTTPS では <code>request.connection.verifyPeer()</code> と\n<code>request.connection.getPeerCertificate()</code> で\nクライアントの認証の詳細を取得できます。\n\n\n\n</p>\n"
-            }
-          ],
-          "methods": [
-            {
-              "textRaw": "request.setEncoding([encoding])",
-              "type": "method",
-              "name": "setEncoding",
-              "desc": "<!--\nSet the encoding for the request body. See [stream.setEncoding()][] for more\ninformation.\n-->\n\n<p>リクエストボディのエンコーディングを設定します。詳細は\n[stream.setEncoding()][] を参照してください。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "request.pause()",
-              "type": "method",
-              "name": "pause",
-              "desc": "<!--\nPauses request from emitting events.  Useful to throttle back an upload.\n-->\n\n<p>リクエストによるイベントの生成を中断します。アップロード速度を落とすのに便利です。\n\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": []
-                }
-              ]
-            },
-            {
-              "textRaw": "request.resume()",
-              "type": "method",
-              "name": "resume",
-              "desc": "<!--\nResumes a paused request.\n-->\n\n<p>中断されたリクエストを再開します。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": []
-                }
-              ]
+              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n\n\n</p>\n"
             }
           ]
         },
@@ -645,13 +559,13 @@
           "textRaw": "Class: http.ClientRequest",
           "type": "class",
           "name": "http.ClientRequest",
-          "desc": "<!--\nThis object is created internally and returned from `http.request()`.  It\nrepresents an _in-progress_ request whose header has already been queued.  The\nheader is still mutable using the `setHeader(name, value)`, `getHeader(name)`,\n`removeHeader(name)` API.  The actual header will be sent along with the first\ndata chunk or when closing the connection.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部で作成され、<code>http.request()</code> から返されます。\nそれはヘッダがキューに入れられた <em>進行中</em> のリクエストを表現します。\nヘッダは <code>setHeader(name, value)</code>, <code>getHeader(name)</code>, <code>removeHeader(name)</code> API によってまだ可変のままです。\n実際にヘッダが送信されるのは、最初のデータチャンクが送信される時またはコネクションがクローズされる時です。\n\n</p>\n<!--\nTo get the response, add a listener for `'response'` to the request object.\n`'response'` will be emitted from the request object when the response\nheaders have been received.  The `'response'` event is executed with one\nargument which is an instance of `http.ClientResponse`.\n-->\n\n<p>レスポンスを取得するには、<code>&#39;response&#39;</code> 用のリスナーをリクエストオブジェクトに加えます。\n<code>&#39;response&#39;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。\n<code>&#39;response&#39;</code> イベントは <code>http.ClientResponse</code> のインスタンスを唯一の引数として実行されます。\n\n</p>\n<!--\nDuring the `'response'` event, one can add listeners to the\nresponse object; particularly to listen for the `'data'` event. Note that\nthe `'response'` event is called before any part of the response body is received,\nso there is no need to worry about racing to catch the first part of the\nbody. As long as a listener for `'data'` is added during the `'response'`\nevent, the entire body will be caught.\n-->\n\n<p><code>&#39;response&#39;</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;\nとりわけ <code>&#39;data&#39;</code> イベントのリスナーです。\n<code>&#39;response&#39;</code> イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。\nそのため、ボディの最初の部分の受信と競合することを心配する必要はありません。\n<code>&#39;response&#39;</code> イベントの間に <code>&#39;data&#39;</code> イベントのリスナーが加えられる限り、\nボディ全体を受信することができます。\n\n\n</p>\n<pre><code>// Good\nrequest.on(&#39;response&#39;, function (response) {\n  response.on(&#39;data&#39;, function (chunk) {\n    console.log(&#39;BODY: &#39; + chunk);\n  });\n});\n\n// Bad - misses all or part of the body\nrequest.on(&#39;response&#39;, function (response) {\n  setTimeout(function () {\n    response.on(&#39;data&#39;, function (chunk) {\n      console.log(&#39;BODY: &#39; + chunk);\n    });\n  }, 10);\n});</code></pre>\n<!--\nThis is a `Writable Stream`.\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n-->\n\n<p>これは <code>Writable Stream</code> です。\n注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。\n\n</p>\n<p><code>ServerRequest</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n<!--\nThe request implements the [Writable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>リクエストは [Writable  Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です。\n\n</p>\n",
+          "desc": "<!--\nThis object is created internally and returned from `http.request()`.  It\nrepresents an _in-progress_ request whose header has already been queued.  The\nheader is still mutable using the `setHeader(name, value)`, `getHeader(name)`,\n`removeHeader(name)` API.  The actual header will be sent along with the first\ndata chunk or when closing the connection.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部で作成され、<code>http.request()</code> から返されます。\nそれはヘッダがキューに入れられた <em>進行中</em> のリクエストを表現します。\nヘッダは <code>setHeader(name, value)</code>, <code>getHeader(name)</code>, <code>removeHeader(name)</code> API によってまだ可変のままです。\n実際にヘッダが送信されるのは、最初のデータチャンクが送信される時またはコネクションがクローズされる時です。\n\n</p>\n<!--\nTo get the response, add a listener for `'response'` to the request object.\n`'response'` will be emitted from the request object when the response\nheaders have been received.  The `'response'` event is executed with one\nargument which is an instance of `http.IncomingMessage`.\n-->\n\n<p>レスポンスを取得するには、<code>&#39;response&#39;</code> 用のリスナーをリクエストオブジェクトに加えます。\n<code>&#39;response&#39;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。\n<code>&#39;response&#39;</code> イベントは <code>http.IncomingMessage</code> のインスタンスを唯一の引数として\n実行されます。\n\n</p>\n<!--\nDuring the `'response'` event, one can add listeners to the\nresponse object; particularly to listen for the `'data'` event. Note that\nthe `'response'` event is called before any part of the response body is received,\nso there is no need to worry about racing to catch the first part of the\nbody. As long as a listener for `'data'` is added during the `'response'`\nevent, the entire body will be caught.\n-->\n\n<p><code>&#39;response&#39;</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;\nとりわけ <code>&#39;data&#39;</code> イベントのリスナーです。\n<code>&#39;response&#39;</code> イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。\nそのため、ボディの最初の部分の受信と競合することを心配する必要はありません。\n<code>&#39;response&#39;</code> イベントの間に <code>&#39;data&#39;</code> イベントのリスナーが加えられる限り、\nボディ全体を受信することができます。\n\n\n</p>\n<pre><code>// Good\nrequest.on(&#39;response&#39;, function (response) {\n  response.on(&#39;data&#39;, function (chunk) {\n    console.log(&#39;BODY: &#39; + chunk);\n  });\n});\n\n// Bad - misses all or part of the body\nrequest.on(&#39;response&#39;, function (response) {\n  setTimeout(function () {\n    response.on(&#39;data&#39;, function (chunk) {\n      console.log(&#39;BODY: &#39; + chunk);\n    });\n  }, 10);\n});</code></pre>\n<!--\nThis is a `Writable Stream`.\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n-->\n\n<p>これは <code>Writable Stream</code> です。\n注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。\n\n</p>\n<p><code>ServerRequest</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n<!--\nThe request implements the [Writable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>リクエストは [Writable  Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event 'response'",
               "type": "event",
               "name": "response",
-              "desc": "<p><code>function (response) { }</code>\n\n</p>\n<!--\nEmitted when a response is received to this request. This event is emitted only\nonce. The `response` argument will be an instance of `http.ClientResponse`.\n-->\n\n<p>このリクエストに対するレスポンスを受信した時に生成されます。\nこのイベントは一回だけ生成されます。\n<code>response</code> 引数は <code>http.ClientResponse</code> のインスタンスです。\n\n</p>\n<!--\nOptions:\n-->\n\n<p>オプション:\n\n</p>\n<!--\n- `host`: A domain name or IP address of the server to issue the request to.\n- `port`: Port of remote server.\n- `socketPath`: Unix Domain Socket (use one of host:port or socketPath)\n-->\n\n<ul>\n<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li>\n<li><code>port</code>: リモートサーバのポート。</li>\n<li><code>soocketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li>\n</ul>\n",
+              "desc": "<p><code>function (response) { }</code>\n\n</p>\n<!--\nEmitted when a response is received to this request. This event is emitted only\nonce. The `response` argument will be an instance of `http.IncomingMessage`.\n-->\n\n<p>このリクエストに対するレスポンスを受信した時に生成されます。\nこのイベントは一回だけ生成されます。\n<code>response</code> 引数は <code>http.IncomingMessage</code> のインスタンスです。\n\n</p>\n<!--\nOptions:\n-->\n\n<p>オプション:\n\n</p>\n<!--\n- `host`: A domain name or IP address of the server to issue the request to.\n- `port`: Port of remote server.\n- `socketPath`: Unix Domain Socket (use one of host:port or socketPath)\n-->\n\n<ul>\n<li><code>host</code>: リクエストを発行するサーバのドメイン名または IP アドレス。</li>\n<li><code>port</code>: リモートサーバのポート。</li>\n<li><code>soocketPath</code>: Unix ドメインソケット (host:port または socketPath のどちらか)</li>\n</ul>\n",
               "params": []
             },
             {
@@ -773,7 +687,7 @@
               "textRaw": "request.setSocketKeepAlive([enable], [initialDelay])",
               "type": "method",
               "name": "setSocketKeepAlive",
-              "desc": "<!--\nOnce a socket is assigned to this request and is connected\n[socket.setKeepAlive()][] will be called.\n-->\n\n<p>このリクエストにソケットが割り当てられて接続した際に、\n[socket.setKeepAlive()][] が呼び出されます。\n\n</p>\n",
+              "desc": "<!--\nOnce a socket is assigned to this request and is connected\n[socket.setKeepAlive()][] will be called.\n-->\n\n<p>このリクエストにソケットが割り当てられて接続した際に、\n[socket.setKeepAlive()][] が呼び出されます。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
