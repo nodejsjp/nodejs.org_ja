@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.9 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -314,7 +314,7 @@
 <li><a href="#all_new_stream_writable_options">new stream.Writable([options])</a></li>
 <li><a href="#all_writable_write_chunk_callback">writable._write(chunk, callback)</a></li>
 <li><a href="#all_writable_write_chunk_encoding_callback">writable.write(chunk, [encoding], [callback])</a></li>
-<li><a href="#all_writable_end_chunk_encoding">writable.end([chunk], [encoding])</a></li>
+<li><a href="#all_writable_end_chunk_encoding_callback">writable.end([chunk], [encoding], [callback])</a></li>
 <li><a href="#all_event_drain">Event: &#39;drain&#39;</a></li>
 <li><a href="#all_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#all_event_finish">Event: &#39;finish&#39;</a></li>
@@ -1725,12 +1725,14 @@ request the timer hold the program open. If the timer is already `ref`d calling
 </p>
 <h2>setImmediate(callback, [arg], [...])<span><a class="mark" href="#all_setimmediate_callback_arg" id="all_setimmediate_callback_arg">#</a></span></h2>
 <!--
-To schedule the "immediate" execution of `callback`. Returns an `immediateId`
-for possible use with `clearImmediate()`. Optionally you can also pass
-arguments to the callback.
+To schedule the "immediate" execution of `callback` after I/O events
+callbacks and before `setTimeout` and `setInterval` . Returns an
+`immediateId` for possible use with `clearImmediate()`. Optionally you
+can also pass arguments to the callback.
 -->
 
-<p><code>callback</code> を「即時に」実行するようスケジュールします。
+<p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および
+<code>setInterval</code> よりも前) に実行するようスケジュールします。
 <code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。
 オプションとして、コールバックへの引数を渡すことができます。
 
@@ -5480,26 +5482,37 @@ Unicode 文字。
 </li>
 </ul>
 <!--
-`Buffer` can also be used with Typed Array Views and DataViews.
+A `Buffer` object can also be used with typed arrays.  The buffer object is
+cloned to an `ArrayBuffer` that is used as the backing store for the typed
+array.  The memory of the buffer and the `ArrayBuffer` is not shared.
 -->
 
-<p><code>Buffer</code> は Typed Array のビューおよびデータビューとして使うことができます。
+<p><code>Buffer</code> は Typed Array として使うことができます。
+バッファオブジェクトは、Typed Array のバッキングストアとして使われる
+<code>ArrayBuffer</code> から複製されます。
+バッファと <code>Typed Array</code> はメモリを共有しません。
 
 </p>
-<pre><code>var buff = new Buffer(4);
-var ui16 = new Uint16Array(buff);
-var view = new DataView(buff);
+<!--
+NOTE: Node.js v0.8 simply retained a reference to the buffer in `array.buffer`
+instead of cloning it.
+-->
 
-ui16[0] = 1;
-ui16[1] = 2;
-console.log(buff);
+<p>Node.js の v0.8 では、バッファを複製するのではなく、単純に <code>array.buffer</code>
+に参照を維持していました。
 
-view.setInt16(0, 1);       // set big-endian int16 at byte offset 0
-view.setInt16(2, 2, true); // set little-endian int16 at byte offset 2
-console.log(buff);
+</p>
+<!--
+While more efficient, it introduces subtle incompatibilities with the typed
+arrays specification.  `ArrayBuffer#slice()` makes a copy of the slice while
+`Buffer#slice()` creates a view.
+-->
 
-// &lt;Buffer 01 00 02 00&gt;
-// &lt;Buffer 00 01 02 00&gt;</code></pre>
+<p>それは効率的ではあったものの、Typed Array との微妙な非互換性をもたらしました。
+<code>ArrayBuffer#slice()</code> はスライスのコピーを作成する一方、
+<code>Buffer#slice()</code> はビューを作成します。
+
+</p>
 <h2>Class: Buffer<span><a class="mark" href="#all_class_buffer_1" id="all_class_buffer_1">#</a></span></h2>
 <!--
 The Buffer class is a global type for dealing with binary data directly.
@@ -5887,12 +5900,13 @@ console.log(buf2.toString(&#39;ascii&#39;, 0, 25));
 <!--
 Returns a new buffer which references the same memory as the old, but offset
 and cropped by the `start` (defaults to `0`) and `end` (defaults to
-`buffer.length`) indexes.
+`buffer.length`) indexes.  Negative indexes start from the end of the buffer.
 -->
 
 <p>元のバッファと同じメモリを参照しますが、<code>start</code> (デフォルトは <code>0</code>) と
 <code>end</code> (デフォルトは <code>buffer.length</code>) で示されるオフセットと長さを持つ
 新しいバッファを返します。
+負のインデックスはバッファの末尾から開始します。
 
 </p>
 <!--
@@ -7433,17 +7447,21 @@ constructor.
 <code>highWaterMark</code> および <code>lowWaterMark</code> オプションによって決定されます。
 
 </p>
-<h3>writable.end([chunk], [encoding])<span><a class="mark" href="#all_writable_end_chunk_encoding" id="all_writable_end_chunk_encoding">#</a></span></h3>
+<h3>writable.end([chunk], [encoding], [callback])<span><a class="mark" href="#all_writable_end_chunk_encoding_callback" id="all_writable_end_chunk_encoding_callback">#</a></span></h3>
 <!--
 * `chunk` {Buffer | String} Optional final data to be written
 * `encoding` {String} Optional.  If `chunk` is a string, then encoding
   defaults to `'utf8'`
+* `callback` {Function} Optional.  Called when the final chunk is
+  successfully written.
 -->
 
 <ul>
 <li><code>chunk</code> {Buffer | String} 書き込まれる最後のデータ (任意)。</li>
 <li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。
 デフォルトは <code>&#39;utf8&#39;</code>。</li>
+<li><code>callback</code> {Function} 最後のチャンクが正常に書き込まれた場合に
+呼び出される (任意)。</li>
 </ul>
 <!--
 Call this method to signal the end of the data being written to the
@@ -16710,7 +16728,7 @@ associated with each `REPLServer`.  For example:
 var repl = require(&quot;repl&quot;),
     msg = &quot;message&quot;;
 
-repl.start().context.m = msg;</code></pre>
+repl.start(&quot;&gt; &quot;).context.m = msg;</code></pre>
 <!--
 Things in the `context` object appear as local within the REPL:
 -->
@@ -17280,6 +17298,17 @@ See `waitpid(2)`.
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close_9" id="all_event_close_9">#</a></span></h3>
 <!--
+* `code` {Number} the exit code, if it exited normally.
+* `signal` {String} the signal passed to kill the child process, if it
+  was killed by the parent.
+-->
+
+<ul>
+<li><code>code</code> {Number} 普通に終了した場合は、その終了コード。</li>
+<li><code>signal</code> {String} 親プロセスによって殺された場合は、
+子プロセスを殺すために渡されたシグナル。</li>
+</ul>
+<!--
 This event is emitted when the stdio streams of a child process have all
 terminated.  This is distinct from 'exit', since multiple processes
 might share the same stdio streams.
@@ -17419,7 +17448,7 @@ be sent `'SIGTERM'`. See `signal(7)` for a list of available signals.
 <pre><code>var spawn = require(&#39;child_process&#39;).spawn,
     grep  = spawn(&#39;grep&#39;, [&#39;ssh&#39;]);
 
-grep.on(&#39;exit&#39;, function (code, signal) {
+grep.on(&#39;close&#39;, function (code, signal) {
   console.log(&#39;child process terminated due to receipt of signal &#39;+signal);
 });
 
@@ -17718,7 +17747,7 @@ ls.stderr.on(&#39;data&#39;, function (data) {
   console.log(&#39;stderr: &#39; + data);
 });
 
-ls.on(&#39;exit&#39;, function (code) {
+ls.on(&#39;close&#39;, function (code) {
   console.log(&#39;child process exited with code &#39; + code);
 });</code></pre>
 <!--
@@ -17740,7 +17769,7 @@ ps.stderr.on(&#39;data&#39;, function (data) {
   console.log(&#39;ps stderr: &#39; + data);
 });
 
-ps.on(&#39;exit&#39;, function (code) {
+ps.on(&#39;close&#39;, function (code) {
   if (code !== 0) {
     console.log(&#39;ps process exited with code &#39; + code);
   }
@@ -17755,7 +17784,7 @@ grep.stderr.on(&#39;data&#39;, function (data) {
   console.log(&#39;grep stderr: &#39; + data);
 });
 
-grep.on(&#39;exit&#39;, function (code) {
+grep.on(&#39;close&#39;, function (code) {
   if (code !== 0) {
     console.log(&#39;grep process exited with code &#39; + code);
   }
@@ -17988,6 +18017,8 @@ Node のドキュメント化されていない API と同様に、
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
   * `stdio` {Array|String} Child's stdio configuration. (See above)
+    Only stdin is configurable, anything else will lead to unpredictable
+    results.
   * `customFds` {Array} **Deprecated** File descriptors for the child to use
     for stdio.  (See above)
   * `env` {Object} Environment key-value pairs
@@ -18006,7 +18037,8 @@ Node のドキュメント化されていない API と同様に、
 <li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
-<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。</li>
+<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。
+標準入力のみが構成可能です。その他は予期しない結果を招くでしょう。</li>
 <li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
 ファイル記述子の配列 (前述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
@@ -20461,7 +20493,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
