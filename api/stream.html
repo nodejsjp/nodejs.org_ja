@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.9.9 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.9.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -79,7 +79,7 @@
 <li><a href="#stream_new_stream_writable_options">new stream.Writable([options])</a></li>
 <li><a href="#stream_writable_write_chunk_callback">writable._write(chunk, callback)</a></li>
 <li><a href="#stream_writable_write_chunk_encoding_callback">writable.write(chunk, [encoding], [callback])</a></li>
-<li><a href="#stream_writable_end_chunk_encoding">writable.end([chunk], [encoding])</a></li>
+<li><a href="#stream_writable_end_chunk_encoding_callback">writable.end([chunk], [encoding], [callback])</a></li>
 <li><a href="#stream_event_drain">Event: &#39;drain&#39;</a></li>
 <li><a href="#stream_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#stream_event_finish">Event: &#39;finish&#39;</a></li>
@@ -902,17 +902,21 @@ constructor.
 <code>highWaterMark</code> および <code>lowWaterMark</code> オプションによって決定されます。
 
 </p>
-<h3>writable.end([chunk], [encoding])<span><a class="mark" href="#stream_writable_end_chunk_encoding" id="stream_writable_end_chunk_encoding">#</a></span></h3>
+<h3>writable.end([chunk], [encoding], [callback])<span><a class="mark" href="#stream_writable_end_chunk_encoding_callback" id="stream_writable_end_chunk_encoding_callback">#</a></span></h3>
 <!--
 * `chunk` {Buffer | String} Optional final data to be written
 * `encoding` {String} Optional.  If `chunk` is a string, then encoding
   defaults to `'utf8'`
+* `callback` {Function} Optional.  Called when the final chunk is
+  successfully written.
 -->
 
 <ul>
 <li><code>chunk</code> {Buffer | String} 書き込まれる最後のデータ (任意)。</li>
 <li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。
 デフォルトは <code>&#39;utf8&#39;</code>。</li>
+<li><code>callback</code> {Function} 最後のチャンクが正常に書き込まれた場合に
+呼び出される (任意)。</li>
 </ul>
 <!--
 Call this method to signal the end of the data being written to the
@@ -1288,7 +1292,7 @@ it can come in handy.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
