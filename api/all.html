@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.10 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -294,8 +294,9 @@
 <li><a href="#all_compatibility">Compatibility</a></li>
 <li><a href="#all_class_stream_readable">Class: stream.Readable</a><ul>
 <li><a href="#all_new_stream_readable_options">new stream.Readable([options])</a></li>
-<li><a href="#all_readable_read_size_callback">readable._read(size, callback)</a></li>
+<li><a href="#all_readable_read_size">readable._read(size)</a></li>
 <li><a href="#all_readable_push_chunk">readable.push(chunk)</a></li>
+<li><a href="#all_readable_unshift_chunk">readable.unshift(chunk)</a></li>
 <li><a href="#all_readable_wrap_stream">readable.wrap(stream)</a></li>
 <li><a href="#all_event_readable">Event: &#39;readable&#39;</a></li>
 <li><a href="#all_event_end">Event: &#39;end&#39;</a></li>
@@ -303,7 +304,7 @@
 <li><a href="#all_event_error">Event: &#39;error&#39;</a></li>
 <li><a href="#all_event_close">Event: &#39;close&#39;</a></li>
 <li><a href="#all_readable_setencoding_encoding">readable.setEncoding(encoding)</a></li>
-<li><a href="#all_readable_read_size">readable.read([size])</a></li>
+<li><a href="#all_readable_read_size_1">readable.read([size])</a></li>
 <li><a href="#all_readable_pipe_destination_options">readable.pipe(destination, [options])</a></li>
 <li><a href="#all_readable_unpipe_destination">readable.unpipe([destination])</a></li>
 <li><a href="#all_readable_pause">readable.pause()</a></li>
@@ -330,6 +331,7 @@
 <li><a href="#all_new_stream_transform_options">new stream.Transform([options])</a></li>
 <li><a href="#all_transform_transform_chunk_outputfn_callback">transform._transform(chunk, outputFn, callback)</a></li>
 <li><a href="#all_transform_flush_outputfn_callback">transform._flush(outputFn, callback)</a></li>
+<li><a href="#all_example_simpleprotocol_parser">Example: <code>SimpleProtocol</code> parser</a></li>
 </ul>
 </li>
 <li><a href="#all_class_stream_passthrough">Class: stream.PassThrough</a></li>
@@ -505,12 +507,12 @@
 <li><a href="#all_fs_writesync_fd_buffer_offset_length_position">fs.writeSync(fd, buffer, offset, length, position)</a></li>
 <li><a href="#all_fs_read_fd_buffer_offset_length_position_callback">fs.read(fd, buffer, offset, length, position, [callback])</a></li>
 <li><a href="#all_fs_readsync_fd_buffer_offset_length_position">fs.readSync(fd, buffer, offset, length, position)</a></li>
-<li><a href="#all_fs_readfile_filename_encoding_callback">fs.readFile(filename, [encoding], [callback])</a></li>
-<li><a href="#all_fs_readfilesync_filename_encoding">fs.readFileSync(filename, [encoding])</a></li>
-<li><a href="#all_fs_writefile_filename_data_encoding_callback">fs.writeFile(filename, data, [encoding], [callback])</a></li>
-<li><a href="#all_fs_writefilesync_filename_data_encoding">fs.writeFileSync(filename, data, [encoding])</a></li>
-<li><a href="#all_fs_appendfile_filename_data_encoding_utf8_callback">fs.appendFile(filename, data, encoding=&#39;utf8&#39;, [callback])</a></li>
-<li><a href="#all_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&#39;utf8&#39;)</a></li>
+<li><a href="#all_fs_readfile_filename_options_callback">fs.readFile(filename, [options], [callback])</a></li>
+<li><a href="#all_fs_readfilesync_filename_options">fs.readFileSync(filename, [options])</a></li>
+<li><a href="#all_fs_writefile_filename_data_options_callback">fs.writeFile(filename, data, [options], [callback])</a></li>
+<li><a href="#all_fs_writefilesync_filename_data_options">fs.writeFileSync(filename, data, [options])</a></li>
+<li><a href="#all_fs_appendfile_filename_data_options_callback">fs.appendFile(filename, data, [options], [callback])</a></li>
+<li><a href="#all_fs_appendfilesync_filename_data_options">fs.appendFileSync(filename, data, [options])</a></li>
 <li><a href="#all_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
 <li><a href="#all_fs_unwatchfile_filename_listener">fs.unwatchFile(filename, [listener])</a></li>
 <li><a href="#all_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
@@ -6811,11 +6813,11 @@ A `Readable Stream` has the following methods, members, and events.
 </p>
 <!--
 Note that `stream.Readable` is an abstract class designed to be
-extended with an underlying implementation of the `_read(size, cb)`
+extended with an underlying implementation of the `_read(size)`
 method. (See below.)
 -->
 
-<p><code>stream.Readable</code> は下層の実装である <code>_read(size, cb)</code> メソッド (後述)
+<p><code>stream.Readable</code> は下層の実装である <code>_read(size)</code> メソッド (後述)
 によって拡張されるように設計された抽象クラスであることに注意してください。
 
 </p>
@@ -6824,8 +6826,6 @@ method. (See below.)
 * `options` {Object}
   * `bufferSize` {Number} The size of the chunks to consume from the
     underlying resource. Default=16kb
-  * `lowWaterMark` {Number} The minimum number of bytes to store in
-    the internal buffer before emitting `readable`.  Default=0
   * `highWaterMark` {Number} The maximum number of bytes to store in
     the internal buffer before ceasing to read from the underlying
     resource.  Default=16kb
@@ -6840,8 +6840,6 @@ method. (See below.)
 <li><code>options</code> {Object} (任意)<ul>
 <li><code>bufferSize</code> {Number} 下層のリソースによって消費される
 チャンクのサイズです。デフォルトは 16kb。</li>
-<li><code>lowWaterMark</code> {Number} <code>readable</code> イベントが生成されるまで
-内部バッファに貯めておくバイト数の最小値。デフォルトは 0。</li>
 <li><code>highWaterMark</code> {Number} 下層のリソースから読み込むのを中断するまで
 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
 <li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
@@ -6862,7 +6860,7 @@ initialized.
 初期化することができるように、必ずコンストラクタを呼び出してください。
 
 </p>
-<h3>readable._read(size, callback)<span><a class="mark" href="#all_readable_read_size_callback" id="all_readable_read_size_callback">#</a></span></h3>
+<h3>readable._read(size)<span><a class="mark" href="#all_readable_read_size" id="all_readable_read_size">#</a></span></h3>
 <!--
 * `size` {Number} Number of bytes to read asynchronously
 * `callback` {Function} Called with an error or with data
@@ -6873,35 +6871,23 @@ initialized.
 <li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>
 </ul>
 <!--
+Note: **This function should NOT be called directly.**  It should be
+implemented by child classes, and called by the internal Readable
+class methods only.
+-->
+
+<p>注意: <strong>この関数は直接呼び出すべきではありません。</strong>
+これはサブクラスで実装されるべきであり、Readable クラスの内部からのみ
+呼び出されるべきです。
+
+</p>
+<!--
 All Readable stream implementations must provide a `_read` method
 to fetch data from the underlying resource.
 -->
 
 <p>全ての Readable ストリームは、下層のリソースからデータを
 取得するために <code>_read</code> メソッドを提供しなければなりません。
-
-</p>
-<!--
-Note: **This function MUST NOT be called directly.**  It should be
-implemented by child classes, and called by the internal Readable
-class methods only.
--->
-
-<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
-これはサブクラスで実装されるべきであり、Readable クラスの内部からのみ
-呼び出されるべきです。
-
-</p>
-<!--
-Call the callback using the standard `callback(error, data)` pattern.
-When no more data can be fetched, call `callback(null, null)` to
-signal the EOF.
--->
-
-<p>コールバックは標準的な <code>callback(error, data)</code>
-パターンを使って呼び出します。
-データをそれ以上取得できなくなった場合は、EOF を伝えるために
-<code>callback(null, null)</code> で呼び出します。
 
 </p>
 <!--
@@ -6917,6 +6903,19 @@ your own extension classes.
 求められて<strong>います</strong>。
 
 </p>
+<!--
+When data is available, put it into the read queue by calling
+`readable.push(chunk)`.  If `push` returns false, then you should stop
+reading.  When `_read` is called again, you should start pushing more
+data.
+-->
+
+<p>データが利用可能になれば、<code>readable.push(chunk)</code> を呼び出すことで
+それを読み込みキューに追加します。
+<code>push</code> が false を返した場合は、読み込みを止めるべきです。
+<code>_read</code> が再び呼び出された時が、さらに多くのデータを追加を開始すべき時です。
+
+</p>
 <h3>readable.push(chunk)<span><a class="mark" href="#all_readable_push_chunk" id="all_readable_push_chunk">#</a></span></h3>
 <!--
 * `chunk` {Buffer | null | String} Chunk of data to push into the read queue
@@ -6929,14 +6928,30 @@ your own extension classes.
 <li>return {Boolean} まだプッシュしてもいいかどうか</li>
 </ul>
 <!--
+Note: **This function should be called by Readable implementors, NOT
+by consumers of Readable subclasses.**  The `_read()` function will not
+be called again until at least one `push(chunk)` call is made.  If no
+data is available, then you MAY call `push('')` (an empty string) to
+allow a future `_read` call, without adding any data to the queue.
+-->
+
+<p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、
+Readable のサブクラスの利用者が呼び出すべきではありません。</strong>
+少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が
+再び呼び出されることはありません。もし利用可能なデータがない場合は、
+将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)
+を呼び出すことができます。
+
+</p>
+<!--
 The `Readable` class works by putting data into a read queue to be
 pulled out later by calling the `read()` method when the `'readable'`
 event fires.
 -->
 
-<p><code>&#39;readable&#39;</code> イベントが生成された時、後で <code>read()</code> メソッドを呼び出して
-取得されるデータを読み込みキューに入れておくことによって
-<code>Readable</code> クラスは機能します。
+<p><code>Readable</code> クラスは、<code>&#39;readable&#39;</code> イベントの生成時に <code>read()</code>
+メソッドが呼び出されることで後から取り出されるデータを、
+読み込みキューに入れておくことによって機能します。
 
 </p>
 <!--
@@ -6982,6 +6997,131 @@ source.onend = function() {
 stream._read = function(size, cb) {
   source.readStart();
 };</code></pre>
+<h3>readable.unshift(chunk)<span><a class="mark" href="#all_readable_unshift_chunk" id="all_readable_unshift_chunk">#</a></span></h3>
+<!--
+* `chunk` {Buffer | null | String} Chunk of data to unshift onto the read queue
+* return {Boolean} Whether or not more pushes should be performed
+-->
+
+<ul>
+<li><code>chunk</code> {Buffer | null | String} 読み込みキューの先頭に戻されるデータのチャンク</li>
+<li>return {Boolean} より多くの追加が実行されるべきかどうか</li>
+</ul>
+<!--
+This is the corollary of `readable.push(chunk)`.  Rather than putting
+the data at the *end* of the read queue, it puts it at the *front* of
+the read queue.
+-->
+
+<p>これは <code>readable.push(chunk)</code> からの帰結です。
+データを読み込みキューの <em>末尾</em> に加えるのではなく、
+読み込みキューの <em>先頭</em> に加えます。
+
+</p>
+<!--
+This is useful in certain use-cases where a stream is being consumed
+by a parser, which needs to "un-consume" some data that it has
+optimistically pulled out of the source.
+-->
+
+<p>これはストリームがパーサによって消費されるユースケースにおいて有用です。
+それはソースから楽観的に取り出したデータを「消費しなかったことにする」
+場合に必要です。
+
+</p>
+<pre><code class="javascript">// A parser for a simple data protocol.
+// The &quot;header&quot; is a JSON object, followed by 2 \n characters, and
+// then a message body.
+//
+// Note: This can be done more simply as a Transform stream.  See below.
+
+function SimpleProtocol(source, options) {
+  if (!(this instanceof SimpleProtocol))
+    return new SimpleProtocol(options);
+
+  Readable.call(this, options);
+  this._inBody = false;
+  this._sawFirstCr = false;
+
+  // source is a readable stream, such as a socket or file
+  this._source = source;
+
+  var self = this;
+  source.on(&#39;end&#39;, function() {
+    self.push(null);
+  });
+
+  // give it a kick whenever the source is readable
+  // read(0) will not consume any bytes
+  source.on(&#39;readable&#39;, function() {
+    self.read(0);
+  });
+
+  this._rawHeader = [];
+  this.header = null;
+}
+
+SimpleProtocol.prototype = Object.create(
+  Readable.prototype, { constructor: { value: SimpleProtocol }});
+
+SimpleProtocol.prototype._read = function(n) {
+  if (!this._inBody) {
+    var chunk = this._source.read();
+
+    // if the source doesn&#39;t have data, we don&#39;t have data yet.
+    if (chunk === null)
+      return this.push(&#39;&#39;);
+
+    // check if the chunk has a \n\n
+    var split = -1;
+    for (var i = 0; i &lt; chunk.length; i++) {
+      if (chunk[i] === 10) { // &#39;\n&#39;
+        if (this._sawFirstCr) {
+          split = i;
+          break;
+        } else {
+          this._sawFirstCr = true;
+        }
+      } else {
+        this._sawFirstCr = false;
+      }
+    }
+
+    if (split === -1) {
+      // still waiting for the \n\n
+      // stash the chunk, and try again.
+      this._rawHeader.push(chunk);
+      this.push(&#39;&#39;);
+    } else {
+      this._inBody = true;
+      var h = chunk.slice(0, split);
+      this._rawHeader.push(h);
+      var header = Buffer.concat(this._rawHeader).toString();
+      try {
+        this.header = JSON.parse(header);
+      } catch (er) {
+        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));
+        return;
+      }
+      // now, because we got some extra data, unshift the rest
+      // back into the read queue so that our consumer will see it.
+      this.unshift(b);
+
+      // and let them know that we are done parsing the header.
+      this.emit(&#39;header&#39;, this.header);
+    }
+  } else {
+    // from there on, just provide the data to our consumer.
+    // careful not to push(null), since that would indicate EOF.
+    var chunk = this._source.read();
+    if (chunk) this.push(chunk);
+  }
+};
+
+// Usage:
+var parser = new SimpleProtocol(source);
+// Now parser is a readable stream that will emit &#39;header&#39;
+// with the parsed header data.</code></pre>
 <h3>readable.wrap(stream)<span><a class="mark" href="#all_readable_wrap_stream" id="all_readable_wrap_stream">#</a></span></h3>
 <!--
 * `stream` {Stream} An "old style" readable stream
@@ -7020,14 +7160,10 @@ myReader.on(&#39;readable&#39;, function() {
 });</code></pre>
 <h3>Event: &#39;readable&#39;<span><a class="mark" href="#all_event_readable" id="all_event_readable">#</a></span></h3>
 <!--
-When there is data ready to be consumed, this event will fire.  The
-number of bytes that are required to be considered "readable" depends
-on the `lowWaterMark` option set in the constructor.
+When there is data ready to be consumed, this event will fire.
 -->
 
 <p>データが消費される準備ができた時、このイベントが生成されます。
-「読み込み可能である」とみなされるために必要なバイト数は、
-コンストラクタで設定された <code>lowWaterMark</code> に依存します。
 
 </p>
 <!--
@@ -7110,7 +7246,7 @@ constructor.
 フィールドでも指定することができます。
 
 </p>
-<h3>readable.read([size])<span><a class="mark" href="#all_readable_read_size" id="all_readable_read_size">#</a></span></h3>
+<h3>readable.read([size])<span><a class="mark" href="#all_readable_read_size_1" id="all_readable_read_size_1">#</a></span></h3>
 <!--
 * `size` {Number | null} Optional number of bytes to read.
 * Return: {Buffer | String | null}
@@ -7120,6 +7256,13 @@ constructor.
 <li><code>size</code> {Number | null} 読み込むバイト数 (任意)</li>
 <li>Return: {Buffer | String | null}</li>
 </ul>
+<!--
+Note: **This function SHOULD be called by Readable stream users.**
+-->
+
+<p>注意: <strong>この関数は Redable ストリームのユーザが呼び出すべきです。</strong>
+
+</p>
 <!--
 Call this method to consume data once the `'readable'` event is
 emitted.
@@ -7151,11 +7294,11 @@ a future `'readable'` event will be emitted when more is available.
 
 </p>
 <!--
-Note that calling `stream.read(0)` will always return `null`, and will
-trigger a refresh of the internal buffer, but otherwise be a no-op.
+Calling `stream.read(0)` will always return `null`, and will trigger a
+refresh of the internal buffer, but otherwise be a no-op.
 -->
 
-<p><code>stream.read(0)</code> は常に <code>null</code> を返すことに注意してください。
+<p><code>stream.read(0)</code> は常に <code>null</code> を返します。
 それは内部バッファをリフレッシュしますが、それ以外の処理はしません。
 
 </p>
@@ -7311,8 +7454,6 @@ method. (See below.)
 * `options` {Object}
   * `highWaterMark` {Number} Buffer level when `write()` starts
     returning false. Default=16kb
-  * `lowWaterMark` {Number} The buffer level when `'drain'` is
-    emitted.  Default=0
   * `decodeStrings` {Boolean} Whether or not to decode strings into
     Buffers before passing them to `_write()`.  Default=true
 -->
@@ -7321,8 +7462,6 @@ method. (See below.)
 <li><code>options</code> {Object} (任意)<ul>
 <li><code>highWaterMark</code> {Number} <code>write()</code> が <code>false</code> を返し始めるバッファレベル。
 デフォルトは 16kb。</li>
-<li><code>lowWaterMark</code> {Number} <code>&#39;drain&#39;</code> が生成されるバッファレベル。
-デフォルトは 0。</li>
 <li><code>decodeStrings</code> {Boolean} 文字列が <code>_write()</code> に渡される前に
 バッファにデコードするかどうか。デフォルトは <code>true</code>。</li>
 </ul>
@@ -7436,15 +7575,12 @@ the buffer is full, and the data will be sent out in the future. The
 
 </p>
 <!--
-The specifics of when `write()` will return false, and when a
-subsequent `'drain'` event will be emitted, are determined by the
-`highWaterMark` and `lowWaterMark` options provided to the
-constructor.
+The specifics of when `write()` will return false, is determined by
+the `highWaterMark` option provided to the constructor.
 -->
 
-<p><code>write()</code> がいつ <code>false</code> を返し、後続の <code>&#39;drain&#39;</code> イベントがいつ
-生成されるかは、コンストラクタに与えられる
-<code>highWaterMark</code> および <code>lowWaterMark</code> オプションによって決定されます。
+<p><code>write()</code> がいつ <code>false</code> を返すかは、コンストラクタに与えられる
+<code>highWaterMark</code> オプションによって決定されます。
 
 </p>
 <h3>writable.end([chunk], [encoding], [callback])<span><a class="mark" href="#all_writable_end_chunk_encoding_callback" id="all_writable_end_chunk_encoding_callback">#</a></span></h3>
@@ -7543,13 +7679,13 @@ Readable であり Writable でもあるストリームの一種です。
 </p>
 <!--
 Note that `stream.Duplex` is an abstract class designed to be
-extended with an underlying implementation of the `_read(size, cb)`
+extended with an underlying implementation of the `_read(size)`
 and `_write(chunk, callback)` methods as you would with a Readable or
 Writable stream class.
 -->
 
 <p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、
-下層の実装である <code>_read(size, cb)</code> および <code>_write(chunk, callback)</code>
+下層の実装である <code>_read(size)</code> および <code>_write(chunk, callback)</code>
 メソッドによって拡張されるように設計された抽象クラスであることに
 注意してください。
 
@@ -7558,14 +7694,14 @@ Writable stream class.
 Since JavaScript doesn't have multiple prototypal inheritance, this
 class prototypally inherits from Readable, and then parasitically from
 Writable.  It is thus up to the user to implement both the lowlevel
-`_read(n,cb)` method as well as the lowlevel `_write(chunk,cb)` method
+`_read(n)` method as well as the lowlevel `_write(chunk,cb)` method
 on extension duplex classes.
 -->
 
 <p>JavaScript は複数のプロトタイプ継承を持つことができないため、
 このクラスは Readable からプロトタイプを継承したうえで、
 Writable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。
-低水準の <code>_read(n,cb)</code> および <code>_write(chunk,cb)</code> を実装することは、
+低水準の <code>_read(n)</code> および <code>_write(chunk,cb)</code> を実装することは、
 Duplex クラスを拡張するユーザの責務です。
 
 </p>
@@ -7669,15 +7805,6 @@ initialized.
 (任意のエラー引数と共に) この関数を呼び出してください。</li>
 </ul>
 <!--
-All Transform stream implementations must provide a `_transform`
-method to accept input and produce output.
--->
-
-<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために
-<code>_transform</code> メソッドを提供しなければなりません。
-
-</p>
-<!--
 Note: **This function MUST NOT be called directly.**  It should be
 implemented by child classes, and called by the internal Transform
 class methods only.
@@ -7686,6 +7813,15 @@ class methods only.
 <p>注意: <strong>この関数は直接呼び出してはいけません。</strong>
 これはサブクラスで実装されるべきであり、Transform クラスの内部からのみ
 呼び出されるべきです。
+
+</p>
+<!--
+All Transform stream implementations must provide a `_transform`
+method to accept input and produce output.
+-->
+
+<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために
+<code>_transform</code> メソッドを提供しなければなりません。
 
 </p>
 <!--
@@ -7794,6 +7930,90 @@ your own extension classes.
 求められて<strong>います</strong>。
 
 </p>
+<h3>Example: <code>SimpleProtocol</code> parser<span><a class="mark" href="#all_example_simpleprotocol_parser" id="all_example_simpleprotocol_parser">#</a></span></h3>
+<!--
+The example above of a simple protocol parser can be implemented much
+more simply by using the higher level `Transform` stream class.
+-->
+
+<p>前述した単純なプロトコルパーサの例は、より高水準な <code>Transform</code>
+ストリームクラスを使うことで、さらにシンプルに実装することができます。
+
+</p>
+<!--
+In this example, rather than providing the input as an argument, it
+would be piped into the parser, which is a more idiomatic Node stream
+approach.
+-->
+
+<p>この例では、入力を引数で与えるのではなく、Node のストームにおける
+より慣用的なアプローチとしてパーサにパイプで送られます。
+
+</p>
+<pre><code class="javascript">function SimpleProtocol(options) {
+  if (!(this instanceof SimpleProtocol))
+    return new SimpleProtocol(options);
+
+  Transform.call(this, options);
+  this._inBody = false;
+  this._sawFirstCr = false;
+  this._rawHeader = [];
+  this.header = null;
+}
+
+SimpleProtocol.prototype = Object.create(
+  Transform.prototype, { constructor: { value: SimpleProtocol }});
+
+SimpleProtocol.prototype._transform = function(chunk, output, done) {
+  if (!this._inBody) {
+    // check if the chunk has a \n\n
+    var split = -1;
+    for (var i = 0; i &lt; chunk.length; i++) {
+      if (chunk[i] === 10) { // &#39;\n&#39;
+        if (this._sawFirstCr) {
+          split = i;
+          break;
+        } else {
+          this._sawFirstCr = true;
+        }
+      } else {
+        this._sawFirstCr = false;
+      }
+    }
+
+    if (split === -1) {
+      // still waiting for the \n\n
+      // stash the chunk, and try again.
+      this._rawHeader.push(chunk);
+    } else {
+      this._inBody = true;
+      var h = chunk.slice(0, split);
+      this._rawHeader.push(h);
+      var header = Buffer.concat(this._rawHeader).toString();
+      try {
+        this.header = JSON.parse(header);
+      } catch (er) {
+        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));
+        return;
+      }
+      // and let them know that we are done parsing the header.
+      this.emit(&#39;header&#39;, this.header);
+
+      // now, because we got some extra data, emit this first.
+      output(b);
+    }
+  } else {
+    // from there on, just provide the data to our consumer as-is.
+    output(b);
+  }
+  done();
+};
+
+var parser = new SimpleProtocol();
+source.pipe(parser)
+
+// Now parser is a readable stream that will emit &#39;header&#39;
+// with the parsed header data.</code></pre>
 <h2>Class: stream.PassThrough<span><a class="mark" href="#all_class_stream_passthrough" id="all_class_stream_passthrough">#</a></span></h2>
 <!--
 This is a trivial implementation of a `Transform` stream that simply
@@ -10785,7 +11005,22 @@ Synchronous version of `fs.read`. Returns the number of `bytesRead`.
 <p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。
 
 </p>
-<h2>fs.readFile(filename, [encoding], [callback])<span><a class="mark" href="#all_fs_readfile_filename_encoding_callback" id="all_fs_readfile_filename_encoding_callback">#</a></span></h2>
+<h2>fs.readFile(filename, [options], [callback])<span><a class="mark" href="#all_fs_readfile_filename_options_callback" id="all_fs_readfile_filename_options_callback">#</a></span></h2>
+<!--
+* `filename` {String}
+* `options` {Object}
+  * `encoding` {String | Null} default = `null`
+  * `flag` {String} default = `'r'`
+-->
+
+<ul>
+<li><code>filename</code> {String}</li>
+<li><code>options</code> {Object}<ul>
+<li><code>encoding</code> {String | Null} デフォルトは <code>null</code></li>
+<li><code>flag</code> {String} デフォルトは <code>&#39;r&#39;</code></li>
+</ul>
+</li>
+</ul>
 <!--
 Asynchronously reads the entire contents of a file. Example:
 -->
@@ -10812,7 +11047,7 @@ If no encoding is specified, then the raw buffer is returned.
 <p>エンコーディングが指定されなければ、生のバッファが渡されます。
 
 </p>
-<h2>fs.readFileSync(filename, [encoding])<span><a class="mark" href="#all_fs_readfilesync_filename_encoding" id="all_fs_readfilesync_filename_encoding">#</a></span></h2>
+<h2>fs.readFileSync(filename, [options])<span><a class="mark" href="#all_fs_readfilesync_filename_options" id="all_fs_readfilesync_filename_options">#</a></span></h2>
 <!--
 Synchronous version of `fs.readFile`. Returns the contents of the `filename`.
 -->
@@ -10821,25 +11056,51 @@ Synchronous version of `fs.readFile`. Returns the contents of the `filename`.
 
 </p>
 <!--
-If `encoding` is specified then this function returns a string. Otherwise it
-returns a buffer.
+If the `encoding` option is specified then this function returns a
+string. Otherwise it returns a buffer.
 -->
 
-<p><code>encoding</code> が指定されるとこの関数は文字列を返します。
+<p><code>encoding</code> オプションが指定されるとこの関数は文字列を返します。
 そうでなければバッファを返します。
 
+
 </p>
-<h2>fs.writeFile(filename, data, [encoding], [callback])<span><a class="mark" href="#all_fs_writefile_filename_data_encoding_callback" id="all_fs_writefile_filename_data_encoding_callback">#</a></span></h2>
+<h2>fs.writeFile(filename, data, [options], [callback])<span><a class="mark" href="#all_fs_writefile_filename_data_options_callback" id="all_fs_writefile_filename_data_options_callback">#</a></span></h2>
+<!--
+* `filename` {String}
+* `data` {String | Buffer}
+* `options` {Object}
+  * `encoding` {String | Null} default = `'utf8'`
+  * `mode` {Number} default = `438` (aka `0666` in Octal)
+  * `flag` {String} default = `'w'`
+-->
+
+<ul>
+<li><code>filename</code> {String}</li>
+<li><code>data</code> {String | Buffer}</li>
+<li><code>options</code> {Object}<ul>
+<li><code>encoding</code> {String | Null} デフォルトは <code>&#39;utf8&#39;</code></li>
+<li><code>mode</code> {Number} デフォルトは <code>438</code> (8進数の <code>0666</code>)</li>
+<li><code>flag</code> {String} デフォルトは <code>&#39;w&#39;</code></li>
+</ul>
+</li>
+</ul>
 <!--
 Asynchronously writes data to a file, replacing the file if it already exists.
-`data` can be a string or a buffer. The `encoding` argument is ignored if
-`data` is a buffer. It defaults to `'utf8'`.
+`data` can be a string or a buffer.
 -->
 
 <p>非同期にデータをファイルに書き込みます。
 ファイルが既に存在する場合は置き換えられます。
 <code>data</code> は文字列またはバッファです。
-<code>data</code> がバッファの場合、<code>encoding</code> は無視されます。
+
+</p>
+<!--
+The `encoding` option is ignored if `data` is a buffer. It defaults
+to `'utf8'`.
+-->
+
+<p><code>data</code> がバッファの場合、<code>encoding</code> オプションは無視されます。
 デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
@@ -10854,7 +11115,7 @@ Example:
   if (err) throw err;
   console.log(&#39;It\&#39;s saved!&#39;);
 });</code></pre>
-<h2>fs.writeFileSync(filename, data, [encoding])<span><a class="mark" href="#all_fs_writefilesync_filename_data_encoding" id="all_fs_writefilesync_filename_data_encoding">#</a></span></h2>
+<h2>fs.writeFileSync(filename, data, [options])<span><a class="mark" href="#all_fs_writefilesync_filename_data_options" id="all_fs_writefilesync_filename_data_options">#</a></span></h2>
 <!--
 The synchronous version of `fs.writeFile`.
 -->
@@ -10862,18 +11123,34 @@ The synchronous version of `fs.writeFile`.
 <p>同期版の <code>fs.writeFile</code>。
 
 </p>
-<h2>fs.appendFile(filename, data, encoding=&#39;utf8&#39;, [callback])<span><a class="mark" href="#all_fs_appendfile_filename_data_encoding_utf8_callback" id="all_fs_appendfile_filename_data_encoding_utf8_callback">#</a></span></h2>
+<h2>fs.appendFile(filename, data, [options], [callback])<span><a class="mark" href="#all_fs_appendfile_filename_data_options_callback" id="all_fs_appendfile_filename_data_options_callback">#</a></span></h2>
+<!--
+* `filename` {String}
+* `data` {String | Buffer}
+* `options` {Object}
+  * `encoding` {String | Null} default = `'utf8'`
+  * `mode` {Number} default = `438` (aka `0666` in Octal)
+  * `flag` {String} default = `'a'`
+-->
+
+<ul>
+<li><code>filename</code> {String}</li>
+<li><code>data</code> {String | Buffer}</li>
+<li><code>options</code> {Object}<ul>
+<li><code>encoding</code> {String | Null} デフォルトは <code>&#39;utf8&#39;</code></li>
+<li><code>mode</code> {Number} デフォルトは <code>438</code> (8進数の <code>0666</code>)</li>
+<li><code>flag</code> {String} デフォルトは <code>&#39;a&#39;</code></li>
+</ul>
+</li>
+</ul>
 <!--
 Asynchronously append data to a file, creating the file if it not yet exists.
-`data` can be a string or a buffer. The `encoding` argument is ignored if
-`data` is a buffer.
+`data` can be a string or a buffer.
 -->
 
 <p>非同期にデータをファイルに追加します。
 ファイルが存在しなければ作成されます。
 <code>data</code> は文字列またはバッファです。
-<code>data</code> がバッファの場合、<code>encoding</code> は無視されます。
-デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
 <!--
@@ -10887,7 +11164,7 @@ Example:
   if (err) throw err;
   console.log(&#39;The &quot;data to append&quot; was appended to file!&#39;);
 });</code></pre>
-<h2>fs.appendFileSync(filename, data, encoding=&#39;utf8&#39;)<span><a class="mark" href="#all_fs_appendfilesync_filename_data_encoding_utf8" id="all_fs_appendfilesync_filename_data_encoding_utf8">#</a></span></h2>
+<h2>fs.appendFileSync(filename, data, [options])<span><a class="mark" href="#all_fs_appendfilesync_filename_data_options" id="all_fs_appendfilesync_filename_data_options">#</a></span></h2>
 <!--
 The synchronous version of `fs.appendFile`.
 -->
@@ -17212,11 +17489,16 @@ Node provides a tri-directional `popen(3)` facility through the
 </p>
 <!--
 It is possible to stream data through a child's `stdin`, `stdout`, and
-`stderr` in a fully non-blocking way.
+`stderr` in a fully non-blocking way.  (Note that some programs use
+line-buffered I/O internally.  That doesn't affect node.js but it means
+data you send to the child process is not immediately consumed.)
 -->
 
 <p>これは完全にノンブロッキングな方法で子プロセスの <code>stdin</code>、<code>stdout</code>、
 そして <code>stderr</code> を通じたデータストリームを実現します。
+(いくつかのプログラムは内部的にバッファリングされた I/O を使うことに
+注意してください。それは node.js には影響しませんが、
+子プロセスに送ったデータがすぐに消費されるとは限らないことを意味します)。
 
 </p>
 <!--
@@ -20493,7 +20775,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -1146,18 +1146,51 @@
           ]
         },
         {
-          "textRaw": "fs.readFile(filename, [encoding], [callback])",
+          "textRaw": "fs.readFile(filename, [options], [callback])",
           "type": "method",
           "name": "readFile",
-          "desc": "<!--\nAsynchronously reads the entire contents of a file. Example:\n-->\n\n<p>ファイル全体の内容を非同期に読み込みます。例:\n\n</p>\n<pre><code>fs.readFile(&#39;/etc/passwd&#39;, function (err, data) {\n  if (err) throw err;\n  console.log(data);\n});</code></pre>\n<!--\nThe callback is passed two arguments `(err, data)`, where `data` is the\ncontents of the file.\n-->\n\n<p>コールバックは 2 つの引数が渡される <code>(err, data)</code> で、<code>data</code> はファイルの内容です。\n\n</p>\n<!--\nIf no encoding is specified, then the raw buffer is returned.\n-->\n\n<p>エンコーディングが指定されなければ、生のバッファが渡されます。\n\n</p>\n",
+          "* `filename` {String}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`null`\n  * `flag` {String} default = `'r'`",
           "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`filename` {String} ",
+                  "name": "filename",
+                  "type": "String"
+                },
+                {
+                  "textRaw": "`options` {Object} ",
+                  "options": [
+                    {
+                      "textRaw": "`encoding` {String | Null} デフォルトは `null` ",
+                      "name": "encoding",
+                      "type": "String | Null",
+                      "desc": "デフォルトは `null`"
+                    },
+                    {
+                      "textRaw": "`flag` {String} デフォルトは `'r'` ",
+                      "name": "flag",
+                      "type": "String",
+                      "desc": "デフォルトは `'r'`"
+                    }
+                  ],
+                  "name": "options",
+                  "type": "Object",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
             {
               "params": [
                 {
                   "name": "filename"
                 },
                 {
-                  "name": "encoding",
+                  "name": "options",
                   "optional": true
                 },
                 {
@@ -1166,13 +1199,14 @@
                 }
               ]
             }
-          ]
+          ],
+          "desc": "<!--\nAsynchronously reads the entire contents of a file. Example:\n-->\n\n<p>ファイル全体の内容を非同期に読み込みます。例:\n\n</p>\n<pre><code>fs.readFile(&#39;/etc/passwd&#39;, function (err, data) {\n  if (err) throw err;\n  console.log(data);\n});</code></pre>\n<!--\nThe callback is passed two arguments `(err, data)`, where `data` is the\ncontents of the file.\n-->\n\n<p>コールバックは 2 つの引数が渡される <code>(err, data)</code> で、<code>data</code> はファイルの内容です。\n\n</p>\n<!--\nIf no encoding is specified, then the raw buffer is returned.\n-->\n\n<p>エンコーディングが指定されなければ、生のバッファが渡されます。\n\n</p>\n"
         },
         {
-          "textRaw": "fs.readFileSync(filename, [encoding])",
+          "textRaw": "fs.readFileSync(filename, [options])",
           "type": "method",
           "name": "readFileSync",
-          "desc": "<!--\nSynchronous version of `fs.readFile`. Returns the contents of the `filename`.\n-->\n\n<p>同期版の <code>fs.readFile</code>。<code>filename</code> の内容を返します。\n\n</p>\n<!--\nIf `encoding` is specified then this function returns a string. Otherwise it\nreturns a buffer.\n-->\n\n<p><code>encoding</code> が指定されるとこの関数は文字列を返します。\nそうでなければバッファを返します。\n\n</p>\n",
+          "desc": "<!--\nSynchronous version of `fs.readFile`. Returns the contents of the `filename`.\n-->\n\n<p>同期版の <code>fs.readFile</code>。<code>filename</code> の内容を返します。\n\n</p>\n<!--\nIf the `encoding` option is specified then this function returns a\nstring. Otherwise it returns a buffer.\n-->\n\n<p><code>encoding</code> オプションが指定されるとこの関数は文字列を返します。\nそうでなければバッファを返します。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1180,7 +1214,7 @@
                   "name": "filename"
                 },
                 {
-                  "name": "encoding",
+                  "name": "options",
                   "optional": true
                 }
               ]
@@ -1188,11 +1222,55 @@
           ]
         },
         {
-          "textRaw": "fs.writeFile(filename, data, [encoding], [callback])",
+          "textRaw": "fs.writeFile(filename, data, [options], [callback])",
           "type": "method",
           "name": "writeFile",
-          "desc": "<!--\nAsynchronously writes data to a file, replacing the file if it already exists.\n`data` can be a string or a buffer. The `encoding` argument is ignored if\n`data` is a buffer. It defaults to `'utf8'`.\n-->\n\n<p>非同期にデータをファイルに書き込みます。\nファイルが既に存在する場合は置き換えられます。\n<code>data</code> は文字列またはバッファです。\n<code>data</code> がバッファの場合、<code>encoding</code> は無視されます。\nデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>fs.writeFile(&#39;message.txt&#39;, &#39;Hello Node&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;It\\&#39;s saved!&#39;);\n});</code></pre>\n",
+          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'w'`",
           "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`filename` {String} ",
+                  "name": "filename",
+                  "type": "String"
+                },
+                {
+                  "textRaw": "`data` {String | Buffer} ",
+                  "name": "data",
+                  "type": "String | Buffer"
+                },
+                {
+                  "textRaw": "`options` {Object} ",
+                  "options": [
+                    {
+                      "textRaw": "`encoding` {String | Null} デフォルトは `'utf8'` ",
+                      "name": "encoding",
+                      "type": "String | Null",
+                      "desc": "デフォルトは `'utf8'`"
+                    },
+                    {
+                      "textRaw": "`mode` {Number} デフォルトは `438` (8進数の `0666`) ",
+                      "name": "mode",
+                      "type": "Number",
+                      "desc": "デフォルトは `438` (8進数の `0666`)"
+                    },
+                    {
+                      "textRaw": "`flag` {String} デフォルトは `'w'` ",
+                      "name": "flag",
+                      "type": "String",
+                      "desc": "デフォルトは `'w'`"
+                    }
+                  ],
+                  "name": "options",
+                  "type": "Object",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
             {
               "params": [
                 {
@@ -1202,7 +1280,7 @@
                   "name": "data"
                 },
                 {
-                  "name": "encoding",
+                  "name": "options",
                   "optional": true
                 },
                 {
@@ -1211,10 +1289,11 @@
                 }
               ]
             }
-          ]
+          ],
+          "desc": "<!--\nAsynchronously writes data to a file, replacing the file if it already exists.\n`data` can be a string or a buffer.\n-->\n\n<p>非同期にデータをファイルに書き込みます。\nファイルが既に存在する場合は置き換えられます。\n<code>data</code> は文字列またはバッファです。\n\n</p>\n<!--\nThe `encoding` option is ignored if `data` is a buffer. It defaults\nto `'utf8'`.\n-->\n\n<p><code>data</code> がバッファの場合、<code>encoding</code> オプションは無視されます。\nデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>fs.writeFile(&#39;message.txt&#39;, &#39;Hello Node&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;It\\&#39;s saved!&#39;);\n});</code></pre>\n"
         },
         {
-          "textRaw": "fs.writeFileSync(filename, data, [encoding])",
+          "textRaw": "fs.writeFileSync(filename, data, [options])",
           "type": "method",
           "name": "writeFileSync",
           "desc": "<!--\nThe synchronous version of `fs.writeFile`.\n-->\n\n<p>同期版の <code>fs.writeFile</code>。\n\n</p>\n",
@@ -1228,7 +1307,7 @@
                   "name": "data"
                 },
                 {
-                  "name": "encoding",
+                  "name": "options",
                   "optional": true
                 }
               ]
@@ -1236,11 +1315,55 @@
           ]
         },
         {
-          "textRaw": "fs.appendFile(filename, data, encoding='utf8', [callback])",
+          "textRaw": "fs.appendFile(filename, data, [options], [callback])",
           "type": "method",
           "name": "appendFile",
-          "desc": "<!--\nAsynchronously append data to a file, creating the file if it not yet exists.\n`data` can be a string or a buffer. The `encoding` argument is ignored if\n`data` is a buffer.\n-->\n\n<p>非同期にデータをファイルに追加します。\nファイルが存在しなければ作成されます。\n<code>data</code> は文字列またはバッファです。\n<code>data</code> がバッファの場合、<code>encoding</code> は無視されます。\nデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>fs.appendFile(&#39;message.txt&#39;, &#39;data to append&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;The &quot;data to append&quot; was appended to file!&#39;);\n});</code></pre>\n",
+          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'a'`",
           "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`filename` {String} ",
+                  "name": "filename",
+                  "type": "String"
+                },
+                {
+                  "textRaw": "`data` {String | Buffer} ",
+                  "name": "data",
+                  "type": "String | Buffer"
+                },
+                {
+                  "textRaw": "`options` {Object} ",
+                  "options": [
+                    {
+                      "textRaw": "`encoding` {String | Null} デフォルトは `'utf8'` ",
+                      "name": "encoding",
+                      "type": "String | Null",
+                      "desc": "デフォルトは `'utf8'`"
+                    },
+                    {
+                      "textRaw": "`mode` {Number} デフォルトは `438` (8進数の `0666`) ",
+                      "name": "mode",
+                      "type": "Number",
+                      "desc": "デフォルトは `438` (8進数の `0666`)"
+                    },
+                    {
+                      "textRaw": "`flag` {String} デフォルトは `'a'` ",
+                      "name": "flag",
+                      "type": "String",
+                      "desc": "デフォルトは `'a'`"
+                    }
+                  ],
+                  "name": "options",
+                  "type": "Object",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
             {
               "params": [
                 {
@@ -1250,8 +1373,8 @@
                   "name": "data"
                 },
                 {
-                  "name": "encoding",
-                  "default": "'utf8'"
+                  "name": "options",
+                  "optional": true
                 },
                 {
                   "name": "callback",
@@ -1259,10 +1382,11 @@
                 }
               ]
             }
-          ]
+          ],
+          "desc": "<!--\nAsynchronously append data to a file, creating the file if it not yet exists.\n`data` can be a string or a buffer.\n-->\n\n<p>非同期にデータをファイルに追加します。\nファイルが存在しなければ作成されます。\n<code>data</code> は文字列またはバッファです。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>fs.appendFile(&#39;message.txt&#39;, &#39;data to append&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;The &quot;data to append&quot; was appended to file!&#39;);\n});</code></pre>\n"
         },
         {
-          "textRaw": "fs.appendFileSync(filename, data, encoding='utf8')",
+          "textRaw": "fs.appendFileSync(filename, data, [options])",
           "type": "method",
           "name": "appendFileSync",
           "desc": "<!--\nThe synchronous version of `fs.appendFile`.\n-->\n\n<p>同期版の <code>fs.appendFile</code>。\n\n</p>\n",
@@ -1276,8 +1400,8 @@
                   "name": "data"
                 },
                 {
-                  "name": "encoding",
-                  "default": "'utf8'"
+                  "name": "options",
+                  "optional": true
                 }
               ]
             }
