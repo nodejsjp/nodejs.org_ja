@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.9.10 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.9.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -110,12 +110,12 @@
 <li><a href="#fs_fs_writesync_fd_buffer_offset_length_position">fs.writeSync(fd, buffer, offset, length, position)</a></li>
 <li><a href="#fs_fs_read_fd_buffer_offset_length_position_callback">fs.read(fd, buffer, offset, length, position, [callback])</a></li>
 <li><a href="#fs_fs_readsync_fd_buffer_offset_length_position">fs.readSync(fd, buffer, offset, length, position)</a></li>
-<li><a href="#fs_fs_readfile_filename_encoding_callback">fs.readFile(filename, [encoding], [callback])</a></li>
-<li><a href="#fs_fs_readfilesync_filename_encoding">fs.readFileSync(filename, [encoding])</a></li>
-<li><a href="#fs_fs_writefile_filename_data_encoding_callback">fs.writeFile(filename, data, [encoding], [callback])</a></li>
-<li><a href="#fs_fs_writefilesync_filename_data_encoding">fs.writeFileSync(filename, data, [encoding])</a></li>
-<li><a href="#fs_fs_appendfile_filename_data_encoding_utf8_callback">fs.appendFile(filename, data, encoding=&#39;utf8&#39;, [callback])</a></li>
-<li><a href="#fs_fs_appendfilesync_filename_data_encoding_utf8">fs.appendFileSync(filename, data, encoding=&#39;utf8&#39;)</a></li>
+<li><a href="#fs_fs_readfile_filename_options_callback">fs.readFile(filename, [options], [callback])</a></li>
+<li><a href="#fs_fs_readfilesync_filename_options">fs.readFileSync(filename, [options])</a></li>
+<li><a href="#fs_fs_writefile_filename_data_options_callback">fs.writeFile(filename, data, [options], [callback])</a></li>
+<li><a href="#fs_fs_writefilesync_filename_data_options">fs.writeFileSync(filename, data, [options])</a></li>
+<li><a href="#fs_fs_appendfile_filename_data_options_callback">fs.appendFile(filename, data, [options], [callback])</a></li>
+<li><a href="#fs_fs_appendfilesync_filename_data_options">fs.appendFileSync(filename, data, [options])</a></li>
 <li><a href="#fs_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
 <li><a href="#fs_fs_unwatchfile_filename_listener">fs.unwatchFile(filename, [listener])</a></li>
 <li><a href="#fs_fs_watch_filename_options_listener">fs.watch(filename, [options], [listener])</a><ul>
@@ -972,7 +972,22 @@ Synchronous version of `fs.read`. Returns the number of `bytesRead`.
 <p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。
 
 </p>
-<h2>fs.readFile(filename, [encoding], [callback])<span><a class="mark" href="#fs_fs_readfile_filename_encoding_callback" id="fs_fs_readfile_filename_encoding_callback">#</a></span></h2>
+<h2>fs.readFile(filename, [options], [callback])<span><a class="mark" href="#fs_fs_readfile_filename_options_callback" id="fs_fs_readfile_filename_options_callback">#</a></span></h2>
+<!--
+* `filename` {String}
+* `options` {Object}
+  * `encoding` {String | Null} default = `null`
+  * `flag` {String} default = `'r'`
+-->
+
+<ul>
+<li><code>filename</code> {String}</li>
+<li><code>options</code> {Object}<ul>
+<li><code>encoding</code> {String | Null} デフォルトは <code>null</code></li>
+<li><code>flag</code> {String} デフォルトは <code>&#39;r&#39;</code></li>
+</ul>
+</li>
+</ul>
 <!--
 Asynchronously reads the entire contents of a file. Example:
 -->
@@ -999,7 +1014,7 @@ If no encoding is specified, then the raw buffer is returned.
 <p>エンコーディングが指定されなければ、生のバッファが渡されます。
 
 </p>
-<h2>fs.readFileSync(filename, [encoding])<span><a class="mark" href="#fs_fs_readfilesync_filename_encoding" id="fs_fs_readfilesync_filename_encoding">#</a></span></h2>
+<h2>fs.readFileSync(filename, [options])<span><a class="mark" href="#fs_fs_readfilesync_filename_options" id="fs_fs_readfilesync_filename_options">#</a></span></h2>
 <!--
 Synchronous version of `fs.readFile`. Returns the contents of the `filename`.
 -->
@@ -1008,25 +1023,51 @@ Synchronous version of `fs.readFile`. Returns the contents of the `filename`.
 
 </p>
 <!--
-If `encoding` is specified then this function returns a string. Otherwise it
-returns a buffer.
+If the `encoding` option is specified then this function returns a
+string. Otherwise it returns a buffer.
 -->
 
-<p><code>encoding</code> が指定されるとこの関数は文字列を返します。
+<p><code>encoding</code> オプションが指定されるとこの関数は文字列を返します。
 そうでなければバッファを返します。
 
+
 </p>
-<h2>fs.writeFile(filename, data, [encoding], [callback])<span><a class="mark" href="#fs_fs_writefile_filename_data_encoding_callback" id="fs_fs_writefile_filename_data_encoding_callback">#</a></span></h2>
+<h2>fs.writeFile(filename, data, [options], [callback])<span><a class="mark" href="#fs_fs_writefile_filename_data_options_callback" id="fs_fs_writefile_filename_data_options_callback">#</a></span></h2>
+<!--
+* `filename` {String}
+* `data` {String | Buffer}
+* `options` {Object}
+  * `encoding` {String | Null} default = `'utf8'`
+  * `mode` {Number} default = `438` (aka `0666` in Octal)
+  * `flag` {String} default = `'w'`
+-->
+
+<ul>
+<li><code>filename</code> {String}</li>
+<li><code>data</code> {String | Buffer}</li>
+<li><code>options</code> {Object}<ul>
+<li><code>encoding</code> {String | Null} デフォルトは <code>&#39;utf8&#39;</code></li>
+<li><code>mode</code> {Number} デフォルトは <code>438</code> (8進数の <code>0666</code>)</li>
+<li><code>flag</code> {String} デフォルトは <code>&#39;w&#39;</code></li>
+</ul>
+</li>
+</ul>
 <!--
 Asynchronously writes data to a file, replacing the file if it already exists.
-`data` can be a string or a buffer. The `encoding` argument is ignored if
-`data` is a buffer. It defaults to `'utf8'`.
+`data` can be a string or a buffer.
 -->
 
 <p>非同期にデータをファイルに書き込みます。
 ファイルが既に存在する場合は置き換えられます。
 <code>data</code> は文字列またはバッファです。
-<code>data</code> がバッファの場合、<code>encoding</code> は無視されます。
+
+</p>
+<!--
+The `encoding` option is ignored if `data` is a buffer. It defaults
+to `'utf8'`.
+-->
+
+<p><code>data</code> がバッファの場合、<code>encoding</code> オプションは無視されます。
 デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
@@ -1041,7 +1082,7 @@ Example:
   if (err) throw err;
   console.log(&#39;It\&#39;s saved!&#39;);
 });</code></pre>
-<h2>fs.writeFileSync(filename, data, [encoding])<span><a class="mark" href="#fs_fs_writefilesync_filename_data_encoding" id="fs_fs_writefilesync_filename_data_encoding">#</a></span></h2>
+<h2>fs.writeFileSync(filename, data, [options])<span><a class="mark" href="#fs_fs_writefilesync_filename_data_options" id="fs_fs_writefilesync_filename_data_options">#</a></span></h2>
 <!--
 The synchronous version of `fs.writeFile`.
 -->
@@ -1049,18 +1090,34 @@ The synchronous version of `fs.writeFile`.
 <p>同期版の <code>fs.writeFile</code>。
 
 </p>
-<h2>fs.appendFile(filename, data, encoding=&#39;utf8&#39;, [callback])<span><a class="mark" href="#fs_fs_appendfile_filename_data_encoding_utf8_callback" id="fs_fs_appendfile_filename_data_encoding_utf8_callback">#</a></span></h2>
+<h2>fs.appendFile(filename, data, [options], [callback])<span><a class="mark" href="#fs_fs_appendfile_filename_data_options_callback" id="fs_fs_appendfile_filename_data_options_callback">#</a></span></h2>
+<!--
+* `filename` {String}
+* `data` {String | Buffer}
+* `options` {Object}
+  * `encoding` {String | Null} default = `'utf8'`
+  * `mode` {Number} default = `438` (aka `0666` in Octal)
+  * `flag` {String} default = `'a'`
+-->
+
+<ul>
+<li><code>filename</code> {String}</li>
+<li><code>data</code> {String | Buffer}</li>
+<li><code>options</code> {Object}<ul>
+<li><code>encoding</code> {String | Null} デフォルトは <code>&#39;utf8&#39;</code></li>
+<li><code>mode</code> {Number} デフォルトは <code>438</code> (8進数の <code>0666</code>)</li>
+<li><code>flag</code> {String} デフォルトは <code>&#39;a&#39;</code></li>
+</ul>
+</li>
+</ul>
 <!--
 Asynchronously append data to a file, creating the file if it not yet exists.
-`data` can be a string or a buffer. The `encoding` argument is ignored if
-`data` is a buffer.
+`data` can be a string or a buffer.
 -->
 
 <p>非同期にデータをファイルに追加します。
 ファイルが存在しなければ作成されます。
 <code>data</code> は文字列またはバッファです。
-<code>data</code> がバッファの場合、<code>encoding</code> は無視されます。
-デフォルトは <code>&#39;utf8&#39;</code> です。
 
 </p>
 <!--
@@ -1074,7 +1131,7 @@ Example:
   if (err) throw err;
   console.log(&#39;The &quot;data to append&quot; was appended to file!&#39;);
 });</code></pre>
-<h2>fs.appendFileSync(filename, data, encoding=&#39;utf8&#39;)<span><a class="mark" href="#fs_fs_appendfilesync_filename_data_encoding_utf8" id="fs_fs_appendfilesync_filename_data_encoding_utf8">#</a></span></h2>
+<h2>fs.appendFileSync(filename, data, [options])<span><a class="mark" href="#fs_fs_appendfilesync_filename_data_options" id="fs_fs_appendfilesync_filename_data_options">#</a></span></h2>
 <!--
 The synchronous version of `fs.appendFile`.
 -->
@@ -1580,7 +1637,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
