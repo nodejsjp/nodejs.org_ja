@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.9.11 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.9.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -72,12 +72,15 @@
 <li><a href="#http_server_listen_handle_callback">server.listen(handle, [callback])</a></li>
 <li><a href="#http_server_close_callback">server.close([callback])</a></li>
 <li><a href="#http_server_maxheaderscount">server.maxHeadersCount</a></li>
+<li><a href="#http_server_settimeout_msecs_callback">server.setTimeout(msecs, callback)</a></li>
+<li><a href="#http_server_timeout">server.timeout</a></li>
 </ul>
 </li>
 <li><a href="#http_class_http_serverresponse">Class: http.ServerResponse</a><ul>
 <li><a href="#http_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#http_response_writecontinue">response.writeContinue()</a></li>
 <li><a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li>
+<li><a href="#http_response_settimeout_msecs_callback">response.setTimeout(msecs, callback)</a></li>
 <li><a href="#http_response_statuscode">response.statusCode</a></li>
 <li><a href="#http_response_setheader_name_value">response.setHeader(name, value)</a></li>
 <li><a href="#http_response_headerssent">response.headersSent</a></li>
@@ -119,6 +122,7 @@
 <li><a href="#http_message_httpversion">message.httpVersion</a></li>
 <li><a href="#http_message_headers">message.headers</a></li>
 <li><a href="#http_message_trailers">message.trailers</a></li>
+<li><a href="#http_message_settimeout_msecs_callback">message.setTimeout(msecs, callback)</a></li>
 <li><a href="#http_message_setencoding_encoding">message.setEncoding([encoding])</a></li>
 <li><a href="#http_message_pause">message.pause()</a></li>
 <li><a href="#http_message_resume">message.resume()</a></li>
@@ -543,7 +547,79 @@ no limit will be applied.
 <p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。
 0 に設定されると、制限しないことになります。
 
+</p>
+<h3>server.setTimeout(msecs, callback)<span><a class="mark" href="#http_server_settimeout_msecs_callback" id="http_server_settimeout_msecs_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>msecs</code> <span class="type">Number</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Sets the timeout value for sockets, and emits a `'timeout'` event on
+the Server object, passing the socket as an argument, if a timeout
+occurs.
+-->
 
+<p>ソケットにタイムアウト値を設定し、サーバオブジェクト上で <code>&#39;timeout&#39;</code>
+イベントを生成します。
+タイムアウトが発生すると、ソケットが引数として渡されます。
+
+</p>
+<!--
+If there is a `'timeout'` event listener on the Server object, then it
+will be called with the timed-out socket as an argument.
+-->
+
+<p>サーバオブジェクトに <code>&#39;timeout&#39;</code> イベントのリスナが存在すると、
+それはタイムアウトしたソケットを引数として呼び出されます。
+
+</p>
+<!--
+By default, the Server's timeout value is 2 minutes, and sockets are
+destroyed automatically if they time out.  However, if you assign a
+callback to the Server's `'timeout'` event, then you are responsible
+for handling socket timeouts.
+-->
+
+<p>デフォルトでは、サーバのタイムアウト値は 2 分で、
+タイムアウトしたソケットは自動的に破棄されます。
+しかしながら、<code>&#39;timeout&#39;</code> イベントのコールバックをサーバに割り当てた場合、
+タイムアウトしたソケットのハンドリングはあなたの責務となります。
+
+</p>
+<h3>server.timeout<span><a class="mark" href="#http_server_timeout" id="http_server_timeout">#</a></span></h3>
+<!--
+* {Number} Default = 120000 (2 minutes)
+-->
+
+<ul>
+<li>{Number} デフォルト = 120000 (2 分)</li>
+</ul>
+<!--
+The number of milliseconds of inactivity before a socket is presumed
+to have timed out.
+-->
+
+<p>不活性なソケットがタイムアウトしたと推定されるまでのミリ秒を表す数値。
+
+</p>
+<!--
+Note that the socket timeout logic is set up on connection, so
+changing this value only affects *new* connections to the server, not
+any existing connections.
+-->
+
+<p>ソケットのタイムアウト処理は接続のセットアップ時に行われるため、
+この値の変更は既存の接続ではなく、サーバへの <em>新しい</em> 接続にだけ
+影響することに注意してください。
+
+</p>
+<!--
+Set to 0 to disable any kind of automatic timeout behavior on incoming
+connections.
+-->
+
+<p>0 を設定すると、到着する接続に対する自動的なタイムアウトの振る舞いは
+無効になります。
 
 </p>
 <h2>Class: http.ServerResponse<span><a class="mark" href="#http_class_http_serverresponse" id="http_class_http_serverresponse">#</a></span></h2>
@@ -641,6 +717,36 @@ which has been transmitted are equal or not.
 もしボディがより上位にコード化された文字を含む場合は、
 指定したエンコーディングによるバイト数を得るために <code>Buffer.byteLength()</code> を使うべきです。
 Node は、Content-Length と実際に送信されたレスポンスボディの長さが等しいかどうかチェックしません。
+
+</p>
+<h3>response.setTimeout(msecs, callback)<span><a class="mark" href="#http_response_settimeout_msecs_callback" id="http_response_settimeout_msecs_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>msecs</code> <span class="type">Number</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Sets the Socket's timeout value to `msecs`.  If a callback is
+provided, then it is added as a listener on the `'timeout'` event on
+the response object.
+-->
+
+<p>ソケットのタイムアウト値を <code>msec</code> に設定します。
+コールバックが与えられると、それはレスポンスオブジェクトの <code>&#39;timeout&#39;</code>
+イベントのリスナとして加えられます。
+
+</p>
+<!--
+If no `'timeout'` listener is added to the request, the response, or
+the server, then sockets are destroyed when they time out.  If you
+assign a handler on the request, the response, or the server's
+`'timeout'` events, then it is your responsibility to handle timed out
+sockets.
+-->
+
+<p>リクエスト、レスポンス、そしてサーバのいずれにも <code>&#39;timeout&#39;</code>
+リスナが存在しない場合、タイムアウトしたソケットは破棄されます。
+もしリクエスト、レスポンス、サーバのいずれかに <code>&#39;timeout&#39;</code> イベントを
+設定した場合、タイムアウトしたソケットのハンドリングはあなたの責務となります。
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#http_response_statuscode" id="http_response_statuscode">#</a></span></h3>
@@ -1633,14 +1739,6 @@ event for more information.
 [http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
 
 </p>
-<!--
-Note: `'close'` can fire after `'end'`, but not vice versa.
--->
-
-<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。
-その逆もあります。
-
-</p>
 <h3>message.httpVersion<span><a class="mark" href="#http_message_httpversion" id="http_message_httpversion">#</a></span></h3>
 <!--
 In case of server request, the HTTP version sent by the client. In the case of
@@ -1693,6 +1791,18 @@ The request/response trailers object. Only populated after the 'end' event.
 
 <p>リクエスト／レスポンスのトレーラオブジェクトです。
 <code>&#39;end&#39;</code> イベントの後にだけ発生します。
+
+</p>
+<h3>message.setTimeout(msecs, callback)<span><a class="mark" href="#http_message_settimeout_msecs_callback" id="http_message_settimeout_msecs_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>msecs</code> <span class="type">Number</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Calls `message.connection.setTimeout(msecs, callback)`.
+-->
+
+<p><code>message.connection.setTimeout(msecs, callback)</code> を呼びます。
 
 </p>
 <h3>message.setEncoding([encoding])<span><a class="mark" href="#http_message_setencoding_encoding" id="http_message_setencoding_encoding">#</a></span></h3>
@@ -1867,7 +1977,7 @@ authentication details.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

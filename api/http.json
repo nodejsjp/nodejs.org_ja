@@ -42,7 +42,7 @@
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。\nその逆もあります。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n",
               "params": []
             }
           ],
@@ -84,6 +84,38 @@
             }
           ],
           "methods": [
+            {
+              "textRaw": "message.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`msecs` {Number} ",
+                      "name": "msecs",
+                      "type": "Number"
+                    },
+                    {
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
+                      "type": "Function"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nCalls `message.connection.setTimeout(msecs, callback)`.\n-->\n\n<p><code>message.connection.setTimeout(msecs, callback)</code> を呼びます。\n\n</p>\n"
+            },
             {
               "textRaw": "message.setEncoding([encoding])",
               "type": "method",
@@ -352,13 +384,52 @@
                   ]
                 }
               ]
+            },
+            {
+              "textRaw": "server.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`msecs` {Number} ",
+                      "name": "msecs",
+                      "type": "Number"
+                    },
+                    {
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
+                      "type": "Function"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nSets the timeout value for sockets, and emits a `'timeout'` event on\nthe Server object, passing the socket as an argument, if a timeout\noccurs.\n-->\n\n<p>ソケットにタイムアウト値を設定し、サーバオブジェクト上で <code>&#39;timeout&#39;</code>\nイベントを生成します。\nタイムアウトが発生すると、ソケットが引数として渡されます。\n\n</p>\n<!--\nIf there is a `'timeout'` event listener on the Server object, then it\nwill be called with the timed-out socket as an argument.\n-->\n\n<p>サーバオブジェクトに <code>&#39;timeout&#39;</code> イベントのリスナが存在すると、\nそれはタイムアウトしたソケットを引数として呼び出されます。\n\n</p>\n<!--\nBy default, the Server's timeout value is 2 minutes, and sockets are\ndestroyed automatically if they time out.  However, if you assign a\ncallback to the Server's `'timeout'` event, then you are responsible\nfor handling socket timeouts.\n-->\n\n<p>デフォルトでは、サーバのタイムアウト値は 2 分で、\nタイムアウトしたソケットは自動的に破棄されます。\nしかしながら、<code>&#39;timeout&#39;</code> イベントのコールバックをサーバに割り当てた場合、\nタイムアウトしたソケットのハンドリングはあなたの責務となります。\n\n</p>\n"
             }
           ],
           "properties": [
             {
               "textRaw": "server.maxHeadersCount",
               "name": "maxHeadersCount",
-              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n\n\n</p>\n"
+              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n</p>\n"
+            },
+            {
+              "textRaw": "`timeout` {Number} デフォルト = 120000 (2 分) ",
+              "name": "timeout",
+              "* {Number} Default": "120000 (2 minutes)",
+              "desc": "<!--\nThe number of milliseconds of inactivity before a socket is presumed\nto have timed out.\n-->\n\n<p>不活性なソケットがタイムアウトしたと推定されるまでのミリ秒を表す数値。\n\n</p>\n<!--\nNote that the socket timeout logic is set up on connection, so\nchanging this value only affects *new* connections to the server, not\nany existing connections.\n-->\n\n<p>ソケットのタイムアウト処理は接続のセットアップ時に行われるため、\nこの値の変更は既存の接続ではなく、サーバへの <em>新しい</em> 接続にだけ\n影響することに注意してください。\n\n</p>\n<!--\nSet to 0 to disable any kind of automatic timeout behavior on incoming\nconnections.\n-->\n\n<p>0 を設定すると、到着する接続に対する自動的なタイムアウトの振る舞いは\n無効になります。\n\n</p>\n",
+              "shortDesc": "デフォルト = 120000 (2 分)"
             }
           ]
         },
@@ -410,6 +481,38 @@
                   ]
                 }
               ]
+            },
+            {
+              "textRaw": "response.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`msecs` {Number} ",
+                      "name": "msecs",
+                      "type": "Number"
+                    },
+                    {
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
+                      "type": "Function"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nSets the Socket's timeout value to `msecs`.  If a callback is\nprovided, then it is added as a listener on the `'timeout'` event on\nthe response object.\n-->\n\n<p>ソケットのタイムアウト値を <code>msec</code> に設定します。\nコールバックが与えられると、それはレスポンスオブジェクトの <code>&#39;timeout&#39;</code>\nイベントのリスナとして加えられます。\n\n</p>\n<!--\nIf no `'timeout'` listener is added to the request, the response, or\nthe server, then sockets are destroyed when they time out.  If you\nassign a handler on the request, the response, or the server's\n`'timeout'` events, then it is your responsibility to handle timed out\nsockets.\n-->\n\n<p>リクエスト、レスポンス、そしてサーバのいずれにも <code>&#39;timeout&#39;</code>\nリスナが存在しない場合、タイムアウトしたソケットは破棄されます。\nもしリクエスト、レスポンス、サーバのいずれかに <code>&#39;timeout&#39;</code> イベントを\n設定した場合、タイムアウトしたソケットのハンドリングはあなたの責務となります。\n\n</p>\n"
             },
             {
               "textRaw": "response.setHeader(name, value)",

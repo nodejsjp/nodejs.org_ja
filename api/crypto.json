@@ -288,7 +288,26 @@
           "textRaw": "crypto.randomBytes(size, [callback])",
           "type": "method",
           "name": "randomBytes",
-          "desc": "<!--\nGenerates cryptographically strong pseudo-random data. Usage:\n-->\n\n<p>暗号学的に強い疑似乱数データを生成します。使用法:\n\n</p>\n<pre><code>// async\ncrypto.randomBytes(256, function(ex, buf) {\n  if (ex) throw ex;\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n});\n\n// sync\ntry {\n  var buf = crypto.randomBytes(256);\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n} catch (ex) {\n  // handle error\n}</code></pre>\n",
+          "desc": "<!--\nGenerates cryptographically strong pseudo-random data. Usage:\n-->\n\n<p>暗号学的で、強い疑似乱数データを生成します。使用法:\n\n</p>\n<pre><code>// async\ncrypto.randomBytes(256, function(ex, buf) {\n  if (ex) throw ex;\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n});\n\n// sync\ntry {\n  var buf = crypto.randomBytes(256);\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n} catch (ex) {\n  // handle error\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "size"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.pseudoRandomBytes(size, [callback])",
+          "type": "method",
+          "name": "pseudoRandomBytes",
+          "desc": "<!--\nGenerates *non*-cryptographically strong pseudo-random data. The data\nreturned will be unique if it is sufficiently long, but is not\nnecessarily unpredictable. For this reason, the output of this\nfunction should never be used where unpredictability is important,\nsuch as in the generation of encryption keys.\n-->\n\n<p>暗号学的では <em>ない</em>、強い疑似乱数データを生成します。\n返されるデータは十分に長ければユニークですが、\n必ずしも予測不可能ではありません。\nこの理由のため、この関数の出力を暗号化キーの生成など、予測不可能であることが\n重要なところでは決して使用しないでください。\n\n</p>\n<!--\nUsage is otherwise identical to `crypto.randomBytes`.\n-->\n\n<p>他の使い方は <code>crypto.randomBytes</code> と同じです。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -391,7 +410,7 @@
           "textRaw": "Class: Cipher",
           "type": "class",
           "name": "Cipher",
-          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n<!--\nCipher objects are [streams](stream.html) that are both readable and\nwritable.  The written plain text data is used to produce the\nencrypted data on the the readable side.  The legacy `update` and\n`final` methods are also supported.\n-->\n\n<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
+          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n<!--\nCipher objects are [streams](stream.html) that are both readable and\nwritable.  The written plain text data is used to produce the\nencrypted data on the readable side.  The legacy `update` and `final`\nmethods are also supported.\n-->\n\n<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "cipher.update(data, [input_encoding], [output_encoding])",
