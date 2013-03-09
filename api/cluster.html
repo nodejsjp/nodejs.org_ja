@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Cluster Node.js v0.9.11 Manual &amp; Documentation</title>
+  <title>Cluster Node.js v0.9.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/cluster.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -76,7 +76,7 @@
 <li><a href="#cluster_worker_process">worker.process</a></li>
 <li><a href="#cluster_worker_suicide">worker.suicide</a></li>
 <li><a href="#cluster_worker_send_message_sendhandle">worker.send(message, [sendHandle])</a></li>
-<li><a href="#cluster_worker_destroy">worker.destroy()</a></li>
+<li><a href="#cluster_worker_kill_signal_sigterm">worker.kill([signal=&#39;SIGTERM&#39;])</a></li>
 <li><a href="#cluster_worker_disconnect">worker.disconnect()</a></li>
 <li><a href="#cluster_event_message">Event: &#39;message&#39;</a></li>
 <li><a href="#cluster_event_online_1">Event: &#39;online&#39;</a></li>
@@ -422,12 +422,13 @@ on more than one address.
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
 <!--
-When a workers IPC channel has disconnected this event is emitted. This will happen
-when the worker dies, usually after calling `.destroy()`.
+When a workers IPC channel has disconnected this event is emitted.
+This will happen when the worker dies, usually after calling
+`.kill()`.
 -->
 
 <p>ワーカの IPC チャネルが切断された場合に生成されます。
-それはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。
+それはワーカが終了した場合や、<code>.kill()</code> を呼び出した後に発生します。
 
 </p>
 <!--
@@ -691,12 +692,13 @@ See: [Child Process module](child_process.html)
 <li><span class="type">Boolean</span></li>
 </div></ul>
 <!--
-This property is a boolean. It is set when a worker dies after calling `.destroy()`
-or immediately after calling the `.disconnect()` method. Until then it is `undefined`.
+This property is a boolean. It is set when a worker dies after calling
+`.kill()` or immediately after calling the `.disconnect()` method.
+Until then it is `undefined`.
 -->
 
 <p>このプロパティは論理値型です。
-これはワーカが <code>.destroy()</code> を呼び出して終了するか、
+これはワーカが <code>.kill()</code> を呼び出して終了するか、
 <code>.disconnect()</code> メソッドを呼び出した後に設定されます。
 それまでは <code>undefined</code> です。
 
@@ -734,7 +736,15 @@ This example will echo back all messages from the master:
     process.send(msg);
   });
 }</code></pre>
-<h3>worker.destroy()<span><a class="mark" href="#cluster_worker_destroy" id="cluster_worker_destroy">#</a></span></h3>
+<h3>worker.kill([signal=&#39;SIGTERM&#39;])<span><a class="mark" href="#cluster_worker_kill_signal_sigterm" id="cluster_worker_kill_signal_sigterm">#</a></span></h3>
+<!--
+* `signal` {String} Name of the kill signal to send to the worker
+  process.
+-->
+
+<ul>
+<li><code>signal</code> {String} ワーカプロセスに送られるシグナルの名前です。</li>
+</ul>
 <!--
 This function will kill the worker, and inform the master to not spawn a
 new worker.  The boolean `suicide` lets you distinguish between voluntary
@@ -751,8 +761,16 @@ boolean の <code>suicide</code> により、自発的かアクシデントに�
   }
 });
 
-// destroy worker
-worker.destroy();</code></pre>
+// kill worker
+worker.kill();</code></pre>
+<!--
+This method is aliased as `worker.destroy()` for backwards
+compatibility.
+-->
+
+<p>後方互換性のため、このメソッドには <code>worker.destroy()</code> という別名があります。
+
+</p>
 <h3>worker.disconnect()<span><a class="mark" href="#cluster_worker_disconnect" id="cluster_worker_disconnect">#</a></span></h3>
 <!--
 When calling this function the worker will no longer accept new connections, but
@@ -775,14 +793,14 @@ IPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベ�
 <!--
 Because there might be long living connections, it is useful to implement a timeout.
 This example ask the worker to disconnect and after 2 seconds it will destroy the
-server. An alternative would be to execute `worker.destroy()` after 2 seconds, but
+server. An alternative would be to execute `worker.kill()` after 2 seconds, but
 that would normally not allow the worker to do any cleanup if needed.
 -->
 
 <p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために
 有益です。
 この例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。
-他の方法として <code>worker.destroy()</code> を呼び出してから
+他の方法として <code>worker.kill()</code> を呼び出してから
 2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを
 行えないかもしれません。
 
@@ -983,7 +1001,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

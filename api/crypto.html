@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.9.11 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.9.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -116,6 +116,7 @@
 <li><a href="#crypto_crypto_pbkdf2_password_salt_iterations_keylen_callback">crypto.pbkdf2(password, salt, iterations, keylen, callback)</a></li>
 <li><a href="#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
 <li><a href="#crypto_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
+<li><a href="#crypto_crypto_pseudorandombytes_size_callback">crypto.pseudoRandomBytes(size, [callback])</a></li>
 <li><a href="#crypto_crypto_default_encoding">crypto.DEFAULT_ENCODING</a></li>
 <li><a href="#crypto_recent_api_changes">Recent API Changes</a></li>
 </ul>
@@ -524,8 +525,8 @@ Returned by `crypto.createCipher` and `crypto.createCipheriv`.
 <!--
 Cipher objects are [streams](stream.html) that are both readable and
 writable.  The written plain text data is used to produce the
-encrypted data on the the readable side.  The legacy `update` and
-`final` methods are also supported.
+encrypted data on the readable side.  The legacy `update` and `final`
+methods are also supported.
 -->
 
 <p>暗号化オブジェクトは読み込みと書き込みの両方が可能な
@@ -1099,7 +1100,7 @@ Synchronous PBKDF2 function.  Returns derivedKey or throws error.
 Generates cryptographically strong pseudo-random data. Usage:
 -->
 
-<p>暗号学的に強い疑似乱数データを生成します。使用法:
+<p>暗号学的で、強い疑似乱数データを生成します。使用法:
 
 </p>
 <pre><code>// async
@@ -1115,6 +1116,29 @@ try {
 } catch (ex) {
   // handle error
 }</code></pre>
+<h2>crypto.pseudoRandomBytes(size, [callback])<span><a class="mark" href="#crypto_crypto_pseudorandombytes_size_callback" id="crypto_crypto_pseudorandombytes_size_callback">#</a></span></h2>
+<!--
+Generates *non*-cryptographically strong pseudo-random data. The data
+returned will be unique if it is sufficiently long, but is not
+necessarily unpredictable. For this reason, the output of this
+function should never be used where unpredictability is important,
+such as in the generation of encryption keys.
+-->
+
+<p>暗号学的では <em>ない</em>、強い疑似乱数データを生成します。
+返されるデータは十分に長ければユニークですが、
+必ずしも予測不可能ではありません。
+この理由のため、この関数の出力を暗号化キーの生成など、予測不可能であることが
+重要なところでは決して使用しないでください。
+
+</p>
+<!--
+Usage is otherwise identical to `crypto.randomBytes`.
+-->
+
+<p>他の使い方は <code>crypto.randomBytes</code> と同じです。
+
+</p>
 <h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#crypto_crypto_default_encoding" id="crypto_crypto_default_encoding">#</a></span></h2>
 <!--
 The default encoding to use for functions that can take either strings
@@ -1237,7 +1261,7 @@ temporary measure.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -2142,7 +2142,7 @@
               "textRaw": "emitter.emit(event, [arg1], [arg2], [...])",
               "type": "method",
               "name": "emit",
-              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n</p>\n",
+              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2166,6 +2166,26 @@
               ]
             }
           ],
+          "classMethods": [
+            {
+              "textRaw": "Class Method: EventEmitter.listenerCount(emitter, event)",
+              "type": "classMethod",
+              "name": "listenerCount",
+              "desc": "<!--\nReturn the number of listeners for a given event.\n-->\n\n<p>与えられたイベントのリスナー数を返します。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "emitter"
+                    },
+                    {
+                      "name": "event"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
           "events": [
             {
               "textRaw": "Event: 'newListener'",
@@ -2181,8 +2201,8 @@
     {
       "textRaw": "Domain",
       "name": "domain",
-      "stability": 1,
-      "stabilityText": "Experimental",
+      "stability": 2,
+      "stabilityText": "Unstable",
       "desc": "<!--\nDomains provide a way to handle multiple different IO operations as a\nsingle group.  If any of the event emitters or callbacks registered to a\ndomain emit an `error` event, or throw an error, then the domain object\nwill be notified, rather than losing the context of the error in the\n`process.on('uncaughtException')` handler, or causing the program to\nexit with an error code.\n-->\n\n<p>ドメインは複数の異なる I/O 操作を一つのグループとして扱う方法を\n提供します。\nもし EventEmitter またはコールバックがドメインに登録されると、\n<code>&#39;error&#39;</code> がイベントが発生したり例外がスローされた場合、\n<code>process.on(&#39;uncaughtException&#39;)</code> ハンドラでエラーのコンテキストが失われたり、\nプログラムがエラーコードと共に終了する代わりに、\nドメインオブジェクトが通知します\n\n</p>\n<!--\nThis feature is new in Node version 0.8.  It is a first pass, and is\nexpected to change significantly in future versions.  Please use it and\nprovide feedback.\n-->\n\n<p>この機能は Node バージョン 0.8 からの新しいものです。\nこれはファーストパスであり、将来のバージョンで大きく変更されると予想されます。\n是非これを使ってフィードバックをしてください。\n\n</p>\n<!--\nDue to their experimental nature, the Domains features are disabled unless\nthe `domain` module is loaded at least once.  No domains are created or\nregistered by default.  This is by design, to prevent adverse effects on\ncurrent programs.  It is expected to be enabled by default in future\nNode.js versions.\n-->\n\n<p>これらは実験的であるため、ドメインの機能は <code>domain</code> モジュールが少なくとも\n一回はロードされるまで無効になっています。\nデフォルトではドメインは作成されず、デフォルトで登録もされません。\nそれは既存のプログラムに悪影響を与えることを防ぐために設計されています。\n将来の Node.js バージョンではデフォルトで有効になることが期待されます。\n\n</p>\n",
       "miscs": [
         {
@@ -4040,19 +4060,13 @@
               "textRaw": "new stream.Readable([options])",
               "type": "method",
               "name": "Readable",
-              "* `options` {Object}\n  * `bufferSize` {Number} The size of the chunks to consume from the\n    underlying resource. Default": "16kb\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default=16kb\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
+              "* `options` {Object}\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default": "16kb\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
               "signatures": [
                 {
                   "params": [
                     {
                       "textRaw": "`options` {Object} (任意) ",
                       "options": [
-                        {
-                          "textRaw": "`bufferSize` {Number} 下層のリソースによって消費される チャンクのサイズです。デフォルトは 16kb。 ",
-                          "name": "bufferSize",
-                          "type": "Number",
-                          "desc": "下層のリソースによって消費される チャンクのサイズです。デフォルトは 16kb。"
-                        },
                         {
                           "textRaw": "`highWaterMark` {Number} 下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。 ",
                           "name": "highWaterMark",
@@ -4094,7 +4108,7 @@
               "textRaw": "readable.\\_read(size)",
               "type": "method",
               "name": "\\_read",
-              "desc": "<!--\n* `size` {Number} Number of bytes to read asynchronously\n* `callback` {Function} Called with an error or with data\n-->\n\n<ul>\n<li><code>size</code> {Number} 非同期に読み込むバイト数</li>\n<li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>\n</ul>\n<!--\nNote: **This function should NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Readable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出すべきではありません。</strong>\nこれはサブクラスで実装されるべきであり、Readable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nAll Readable stream implementations must provide a `_read` method\nto fetch data from the underlying resource.\n-->\n\n<p>全ての Readable ストリームは、下層のリソースからデータを\n取得するために <code>_read</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<!--\nWhen data is available, put it into the read queue by calling\n`readable.push(chunk)`.  If `push` returns false, then you should stop\nreading.  When `_read` is called again, you should start pushing more\ndata.\n-->\n\n<p>データが利用可能になれば、<code>readable.push(chunk)</code> を呼び出すことで\nそれを読み込みキューに追加します。\n<code>push</code> が false を返した場合は、読み込みを止めるべきです。\n<code>_read</code> が再び呼び出された時が、さらに多くのデータを追加を開始すべき時です。\n\n</p>\n",
+              "desc": "<!--\n* `size` {Number} Number of bytes to read asynchronously\n-->\n\n<ul>\n<li><code>size</code> {Number} 非同期に読み込むバイト数</li>\n</ul>\n<!--\nNote: **This function should NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Readable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出すべきではありません。</strong>\nこれはサブクラスで実装されるべきであり、Readable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nAll Readable stream implementations must provide a `_read` method\nto fetch data from the underlying resource.\n-->\n\n<p>全ての Readable ストリームは、下層のリソースからデータを\n取得するために <code>_read</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<!--\nWhen data is available, put it into the read queue by calling\n`readable.push(chunk)`.  If `push` returns false, then you should stop\nreading.  When `_read` is called again, you should start pushing more\ndata.\n-->\n\n<p>データが利用可能になれば、<code>readable.push(chunk)</code> を呼び出すことで\nそれを読み込みキューに追加します。\n<code>push</code> が false を返した場合は、読み込みを止めるべきです。\n<code>_read</code> が再び呼び出された時が、さらに多くのデータを追加を開始すべき時です。\n\n</p>\n<!--\nThe `size` argument is advisory.  Implementations where a \"read\" is a\nsingle call that returns data can use this to know how much data to\nfetch.  Implementations where that is not relevant, such as TCP or\nTLS, may ignore this argument, and simply provide data whenever it\nbecomes available.  There is no need, for example to \"wait\" until\n`size` bytes are available before calling `stream.push(chunk)`.\n-->\n\n<p><code>size</code> 引数はアドバイス的です。\n&quot;read&quot; が一回の呼び出しでデータを返す実装では、\nどれだけのデータを取得すべきか知るためにこれを使うことができます。\nTCPやTLSなど、それに関連しない実装ではこの引数は無視され、\n利用可能になったデータをシンプルに提供するかもしれません。\nたとえば <code>size</code> バイトが利用可能になるまで「待つ」必要はありません。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4109,7 +4123,7 @@
               "textRaw": "readable.push(chunk)",
               "type": "method",
               "name": "push",
-              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to push into the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、\nデータのチャンク</li>\n<li>return {Boolean} まだプッシュしてもいいかどうか</li>\n</ul>\n<!--\nNote: **This function should be called by Readable implementors, NOT\nby consumers of Readable subclasses.**  The `_read()` function will not\nbe called again until at least one `push(chunk)` call is made.  If no\ndata is available, then you MAY call `push('')` (an empty string) to\nallow a future `_read` call, without adding any data to the queue.\n-->\n\n<p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、\nReadable のサブクラスの利用者が呼び出すべきではありません。</strong>\n少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が\n再び呼び出されることはありません。もし利用可能なデータがない場合は、\n将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)\nを呼び出すことができます。\n\n</p>\n<!--\nThe `Readable` class works by putting data into a read queue to be\npulled out later by calling the `read()` method when the `'readable'`\nevent fires.\n-->\n\n<p><code>Readable</code> クラスは、<code>&#39;readable&#39;</code> イベントの生成時に <code>read()</code>\nメソッドが呼び出されることで後から取り出されるデータを、\n読み込みキューに入れておくことによって機能します。\n\n</p>\n<!--\nThe `push()` method will explicitly insert some data into the read\nqueue.  If it is called with `null` then it will signal the end of the\ndata.\n-->\n\n<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。\nもし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。\n\n</p>\n<!--\nIn some cases, you may be wrapping a lower-level source which has some\nsort of pause/resume mechanism, and a data callback.  In those cases,\nyou could wrap the low-level source object by doing something like\nthis:\n-->\n\n<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ\n低水準のソースをラップするかもしれません。\nそれらのケースでは、次のように低水準なソースオブジェクトを\nラップすることができます:\n\n</p>\n<pre><code class=\"javascript\">// source is an object with readStop() and readStart() methods,\n// and an `ondata` member that gets called when it has data, and\n// an `onend` member that gets called when the data is over.\n\nvar stream = new Readable();\n\nsource.ondata = function(chunk) {\n  // if push() returns false, then we need to stop reading from source\n  if (!stream.push(chunk))\n    source.readStop();\n};\n\nsource.onend = function() {\n  stream.push(null);\n};\n\n// _read will be called when the stream wants to pull more data in\nstream._read = function(size, cb) {\n  source.readStart();\n};</code></pre>\n",
+              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to push into the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、\nデータのチャンク</li>\n<li>return {Boolean} まだプッシュしてもいいかどうか</li>\n</ul>\n<!--\nNote: **This function should be called by Readable implementors, NOT\nby consumers of Readable subclasses.**  The `_read()` function will not\nbe called again until at least one `push(chunk)` call is made.  If no\ndata is available, then you MAY call `push('')` (an empty string) to\nallow a future `_read` call, without adding any data to the queue.\n-->\n\n<p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、\nReadable のサブクラスの利用者が呼び出すべきではありません。</strong>\n少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が\n再び呼び出されることはありません。もし利用可能なデータがない場合は、\n将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)\nを呼び出すことができます。\n\n</p>\n<!--\nThe `Readable` class works by putting data into a read queue to be\npulled out later by calling the `read()` method when the `'readable'`\nevent fires.\n-->\n\n<p><code>Readable</code> クラスは、<code>&#39;readable&#39;</code> イベントの生成時に <code>read()</code>\nメソッドが呼び出されることで後から取り出されるデータを、\n読み込みキューに入れておくことによって機能します。\n\n</p>\n<!--\nThe `push()` method will explicitly insert some data into the read\nqueue.  If it is called with `null` then it will signal the end of the\ndata.\n-->\n\n<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。\nもし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。\n\n</p>\n<!--\nIn some cases, you may be wrapping a lower-level source which has some\nsort of pause/resume mechanism, and a data callback.  In those cases,\nyou could wrap the low-level source object by doing something like\nthis:\n-->\n\n<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ\n低水準のソースをラップするかもしれません。\nそれらのケースでは、次のように低水準なソースオブジェクトを\nラップすることができます:\n\n</p>\n<pre><code class=\"javascript\">// source is an object with readStop() and readStart() methods,\n// and an `ondata` member that gets called when it has data, and\n// an `onend` member that gets called when the data is over.\n\nvar stream = new Readable();\n\nsource.ondata = function(chunk) {\n  // if push() returns false, then we need to stop reading from source\n  if (!stream.push(chunk))\n    source.readStop();\n};\n\nsource.onend = function() {\n  stream.push(null);\n};\n\n// _read will be called when the stream wants to pull more data in\n// the advisory size argument is ignored in this case.\nstream._read = function(n) {\n  source.readStart();\n};</code></pre>\n",
               "signatures": [
                 {
                   "params": [
@@ -4124,7 +4138,7 @@
               "textRaw": "readable.unshift(chunk)",
               "type": "method",
               "name": "unshift",
-              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to unshift onto the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューの先頭に戻されるデータのチャンク</li>\n<li>return {Boolean} より多くの追加が実行されるべきかどうか</li>\n</ul>\n<!--\nThis is the corollary of `readable.push(chunk)`.  Rather than putting\nthe data at the *end* of the read queue, it puts it at the *front* of\nthe read queue.\n-->\n\n<p>これは <code>readable.push(chunk)</code> からの帰結です。\nデータを読み込みキューの <em>末尾</em> に加えるのではなく、\n読み込みキューの <em>先頭</em> に加えます。\n\n</p>\n<!--\nThis is useful in certain use-cases where a stream is being consumed\nby a parser, which needs to \"un-consume\" some data that it has\noptimistically pulled out of the source.\n-->\n\n<p>これはストリームがパーサによって消費されるユースケースにおいて有用です。\nそれはソースから楽観的に取り出したデータを「消費しなかったことにする」\n場合に必要です。\n\n</p>\n<pre><code class=\"javascript\">// A parser for a simple data protocol.\n// The &quot;header&quot; is a JSON object, followed by 2 \\n characters, and\n// then a message body.\n//\n// Note: This can be done more simply as a Transform stream.  See below.\n\nfunction SimpleProtocol(source, options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Readable.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n\n  // source is a readable stream, such as a socket or file\n  this._source = source;\n\n  var self = this;\n  source.on(&#39;end&#39;, function() {\n    self.push(null);\n  });\n\n  // give it a kick whenever the source is readable\n  // read(0) will not consume any bytes\n  source.on(&#39;readable&#39;, function() {\n    self.read(0);\n  });\n\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Readable.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._read = function(n) {\n  if (!this._inBody) {\n    var chunk = this._source.read();\n\n    // if the source doesn&#39;t have data, we don&#39;t have data yet.\n    if (chunk === null)\n      return this.push(&#39;&#39;);\n\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n      this.push(&#39;&#39;);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // now, because we got some extra data, unshift the rest\n      // back into the read queue so that our consumer will see it.\n      this.unshift(b);\n\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n    }\n  } else {\n    // from there on, just provide the data to our consumer.\n    // careful not to push(null), since that would indicate EOF.\n    var chunk = this._source.read();\n    if (chunk) this.push(chunk);\n  }\n};\n\n// Usage:\nvar parser = new SimpleProtocol(source);\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
+              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to unshift onto the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューの先頭に戻されるデータのチャンク</li>\n<li>return {Boolean} より多くの追加が実行されるべきかどうか</li>\n</ul>\n<!--\nThis is the corollary of `readable.push(chunk)`.  Rather than putting\nthe data at the *end* of the read queue, it puts it at the *front* of\nthe read queue.\n-->\n\n<p>これは <code>readable.push(chunk)</code> からの帰結です。\nデータを読み込みキューの <em>末尾</em> に加えるのではなく、\n読み込みキューの <em>先頭</em> に加えます。\n\n</p>\n<!--\nThis is useful in certain use-cases where a stream is being consumed\nby a parser, which needs to \"un-consume\" some data that it has\noptimistically pulled out of the source.\n-->\n\n<p>これはストリームがパーサによって消費されるユースケースにおいて有用です。\nそれはソースから楽観的に取り出したデータを「消費しなかったことにする」\n場合に必要です。\n\n</p>\n<pre><code class=\"javascript\">// A parser for a simple data protocol.\n// The &quot;header&quot; is a JSON object, followed by 2 \\n characters, and\n// then a message body.\n//\n// Note: This can be done more simply as a Transform stream.  See below.\n\nfunction SimpleProtocol(source, options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Readable.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n\n  // source is a readable stream, such as a socket or file\n  this._source = source;\n\n  var self = this;\n  source.on(&#39;end&#39;, function() {\n    self.push(null);\n  });\n\n  // give it a kick whenever the source is readable\n  // read(0) will not consume any bytes\n  source.on(&#39;readable&#39;, function() {\n    self.read(0);\n  });\n\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Readable.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._read = function(n) {\n  if (!this._inBody) {\n    var chunk = this._source.read();\n\n    // if the source doesn&#39;t have data, we don&#39;t have data yet.\n    if (chunk === null)\n      return this.push(&#39;&#39;);\n\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n      this.push(&#39;&#39;);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // now, because we got some extra data, unshift the rest\n      // back into the read queue so that our consumer will see it.\n      var b = chunk.slice(split);\n      this.unshift(b);\n\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n    }\n  } else {\n    // from there on, just provide the data to our consumer.\n    // careful not to push(null), since that would indicate EOF.\n    var chunk = this._source.read();\n    if (chunk) this.push(chunk);\n  }\n};\n\n// Usage:\nvar parser = new SimpleProtocol(source);\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
               "signatures": [
                 {
                   "params": [
@@ -4306,7 +4320,7 @@
           "textRaw": "Class: stream.Writable",
           "type": "class",
           "name": "stream.Writable",
-          "desc": "<!--\nA `Writable` Stream has the following methods, members, and events.\n-->\n\n<p><code>Writable</code> ストリームには以下のメソッド、メンバー、そしてイベントがあります。\n\n</p>\n<!--\nNote that `stream.Writable` is an abstract class designed to be\nextended with an underlying implementation of the `_write(chunk, cb)`\nmethod. (See below.)\n-->\n\n<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, cb)</code> メソッド (後述)\nによって拡張されるように設計された抽象クラスであることに注意してください。\n\n</p>\n",
+          "desc": "<!--\nA `Writable` Stream has the following methods, members, and events.\n-->\n\n<p><code>Writable</code> ストリームには以下のメソッド、メンバー、そしてイベントがあります。\n\n</p>\n<!--\nNote that `stream.Writable` is an abstract class designed to be\nextended with an underlying implementation of the\n`_write(chunk, encoding, cb)` method. (See below.)\n-->\n\n<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, encoding, cb)</code>\nメソッド (後述) によって拡張されるように設計された抽象クラスであることに\n注意してください。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "new stream.Writable([options])",
@@ -4351,15 +4365,18 @@
               "desc": "<!--\nIn classes that extend the Writable class, make sure to call the\nconstructor so that the buffering settings can be properly\ninitialized.\n-->\n\n<p><code>Writable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に\n初期化することができるように、必ずコンストラクタを呼び出してください。\n\n</p>\n"
             },
             {
-              "textRaw": "writable.\\_write(chunk, callback)",
+              "textRaw": "writable.\\_write(chunk, encoding, callback)",
               "type": "method",
               "name": "\\_write",
-              "desc": "<!--\n* `chunk` {Buffer | Array} The data to be written\n* `callback` {Function} Called with an error, or null when finished\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。</li>\n<li><code>callback</code> {Function} 終了後にエラーまたは <code>null</code>\nと共に呼び出されるコールバック</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` will be an array rather than a Buffer.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.\n-->\n\n<p>コンストラクタオプションの <code>decodeString</code> フラグがセットされると、\n<code>chunk</code> は Buffer ではなく配列になります。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n\n</p>\n",
+              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be written.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  Ignore chunk is a buffer.  Note that chunk will\n  **always** be a buffer unless the `decodeStrings` option is\n  explicitly set to `false`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。\nチャンクがバッファの場合は無視されます。\n<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、\nチャンクは <em>常に</em> バッファであるべき事に注意してください。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` may be a string rather than a Buffer, and `encoding` will\nindicate the sort of string that it is.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.  If you do not explicitly set the `decodeStrings`\noption to `false`, then you can safely ignore the `encoding` argument,\nand assume that `chunk` will always be a Buffer.\n-->\n\n<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、\n<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の\n種類を示すことができます。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、\n<code>endocing</code> 引数は安全に無視することができます。\nそして <code>chunk</code> は常に Buffer であると見なせます。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
                     {
                       "name": "chunk"
+                    },
+                    {
+                      "name": "encoding"
                     },
                     {
                       "name": "callback"
@@ -4458,7 +4475,7 @@
           "textRaw": "Class: stream.Duplex",
           "type": "class",
           "name": "stream.Duplex",
-          "desc": "<!--\nA \"duplex\" stream is one that is both Readable and Writable, such as a\nTCP socket connection.\n-->\n\n<p>&quot;duplex&quot; ストリームは、TCP ソケットコネクションのように\nReadable であり Writable でもあるストリームの一種です。\n\n</p>\n<!--\nNote that `stream.Duplex` is an abstract class designed to be\nextended with an underlying implementation of the `_read(size)`\nand `_write(chunk, callback)` methods as you would with a Readable or\nWritable stream class.\n-->\n\n<p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、\n下層の実装である <code>_read(size)</code> および <code>_write(chunk, callback)</code>\nメソッドによって拡張されるように設計された抽象クラスであることに\n注意してください。\n\n</p>\n<!--\nSince JavaScript doesn't have multiple prototypal inheritance, this\nclass prototypally inherits from Readable, and then parasitically from\nWritable.  It is thus up to the user to implement both the lowlevel\n`_read(n)` method as well as the lowlevel `_write(chunk,cb)` method\non extension duplex classes.\n-->\n\n<p>JavaScript は複数のプロトタイプ継承を持つことができないため、\nこのクラスは Readable からプロトタイプを継承したうえで、\nWritable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。\n低水準の <code>_read(n)</code> および <code>_write(chunk,cb)</code> を実装することは、\nDuplex クラスを拡張するユーザの責務です。\n\n</p>\n",
+          "desc": "<!--\nA \"duplex\" stream is one that is both Readable and Writable, such as a\nTCP socket connection.\n-->\n\n<p>&quot;duplex&quot; ストリームは、TCP ソケットコネクションのように\nReadable であり Writable でもあるストリームの一種です。\n\n</p>\n<!--\nNote that `stream.Duplex` is an abstract class designed to be\nextended with an underlying implementation of the `_read(size)`\nand `_write(chunk, encoding, callback)` methods as you would with a Readable or\nWritable stream class.\n-->\n\n<p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、\n下層の実装である <code>_read(size)</code> および <code>_write(chunk, encoding, cb)</code>\nメソッドによって拡張されるように設計された抽象クラスであることに\n注意してください。\n\n</p>\n<!--\nSince JavaScript doesn't have multiple prototypal inheritance, this\nclass prototypally inherits from Readable, and then parasitically from\nWritable.  It is thus up to the user to implement both the lowlevel\n`_read(n)` method as well as the lowlevel `_write(chunk, encoding, cb)` method\non extension duplex classes.\n-->\n\n<p>JavaScript は複数のプロトタイプ継承を持つことができないため、\nこのクラスは Readable からプロトタイプを継承したうえで、\nWritable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。\n低水準の <code>_read(n)</code> および <code>_write(chunk, encoding, cb)</code> を実装することは、\nDuplex クラスを拡張するユーザの責務です。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "new stream.Duplex(options)",
@@ -4519,10 +4536,10 @@
               ]
             },
             {
-              "textRaw": "transform.\\_transform(chunk, outputFn, callback)",
+              "textRaw": "transform.\\_transform(chunk, encoding, callback)",
               "type": "method",
               "name": "\\_transform",
-              "desc": "<!--\n* `chunk` {Buffer} The chunk to be transformed.\n* `outputFn` {Function} Call this function with any output data to be\n  passed to the readable interface.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer} 変換されるチャンク。</li>\n<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために\nデータと共に呼び出してください。</li>\n<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nAll Transform stream implementations must provide a `_transform`\nmethod to accept input and produce output.\n-->\n\n<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために\n<code>_transform</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\n`_transform` should do whatever has to be done in this specific\nTransform class, to handle the bytes being written, and pass them off\nto the readable portion of the interface.  Do asynchronous I/O,\nprocess things, and so on.\n-->\n\n<p>書き込まれるバイトを処理し、読み込み可能なインタフェースに渡すなど、\nTransform クラスでしなければならないことは全て <code>_transform</code>\nで行わなければなりません。非同期 I/O、何かの処理、その他。\n\n</p>\n<!--\nCall the callback function only when the current chunk is completely\nconsumed.  Note that this may mean that you call the `outputFn` zero\nor more times, depending on how much data you want to output as a\nresult of this chunk.\n-->\n\n<p>現在のチャンクの処理が完全に終了した場合のみ、コールバック関数を呼び出します。\n<code>outputFn</code> を何度 (0 回以上) 呼び出すかは、このチャンクからどれだけのデータを\n出力した以下に依存することに注意してください。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n",
+              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be transformed.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  (Ignore if `decodeStrings` chunk is a buffer.)\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式\n(チャンクがバッファの場合は無視されます)。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nAll Transform stream implementations must provide a `_transform`\nmethod to accept input and produce output.\n-->\n\n<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために\n<code>_transform</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\n`_transform` should do whatever has to be done in this specific\nTransform class, to handle the bytes being written, and pass them off\nto the readable portion of the interface.  Do asynchronous I/O,\nprocess things, and so on.\n-->\n\n<p>書き込まれるバイトを処理し、読み込み可能なインタフェースに渡すなど、\nTransform クラスでしなければならないことは全て <code>_transform</code>\nで行わなければなりません。非同期 I/O、何かの処理、その他。\n\n</p>\n<!--\nCall `transform.push(outputChunk)` 0 or more times to generate output\nfrom this input chunk, depending on how much data you want to output\nas a result of this chunk.\n-->\n\n<p>この入力チャンクからの出力を生成するために、<code>transform.push(outputChunk)</code>\nを 0 回以上呼び出してください。\nそれはこのチャンクの結果としてどれだけのデータを出力したいのかに依存します。\n\n</p>\n<!--\nCall the callback function only when the current chunk is completely\nconsumed.  Note that there may or may not be output as a result of any\nparticular input chunk.\n-->\n\n<p>現在のチャンクの処理が完全に終了した場合のみ、コールバック関数を呼び出します。\n特定の入力チャンクからの結果として、出力があるかもしれないし、\n無いかもしれないことに注意してください。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4530,7 +4547,7 @@
                       "name": "chunk"
                     },
                     {
-                      "name": "outputFn"
+                      "name": "encoding"
                     },
                     {
                       "name": "callback"
@@ -4540,16 +4557,13 @@
               ]
             },
             {
-              "textRaw": "transform.\\_flush(outputFn, callback)",
+              "textRaw": "transform.\\_flush(callback)",
               "type": "method",
               "name": "\\_flush",
-              "desc": "<!--\n* `outputFn` {Function} Call this function with any output data to be\n  passed to the readable interface.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done flushing any remaining data.\n-->\n\n<ul>\n<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために\nデータと共に呼び出してください。</li>\n<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It MAY be implemented\nby child classes, and if so, will be called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nIn some cases, your transform operation may need to emit a bit more\ndata at the end of the stream.  For example, a `Zlib` compression\nstream will store up some internal state so that it can optimally\ncompress the output.  At the end, however, it needs to do the best it\ncan with what is left, so that the data will be complete.\n-->\n\n<p>場合によっては、変換操作はストリームの終端でより多くのデータを\n生成する必要があります。\nたとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、\nいくつかの内部状態を持ちます。\n一方、終端ではデータが完全なものになるように、\n残されたものに最善を尽くす必要があります。\n\n</p>\n<!--\nIn those cases, you can implement a `_flush` method, which will be\ncalled at the very end, after all the written data is consumed, but\nbefore emitting `end` to signal the end of the readable side.  Just\nlike with `_transform`, call `outputFn` zero or more times, as\nappropriate, and call `callback` when the flush operation is complete.\n-->\n\n<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、\nただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される\n<code>_flush</code> メソッドを実装することができます。\n<code>_transform</code> と同様、<code>outputFn</code> は何度 (0 回以上) でも適切に呼び出し、\nフラッシュ操作が完了した時に <code>callback</code> を呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<h3>Example: <code>SimpleProtocol</code> parser</h3>\n<!--\nThe example above of a simple protocol parser can be implemented much\nmore simply by using the higher level `Transform` stream class.\n-->\n\n<p>前述した単純なプロトコルパーサの例は、より高水準な <code>Transform</code>\nストリームクラスを使うことで、さらにシンプルに実装することができます。\n\n</p>\n<!--\nIn this example, rather than providing the input as an argument, it\nwould be piped into the parser, which is a more idiomatic Node stream\napproach.\n-->\n\n<p>この例では、入力を引数で与えるのではなく、Node のストームにおける\nより慣用的なアプローチとしてパーサにパイプで送られます。\n\n</p>\n<pre><code class=\"javascript\">function SimpleProtocol(options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Transform.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Transform.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._transform = function(chunk, output, done) {\n  if (!this._inBody) {\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n\n      // now, because we got some extra data, emit this first.\n      output(b);\n    }\n  } else {\n    // from there on, just provide the data to our consumer as-is.\n    output(b);\n  }\n  done();\n};\n\nvar parser = new SimpleProtocol();\nsource.pipe(parser)\n\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
+              "desc": "<!--\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done flushing any remaining data.\n-->\n\n<ul>\n<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It MAY be implemented\nby child classes, and if so, will be called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nIn some cases, your transform operation may need to emit a bit more\ndata at the end of the stream.  For example, a `Zlib` compression\nstream will store up some internal state so that it can optimally\ncompress the output.  At the end, however, it needs to do the best it\ncan with what is left, so that the data will be complete.\n-->\n\n<p>場合によっては、変換操作はストリームの終端でより多くのデータを\n生成する必要があります。\nたとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、\nいくつかの内部状態を持ちます。\n一方、終端ではデータが完全なものになるように、\n残されたものに最善を尽くす必要があります。\n\n</p>\n<!--\nIn those cases, you can implement a `_flush` method, which will be\ncalled at the very end, after all the written data is consumed, but\nbefore emitting `end` to signal the end of the readable side.  Just\nlike with `_transform`, call `transform.push(chunk)` zero or more\ntimes, as appropriate, and call `callback` when the flush operation is\ncomplete.\n-->\n\n<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、\nただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される\n<code>_flush</code> メソッドを実装することができます。\n<code>_transform</code> と同様、<code>transform.push(chunk)</code> を何度 (0 回以上) でも\n適切に呼び出し、フラッシュ操作が完了した時に <code>callback</code> を呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<h3>Example: <code>SimpleProtocol</code> parser</h3>\n<!--\nThe example above of a simple protocol parser can be implemented much\nmore simply by using the higher level `Transform` stream class.\n-->\n\n<p>前述した単純なプロトコルパーサの例は、より高水準な <code>Transform</code>\nストリームクラスを使うことで、さらにシンプルに実装することができます。\n\n</p>\n<!--\nIn this example, rather than providing the input as an argument, it\nwould be piped into the parser, which is a more idiomatic Node stream\napproach.\n-->\n\n<p>この例では、入力を引数で与えるのではなく、Node のストームにおける\nより慣用的なアプローチとしてパーサにパイプで送られます。\n\n</p>\n<pre><code class=\"javascript\">function SimpleProtocol(options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Transform.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Transform.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._transform = function(chunk, encoding, done) {\n  if (!this._inBody) {\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n\n      // now, because we got some extra data, emit this first.\n      this.push(b);\n    }\n  } else {\n    // from there on, just provide the data to our consumer as-is.\n    this.push(b);\n  }\n  done();\n};\n\nvar parser = new SimpleProtocol();\nsource.pipe(parser)\n\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
               "signatures": [
                 {
                   "params": [
-                    {
-                      "name": "outputFn"
-                    },
                     {
                       "name": "callback"
                     }
@@ -4856,7 +4870,26 @@
           "textRaw": "crypto.randomBytes(size, [callback])",
           "type": "method",
           "name": "randomBytes",
-          "desc": "<!--\nGenerates cryptographically strong pseudo-random data. Usage:\n-->\n\n<p>暗号学的に強い疑似乱数データを生成します。使用法:\n\n</p>\n<pre><code>// async\ncrypto.randomBytes(256, function(ex, buf) {\n  if (ex) throw ex;\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n});\n\n// sync\ntry {\n  var buf = crypto.randomBytes(256);\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n} catch (ex) {\n  // handle error\n}</code></pre>\n",
+          "desc": "<!--\nGenerates cryptographically strong pseudo-random data. Usage:\n-->\n\n<p>暗号学的で、強い疑似乱数データを生成します。使用法:\n\n</p>\n<pre><code>// async\ncrypto.randomBytes(256, function(ex, buf) {\n  if (ex) throw ex;\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n});\n\n// sync\ntry {\n  var buf = crypto.randomBytes(256);\n  console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);\n} catch (ex) {\n  // handle error\n}</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "size"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "crypto.pseudoRandomBytes(size, [callback])",
+          "type": "method",
+          "name": "pseudoRandomBytes",
+          "desc": "<!--\nGenerates *non*-cryptographically strong pseudo-random data. The data\nreturned will be unique if it is sufficiently long, but is not\nnecessarily unpredictable. For this reason, the output of this\nfunction should never be used where unpredictability is important,\nsuch as in the generation of encryption keys.\n-->\n\n<p>暗号学的では <em>ない</em>、強い疑似乱数データを生成します。\n返されるデータは十分に長ければユニークですが、\n必ずしも予測不可能ではありません。\nこの理由のため、この関数の出力を暗号化キーの生成など、予測不可能であることが\n重要なところでは決して使用しないでください。\n\n</p>\n<!--\nUsage is otherwise identical to `crypto.randomBytes`.\n-->\n\n<p>他の使い方は <code>crypto.randomBytes</code> と同じです。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -4959,7 +4992,7 @@
           "textRaw": "Class: Cipher",
           "type": "class",
           "name": "Cipher",
-          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n<!--\nCipher objects are [streams](stream.html) that are both readable and\nwritable.  The written plain text data is used to produce the\nencrypted data on the the readable side.  The legacy `update` and\n`final` methods are also supported.\n-->\n\n<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
+          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n<!--\nCipher objects are [streams](stream.html) that are both readable and\nwritable.  The written plain text data is used to produce the\nencrypted data on the readable side.  The legacy `update` and `final`\nmethods are also supported.\n-->\n\n<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
           "methods": [
             {
               "textRaw": "cipher.update(data, [input_encoding], [output_encoding])",
@@ -8915,7 +8948,7 @@
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n<!--\nNote: `'close'` can fire after `'end'`, but not vice versa.\n-->\n\n<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。\nその逆もあります。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n",
               "params": []
             }
           ],
@@ -8957,6 +8990,38 @@
             }
           ],
           "methods": [
+            {
+              "textRaw": "message.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`msecs` {Number} ",
+                      "name": "msecs",
+                      "type": "Number"
+                    },
+                    {
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
+                      "type": "Function"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nCalls `message.connection.setTimeout(msecs, callback)`.\n-->\n\n<p><code>message.connection.setTimeout(msecs, callback)</code> を呼びます。\n\n</p>\n"
+            },
             {
               "textRaw": "message.setEncoding([encoding])",
               "type": "method",
@@ -9225,13 +9290,52 @@
                   ]
                 }
               ]
+            },
+            {
+              "textRaw": "server.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`msecs` {Number} ",
+                      "name": "msecs",
+                      "type": "Number"
+                    },
+                    {
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
+                      "type": "Function"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nSets the timeout value for sockets, and emits a `'timeout'` event on\nthe Server object, passing the socket as an argument, if a timeout\noccurs.\n-->\n\n<p>ソケットにタイムアウト値を設定し、サーバオブジェクト上で <code>&#39;timeout&#39;</code>\nイベントを生成します。\nタイムアウトが発生すると、ソケットが引数として渡されます。\n\n</p>\n<!--\nIf there is a `'timeout'` event listener on the Server object, then it\nwill be called with the timed-out socket as an argument.\n-->\n\n<p>サーバオブジェクトに <code>&#39;timeout&#39;</code> イベントのリスナが存在すると、\nそれはタイムアウトしたソケットを引数として呼び出されます。\n\n</p>\n<!--\nBy default, the Server's timeout value is 2 minutes, and sockets are\ndestroyed automatically if they time out.  However, if you assign a\ncallback to the Server's `'timeout'` event, then you are responsible\nfor handling socket timeouts.\n-->\n\n<p>デフォルトでは、サーバのタイムアウト値は 2 分で、\nタイムアウトしたソケットは自動的に破棄されます。\nしかしながら、<code>&#39;timeout&#39;</code> イベントのコールバックをサーバに割り当てた場合、\nタイムアウトしたソケットのハンドリングはあなたの責務となります。\n\n</p>\n"
             }
           ],
           "properties": [
             {
               "textRaw": "server.maxHeadersCount",
               "name": "maxHeadersCount",
-              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n\n\n</p>\n"
+              "desc": "<!--\nLimits maximum incoming headers count, equal to 1000 by default. If set to 0 -\nno limit will be applied.\n-->\n\n<p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。\n0 に設定されると、制限しないことになります。\n\n</p>\n"
+            },
+            {
+              "textRaw": "`timeout` {Number} デフォルト = 120000 (2 分) ",
+              "name": "timeout",
+              "* {Number} Default": "120000 (2 minutes)",
+              "desc": "<!--\nThe number of milliseconds of inactivity before a socket is presumed\nto have timed out.\n-->\n\n<p>不活性なソケットがタイムアウトしたと推定されるまでのミリ秒を表す数値。\n\n</p>\n<!--\nNote that the socket timeout logic is set up on connection, so\nchanging this value only affects *new* connections to the server, not\nany existing connections.\n-->\n\n<p>ソケットのタイムアウト処理は接続のセットアップ時に行われるため、\nこの値の変更は既存の接続ではなく、サーバへの <em>新しい</em> 接続にだけ\n影響することに注意してください。\n\n</p>\n<!--\nSet to 0 to disable any kind of automatic timeout behavior on incoming\nconnections.\n-->\n\n<p>0 を設定すると、到着する接続に対する自動的なタイムアウトの振る舞いは\n無効になります。\n\n</p>\n",
+              "shortDesc": "デフォルト = 120000 (2 分)"
             }
           ]
         },
@@ -9283,6 +9387,38 @@
                   ]
                 }
               ]
+            },
+            {
+              "textRaw": "response.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`msecs` {Number} ",
+                      "name": "msecs",
+                      "type": "Number"
+                    },
+                    {
+                      "textRaw": "`callback` {Function} ",
+                      "name": "callback",
+                      "type": "Function"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nSets the Socket's timeout value to `msecs`.  If a callback is\nprovided, then it is added as a listener on the `'timeout'` event on\nthe response object.\n-->\n\n<p>ソケットのタイムアウト値を <code>msec</code> に設定します。\nコールバックが与えられると、それはレスポンスオブジェクトの <code>&#39;timeout&#39;</code>\nイベントのリスナとして加えられます。\n\n</p>\n<!--\nIf no `'timeout'` listener is added to the request, the response, or\nthe server, then sockets are destroyed when they time out.  If you\nassign a handler on the request, the response, or the server's\n`'timeout'` events, then it is your responsibility to handle timed out\nsockets.\n-->\n\n<p>リクエスト、レスポンス、そしてサーバのいずれにも <code>&#39;timeout&#39;</code>\nリスナが存在しない場合、タイムアウトしたソケットは破棄されます。\nもしリクエスト、レスポンス、サーバのいずれかに <code>&#39;timeout&#39;</code> イベントを\n設定した場合、タイムアウトしたソケットのハンドリングはあなたの責務となります。\n\n</p>\n"
             },
             {
               "textRaw": "response.setHeader(name, value)",
@@ -9785,7 +9921,7 @@
           "textRaw": "url.resolve(from, to)",
           "type": "method",
           "name": "resolve",
-          "desc": "<!--\nTake a base URL, and a href URL, and resolve them as a browser would for\nan anchor tag.\n-->\n\n<p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。\n\n</p>\n",
+          "desc": "<!--\nTake a base URL, and a href URL, and resolve them as a browser would for\nan anchor tag.  Examples:\n-->\n\n<p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。例:\n\n</p>\n<pre><code>url.resolve(&#39;/one/two/three&#39;, &#39;four&#39;)         // &#39;/one/two/four&#39;\nurl.resolve(&#39;http://example.com/&#39;, &#39;/one&#39;)    // &#39;http://example.com/one&#39;\nurl.resolve(&#39;http://example.com/one&#39;, &#39;/two&#39;) // &#39;http://example.com/two&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -11590,7 +11726,7 @@
           "type": "event",
           "name": "disconnect",
           "params": [],
-          "desc": "<!--\nWhen a workers IPC channel has disconnected this event is emitted. This will happen\nwhen the worker dies, usually after calling `.destroy()`.\n-->\n\n<p>ワーカの IPC チャネルが切断された場合に生成されます。\nそれはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。\n\n</p>\n<!--\nWhen calling `.disconnect()`, there may be a delay between the\n`disconnect` and `exit` events.  This event can be used to detect if\nthe process is stuck in a cleanup or if there are long-living\nconnections.\n-->\n\n<p><code>.disconnect()</code> を呼び出した後、<code>&#39;disconnect&#39;</code> と <code>&#39;exit&#39;</code> の間には\n遅延があるかもしれません。このイベントはプロセスがクリーンナップで\n行き詰まったり、長時間生きている接続がないかを検出することに\n使用できます。\n\n</p>\n<pre><code>cluster.on(&#39;disconnect&#39;, function(worker) {\n  console.log(&#39;The worker #&#39; + worker.id + &#39; has disconnected&#39;);\n});</code></pre>\n"
+          "desc": "<!--\nWhen a workers IPC channel has disconnected this event is emitted.\nThis will happen when the worker dies, usually after calling\n`.kill()`.\n-->\n\n<p>ワーカの IPC チャネルが切断された場合に生成されます。\nそれはワーカが終了した場合や、<code>.kill()</code> を呼び出した後に発生します。\n\n</p>\n<!--\nWhen calling `.disconnect()`, there may be a delay between the\n`disconnect` and `exit` events.  This event can be used to detect if\nthe process is stuck in a cleanup or if there are long-living\nconnections.\n-->\n\n<p><code>.disconnect()</code> を呼び出した後、<code>&#39;disconnect&#39;</code> と <code>&#39;exit&#39;</code> の間には\n遅延があるかもしれません。このイベントはプロセスがクリーンナップで\n行き詰まったり、長時間生きている接続がないかを検出することに\n使用できます。\n\n</p>\n<pre><code>cluster.on(&#39;disconnect&#39;, function(worker) {\n  console.log(&#39;The worker #&#39; + worker.id + &#39; has disconnected&#39;);\n});</code></pre>\n"
         },
         {
           "textRaw": "Event: 'exit'",
@@ -11708,7 +11844,7 @@
             {
               "textRaw": "`suicide` {Boolean} ",
               "name": "suicide",
-              "desc": "<!--\nThis property is a boolean. It is set when a worker dies after calling `.destroy()`\nor immediately after calling the `.disconnect()` method. Until then it is `undefined`.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが <code>.destroy()</code> を呼び出して終了するか、\n<code>.disconnect()</code> メソッドを呼び出した後に設定されます。\nそれまでは <code>undefined</code> です。\n\n</p>\n"
+              "desc": "<!--\nThis property is a boolean. It is set when a worker dies after calling\n`.kill()` or immediately after calling the `.disconnect()` method.\nUntil then it is `undefined`.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが <code>.kill()</code> を呼び出して終了するか、\n<code>.disconnect()</code> メソッドを呼び出した後に設定されます。\nそれまでは <code>undefined</code> です。\n\n</p>\n"
             }
           ],
           "methods": [
@@ -11747,13 +11883,19 @@
               "desc": "<!--\nThis function is equal to the send methods provided by\n`child_process.fork()`.  In the master you should use this function to\nsend a message to a specific worker.  However in a worker you can also use\n`process.send(message)`, since this is the same function.\n\nThis example will echo back all messages from the master:\n-->\n\n<p>この関数は <code>child_process.fork()</code> が返すオブジェクトの <code>send()</code>\nメソッドと同じです．\nマスタは特定のワーカにメッセージを送信するためにこの関数を\n使用することができます。\nしかし、ワーカでは <code>process.send(message)</code> を使うこともできます。\n\n</p>\n<p>この例はマスタからのメッセージをエコーバックします。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  worker.send(&#39;hi there&#39;);\n\n} else if (cluster.isWorker) {\n  process.on(&#39;message&#39;, function(msg) {\n    process.send(msg);\n  });\n}</code></pre>\n"
             },
             {
-              "textRaw": "worker.destroy()",
+              "textRaw": "worker.kill([signal='SIGTERM'])",
               "type": "method",
-              "name": "destroy",
-              "desc": "<!--\nThis function will kill the worker, and inform the master to not spawn a\nnew worker.  The boolean `suicide` lets you distinguish between voluntary\nand accidental exit.\n-->\n\n<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。\nboolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。\n\n</p>\n<pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {\n  if (worker.suicide === true) {\n    console.log(&#39;Oh, it was just suicide\\&#39; – no need to worry&#39;).\n  }\n});\n\n// destroy worker\nworker.destroy();</code></pre>\n",
+              "name": "kill",
+              "desc": "<!--\n* `signal` {String} Name of the kill signal to send to the worker\n  process.\n-->\n\n<ul>\n<li><code>signal</code> {String} ワーカプロセスに送られるシグナルの名前です。</li>\n</ul>\n<!--\nThis function will kill the worker, and inform the master to not spawn a\nnew worker.  The boolean `suicide` lets you distinguish between voluntary\nand accidental exit.\n-->\n\n<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。\nboolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。\n\n</p>\n<pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {\n  if (worker.suicide === true) {\n    console.log(&#39;Oh, it was just suicide\\&#39; – no need to worry&#39;).\n  }\n});\n\n// kill worker\nworker.kill();</code></pre>\n<!--\nThis method is aliased as `worker.destroy()` for backwards\ncompatibility.\n-->\n\n<p>後方互換性のため、このメソッドには <code>worker.destroy()</code> という別名があります。\n\n</p>\n",
               "signatures": [
                 {
-                  "params": []
+                  "params": [
+                    {
+                      "name": "signal",
+                      "optional": true,
+                      "default": "'SIGTERM'"
+                    }
+                  ]
                 }
               ]
             },
@@ -11761,7 +11903,7 @@
               "textRaw": "worker.disconnect()",
               "type": "method",
               "name": "disconnect",
-              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.destroy()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.destroy()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
+              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.kill()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.kill()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
               "signatures": [
                 {
                   "params": []

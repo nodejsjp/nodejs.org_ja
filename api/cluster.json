@@ -90,7 +90,7 @@
           "type": "event",
           "name": "disconnect",
           "params": [],
-          "desc": "<!--\nWhen a workers IPC channel has disconnected this event is emitted. This will happen\nwhen the worker dies, usually after calling `.destroy()`.\n-->\n\n<p>ワーカの IPC チャネルが切断された場合に生成されます。\nそれはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。\n\n</p>\n<!--\nWhen calling `.disconnect()`, there may be a delay between the\n`disconnect` and `exit` events.  This event can be used to detect if\nthe process is stuck in a cleanup or if there are long-living\nconnections.\n-->\n\n<p><code>.disconnect()</code> を呼び出した後、<code>&#39;disconnect&#39;</code> と <code>&#39;exit&#39;</code> の間には\n遅延があるかもしれません。このイベントはプロセスがクリーンナップで\n行き詰まったり、長時間生きている接続がないかを検出することに\n使用できます。\n\n</p>\n<pre><code>cluster.on(&#39;disconnect&#39;, function(worker) {\n  console.log(&#39;The worker #&#39; + worker.id + &#39; has disconnected&#39;);\n});</code></pre>\n"
+          "desc": "<!--\nWhen a workers IPC channel has disconnected this event is emitted.\nThis will happen when the worker dies, usually after calling\n`.kill()`.\n-->\n\n<p>ワーカの IPC チャネルが切断された場合に生成されます。\nそれはワーカが終了した場合や、<code>.kill()</code> を呼び出した後に発生します。\n\n</p>\n<!--\nWhen calling `.disconnect()`, there may be a delay between the\n`disconnect` and `exit` events.  This event can be used to detect if\nthe process is stuck in a cleanup or if there are long-living\nconnections.\n-->\n\n<p><code>.disconnect()</code> を呼び出した後、<code>&#39;disconnect&#39;</code> と <code>&#39;exit&#39;</code> の間には\n遅延があるかもしれません。このイベントはプロセスがクリーンナップで\n行き詰まったり、長時間生きている接続がないかを検出することに\n使用できます。\n\n</p>\n<pre><code>cluster.on(&#39;disconnect&#39;, function(worker) {\n  console.log(&#39;The worker #&#39; + worker.id + &#39; has disconnected&#39;);\n});</code></pre>\n"
         },
         {
           "textRaw": "Event: 'exit'",
@@ -208,7 +208,7 @@
             {
               "textRaw": "`suicide` {Boolean} ",
               "name": "suicide",
-              "desc": "<!--\nThis property is a boolean. It is set when a worker dies after calling `.destroy()`\nor immediately after calling the `.disconnect()` method. Until then it is `undefined`.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが <code>.destroy()</code> を呼び出して終了するか、\n<code>.disconnect()</code> メソッドを呼び出した後に設定されます。\nそれまでは <code>undefined</code> です。\n\n</p>\n"
+              "desc": "<!--\nThis property is a boolean. It is set when a worker dies after calling\n`.kill()` or immediately after calling the `.disconnect()` method.\nUntil then it is `undefined`.\n-->\n\n<p>このプロパティは論理値型です。\nこれはワーカが <code>.kill()</code> を呼び出して終了するか、\n<code>.disconnect()</code> メソッドを呼び出した後に設定されます。\nそれまでは <code>undefined</code> です。\n\n</p>\n"
             }
           ],
           "methods": [
@@ -247,13 +247,19 @@
               "desc": "<!--\nThis function is equal to the send methods provided by\n`child_process.fork()`.  In the master you should use this function to\nsend a message to a specific worker.  However in a worker you can also use\n`process.send(message)`, since this is the same function.\n\nThis example will echo back all messages from the master:\n-->\n\n<p>この関数は <code>child_process.fork()</code> が返すオブジェクトの <code>send()</code>\nメソッドと同じです．\nマスタは特定のワーカにメッセージを送信するためにこの関数を\n使用することができます。\nしかし、ワーカでは <code>process.send(message)</code> を使うこともできます。\n\n</p>\n<p>この例はマスタからのメッセージをエコーバックします。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  worker.send(&#39;hi there&#39;);\n\n} else if (cluster.isWorker) {\n  process.on(&#39;message&#39;, function(msg) {\n    process.send(msg);\n  });\n}</code></pre>\n"
             },
             {
-              "textRaw": "worker.destroy()",
+              "textRaw": "worker.kill([signal='SIGTERM'])",
               "type": "method",
-              "name": "destroy",
-              "desc": "<!--\nThis function will kill the worker, and inform the master to not spawn a\nnew worker.  The boolean `suicide` lets you distinguish between voluntary\nand accidental exit.\n-->\n\n<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。\nboolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。\n\n</p>\n<pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {\n  if (worker.suicide === true) {\n    console.log(&#39;Oh, it was just suicide\\&#39; – no need to worry&#39;).\n  }\n});\n\n// destroy worker\nworker.destroy();</code></pre>\n",
+              "name": "kill",
+              "desc": "<!--\n* `signal` {String} Name of the kill signal to send to the worker\n  process.\n-->\n\n<ul>\n<li><code>signal</code> {String} ワーカプロセスに送られるシグナルの名前です。</li>\n</ul>\n<!--\nThis function will kill the worker, and inform the master to not spawn a\nnew worker.  The boolean `suicide` lets you distinguish between voluntary\nand accidental exit.\n-->\n\n<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。\nboolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。\n\n</p>\n<pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {\n  if (worker.suicide === true) {\n    console.log(&#39;Oh, it was just suicide\\&#39; – no need to worry&#39;).\n  }\n});\n\n// kill worker\nworker.kill();</code></pre>\n<!--\nThis method is aliased as `worker.destroy()` for backwards\ncompatibility.\n-->\n\n<p>後方互換性のため、このメソッドには <code>worker.destroy()</code> という別名があります。\n\n</p>\n",
               "signatures": [
                 {
-                  "params": []
+                  "params": [
+                    {
+                      "name": "signal",
+                      "optional": true,
+                      "default": "'SIGTERM'"
+                    }
+                  ]
                 }
               ]
             },
@@ -261,7 +267,7 @@
               "textRaw": "worker.disconnect()",
               "type": "method",
               "name": "disconnect",
-              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.destroy()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.destroy()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
+              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.kill()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.kill()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
               "signatures": [
                 {
                   "params": []
