@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.9.11 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.9.12 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.9.11 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.9.12 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -211,6 +211,7 @@
 <li><a href="#all_emitter_setmaxlisteners_n">emitter.setMaxListeners(n)</a></li>
 <li><a href="#all_emitter_listeners_event">emitter.listeners(event)</a></li>
 <li><a href="#all_emitter_emit_event_arg1_arg2">emitter.emit(event, [arg1], [arg2], [...])</a></li>
+<li><a href="#all_class_method_eventemitter_listenercount_emitter_event">Class Method: EventEmitter.listenerCount(emitter, event)</a></li>
 <li><a href="#all_event_newlistener">Event: &#39;newListener&#39;</a></li>
 </ul>
 </li>
@@ -313,8 +314,8 @@
 </li>
 <li><a href="#all_class_stream_writable">Class: stream.Writable</a><ul>
 <li><a href="#all_new_stream_writable_options">new stream.Writable([options])</a></li>
-<li><a href="#all_writable_write_chunk_callback">writable._write(chunk, callback)</a></li>
-<li><a href="#all_writable_write_chunk_encoding_callback">writable.write(chunk, [encoding], [callback])</a></li>
+<li><a href="#all_writable_write_chunk_encoding_callback">writable._write(chunk, encoding, callback)</a></li>
+<li><a href="#all_writable_write_chunk_encoding_callback_1">writable.write(chunk, [encoding], [callback])</a></li>
 <li><a href="#all_writable_end_chunk_encoding_callback">writable.end([chunk], [encoding], [callback])</a></li>
 <li><a href="#all_event_drain">Event: &#39;drain&#39;</a></li>
 <li><a href="#all_event_close_1">Event: &#39;close&#39;</a></li>
@@ -329,8 +330,8 @@
 </li>
 <li><a href="#all_class_stream_transform">Class: stream.Transform</a><ul>
 <li><a href="#all_new_stream_transform_options">new stream.Transform([options])</a></li>
-<li><a href="#all_transform_transform_chunk_outputfn_callback">transform._transform(chunk, outputFn, callback)</a></li>
-<li><a href="#all_transform_flush_outputfn_callback">transform._flush(outputFn, callback)</a></li>
+<li><a href="#all_transform_transform_chunk_encoding_callback">transform._transform(chunk, encoding, callback)</a></li>
+<li><a href="#all_transform_flush_callback">transform._flush(callback)</a></li>
 <li><a href="#all_example_simpleprotocol_parser">Example: <code>SimpleProtocol</code> parser</a></li>
 </ul>
 </li>
@@ -398,6 +399,7 @@
 <li><a href="#all_crypto_pbkdf2_password_salt_iterations_keylen_callback">crypto.pbkdf2(password, salt, iterations, keylen, callback)</a></li>
 <li><a href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
 <li><a href="#all_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
+<li><a href="#all_crypto_pseudorandombytes_size_callback">crypto.pseudoRandomBytes(size, [callback])</a></li>
 <li><a href="#all_crypto_default_encoding">crypto.DEFAULT_ENCODING</a></li>
 <li><a href="#all_recent_api_changes">Recent API Changes</a></li>
 </ul>
@@ -673,12 +675,15 @@
 <li><a href="#all_server_listen_handle_callback_1">server.listen(handle, [callback])</a></li>
 <li><a href="#all_server_close_callback_1">server.close([callback])</a></li>
 <li><a href="#all_server_maxheaderscount">server.maxHeadersCount</a></li>
+<li><a href="#all_server_settimeout_msecs_callback">server.setTimeout(msecs, callback)</a></li>
+<li><a href="#all_server_timeout">server.timeout</a></li>
 </ul>
 </li>
 <li><a href="#all_class_http_serverresponse">Class: http.ServerResponse</a><ul>
 <li><a href="#all_event_close_6">Event: &#39;close&#39;</a></li>
 <li><a href="#all_response_writecontinue">response.writeContinue()</a></li>
 <li><a href="#all_response_writehead_statuscode_reasonphrase_headers">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li>
+<li><a href="#all_response_settimeout_msecs_callback">response.setTimeout(msecs, callback)</a></li>
 <li><a href="#all_response_statuscode">response.statusCode</a></li>
 <li><a href="#all_response_setheader_name_value">response.setHeader(name, value)</a></li>
 <li><a href="#all_response_headerssent">response.headersSent</a></li>
@@ -720,6 +725,7 @@
 <li><a href="#all_message_httpversion">message.httpVersion</a></li>
 <li><a href="#all_message_headers">message.headers</a></li>
 <li><a href="#all_message_trailers">message.trailers</a></li>
+<li><a href="#all_message_settimeout_msecs_callback">message.setTimeout(msecs, callback)</a></li>
 <li><a href="#all_message_setencoding_encoding">message.setEncoding([encoding])</a></li>
 <li><a href="#all_message_pause">message.pause()</a></li>
 <li><a href="#all_message_resume">message.resume()</a></li>
@@ -963,7 +969,7 @@
 <li><a href="#all_worker_process">worker.process</a></li>
 <li><a href="#all_worker_suicide">worker.suicide</a></li>
 <li><a href="#all_worker_send_message_sendhandle">worker.send(message, [sendHandle])</a></li>
-<li><a href="#all_worker_destroy">worker.destroy()</a></li>
+<li><a href="#all_worker_kill_signal_sigterm">worker.kill([signal=&#39;SIGTERM&#39;])</a></li>
 <li><a href="#all_worker_disconnect">worker.disconnect()</a></li>
 <li><a href="#all_event_message_2">Event: &#39;message&#39;</a></li>
 <li><a href="#all_event_online_1">Event: &#39;online&#39;</a></li>
@@ -4880,6 +4886,16 @@ Execute each of the listeners in order with the supplied arguments.
 
 <p>提供された引数の並びでそれぞれのリスナーを実行します。
 
+
+</p>
+<h3>Class Method: EventEmitter.listenerCount(emitter, event)<span><a class="mark" href="#all_class_method_eventemitter_listenercount_emitter_event" id="all_class_method_eventemitter_listenercount_emitter_event">#</a></span></h3>
+<!--
+Return the number of listeners for a given event.
+-->
+
+<p>与えられたイベントのリスナー数を返します。
+
+
 </p>
 <h3>Event: &#39;newListener&#39;<span><a class="mark" href="#all_event_newlistener" id="all_event_newlistener">#</a></span></h3>
 <div class="signature"><ul>
@@ -4894,7 +4910,7 @@ This event is emitted any time someone adds a new listener.
 
 </p>
 <h1>Domain<span><a class="mark" href="#all_domain" id="all_domain">#</a></span></h1>
-<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 Domains provide a way to handle multiple different IO operations as a
 single group.  If any of the event emitters or callbacks registered to a
 domain emit an `error` event, or throw an error, then the domain object
@@ -6824,8 +6840,6 @@ method. (See below.)
 <h3>new stream.Readable([options])<span><a class="mark" href="#all_new_stream_readable_options" id="all_new_stream_readable_options">#</a></span></h3>
 <!--
 * `options` {Object}
-  * `bufferSize` {Number} The size of the chunks to consume from the
-    underlying resource. Default=16kb
   * `highWaterMark` {Number} The maximum number of bytes to store in
     the internal buffer before ceasing to read from the underlying
     resource.  Default=16kb
@@ -6838,8 +6852,6 @@ method. (See below.)
 
 <ul>
 <li><code>options</code> {Object} (任意)<ul>
-<li><code>bufferSize</code> {Number} 下層のリソースによって消費される
-チャンクのサイズです。デフォルトは 16kb。</li>
 <li><code>highWaterMark</code> {Number} 下層のリソースから読み込むのを中断するまで
 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
 <li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
@@ -6863,12 +6875,10 @@ initialized.
 <h3>readable._read(size)<span><a class="mark" href="#all_readable_read_size" id="all_readable_read_size">#</a></span></h3>
 <!--
 * `size` {Number} Number of bytes to read asynchronously
-* `callback` {Function} Called with an error or with data
 -->
 
 <ul>
 <li><code>size</code> {Number} 非同期に読み込むバイト数</li>
-<li><code>callback</code> {Function} エラーまたはデータと共に呼び出されるコールバック</li>
 </ul>
 <!--
 Note: **This function should NOT be called directly.**  It should be
@@ -6914,6 +6924,23 @@ data.
 それを読み込みキューに追加します。
 <code>push</code> が false を返した場合は、読み込みを止めるべきです。
 <code>_read</code> が再び呼び出された時が、さらに多くのデータを追加を開始すべき時です。
+
+</p>
+<!--
+The `size` argument is advisory.  Implementations where a "read" is a
+single call that returns data can use this to know how much data to
+fetch.  Implementations where that is not relevant, such as TCP or
+TLS, may ignore this argument, and simply provide data whenever it
+becomes available.  There is no need, for example to "wait" until
+`size` bytes are available before calling `stream.push(chunk)`.
+-->
+
+<p><code>size</code> 引数はアドバイス的です。
+&quot;read&quot; が一回の呼び出しでデータを返す実装では、
+どれだけのデータを取得すべきか知るためにこれを使うことができます。
+TCPやTLSなど、それに関連しない実装ではこの引数は無視され、
+利用可能になったデータをシンプルに提供するかもしれません。
+たとえば <code>size</code> バイトが利用可能になるまで「待つ」必要はありません。
 
 </p>
 <h3>readable.push(chunk)<span><a class="mark" href="#all_readable_push_chunk" id="all_readable_push_chunk">#</a></span></h3>
@@ -6994,7 +7021,8 @@ source.onend = function() {
 };
 
 // _read will be called when the stream wants to pull more data in
-stream._read = function(size, cb) {
+// the advisory size argument is ignored in this case.
+stream._read = function(n) {
   source.readStart();
 };</code></pre>
 <h3>readable.unshift(chunk)<span><a class="mark" href="#all_readable_unshift_chunk" id="all_readable_unshift_chunk">#</a></span></h3>
@@ -7105,6 +7133,7 @@ SimpleProtocol.prototype._read = function(n) {
       }
       // now, because we got some extra data, unshift the rest
       // back into the read queue so that our consumer will see it.
+      var b = chunk.slice(split);
       this.unshift(b);
 
       // and let them know that we are done parsing the header.
@@ -7441,12 +7470,13 @@ A `Writable` Stream has the following methods, members, and events.
 </p>
 <!--
 Note that `stream.Writable` is an abstract class designed to be
-extended with an underlying implementation of the `_write(chunk, cb)`
-method. (See below.)
+extended with an underlying implementation of the
+`_write(chunk, encoding, cb)` method. (See below.)
 -->
 
-<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, cb)</code> メソッド (後述)
-によって拡張されるように設計された抽象クラスであることに注意してください。
+<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, encoding, cb)</code>
+メソッド (後述) によって拡張されるように設計された抽象クラスであることに
+注意してください。
 
 </p>
 <h3>new stream.Writable([options])<span><a class="mark" href="#all_new_stream_writable_options" id="all_new_stream_writable_options">#</a></span></h3>
@@ -7477,16 +7507,27 @@ initialized.
 初期化することができるように、必ずコンストラクタを呼び出してください。
 
 </p>
-<h3>writable._write(chunk, callback)<span><a class="mark" href="#all_writable_write_chunk_callback" id="all_writable_write_chunk_callback">#</a></span></h3>
+<h3>writable._write(chunk, encoding, callback)<span><a class="mark" href="#all_writable_write_chunk_encoding_callback" id="all_writable_write_chunk_encoding_callback">#</a></span></h3>
 <!--
-* `chunk` {Buffer | Array} The data to be written
-* `callback` {Function} Called with an error, or null when finished
+* `chunk` {Buffer | String} The chunk to be written.  Will always
+  be a buffer unless the `decodeStrings` option was set to `false`.
+* `encoding` {String} If the chunk is a string, then this is the
+  encoding type.  Ignore chunk is a buffer.  Note that chunk will
+  **always** be a buffer unless the `decodeStrings` option is
+  explicitly set to `false`.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when you are done processing the supplied chunk.
 -->
 
 <ul>
-<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。</li>
-<li><code>callback</code> {Function} 終了後にエラーまたは <code>null</code>
-と共に呼び出されるコールバック</li>
+<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。
+<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>
+<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。
+チャンクがバッファの場合は無視されます。
+<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、
+チャンクは <em>常に</em> バッファであるべき事に注意してください。</li>
+<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、
+(任意のエラー引数と共に) この関数を呼び出してください。</li>
 </ul>
 <!--
 All Writable stream implementations must provide a `_write` method to
@@ -7519,14 +7560,21 @@ signal that the write completed successfully or with an error.
 </p>
 <!--
 If the `decodeStrings` flag is set in the constructor options, then
-`chunk` will be an array rather than a Buffer.  This is to support
+`chunk` may be a string rather than a Buffer, and `encoding` will
+indicate the sort of string that it is.  This is to support
 implementations that have an optimized handling for certain string
-data encodings.
+data encodings.  If you do not explicitly set the `decodeStrings`
+option to `false`, then you can safely ignore the `encoding` argument,
+and assume that `chunk` will always be a Buffer.
 -->
 
-<p>コンストラクタオプションの <code>decodeString</code> フラグがセットされると、
-<code>chunk</code> は Buffer ではなく配列になります。
+<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、
+<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の
+種類を示すことができます。
 これは、実装が文字列データのエンコーディングを最適化できるようにするためです。
+<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、
+<code>endocing</code> 引数は安全に無視することができます。
+そして <code>chunk</code> は常に Buffer であると見なせます。
 
 </p>
 <!--
@@ -7543,7 +7591,7 @@ your own extension classes.
 
 
 </p>
-<h3>writable.write(chunk, [encoding], [callback])<span><a class="mark" href="#all_writable_write_chunk_encoding_callback" id="all_writable_write_chunk_encoding_callback">#</a></span></h3>
+<h3>writable.write(chunk, [encoding], [callback])<span><a class="mark" href="#all_writable_write_chunk_encoding_callback_1" id="all_writable_write_chunk_encoding_callback_1">#</a></span></h3>
 <!--
 * `chunk` {Buffer | String} Data to be written
 * `encoding` {String} Optional.  If `chunk` is a string, then encoding
@@ -7680,12 +7728,12 @@ Readable であり Writable でもあるストリームの一種です。
 <!--
 Note that `stream.Duplex` is an abstract class designed to be
 extended with an underlying implementation of the `_read(size)`
-and `_write(chunk, callback)` methods as you would with a Readable or
+and `_write(chunk, encoding, callback)` methods as you would with a Readable or
 Writable stream class.
 -->
 
 <p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、
-下層の実装である <code>_read(size)</code> および <code>_write(chunk, callback)</code>
+下層の実装である <code>_read(size)</code> および <code>_write(chunk, encoding, cb)</code>
 メソッドによって拡張されるように設計された抽象クラスであることに
 注意してください。
 
@@ -7694,14 +7742,14 @@ Writable stream class.
 Since JavaScript doesn't have multiple prototypal inheritance, this
 class prototypally inherits from Readable, and then parasitically from
 Writable.  It is thus up to the user to implement both the lowlevel
-`_read(n)` method as well as the lowlevel `_write(chunk,cb)` method
+`_read(n)` method as well as the lowlevel `_write(chunk, encoding, cb)` method
 on extension duplex classes.
 -->
 
 <p>JavaScript は複数のプロトタイプ継承を持つことができないため、
 このクラスは Readable からプロトタイプを継承したうえで、
 Writable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。
-低水準の <code>_read(n)</code> および <code>_write(chunk,cb)</code> を実装することは、
+低水準の <code>_read(n)</code> および <code>_write(chunk, encoding, cb)</code> を実装することは、
 Duplex クラスを拡張するユーザの責務です。
 
 </p>
@@ -7788,20 +7836,22 @@ initialized.
 初期化することができるように、必ずコンストラクタを呼び出してください。
 
 </p>
-<h3>transform._transform(chunk, outputFn, callback)<span><a class="mark" href="#all_transform_transform_chunk_outputfn_callback" id="all_transform_transform_chunk_outputfn_callback">#</a></span></h3>
+<h3>transform._transform(chunk, encoding, callback)<span><a class="mark" href="#all_transform_transform_chunk_encoding_callback" id="all_transform_transform_chunk_encoding_callback">#</a></span></h3>
 <!--
-* `chunk` {Buffer} The chunk to be transformed.
-* `outputFn` {Function} Call this function with any output data to be
-  passed to the readable interface.
+* `chunk` {Buffer | String} The chunk to be transformed.  Will always
+  be a buffer unless the `decodeStrings` option was set to `false`.
+* `encoding` {String} If the chunk is a string, then this is the
+  encoding type.  (Ignore if `decodeStrings` chunk is a buffer.)
 * `callback` {Function} Call this function (optionally with an error
   argument) when you are done processing the supplied chunk.
 -->
 
 <ul>
-<li><code>chunk</code> {Buffer} 変換されるチャンク。</li>
-<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために
-データと共に呼び出してください。</li>
-<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、
+<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。
+<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>
+<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式
+(チャンクがバッファの場合は無視されます)。</li>
+<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、
 (任意のエラー引数と共に) この関数を呼び出してください。</li>
 </ul>
 <!--
@@ -7837,15 +7887,25 @@ Transform クラスでしなければならないことは全て <code>_transfor
 
 </p>
 <!--
+Call `transform.push(outputChunk)` 0 or more times to generate output
+from this input chunk, depending on how much data you want to output
+as a result of this chunk.
+-->
+
+<p>この入力チャンクからの出力を生成するために、<code>transform.push(outputChunk)</code>
+を 0 回以上呼び出してください。
+それはこのチャンクの結果としてどれだけのデータを出力したいのかに依存します。
+
+</p>
+<!--
 Call the callback function only when the current chunk is completely
-consumed.  Note that this may mean that you call the `outputFn` zero
-or more times, depending on how much data you want to output as a
-result of this chunk.
+consumed.  Note that there may or may not be output as a result of any
+particular input chunk.
 -->
 
 <p>現在のチャンクの処理が完全に終了した場合のみ、コールバック関数を呼び出します。
-<code>outputFn</code> を何度 (0 回以上) 呼び出すかは、このチャンクからどれだけのデータを
-出力した以下に依存することに注意してください。
+特定の入力チャンクからの結果として、出力があるかもしれないし、
+無いかもしれないことに注意してください。
 
 </p>
 <!--
@@ -7861,17 +7921,13 @@ your own extension classes.
 求められて<strong>います</strong>。
 
 </p>
-<h3>transform._flush(outputFn, callback)<span><a class="mark" href="#all_transform_flush_outputfn_callback" id="all_transform_flush_outputfn_callback">#</a></span></h3>
+<h3>transform._flush(callback)<span><a class="mark" href="#all_transform_flush_callback" id="all_transform_flush_callback">#</a></span></h3>
 <!--
-* `outputFn` {Function} Call this function with any output data to be
-  passed to the readable interface.
 * `callback` {Function} Call this function (optionally with an error
   argument) when you are done flushing any remaining data.
 -->
 
 <ul>
-<li><code>outputFn</code> {Function} 読み込み可能なインタフェースに渡すために
-データと共に呼び出してください。</li>
 <li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、
 (任意のエラー引数と共に) この関数を呼び出してください。</li>
 </ul>
@@ -7906,15 +7962,16 @@ can with what is left, so that the data will be complete.
 In those cases, you can implement a `_flush` method, which will be
 called at the very end, after all the written data is consumed, but
 before emitting `end` to signal the end of the readable side.  Just
-like with `_transform`, call `outputFn` zero or more times, as
-appropriate, and call `callback` when the flush operation is complete.
+like with `_transform`, call `transform.push(chunk)` zero or more
+times, as appropriate, and call `callback` when the flush operation is
+complete.
 -->
 
 <p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、
 ただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される
 <code>_flush</code> メソッドを実装することができます。
-<code>_transform</code> と同様、<code>outputFn</code> は何度 (0 回以上) でも適切に呼び出し、
-フラッシュ操作が完了した時に <code>callback</code> を呼び出します。
+<code>_transform</code> と同様、<code>transform.push(chunk)</code> を何度 (0 回以上) でも
+適切に呼び出し、フラッシュ操作が完了した時に <code>callback</code> を呼び出します。
 
 </p>
 <!--
@@ -7964,7 +8021,7 @@ approach.
 SimpleProtocol.prototype = Object.create(
   Transform.prototype, { constructor: { value: SimpleProtocol }});
 
-SimpleProtocol.prototype._transform = function(chunk, output, done) {
+SimpleProtocol.prototype._transform = function(chunk, encoding, done) {
   if (!this._inBody) {
     // check if the chunk has a \n\n
     var split = -1;
@@ -8000,11 +8057,11 @@ SimpleProtocol.prototype._transform = function(chunk, output, done) {
       this.emit(&#39;header&#39;, this.header);
 
       // now, because we got some extra data, emit this first.
-      output(b);
+      this.push(b);
     }
   } else {
     // from there on, just provide the data to our consumer as-is.
-    output(b);
+    this.push(b);
   }
   done();
 };
@@ -8428,8 +8485,8 @@ Returned by `crypto.createCipher` and `crypto.createCipheriv`.
 <!--
 Cipher objects are [streams](stream.html) that are both readable and
 writable.  The written plain text data is used to produce the
-encrypted data on the the readable side.  The legacy `update` and
-`final` methods are also supported.
+encrypted data on the readable side.  The legacy `update` and `final`
+methods are also supported.
 -->
 
 <p>暗号化オブジェクトは読み込みと書き込みの両方が可能な
@@ -9003,7 +9060,7 @@ Synchronous PBKDF2 function.  Returns derivedKey or throws error.
 Generates cryptographically strong pseudo-random data. Usage:
 -->
 
-<p>暗号学的に強い疑似乱数データを生成します。使用法:
+<p>暗号学的で、強い疑似乱数データを生成します。使用法:
 
 </p>
 <pre><code>// async
@@ -9019,6 +9076,29 @@ try {
 } catch (ex) {
   // handle error
 }</code></pre>
+<h2>crypto.pseudoRandomBytes(size, [callback])<span><a class="mark" href="#all_crypto_pseudorandombytes_size_callback" id="all_crypto_pseudorandombytes_size_callback">#</a></span></h2>
+<!--
+Generates *non*-cryptographically strong pseudo-random data. The data
+returned will be unique if it is sufficiently long, but is not
+necessarily unpredictable. For this reason, the output of this
+function should never be used where unpredictability is important,
+such as in the generation of encryption keys.
+-->
+
+<p>暗号学的では <em>ない</em>、強い疑似乱数データを生成します。
+返されるデータは十分に長ければユニークですが、
+必ずしも予測不可能ではありません。
+この理由のため、この関数の出力を暗号化キーの生成など、予測不可能であることが
+重要なところでは決して使用しないでください。
+
+</p>
+<!--
+Usage is otherwise identical to `crypto.randomBytes`.
+-->
+
+<p>他の使い方は <code>crypto.randomBytes</code> と同じです。
+
+</p>
 <h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#all_crypto_default_encoding" id="all_crypto_default_encoding">#</a></span></h2>
 <!--
 The default encoding to use for functions that can take either strings
@@ -14172,7 +14252,79 @@ no limit will be applied.
 <p>受け付けるヘッダ数の上限で、デフォルトは 1000 です。
 0 に設定されると、制限しないことになります。
 
+</p>
+<h3>server.setTimeout(msecs, callback)<span><a class="mark" href="#all_server_settimeout_msecs_callback" id="all_server_settimeout_msecs_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>msecs</code> <span class="type">Number</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Sets the timeout value for sockets, and emits a `'timeout'` event on
+the Server object, passing the socket as an argument, if a timeout
+occurs.
+-->
 
+<p>ソケットにタイムアウト値を設定し、サーバオブジェクト上で <code>&#39;timeout&#39;</code>
+イベントを生成します。
+タイムアウトが発生すると、ソケットが引数として渡されます。
+
+</p>
+<!--
+If there is a `'timeout'` event listener on the Server object, then it
+will be called with the timed-out socket as an argument.
+-->
+
+<p>サーバオブジェクトに <code>&#39;timeout&#39;</code> イベントのリスナが存在すると、
+それはタイムアウトしたソケットを引数として呼び出されます。
+
+</p>
+<!--
+By default, the Server's timeout value is 2 minutes, and sockets are
+destroyed automatically if they time out.  However, if you assign a
+callback to the Server's `'timeout'` event, then you are responsible
+for handling socket timeouts.
+-->
+
+<p>デフォルトでは、サーバのタイムアウト値は 2 分で、
+タイムアウトしたソケットは自動的に破棄されます。
+しかしながら、<code>&#39;timeout&#39;</code> イベントのコールバックをサーバに割り当てた場合、
+タイムアウトしたソケットのハンドリングはあなたの責務となります。
+
+</p>
+<h3>server.timeout<span><a class="mark" href="#all_server_timeout" id="all_server_timeout">#</a></span></h3>
+<!--
+* {Number} Default = 120000 (2 minutes)
+-->
+
+<ul>
+<li>{Number} デフォルト = 120000 (2 分)</li>
+</ul>
+<!--
+The number of milliseconds of inactivity before a socket is presumed
+to have timed out.
+-->
+
+<p>不活性なソケットがタイムアウトしたと推定されるまでのミリ秒を表す数値。
+
+</p>
+<!--
+Note that the socket timeout logic is set up on connection, so
+changing this value only affects *new* connections to the server, not
+any existing connections.
+-->
+
+<p>ソケットのタイムアウト処理は接続のセットアップ時に行われるため、
+この値の変更は既存の接続ではなく、サーバへの <em>新しい</em> 接続にだけ
+影響することに注意してください。
+
+</p>
+<!--
+Set to 0 to disable any kind of automatic timeout behavior on incoming
+connections.
+-->
+
+<p>0 を設定すると、到着する接続に対する自動的なタイムアウトの振る舞いは
+無効になります。
 
 </p>
 <h2>Class: http.ServerResponse<span><a class="mark" href="#all_class_http_serverresponse" id="all_class_http_serverresponse">#</a></span></h2>
@@ -14270,6 +14422,36 @@ which has been transmitted are equal or not.
 もしボディがより上位にコード化された文字を含む場合は、
 指定したエンコーディングによるバイト数を得るために <code>Buffer.byteLength()</code> を使うべきです。
 Node は、Content-Length と実際に送信されたレスポンスボディの長さが等しいかどうかチェックしません。
+
+</p>
+<h3>response.setTimeout(msecs, callback)<span><a class="mark" href="#all_response_settimeout_msecs_callback" id="all_response_settimeout_msecs_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>msecs</code> <span class="type">Number</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Sets the Socket's timeout value to `msecs`.  If a callback is
+provided, then it is added as a listener on the `'timeout'` event on
+the response object.
+-->
+
+<p>ソケットのタイムアウト値を <code>msec</code> に設定します。
+コールバックが与えられると、それはレスポンスオブジェクトの <code>&#39;timeout&#39;</code>
+イベントのリスナとして加えられます。
+
+</p>
+<!--
+If no `'timeout'` listener is added to the request, the response, or
+the server, then sockets are destroyed when they time out.  If you
+assign a handler on the request, the response, or the server's
+`'timeout'` events, then it is your responsibility to handle timed out
+sockets.
+-->
+
+<p>リクエスト、レスポンス、そしてサーバのいずれにも <code>&#39;timeout&#39;</code>
+リスナが存在しない場合、タイムアウトしたソケットは破棄されます。
+もしリクエスト、レスポンス、サーバのいずれかに <code>&#39;timeout&#39;</code> イベントを
+設定した場合、タイムアウトしたソケットのハンドリングはあなたの責務となります。
 
 </p>
 <h3>response.statusCode<span><a class="mark" href="#all_response_statuscode" id="all_response_statuscode">#</a></span></h3>
@@ -15262,14 +15444,6 @@ event for more information.
 [http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
 
 </p>
-<!--
-Note: `'close'` can fire after `'end'`, but not vice versa.
--->
-
-<p>注意: <code>&#39;close&#39;</code> は <code>&#39;end&#39;</code> の後に発生することがあります。
-その逆もあります。
-
-</p>
 <h3>message.httpVersion<span><a class="mark" href="#all_message_httpversion" id="all_message_httpversion">#</a></span></h3>
 <!--
 In case of server request, the HTTP version sent by the client. In the case of
@@ -15322,6 +15496,18 @@ The request/response trailers object. Only populated after the 'end' event.
 
 <p>リクエスト／レスポンスのトレーラオブジェクトです。
 <code>&#39;end&#39;</code> イベントの後にだけ発生します。
+
+</p>
+<h3>message.setTimeout(msecs, callback)<span><a class="mark" href="#all_message_settimeout_msecs_callback" id="all_message_settimeout_msecs_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>msecs</code> <span class="type">Number</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
+<!--
+Calls `message.connection.setTimeout(msecs, callback)`.
+-->
+
+<p><code>message.connection.setTimeout(msecs, callback)</code> を呼びます。
 
 </p>
 <h3>message.setEncoding([encoding])<span><a class="mark" href="#all_message_setencoding_encoding" id="all_message_setencoding_encoding">#</a></span></h3>
@@ -16003,12 +16189,15 @@ Take a parsed URL object, and return a formatted URL string.
 <h2>url.resolve(from, to)<span><a class="mark" href="#all_url_resolve_from_to" id="all_url_resolve_from_to">#</a></span></h2>
 <!--
 Take a base URL, and a href URL, and resolve them as a browser would for
-an anchor tag.
+an anchor tag.  Examples:
 -->
 
-<p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。
+<p>ベースとなる URL と相対 URL を引数に取り、ブラウザがアンカータグに対して行うのと同様に URL を解決します。例:
 
 </p>
+<pre><code>url.resolve(&#39;/one/two/three&#39;, &#39;four&#39;)         // &#39;/one/two/four&#39;
+url.resolve(&#39;http://example.com/&#39;, &#39;/one&#39;)    // &#39;http://example.com/one&#39;
+url.resolve(&#39;http://example.com/one&#39;, &#39;/two&#39;) // &#39;http://example.com/two&#39;</code></pre>
 <h1>Query String<span><a class="mark" href="#all_query_string" id="all_query_string">#</a></span></h1>
 <pre class="api_stability_3">Stability: 3 - Stable</pre><!--name=querystring-->
 
@@ -20214,12 +20403,13 @@ on more than one address.
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
 <!--
-When a workers IPC channel has disconnected this event is emitted. This will happen
-when the worker dies, usually after calling `.destroy()`.
+When a workers IPC channel has disconnected this event is emitted.
+This will happen when the worker dies, usually after calling
+`.kill()`.
 -->
 
 <p>ワーカの IPC チャネルが切断された場合に生成されます。
-それはワーカが終了した場合や、<code>.destroy()</code> を呼び出した後に発生します。
+それはワーカが終了した場合や、<code>.kill()</code> を呼び出した後に発生します。
 
 </p>
 <!--
@@ -20483,12 +20673,13 @@ See: [Child Process module](child_process.html)
 <li><span class="type">Boolean</span></li>
 </div></ul>
 <!--
-This property is a boolean. It is set when a worker dies after calling `.destroy()`
-or immediately after calling the `.disconnect()` method. Until then it is `undefined`.
+This property is a boolean. It is set when a worker dies after calling
+`.kill()` or immediately after calling the `.disconnect()` method.
+Until then it is `undefined`.
 -->
 
 <p>このプロパティは論理値型です。
-これはワーカが <code>.destroy()</code> を呼び出して終了するか、
+これはワーカが <code>.kill()</code> を呼び出して終了するか、
 <code>.disconnect()</code> メソッドを呼び出した後に設定されます。
 それまでは <code>undefined</code> です。
 
@@ -20526,7 +20717,15 @@ This example will echo back all messages from the master:
     process.send(msg);
   });
 }</code></pre>
-<h3>worker.destroy()<span><a class="mark" href="#all_worker_destroy" id="all_worker_destroy">#</a></span></h3>
+<h3>worker.kill([signal=&#39;SIGTERM&#39;])<span><a class="mark" href="#all_worker_kill_signal_sigterm" id="all_worker_kill_signal_sigterm">#</a></span></h3>
+<!--
+* `signal` {String} Name of the kill signal to send to the worker
+  process.
+-->
+
+<ul>
+<li><code>signal</code> {String} ワーカプロセスに送られるシグナルの名前です。</li>
+</ul>
 <!--
 This function will kill the worker, and inform the master to not spawn a
 new worker.  The boolean `suicide` lets you distinguish between voluntary
@@ -20543,8 +20742,16 @@ boolean の <code>suicide</code> により、自発的かアクシデントに�
   }
 });
 
-// destroy worker
-worker.destroy();</code></pre>
+// kill worker
+worker.kill();</code></pre>
+<!--
+This method is aliased as `worker.destroy()` for backwards
+compatibility.
+-->
+
+<p>後方互換性のため、このメソッドには <code>worker.destroy()</code> という別名があります。
+
+</p>
 <h3>worker.disconnect()<span><a class="mark" href="#all_worker_disconnect" id="all_worker_disconnect">#</a></span></h3>
 <!--
 When calling this function the worker will no longer accept new connections, but
@@ -20567,14 +20774,14 @@ IPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベ�
 <!--
 Because there might be long living connections, it is useful to implement a timeout.
 This example ask the worker to disconnect and after 2 seconds it will destroy the
-server. An alternative would be to execute `worker.destroy()` after 2 seconds, but
+server. An alternative would be to execute `worker.kill()` after 2 seconds, but
 that would normally not allow the worker to do any cleanup if needed.
 -->
 
 <p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために
 有益です。
 この例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。
-他の方法として <code>worker.destroy()</code> を呼び出してから
+他の方法として <code>worker.kill()</code> を呼び出してから
 2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを
 行えないかもしれません。
 
@@ -20775,7 +20982,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.11/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.9.12/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
