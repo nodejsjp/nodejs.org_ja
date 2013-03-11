@@ -1,0 +1,365 @@
+{
+  "source": "doc/api/tls.markdown",
+  "modules": [
+    {
+      "textRaw": "TLS (SSL)",
+      "name": "tls_(ssl)",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nUse `require('tls')` to access this module.\n-->\n\n<p><code>require(&#39;tls&#39;)</code> でこのモジュールにアクセスします。\n\n</p>\n<!--\nThe `tls` module uses OpenSSL to provide Transport Layer Security and/or\nSecure Socket Layer: encrypted stream communication.\n-->\n\n<p><code>tls</code> モジュールは OpenSSL を使用することで Transport Layer Security および\nSecure Socket Layer: 暗号化されたストリーム通信を提供します。\n\n</p>\n<!--\nTLS/SSL is a public/private key infrastructure. Each client and each\nserver must have a private key. A private key is created like this\n-->\n\n<p>TLS/SSL は公開／秘密鍵を基礎とします。\nどのクライアントとサーバも秘密鍵が必要です。\n秘密鍵は次のように作成します\n\n</p>\n<pre><code>openssl genrsa -out ryans-key.pem 1024</code></pre>\n<!--\nAll severs and some clients need to have a certificate. Certificates are public\nkeys signed by a Certificate Authority or self-signed. The first step to\ngetting a certificate is to create a \"Certificate Signing Request\" (CSR)\nfile. This is done with:\n-->\n\n<p>全てのサーバと一部のクライアントは証明書を必要とします。\n証明書は認証局の公開鍵または自身によって署名されます。\n証明書を作成する最初のステップは「証明書署名要求 (CSR)」ファイルです。\n次のようにします:\n\n</p>\n<pre><code>openssl req -new -key ryans-key.pem -out ryans-csr.pem</code></pre>\n<!--\nTo create a self-signed certificate with the CSR, do this:\n-->\n\n<p>CSR から自己署名証明書を作成するには次のようにします:\n\n</p>\n<pre><code>openssl x509 -req -in ryans-csr.pem -signkey ryans-key.pem -out ryans-cert.pem</code></pre>\n<!--\nAlternatively you can send the CSR to a Certificate Authority for signing.\n-->\n\n<p>他に CSR を認証局に送って署名してもらうこともできます。\n\n</p>\n<!--\n(TODO: docs on creating a CA, for now interested users should just look at\n`test/fixtures/keys/Makefile` in the Node source code)\n-->\n\n<p>(TODO: CA を作るドキュメント、現在は興味あるユーザは Node のソースコードから\n<code>test/fixtures/keys/Makefile</code> を見る必要がある)\n\n</p>\n<!--\nTo create .pfx or .p12, do this:\n-->\n\n<p>.pfx または .p12 を作成するには次のようにします:\n\n</p>\n<pre><code>openssl pkcs12 -export -in agent5-cert.pem -inkey agent5-key.pem \\\n    -certfile ca-cert.pem -out agent5.pfx</code></pre>\n<ul>\n<li><code>in</code>:  certificate</li>\n<li><code>inkey</code>: private key</li>\n<li><code>certfile</code>: all CA certs concatenated in one file like\n<code>cat ca1-cert.pem ca2-cert.pem &gt; ca-cert.pem</code></li>\n</ul>\n",
+      "miscs": [
+        {
+          "textRaw": "Client-initiated renegotiation attack mitigation",
+          "name": "Client-initiated renegotiation attack mitigation",
+          "type": "misc",
+          "desc": "<!--\nThe TLS protocol lets the client renegotiate certain aspects of the TLS session.\nUnfortunately, session renegotiation requires a disproportional amount of\nserver-side resources, which makes it a potential vector for denial-of-service\nattacks.\n\nTo mitigate this, renegotiations are limited to three times every 10 minutes. An\nerror is emitted on the [CleartextStream][] instance when the threshold is\nexceeded. The limits are configurable:\n\n  - `tls.CLIENT_RENEG_LIMIT`: renegotiation limit, default is 3.\n\n  - `tls.CLIENT_RENEG_WINDOW`: renegotiation window in seconds, default is\n                               10 minutes.\n\nDon't change the defaults unless you know what you are doing.\n\nTo test your server, connect to it with `openssl s_client -connect address:port`\nand tap `R<CR>` (that's the letter `R` followed by a carriage return) a few\ntimes.\n-->\n\n<p>TLS プロトコルでは、クライアントに TLS セッションの再ネゴシエーションを\n許します。\n\n</p>\n<p>残念ながら、セッション再ネゴシエーション要求はサーバサイドに過度なリソースを\n要求するため、それは潜在的なサーバ強制停止攻撃となります。\n\n</p>\n<p>これを軽減するために、再ネゴシエーションは 10 分当たり 3 回までに\n制限されています。この制限を超えると、[CleartextStream][]\nのインスタンス上でエラーが生成されます。この制限は変更可能です:\n\n</p>\n<ul>\n<li><p><code>tls.CLIENT_RENEG_LIMIT</code>: 再ネゴシエーションの上限、デフォルトは 3 です。</p>\n</li>\n<li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 秒単位の再ネゴシエーションウィンドウ、</p>\n<pre><code>                       デフォルトは 10 分です。</code></pre>\n</li>\n</ul>\n<p>あなたが何をしようとしているか十分に理解していない限り、\nデフォルトを変更しないでください。\n\n</p>\n<p>サーバをテストするために、<code>openssl s_client -connect address:port</code>\nおよび <code>R&lt;CR&gt;</code> (<code>R</code> キーの後に続けてリターンキー) を\n数回繰り返します。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "NPN and SNI",
+          "name": "NPN and SNI",
+          "type": "misc",
+          "desc": "<!--\nNPN (Next Protocol Negotiation) and SNI (Server Name Indication) are TLS\nhandshake extensions allowing you:\n\n  * NPN - to use one TLS server for multiple protocols (HTTP, SPDY)\n  * SNI - to use one TLS server for multiple hostnames with different SSL\n    certificates.\n-->\n\n<p>NPN (Next Protocol Negotitation) と SNI (Server Name Indication) は\nTLS の拡張で、以下を可能にします。\n\n</p>\n<ul>\n<li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li>\n<li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li>\n</ul>\n"
+        }
+      ],
+      "methods": [
+        {
+          "textRaw": "tls.createServer(options, [secureConnectionListener])",
+          "type": "method",
+          "name": "createServer",
+          "desc": "<!--\nCreates a new [tls.Server][].  The `connectionListener` argument is\nautomatically set as a listener for the [secureConnection][] event.  The\n`options` object has these possibilities:\n-->\n\n<p>新しい [tls.Server][] を作成します。\n<code>connectionListener</code> は [secureConnection][] イベントのリスナとして\n自動的に登録されます。\n<code>options</code> は以下を持つことができます:\n\n\n</p>\n<!--\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with\n    the `key`, `cert` and `ca` options.)\n\n  - `key`: A string or `Buffer` containing the private key of the server in\n    PEM format. (Required)\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the server in\n    PEM format. (Required)\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate\n    Revocation List)\n\n  - `ciphers`: A string describing the ciphers to use or exclude.\n\n    To mitigate [BEAST attacks] it is recommended that you use this option in\n    conjunction with the `honorCipherOrder` option described below to\n    prioritize the non-CBC cipher.\n\n    Defaults to\n    `ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.\n    Consult the [OpenSSL cipher list format documentation] for details on the\n    format.\n\n    `ECDHE-RSA-AES128-SHA256` and `AES128-GCM-SHA256` are used when node.js is\n    linked against OpenSSL 1.0.1 or newer and the client speaks TLS 1.2, RC4 is\n    used as a secure fallback.\n\n    **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an\n    acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore\n    susceptible to BEAST attacks. Do *not* use it.\n\n  - `handshakeTimeout`: Abort the connection if the SSL/TLS handshake does not\n    finish in this many milliseconds. The default is 120 seconds.\n\n    A `'clientError'` is emitted on the `tls.Server` object whenever a handshake\n    times out.\n\n  - `honorCipherOrder` : When choosing a cipher, use the server's preferences\n    instead of the client preferences.\n\n    Note that if SSLv2 is used, the server will send its list of preferences\n    to the client, and the client chooses the cipher.\n\n    Although, this option is disabled by default, it is *recommended* that you\n    use this option in conjunction with the `ciphers` option to mitigate\n    BEAST attacks.\n\n  - `requestCert`: If `true` the server will request a certificate from\n    clients that connect and attempt to verify that certificate. Default:\n    `false`.\n\n  - `rejectUnauthorized`: If `true` the server will reject any connection\n    which is not authorized with the list of supplied CAs. This option only\n    has an effect if `requestCert` is `true`. Default: `false`.\n\n  - `NPNProtocols`: An array or `Buffer` of possible NPN protocols. (Protocols\n    should be ordered by their priority).\n\n  - `SNICallback`: A function that will be called if client supports SNI TLS\n    extension. Only one argument will be passed to it: `servername`. And\n    `SNICallback` should return SecureContext instance.\n    (You can use `crypto.createCredentials(...).context` to get proper\n    SecureContext). If `SNICallback` wasn't provided - default callback with\n    high-level API will be used (see below).\n\n  - `sessionIdContext`: A string containing a opaque identifier for session\n    resumption. If `requestCert` is `true`, the default is MD5 hash value\n    generated from command-line. Otherwise, the default is not provided.\n\n-->\n\n<ul>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、および CA の\n証明書を含む文字列またはバッファ\n(<code>key</code>、<code>cert</code>、および <code>ca</code> オプションとは相互に排他的です)。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または <code>Buffer</code> です\n(必須)。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です\n(必須)。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>crl</code> : PEM でエンコードされた CRL (Certificate Revocation List、\n失効した証明書の一覧) の文字列または文字列の配列。</p>\n</li>\n<li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。</p>\n<p>[BEAST 攻撃]を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>\nを共に使って、非 CBC 暗号を優先することを推奨します。</p>\n<p>デフォルトは\n<code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code>\nです。\n詳細は [OpenSSL 暗号リストフォーマットのドキュメント] を参照してください。</p>\n<p><code>ECDHE-RSA-AES128-SHA256</code> と <code>AES128-GCM-SHA256</code> は、Node.js が\nOpenSSL 1.0.1 以降とリンクされていて、クライアントが TLS 1.2 を\nサポートしている場合に使われます。\nRC4 は安全なフォールバックとして使われます。</p>\n<p><strong>注意</strong>: 以前のバージョンのこのセクションは <code>AES256-SHA</code> を\n受け入れ可能な暗号であるかのように示していました。\n残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって BEAST\n攻撃には弱いです。</p>\n</li>\n<li><p><code>handshakeTimeout</code>: SSL/TLS ハンドシェークがこの時間 (ミリ秒)\n以内に終了しなかった場合は接続をアボートします。\nデフォルトは 120 秒です。</p>\n<p>ハンドシェークがタイムアウトすると、<code>tls.Server</code> オブジェクトで\n<code>&#39;clientError&#39;</code> イベントが生成されます。</p>\n</li>\n<li><p><code>honorCipherOrder</code> :\n暗号を選択する際に、クライアントではなくサーバの設定を使用します。</p>\n<p>SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、\nクライアントが暗号を選択することに注意してください。</p>\n<p>このオプションはデフォルトでは無効ですが、BEAST 攻撃を抑制するために\n<code>ciphers</code> オプションと共に使用することを <em>推奨</em> します。</p>\n</li>\n<li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの\n証明書を要求します。デフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバは提供された認証局の\nリストによって認証されていないコネクションを破棄します．\nこのオプションは <code>requestCert</code> が <code>true</code> の場合だけ効果があります。\nデフォルトは <code>false</code> です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列\n(プロトコルはその優先度に応じて並んでいる必要があります)。</p>\n</li>\n<li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に\n呼び出される関数です。\n<code>servername</code> が唯一の引数として渡されます。\n<code>SNICallback</code> は SecureContext のインスタンスを返す必要があります\n(SecureContext を取得するために <code>crypto.createCredentials(...).context</code>\nを使用することができます)。\n<code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして\n後述する高水準 API が使用されます。</p>\n</li>\n<li><p><code>sessionIdContext</code>: セッション再開のための識別子となる文字列です。\n<code>requestCedrt</code> が <code>true</code> の場合、デフォルトはコマンドライン引数から\n生成された MD5 ハッシュ値となります。\nそうでない場合はデフォルトは提供されません。</p>\n</li>\n</ul>\n<!--\nHere is a simple example echo server:\n-->\n\n<p>これはシンプルはエコーサーバの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  key: fs.readFileSync(&#39;server-key.pem&#39;),\n  cert: fs.readFileSync(&#39;server-cert.pem&#39;),\n\n  // This is necessary only if using the client certificate authentication.\n  requestCert: true,\n\n  // This is necessary only if the client uses the self-signed certificate.\n  ca: [ fs.readFileSync(&#39;client-cert.pem&#39;) ]\n};\n\nvar server = tls.createServer(options, function(cleartextStream) {\n  console.log(&#39;server connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  cleartextStream.write(&quot;welcome!\\n&quot;);\n  cleartextStream.setEncoding(&#39;utf8&#39;);\n  cleartextStream.pipe(cleartextStream);\n});\nserver.listen(8000, function() {\n  console.log(&#39;server bound&#39;);\n});</code></pre>\n<!--\nOr\n-->\n\n<p>あるいは:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;server.pfx&#39;),\n\n  // This is necessary only if using the client certificate authentication.\n  requestCert: true,\n\n};\n\nvar server = tls.createServer(options, function(cleartextStream) {\n  console.log(&#39;server connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  cleartextStream.write(&quot;welcome!\\n&quot;);\n  cleartextStream.setEncoding(&#39;utf8&#39;);\n  cleartextStream.pipe(cleartextStream);\n});\nserver.listen(8000, function() {\n  console.log(&#39;server bound&#39;);\n});</code></pre>\n<!--\nYou can test this server by connecting to it with `openssl s_client`:\n-->\n\n<p><code>openssl s_client</code> を使用してこのサーバに接続するテストを行うことができます。\n\n</p>\n<pre><code>openssl s_client -connect 127.0.0.1:8000</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "secureConnectionListener",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "tls.connect(options, [callback])",
+          "type": "method",
+          "name": "connect",
+          "desc": "<!--\nCreates a new client connection to the given `port` and `host` (old API) or\n`options.port` and `options.host`. (If `host` is omitted, it defaults to\n`localhost`.) `options` should be an object which specifies:\n-->\n\n<p>与えられた <code>port</code> と <code>host</code> (旧 API) または <code>options.port</code> と <code>options.host</code>\nで新しいクライアントコネクションを作成します\n(<code>host</code> が省略された場合、デフォルトは <code>localhost</code> です)。\n<code>options</code> は以下を指定したオブジェクトです:\n\n</p>\n<!--\n  - `host`: Host the client should connect to\n\n  - `port`: Port the client should connect to\n\n  - `socket`: Establish secure connection on a given socket rather than\n    creating a new socket. If this option is specified, `host` and `port`\n    are ignored.\n\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format.\n\n  - `key`: A string or `Buffer` containing the private key of the client in\n    PEM format.\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the client in\n    PEM format.\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `rejectUnauthorized`: If `true`, the server certificate is verified against\n    the list of supplied CAs. An `'error'` event is emitted if verification\n    fails. Default: `true`.\n\n  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN\n    protocols. `Buffer` should have following format: `0x05hello0x05world`,\n    where first byte is next protocol name's length. (Passing array should\n    usually be much simpler: `['hello', 'world']`.)\n\n  - `servername`: Servername for SNI (Server Name Indication) TLS extension.\n-->\n\n<ul>\n<li><p><code>host</code>: クライアントが接続するホスト。</p>\n</li>\n<li><p><code>port</code>: クライアントが接続するポート番号。</p>\n</li>\n<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で\nセキュアな接続を確立します。\nこのオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>\n</li>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、\nおよびサーバに対する CA の証明書を含む文字列またはバッファ。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または\n<code>Buffer</code> です。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは true です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> \nの配列です。\n<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>\n最初のバイトは次のプロトコル名の長さです\n(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>\n</li>\n<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>\n</li>\n</ul>\n<!--\nThe `callback` parameter will be added as a listener for the\n['secureConnect'][] event.\n\n`tls.connect()` returns a [CleartextStream][] object.\n\nHere is an example of a client of echo server as described previously:\n-->\n\n<p><code>callback</code> 引数は [&#39;secureConnect&#39;][] イベントのリスナとして\n加えられます。\n\n</p>\n<p><code>tls.connect()</code> は [CleartextStream][] オブジェクトを返します。\n\n</p>\n<p>これは前述のエコーサーバに接続するクライアントの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  // These are necessary only if using the client certificate authentication\n  key: fs.readFileSync(&#39;client-key.pem&#39;),\n  cert: fs.readFileSync(&#39;client-cert.pem&#39;),\n\n  // This is necessary only if the server uses the self-signed certificate\n  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;client.pfx&#39;)\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "port"
+                },
+                {
+                  "name": "host",
+                  "optional": true
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "tls.connect(port, [host], [options], [callback])",
+          "type": "method",
+          "name": "connect",
+          "desc": "<!--\nCreates a new client connection to the given `port` and `host` (old API) or\n`options.port` and `options.host`. (If `host` is omitted, it defaults to\n`localhost`.) `options` should be an object which specifies:\n-->\n\n<p>与えられた <code>port</code> と <code>host</code> (旧 API) または <code>options.port</code> と <code>options.host</code>\nで新しいクライアントコネクションを作成します\n(<code>host</code> が省略された場合、デフォルトは <code>localhost</code> です)。\n<code>options</code> は以下を指定したオブジェクトです:\n\n</p>\n<!--\n  - `host`: Host the client should connect to\n\n  - `port`: Port the client should connect to\n\n  - `socket`: Establish secure connection on a given socket rather than\n    creating a new socket. If this option is specified, `host` and `port`\n    are ignored.\n\n  - `pfx`: A string or `Buffer` containing the private key, certificate and\n    CA certs of the server in PFX or PKCS12 format.\n\n  - `key`: A string or `Buffer` containing the private key of the client in\n    PEM format.\n\n  - `passphrase`: A string of passphrase for the private key or pfx.\n\n  - `cert`: A string or `Buffer` containing the certificate key of the client in\n    PEM format.\n\n  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is\n    omitted several well known \"root\" CAs will be used, like VeriSign.\n    These are used to authorize connections.\n\n  - `rejectUnauthorized`: If `true`, the server certificate is verified against\n    the list of supplied CAs. An `'error'` event is emitted if verification\n    fails. Default: `true`.\n\n  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN\n    protocols. `Buffer` should have following format: `0x05hello0x05world`,\n    where first byte is next protocol name's length. (Passing array should\n    usually be much simpler: `['hello', 'world']`.)\n\n  - `servername`: Servername for SNI (Server Name Indication) TLS extension.\n-->\n\n<ul>\n<li><p><code>host</code>: クライアントが接続するホスト。</p>\n</li>\n<li><p><code>port</code>: クライアントが接続するポート番号。</p>\n</li>\n<li><p><code>socket</code>: 新しいソケットを生成するのではなく、与えられたソケット上で\nセキュアな接続を確立します。\nこのオプションが指定された場合、<code>host</code> および <code>port</code> は無視されます。</p>\n</li>\n<li><p><code>pfx</code> : PFX または PKCS12 でエンコードされた秘密鍵、証明書、\nおよびサーバに対する CA の証明書を含む文字列またはバッファ。</p>\n</li>\n<li><p><code>key</code>: PEM フォーマットによるサーバの秘密鍵を持つ文字列または\n<code>Buffer</code> です。</p>\n</li>\n<li><p><code>passphrase</code>: 秘密鍵または pfx のパスフレーズを表す文字列です。</p>\n</li>\n<li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です。</p>\n</li>\n<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。\n省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。\nこれらはコネクションの認証に使われます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の\nリストによって検証されます。\n認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。\n認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。\nデフォルトは true です。</p>\n</li>\n<li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> \nの配列です。\n<code>Buffer</code> は次のような形式です: <code>0x05hello0x5world</code>\n最初のバイトは次のプロトコル名の長さです\n(通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>\n</li>\n<li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>\n</li>\n</ul>\n<!--\nThe `callback` parameter will be added as a listener for the\n['secureConnect'][] event.\n\n`tls.connect()` returns a [CleartextStream][] object.\n\nHere is an example of a client of echo server as described previously:\n-->\n\n<p><code>callback</code> 引数は [&#39;secureConnect&#39;][] イベントのリスナとして\n加えられます。\n\n</p>\n<p><code>tls.connect()</code> は [CleartextStream][] オブジェクトを返します。\n\n</p>\n<p>これは前述のエコーサーバに接続するクライアントの例です:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  // These are necessary only if using the client certificate authentication\n  key: fs.readFileSync(&#39;client-key.pem&#39;),\n  cert: fs.readFileSync(&#39;client-cert.pem&#39;),\n\n  // This is necessary only if the server uses the self-signed certificate\n  ca: [ fs.readFileSync(&#39;server-cert.pem&#39;) ]\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var tls = require(&#39;tls&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;client.pfx&#39;)\n};\n\nvar cleartextStream = tls.connect(8000, options, function() {\n  console.log(&#39;client connected&#39;,\n              cleartextStream.authorized ? &#39;authorized&#39; : &#39;unauthorized&#39;);\n  process.stdin.pipe(cleartextStream);\n  process.stdin.resume();\n});\ncleartextStream.setEncoding(&#39;utf8&#39;);\ncleartextStream.on(&#39;data&#39;, function(data) {\n  console.log(data);\n});\ncleartextStream.on(&#39;end&#39;, function() {\n  server.close();\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "port"
+                },
+                {
+                  "name": "host",
+                  "optional": true
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])",
+          "type": "method",
+          "name": "createSecurePair",
+          "desc": "<!--\nCreates a new secure pair object with two streams, one of which reads/writes\nencrypted data, and one reads/writes cleartext data.\nGenerally the encrypted one is piped to/from an incoming encrypted data stream,\nand the cleartext one is used as a replacement for the initial encrypted stream.\n - `credentials`: A credentials object from crypto.createCredentials( ... )\n\n - `isServer`: A boolean indicating whether this tls connection should be\n   opened as a server or a client.\n\n - `requestCert`: A boolean indicating whether a server should request a\n   certificate from a connecting client. Only applies to server connections.\n\n - `rejectUnauthorized`: A boolean indicating whether a server should\n   automatically reject clients with invalid certificates. Only applies to\n   servers with `requestCert` enabled.\n\n`tls.createSecurePair()` returns a SecurePair object with [cleartext][] and\n`encrypted` stream properties.\n-->\n\n<p>二つのストリームを持つセキュアペアオブジェクトを作成します。\n一つは暗号化されたデータを読み書きし、もう一つは平文のデータを読み書きします。\n通常、暗号化されたストリームに外部からの暗号化されたデータが連結され、\n暗号化されたストリームの代わりに平文のストリームが使われます。\n\n</p>\n<ul>\n<li><p><code>credentials</code>: <code>crypto.createCredentials( ... )</code> で作成された\n証明書オブジェクト。</p>\n</li>\n<li><p><code>isServer</code>: この TLS コネクションをサーバとしてオープンするかどうかを示す\nブーリアン値。</p>\n</li>\n<li><p><code>requestCert</code>: クライアントからの接続に対して、サーバがクライアントに\n証明書を要求するかどうかを示すブーリアン値。\nサーバコネクションにのみ適用されます。</p>\n</li>\n<li><p><code>rejectUnauthorized</code>: クライアント認証が不正だった場合に、\n自動的にクライアントを破棄するかどうかを示すブーリアン値。\n<code>requestCert</code> が有効なサーバにのみ適用されます。</p>\n</li>\n</ul>\n<p><code>tls.createSequrePair()</code> は、[cleartext][] と <code>encrypted</code>\nをプロパティとして持つ <code>SecurePair</code> オブジェクトを返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "credentials",
+                  "optional": true
+                },
+                {
+                  "name": "isServer",
+                  "optional": true
+                },
+                {
+                  "name": "requestCert",
+                  "optional": true
+                },
+                {
+                  "name": "rejectUnauthorized",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "tls.SLAB_BUFFER_SIZE",
+          "name": "SLAB_BUFFER_SIZE",
+          "desc": "<!--\nSize of slab buffer used by all tls servers and clients.\nDefault: `10 * 1024 * 1024`.\n-->\n\n<p>全ての TLS サーバ及びクライアントで使用されるスラブバッファのサイズ。\nデフォルトは: <code>10 * 1024 * 1024</code>。\n\n\n</p>\n<!--\nDon't change the defaults unless you know what you are doing.\n-->\n\n<p>あなたがしようとしていることを理解していない限り、\nデフォルトを変更しないでください。\n\n\n</p>\n"
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: SecurePair",
+          "type": "class",
+          "name": "SecurePair",
+          "desc": "<!--\nReturned by tls.createSecurePair.\n-->\n\n<p><code>tls.createSecurePair</code> から返されます。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'secure'",
+              "type": "event",
+              "name": "secure",
+              "desc": "<!--\nThe event is emitted from the SecurePair once the pair has successfully\nestablished a secure connection.\n\nSimilarly to the checking for the server 'secureConnection' event,\npair.cleartext.authorized should be checked to confirm whether the certificate\nused properly authorized.\n-->\n\n<p>SecurePair オブジェクトのペアが安全な接続を確立した場合に発生します。\n\n</p>\n<p>サーバの <code>&#39;secureConnection&#39;</code> イベントと同様に、\n<code>pari.cleartext.authorized</code> によって接続相手の証明書を承認できたかどうかを\nチェックすることができます。\n\n</p>\n",
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: tls.Server",
+          "type": "class",
+          "name": "tls.Server",
+          "desc": "<!--\nThis class is a subclass of `net.Server` and has the same methods on it.\nInstead of accepting just raw TCP connections, this accepts encrypted\nconnections using TLS or SSL.\n-->\n\n<p>このクラスは <code>net.Server</code> のサブクラスで、同じメソッドを持っています。\n生の TCP コネクションを受け入れる代わりに、\nTLS または SSL を使った暗号化されたコネクションを受け付けます。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'secureConnection'",
+              "type": "event",
+              "name": "secureConnection",
+              "desc": "<p><code>function (cleartextStream) {}</code>\n\n</p>\n<!--\nThis event is emitted after a new connection has been successfully\nhandshaked. The argument is a instance of [CleartextStream][]. It has all the\ncommon stream methods and events.\n-->\n\n<p>このイベントは、新しい接続のハンドシェークが成功した場合に生成されます。\n引数は [CleartextStream][] のインスタンスです。\nこれはストリームに共通する全てのメソッドとイベントを持っています。\n\n</p>\n<!--\n`cleartextStream.authorized` is a boolean value which indicates if the\nclient has verified by one of the supplied certificate authorities for the\nserver. If `cleartextStream.authorized` is false, then\n`cleartextStream.authorizationError` is set to describe how authorization\nfailed. Implied but worth mentioning: depending on the settings of the TLS\nserver, you unauthorized connections may be accepted.\n`cleartextStream.npnProtocol` is a string containing selected NPN protocol.\n`cleartextStream.servername` is a string containing servername requested with\nSNI.\n-->\n\n<p><code>cleartextStream.authorized</code> は提供された認証局のいずれかによって\n認証されたかを示す boolean 値です。\n<code>cleartextStream.authorized</code> が false の場合、\n<code>cleartextStream.authorizationError</code> にはどのように認証が失敗したのかが設定されます。\n暗黙的ですが言及する価値のあること:\nTLS サーバの設定に依存しますが、認証されていないコネクションも受け入れられることがあります。\n<code>cleartextStream.npnProtocol</code> は、選択された NPN プロトコルを持つ文字列です。\n<code>cleartextStream.servername</code> は、SNI でリクエストされたサーバ名を持つ\n文字列です。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'clientError'",
+              "type": "event",
+              "name": "clientError",
+              "desc": "<p><code>function (exception, securePair) { }</code>\n\n</p>\n<!--\nWhen a client connection emits an 'error' event before secure connection is\nestablished - it will be forwarded here.\n-->\n\n<p>セキュアコネクションが確立される前にクライアントコネクションが\n<code>&#39;error&#39;</code> イベントを発した場合 － ここに転送されます。\n\n</p>\n<!--\n`securePair` is the `tls.SecurePair` that the error originated from.\n-->\n\n<p><code>securePair</code> はエラーが発生した <code>tls.SecurePair</code> です。\n\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'newSession'",
+              "type": "event",
+              "name": "newSession",
+              "desc": "<p><code>function (sessionId, sessionData) { }</code>\n\n</p>\n<!--\nEmitted on creation of TLS session. May be used to store sessions in external\nstorage.\n-->\n\n<p>TLS セッションが作成された場合に生成されます。\nセッションを外部ストレージに保存する場合に使えるでしょう。\n\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'resumeSession'",
+              "type": "event",
+              "name": "resumeSession",
+              "desc": "<p><code>function (sessionId, callback) { }</code>\n\n</p>\n<!--\nEmitted when client wants to resume previous TLS session. Event listener may\nperform lookup in external storage using given `sessionId`, and invoke\n`callback(null, sessionData)` once finished. If session can't be resumed\n(i.e. doesn't exist in storage) one may call `callback(null, null)`. Calling\n`callback(err)` will terminate incoming connection and destroy socket.\n-->\n\n<p>クライアントが以前の TLS セッションを再開を要求した場合に生成されます。\nイベントリスナは与えられた <code>sessionId</code> を使用して外部ストレージから\nセッションを見つけた場合、<code>callback(null, sessionData)</code> を一度呼び出すことが\nできます。\nセッションを再開できない場合 (すなわち、ストレージに存在しない場合)、\n<code>callback(null, null)</code> を呼ぶことができます。\n<code>callback(err)</code> を呼び出すと接続を終了し、ソケットを破棄します。\n\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "server.listen(port, [host], [callback])",
+              "type": "method",
+              "name": "listen",
+              "desc": "<!--\nBegin accepting connections on the specified `port` and `host`.  If the\n`host` is omitted, the server will accept connections directed to any\nIPv4 address (`INADDR_ANY`).\n-->\n\n<p>指定の <code>port</code> と <code>host</code> で接続の受け入れを開始します。\n<code>host</code> が省略されると、サーバはどんな IPv4 アドレスからのコネクションも受け入れます (<code>INADDR_ANY</code>)。\n\n</p>\n<!--\nThis function is asynchronous. The last parameter `callback` will be called\nwhen the server has been bound.\n-->\n\n<p>この関数は非同期です。\n最後の引数 <code>callback</code> はサーバがバインドされると呼び出されます。\n\n</p>\n<!--\nSee `net.Server` for more information.\n-->\n\n<p>より詳細は <code>net.Server</code> を参照してください。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "port"
+                    },
+                    {
+                      "name": "host",
+                      "optional": true
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "server.close()",
+              "type": "method",
+              "name": "close",
+              "desc": "<!--\nStops the server from accepting new connections. This function is\nasynchronous, the server is finally closed when the server emits a `'close'`\nevent.\n-->\n\n<p>サーバが新しい接続を受け入れることを終了します。\nこの関数は非同期で、サーバが最終的にクローズされるとサーバは <code>&#39;close&#39;</code> イベントを生成します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "server.address()",
+              "type": "method",
+              "name": "address",
+              "desc": "<!--\nReturns the bound address, the address family name and port of the\nserver as reported by the operating system.  See [net.Server.address()][] for\nmore information.\n-->\n\n<p>オペレーティングシステムから報告された、サーバにバインドされたアドレスと\nアドレスファミリ名、ポートを返します。 \nより詳しくは [net.Server.address()][] を参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "server.addContext(hostname, credentials)",
+              "type": "method",
+              "name": "addContext",
+              "desc": "<!--\nAdd secure context that will be used if client request's SNI hostname is\nmatching passed `hostname` (wildcards can be used). `credentials` can contain\n`key`, `cert` and `ca`.\n-->\n\n<p>クライアントが要求してきた SNI ホスト名と <code>hostname</code> (ワイルドカードを使用可能)\nがマッチした場合のセキュリティコンテキストを追加します。\n<code>credentials</code> は <code>key</code>、<code>cert</code>、そして <code>ca</code> を含むことができます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "hostname"
+                    },
+                    {
+                      "name": "credentials"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "server.maxConnections",
+              "name": "maxConnections",
+              "desc": "<!--\nSet this property to reject connections when the server's connection count\ngets high.\n-->\n\n<p>このプロパティを設定すると、サーバの接続数がこれを越えた場合に接続を破棄します。\n</p>\n"
+            },
+            {
+              "textRaw": "server.connections",
+              "name": "connections",
+              "desc": "<!--\nThe number of concurrent connections on the server.\n-->\n\n<p>サーバの並行コネクションの数です。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: CryptoStream",
+          "type": "class",
+          "name": "CryptoStream",
+          "desc": "<!--\nThis is an encrypted stream.\n-->\n\n<p>これは暗号化されたストリームです。\n\n</p>\n",
+          "properties": [
+            {
+              "textRaw": "cryptoStream.bytesWritten",
+              "name": "bytesWritten",
+              "desc": "<!--\nA proxy to the underlying socket's bytesWritten accessor, this will return\nthe total bytes written to the socket, *including the TLS overhead*.\n-->\n\n<p>下層にあるソケットの bytesWritten にアクセスするプロキシで、\n<em>TLS のオーバーヘッドを含めて</em> ソケットに書き込まれたトータルのバイト数を\n返します。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: tls.CleartextStream",
+          "type": "class",
+          "name": "tls.CleartextStream",
+          "desc": "<!--\nThis is a stream on top of the *Encrypted* stream that makes it possible to\nread/write an encrypted data as a cleartext data.\n\nThis instance implements a duplex [Stream][] interfaces.  It has all the\ncommon stream methods and events.\n-->\n\n<p>暗号化されたストリーム上で、暗号化されたデータを平文のデータとして\n読み書きすることができるストリームです。\n\n</p>\n<p>このインスタンスは双方向の [Stream][] インタフェースを実装します。\nストリームに共通な全てのメソッドとイベントを持ちます。\n\n</p>\n<p>A ClearTextStream is the <code>clear</code> member of a SecurePair object.\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'secureConnect'",
+              "type": "event",
+              "name": "secureConnect",
+              "desc": "<!--\nThis event is emitted after a new connection has been successfully handshaked. \nThe listener will be called no matter if the server's certificate was\nauthorized or not. It is up to the user to test `cleartextStream.authorized`\nto see if the server certificate was signed by one of the specified CAs.\nIf `cleartextStream.authorized === false` then the error can be found in\n`cleartextStream.authorizationError`. Also if NPN was used - you can check\n`cleartextStream.npnProtocol` for negotiated protocol.\n-->\n\n<p>新しいコネクションの TLS/SSL ハンドシェークが成功すると生成されます。\nリスナはサーバの証明書が認証されたかどうかに関わらず呼び出されます。\nサーバ証明書が指定した認証局に承認されたかチェックするために\n<code>cleartextStream.authorized</code> を確認するかはユーザ次第です。\n<code>cleartextStream.authorized === false</code>の場合、\n<code>cleartextStream.authorizationError</code> からエラーを見つけることができます。\n同様に NPN が使われている場合は <code>cleartextStream.npnProtocol</code>\nから合意されたプロトコルをチェックすることが出来ます。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "cleartextStream.authorized",
+              "name": "authorized",
+              "desc": "<!--\nA boolean that is `true` if the peer certificate was signed by one of the\nspecified CAs, otherwise `false`\n-->\n\n<p>接続相手の証明書が CA の一つによって署名されていれば <code>true</code>、\nそうでなければ <code>false</code> です。\n\n</p>\n"
+            },
+            {
+              "textRaw": "cleartextStream.authorizationError",
+              "name": "authorizationError",
+              "The reason why the peer's certificate has not been verified. This property\nbecomes available only when `cleartextStream.authorized": "== false`.",
+              "desc": "<p>接続相手の証明書が認証されなかった理由です。\nこのプロパティは <code>cleartextStream.authorized === false</code>\nの場合だけ利用可能になります。\n\n</p>\n"
+            },
+            {
+              "textRaw": "cleartextStream.remoteAddress",
+              "name": "remoteAddress",
+              "desc": "<!--\nThe string representation of the remote IP address. For example,\n`'74.125.127.100'` or `'2001:4860:a005::68'`.\n-->\n\n<p>リモートの IP アドレスを表現する文字列です。\n例えば、<code>&#39;74.125.127.100&#39;</code> あるいは <code>&#39;2001:4860:a005::68&#39;</code>。\n\n</p>\n"
+            },
+            {
+              "textRaw": "cleartextStream.remotePort",
+              "name": "remotePort",
+              "desc": "<!--\nThe numeric representation of the remote port. For example, `443`.\n-->\n\n<p>リモートポートの数値表現です。\n例えば、<code>443</code>。\n\n</p>\n<!--\n[OpenSSL cipher list format documentation]: http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT\n[BEAST attacks]: http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html\n[CleartextStream]: #tls_class_tls_cleartextstream\n[net.Server.address()]: net.html#net_server_address\n['secureConnect']: #tls_event_secureconnect\n[secureConnection]: #tls_event_secureconnection\n[Stream]: stream.html#stream_stream\n[tls.Server]: #tls_class_tls_server\n-->\n\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "cleartextStream.getPeerCertificate()",
+              "type": "method",
+              "name": "getPeerCertificate",
+              "desc": "<!--\nReturns an object representing the peer's certificate. The returned object has\nsome properties corresponding to the field of the certificate.\n-->\n\n<p>接続相手の証明書を表現するオブジェクトを返します。\n返されるオブジェクトは証明書のフィールドに対応するプロパティを持ちます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>{ subject: \n   { C: &#39;UK&#39;,\n     ST: &#39;Acknack Ltd&#39;,\n     L: &#39;Rhys Jones&#39;,\n     O: &#39;node.js&#39;,\n     OU: &#39;Test TLS Certificate&#39;,\n     CN: &#39;localhost&#39; },\n  issuer: \n   { C: &#39;UK&#39;,\n     ST: &#39;Acknack Ltd&#39;,\n     L: &#39;Rhys Jones&#39;,\n     O: &#39;node.js&#39;,\n     OU: &#39;Test TLS Certificate&#39;,\n     CN: &#39;localhost&#39; },\n  valid_from: &#39;Nov 11 09:52:22 2009 GMT&#39;,\n  valid_to: &#39;Nov  6 09:52:22 2029 GMT&#39;,\n  fingerprint: &#39;2A:7A:C2:DD:E5:F9:CC:53:72:35:99:7A:02:5A:71:38:52:EC:8A:DF&#39; }</code></pre>\n<!--\nIf the peer does not provide a certificate, it returns `null` or an empty\nobject.\n-->\n\n<p>接続相手が証明書を提供しなかった場合は、\n<code>null</code> または空のオブジェクトを返します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "cleartextStream.getCipher()",
+              "type": "method",
+              "name": "getCipher",
+              "desc": "<!--\nReturns an object representing the cipher name and the SSL/TLS\nprotocol version of the current connection.\n-->\n\n<p>現在の接続における暗号と SSL/TLS プロトコルのバージョンを表現する\nオブジェクトを返します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>{ name: &#39;AES256-SHA&#39;, version: &#39;TLSv1/SSLv3&#39; }</code></pre>\n<!--\nSee SSL_CIPHER_get_name() and SSL_CIPHER_get_version() in\nhttp://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS for more\ninformation.\n-->\n\n<p>詳細は\n<a href=\"http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS\">http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS</a>\nで <code>SSL_CIPHER_get_name()</code> および <code>SSL_CIPHER_get_version()</code> を\n参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "cleartextStream.address()",
+              "type": "method",
+              "name": "address",
+              "desc": "<!--\nReturns the bound address, the address family name and port of the\nunderlying socket as reported by the operating system. Returns an\nobject with three properties, e.g.\n`{ port: 12346, family: 'IPv4', address: '127.0.0.1' }`\n-->\n\n<p>オペレーティングシステムから報告された、ソケットにバインドされたアドレスと\nアドレスファミリ名、ポートを返します。\n返されるオブジェクトは二つのプロパティを持ちます。例:\n<code>{ port: 12346, family: &#39;IPv4&#39;, address: &#39;127.0.0.1&#39; }</code>\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "TLS (SSL)"
+    }
+  ]
+}

@@ -1,0 +1,554 @@
+{
+  "source": "doc/api/stream.markdown",
+  "modules": [
+    {
+      "textRaw": "Stream",
+      "name": "stream",
+      "stability": 2,
+      "stabilityText": "Unstable",
+      "desc": "<!--\nA stream is an abstract interface implemented by various objects in\nNode.  For example a request to an HTTP server is a stream, as is\nstdout. Streams are readable, writable, or both. All streams are\ninstances of [EventEmitter][]\n-->\n\n<p>ストリームは Node の様々なオブジェクトで実装される抽象的なインタフェースです。\n例えば HTTP サーバへのリクエストは標準出力と同様にストリームです。\nストリームは読み込み可能、書き込み可能、またはその両方です。\n全てのストリームは [EventEmitter][] のインスタンスです。\n\n</p>\n<!--\nYou can load the Stream base classes by doing `require('stream')`.\nThere are base classes provided for Readable streams, Writable\nstreams, Duplex streams, and Transform streams.\n-->\n\n<p>Stream のベースクラスは <code>require(&#39;stream&#39;)</code> でロードすることができます。\nReadable ストリーム、Writable ストリーム、Duplex ストリーム、Transform\nストリームのベースクラスが提供されます。\n\n</p>\n",
+      "modules": [
+        {
+          "textRaw": "Compatibility",
+          "name": "compatibility",
+          "desc": "<!--\nIn earlier versions of Node, the Readable stream interface was\nsimpler, but also less powerful and less useful.\n-->\n\n<p>以前のバージョンの Node では、読み込み可能なストリームのインタフェースは\nよりシンプルでしたが、強力ではなく使いやすくもありませんでした。\n\n</p>\n<!--\n* Rather than waiting for you to call the `read()` method, `'data'`\n  events would start emitting immediately.  If you needed to do some\n  I/O to decide how to handle data, then you had to store the chunks\n  in some kind of buffer so that they would not be lost.\n* The `pause()` method was advisory, rather than guaranteed.  This\n  meant that you still had to be prepared to receive `'data'` events\n  even when the stream was in a paused state.\n-->\n\n<ul>\n<li><code>read()</code> メソッドを呼び出すのを待つのではなく、\n<code>&#39;data&#39;</code> イベントがすぐに生成され始めます。\nもしデータを処理する方法を決定するためにいくらかの I/O をする\n必要がある場合、データが失われないようにするためには\nチャンクを何らかのバッファに保存しなければなりませんでした。</li>\n<li><code>pause()</code> は保証というよりはむしろ助言です。\nそれはストリームが中断された状態であったとしても、\n<code>&#39;data&#39;</code> イベントを受け取る準備が必要だということを意味します。</li>\n</ul>\n<!--\nIn Node v0.10, the Readable class described below was added.  For\nbackwards compatibility with older Node programs, Readable streams\nswitch into \"old mode\" when a `'data'` event handler is added, or when\nthe `pause()` or `resume()` methods are called.  The effect is that,\neven if you are not using the new `read()` method and `'readable'`\nevent, you no longer have to worry about losing `'data'` chunks.\n-->\n\n<p>Node v0.10 から、以下で説明する Readable クラスが追加されました。\n古い Node プログラムとの後方互換性のために、Readable ストリームは\n<code>&#39;data&#39;</code> イベントのハンドラが加えられた場合や、<code>pause()</code> または\n<code>resume()</code> メソッドが読み出されると、「旧モード」に切り替わります。\nその結果として、新しい <code>read()</code> メソッドや <code>&#39;readable&#39;</code> イベントを\n使用していなくても、もう <code>&#39;data&#39;</code> イベントのチャンクが失われることを\n心配する必要はありません。\n\n</p>\n<!--\nMost programs will continue to function normally.  However, this\nintroduces an edge case in the following conditions:\n-->\n\n<p>ほとんどのプログラムはこれまで通りに機能するでしょう。\nしかしながら、以下の条件でエッジケースが存在します。\n\n</p>\n<!--\n* No `'data'` event handler is added.\n* The `pause()` and `resume()` methods are never called.\n-->\n\n<ul>\n<li><code>&#39;data&#39;</code> イベントハンドラが登録されていない。</li>\n<li><code>pause()</code> および <code>resume()</code> メソッドが呼び出されていない。</li>\n</ul>\n<!--\nFor example, consider the following code:\n-->\n\n<p>例えば、以下のコードを考えてみてください:\n\n</p>\n<pre><code class=\"javascript\">// WARNING!  BROKEN!\nnet.createServer(function(socket) {\n\n  // we add an &#39;end&#39; method, but never consume the data\n  socket.on(&#39;end&#39;, function() {\n    // It will never get here.\n    socket.end(&#39;I got your message (but didnt read it)\\n&#39;);\n  });\n\n}).listen(1337);</code></pre>\n<!--\nIn versions of node prior to v0.10, the incoming message data would be\nsimply discarded.  However, in Node v0.10 and beyond, the socket will\nremain paused forever.\n-->\n\n<p>v0.10 より前の Node では、入ってきたデータは単純に破棄されていました。\nしかしながら、Node v0.10 以降では、ソケットは中断したままとなります。\n\n</p>\n<!--\nThe workaround in this situation is to call the `resume()` method to\ntrigger \"old mode\" behavior:\n-->\n\n<p>この状況の回避策は、「旧モード」の振る舞いへのトリガーとして\n<code>resume()</code> メソッドを呼び出すことです。\n\n</p>\n<pre><code class=\"javascript\">// Workaround\nnet.createServer(function(socket) {\n\n  socket.on(&#39;end&#39;, function() {\n    socket.end(&#39;I got your message (but didnt read it)\\n&#39;);\n  });\n\n  // start the flow of data, discarding it.\n  socket.resume();\n\n}).listen(1337);</code></pre>\n<!--\nIn addition to new Readable streams switching into old-mode, pre-v0.10\nstyle streams can be wrapped in a Readable class using the `wrap()`\nmethod.\n-->\n\n<p>新しい Readable ストリームを旧モードに切り替えられることに加えて、\n<code>warp()</code> メソッドを使って v0.10 より前のスタイルのストリームを\nReadable クラスでラップすることもできます。\n\n</p>\n",
+          "type": "module",
+          "displayName": "Compatibility"
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: stream.Readable",
+          "type": "class",
+          "name": "stream.Readable",
+          "desc": "<!--\nA `Readable Stream` has the following methods, members, and events.\n-->\n\n<p><code>Readable Stream</code> には以下のメソッド、メンバー、そしてイベントがあります。\n\n</p>\n<!--\nNote that `stream.Readable` is an abstract class designed to be\nextended with an underlying implementation of the `_read(size)`\nmethod. (See below.)\n-->\n\n<p><code>stream.Readable</code> は下層の実装である <code>_read(size)</code> メソッド (後述)\nによって拡張されるように設計された抽象クラスであることに注意してください。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "new stream.Readable([options])",
+              "type": "method",
+              "name": "Readable",
+              "* `options` {Object}\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default": "16kb\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`options` {Object} (任意) ",
+                      "options": [
+                        {
+                          "textRaw": "`highWaterMark` {Number} 下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。 ",
+                          "name": "highWaterMark",
+                          "type": "Number",
+                          "desc": "下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。"
+                        },
+                        {
+                          "textRaw": "`encoding` {String} 指定されるとバッファは指定のエンコーディングで デコードされます。デフォルトは `null`。 ",
+                          "name": "encoding",
+                          "type": "String",
+                          "desc": "指定されるとバッファは指定のエンコーディングで デコードされます。デフォルトは `null`。"
+                        },
+                        {
+                          "textRaw": "`objectMode` {Boolean} このストリームがオブジェクトストリームとして 振る舞うべきかどうか。これは `stream.read(n)` がサイズ n のバッファではなく 一つの値を返すことを意味します。 ",
+                          "name": "objectMode",
+                          "type": "Boolean",
+                          "desc": "このストリームがオブジェクトストリームとして 振る舞うべきかどうか。これは `stream.read(n)` がサイズ n のバッファではなく 一つの値を返すことを意味します。"
+                        }
+                      ],
+                      "name": "options",
+                      "type": "Object",
+                      "desc": "(任意)",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "options",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nIn classes that extend the Readable class, make sure to call the\nconstructor so that the buffering settings can be properly\ninitialized.\n-->\n\n<p><code>Readable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に\n初期化することができるように、必ずコンストラクタを呼び出してください。\n\n</p>\n"
+            },
+            {
+              "textRaw": "readable.\\_read(size)",
+              "type": "method",
+              "name": "\\_read",
+              "desc": "<!--\n* `size` {Number} Number of bytes to read asynchronously\n-->\n\n<ul>\n<li><code>size</code> {Number} 非同期に読み込むバイト数</li>\n</ul>\n<!--\nNote: **This function should NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Readable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出すべきではありません。</strong>\nこれはサブクラスで実装されるべきであり、Readable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nAll Readable stream implementations must provide a `_read` method\nto fetch data from the underlying resource.\n-->\n\n<p>全ての Readable ストリームは、下層のリソースからデータを\n取得するために <code>_read</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<!--\nWhen data is available, put it into the read queue by calling\n`readable.push(chunk)`.  If `push` returns false, then you should stop\nreading.  When `_read` is called again, you should start pushing more\ndata.\n-->\n\n<p>データが利用可能になれば、<code>readable.push(chunk)</code> を呼び出すことで\nそれを読み込みキューに追加します。\n<code>push</code> が false を返した場合は、読み込みを止めるべきです。\n<code>_read</code> が再び呼び出された時が、さらに多くのデータを追加を開始すべき時です。\n\n</p>\n<!--\nThe `size` argument is advisory.  Implementations where a \"read\" is a\nsingle call that returns data can use this to know how much data to\nfetch.  Implementations where that is not relevant, such as TCP or\nTLS, may ignore this argument, and simply provide data whenever it\nbecomes available.  There is no need, for example to \"wait\" until\n`size` bytes are available before calling `stream.push(chunk)`.\n-->\n\n<p><code>size</code> 引数はアドバイス的です。\n&quot;read&quot; が一回の呼び出しでデータを返す実装では、\nどれだけのデータを取得すべきか知るためにこれを使うことができます。\nTCPやTLSなど、それに関連しない実装ではこの引数は無視され、\n利用可能になったデータをシンプルに提供するかもしれません。\nたとえば <code>size</code> バイトが利用可能になるまで「待つ」必要はありません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "size"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.push(chunk)",
+              "type": "method",
+              "name": "push",
+              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to push into the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、\nデータのチャンク</li>\n<li>return {Boolean} まだプッシュしてもいいかどうか</li>\n</ul>\n<!--\nNote: **This function should be called by Readable implementors, NOT\nby consumers of Readable subclasses.**  The `_read()` function will not\nbe called again until at least one `push(chunk)` call is made.  If no\ndata is available, then you MAY call `push('')` (an empty string) to\nallow a future `_read` call, without adding any data to the queue.\n-->\n\n<p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、\nReadable のサブクラスの利用者が呼び出すべきではありません。</strong>\n少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が\n再び呼び出されることはありません。もし利用可能なデータがない場合は、\n将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)\nを呼び出すことができます。\n\n</p>\n<!--\nThe `Readable` class works by putting data into a read queue to be\npulled out later by calling the `read()` method when the `'readable'`\nevent fires.\n-->\n\n<p><code>Readable</code> クラスは、<code>&#39;readable&#39;</code> イベントの生成時に <code>read()</code>\nメソッドが呼び出されることで後から取り出されるデータを、\n読み込みキューに入れておくことによって機能します。\n\n</p>\n<!--\nThe `push()` method will explicitly insert some data into the read\nqueue.  If it is called with `null` then it will signal the end of the\ndata.\n-->\n\n<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。\nもし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。\n\n</p>\n<!--\nIn some cases, you may be wrapping a lower-level source which has some\nsort of pause/resume mechanism, and a data callback.  In those cases,\nyou could wrap the low-level source object by doing something like\nthis:\n-->\n\n<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ\n低水準のソースをラップするかもしれません。\nそれらのケースでは、次のように低水準なソースオブジェクトを\nラップすることができます:\n\n</p>\n<pre><code class=\"javascript\">// source is an object with readStop() and readStart() methods,\n// and an `ondata` member that gets called when it has data, and\n// an `onend` member that gets called when the data is over.\n\nvar stream = new Readable();\n\nsource.ondata = function(chunk) {\n  // if push() returns false, then we need to stop reading from source\n  if (!stream.push(chunk))\n    source.readStop();\n};\n\nsource.onend = function() {\n  stream.push(null);\n};\n\n// _read will be called when the stream wants to pull more data in\n// the advisory size argument is ignored in this case.\nstream._read = function(n) {\n  source.readStart();\n};</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.unshift(chunk)",
+              "type": "method",
+              "name": "unshift",
+              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to unshift onto the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューの先頭に戻されるデータのチャンク</li>\n<li>return {Boolean} より多くの追加が実行されるべきかどうか</li>\n</ul>\n<!--\nThis is the corollary of `readable.push(chunk)`.  Rather than putting\nthe data at the *end* of the read queue, it puts it at the *front* of\nthe read queue.\n-->\n\n<p>これは <code>readable.push(chunk)</code> からの帰結です。\nデータを読み込みキューの <em>末尾</em> に加えるのではなく、\n読み込みキューの <em>先頭</em> に加えます。\n\n</p>\n<!--\nThis is useful in certain use-cases where a stream is being consumed\nby a parser, which needs to \"un-consume\" some data that it has\noptimistically pulled out of the source.\n-->\n\n<p>これはストリームがパーサによって消費されるユースケースにおいて有用です。\nそれはソースから楽観的に取り出したデータを「消費しなかったことにする」\n場合に必要です。\n\n</p>\n<pre><code class=\"javascript\">// A parser for a simple data protocol.\n// The &quot;header&quot; is a JSON object, followed by 2 \\n characters, and\n// then a message body.\n//\n// Note: This can be done more simply as a Transform stream.  See below.\n\nfunction SimpleProtocol(source, options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Readable.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n\n  // source is a readable stream, such as a socket or file\n  this._source = source;\n\n  var self = this;\n  source.on(&#39;end&#39;, function() {\n    self.push(null);\n  });\n\n  // give it a kick whenever the source is readable\n  // read(0) will not consume any bytes\n  source.on(&#39;readable&#39;, function() {\n    self.read(0);\n  });\n\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Readable.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._read = function(n) {\n  if (!this._inBody) {\n    var chunk = this._source.read();\n\n    // if the source doesn&#39;t have data, we don&#39;t have data yet.\n    if (chunk === null)\n      return this.push(&#39;&#39;);\n\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n      this.push(&#39;&#39;);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // now, because we got some extra data, unshift the rest\n      // back into the read queue so that our consumer will see it.\n      var b = chunk.slice(split);\n      this.unshift(b);\n\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n    }\n  } else {\n    // from there on, just provide the data to our consumer.\n    // careful not to push(null), since that would indicate EOF.\n    var chunk = this._source.read();\n    if (chunk) this.push(chunk);\n  }\n};\n\n// Usage:\nvar parser = new SimpleProtocol(source);\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.wrap(stream)",
+              "type": "method",
+              "name": "wrap",
+              "desc": "<!--\n* `stream` {Stream} An \"old style\" readable stream\n-->\n\n<ul>\n<li><code>stream</code> {Stream} 「古いスタイル」の読み込み可能なストリーム</li>\n</ul>\n<!--\nIf you are using an older Node library that emits `'data'` events and\nhas a `pause()` method that is advisory only, then you can use the\n`wrap()` method to create a Readable stream that uses the old stream\nas its data source.\n-->\n\n<p>もし <code>&#39;data&#39;</code> イベントを生成し、アドバイスだけを行う <code>pause()</code>\nメソッドを持つ、古い Node ライブラリを使っているなら、\n`wrap()`` メソッドは古いストリームをデータソースとして使用する\nReadable ストリームを作成します。\n\n</p>\n<!--\nFor example:\n-->\n\n<p>例:\n\n</p>\n<pre><code class=\"javascript\">var OldReader = require(&#39;./old-api-module.js&#39;).OldReader;\nvar oreader = new OldReader;\nvar Readable = require(&#39;stream&#39;).Readable;\nvar myReader = new Readable().wrap(oreader);\n\nmyReader.on(&#39;readable&#39;, function() {\n  myReader.read(); // etc.\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "stream"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.setEncoding(encoding)",
+              "type": "method",
+              "name": "setEncoding",
+              "desc": "<!--\nMakes the `'data'` event emit a string instead of a `Buffer`. `encoding`\ncan be `'utf8'`, `'utf16le'` (`'ucs2'`), `'ascii'`, or `'hex'`.\n-->\n\n<p><code>&#39;data&#39;</code> イベントが <code>Buffer</code> ではなく文字列を生成するようにします。\n<code>encoding</code> には <code>&#39;utf8&#39;</code>、<code>&#39;utf16le&#39;</code> (<code>&#39;ucs2&#39;</code>)、<code>&#39;ascii&#39;</code>、\nまたは <code>&#39;hex&#39;</code> を指定することができます。\n\n</p>\n<!--\nThe encoding can also be set by specifying an `encoding` field to the\nconstructor.\n-->\n\n<p>エンコーディングはコンストラクタに渡す <code>encoding</code>\nフィールドでも指定することができます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.read([size])",
+              "type": "method",
+              "name": "read",
+              "desc": "<!--\n* `size` {Number | null} Optional number of bytes to read.\n* Return: {Buffer | String | null}\n-->\n\n<ul>\n<li><code>size</code> {Number | null} 読み込むバイト数 (任意)</li>\n<li>Return: {Buffer | String | null}</li>\n</ul>\n<!--\nNote: **This function SHOULD be called by Readable stream users.**\n-->\n\n<p>注意: <strong>この関数は Redable ストリームのユーザが呼び出すべきです。</strong>\n\n</p>\n<!--\nCall this method to consume data once the `'readable'` event is\nemitted.\n-->\n\n<p><code>&#39;readable&#39;</code> イベントが生成した後にデータを消費するために呼び出してください。\n\n</p>\n<!--\nThe `size` argument will set a minimum number of bytes that you are\ninterested in.  If not set, then the entire content of the internal\nbuffer is returned.\n-->\n\n<p><code>size</code> 引数は、必要な最小のバイト数を指定します。\n指定しなかった場合、内部バッファ全体の内容が返されます。\n\n</p>\n<!--\nIf there is no data to consume, or if there are fewer bytes in the\ninternal buffer than the `size` argument, then `null` is returned, and\na future `'readable'` event will be emitted when more is available.\n-->\n\n<p>もし消費できるデータがなかったり、内部バッファに <code>size</code>\n引数で指定されたよりも少ないバイト数しかデータがなかったりした場合は、\n<code>null</code> が返されます。\nその後、より多くのデータが利用可能になると <code>&#39;readable&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nCalling `stream.read(0)` will always return `null`, and will trigger a\nrefresh of the internal buffer, but otherwise be a no-op.\n-->\n\n<p><code>stream.read(0)</code> は常に <code>null</code> を返します。\nそれは内部バッファをリフレッシュしますが、それ以外の処理はしません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "size",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.pipe(destination, [options])",
+              "type": "method",
+              "name": "pipe",
+              "* `destination` {Writable Stream}\n* `options` {Object} Optional\n  * `end` {Boolean} Default": "true",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`destination` {Writable Stream} ",
+                      "name": "destination",
+                      "type": "Writable Stream"
+                    },
+                    {
+                      "textRaw": "`options` {Object} (任意) ",
+                      "options": [
+                        {
+                          "textRaw": "`end` {Boolean} デフォルトは `true` ",
+                          "name": "end",
+                          "type": "Boolean",
+                          "desc": "デフォルトは `true`"
+                        }
+                      ],
+                      "name": "options",
+                      "type": "Object",
+                      "desc": "(任意)",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "destination"
+                    },
+                    {
+                      "name": "options",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nConnects this readable stream to `destination` WriteStream. Incoming\ndata on this stream gets written to `destination`.  Properly manages\nback-pressure so that a slow destination will not be overwhelmed by a\nfast readable stream.\n\n読み込み可能なストリームを `destination` の書き込みストリームに接続します。\nこのストリームに入ってきたデータは `destination` に書き込まれます。\n遅い出力先が速い読み込み可能なストリームに圧倒されないよう、\n背圧を適切に管理します。\n\n<!--\nThis function returns the `destination` stream.\n-->\n\n<!--\nFor example, emulating the Unix `cat` command:\n-->\n\n<p>Unix の <code>cat</code> コマンドのエミュレートする例:\n\n</p>\n<pre><code>process.stdin.pipe(process.stdout);</code></pre>\n<!--\nBy default `end()` is called on the destination when the source stream\nemits `end`, so that `destination` is no longer writable. Pass `{ end:\nfalse }` as `options` to keep the destination stream open.\n-->\n\n<p>デフォルトでは接続元ストリームで <code>end</code> イベントが生成されると、\n接続先の <code>end()</code> が呼ばれるので、もう書き込みはできません。\n<code>option</code> に <code>{ end: false }</code> を渡すと接続先はストリームはオープンされたままとなります。\n\n</p>\n<!--\nThis keeps `writer` open so that \"Goodbye\" can be written at the\nend.\n-->\n\n<p>これは <code>writer</code> をオープンしたままにして、最後に &quot;Goodbye&quot; と出力します。\n\n</p>\n<pre><code>reader.pipe(writer, { end: false });\nreader.on(&quot;end&quot;, function() {\n  writer.end(&quot;Goodbye\\n&quot;);\n});</code></pre>\n<!--\nNote that `process.stderr` and `process.stdout` are never closed until\nthe process exits, regardless of the specified options.\n-->\n\n<p>オプションの指定にかかわらず、<code>process.stderr</code> および <code>process.stdou</code>\nはプロセスが終了するまで決してクローズされないことに注意してください。\n\n</p>\n"
+            },
+            {
+              "textRaw": "readable.unpipe([destination])",
+              "type": "method",
+              "name": "unpipe",
+              "desc": "<!--\n* `destination` {Writable Stream} Optional\n-->\n\n<ul>\n<li><code>destination</code> {Writable Stream} (任意)</li>\n</ul>\n<!--\nUndo a previously established `pipe()`.  If no destination is\nprovided, then all previously established pipes are removed.\n-->\n\n<p>以前に構築した <code>pipe()</code> を取り消します。\nもし接続先が与えられなかった場合は、\n以前に構築された全てのパイプが削除されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "destination",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.pause()",
+              "type": "method",
+              "name": "pause",
+              "desc": "<!--\nSwitches the readable stream into \"old mode\", where data is emitted\nusing a `'data'` event rather than being buffered for consumption via\nthe `read()` method.\n-->\n\n<p>読み込み可能なストリームを「旧モード」に切り替えます。\nデータはバッファリングされて <code>read()</code> メソッドによって消費される代わりに、\n<code>&#39;data&#39;</code> イベントによって生成されます。\n\n</p>\n<!--\nCeases the flow of data.  No `'data'` events are emitted while the\nstream is in a paused state.\n-->\n\n<p>データの流れは中断します。\nストリームが中断状態にある限り、<code>&#39;data&#39;</code> イベントは生成されません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "readable.resume()",
+              "type": "method",
+              "name": "resume",
+              "desc": "<!--\nSwitches the readable stream into \"old mode\", where data is emitted\nusing a `'data'` event rather than being buffered for consumption via\nthe `read()` method.\n-->\n\n<p>読み込み可能なストリームを「旧モード」に切り替えます。\nデータはバッファリングされて <code>read()</code> メソッドによって消費される代わりに、\n<code>&#39;data&#39;</code> イベントによって生成されます。\n\n</p>\n<!--\nResumes the incoming `'data'` events after a `pause()`.\n-->\n\n<p><code>pause()</code> の後で中断されていた <code>&#39;data&#39;</code> イベントを再開します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'readable'",
+              "type": "event",
+              "name": "readable",
+              "desc": "<!--\nWhen there is data ready to be consumed, this event will fire.\n-->\n\n<p>データが消費される準備ができた時、このイベントが生成されます。\n\n</p>\n<!--\nWhen this event emits, call the `read()` method to consume the data.\n-->\n\n<p>このイベントが生成された場合、<code>read()</code> を呼んでデータを消費してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'end'",
+              "type": "event",
+              "name": "end",
+              "desc": "<!--\nEmitted when the stream has received an EOF (FIN in TCP terminology).\nIndicates that no more `'data'` events will happen. If the stream is\nalso writable, it may be possible to continue writing.\n-->\n\n<p>ストリームが EOF (TCP 用語では FIN) を受信した時に生成されます。\n<code>&#39;data&#39;</code> イベントがもう発生しないことを示します。\nもしストリームが書き込み可能でもあるなら、\n書き込みを続けることは可能かもしれません。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'data'",
+              "type": "event",
+              "name": "data",
+              "desc": "<!--\nThe `'data'` event emits either a `Buffer` (by default) or a string if\n`setEncoding()` was used.\n-->\n\n<p><code>&#39;data&#39;</code> イベントは <code>Buffer</code> (デフォルト) または、<code>setEncoding()</code>\nされた場合は文字列のどちらかを生成します。\n\n</p>\n<!--\nNote that adding a `'data'` event listener will switch the Readable\nstream into \"old mode\", where data is emitted as soon as it is\navailable, rather than waiting for you to call `read()` to consume it.\n-->\n\n<p><code>&#39;data&#39;</code> イベントリスナが加えられた場合のみ、Readable ストリームは\n「旧モード」に切り替わることに注意してください。\nデータを消費するために <code>read()</code> メソッドが呼び出されるまで待つ代わりに、\nデータが利用可能になるとすぐにイベントが生成されます。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'error'",
+              "type": "event",
+              "name": "error",
+              "desc": "<!--\nEmitted if there was an error receiving data.\n-->\n\n<p>データ受信でエラーがあると生成されます。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<!--\nEmitted when the underlying resource (for example, the backing file\ndescriptor) has been closed. Not all streams will emit this.\n-->\n\n<p>下層のリソース (例えば背後のファイル記述子) がクローズされた時に生成されます。\n全てのストリームがこのイベントを発生するわけではありません。\n\n</p>\n",
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: stream.Writable",
+          "type": "class",
+          "name": "stream.Writable",
+          "desc": "<!--\nA `Writable` Stream has the following methods, members, and events.\n-->\n\n<p><code>Writable</code> ストリームには以下のメソッド、メンバー、そしてイベントがあります。\n\n</p>\n<!--\nNote that `stream.Writable` is an abstract class designed to be\nextended with an underlying implementation of the\n`_write(chunk, encoding, cb)` method. (See below.)\n-->\n\n<p><code>stream.Writable</code> は下層の実装である <code>_write(chunk, encoding, cb)</code>\nメソッド (後述) によって拡張されるように設計された抽象クラスであることに\n注意してください。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "new stream.Writable([options])",
+              "type": "method",
+              "name": "Writable",
+              "* `options` {Object}\n  * `highWaterMark` {Number} Buffer level when `write()` starts\n    returning false. Default": "16kb\n  * `decodeStrings` {Boolean} Whether or not to decode strings into\n    Buffers before passing them to `_write()`.  Default=true",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`options` {Object} (任意) ",
+                      "options": [
+                        {
+                          "textRaw": "`highWaterMark` {Number} `write()` が `false` を返し始めるバッファレベル。 デフォルトは 16kb。 ",
+                          "name": "highWaterMark",
+                          "type": "Number",
+                          "desc": "`write()` が `false` を返し始めるバッファレベル。 デフォルトは 16kb。"
+                        },
+                        {
+                          "textRaw": "`decodeStrings` {Boolean} 文字列が `_write()` に渡される前に バッファにデコードするかどうか。デフォルトは `true`。 ",
+                          "name": "decodeStrings",
+                          "type": "Boolean",
+                          "desc": "文字列が `_write()` に渡される前に バッファにデコードするかどうか。デフォルトは `true`。"
+                        }
+                      ],
+                      "name": "options",
+                      "type": "Object",
+                      "desc": "(任意)",
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "options",
+                      "optional": true
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nIn classes that extend the Writable class, make sure to call the\nconstructor so that the buffering settings can be properly\ninitialized.\n-->\n\n<p><code>Writable</code> クラスを拡張するクラスでは、バッファリングの設定を確実に\n初期化することができるように、必ずコンストラクタを呼び出してください。\n\n</p>\n"
+            },
+            {
+              "textRaw": "writable.\\_write(chunk, encoding, callback)",
+              "type": "method",
+              "name": "\\_write",
+              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be written.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  Ignore chunk is a buffer.  Note that chunk will\n  **always** be a buffer unless the `decodeStrings` option is\n  explicitly set to `false`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。\nチャンクがバッファの場合は無視されます。\n<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、\nチャンクは <em>常に</em> バッファであるべき事に注意してください。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` may be a string rather than a Buffer, and `encoding` will\nindicate the sort of string that it is.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.  If you do not explicitly set the `decodeStrings`\noption to `false`, then you can safely ignore the `encoding` argument,\nand assume that `chunk` will always be a Buffer.\n-->\n\n<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、\n<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の\n種類を示すことができます。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、\n<code>endocing</code> 引数は安全に無視することができます。\nそして <code>chunk</code> は常に Buffer であると見なせます。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    },
+                    {
+                      "name": "encoding"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.write(chunk, [encoding], [callback])",
+              "type": "method",
+              "name": "write",
+              "desc": "<!--\n* `chunk` {Buffer | String} Data to be written\n* `encoding` {String} Optional.  If `chunk` is a string, then encoding\n  defaults to `'utf8'`\n* `callback` {Function} Optional.  Called when this chunk is\n  successfully written.\n* Returns {Boolean}\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | String} 書き込まれるデータ</li>\n<li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。\nデフォルトは <code>&#39;utf8&#39;</code>。</li>\n<li><code>callback</code> {Function} チャンクが正常に書き込まれた場合に呼び出される (任意)。</li>\n<li>Returns {Boolean}</li>\n</ul>\n<!--\nWrites `chunk` to the stream.  Returns `true` if the data has been\nflushed to the underlying resource.  Returns `false` to indicate that\nthe buffer is full, and the data will be sent out in the future. The\n`'drain'` event will indicate when the buffer is empty again.\n-->\n\n<p><code>chunk</code> をストリームに書き込みます。\nデータが下層のリソースに書き込まれると <code>true</code> を返します。\nバッファが一杯であることを伝えるために <code>false</code> が返され、\nデータは将来送り出されます。\n<code>&#39;drain&#39;</code> イベントはバッファが再び空になったことを伝えます。\n\n</p>\n<!--\nThe specifics of when `write()` will return false, is determined by\nthe `highWaterMark` option provided to the constructor.\n-->\n\n<p><code>write()</code> がいつ <code>false</code> を返すかは、コンストラクタに与えられる\n<code>highWaterMark</code> オプションによって決定されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.end([chunk], [encoding], [callback])",
+              "type": "method",
+              "name": "end",
+              "desc": "<!--\n* `chunk` {Buffer | String} Optional final data to be written\n* `encoding` {String} Optional.  If `chunk` is a string, then encoding\n  defaults to `'utf8'`\n* `callback` {Function} Optional.  Called when the final chunk is\n  successfully written.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | String} 書き込まれる最後のデータ (任意)。</li>\n<li><code>encoding</code> {String} <code>chunk</code> が文字列の場合のエンコーディング (任意)。\nデフォルトは <code>&#39;utf8&#39;</code>。</li>\n<li><code>callback</code> {Function} 最後のチャンクが正常に書き込まれた場合に\n呼び出される (任意)。</li>\n</ul>\n<!--\nCall this method to signal the end of the data being written to the\nstream.\n-->\n\n<p>ストリームに書き込まれるデータが終わることを合図するために、\nこのメソッドを呼び出してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk",
+                      "optional": true
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "callback",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'drain'",
+              "type": "event",
+              "name": "drain",
+              "desc": "<!--\nEmitted when the stream's write queue empties and it's safe to write\nwithout buffering again. Listen for it when `stream.write()` returns\n`false`.\n-->\n\n<p>ストリームの書き込みキューが空になり、バッファリングされることなく\n再び安全に書き込みができるようになった場合に生成されます。\n<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'close'",
+              "type": "event",
+              "name": "close",
+              "desc": "<!--\nEmitted when the underlying resource (for example, the backing file\ndescriptor) has been closed. Not all streams will emit this.\n-->\n\n<p>下層のリソース (たとえば、背後のファイル記述子)\nがクローズされた時に生成されます。\n全てのストリームがこれを生成するわけではありません。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'finish'",
+              "type": "event",
+              "name": "finish",
+              "desc": "<!--\nWhen `end()` is called and there are no more chunks to write, this\nevent is emitted.\n-->\n\n<p><code>end()</code> が呼び出されてそれ以上書き込まれるチャンクがない場合、\nこのイベントが生成されます。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'pipe'",
+              "type": "event",
+              "name": "pipe",
+              "params": [],
+              "desc": "<!--\nEmitted when the stream is passed to a readable stream's pipe method.\n-->\n\n<p>このストリームが読み込み可能ストリームの pipe メソッドに渡された時に生成されます。\n\n</p>\n"
+            },
+            {
+              "textRaw": "Event 'unpipe'",
+              "type": "event",
+              "name": "unpipe",
+              "params": [],
+              "desc": "<!--\nEmitted when a previously established `pipe()` is removed using the\nsource Readable stream's `unpipe()` method.\n-->\n\n<p>以前に構築された <code>pipe()</code> が、接続元である Readable ストリームの\n<code>unpipe()</code> メソッドによって取り除かれた場合に生成されます。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: stream.Duplex",
+          "type": "class",
+          "name": "stream.Duplex",
+          "desc": "<!--\nA \"duplex\" stream is one that is both Readable and Writable, such as a\nTCP socket connection.\n-->\n\n<p>&quot;duplex&quot; ストリームは、TCP ソケットコネクションのように\nReadable であり Writable でもあるストリームの一種です。\n\n</p>\n<!--\nNote that `stream.Duplex` is an abstract class designed to be\nextended with an underlying implementation of the `_read(size)`\nand `_write(chunk, encoding, callback)` methods as you would with a Readable or\nWritable stream class.\n-->\n\n<p><code>stream.Duplex</code> は、Readable および Writable ストリームクラスと同様、\n下層の実装である <code>_read(size)</code> および <code>_write(chunk, encoding, cb)</code>\nメソッドによって拡張されるように設計された抽象クラスであることに\n注意してください。\n\n</p>\n<!--\nSince JavaScript doesn't have multiple prototypal inheritance, this\nclass prototypally inherits from Readable, and then parasitically from\nWritable.  It is thus up to the user to implement both the lowlevel\n`_read(n)` method as well as the lowlevel `_write(chunk, encoding, cb)` method\non extension duplex classes.\n-->\n\n<p>JavaScript は複数のプロトタイプ継承を持つことができないため、\nこのクラスは Readable からプロトタイプを継承したうえで、\nWritable から寄生的な方法 (プロトタイプメンバーのコピー) を行います。\n低水準の <code>_read(n)</code> および <code>_write(chunk, encoding, cb)</code> を実装することは、\nDuplex クラスを拡張するユーザの責務です。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "new stream.Duplex(options)",
+              "type": "method",
+              "name": "Duplex",
+              "* `options` {Object} Passed to both Writable and Readable\n  constructors. Also has the following fields:\n  * `allowHalfOpen` {Boolean} Default": "true.  If set to `false`, then\n    the stream will automatically end the readable side when the\n    writable side ends and vice versa.",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`options` {Object} Writable および Readable のコンストラクタに渡されます。 以下のフィールドを持つこともできます: ",
+                      "options": [
+                        {
+                          "textRaw": "`allowHalfOpen` {Boolean} デフォルトは `true`。 もし `false` に設定された場合、読み込み側が閉じられると 自動的に書き込み側も閉じられます。 ",
+                          "name": "allowHalfOpen",
+                          "type": "Boolean",
+                          "desc": "デフォルトは `true`。 もし `false` に設定された場合、読み込み側が閉じられると 自動的に書き込み側も閉じられます。"
+                        }
+                      ],
+                      "name": "options",
+                      "type": "Object",
+                      "desc": "Writable および Readable のコンストラクタに渡されます。 以下のフィールドを持つこともできます:"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "options"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\nIn classes that extend the Duplex class, make sure to call the\nconstructor so that the buffering settings can be properly\ninitialized.\n-->\n\n<p><code>Duplex</code> クラスを拡張するクラスでは、バッファリングの設定を確実に\n初期化することができるように、必ずコンストラクタを呼び出してください。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: stream.Transform",
+          "type": "class",
+          "name": "stream.Transform",
+          "desc": "<!--\nA \"transform\" stream is a duplex stream where the output is causally\nconnected in some way to the input, such as a zlib stream or a crypto\nstream.\n-->\n\n<p>&quot;transform&quot; ストリームは、zlib ストリームや暗号化ストリームのように、\n入力が何らかの方法で出力の元となっているような双方向ストリームです。\n\n</p>\n<!--\nThere is no requirement that the output be the same size as the input,\nthe same number of chunks, or arrive at the same time.  For example, a\nHash stream will only ever have a single chunk of output which is\nprovided when the input is ended.  A zlib stream will either produce\nmuch smaller or much larger than its input.\n-->\n\n<p>出力は、入力と同じサイズ、同じ数のチャンク、同時に到着することを\n要求されません。\nたとえば、Hash ストリームは入力が終了すると一つだけのチャンクを出力します。\nzlib ストリームは、入力より小さいか、またはより大きい出力を生成します。\n\n</p>\n<!--\nRather than implement the `_read()` and `_write()` methods, Transform\nclasses must implement the `_transform()` method, and may optionally\nalso implement the `_flush()` method.  (See below.)\n-->\n\n<p><code>_read()</code> および <code>_write()</code> メソッドの代わりに、Transform クラスでは\n<code>_transform()</code> メソッドを実装しなければなりません。\nまた、任意で <code>_flush()</code> メソッドを実装することもできます (後述)。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "new stream.Transform([options])",
+              "type": "method",
+              "name": "Transform",
+              "desc": "<!--\n* `options` {Object} Passed to both Writable and Readable\n  constructors.\n-->\n\n<ul>\n<li><code>options</code> {Object} Writable および Readable のコンストラクタに渡されます。</li>\n</ul>\n<!--\nIn classes that extend the Transform class, make sure to call the\nconstructor so that the buffering settings can be properly\ninitialized.\n-->\n\n<p><code>Transform</code> クラスを拡張するクラスでは、バッファリングの設定を確実に\n初期化することができるように、必ずコンストラクタを呼び出してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "options",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "transform.\\_transform(chunk, encoding, callback)",
+              "type": "method",
+              "name": "\\_transform",
+              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be transformed.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  (Ignore if `decodeStrings` chunk is a buffer.)\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式\n(チャンクがバッファの場合は無視されます)。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nAll Transform stream implementations must provide a `_transform`\nmethod to accept input and produce output.\n-->\n\n<p>全ての Transform ストリームの実装は、入力を受け取って出力を提供するために\n<code>_transform</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\n`_transform` should do whatever has to be done in this specific\nTransform class, to handle the bytes being written, and pass them off\nto the readable portion of the interface.  Do asynchronous I/O,\nprocess things, and so on.\n-->\n\n<p>書き込まれるバイトを処理し、読み込み可能なインタフェースに渡すなど、\nTransform クラスでしなければならないことは全て <code>_transform</code>\nで行わなければなりません。非同期 I/O、何かの処理、その他。\n\n</p>\n<!--\nCall `transform.push(outputChunk)` 0 or more times to generate output\nfrom this input chunk, depending on how much data you want to output\nas a result of this chunk.\n-->\n\n<p>この入力チャンクからの出力を生成するために、<code>transform.push(outputChunk)</code>\nを 0 回以上呼び出してください。\nそれはこのチャンクの結果としてどれだけのデータを出力したいのかに依存します。\n\n</p>\n<!--\nCall the callback function only when the current chunk is completely\nconsumed.  Note that there may or may not be output as a result of any\nparticular input chunk.\n-->\n\n<p>現在のチャンクの処理が完全に終了した場合のみ、コールバック関数を呼び出します。\n特定の入力チャンクからの結果として、出力があるかもしれないし、\n無いかもしれないことに注意してください。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunk"
+                    },
+                    {
+                      "name": "encoding"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "transform.\\_flush(callback)",
+              "type": "method",
+              "name": "\\_flush",
+              "desc": "<!--\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done flushing any remaining data.\n-->\n\n<ul>\n<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It MAY be implemented\nby child classes, and if so, will be called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nIn some cases, your transform operation may need to emit a bit more\ndata at the end of the stream.  For example, a `Zlib` compression\nstream will store up some internal state so that it can optimally\ncompress the output.  At the end, however, it needs to do the best it\ncan with what is left, so that the data will be complete.\n-->\n\n<p>場合によっては、変換操作はストリームの終端でより多くのデータを\n生成する必要があります。\nたとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、\nいくつかの内部状態を持ちます。\n一方、終端ではデータが完全なものになるように、\n残されたものに最善を尽くす必要があります。\n\n</p>\n<!--\nIn those cases, you can implement a `_flush` method, which will be\ncalled at the very end, after all the written data is consumed, but\nbefore emitting `end` to signal the end of the readable side.  Just\nlike with `_transform`, call `transform.push(chunk)` zero or more\ntimes, as appropriate, and call `callback` when the flush operation is\ncomplete.\n-->\n\n<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、\nただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される\n<code>_flush</code> メソッドを実装することができます。\n<code>_transform</code> と同様、<code>transform.push(chunk)</code> を何度 (0 回以上) でも\n適切に呼び出し、フラッシュ操作が完了した時に <code>callback</code> を呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<h3>Example: <code>SimpleProtocol</code> parser</h3>\n<!--\nThe example above of a simple protocol parser can be implemented much\nmore simply by using the higher level `Transform` stream class.\n-->\n\n<p>前述した単純なプロトコルパーサの例は、より高水準な <code>Transform</code>\nストリームクラスを使うことで、さらにシンプルに実装することができます。\n\n</p>\n<!--\nIn this example, rather than providing the input as an argument, it\nwould be piped into the parser, which is a more idiomatic Node stream\napproach.\n-->\n\n<p>この例では、入力を引数で与えるのではなく、Node のストームにおける\nより慣用的なアプローチとしてパーサにパイプで送られます。\n\n</p>\n<pre><code class=\"javascript\">function SimpleProtocol(options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Transform.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Transform.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._transform = function(chunk, encoding, done) {\n  if (!this._inBody) {\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n\n      // now, because we got some extra data, emit this first.\n      this.push(b);\n    }\n  } else {\n    // from there on, just provide the data to our consumer as-is.\n    this.push(b);\n  }\n  done();\n};\n\nvar parser = new SimpleProtocol();\nsource.pipe(parser)\n\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: stream.PassThrough",
+          "type": "class",
+          "name": "stream.PassThrough",
+          "desc": "<!--\nThis is a trivial implementation of a `Transform` stream that simply\npasses the input bytes across to the output.  Its purpose is mainly\nfor examples and testing, but there are occasionally use cases where\nit can come in handy.\n-->\n\n<p>これは入力したバイト列を出力に単純に渡すだけの、\n<code>Transform</code> のつまらない実装です。\nこれの主な目的はサンプル及びテストですが、何かと便利となるユースケースが\n時折存在します。\n\n\n</p>\n"
+        }
+      ],
+      "type": "module",
+      "displayName": "Stream"
+    }
+  ]
+}
