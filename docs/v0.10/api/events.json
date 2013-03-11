@@ -1,0 +1,207 @@
+{
+  "source": "doc/api/events.markdown",
+  "modules": [
+    {
+      "textRaw": "Events",
+      "name": "Events",
+      "stability": 4,
+      "stabilityText": "API Frozen",
+      "type": "module",
+      "desc": "<!--\nMany objects in Node emit events: a `net.Server` emits an event each time\na peer connects to it, a `fs.readStream` emits an event when the file is\nopened. All objects which emit events are instances of `events.EventEmitter`.\nYou can access this module by doing: `require(\"events\");`\n-->\n\n<p>Node のオブジェクトの多くはイベントを生成します:\n<code>net.Server</code>は相手から接続するたびにイベントを生成し、\n<code>fs.readStream</code>はファイルがオープンされるたびにイベントを生成します。\nイベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。\n次のようにすることでこのモジュールにアクセスできます: <code>require(&quot;events&quot;);</code>\n\n</p>\n<!--\nTypically, event names are represented by a camel-cased string, however,\nthere aren't any strict restrictions on that, as any string will be accepted.\n-->\n\n<p>通常、イベント名はキャメル記法による文字列で表現されますが、\n厳格な制限ではなく、どんな文字列でも受け入れられます。\n\n</p>\n<!--\nFunctions can then be attached to objects, to be executed when an event\nis emitted. These functions are called _listeners_.\n-->\n\n<p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。\nこれらの関数は<em>リスナー</em>と呼ばれます。\n\n\n</p>\n",
+      "classes": [
+        {
+          "textRaw": "Class: events.EventEmitter",
+          "type": "class",
+          "name": "events.EventEmitter",
+          "desc": "<!--\nTo access the EventEmitter class, `require('events').EventEmitter`.\n-->\n\n<p>EventEmitterクラスにアクセスするには、<code>require(&#39;events&#39;).EventEmitter</code> を使います。\n\n</p>\n<!--\nWhen an `EventEmitter` instance experiences an error, the typical action is\nto emit an `'error'` event.  Error events are treated as a special case in node.\nIf there is no listener for it, then the default action is to print a stack\ntrace and exit the program.\n-->\n\n<p><code>EventEmitter</code> のインスタンスがエラーに遭遇した時、\n典型的な動作は <code>&#39;error&#39;</code> イベントを生成することです。\nnode ではエラーイベントは特別に扱われます．\nもしそのリスナーがなければ、デフォルトの動作はスタックトレースを出力してプログラムを終了することです。\n\n</p>\n<!--\nAll EventEmitters emit the event `'newListener'` when new listeners are\nadded and `'removeListener'` when a listener is removed.\n-->\n\n<p>全ての EventEmitter は、新しいリスナーが加えられるとイベント <code>&#39;newListener&#39;</code> を生成し、リスナーが削除されると <code>&#39;removeListener&#39;</code> を生成します。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "emitter.addListener(event, listener)",
+              "type": "method",
+              "name": "addListener",
+              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    },
+                    {
+                      "name": "listener"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    },
+                    {
+                      "name": "listener"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.on(event, listener)",
+              "type": "method",
+              "name": "on",
+              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    },
+                    {
+                      "name": "listener"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.once(event, listener)",
+              "type": "method",
+              "name": "once",
+              "desc": "<!--\nAdds a **one time** listener for the event. This listener is\ninvoked only the next time the event is fired, after which\nit is removed.\n-->\n\n<p><strong>一回限り</strong>のリスナーをイベントに追加します。\nこのリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。\n\n</p>\n<pre><code>server.once(&#39;connection&#39;, function (stream) {\n  console.log(&#39;Ah, we have our first user!&#39;);\n});</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    },
+                    {
+                      "name": "listener"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.removeListener(event, listener)",
+              "type": "method",
+              "name": "removeListener",
+              "desc": "<!--\nRemove a listener from the listener array for the specified event.\n**Caution**: changes array indices in the listener array behind the listener.\n-->\n\n<p>指定されたイベントに対するリスナー配列からリスナーを削除します。\n<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。\n\n</p>\n<pre><code>var callback = function(stream) {\n  console.log(&#39;someone connected!&#39;);\n};\nserver.on(&#39;connection&#39;, callback);\n// ...\nserver.removeListener(&#39;connection&#39;, callback);</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    },
+                    {
+                      "name": "listener"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.removeAllListeners([event])",
+              "type": "method",
+              "name": "removeAllListeners",
+              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.setMaxListeners(n)",
+              "type": "method",
+              "name": "setMaxListeners",
+              "desc": "<!--\nBy default EventEmitters will print a warning if more than 10 listeners are\nadded for a particular event. This is a useful default which helps finding memory leaks.\nObviously not all Emitters should be limited to 10. This function allows\nthat to be increased. Set to zero for unlimited.\n-->\n\n<p>デフォルトでは、EventEmitter は 10 を越えるリスナが特定のイベントに追加されると警告を出力します。\nこれはメモリリークを見つけるために役に立つデフォルト値です。\n全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。\nこの関数は制限を増やすことを許可します。\n0 を設定すると無制限になります。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "n"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.listeners(event)",
+              "type": "method",
+              "name": "listeners",
+              "desc": "<!--\nReturns an array of listeners for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列を返します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});\nconsole.log(util.inspect(server.listeners(&#39;connection&#39;))); // [ [Function] ]</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "emitter.emit(event, [arg1], [arg2], [...])",
+              "type": "method",
+              "name": "emit",
+              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "event"
+                    },
+                    {
+                      "name": "arg1",
+                      "optional": true
+                    },
+                    {
+                      "name": "arg2",
+                      "optional": true
+                    },
+                    {
+                      "name": "...",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "classMethods": [
+            {
+              "textRaw": "Class Method: EventEmitter.listenerCount(emitter, event)",
+              "type": "classMethod",
+              "name": "listenerCount",
+              "desc": "<!--\nReturn the number of listeners for a given event.\n-->\n\n<p>与えられたイベントのリスナー数を返します。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "emitter"
+                    },
+                    {
+                      "name": "event"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'newListener'",
+              "type": "event",
+              "name": "newListener",
+              "params": [],
+              "desc": "<!--\nThis event is emitted any time someone adds a new listener.\n-->\n\n<p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。\n</p>\n"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

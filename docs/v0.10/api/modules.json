@@ -1,0 +1,141 @@
+{
+  "source": "doc/api/modules.markdown",
+  "modules": [
+    {
+      "textRaw": "Modules",
+      "name": "module",
+      "stability": 5,
+      "stabilityText": "Locked",
+      "desc": "<!--\nNode has a simple module loading system.  In Node, files and modules are in\none-to-one correspondence.  As an example, `foo.js` loads the module\n`circle.js` in the same directory.\n-->\n\n<p>Node はシンプルなモジュールローディングシステムを持ちます。\nNode では、ファイルとモジュールは１対１に対応します。\n例として、 <code>foo.js</code> は、同じディレクトリにある <code>circle.js</code> をロードしています。\n\n</p>\n<!--\nThe contents of `foo.js`:\n-->\n\n<p><code>foo.js</code> の内容:\n\n</p>\n<pre><code>var circle = require(&#39;./circle.js&#39;);\nconsole.log( &#39;The area of a circle of radius 4 is &#39;\n           + circle.area(4));</code></pre>\n<!--\nThe contents of `circle.js`:\n-->\n\n<p><code>circle.js</code> の内容:\n\n</p>\n<pre><code>var PI = Math.PI;\n\nexports.area = function (r) {\n  return PI * r * r;\n};\n\nexports.circumference = function (r) {\n  return 2 * PI * r;\n};</code></pre>\n<!--\nThe module `circle.js` has exported the functions `area()` and\n`circumference()`.  To export an object, add to the special `exports`\nobject.\n\nVariables\nlocal to the module will be private. In this example the variable `PI` is\nprivate to `circle.js`.\n\nThe module system is implemented in the `require(\"module\")` module.\n-->\n\n<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。\nオブジェクトをエクスポートするには、 <code>exports</code> という特別なオブジェクトに加えます。\n\n</p>\n<p>モジュールのローカル変数はプライベートです。\nこの例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。\n\n</p>\n<p>モジュールシステムは <code>require(&quot;module&quot;)</code> モジュールによって実装されます。\n\n</p>\n",
+      "miscs": [
+        {
+          "textRaw": "Cycles",
+          "name": "Cycles",
+          "type": "misc",
+          "desc": "<!--\nWhen there are circular `require()` calls, a module might not be\ndone being executed when it is returned.\n\nConsider this situation:\n-->\n\n<p><code>require()</code> が循環的に呼び出される場合、実行が完了していないモジュールが\n返されることがあります。\n\n</p>\n<p>次の状況を考えてください:\n\n</p>\n<p><code>a.js</code>:\n\n</p>\n<pre><code>console.log(&#39;a starting&#39;);\nexports.done = false;\nvar b = require(&#39;./b.js&#39;);\nconsole.log(&#39;in a, b.done = %j&#39;, b.done);\nexports.done = true;\nconsole.log(&#39;a done&#39;);</code></pre>\n<p><code>b.js</code>:\n\n</p>\n<pre><code>console.log(&#39;b starting&#39;);\nexports.done = false;\nvar a = require(&#39;./a.js&#39;);\nconsole.log(&#39;in b, a.done = %j&#39;, a.done);\nexports.done = true;\nconsole.log(&#39;b done&#39;);</code></pre>\n<p><code>main.js</code>:\n\n</p>\n<pre><code>console.log(&#39;main starting&#39;);\nvar a = require(&#39;./a.js&#39;);\nvar b = require(&#39;./b.js&#39;);\nconsole.log(&#39;in main, a.done=%j, b.done=%j&#39;, a.done, b.done);</code></pre>\n<!--\nWhen `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that\npoint, `b.js` tries to load `a.js`.  In order to prevent an infinite\nloop an **unfinished copy** of the `a.js` exports object is returned to the\n`b.js` module.  `b.js` then finishes loading, and its exports object is\nprovided to the `a.js` module.\n\nBy the time `main.js` has loaded both modules, they're both finished.\nThe output of this program would thus be:\n-->\n\n<p><code>main.js</code> が <code>a.js</code> をロードすると、<code>a.js</code> は <code>b.js</code> をロードします。\nポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。\n無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの\n<strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。\n<code>b.js</code> のロードが完了すると、エクスポートされたオブジェクトが <code>a.js</code>\nモジュールに提供されます。\n\n</p>\n<p><code>main.js</code> が両方のモジュールをロードするまでには、どちらも完了します。\nこのプログラムの出力はこのようになります:\n\n</p>\n<pre><code>$ node main.js\nmain starting\na starting\nb starting\nin b, a.done = false\nb done\nin a, b.done = true\na done\nin main, a.done=true, b.done=true</code></pre>\n<!--\nIf you have cyclic module dependencies in your program, make sure to\nplan accordingly.\n-->\n\n<p>プログラムが循環参照するモジュールを持つ場合は、計画が適切か確認してください。\n\n\n</p>\n"
+        },
+        {
+          "textRaw": "Core Modules",
+          "name": "Core Modules",
+          "type": "misc",
+          "desc": "<!--\nNode has several modules compiled into the binary.  These modules are\ndescribed in greater detail elsewhere in this documentation.\n\nThe core modules are defined in node's source in the `lib/` folder.\n\nCore modules are always preferentially loaded if their identifier is\npassed to `require()`.  For instance, `require('http')` will always\nreturn the built in HTTP module, even if there is a file by that name.\n-->\n\n<p>Node にはバイナリにコンパイル済みのいくつかのモジュールがあります。\nこれらのモジュールについては、このドキュメントの他の場所でより詳しく記述されています。\n\n</p>\n<p>コアモジュールは、 Node のソースの <code>lib/</code> フォルダにて定義されています。\n\n</p>\n<p><code>require()</code> では常にコアモジュールの識別名を優先的に解釈します。\n例えば <code>require(&#39;http&#39;)</code> は、例え同名のファイルが存在していたとしても、常にビルトイインの HTTP モジュールを返します。\n\n</p>\n"
+        },
+        {
+          "textRaw": "File Modules",
+          "name": "File Modules",
+          "type": "misc",
+          "desc": "<!--\nIf the exact filename is not found, then node will attempt to load the\nrequired filename with the added extension of `.js`, `.json`, and then `.node`.\n\n`.js` files are interpreted as JavaScript text files, and `.json` files are\nparsed as JSON text files. `.node` files are interpreted as compiled addon\nmodules loaded with `dlopen`.\n\nA module prefixed with `'/'` is an absolute path to the file.  For\nexample, `require('/home/marco/foo.js')` will load the file at\n`/home/marco/foo.js`.\n\nA module prefixed with `'./'` is relative to the file calling `require()`.\nThat is, `circle.js` must be in the same directory as `foo.js` for\n`require('./circle')` to find it.\n\nWithout a leading '/' or './' to indicate a file, the module is either a\n\"core module\" or is loaded from a `node_modules` folder.\n-->\n\n<p>指定された名前のファイルが見つからなければ、 Node は指定されたファイル名に\n<code>.js</code>、<code>.json</code>、または <code>.node</code> を付けたものを読み込もうとします。\n\n</p>\n<p><code>.js</code> ファイルは JavaScript ファイルとして解釈され、\n<code>.json</code> ファイルは JSON ファイルとして解釈されます。\n一方 <code>.node</code> ファイルはコンパイル済みのアドオンモジュールとして解釈され、\n<code>dlopen</code> を使って読み込まれます。\n\n</p>\n<p><code>&#39;/&#39;</code> から始まるモジュールは、ファイルへの絶対パスと見なされます。\n例えば、 <code>require(&#39;/home/marco/foo.js&#39;)</code> は <code>/home/macro/foo.js</code> を読み込みます。\n\n</p>\n<p><code>&#39;./&#39;</code> から始まるモジュールは、 <code>require()</code> を呼んだファイルからの相対パスになります。\nすなわち、 <code>foo.js</code> から <code>require(&#39;./circle&#39;)</code> によって <code>circle.js</code> を読み込むには、 <code>circle.js</code> は <code>foo.js</code> と同じディレクトリに存在していなければなりません。\n\n</p>\n<p>&#39;/&#39; や &#39;./&#39; が先頭になければ、モジュールは &quot;コアモジュール&quot; であるかもしくは <code>node_modules</code> フォルダから読み込まれることになります。\n\n</p>\n<!--\nIf the given path does not exist, `require()` will throw an Error with its\n`code` property set to `'MODULE_NOT_FOUND'`.\n-->\n\n<p>与えられたパスが存在しなかった場合、<code>require()</code> は <code>code</code> プロパティに\n<code>&#39;MODULE_NOT_FOUND&#39;</code> を設定したエラーをスローします。\n\n</p>\n"
+        },
+        {
+          "textRaw": "Loading from `node_modules` Folders",
+          "name": "Loading from `node_modules` Folders",
+          "type": "misc",
+          "desc": "<!--\nIf the module identifier passed to `require()` is not a native module,\nand does not begin with `'/'`, `'../'`, or `'./'`, then node starts at the\nparent directory of the current module, and adds `/node_modules`, and\nattempts to load the module from that location.\n\nIf it is not found there, then it moves to the parent directory, and so\non, until the root of the tree is reached.\n\nFor example, if the file at `'/home/ry/projects/foo.js'` called\n`require('bar.js')`, then node would look in the following locations, in\nthis order:\n-->\n\n<p>もし <code>require()</code> に渡されたモジュール識別子がネイティブモジュールではなく、かつ  <code>&#39;/&#39;</code> や <code>&#39;../&#39;</code> や <code>&#39;./&#39;</code> から始まらないならば、 Node は現在のモジュールの親ディレクトリに <code>&#39;/node_modules&#39;</code> を付与してそこからモジュールを読み込もうとします。\n\n</p>\n<p>そこに見つからない場合はさらに親ディレクトリに移動し、モジュールが見つかるか root ディレクトリに到達するまで同様のことを繰り返していきます。\n\n</p>\n<p>例えば <code>&#39;/home/ry/projects/foo.js&#39;</code> の中で <code>require(&#39;bar.js&#39;)</code> を呼んでいた場合、 Node は下記の位置を上から順番に見ていきます。\n\n</p>\n<ul>\n<li><code>/home/ry/projects/node_modules/bar.js</code></li>\n<li><code>/home/ry/node_modules/bar.js</code></li>\n<li><code>/home/node_modules/bar.js</code></li>\n<li><code>/node_modules/bar.js</code></li>\n</ul>\n<!--\nThis allows programs to localize their dependencies, so that they do not\nclash.\n-->\n\n<p>この仕組みによって、プログラムはクラッシュを避けるために依存関係を上書きすることができるのです。\n\n</p>\n"
+        },
+        {
+          "textRaw": "Folders as Modules",
+          "name": "Folders as Modules",
+          "type": "misc",
+          "desc": "<!--\nIt is convenient to organize programs and libraries into self-contained\ndirectories, and then provide a single entry point to that library.\nThere are three ways in which a folder may be passed to `require()` as\nan argument.\n\nThe first is to create a `package.json` file in the root of the folder,\nwhich specifies a `main` module.  An example package.json file might\nlook like this:\n-->\n\n<p>プログラムとライブラリをディレクトリ内にまとめて、そのエントリポイントを提示するという便利な方法もあります。\nそれには <code>require()</code> に引数として何を渡すかによって3通りの方法があります。\n\n</p>\n<p>1つ目は、 <code>package.json</code> というファイルをフォルダ直下に作成し、 <code>main</code> モジュールを指定するという方法です。\n例えば、 package.json は以下のようなファイルになります:\n\n</p>\n<pre><code>{ &quot;name&quot; : &quot;some-library&quot;,\n  &quot;main&quot; : &quot;./lib/some-library.js&quot; }</code></pre>\n<!--\nIf this was in a folder at `./some-library`, then\n`require('./some-library')` would attempt to load\n`./some-library/lib/some-library.js`.\n\nThis is the extent of Node's awareness of package.json files.\n\nIf there is no package.json file present in the directory, then node\nwill attempt to load an `index.js` or `index.node` file out of that\ndirectory.  For example, if there was no package.json file in the above\nexample, then `require('./some-library')` would attempt to load:\n-->\n\n<p>もし <code>./some-library</code> フォルダ内にこのファイルがあれば、 <code>require(&#39;./some-library&#39;)</code> は <code>./some-library/lib/some-library.js</code> を読みにいきます。\n\n</p>\n<p>これは、 Node が package.json の存在に気づくことによってもたらされます。\n\n</p>\n<p>もし package.json がディレクトリに存在していなければ、 Node はそのディレクトリで <code>index.js</code> もしくは <code>index.node</code> を探します。\n例えば、もし上の例で package.json がいるが存在しないとすると、 <code>require(&#39;./some-library&#39;)</code> は以下のファイルを読み込もうとします: \n\n</p>\n<ul>\n<li><code>./some-library/index.js</code></li>\n<li><code>./some-library/index.node</code></li>\n</ul>\n"
+        },
+        {
+          "textRaw": "Caching",
+          "name": "Caching",
+          "type": "misc",
+          "desc": "<!--\nModules are cached after the first time they are loaded.  This means\n(among other things) that every call to `require('foo')` will get\nexactly the same object returned, if it would resolve to the same file.\n-->\n\n<p>モジュールは初めて読み込まれたときにキャッシュされます。\nすなわち（他のキャッシュと同様に） <code>require(&#39;foo&#39;)</code> を呼ぶたびに、もし引数の意味するものが同一のファイルであったなら全く同一のオブジェクトが返されます。\n\n</p>\n<!--\nMultiple calls to `require('foo')` may not cause the module code to be\nexecuted multiple times.  This is an important feature.  With it,\n\"partially done\" objects can be returned, thus allowing transitive\ndependencies to be loaded even when they would cause cycles.\n-->\n\n<p><code>require(&#39;foo&#39;)</code> が複数回呼び出されても、モジュールが複数回実行されることにはなりません。\nこれは重要な特徴です。\nそのため、「部分的に完了した」オブジェクトを返すことで、\n推移的な依存関係が循環していてもロードすることができます。\n\n</p>\n<!--\nIf you want to have a module execute code multiple times, then export a\nfunction, and call that function.\n-->\n\n<p>もしモジュールを複数回実行したければ、関数を公開して、\nその関数を呼び出してください。\n\n</p>\n",
+          "miscs": [
+            {
+              "textRaw": "Module Caching Caveats",
+              "name": "Module Caching Caveats",
+              "type": "misc",
+              "desc": "<!--\nModules are cached based on their resolved filename.  Since modules may\nresolve to a different filename based on the location of the calling\nmodule (loading from `node_modules` folders), it is not a *guarantee*\nthat `require('foo')` will always return the exact same object, if it\nwould resolve to different files.\n-->\n\n<p>モジュールは解決されたファイル名に基づいてキャッシュされます。\n異なる場所にあるモジュールから呼び出されたモジュールは、\n(<code>node_module</code> フォルダからロードされるため) 異なったファイル名で\n解決されることがあるため、 <code>require(&#39;foo&#39;)</code> が常に同じオブジェクトを返す\n<em>保証</em>はなく、異なるファイルとして解決されます。\n\n</p>\n"
+            }
+          ]
+        },
+        {
+          "textRaw": "All Together...",
+          "name": "All Together...",
+          "type": "misc",
+          "desc": "<!--\nTo get the exact filename that will be loaded when `require()` is called, use\nthe `require.resolve()` function.\n-->\n\n<p><code>require()</code> が呼び出されると、正確なファイル名を得るために <code>require.resolve()</code> が使われます。\n\n</p>\n<!--\nPutting together all of the above, here is the high-level algorithm\nin pseudocode of what require.resolve does:\n-->\n\n<p>上で述べたことをまとめると、 require.resolve は以下の擬似コードで記述されるようなハイレベルなアルゴリズムに則っています:\n\n</p>\n<pre><code>require(X) from module at path Y\n1. If X is a core module,\n   a. return the core module\n   b. STOP\n2. If X begins with &#39;./&#39; or &#39;/&#39; or &#39;../&#39;\n   a. LOAD_AS_FILE(Y + X)\n   b. LOAD_AS_DIRECTORY(Y + X)\n3. LOAD_NODE_MODULES(X, dirname(Y))\n4. THROW &quot;not found&quot;\n\nLOAD_AS_FILE(X)\n1. If X is a file, load X as JavaScript text.  STOP\n2. If X.js is a file, load X.js as JavaScript text.  STOP\n3. If X.node is a file, load X.node as binary addon.  STOP\n\nLOAD_AS_DIRECTORY(X)\n1. If X/package.json is a file,\n   a. Parse X/package.json, and look for &quot;main&quot; field.\n   b. let M = X + (json main field)\n   c. LOAD_AS_FILE(M)\n2. If X/index.js is a file, load X/index.js as JavaScript text.  STOP\n3. If X/index.node is a file, load X/index.node as binary addon.  STOP\n\nLOAD_NODE_MODULES(X, START)\n1. let DIRS=NODE_MODULES_PATHS(START)\n2. for each DIR in DIRS:\n   a. LOAD_AS_FILE(DIR/X)\n   b. LOAD_AS_DIRECTORY(DIR/X)\n\nNODE_MODULES_PATHS(START)\n1. let PARTS = path split(START)\n2. let ROOT = index of first instance of &quot;node_modules&quot; in PARTS, or 0\n3. let I = count of PARTS - 1\n4. let DIRS = []\n5. while I &gt; ROOT,\n   a. if PARTS[I] = &quot;node_modules&quot; CONTINUE\n   c. DIR = path join(PARTS[0 .. I] + &quot;node_modules&quot;)\n   b. DIRS = DIRS + DIR\n   c. let I = I - 1\n6. return DIRS</code></pre>\n"
+        },
+        {
+          "textRaw": "Loading from the global folders",
+          "name": "Loading from the global folders",
+          "type": "misc",
+          "desc": "<!--\nIf the `NODE_PATH` environment variable is set to a colon-delimited list\nof absolute paths, then node will search those paths for modules if they\nare not found elsewhere.  (Note: On Windows, `NODE_PATH` is delimited by\nsemicolons instead of colons.)\n\nAdditionally, node will search in the following locations:\n-->\n\n<p><code>NODE_PATH</code> 環境変数に絶対パスをコロンで区切ったリストを設定すると、\nnode は他で見つからなかったモジュールをそれらのパスから探します。\n(注意: Windows では、<code>NODE_PATH</code> はコロンではなくセミコロンで区切られます)\n\n</p>\n<p>加えると、node は以下の場所から検索します。\n\n</p>\n<ul>\n<li>1: <code>$HOME/.node_modules</code></li>\n<li>2: <code>$HOME/.node_libraries</code></li>\n<li>3: <code>$PREFIX/lib/node</code></li>\n</ul>\n<!--\nWhere `$HOME` is the user's home directory, and `$PREFIX` is node's\nconfigured `node_prefix`.\n\nThese are mostly for historic reasons.  You are highly encouraged to\nplace your dependencies locally in `node_modules` folders.  They will be\nloaded faster, and more reliably.\n-->\n\n<p><code>$HOME</code> はユーザのホームディレクトリ、<code>$PREFIX</code> は node を\nconfigure した時の <code>node_prefix</code> です。\n\n</p>\n<p>これらは主に歴史的な理由によるものです。\nあなたが依存するものはローカルの <code>node_modules</code> フォルダに置くことが\n強く推奨されます。それは素早くロードされ、確実です。\n\n</p>\n"
+        },
+        {
+          "textRaw": "Accessing the main module",
+          "name": "Accessing the main module",
+          "type": "misc",
+          "desc": "<!--\nWhen a file is run directly from Node, `require.main` is set to its\n`module`. That means that you can determine whether a file has been run\ndirectly by testing\n-->\n\n<p>ファイルがNodeによって直接実行される場合、その <code>module</code> が\n<code>require.main</code> に設定されます。\nこれは、ファイルが直接実行されたかを決定できることを意味します。\n\n</p>\n<pre><code>require.main === module</code></pre>\n<!--\nFor a file `foo.js`, this will be `true` if run via `node foo.js`, but\n`false` if run by `require('./foo')`.\n\nBecause `module` provides a `filename` property (normally equivalent to\n`__filename`), the entry point of the current application can be obtained\nby checking `require.main.filename`.\n-->\n\n<p><code>foo.js</code> ファイルの場合、<code>node foo.js</code> と実行された場合にこれは <code>true</code> \nになりますが、<code>require(&#39;./foo&#39;)</code> で実行された場合は <code>false</code> になります。\n\n</p>\n<p><code>module</code> は <code>filename</code> プロパティ (通常 <code>__filename</code> と同じです) \nを提供するため、現在のアプリケーションのエントリポイントは\n<code>require.main.filename</code> をチェックすることで得ることができます。\n\n</p>\n"
+        },
+        {
+          "textRaw": "Addenda: Package Manager Tips",
+          "name": "Addenda: Package Manager Tips",
+          "type": "misc",
+          "desc": "<!--\nThe semantics of Node's `require()` function were designed to be general\nenough to support a number of sane directory structures. Package manager\nprograms such as `dpkg`, `rpm`, and `npm` will hopefully find it possible to\nbuild native packages from Node modules without modification.\n-->\n\n<p>Node の <code>require()</code> は普通のディレクトリ構造をサポートできるよう汎用的に設計されています。\n<code>dpkg</code> や <code>rpm</code> や <code>npm</code> のようなパッケージ管理プログラムは修正なしに Node モジュールからネイティブパッケージを組み立てることができるでしょう。\n\n</p>\n<!--\nBelow we give a suggested directory structure that could work:\n\nLet's say that we wanted to have the folder at\n`/usr/lib/node/<some-package>/<some-version>` hold the contents of a\nspecific version of a package.\n-->\n\n<p>推奨するディレクトリ構造は次のようになります:\n\n</p>\n<p>例えば <code>/usr/lib/node/&lt;some-package&gt;/&lt;some-version&gt;</code> フォルダに、あるパッケージの特定のバージョンを保持する形式です。\n\n</p>\n<!--\nPackages can depend on one another. In order to install package `foo`, you\nmay have to install a specific version of package `bar`.  The `bar` package\nmay itself have dependencies, and in some cases, these dependencies may even\ncollide or form cycles.\n-->\n\n<p>パッケージは相互に依存しあうことがあります。\n<code>foo</code> パッケージをインストールするためにはある特定のバージョンの <code>bar</code> パッケージをインストールする必要があります。\n<code>bar</code> パッケージ自身も依存関係をもっているので、ときには依存関係が衝突したり循環したりすることがあります。\n\n</p>\n<!--\nSince Node looks up the `realpath` of any modules it loads (that is,\nresolves symlinks), and then looks for their dependencies in the\n`node_modules` folders as described above, this situation is very simple to\nresolve with the following architecture:\n-->\n\n<p>Node はモジュールの <code>realpath</code> （シンボリックリンクを解釈します）を調べ、その依存関係を上述の <code>node_modules</code> フォルダの仕組みで探しにいきます。\nこれによって次のような構造をとてもシンプルに解釈することができます。\n\n</p>\n<!--\n* `/usr/lib/node/foo/1.2.3/` - Contents of the `foo` package, version 1.2.3.\n* `/usr/lib/node/bar/4.3.2/` - Contents of the `bar` package that `foo`\n  depends on.\n* `/usr/lib/node/foo/1.2.3/node_modules/bar` - Symbolic link to\n  `/usr/lib/node/bar/4.3.2/`.\n* `/usr/lib/node/bar/4.3.2/node_modules/*` - Symbolic links to the packages\n  that `bar` depends on.\n-->\n\n<ul>\n<li><code>/usr/lib/node/foo/1.2.3/</code> - <code>foo</code> パッケージの中身。バージョン1.2.3。</li>\n<li><code>/usr/lib/node/bar/4.3.2/</code> - <code>bar</code> パッケージの中身。 <code>foo</code> が依存している。</li>\n<li><code>/usr/lib/node/foo/1.2.3/node_modules/bar</code> - <code>/usr/lib/node/bar/4.3.2/</code> へのシンボリックリンク。</li>\n<li><code>/usr/lib/node/bar/4.3.2/node_modules/*</code> - <code>bar</code> が依存しているパッケージへのシンボリックリンク。</li>\n</ul>\n<!--\nThus, even if a cycle is encountered, or if there are dependency\nconflicts, every module will be able to get a version of its dependency\nthat it can use.\n\nWhen the code in the `foo` package does `require('bar')`, it will get the\nversion that is symlinked into `/usr/lib/node/foo/1.2.3/node_modules/bar`.\nThen, when the code in the `bar` package calls `require('quux')`, it'll get\nthe version that is symlinked into\n`/usr/lib/node/bar/4.3.2/node_modules/quux`.\n\nFurthermore, to make the module lookup process even more optimal, rather\nthan putting packages directly in `/usr/lib/node`, we could put them in\n`/usr/lib/node_modules/<name>/<version>`.  Then node will not bother\nlooking for missing dependencies in `/usr/node_modules` or `/node_modules`.\n\nIn order to make modules available to the node REPL, it might be useful to\nalso add the `/usr/lib/node_modules` folder to the `$NODE_PATH` environment\nvariable.  Since the module lookups using `node_modules` folders are all\nrelative, and based on the real path of the files making the calls to\n`require()`, the packages themselves can be anywhere.\n-->\n\n<p>このようにして、もし仮に依存関係に循環や衝突が見つかったとしても、全てのモジュールは依存しているパッケージの特定のバージョンを取得することができます。\n\n</p>\n<p><code>foo</code> パッケージの中で <code>require(&#39;bar&#39;)</code> したら、 <code>/usr/lib/node/foo/1.2.3/node_modules/bar</code> からリンクされているバージョンを取得します。\nそして、 <code>bar</code> パッケージ内で <code>require(&#39;quux&#39;)</code> を呼んだら、 <code>/usr/lib/node/bar/4.3.2/node_modules/quux</code> からリンクされているバージョンを取得します。\n\n</p>\n<p>さらに、モジュールを探索する過程をより最適化するために、 <code>/usr/lib/node</code> にパッケージを置くよりも <code>/usr/lib/node_modules/&lt;name&gt;/&lt;version&gt;</code> に置くのをお勧めします。\nそうすることで Node は見つからない依存パッケージを <code>/usr/node_modules</code> や <code>/node_modules</code> に探しにいかなくてもようなります。\n\n</p>\n<p>Node の REPL でモジュールを使えるようにするために、 <code>/usr/lib/node_modules</code> フォルダを <code>$NODE_PATH</code> 環境変数に追加するとよいでしょう。\n<code>node_modules</code> フォルダを使ったモジュール探索は全て相対的なものであり、 <code>require()</code> を呼び出したファイルの絶対パスを基準としているので、パッケージ自体はどこにでも配置することができます。\n</p>\n"
+        }
+      ],
+      "vars": [
+        {
+          "textRaw": "The `module` Object",
+          "name": "The `module` Object",
+          "type": "var",
+          "desc": "<p>!-- name=module --&gt;\n\n</p>\n<ul>\n<li>{Object}</li>\n</ul>\n<!--\nIn each module, the `module` free variable is a reference to the object\nrepresenting the current module.  In particular\n`module.exports` is the same as the `exports` object.\n`module` isn't actually a global but rather local to each module.\n-->\n\n<p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを\n参照します。特に、<code>module.exports</code> は <code>exports</code> オブジェクトと同じです。\n<code>module</code> は実際はグローバルではなく、各モジュールにローカルです。\n\n</p>\n",
+          "properties": [
+            {
+              "textRaw": "`exports` {Object} ",
+              "name": "exports",
+              "desc": "<p>The <code>exports</code> object is created by the Module system. Sometimes this is not\nacceptable, many want their module to be an instance of some class. To do this\nassign the desired export object to <code>module.exports</code>. For example suppose we\nwere making a module called <code>a.js</code>\n--&gt;\n\n</p>\n<p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。\n時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。\nそれには公開したいオブジェクトを <code>module.exports</code> に割り当てます。\n例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら\n\n\n</p>\n<pre><code>var EventEmitter = require(&#39;events&#39;).EventEmitter;\n\nmodule.exports = new EventEmitter();\n\n// Do some work, and after some time emit\n// the &#39;ready&#39; event from the module itself.\nsetTimeout(function() {\n  module.exports.emit(&#39;ready&#39;);\n}, 1000);</code></pre>\n<!--\nThen in another file we could do\n-->\n\n<p>そして別のファイルで\n\n</p>\n<pre><code>var a = require(&#39;./a&#39;);\na.on(&#39;ready&#39;, function() {\n  console.log(&#39;module a is ready&#39;);\n});</code></pre>\n<!--\nNote that assignment to `module.exports` must be done immediately. It cannot be\ndone in any callbacks.  This does not work:\n-->\n\n<p><code>module.exports</code> への代入はすぐに行わなければなりません。\nコールバックの中ではできません。以下は動きません。\n\n</p>\n<p>x.js:\n\n</p>\n<pre><code>setTimeout(function() {\n  module.exports = { a: &quot;hello&quot; };\n}, 0);</code></pre>\n<p>y.js:\n\n</p>\n<pre><code>var x = require(&#39;./x&#39;);\nconsole.log(x.a);</code></pre>\n"
+            },
+            {
+              "textRaw": "`id` {String} ",
+              "name": "id",
+              "desc": "<!--\nThe identifier for the module.  Typically this is the fully resolved\nfilename.\n-->\n\n<p>モジュールの識別子。通常は完全に解決されたファイル名です。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "`filename` {String} ",
+              "name": "filename",
+              "desc": "<!--\nThe fully resolved filename to the module.\n-->\n\n<p>完全に解決されたモジュールのファイル名です。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "`loaded` {Boolean} ",
+              "name": "loaded",
+              "desc": "<!--\nWhether or not the module is done loading, or is in the process of\nloading.\n-->\n\n<p>モジュールのロードが完了したか，あるいはローディング中かを示します。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "`parent` {Module Object} ",
+              "name": "parent",
+              "desc": "<!--\nThe module that required this one.\n-->\n\n<p>このモジュールを要求したモジュールです。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "`children` {Array} ",
+              "name": "children",
+              "desc": "<!--\nThe module objects required by this one.\n-->\n\n<p>このモジュールが要求したモジュールです。\n\n\n\n</p>\n"
+            }
+          ],
+          "methods": [
+            {
+              "textRaw": "module.require(id)",
+              "type": "method",
+              "name": "require",
+              "desc": "<!--\n* `id` {String}\n* Return: {Object} `exports` from the resolved module\n-->\n\n<ul>\n<li><code>id</code> {String}</li>\n<li>Return: {Object} 解決されたモジュールの <code>exports</code></li>\n</ul>\n<!--\nThe `module.require` method provides a way to load a module as if\n`require()` was called from the original module.\n-->\n\n<p><code>module.require</code> メソッドは、元のモジュールが <code>require()</code>\nを呼び出したかのようにモジュールをロードするために提供されています。\n\n</p>\n<!--\nNote that in order to do this, you must get a reference to the `module`\nobject.  Since `require()` returns the `exports`, and the `module` is\ntypically *only* available within a specific module's code, it must be\nexplicitly exported in order to be used.\n-->\n\n<p>それには <code>module</code> オブジェクトの参照が必要なことに注意してください。\n<code>require()</code> が <code>exports</code> を返した後、一般的に <code>module</code> \nはそのモジュールのコードで <em>のみ</em> 利用可能です。\nそれが使われるようにするには、明示的にエクスポートする必要があります。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "id"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "module"
+    }
+  ]
+}

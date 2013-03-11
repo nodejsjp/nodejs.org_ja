@@ -1,0 +1,74 @@
+{
+  "source": "doc/api/debugger.markdown",
+  "stability": 3,
+  "stabilityText": "Stable",
+  "miscs": [
+    {
+      "textRaw": "Debugger",
+      "name": "Debugger",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "type": "misc",
+      "desc": "<!--\nV8 comes with an extensive debugger which is accessible out-of-process via a\nsimple [TCP protocol](http://code.google.com/p/v8/wiki/DebuggerProtocol).\nNode has a built-in client for this debugger. To use this, start Node with the\n`debug` argument; a prompt will appear:\n-->\n\n<p>V8は外部プロセスから <a href=\"http://code.google.com/p/v8/wiki/DebuggerProtocol\">TCP プロトコル</a>経由で接続可能なデバッガを備えています。\nNode にはこのデバッガへのクライアントが組み込まれています。\nこれを使うには、 <code>debug</code> 引数を指定して Node を起動します。\n次のようになります:\n\n</p>\n<pre><code>% node debug myscript.js\n&lt; debugger listening on port 5858\nconnecting... ok\nbreak in /home/indutny/Code/git/indutny/myscript.js:1\n  1 x = 5;\n  2 setTimeout(function () {\n  3   debugger;\ndebug&gt;</code></pre>\n<!--\nNode's debugger client doesn't support the full range of commands, but\nsimple step and inspection is possible. By putting the statement `debugger;`\ninto the source code of your script, you will enable a breakpoint.\n-->\n\n<p>Node のデバッガクライアントはあらゆるコマンドを完全にサポートしているわけではありませんが、\n単純なステップ実行やインスペクションが可能です。\nスクリプトのソースコードに <code>debugger;</code> 文を挿入すると、\nブレークポイントが有効になります。\n\n</p>\n<!--\nFor example, suppose `myscript.js` looked like this:\n-->\n\n<p>例えば、<code>myscript.js</code> が次のようだとします:\n\n</p>\n<pre><code>// myscript.js\nx = 5;\nsetTimeout(function () {\n  debugger;\n  console.log(&quot;world&quot;);\n}, 1000);\nconsole.log(&quot;hello&quot;);</code></pre>\n<!--\nThen once the debugger is run, it will break on line 4.\n-->\n\n<p>ひとたびデバッガを実行すると、4行目で中断します。\n\n</p>\n<pre><code>% node debug myscript.js\n&lt; debugger listening on port 5858\nconnecting... ok\nbreak in /home/indutny/Code/git/indutny/myscript.js:1\n  1 x = 5;\n  2 setTimeout(function () {\n  3   debugger;\ndebug&gt; cont\n&lt; hello\nbreak in /home/indutny/Code/git/indutny/myscript.js:3\n  1 x = 5;\n  2 setTimeout(function () {\n  3   debugger;\n  4   console.log(&quot;world&quot;);\n  5 }, 1000);\ndebug&gt; next\nbreak in /home/indutny/Code/git/indutny/myscript.js:4\n  2 setTimeout(function () {\n  3   debugger;\n  4   console.log(&quot;world&quot;);\n  5 }, 1000);\n  6 console.log(&quot;hello&quot;);\ndebug&gt; repl\nPress Ctrl + C to leave debug repl\n&gt; x\n5\n&gt; 2+2\n4\ndebug&gt; next\n&lt; world\nbreak in /home/indutny/Code/git/indutny/myscript.js:5\n  3   debugger;\n  4   console.log(&quot;world&quot;);\n  5 }, 1000);\n  6 console.log(&quot;hello&quot;);\n  7\ndebug&gt; quit\n%</code></pre>\n<!--\nThe `repl` command allows you to evaluate code remotely. The `next` command\nsteps over to the next line. There are a few other commands available and more\nto come. Type `help` to see others.\n-->\n\n<p><code>repl</code> コマンドはコードをリモートで評価します。\n<code>next</code> コマンドは次の行にステップオーバーします。\n他にもいくつかのコマンドを利用することができます。\nその他については <code>help</code> をタイプしてください。\n\n</p>\n",
+      "miscs": [
+        {
+          "textRaw": "Watchers",
+          "name": "watchers",
+          "desc": "<!--\nYou can watch expression and variable values while debugging your code.\nOn every breakpoint each expression from the watchers list will be evaluated\nin the current context and displayed just before the breakpoint's source code\nlisting.\n-->\n\n<p>デバッグ中に式や変数の値をウォッチすることができます。\n全てのブレークポイントにおいて、ウォッチリストのそれぞれの式は\n現在のコンテキストで評価され、ブレークポイントのソースコードの前に\n表示されます。\n\n</p>\n<!--\nTo start watching an expression, type `watch(\"my_expression\")`. `watchers`\nprints the active watchers. To remove a watcher, type\n`unwatch(\"my_expression\")`.\n-->\n\n<p>式のウォッチを開始するには、<code>watch(&quot;my_expression&quot;)</code> をタイプします。\n<code>watchers</code> はアクティブなウォッチの一覧を表示します。\nウォッチを解除するには、<code>unwatch(&quot;my_expression&quot;)</code> とタイプします。\n\n</p>\n",
+          "type": "misc",
+          "displayName": "Watchers"
+        },
+        {
+          "textRaw": "Commands reference",
+          "name": "commands_reference",
+          "modules": [
+            {
+              "textRaw": "Stepping",
+              "name": "stepping",
+              "desc": "<!--\n* `cont`, `c` - Continue execution\n* `next`, `n` - Step next\n* `step`, `s` - Step in\n* `out`, `o` - Step out\n* `pause` - Pause running code (like pause button in Developer TOols)\n-->\n\n<ul>\n<li><code>cont</code>, <code>c</code> - 実行を継続します。</li>\n<li><code>next</code>, <code>n</code> - 次の行へステップオーバーします。</li>\n<li><code>step</code>, <code>s</code> - ステップインします。</li>\n<li><code>out</code>, <code>o</code> - ステップアウトします。</li>\n<li><code>pause</code> - コードの実行を中断します (Developer Tools の pause\nボタンと同じです。</li>\n</ul>\n",
+              "type": "module",
+              "displayName": "Stepping"
+            },
+            {
+              "textRaw": "Breakpoints",
+              "name": "breakpoints",
+              "desc": "<!--\n* `setBreakpoint()`, `sb()` - Set breakpoint on current line\n* `setBreakpoint(line)`, `sb(line)` - Set breakpoint on specific line\n* `setBreakpoint('fn()')`, `sb(...)` - Set breakpoint on a first statement in\nfunctions body\n* `setBreakpoint('script.js', 1)`, `sb(...)` - Set breakpoint on first line of\nscript.js\n* `clearBreakpoint`, `cb(...)` - Clear breakpoint\n-->\n\n<ul>\n<li><code>setBreakpoint()</code>, <code>sb()</code> - 現在行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(line)</code>, <code>sb(line)</code> - 指定した行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(&#39;fn()&#39;)</code>, <code>sb(...)</code> - 指定した関数の先頭行にブレークポイントを設定します</li>\n<li><code>setBreakpoint(&#39;script.js&#39;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>\n<li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>\n</ul>\n",
+              "type": "module",
+              "displayName": "Breakpoints"
+            },
+            {
+              "textRaw": "Info",
+              "name": "info",
+              "desc": "<!--\n* `backtrace`, `bt` - Print backtrace of current execution frame\n* `list(5)` - List scripts source code with 5 line context (5 lines before and\nafter)\n* `watch(expr)` - Add expression to watch list\n* `unwatch(expr)` - Remove expression from watch list\n* `watchers` - List all watchers and their values (automatically listed on each\nbreakpoint)\n* `repl` - Open debugger's repl for evaluation in debugging script's context\n-->\n\n<ul>\n<li><code>backtrace</code>, <code>bt</code> - 現在の実行フレームのバックトレースを表示します。</li>\n<li><code>list(5)</code> - 現在の行の前後のソースコードを表示します (例では前後とも 5 行が表示されます)。</li>\n<li><code>watch(expr)</code> - 式をウォッチリストに追加します。</li>\n<li><code>unwatch(expr)</code> - 式をウォッチリストから削除します。</li>\n<li><code>watchers</code> - ウォッチしている全ての式とその値を表示します (各ブレークポイントで自動的に表示されます)。</li>\n<li><code>repl</code> - デバッグしているスクリプトをコンテキストとする REPL を開きます。</li>\n</ul>\n",
+              "type": "module",
+              "displayName": "Info"
+            },
+            {
+              "textRaw": "Execution control",
+              "name": "execution_control",
+              "desc": "<!--\n* `run` - Run script (automatically runs on debugger's start)\n* `restart` - Restart script\n* `kill` - Kill script\n-->\n\n<ul>\n<li><code>run</code> - スクリプトを実行します (デバッガを開始すると自動的に実行します)。</li>\n<li><code>restart</code> - スクリプトを再実行します。</li>\n<li><code>kill</code> - スクリプトを終了します。</li>\n</ul>\n",
+              "type": "module",
+              "displayName": "Execution control"
+            },
+            {
+              "textRaw": "Various",
+              "name": "various",
+              "desc": "<!--\n* `scripts` - List all loaded scripts\n* `version` - Display v8's version\n-->\n\n<ul>\n<li><code>scripts</code> - ロードされている全スクリプトの一覧を表示します。</li>\n<li><code>version</code> - v8 のバージョンを表示します。</li>\n</ul>\n",
+              "type": "module",
+              "displayName": "Various"
+            }
+          ],
+          "type": "misc",
+          "displayName": "Commands reference"
+        },
+        {
+          "textRaw": "Advanced Usage",
+          "name": "advanced_usage",
+          "desc": "<!--\nThe V8 debugger can be enabled and accessed either by starting Node with\nthe `--debug` command-line flag or by signaling an existing Node process\nwith `SIGUSR1`.\n-->\n\n<p>V8 デバッガは Node をコマンドラインの <code>--debug</code> フラグで起動したり、起動済みの Node プロセスに <code>SIGUSR1</code> シグナルを送ることでも有効にできます。\n\n</p>\n<!--\nOnce a process has been set in debug mode with this it can be connected to\nwith the node debugger. Either connect to the `pid` or the URI to the debugger.\nThe syntax is:\n-->\n\n<p>これによって一度デバッグモードに設定されたプロセスは、\n<code>pid</code> または URI のどちらでも node デバッガに接続することができます。\n形式は:\n\n</p>\n<!--\n* `node debug -p <pid>` - Connects to the process via the `pid`\n* `node debug <URI> - Connects to the process via the URI such as localhost:5858-->\n\n<ul>\n<li><code>node debug -p &lt;pid&gt;</code> - <code>pid</code> を通じてプロセスに接続</li>\n<li><code>node debug &lt;URI&gt; - </code>localhost:585` のような URI を通じてプロセスに接続</li>\n</ul>\n",
+          "type": "misc",
+          "displayName": "Advanced Usage"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1660 @@
+{
+  "source": "doc/api/fs.markdown",
+  "modules": [
+    {
+      "textRaw": "File System",
+      "name": "fs",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nFile I/O is provided by simple wrappers around standard POSIX functions.  To\nuse this module do `require('fs')`. All the methods have asynchronous and\nsynchronous forms.\n-->\n\n<p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。\nこのモジュールを使用するには <code>require(&#39;fs&#39;)</code> してください。\n全てのメソッドは非同期と同期の形式があります。\n\n</p>\n<!--\nThe asynchronous form always take a completion callback as its last argument.\nThe arguments passed to the completion callback depend on the method, but the\nfirst argument is always reserved for an exception. If the operation was\ncompleted successfully, then the first argument will be `null` or `undefined`.\n\nWhen using the synchronous form any exceptions are immediately thrown.\nYou can use try/catch to handle exceptions or allow them to bubble up.\n-->\n\n<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。\n引数として渡される完了コールバックはメソッドに依存しますが、\n最初の引数は常に例外のために予約されています。\n操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります\n\n</p>\n<p>同期の形式では、全ての例外はすぐにスローされます。\n例外は try/catch で捕まえることも、そのまま通過させることもできます。\n\n</p>\n<!--\nHere is an example of the asynchronous version:\n-->\n\n<p>非同期バージョンの例です:\n\n</p>\n<pre><code>var fs = require(&#39;fs&#39;);\n\nfs.unlink(&#39;/tmp/hello&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;successfully deleted /tmp/hello&#39;);\n});</code></pre>\n<!--\nHere is the synchronous version:\n-->\n\n<p>同期バージョンです:\n\n</p>\n<pre><code>var fs = require(&#39;fs&#39;);\n\nfs.unlinkSync(&#39;/tmp/hello&#39;)\nconsole.log(&#39;successfully deleted /tmp/hello&#39;);</code></pre>\n<!--\nWith the asynchronous methods there is no guaranteed ordering. So the\nfollowing is prone to error:\n-->\n\n<p>非同期メソッドでは順序の保証はありません。\n以下のような傾向のエラーがあります。\n\n</p>\n<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;renamed complete&#39;);\n});\nfs.stat(&#39;/tmp/world&#39;, function (err, stats) {\n  if (err) throw err;\n  console.log(&#39;stats: &#39; + JSON.stringify(stats));\n});</code></pre>\n<!--\nIt could be that `fs.stat` is executed before `fs.rename`.\nThe correct way to do this is to chain the callbacks.\n-->\n\n<p><code>fs.stat</code> は <code>fs.rename</code> より先に実行される可能性がありrます。\n正しい方法はコールバックをチェーンすることです。\n\n</p>\n<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {\n  if (err) throw err;\n  fs.stat(&#39;/tmp/world&#39;, function (err, stats) {\n    if (err) throw err;\n    console.log(&#39;stats: &#39; + JSON.stringify(stats));\n  });\n});</code></pre>\n<!--\nIn busy processes, the programmer is _strongly encouraged_ to use the\nasynchronous versions of these calls. The synchronous versions will block\nthe entire process until they complete--halting all connections.\n\nRelative path to filename can be used, remember however that this path will be\nrelative to `process.cwd()`.\n-->\n\n<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。\n同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。\n\n</p>\n<p>ファイル名には相対パスを使うことが出来ます。しかし、このパスは\n<code>process.cwd()</code> からの相対パスであることを思い出してください。\n\n</p>\n<!--\nMost fs functions let you omit the callback argument. If you do, a default\ncallback is used that rethrows errors. To get a trace to the original call\nsite, set the NODE_DEBUG environment variable:\n-->\n\n<p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。\nそうすると、エラーを再スローするコールバックがデフォルトとして使用されます。\n本来の呼び出し元のトレースを取得するには、<code>NODE_DEBUG</code>\n環境変数を設定してください:\n\n</p>\n<pre><code>$ cat script.js\nfunction bad() {\n  require(&#39;fs&#39;).readFile(&#39;/&#39;);\n}\nbad();\n\n$ env NODE_DEBUG=fs node script.js\nfs.js:66\n        throw err;\n              ^\nError: EISDIR, read\n    at rethrow (fs.js:61:21)\n    at maybeCallback (fs.js:79:42)\n    at Object.fs.readFile (fs.js:153:18)\n    at bad (/path/to/script.js:2:17)\n    at Object.&lt;anonymous&gt; (/path/to/script.js:5:1)\n    &lt;etc.&gt;</code></pre>\n",
+      "methods": [
+        {
+          "textRaw": "fs.rename(oldPath, newPath, [callback])",
+          "type": "method",
+          "name": "rename",
+          "desc": "<!--\nAsynchronous rename(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の rename(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "oldPath"
+                },
+                {
+                  "name": "newPath"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.renameSync(oldPath, newPath)",
+          "type": "method",
+          "name": "renameSync",
+          "desc": "<!--\nSynchronous rename(2).\n-->\n\n<p>同期の rename(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "oldPath"
+                },
+                {
+                  "name": "newPath"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.ftruncate(fd, len, [callback])",
+          "type": "method",
+          "name": "ftruncate",
+          "desc": "<!--\nAsynchronous ftruncate(2). No arguments other than a possible exception are\ngiven to the completion callback.\n-->\n\n<p>非同期の ftruncate(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "len"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.ftruncateSync(fd, len)",
+          "type": "method",
+          "name": "ftruncateSync",
+          "desc": "<!--\nSynchronous ftruncate(2).\n-->\n\n<p>同期の ftruncate(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "len"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.truncate(path, len, [callback])",
+          "type": "method",
+          "name": "truncate",
+          "desc": "<!--\nAsynchronous truncate(2). No arguments other than a possible exception are\ngiven to the completion callback.\n-->\n\n<p>非同期の truncate(2)。\n完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "len"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.truncateSync(path, len)",
+          "type": "method",
+          "name": "truncateSync",
+          "desc": "<!--\nSynchronous truncate(2).\n-->\n\n<p>同期の truncate(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "len"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.chown(path, uid, gid, [callback])",
+          "type": "method",
+          "name": "chown",
+          "desc": "<!--\nAsynchronous chown(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の chown(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "uid"
+                },
+                {
+                  "name": "gid"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.chownSync(path, uid, gid)",
+          "type": "method",
+          "name": "chownSync",
+          "desc": "<!--\nSynchronous chown(2).\n-->\n\n<p>同期の chown(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "uid"
+                },
+                {
+                  "name": "gid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fchown(fd, uid, gid, [callback])",
+          "type": "method",
+          "name": "fchown",
+          "desc": "<!--\nAsynchronous fchown(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の fchown(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "uid"
+                },
+                {
+                  "name": "gid"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fchownSync(fd, uid, gid)",
+          "type": "method",
+          "name": "fchownSync",
+          "desc": "<!--\nSynchronous fchown(2).\n-->\n\n<p>同期の fchown(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "uid"
+                },
+                {
+                  "name": "gid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.lchown(path, uid, gid, [callback])",
+          "type": "method",
+          "name": "lchown",
+          "desc": "<!--\nAsynchronous lchown(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の lchown(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "uid"
+                },
+                {
+                  "name": "gid"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.lchownSync(path, uid, gid)",
+          "type": "method",
+          "name": "lchownSync",
+          "desc": "<!--\nSynchronous lchown(2).\n-->\n\n<p>同期の lchown(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "uid"
+                },
+                {
+                  "name": "gid"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.chmod(path, mode, [callback])",
+          "type": "method",
+          "name": "chmod",
+          "desc": "<!--\nAsynchronous chmod(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の chmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "mode"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.chmodSync(path, mode)",
+          "type": "method",
+          "name": "chmodSync",
+          "desc": "<!--\nSynchronous chmod(2).\n-->\n\n<p>同期の chmod(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fchmod(fd, mode, [callback])",
+          "type": "method",
+          "name": "fchmod",
+          "desc": "<!--\nAsynchronous fchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の fchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "mode"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fchmodSync(fd, mode)",
+          "type": "method",
+          "name": "fchmodSync",
+          "desc": "<!--\nSynchronous fchmod(2).\n-->\n\n<p>同期の fchmod(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.lchmod(path, mode, [callback])",
+          "type": "method",
+          "name": "lchmod",
+          "desc": "<!--\nAsynchronous lchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n<!--\nOnly available on Mac OS X.\n-->\n\n<p>Mac OS X でのみ利用可能です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "mode"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.lchmodSync(path, mode)",
+          "type": "method",
+          "name": "lchmodSync",
+          "desc": "<!--\nSynchronous lchmod(2).\n-->\n\n<p>同期の lchmod(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.stat(path, [callback])",
+          "type": "method",
+          "name": "stat",
+          "desc": "<!--\nAsynchronous stat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a [fs.Stats](#fs_class_fs_stats) object.  See the [fs.Stats](#fs_class_fs_stats)\nsection below for more information.\n-->\n\n<p>非同期の stat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、\n<code>stats</code> は <a href=\"#fs_class_fs_stats\">fs.Stats</a> オブジェクトです。\n詳細は <a href=\"#fs_class_fs_stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n<!--\nSee the [fs.Stats](#fs.Stats) section below for more information.\n-->\n\n<p>より詳しくは後述の <a href=\"#fs.Stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.lstat(path, [callback])",
+          "type": "method",
+          "name": "lstat",
+          "desc": "<!--\nAsynchronous lstat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a `fs.Stats` object. `lstat()` is identical to `stat()`, except that if\n`path` is a symbolic link, then the link itself is stat-ed, not the file that it\nrefers to.\n-->\n\n<p>非同期の lstat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、\n<code>stats</code> は <code>fs.Stats</code> オブジェクトです。\n<code>lstat()</code> はパスがシンボリックリンクだった場合に、\n参照先のファイルではなくそのリンク自身が調べられる点を除いて <code>stat()</code> と同じす。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fstat(fd, [callback])",
+          "type": "method",
+          "name": "fstat",
+          "desc": "<!--\nAsynchronous fstat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a `fs.Stats` object. `fstat()` is identical to `stat()`, except that\nthe file to be stat-ed is specified by the file descriptor `fd`.\n-->\n\n<p>非同期の fstat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code> で、\n<code>stats</code> は <code>fs.Stats</code> オブジェクトです。\n状態を取得するファイルをファイル記述子 <code>fd</code> で指定することを除いて、\n<code>fstat()</code> は <code>stat()</code> と同じです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.statSync(path)",
+          "type": "method",
+          "name": "statSync",
+          "desc": "<!--\nSynchronous stat(2). Returns an instance of `fs.Stats`.\n-->\n\n<p>同期の stat(2)。<code>fs.Stats</code> のインスタンスを返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.lstatSync(path)",
+          "type": "method",
+          "name": "lstatSync",
+          "desc": "<!--\nSynchronous lstat(2). Returns an instance of `fs.Stats`.\n-->\n\n<p>同期の lstat(2)。<code>fs.Stats</code> のインスタンスを返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fstatSync(fd)",
+          "type": "method",
+          "name": "fstatSync",
+          "desc": "<!--\nSynchronous fstat(2). Returns an instance of `fs.Stats`.\n-->\n\n<p>同期の fstat(2)。<code>fs.Stats</code> のインスタンスを返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.link(srcpath, dstpath, [callback])",
+          "type": "method",
+          "name": "link",
+          "desc": "<!--\nAsynchronous link(2). No arguments other than a possible exception are given to\nthe completion callback.\n-->\n\n<p>非同期の link(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "srcpath"
+                },
+                {
+                  "name": "dstpath"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.linkSync(srcpath, dstpath)",
+          "type": "method",
+          "name": "linkSync",
+          "desc": "<!--\nSynchronous link(2).\n-->\n\n<p>同期の link(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "srcpath"
+                },
+                {
+                  "name": "dstpath"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.symlink(srcpath, dstpath, [type], [callback])",
+          "type": "method",
+          "name": "symlink",
+          "desc": "<!--\nAsynchronous symlink(2). No arguments other than a possible exception are given\nto the completion callback.\n`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only \nused on Windows (ignored on other platforms).\nNote that Windows junction points require the destination path to be absolute.  When using\n`'junction'`, the `destination` argument will automatically be normalized to absolute path.\n-->\n\n<p>非同期の symlink(2)。\n完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n<code>type</code> 引数は <code>&#39;dir&#39;</code>、<code>&#39;file&#39;</code>、または <code>&#39;junction</code>&#39; (デフォルトは <code>&#39;file&#39;</code>)\nです。\nこれは Windows でのみ使われます (他のプラットフォームでは無視されます)。\nWindows のジャンクションポイントは対象に絶対パスを要求することに\n注意してください。\n<code>&#39;junction&#39;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "srcpath"
+                },
+                {
+                  "name": "dstpath"
+                },
+                {
+                  "name": "type",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.symlinkSync(srcpath, dstpath, [type])",
+          "type": "method",
+          "name": "symlinkSync",
+          "desc": "<!--\nSynchronous symlink(2).\n-->\n\n<p>同期の symlink(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "srcpath"
+                },
+                {
+                  "name": "dstpath"
+                },
+                {
+                  "name": "type",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.readlink(path, [callback])",
+          "type": "method",
+          "name": "readlink",
+          "desc": "<!--\nAsynchronous readlink(2). The callback gets two arguments `(err,\nlinkString)`.\n-->\n\n<p>非同期の readlink(2)。コールバックは 2 つの引数を受け取る <code>(err, linkString)</code>です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.readlinkSync(path)",
+          "type": "method",
+          "name": "readlinkSync",
+          "desc": "<!--\nSynchronous readlink(2). Returns the symbolic link's string value.\n-->\n\n<p>同期の readlink(2)。シンボリックリンクの持つ文字列値を返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.realpath(path, [cache], callback)",
+          "type": "method",
+          "name": "realpath",
+          "desc": "<!--\nAsynchronous realpath(2). The `callback` gets two arguments `(err,\nresolvedPath)`. May use `process.cwd` to resolve relative paths. `cache` is an\nobject literal of mapped paths that can be used to force a specific path\nresolution or avoid additional `fs.stat` calls for known real paths.\n-->\n\n<p>非同期の realpath(2)。コールバックは 2 つの引数を受け取る <code>(err, resolvedPath)</code>です。\n相対パスを解決するために <code>process.cwd</code> を使用することができます。\n<code>cache</code> はオブジェクトで、パスがキーとして含まれていればその値が\n強制的に解決されたパスとして扱われ、<code>fs.stat</code> によってパスが実在するかどうかの\n確認が省かれます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var cache = {&#39;/etc&#39;:&#39;/private/etc&#39;};\nfs.realpath(&#39;/etc/passwd&#39;, cache, function (err, resolvedPath) {\n  if (err) throw err;\n  console.log(resolvedPath);\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "cache",
+                  "optional": true
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.realpathSync(path, [cache])",
+          "type": "method",
+          "name": "realpathSync",
+          "desc": "<!--\nSynchronous realpath(2). Returns the resolved path.\n-->\n\n<p>同期の realpath(2)。解決されたパスを返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "cache",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.unlink(path, [callback])",
+          "type": "method",
+          "name": "unlink",
+          "desc": "<!--\nAsynchronous unlink(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の unlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.unlinkSync(path)",
+          "type": "method",
+          "name": "unlinkSync",
+          "desc": "<!--\nSynchronous unlink(2).\n-->\n\n<p>同期の unlink(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.rmdir(path, [callback])",
+          "type": "method",
+          "name": "rmdir",
+          "desc": "<!--\nAsynchronous rmdir(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の rmdir(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.rmdirSync(path)",
+          "type": "method",
+          "name": "rmdirSync",
+          "desc": "<!--\nSynchronous rmdir(2).\n-->\n\n<p>同期の rmdir(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.mkdir(path, [mode], [callback])",
+          "type": "method",
+          "name": "mkdir",
+          "desc": "<!--\nAsynchronous mkdir(2). No arguments other than a possible exception are given\nto the completion callback. `mode` defaults to `0777`.\n-->\n\n<p>非同期の mkdir(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n<code>mode</code> のデフォルトは <code>0777</code> です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "mode",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.mkdirSync(path, [mode])",
+          "type": "method",
+          "name": "mkdirSync",
+          "desc": "<!--\nSynchronous mkdir(2).\n-->\n\n<p>同期の mkdir(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "mode",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.readdir(path, [callback])",
+          "type": "method",
+          "name": "readdir",
+          "desc": "<!--\nAsynchronous readdir(3).  Reads the contents of a directory.\nThe callback gets two arguments `(err, files)` where `files` is an array of\nthe names of the files in the directory excluding `'.'` and `'..'`.\n-->\n\n<p>非同期の readdir(3)。ディレクトリの内容を読み込みます。\nコールバックは 2 つの引数を受け取る <code>(err, files)</code>で、\n<code>files</code> は <code>&#39;.&#39;</code> と <code>&#39;..&#39;</code> を除くディレクトリ内のファイル名の配列です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.readdirSync(path)",
+          "type": "method",
+          "name": "readdirSync",
+          "desc": "<!--\nSynchronous readdir(3). Returns an array of filenames excluding `'.'` and\n`'..'`.\n-->\n\n<p>同期の readdir(3)。<code>&#39;.&#39;</code> と <code>&#39;..&#39;</code> を除くディレクトリ内のファイル名の配列を返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.close(fd, [callback])",
+          "type": "method",
+          "name": "close",
+          "desc": "<!--\nAsynchronous close(2).  No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の close(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.closeSync(fd)",
+          "type": "method",
+          "name": "closeSync",
+          "desc": "<!--\nSynchronous close(2).\n-->\n\n<p>同期の close(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.open(path, flags, [mode], [callback])",
+          "type": "method",
+          "name": "open",
+          "desc": "<!--\nAsynchronous file open. See open(2). `flags` can be:\n\n* `'r'` - Open file for reading.\nAn exception occurs if the file does not exist.\n\n* `'r+'` - Open file for reading and writing.\nAn exception occurs if the file does not exist.\n\n* `'rs'` - Open file for reading in synchronous mode. Instructs the operating\n  system to bypass the local file system cache.\n\n  This is primarily useful for opening files on NFS mounts as it allows you to\n  skip the potentially stale local cache. It has a very real impact on I/O\n  performance so don't use this mode unless you need it.\n\n  Note that this doesn't turn `fs.open()` into a synchronous blocking call.\n  If that's what you want then you should be using `fs.openSync()`\n\n* `'rs+'` - Open file for reading and writing, telling the OS to open it\n  synchronously. See notes for `'rs'` about using this with caution.\n\n* `'w'` - Open file for writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx'` - Like `'w'` but opens the file in exclusive mode.\n\n* `'w+'` - Open file for reading and writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx+'` - Like `'w+'` but opens the file in exclusive mode.\n\n* `'a'` - Open file for appending.\nThe file is created if it does not exist.\n\n* `'ax'` - Like `'a'` but opens the file in exclusive mode.\n\n* `'a+'` - Open file for reading and appending.\nThe file is created if it does not exist.\n\n* `'ax+'` - Like `'a+'` but opens the file in exclusive mode.\n\n`mode` defaults to `0666`. The callback gets two arguments `(err, fd)`.\n\nExclusive mode (`O_EXCL`) ensures that `path` is newly created. `fs.open()`\nfails if a file by that name already exists. On POSIX systems, symlinks are\nnot followed. Exclusive mode may or may not work with network file systems.\n-->\n\n<p>非同期のファイルオープン。open(2) を参照してください。\nフラグは以下になります:\n\n</p>\n<ul>\n<li><p><code>&#39;r&#39;</code> - ファイルを読み込み専用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;r+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;rs&#39;</code> - ファイルを同期モードで読み込むためにオープンします。\nオペレーティングシステムにローカルファイルシステムのキャッシュを\nバイパスするように指示します。</p>\n<p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い\nローカルキャッシュをスキップするのに役立ちます。\nこれはI/O パフォーマンスにとても深刻な影響を与えるため、必要でない限り\n使用しないでください。</p>\n<p>これは <code>fs.open()</code> を同期的なブロッキング呼び出しにするわけではないことに\n注意してください。\nそれが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>\n</li>\n<li><p><code>&#39;rs+&#39;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように\n伝えます。これを使用する際の警告は <code>&#39;rs&#39;</code> の注意を参照してください。</p>\n</li>\n<li><p><code>&#39;w&#39;</code> - ファイルを書き込み専用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx&#39;</code> - <code>&#39;w&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;w+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx+&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a&#39;</code> - ファイルを追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax&#39;</code> - <code>&#39;a&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a+&#39;</code> - ファイルを読み込みおよび追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax+&#39;</code> - <code>&#39;a+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n</ul>\n<p><code>mode</code> のデフォルトは 0666 です。\nコールバックは 2 つの引数を受け取る <code>(err, fd)</code>です。\n\n</p>\n<p>排他モード (<code>O_EXCL</code>) は、<code>path</code> が新しいファイルとして作成されることを\n確実にします。 指定された名前のファイルが既に存在する場合、\n<code>fs.open()</code> は失敗します。\nPOSIX システムでは、シンボリックリンクは辿られません。\n排他モードはネットワークファイルシステムでは動くかもしれませんし、\n動かないかもしれません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "flags"
+                },
+                {
+                  "name": "mode",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.openSync(path, flags, [mode])",
+          "type": "method",
+          "name": "openSync",
+          "desc": "<!--\nSynchronous open(2).\n-->\n\n<p>同期の open(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "flags"
+                },
+                {
+                  "name": "mode",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.utimes(path, atime, mtime, [callback])",
+          "type": "method",
+          "name": "utimes",
+          "desc": "<!--\nChange file timestamps.\nChange file timestamps of the file referenced by the supplied path.\n-->\n\n<p>渡されたパスが参照するファイルのタイムスタンプを変更します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "atime"
+                },
+                {
+                  "name": "mtime"
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "atime"
+                },
+                {
+                  "name": "mtime"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.utimesSync(path, atime, mtime)",
+          "type": "method",
+          "name": "utimesSync",
+          "desc": "<!--\nChange file timestamps.\nChange file timestamps of the file referenced by the supplied path.\n-->\n\n<p>渡されたパスが参照するファイルのタイムスタンプを変更します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "atime"
+                },
+                {
+                  "name": "mtime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.futimes(fd, atime, mtime, [callback])",
+          "type": "method",
+          "name": "futimes",
+          "desc": "<!--\nChange the file timestamps of a file referenced by the supplied file\ndescriptor.\n-->\n\n<p>渡されたファイル記述子が参照するファイルのタイムスタンプを変更します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "atime"
+                },
+                {
+                  "name": "mtime"
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "atime"
+                },
+                {
+                  "name": "mtime"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.futimesSync(fd, atime, mtime)",
+          "type": "method",
+          "name": "futimesSync",
+          "desc": "<!--\nChange the file timestamps of a file referenced by the supplied file\ndescriptor.\n-->\n\n<p>渡されたファイル記述子が参照するファイルのタイムスタンプを変更します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "atime"
+                },
+                {
+                  "name": "mtime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fsync(fd, [callback])",
+          "type": "method",
+          "name": "fsync",
+          "desc": "<!--\nAsynchronous fsync(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の fsync(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.fsyncSync(fd)",
+          "type": "method",
+          "name": "fsyncSync",
+          "desc": "<!--\nSynchronous fsync(2).\n-->\n\n<p>同期の fsync(2)。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.write(fd, buffer, offset, length, position, [callback])",
+          "type": "method",
+          "name": "write",
+          "desc": "<!--\nWrite `buffer` to the file specified by `fd`.\n-->\n\n<p><code>fd</code> で指定されたファイルに <code>buffer</code> を書き込みます。\n\n</p>\n<!--\n`offset` and `length` determine the part of the buffer to be written.\n-->\n\n<p><code>offset</code> と <code>length</code> は書き込まれるバッファの部分を決定します。\n\n</p>\n<!--\n`position` refers to the offset from the beginning of the file where this data\nshould be written. If `position` is `null`, the data will be written at the\ncurrent position.\nSee pwrite(2).\n-->\n\n<p><code>position</code> はデータが書き込まれる位置をファイルの先頭からのオフセットで示します。\n<code>position</code> が <code>null</code> の場合、データは現在の位置から書き込まれます。\npwrite(2) を参照してください。\n\n</p>\n<!--\nThe callback will be given two arguments `(err, written)` where `written`\nspecifies how many _bytes_ were written.\nThe callback will be given three arguments `(err, written, buffer)` where `written`\nspecifies how many _bytes_ were written from `buffer`.\n-->\n\n<p>コールバックは 3 つの引数が与えられる <code>(err, written, buffer)</code> で、\n<code>written</code> は <code>buffer</code> から書き込まれた<em>バイト数</em>を示します。\n\n</p>\n<!--\nNote that it is unsafe to use `fs.write` multiple times on the same file\nwithout waiting for the callback. For this scenario,\n`fs.createWriteStream` is strongly recommended.\n-->\n\n<p>同じファイルに対してコールバックされるのを待つことなく <code>fs.write()</code> を何度も呼び出すことは、安全ではないことに注意してください。\nこのシナリオでは、 <code>fs.createWriteStream()</code> を強く推奨します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "buffer"
+                },
+                {
+                  "name": "offset"
+                },
+                {
+                  "name": "length"
+                },
+                {
+                  "name": "position"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.writeSync(fd, buffer, offset, length, position)",
+          "type": "method",
+          "name": "writeSync",
+          "desc": "<!--\nSynchronous version of `fs.write()`. Returns the number of bytes written.\n-->\n\n<p>同期版の <code>fs.write()</code>。書き込まれたバイト数を返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "buffer"
+                },
+                {
+                  "name": "offset"
+                },
+                {
+                  "name": "length"
+                },
+                {
+                  "name": "position"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.read(fd, buffer, offset, length, position, [callback])",
+          "type": "method",
+          "name": "read",
+          "desc": "<!--\nRead data from the file specified by `fd`.\n-->\n\n<p><code>fd</code> で指定されたファイルからデータを読み込みます。\n\n</p>\n<!--\n`buffer` is the buffer that the data will be written to.\n-->\n\n<p><code>buffer</code> はデータが書き込まれるバッファです。\n\n</p>\n<!--\n`offset` is offset within the buffer where reading will start.\n-->\n\n<p><code>offset</code> は読み込みを開始するバッファ内のオフセットです。\n\n</p>\n<!--\n`length` is an integer specifying the number of bytes to read.\n-->\n\n<p><code>length</code> は読み込むバイト数を指定する整数です。\n\n</p>\n<!--\n`position` is an integer specifying where to begin reading from in the file.\nIf `position` is `null`, data will be read from the current file position.\n-->\n\n<p><code>position</code> はファイルの読み込みを開始する位置を指定する整数です。\n<code>position</code> が <code>null</code> の場合、データは現在の位置から読み込まれます。\n\n</p>\n<!--\nThe callback is given the three arguments, `(err, bytesRead, buffer)`.\n-->\n\n<p>コールバックは3つの引数が与えられる <code>(err, bytesRead, buffer)</code> です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "buffer"
+                },
+                {
+                  "name": "offset"
+                },
+                {
+                  "name": "length"
+                },
+                {
+                  "name": "position"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.readSync(fd, buffer, offset, length, position)",
+          "type": "method",
+          "name": "readSync",
+          "desc": "<!--\nSynchronous version of `fs.read`. Returns the number of `bytesRead`.\n-->\n\n<p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "fd"
+                },
+                {
+                  "name": "buffer"
+                },
+                {
+                  "name": "offset"
+                },
+                {
+                  "name": "length"
+                },
+                {
+                  "name": "position"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.readFile(filename, [options], [callback])",
+          "type": "method",
+          "name": "readFile",
+          "* `filename` {String}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`null`\n  * `flag` {String} default = `'r'`",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`filename` {String} ",
+                  "name": "filename",
+                  "type": "String"
+                },
+                {
+                  "textRaw": "`options` {Object} ",
+                  "options": [
+                    {
+                      "textRaw": "`encoding` {String | Null} デフォルトは `null` ",
+                      "name": "encoding",
+                      "type": "String | Null",
+                      "desc": "デフォルトは `null`"
+                    },
+                    {
+                      "textRaw": "`flag` {String} デフォルトは `'r'` ",
+                      "name": "flag",
+                      "type": "String",
+                      "desc": "デフォルトは `'r'`"
+                    }
+                  ],
+                  "name": "options",
+                  "type": "Object",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ],
+          "desc": "<!--\nAsynchronously reads the entire contents of a file. Example:\n-->\n\n<p>ファイル全体の内容を非同期に読み込みます。例:\n\n</p>\n<pre><code>fs.readFile(&#39;/etc/passwd&#39;, function (err, data) {\n  if (err) throw err;\n  console.log(data);\n});</code></pre>\n<!--\nThe callback is passed two arguments `(err, data)`, where `data` is the\ncontents of the file.\n-->\n\n<p>コールバックは 2 つの引数が渡される <code>(err, data)</code> で、<code>data</code> はファイルの内容です。\n\n</p>\n<!--\nIf no encoding is specified, then the raw buffer is returned.\n-->\n\n<p>エンコーディングが指定されなければ、生のバッファが渡されます。\n\n</p>\n"
+        },
+        {
+          "textRaw": "fs.readFileSync(filename, [options])",
+          "type": "method",
+          "name": "readFileSync",
+          "desc": "<!--\nSynchronous version of `fs.readFile`. Returns the contents of the `filename`.\n-->\n\n<p>同期版の <code>fs.readFile</code>。<code>filename</code> の内容を返します。\n\n</p>\n<!--\nIf the `encoding` option is specified then this function returns a\nstring. Otherwise it returns a buffer.\n-->\n\n<p><code>encoding</code> オプションが指定されるとこの関数は文字列を返します。\nそうでなければバッファを返します。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.writeFile(filename, data, [options], [callback])",
+          "type": "method",
+          "name": "writeFile",
+          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'w'`",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`filename` {String} ",
+                  "name": "filename",
+                  "type": "String"
+                },
+                {
+                  "textRaw": "`data` {String | Buffer} ",
+                  "name": "data",
+                  "type": "String | Buffer"
+                },
+                {
+                  "textRaw": "`options` {Object} ",
+                  "options": [
+                    {
+                      "textRaw": "`encoding` {String | Null} デフォルトは `'utf8'` ",
+                      "name": "encoding",
+                      "type": "String | Null",
+                      "desc": "デフォルトは `'utf8'`"
+                    },
+                    {
+                      "textRaw": "`mode` {Number} デフォルトは `438` (8進数の `0666`) ",
+                      "name": "mode",
+                      "type": "Number",
+                      "desc": "デフォルトは `438` (8進数の `0666`)"
+                    },
+                    {
+                      "textRaw": "`flag` {String} デフォルトは `'w'` ",
+                      "name": "flag",
+                      "type": "String",
+                      "desc": "デフォルトは `'w'`"
+                    }
+                  ],
+                  "name": "options",
+                  "type": "Object",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "data"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ],
+          "desc": "<!--\nAsynchronously writes data to a file, replacing the file if it already exists.\n`data` can be a string or a buffer.\n-->\n\n<p>非同期にデータをファイルに書き込みます。\nファイルが既に存在する場合は置き換えられます。\n<code>data</code> は文字列またはバッファです。\n\n</p>\n<!--\nThe `encoding` option is ignored if `data` is a buffer. It defaults\nto `'utf8'`.\n-->\n\n<p><code>data</code> がバッファの場合、<code>encoding</code> オプションは無視されます。\nデフォルトは <code>&#39;utf8&#39;</code> です。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>fs.writeFile(&#39;message.txt&#39;, &#39;Hello Node&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;It\\&#39;s saved!&#39;);\n});</code></pre>\n"
+        },
+        {
+          "textRaw": "fs.writeFileSync(filename, data, [options])",
+          "type": "method",
+          "name": "writeFileSync",
+          "desc": "<!--\nThe synchronous version of `fs.writeFile`.\n-->\n\n<p>同期版の <code>fs.writeFile</code>。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "data"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.appendFile(filename, data, [options], [callback])",
+          "type": "method",
+          "name": "appendFile",
+          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'a'`",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`filename` {String} ",
+                  "name": "filename",
+                  "type": "String"
+                },
+                {
+                  "textRaw": "`data` {String | Buffer} ",
+                  "name": "data",
+                  "type": "String | Buffer"
+                },
+                {
+                  "textRaw": "`options` {Object} ",
+                  "options": [
+                    {
+                      "textRaw": "`encoding` {String | Null} デフォルトは `'utf8'` ",
+                      "name": "encoding",
+                      "type": "String | Null",
+                      "desc": "デフォルトは `'utf8'`"
+                    },
+                    {
+                      "textRaw": "`mode` {Number} デフォルトは `438` (8進数の `0666`) ",
+                      "name": "mode",
+                      "type": "Number",
+                      "desc": "デフォルトは `438` (8進数の `0666`)"
+                    },
+                    {
+                      "textRaw": "`flag` {String} デフォルトは `'a'` ",
+                      "name": "flag",
+                      "type": "String",
+                      "desc": "デフォルトは `'a'`"
+                    }
+                  ],
+                  "name": "options",
+                  "type": "Object",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "data"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ],
+          "desc": "<!--\nAsynchronously append data to a file, creating the file if it not yet exists.\n`data` can be a string or a buffer.\n-->\n\n<p>非同期にデータをファイルに追加します。\nファイルが存在しなければ作成されます。\n<code>data</code> は文字列またはバッファです。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>fs.appendFile(&#39;message.txt&#39;, &#39;data to append&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;The &quot;data to append&quot; was appended to file!&#39;);\n});</code></pre>\n"
+        },
+        {
+          "textRaw": "fs.appendFileSync(filename, data, [options])",
+          "type": "method",
+          "name": "appendFileSync",
+          "desc": "<!--\nThe synchronous version of `fs.appendFile`.\n-->\n\n<p>同期版の <code>fs.appendFile</code>。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "data"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.watchFile(filename, [options], listener)",
+          "type": "method",
+          "name": "watchFile",
+          "stability": 2,
+          "stabilityText": "Unstable.  Use fs.watch instead, if possible.",
+          "desc": "<!--\nWatch for changes on `filename`. The callback `listener` will be called each\ntime the file is accessed.\n-->\n\n<p><code>filename</code> の変更を監視します。コールバックの <code>listener</code> はファイルがアクセスされる度に呼び出されます。\n\n</p>\n<!--\nThe second argument is optional. The `options` if provided should be an object\ncontaining two members a boolean, `persistent`, and `interval`. `persistent`\nindicates whether the process should continue to run as long as files are\nbeing watched. `interval` indicates how often the target should be polled,\nin milliseconds. The default is `{ persistent: true, interval: 5007 }`.\n-->\n\n<p>第 2 引数はオプションです．\n<code>options</code> が与えられる場合、それは boolean の <code>persistent</code> と <code>interval</code>\nの二つのメンバを含むオブジェクトです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\n<code>interval</code> は対象をポーリングする間隔をミリ秒で示します\nデフォルトは <code>{ persistent: true, interval: 5007 }</code> です。\n\n</p>\n<!--\nThe `listener` gets two arguments the current stat object and the previous\nstat object:\n-->\n\n<p><code>listener</code> は現在の状態オブジェクトと前の状態オブジェクトの 2 つの引数を受け取ります:\n\n</p>\n<pre><code>fs.watchFile(&#39;message.text&#39;, function (curr, prev) {\n  console.log(&#39;the current mtime is: &#39; + curr.mtime);\n  console.log(&#39;the previous mtime was: &#39; + prev.mtime);\n});</code></pre>\n<!--\nThese stat objects are instances of `fs.Stat`.\n\nIf you want to be notified when the file was modified, not just accessed\nyou need to compare `curr.mtime` and `prev.mtime`.\n-->\n\n<p>これらの状態オブジェクトは <code>fs.Stat</code> のインスタンスです。\n\n</p>\n<p>もしファイルがアクセスされただけでなく、変更された時の通知が必要であれば、<code>curr.mtime</code> と <code>prev.mtime</code> を比較する必要があります。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "listener"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.unwatchFile(filename, [listener])",
+          "type": "method",
+          "name": "unwatchFile",
+          "stability": 2,
+          "stabilityText": "Unstable.  Use fs.watch instead, if available.",
+          "desc": "<!--\nStop watching for changes on `filename`. If `listener` is specified, only that\nparticular listener is removed. Otherwise, *all* listeners are removed and you\nhave effectively stopped watching `filename`.\n\nCalling `fs.unwatchFile()` with a filename that is not being watched is a\nno-op, not an error.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n<code>listener</code> が指定された場合は該当の <code>listener</code> だけが取り除かれます。\nそうでなければ、<em>全ての</em> リスナが取り除かれ、\n<code>filenam</code> の監視は事実上終了します。\n\n</p>\n<p>監視されていないファイル名を指定した <code>fs.unwatchFile()</code> の呼び出しは\nエラーになるのではなく、何もしません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "listener",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.watch(filename, [options], [listener])",
+          "type": "method",
+          "name": "watch",
+          "stability": 2,
+          "stabilityText": "Unstable.",
+          "desc": "<!--\nWatch for changes on `filename`, where `filename` is either a file or a\ndirectory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).\n\nThe second argument is optional. The `options` if provided should be an object\ncontaining a boolean member `persistent`, which indicates whether the process\nshould continue to run as long as files are being watched. The default is\n`{ persistent: true }`.\n\nThe listener callback gets two arguments `(event, filename)`.  `event` is either\n'rename' or 'change', and `filename` is the name of the file which triggered\nthe event.\n-->\n\n<p><code>filename</code> の変更を監視します。\n<code>filename</code> はファイルまたはディレクトリのどちらかです。\n戻り値のオブジェクトは <a href=\"#fs.FSWatcher\">fs.FSWatcher</a> です。\n\n</p>\n<p>第 2 引数はオプションです。\nもし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを\n持つオブジェクトであるべきです。\n<code>persistent</code> はファイルが監視されている間、\nプロセスが実行し続けることを示します。\nデフォルトは <code>{ persistent: true }</code> です。\n\n</p>\n<p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。\n<code>event</code> は <code>&#39;rename&#39;</code> または <code>&#39;change&#39;</code>、そして <code>filename</code> はイベントを\n引き起こしたファイルの名前です。\n\n</p>\n",
+          "miscs": [
+            {
+              "textRaw": "Caveats",
+              "name": "Caveats",
+              "type": "misc",
+              "desc": "<!--\nThe `fs.watch` API is not 100% consistent across platforms, and is\nunavailable in some situations.\n-->\n\n<p><code>fs.watch</code> API はプラットフォーム間で 100% 完全ではありmせんし、\nいくつかのシチュエーションで利用不可能です。\n\n</p>\n",
+              "miscs": [
+                {
+                  "textRaw": "Availability",
+                  "name": "Availability",
+                  "type": "misc",
+                  "desc": "<!--\nThis feature depends on the underlying operating system providing a way\nto be notified of filesystem changes.\n-->\n\n<p>この機能は下層のオペレーティングシステムが提供するファイルシステム変更の\n通知に依存します。\n\n</p>\n<!--\n* On Linux systems, this uses `inotify`.\n* On BSD systems (including OS X), this uses `kqueue`.\n* On SunOS systems (including Solaris and SmartOS), this uses `event ports`.\n* On Windows systems, this feature depends on `ReadDirectoryChangesW`.\n-->\n\n<ul>\n<li>Linux システムでは <code>inotify</code> が使われます。</li>\n<li>BSD システム (OS X を含みます) では <code>kqueue</code> が使われます。</li>\n<li>SunOS システム (Solaris および SmartOS を含みます) では <code>event ports</code>\nが使われます。</li>\n<li>Windows システムでは、この機能は <code>ReadDirectoryChangesW</code> に依存します。</li>\n</ul>\n<!--\nIf the underlying functionality is not available for some reason, then\n`fs.watch` will not be able to function.  For example, watching files or\ndirectories on network file systems (NFS, SMB, etc.) often doesn't work\nreliably or at all.\n-->\n\n<p>何らかの理由で下層の機能が使えない場合、<code>fs.watch()</code> は使えません。\nたとえば、ネットワークファイルシステム (NFS、SMB、その他) はしばしば\n信頼できないか全く動作しません。\n\n</p>\n<!--\nYou can still use `fs.watchFile`, which uses stat polling, but it is slower and\nless reliable.\n-->\n\n<p>stat をポーリングする <code>fs.watchFile()</code> を使うことはできますが、\nそれは遅くて信頼性はより低くなります。\n\n</p>\n"
+                },
+                {
+                  "textRaw": "Filename Argument",
+                  "name": "Filename Argument",
+                  "type": "misc",
+                  "desc": "<!--\nProviding `filename` argument in the callback is not supported\non every platform (currently it's only supported on Linux and Windows).  Even\non supported platforms `filename` is not always guaranteed to be provided.\nTherefore, don't assume that `filename` argument is always provided in the\ncallback, and have some fallback logic if it is null.\n-->\n\n<p>コールバックに提供される <code>filename</code> 引数は、\n全てのプラットフォームでサポートされるわけではありません\n(現時点では Linux と Windows でのみサポートされます)。\nサポートされるプラットフォームであっても、<code>filename</code> が常に提供されることが\n保証されているわけではありません。\nそのため、コールバックは <code>filename</code> 引数が常に提供されると仮定せず、\nそれが <code>null</code> だったときの代替手段を持つべきです。\n\n</p>\n<pre><code>fs.watch(&#39;somedir&#39;, function (event, filename) {\n  console.log(&#39;event is: &#39; + event);\n  if (filename) {\n    console.log(&#39;filename provided: &#39; + filename);\n  } else {\n    console.log(&#39;filename not provided&#39;);\n  }\n});</code></pre>\n"
+                }
+              ]
+            }
+          ],
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                },
+                {
+                  "name": "listener",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.exists(path, [callback])",
+          "type": "method",
+          "name": "exists",
+          "desc": "<!--\nTest whether or not the given path exists by checking with the file system.\nThen call the `callback` argument with either true or false.  Example:\n-->\n\n<p>与えられたパスがファイルシステム上に存在するかどうか検査します。\nそして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。\n例:\n\n</p>\n<pre><code>fs.exists(&#39;/etc/passwd&#39;, function (exists) {\n  util.debug(exists ? &quot;it&#39;s there&quot; : &quot;no passwd!&quot;);\n});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.existsSync(path)",
+          "type": "method",
+          "name": "existsSync",
+          "desc": "<!--\nSynchronous version of `fs.exists`.\n-->\n\n<p>同期版の <code>fs.exists</code> です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.createReadStream(path, [options])",
+          "type": "method",
+          "name": "createReadStream",
+          "desc": "<!--\nReturns a new ReadStream object (See `Readable Stream`).\n-->\n\n<p>新しい ReadStream オブジェクトを返します (<code>Readable Stream</code> を参照してください)。\n\n</p>\n<!--\n`options` is an object with the following defaults:\n-->\n\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ flags: &#39;r&#39;,\n  encoding: null,\n  fd: null,\n  mode: 0666,\n  bufferSize: 64 * 1024,\n  autoClose: true\n}</code></pre>\n<!--\n`options` can include `start` and `end` values to read a range of bytes from\nthe file instead of the entire file.  Both `start` and `end` are inclusive and\nstart at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.\n-->\n\n<p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、\n<code>options</code> に <code>start</code> および <code>end</code> を含めることができます。\n<code>start</code> と <code>end</code> はどちらも包含的で0から始まります。\n<code>encoding</code> は <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、または <code>&#39;base64&#39;</code> です。\n\n</p>\n<!--\nIf `autoClose` is false, then the file descriptor won't be closed, even if\nthere's an error.  It is your responsiblity to close it and make sure\nthere's no file descriptor leak.  If `autoClose` is set to true (default\nbehavior), on `error` or `end` the file descriptor will be closed\nautomatically.\n-->\n\n<p><code>autoClose</code> が <code>false</code> の場合、エラーが発生しない限りファイル記述子は\nクローズされません。ファイルをクローズし、ファイル記述子が\nリークしないようにするのはあなたの責務です。\n<code>autoClose</code> が <code>true</code> に設定されると (デフォルトの振る舞いです)、\n<code>error</code> または <code>end</code> によってファイル記述子は自動的にクローズされます。\n\n</p>\n<!--\nAn example to read the last 10 bytes of a file which is 100 bytes long:\n-->\n\n<p>100 バイトの長さを持つファイルの最後の 10 バイトを読み込む例:\n\n</p>\n<pre><code>fs.createReadStream(&#39;sample.txt&#39;, {start: 90, end: 99});</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "fs.createWriteStream(path, [options])",
+          "type": "method",
+          "name": "createWriteStream",
+          "desc": "<!--\nReturns a new WriteStream object (See `Writable Stream`).\n-->\n\n<p>新しい WriteStream オブジェクトを返します (<code>Writable Stream</code> を参照してください)。\n\n</p>\n<!--\n`options` is an object with the following defaults:\n-->\n\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ flags: &#39;w&#39;,\n  encoding: null,\n  mode: 0666 }</code></pre>\n<!--\n`options` may also include a `start` option to allow writing data at\nsome position past the beginning of the file.  Modifying a file rather\nthan replacing it may require a `flags` mode of `r+` rather than the\ndefault mode `w`.\n-->\n\n<p><code>options</code> にはデータをファイルのどの位置に書き込むかを指定する\n<code>start</code> を含めることができます。\nファイルを置換するのではなく変更する場合は、 <code>flags</code> にデフォルトの\n<code>w</code> ではなく <code>r+</code> が必要となります。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: fs.Stats",
+          "type": "class",
+          "name": "fs.Stats",
+          "desc": "<!--\nObjects returned from `fs.stat()`, `fs.lstat()` and `fs.fstat()` and their\nsynchronous counterparts are of this type.\n-->\n\n<p><code>fs.stat()</code>、<code>fs.lstat()</code>、<code>fs.fstat()</code>、そしてそれらの同期版 から返される\nオブジェクトはこの型です。\n\n</p>\n<!--\n - `stats.isFile()`\n - `stats.isDirectory()`\n - `stats.isBlockDevice()`\n - `stats.isCharacterDevice()`\n - `stats.isSymbolicLink()` (only valid with  `fs.lstat()`)\n - `stats.isFIFO()`\n - `stats.isSocket()`\n-->\n\n<ul>\n<li><code>stats.isFile()</code></li>\n<li><code>stats.isDirectory()</code></li>\n<li><code>stats.isBlockDevice()</code></li>\n<li><code>stats.isCharacterDevice()</code></li>\n<li><code>stats.isSymbolicLink()</code> (<code>fs.lstat()</code> でのみ有効)</li>\n<li><code>stats.isFIFO()</code></li>\n<li><code>stats.isSocket()</code></li>\n</ul>\n<!--\nFor a regular file `util.inspect(stats)` would return a string very\nsimilar to this:\n-->\n\n<p><code>util.inspect(stats)</code> は通常のファイルに対して次のような文字列を返します。\n\n</p>\n<pre><code>{ dev: 2114,\n  ino: 48064969,\n  mode: 33188,\n  nlink: 1,\n  uid: 85,\n  gid: 100,\n  rdev: 0,\n  size: 527,\n  blksize: 4096,\n  blocks: 8,\n  atime: Mon, 10 Oct 2011 23:24:11 GMT,\n  mtime: Mon, 10 Oct 2011 23:24:11 GMT,\n  ctime: Mon, 10 Oct 2011 23:24:11 GMT }</code></pre>\n<!--\nPlease note that `atime`, `mtime` and `ctime` are instances\nof [Date][MDN-Date] object and to compare the values of\nthese objects you should use appropriate methods. For most\ngeneral uses [getTime()][MDN-Date-getTime] will return\nthe number of milliseconds elapsed since _1 January 1970\n00:00:00 UTC_ and this integer should be sufficient for\nany comparison, however there additional methods which can\nbe used for displaying fuzzy information. More details can\nbe found in the [MDN JavaScript Reference][MDN-Date] page.\n-->\n\n<p><code>atime</code>、<code>mtime</code>、そして <code>ctime</code> は [Date][MDN-Date] オブジェクトであり、\nその値を比較するには適切な方法があるということに注意してください。\nもっとも一般的に使われる [getTime()][MDN-Date-getTime] は <em>1970 年 1 月\n1 日</em>からの経過時間をミリ秒単位で返します。\nそれは比較には十分ですが、曖昧な情報を表示するには別の方法を使ってください。\nより詳しい情報は [MDN JavaScript Reference][MDN-Date] で探すことができます。\n\n</p>\n"
+        },
+        {
+          "textRaw": "Class: fs.ReadStream",
+          "type": "class",
+          "name": "fs.ReadStream",
+          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#stream_readable_stream\">Readable Stream</a> です。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'open'",
+              "type": "event",
+              "name": "open",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the ReadStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} ReadStream で使われる ファイル記述子。</li>\n</ul>\n<p>ReadStream のファイルがオープンされた場合に生成されます。\n\n\n</p>\n",
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: fs.FSWatcher",
+          "type": "class",
+          "name": "fs.FSWatcher",
+          "desc": "<!--\nObjects returned from `fs.watch()` are of this type.\n-->\n\n<p><code>fs.watch()</code> が返すオブジェクトはこの型です。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "watcher.close()",
+              "type": "method",
+              "name": "close",
+              "desc": "<!--\nStop watching for changes on the given `fs.FSWatcher`.\n-->\n\n<p><code>fs.FSWatcher</code> に与えられたファイルの監視を終了します。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "textRaw": "Event: 'change'",
+              "type": "event",
+              "name": "change",
+              "desc": "<!--\n* `event` {String} The type of fs change\n* `filename` {String} The filename that changed (if relevant/available)\n-->\n\n<ul>\n<li><code>event</code> {String} ファイルシステム変更の種類です。</li>\n<li><code>filename</code> {String} 変更されたファイル名です (もし利用可能であれば)。</li>\n</ul>\n<!--\nEmitted when something changes in a watched directory or file.\nSee more details in [fs.watch](#fs_fs_watch_filename_options_listener).\n-->\n\n<p>監視しているファイルまたはディレクトリに変更があると生成されます。\n詳しくは <a href=\"#fs_fs_watch_filename_options_listener\">fs.watch</a>\nを参照してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'error'",
+              "type": "event",
+              "name": "error",
+              "params": [],
+              "desc": "<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n</p>\n"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "fs.WriteStream",
+          "name": "WriteStream",
+          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#stream_writable_stream\">Writable Stream</a> です。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'open'",
+              "type": "event",
+              "name": "open",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the WriteStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "file.bytesWritten",
+              "name": "bytesWritten",
+              "desc": "<!--\nThe number of bytes written so far. Does not include data that is still queued\nfor writing.\n-->\n\n<p>これまでに書き込まれたバイト数。\n書き込みがキューイングされたままのデータは含まれません。\n\n</p>\n"
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "fs"
+    }
+  ]
+}
