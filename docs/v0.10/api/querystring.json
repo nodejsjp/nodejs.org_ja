@@ -1,0 +1,80 @@
+{
+  "source": "doc/api/querystring.markdown",
+  "modules": [
+    {
+      "textRaw": "Query String",
+      "name": "querystring",
+      "stability": 3,
+      "stabilityText": "Stable",
+      "desc": "<!--\nThis module provides utilities for dealing with query strings.\nIt provides the following methods:\n-->\n\n<p>このモジュールはクエリ文字列を処理するユーティリティを提供します。 以下のメソッドから成ります:\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "querystring.stringify(obj, [sep], [eq])",
+          "type": "method",
+          "name": "stringify",
+          "Serialize an object to a query string.\nOptionally override the default separator (`'&'`) and assignment (`'": "'`)\ncharacters.",
+          "desc": "<p>クエリオブジェクトを文字列へ直列化します。\nオプションとしてデフォルトの区切り文字 (デフォルトは <code>&#39;&amp;&#39;</code>) と代入文字\n(デフォルトは <code>&#39;=&#39;</code>) を上書き指定できます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>querystring.stringify({ foo: &#39;bar&#39;, baz: [&#39;qux&#39;, &#39;quux&#39;], corge: &#39;&#39; })\n// returns\n&#39;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge=&#39;\n\nquerystring.stringify({foo: &#39;bar&#39;, baz: &#39;qux&#39;}, &#39;;&#39;, &#39;:&#39;)\n// returns\n&#39;foo:bar;baz:qux&#39;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": "sep",
+                  "optional": true
+                },
+                {
+                  "name": "eq",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "querystring.parse(str, [sep], [eq], [options])",
+          "type": "method",
+          "name": "parse",
+          "Deserialize a query string to an object.\nOptionally override the default separator (`'&'`) and assignment (`'": "'`)\ncharacters.\n\nOptions object may contain `maxKeys` property (equal to 1000 by default), it'll\nbe used to limit processed keys. Set it to 0 to remove key count limitation.",
+          "desc": "<p>クエリ文字列をオブジェクトに復元します。\nオプションとしてデフォルトの区切り文字 (<code>&#39;&amp;&#39;</code>) と代入文字 (<code>&#39;=&#39;</code>)\nを上書き指定できます。\n\n</p>\n<p>オプションオブジェクトは <code>maxKeys</code> を含むことができます (デフォルトは\n1000 です)。それはキーを処理する上限として使われます。\n0 を設定すると制限は取り除かれます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>querystring.parse(&#39;foo=bar&amp;baz=qux&amp;baz=quux&amp;corge&#39;)\n// returns\n{ foo: &#39;bar&#39;, baz: [&#39;qux&#39;, &#39;quux&#39;], corge: &#39;&#39; }</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "str"
+                },
+                {
+                  "name": "sep",
+                  "optional": true
+                },
+                {
+                  "name": "eq",
+                  "optional": true
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "textRaw": "querystring.escape",
+          "name": "escape",
+          "desc": "<!--\nThe escape function used by `querystring.stringify`,\nprovided so that it could be overridden if necessary.\n-->\n\n<p>escape 関数は <code>querystring.stringify</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。\n\n</p>\n"
+        },
+        {
+          "textRaw": "querystring.unescape",
+          "name": "unescape",
+          "desc": "<!--\nThe unescape function used by `querystring.parse`,\nprovided so that it could be overridden if necessary.\n-->\n\n<p>unescape関数は <code>querystring.parse</code> で使用されていて、必要な場合にオーバーライドできるよう提供されています。\n</p>\n"
+        }
+      ],
+      "type": "module",
+      "displayName": "querystring"
+    }
+  ]
+}

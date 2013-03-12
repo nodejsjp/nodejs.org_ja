@@ -1,0 +1,158 @@
+{
+  "source": "doc/api/timers.markdown",
+  "modules": [
+    {
+      "textRaw": "Timers",
+      "name": "timers",
+      "stability": 5,
+      "stabilityText": "Locked",
+      "desc": "<!--\nAll of the timer functions are globals.  You do not need to `require()`\nthis module in order to use them.\n-->\n\n<p>全てのタイマ関数はグローバルです。\nこのモジュールを使うために <code>require()</code> をする必要はありません。\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "setTimeout(callback, delay, [arg], [...])",
+          "type": "method",
+          "name": "setTimeout",
+          "desc": "<!--\nTo schedule execution of a one-time `callback` after `delay` milliseconds. Returns a\n`timeoutId` for possible use with `clearTimeout()`. Optionally you can\nalso pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過した後で、\n<code>callback</code> が一度だけ実行されるようにスケジュールします。\n<code>clearTimeout()</code> で使うことができる <code>timeoutId</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n<!--\nIt is important to note that your callback will probably not be called in exactly\n`delay` milliseconds - Node.js makes no guarantees about the exact timing of when\nthe callback will fire, nor of the ordering things will fire in. The callback will\nbe called as close as possible to the time specified.\n-->\n\n<p>コールバックが正確に <code>delay</code> ミリ秒後に呼び出されるとは限らない点に\n注目することは重要です - \nNode.js はコールバックが呼び出される正確なタイミングも、\n呼び出される順番も保証しません。\nコールバックはできるだけ指定された時間に近いタイミングで呼び出されます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback"
+                },
+                {
+                  "name": "delay"
+                },
+                {
+                  "name": "arg",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "clearTimeout(timeoutId)",
+          "type": "method",
+          "name": "clearTimeout",
+          "desc": "<!--\nPrevents a timeout from triggering.\n-->\n\n<p>タイムアウトがトリガーされるのを止めます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "timeoutId"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "setInterval(callback, delay, [arg], [...])",
+          "type": "method",
+          "name": "setInterval",
+          "desc": "<!--\nTo schedule the repeated execution of `callback` every `delay` milliseconds.\nReturns a `intervalId` for possible use with `clearInterval()`. Optionally\nyou can also pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。\n<code>clearInterval()</code> で使うことができる <code>intervalId</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback"
+                },
+                {
+                  "name": "delay"
+                },
+                {
+                  "name": "arg",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "clearInterval(intervalId)",
+          "type": "method",
+          "name": "clearInterval",
+          "desc": "<!--\nStops a interval from triggering.\n-->\n\n<p>インターバルがトリガーされるのを止めます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "intervalId"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "unref()",
+          "type": "method",
+          "name": "unref",
+          "desc": "<!--\nThe opaque value returned by `setTimeout` and `setInterval` also has the method\n`timer.unref()` which will allow you to create a timer that is active but if\nit is the only item left in the event loop won't keep the program running.\nIf the timer is already `unref`d calling `unref` again will have no effect.\n-->\n\n<p><code>setTimeout()</code> あるいは <code>setInterval()</code> が返す不透明な値は、\nアクティブであるにもかかわらず、それがイベントループの最後の一つになっても\nプログラムの実行を継続しないタイマを作ることを可能にする、\n<code>timer.unref()</code> メソッドを持っています。\n既に <code>unref</code> されたタイマで再び <code>unref</code> が呼び出されても影響はありません。\n\n</p>\n<!--\nIn the case of `setTimeout` when you `unref` you create a separate timer that\nwill wakeup the event loop, creating too many of these may adversely effect\nevent loop performance -- use wisely.\n-->\n\n<p><code>setTimeout()</code> が <code>unref</code> された場合、イベントループを起こすために独立した\nタイマが作成されるため、それらがあまりに多く作成されるとイベントループの\nパフォーマンスに悪影響を与えます -- 賢明に使ってください。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "ref()",
+          "type": "method",
+          "name": "ref",
+          "desc": "<!--\nIf you had previously `unref()`d a timer you can call `ref()` to explicitly\nrequest the timer hold the program open. If the timer is already `ref`d calling\n`ref` again will have no effect.\n-->\n\n<p>以前に <code>unref</code> されたタイマは、明示的に <code>ref()</code> を呼び出すことで\nプログラムを実行したままにするよう要求することができます。\n既に <code>ref</code> されたタイマで再び <code>ref</code> が呼び出されても影響はありません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "setImmediate(callback, [arg], [...])",
+          "type": "method",
+          "name": "setImmediate",
+          "desc": "<!--\nTo schedule the \"immediate\" execution of `callback` after I/O events\ncallbacks and before `setTimeout` and `setInterval` . Returns an\n`immediateId` for possible use with `clearImmediate()`. Optionally you\ncan also pass arguments to the callback.\n-->\n\n<p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および\n<code>setInterval</code> よりも前) に実行するようスケジュールします。\n<code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。\nオプションとして、コールバックへの引数を渡すことができます。\n\n</p>\n<!--\nImmediates are queued in the order created, and are popped off the queue once\nper loop iteration. This is different from `process.nextTick` which will\nexecute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`\nwill yield to the event loop after firing a queued callback to make sure I/O is\nnot being starved. While order is preserved for execution, other I/O events may\nfire between any two scheduled immediate callbacks.\n-->\n\n<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの\n繰り返し毎に一度、キューから取り出されます。\nこれは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに\n入れられた関数が実行される <code>process.nextTick()</code> とは異なります。\n<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが\n呼び出された後イベントループに制御を譲ります。\n二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、\n他の I/O が間に挟まるかもしれません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "callback"
+                },
+                {
+                  "name": "arg",
+                  "optional": true
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "clearImmediate(immediateId)",
+          "type": "method",
+          "name": "clearImmediate",
+          "desc": "<!--\nStops an immediate from triggering.\n-->\n\n<p><code>setImmediate()</code> に渡した関数が呼び出されることを中止します。\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "immediateId"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Timers"
+    }
+  ]
+}

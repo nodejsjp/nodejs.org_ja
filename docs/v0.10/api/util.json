@@ -1,0 +1,241 @@
+{
+  "source": "doc/api/util.markdown",
+  "modules": [
+    {
+      "textRaw": "util",
+      "name": "util",
+      "stability": 5,
+      "stabilityText": "Locked",
+      "desc": "<!--\nThese functions are in the module `'util'`. Use `require('util')` to access\nthem.\n-->\n\n<p>これらの関数はモジュール <code>&#39;util&#39;</code> 内にあります。\n<code>require(&#39;util&#39;)</code> を使うことでこれらにアクセスします。\n\n\n</p>\n",
+      "methods": [
+        {
+          "textRaw": "util.format(format, [...])",
+          "type": "method",
+          "name": "format",
+          "desc": "<!--\nReturns a formatted string using the first argument as a `printf`-like format.\n-->\n\n<p>最初の引数を <code>printf</code> のようなフォーマットとして使用して、フォーマット化された\n文字列を返します。\n\n</p>\n<!--\nThe first argument is a string that contains zero or more *placeholders*.\nEach placeholder is replaced with the converted value from its corresponding\nargument. Supported placeholders are:\n-->\n\n<p>第一引数は文字列で、0 個以上の <em>プレースホルダ</em> を含みます。\nそれぞれのプレースホルダは対応する引数を変換した値で置換されます。\nサポートするプレースホルダは:\n\n</p>\n<!--\n* `%s` - String.\n* `%d` - Number (both integer and float).\n* `%j` - JSON.\n* `%` - single percent sign (`'%'`). This does not consume an argument.\n-->\n\n<ul>\n<li><code>%s</code> - 文字列。</li>\n<li><code>%d</code> - 数値 (整数と浮動小数点数の両方)。</li>\n<li><code>%j</code> - JSON。</li>\n<li><code>%</code> - 一つのパーセント記号 (<code>&#39;%&#39;</code>)。これは引数を消費しません。</li>\n</ul>\n<!--\nIf the placeholder does not have a corresponding argument, the placeholder is\nnot replaced.\n-->\n\n<p>プレースホルダに対応する引数が無い場合、そのプレースホルダは置換されません。\n\n</p>\n<pre><code>util.format(&#39;%s:%s&#39;, &#39;foo&#39;); // &#39;foo:%s&#39;</code></pre>\n<!--\nIf there are more arguments than placeholders, the extra arguments are\nconverted to strings with `util.inspect()` and these strings are concatenated,\ndelimited by a space.\n-->\n\n<p>プレースホルダより多くの引数がある場合、余った引数は <code>util.inspect()</code> によって\n文字列化され、それらはスペース区切りで連結されます。\n\n</p>\n<pre><code>util.format(&#39;%s:%s&#39;, &#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;); // &#39;foo:bar baz&#39;</code></pre>\n<!--\nIf the first argument is not a format string then `util.format()` returns\na string that is the concatenation of all its arguments separated by spaces.\nEach argument is converted to a string with `util.inspect()`.\n-->\n\n<p>第一引数がフォーマット文字列ではない場合、<code>util.format()</code> は全ての引数を\nスペース区切りで連結して返します。\nここの引数は <code>util.inspect()</code> で文字列に変換されます。\n\n</p>\n<pre><code>util.format(1, 2, 3); // &#39;1 2 3&#39;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "format"
+                },
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.debug(string)",
+          "type": "method",
+          "name": "debug",
+          "desc": "<!--\nA synchronous output function. Will block the process and\noutput `string` immediately to `stderr`.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。\n\n</p>\n<pre><code>require(&#39;util&#39;).debug(&#39;message on stderr&#39;);</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "string"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.error([...])",
+          "type": "method",
+          "name": "error",
+          "desc": "<!--\nSame as `util.debug()` except this will output all arguments immediately to\n`stderr`.\n-->\n\n<p>全ての引数をすぐに <code>stderr</code> に出力することを除いて <code>util.debug()</code> と同じです。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.puts([...])",
+          "type": "method",
+          "name": "puts",
+          "desc": "<!--\nA synchronous output function. Will block the process and output all arguments\nto `stdout` with newlines after each argument.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして即座に <code>stdout</code> に出力します。\n各引数は改行が付加されます。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.print([...])",
+          "type": "method",
+          "name": "print",
+          "desc": "<!--\nA synchronous output function. Will block the process, cast each argument to a\nstring then output to `stdout`. Does not place newlines after each argument.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして、引数を文字列に変換して <code>stdout</code> に出力します。\n各引数に改行は付加されません。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.log(string)",
+          "type": "method",
+          "name": "log",
+          "desc": "<!--\nOutput with timestamp on `stdout`.\n-->\n\n<p>タイムスタンプとともに <code>stdout</code> へ出力します。\n\n</p>\n<pre><code>require(&#39;util&#39;).log(&#39;Timestamped message.&#39;);</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "string"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.inspect(object, [options])",
+          "type": "method",
+          "name": "inspect",
+          "desc": "<!--\nReturn a string representation of `object`, which is useful for debugging.\n-->\n\n<p>デバッグで有用な、<code>object</code> の文字列表現を返します。\n\n</p>\n<!--\nAn optional *options* object may be passed that alters certain aspects of the\nformatted string:\n-->\n\n<p>オプションの <em>options</em> オブジェクトは、フォーマット化された文字列の\n特定の側面を変更するために渡すことができます。\n\n</p>\n<!--\n - `showHidden` - if `true` then the object's non-enumerable properties will be\n   shown too. Defaults to `false`.\n-->\n\n<ul>\n<li><code>showHidden</code> - <code>true</code> の場合、\nオブジェクトの Enumerable でないプロパティも表示されます。\nデフォルトは <code>false</code> です。</li>\n</ul>\n<!--\n - `depth` - tells `inspect` how many times to recurse while formatting the\n   object. This is useful for inspecting large complicated objects. Defaults to\n   `2`. To make it recurse indefinitely pass `null`.\n-->\n\n<ul>\n<li><code>depth</code> - オブジェクトをフォーマットするために何回再帰するかを\n<code>inspect</code> に伝えます。\nこれは巨大で複雑なオブジェクトを調査する場合に便利です。\nデフォルトは <code>2</code> です。\n無限に再帰するには、<code>null</code> を渡します。</li>\n</ul>\n<!--\n - `colors` - if `true`, then the output will be styled with ANSI color codes.\n   Defaults to `false`. Colors are customizable, see below.\n-->\n\n<ul>\n<li><code>colors</code> - <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。\nデフォルトは <code>false</code> です。\n後述するように、色はカスタマイズ可能です。</li>\n</ul>\n<!--\n - `customInspect` - if `false`, then custom `inspect()` functions defined on the\n   objects being inspected won't be called. Defaults to `true`.\n-->\n\n<ul>\n<li><code>customInspect</code> - <code>false</code> の場合、オブジェクト独自の <code>inspect()</code> 関数は\n呼び出されません。デフォルトは <code>false</code> です。</li>\n</ul>\n<!--\nExample of inspecting all properties of the `util` object:\n-->\n\n<p><code>util</code> オブジェクトの全てのプロパティを調査する例:\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nconsole.log(util.inspect(util, { showHidden: true, depth: null }));</code></pre>\n",
+          "modules": [
+            {
+              "textRaw": "Customizing `util.inspect` colors",
+              "name": "customizing_`util.inspect`_colors",
+              "desc": "<!--\nColor output (if enabled) of `util.inspect` is customizable globally\nvia `util.inspect.styles` and `util.inspect.colors` objects.\n-->\n\n<p><code>util.inspect</code> が出力する色は、(有効であれば) <code>util.inspect.styles</code> および\n<code>util.inspect.colors</code> オブジェクトを通じてグローバルにカスタマイズすることが\n可能です。\n\n</p>\n<!--\n`util.inspect.styles` is a map assigning each style a color\nfrom `util.inspect.colors`.\nHighlighted styles and their default values are:\n-->\n\n<p><code>util.inspect.styles</code> は各スタイルと <code>util.inspect.colors</code> に\n定義された色を割り当てたマッピングです。\n強調されるスタイルとそれらのデフォルト値は:\n\n</p>\n<!--\n * `number` (yellow)\n * `boolean` (yellow)\n * `string` (green)\n * `date` (magenta)\n * `regexp` (red)\n * `null` (bold)\n * `undefined` (grey)\n * `special` - only function at this time (cyan)\n * `name` (intentionally no styling)\n-->\n\n<ul>\n<li><code>number</code> (黄)</li>\n<li><code>boolean</code> (黄)</li>\n<li><code>string</code> (緑)</li>\n<li><code>date</code> (紫)</li>\n<li><code>regexp</code> (赤)</li>\n<li><code>null</code> (太字)</li>\n<li><code>undefined</code> (灰)</li>\n<li><code>special</code> - only function at this time (水色)</li>\n<li><code>name</code> (意図的にスタイル無し)</li>\n</ul>\n<!--\nPredefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, \n`green`, `magenta`, `red` and `yellow`.\nThere are also `bold`, `italic`, `underline` and `inverse` codes.\n-->\n\n<p>事前に定義された色は: <code>white</code>、<code>grey</code>、<code>black</code>、<code>blue</code>、<code>cyan</code>、\n<code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。\n<code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。\n\n</p>\n<!--\nObjects also may define their own `inspect(depth)` function which `util.inspect()`\nwill invoke and use the result of when inspecting the object:\n-->\n\n<p>オブジェクトは <code>util.inspect()</code> から呼び出される自前の <code>inspect(depth)</code>\n関数を持つことができ、その結果はオブジェクトを調査するために使われます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nvar obj = { name: &#39;nate&#39; };\nobj.inspect = function(depth) {\n  return &#39;{&#39; + this.name + &#39;}&#39;;\n};\n\nutil.inspect(obj);\n  // &quot;{nate}&quot;</code></pre>\n",
+              "type": "module",
+              "displayName": "Customizing `util.inspect` colors"
+            }
+          ],
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "object"
+                },
+                {
+                  "name": "options",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.isArray(object)",
+          "type": "method",
+          "name": "isArray",
+          "desc": "<!--\nReturns `true` if the given \"object\" is an `Array`. `false` otherwise.\n-->\n\n<p><code>object</code> が配列なら <code>true</code> を、それ以外は <code>false</code> を返します。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nutil.isArray([])\n  // true\nutil.isArray(new Array)\n  // true\nutil.isArray({})\n  // false</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "object"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.isRegExp(object)",
+          "type": "method",
+          "name": "isRegExp",
+          "desc": "<!--\nReturns `true` if the given \"object\" is a `RegExp`. `false` otherwise.\n-->\n\n<p><code>object</code> が <code>RegExp</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nutil.isRegExp(/some regexp/)\n  // true\nutil.isRegExp(new RegExp(&#39;another regexp&#39;))\n  // true\nutil.isRegExp({})\n  // false</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "object"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.isDate(object)",
+          "type": "method",
+          "name": "isDate",
+          "desc": "<!--\nReturns `true` if the given \"object\" is a `Date`. `false` otherwise.\n-->\n\n<p><code>object</code> が <code>Date</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nutil.isDate(new Date())\n  // true\nutil.isDate(Date())\n  // false (without &#39;new&#39; returns a String)\nutil.isDate({})\n  // false</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "object"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.isError(object)",
+          "type": "method",
+          "name": "isError",
+          "desc": "<!--\nReturns `true` if the given \"object\" is an `Error`. `false` otherwise.\n-->\n\n<p><code>object</code> が <code>Error</code> なら <code>true</code> を、それ以外なら <code>false</code> を返します。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nutil.isError(new Error())\n  // true\nutil.isError(new TypeError())\n  // true\nutil.isError({ name: &#39;Error&#39;, message: &#39;an error occurred&#39; })\n  // false</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "object"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.pump(readableStream, writableStream, [callback])",
+          "type": "method",
+          "name": "pump",
+          "desc": "<!--\n    Stability: 0 - Deprecated: Use readableStream.pipe(writableStream)\n-->\n\n<pre><code>Stability: 0 - Deprecated: `readableStream.pipe(writableStream)` を使ってください。</code></pre>\n<!--\nRead the data from `readableStream` and send it to the `writableStream`.\nWhen `writableStream.write(data)` returns `false` `readableStream` will be\npaused until the `drain` event occurs on the `writableStream`. `callback` gets\nan error as its only argument and is called when `writableStream` is closed or\nwhen an error occurs.\n-->\n\n<p><code>readableStream</code> からデータを読み、それ を<code>writableStream</code> に送ります。\n<code>writableStream.write(data)</code> が <code>false</code> を返す場合、\n<code>writableStream</code> が <code>drain</code> イベントを生成するまで、\n<code>readableStream</code> は中断します。\n<code>writableStream</code> がクローズされるかエラーが発生すると、<code>callback</code> は error を唯一の引数として呼び出されます。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "readableStream"
+                },
+                {
+                  "name": "writableStream"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.inherits(constructor, superConstructor)",
+          "type": "method",
+          "name": "inherits",
+          "desc": "<!--\nInherit the prototype methods from one\n[constructor](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor)\ninto another.  The prototype of `constructor` will be set to a new\nobject created from `superConstructor`.\n-->\n\n<p>ある\n<a href=\"https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor\">コンストラクタ</a>\nからプロトタイプメソッドを継承します。\n<code>constructor</code> のプロトタイプは <code>superConstructor</code> から作られたオブジェクトに設定されます。\n\n</p>\n<!--\nAs an additional convenience, `superConstructor` will be accessible\nthrough the `constructor.super_` property.\n-->\n\n<p>さらなる利便性のために、<code>superConstructor</code> は <code>constructor.super_</code>\nプロパティを通じてアクセスすることができるようになります。\n\n</p>\n<pre><code>var util = require(&quot;util&quot;);\nvar events = require(&quot;events&quot;);\n\nfunction MyStream() {\n    events.EventEmitter.call(this);\n}\n\nutil.inherits(MyStream, events.EventEmitter);\n\nMyStream.prototype.write = function(data) {\n    this.emit(&quot;data&quot;, data);\n}\n\nvar stream = new MyStream();\n\nconsole.log(stream instanceof events.EventEmitter); // true\nconsole.log(MyStream.super_ === events.EventEmitter); // true\n\nstream.on(&quot;data&quot;, function(data) {\n    console.log(&#39;Received data: &quot;&#39; + data + &#39;&quot;&#39;);\n})\nstream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "constructor"
+                },
+                {
+                  "name": "superConstructor"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "util"
+    }
+  ]
+}
