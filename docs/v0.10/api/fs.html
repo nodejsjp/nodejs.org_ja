@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.10.0 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.10.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,65 +56,65 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#fs_file_system">File System</a><ul>
-<li><a href="#fs_fs_rename_oldpath_newpath_callback">fs.rename(oldPath, newPath, [callback])</a></li>
+<li><a href="#fs_fs_rename_oldpath_newpath_callback">fs.rename(oldPath, newPath, callback)</a></li>
 <li><a href="#fs_fs_renamesync_oldpath_newpath">fs.renameSync(oldPath, newPath)</a></li>
-<li><a href="#fs_fs_ftruncate_fd_len_callback">fs.ftruncate(fd, len, [callback])</a></li>
+<li><a href="#fs_fs_ftruncate_fd_len_callback">fs.ftruncate(fd, len, callback)</a></li>
 <li><a href="#fs_fs_ftruncatesync_fd_len">fs.ftruncateSync(fd, len)</a></li>
-<li><a href="#fs_fs_truncate_path_len_callback">fs.truncate(path, len, [callback])</a></li>
+<li><a href="#fs_fs_truncate_path_len_callback">fs.truncate(path, len, callback)</a></li>
 <li><a href="#fs_fs_truncatesync_path_len">fs.truncateSync(path, len)</a></li>
-<li><a href="#fs_fs_chown_path_uid_gid_callback">fs.chown(path, uid, gid, [callback])</a></li>
+<li><a href="#fs_fs_chown_path_uid_gid_callback">fs.chown(path, uid, gid, callback)</a></li>
 <li><a href="#fs_fs_chownsync_path_uid_gid">fs.chownSync(path, uid, gid)</a></li>
-<li><a href="#fs_fs_fchown_fd_uid_gid_callback">fs.fchown(fd, uid, gid, [callback])</a></li>
+<li><a href="#fs_fs_fchown_fd_uid_gid_callback">fs.fchown(fd, uid, gid, callback)</a></li>
 <li><a href="#fs_fs_fchownsync_fd_uid_gid">fs.fchownSync(fd, uid, gid)</a></li>
-<li><a href="#fs_fs_lchown_path_uid_gid_callback">fs.lchown(path, uid, gid, [callback])</a></li>
+<li><a href="#fs_fs_lchown_path_uid_gid_callback">fs.lchown(path, uid, gid, callback)</a></li>
 <li><a href="#fs_fs_lchownsync_path_uid_gid">fs.lchownSync(path, uid, gid)</a></li>
-<li><a href="#fs_fs_chmod_path_mode_callback">fs.chmod(path, mode, [callback])</a></li>
+<li><a href="#fs_fs_chmod_path_mode_callback">fs.chmod(path, mode, callback)</a></li>
 <li><a href="#fs_fs_chmodsync_path_mode">fs.chmodSync(path, mode)</a></li>
-<li><a href="#fs_fs_fchmod_fd_mode_callback">fs.fchmod(fd, mode, [callback])</a></li>
+<li><a href="#fs_fs_fchmod_fd_mode_callback">fs.fchmod(fd, mode, callback)</a></li>
 <li><a href="#fs_fs_fchmodsync_fd_mode">fs.fchmodSync(fd, mode)</a></li>
-<li><a href="#fs_fs_lchmod_path_mode_callback">fs.lchmod(path, mode, [callback])</a></li>
+<li><a href="#fs_fs_lchmod_path_mode_callback">fs.lchmod(path, mode, callback)</a></li>
 <li><a href="#fs_fs_lchmodsync_path_mode">fs.lchmodSync(path, mode)</a></li>
-<li><a href="#fs_fs_stat_path_callback">fs.stat(path, [callback])</a></li>
-<li><a href="#fs_fs_lstat_path_callback">fs.lstat(path, [callback])</a></li>
-<li><a href="#fs_fs_fstat_fd_callback">fs.fstat(fd, [callback])</a></li>
+<li><a href="#fs_fs_stat_path_callback">fs.stat(path, callback)</a></li>
+<li><a href="#fs_fs_lstat_path_callback">fs.lstat(path, callback)</a></li>
+<li><a href="#fs_fs_fstat_fd_callback">fs.fstat(fd, callback)</a></li>
 <li><a href="#fs_fs_statsync_path">fs.statSync(path)</a></li>
 <li><a href="#fs_fs_lstatsync_path">fs.lstatSync(path)</a></li>
 <li><a href="#fs_fs_fstatsync_fd">fs.fstatSync(fd)</a></li>
-<li><a href="#fs_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, [callback])</a></li>
+<li><a href="#fs_fs_link_srcpath_dstpath_callback">fs.link(srcpath, dstpath, callback)</a></li>
 <li><a href="#fs_fs_linksync_srcpath_dstpath">fs.linkSync(srcpath, dstpath)</a></li>
-<li><a href="#fs_fs_symlink_srcpath_dstpath_type_callback">fs.symlink(srcpath, dstpath, [type], [callback])</a></li>
+<li><a href="#fs_fs_symlink_srcpath_dstpath_type_callback">fs.symlink(srcpath, dstpath, [type], callback)</a></li>
 <li><a href="#fs_fs_symlinksync_srcpath_dstpath_type">fs.symlinkSync(srcpath, dstpath, [type])</a></li>
-<li><a href="#fs_fs_readlink_path_callback">fs.readlink(path, [callback])</a></li>
+<li><a href="#fs_fs_readlink_path_callback">fs.readlink(path, callback)</a></li>
 <li><a href="#fs_fs_readlinksync_path">fs.readlinkSync(path)</a></li>
 <li><a href="#fs_fs_realpath_path_cache_callback">fs.realpath(path, [cache], callback)</a></li>
 <li><a href="#fs_fs_realpathsync_path_cache">fs.realpathSync(path, [cache])</a></li>
-<li><a href="#fs_fs_unlink_path_callback">fs.unlink(path, [callback])</a></li>
+<li><a href="#fs_fs_unlink_path_callback">fs.unlink(path, callback)</a></li>
 <li><a href="#fs_fs_unlinksync_path">fs.unlinkSync(path)</a></li>
-<li><a href="#fs_fs_rmdir_path_callback">fs.rmdir(path, [callback])</a></li>
+<li><a href="#fs_fs_rmdir_path_callback">fs.rmdir(path, callback)</a></li>
 <li><a href="#fs_fs_rmdirsync_path">fs.rmdirSync(path)</a></li>
-<li><a href="#fs_fs_mkdir_path_mode_callback">fs.mkdir(path, [mode], [callback])</a></li>
+<li><a href="#fs_fs_mkdir_path_mode_callback">fs.mkdir(path, [mode], callback)</a></li>
 <li><a href="#fs_fs_mkdirsync_path_mode">fs.mkdirSync(path, [mode])</a></li>
-<li><a href="#fs_fs_readdir_path_callback">fs.readdir(path, [callback])</a></li>
+<li><a href="#fs_fs_readdir_path_callback">fs.readdir(path, callback)</a></li>
 <li><a href="#fs_fs_readdirsync_path">fs.readdirSync(path)</a></li>
-<li><a href="#fs_fs_close_fd_callback">fs.close(fd, [callback])</a></li>
+<li><a href="#fs_fs_close_fd_callback">fs.close(fd, callback)</a></li>
 <li><a href="#fs_fs_closesync_fd">fs.closeSync(fd)</a></li>
-<li><a href="#fs_fs_open_path_flags_mode_callback">fs.open(path, flags, [mode], [callback])</a></li>
+<li><a href="#fs_fs_open_path_flags_mode_callback">fs.open(path, flags, [mode], callback)</a></li>
 <li><a href="#fs_fs_opensync_path_flags_mode">fs.openSync(path, flags, [mode])</a></li>
-<li><a href="#fs_fs_utimes_path_atime_mtime_callback">fs.utimes(path, atime, mtime, [callback])</a></li>
+<li><a href="#fs_fs_utimes_path_atime_mtime_callback">fs.utimes(path, atime, mtime, callback)</a></li>
 <li><a href="#fs_fs_utimessync_path_atime_mtime">fs.utimesSync(path, atime, mtime)</a></li>
-<li><a href="#fs_fs_futimes_fd_atime_mtime_callback">fs.futimes(fd, atime, mtime, [callback])</a></li>
+<li><a href="#fs_fs_futimes_fd_atime_mtime_callback">fs.futimes(fd, atime, mtime, callback)</a></li>
 <li><a href="#fs_fs_futimessync_fd_atime_mtime">fs.futimesSync(fd, atime, mtime)</a></li>
-<li><a href="#fs_fs_fsync_fd_callback">fs.fsync(fd, [callback])</a></li>
+<li><a href="#fs_fs_fsync_fd_callback">fs.fsync(fd, callback)</a></li>
 <li><a href="#fs_fs_fsyncsync_fd">fs.fsyncSync(fd)</a></li>
-<li><a href="#fs_fs_write_fd_buffer_offset_length_position_callback">fs.write(fd, buffer, offset, length, position, [callback])</a></li>
+<li><a href="#fs_fs_write_fd_buffer_offset_length_position_callback">fs.write(fd, buffer, offset, length, position, callback)</a></li>
 <li><a href="#fs_fs_writesync_fd_buffer_offset_length_position">fs.writeSync(fd, buffer, offset, length, position)</a></li>
-<li><a href="#fs_fs_read_fd_buffer_offset_length_position_callback">fs.read(fd, buffer, offset, length, position, [callback])</a></li>
+<li><a href="#fs_fs_read_fd_buffer_offset_length_position_callback">fs.read(fd, buffer, offset, length, position, callback)</a></li>
 <li><a href="#fs_fs_readsync_fd_buffer_offset_length_position">fs.readSync(fd, buffer, offset, length, position)</a></li>
-<li><a href="#fs_fs_readfile_filename_options_callback">fs.readFile(filename, [options], [callback])</a></li>
+<li><a href="#fs_fs_readfile_filename_options_callback">fs.readFile(filename, [options], callback)</a></li>
 <li><a href="#fs_fs_readfilesync_filename_options">fs.readFileSync(filename, [options])</a></li>
-<li><a href="#fs_fs_writefile_filename_data_options_callback">fs.writeFile(filename, data, [options], [callback])</a></li>
+<li><a href="#fs_fs_writefile_filename_data_options_callback">fs.writeFile(filename, data, [options], callback)</a></li>
 <li><a href="#fs_fs_writefilesync_filename_data_options">fs.writeFileSync(filename, data, [options])</a></li>
-<li><a href="#fs_fs_appendfile_filename_data_options_callback">fs.appendFile(filename, data, [options], [callback])</a></li>
+<li><a href="#fs_fs_appendfile_filename_data_options_callback">fs.appendFile(filename, data, [options], callback)</a></li>
 <li><a href="#fs_fs_appendfilesync_filename_data_options">fs.appendFileSync(filename, data, [options])</a></li>
 <li><a href="#fs_fs_watchfile_filename_options_listener">fs.watchFile(filename, [options], listener)</a></li>
 <li><a href="#fs_fs_unwatchfile_filename_listener">fs.unwatchFile(filename, [listener])</a></li>
@@ -126,7 +126,7 @@
 </li>
 </ul>
 </li>
-<li><a href="#fs_fs_exists_path_callback">fs.exists(path, [callback])</a></li>
+<li><a href="#fs_fs_exists_path_callback">fs.exists(path, callback)</a></li>
 <li><a href="#fs_fs_existssync_path">fs.existsSync(path)</a></li>
 <li><a href="#fs_class_fs_stats">Class: fs.Stats</a></li>
 <li><a href="#fs_fs_createreadstream_path_options">fs.createReadStream(path, [options])</a></li>
@@ -263,34 +263,25 @@ relative to `process.cwd()`.
 </p>
 <!--
 Most fs functions let you omit the callback argument. If you do, a default
-callback is used that rethrows errors. To get a trace to the original call
-site, set the NODE_DEBUG environment variable:
+callback is used that ignores errors, but prints a deprecation
+warning.
 -->
 
 <p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。
-そうすると、エラーを再スローするコールバックがデフォルトとして使用されます。
-本来の呼び出し元のトレースを取得するには、<code>NODE_DEBUG</code>
-環境変数を設定してください:
+そうすると、エラーを無視するコールバックがデフォルトとして使用され、
+廃止予定の警告が出力されます。
 
 </p>
-<pre><code>$ cat script.js
-function bad() {
-  require(&#39;fs&#39;).readFile(&#39;/&#39;);
-}
-bad();
+<!--
+**IMPORTANT**: Omitting the callback is deprecated.  v0.12 will throw the
+errors as exceptions.
+-->
 
-$ env NODE_DEBUG=fs node script.js
-fs.js:66
-        throw err;
-              ^
-Error: EISDIR, read
-    at rethrow (fs.js:61:21)
-    at maybeCallback (fs.js:79:42)
-    at Object.fs.readFile (fs.js:153:18)
-    at bad (/path/to/script.js:2:17)
-    at Object.&lt;anonymous&gt; (/path/to/script.js:5:1)
-    &lt;etc.&gt;</code></pre>
-<h2>fs.rename(oldPath, newPath, [callback])<span><a class="mark" href="#fs_fs_rename_oldpath_newpath_callback" id="fs_fs_rename_oldpath_newpath_callback">#</a></span></h2>
+<p><strong>重要</strong>: コールバックの省略は廃止予定です。v0.12 は例外をスローするでしょう。
+
+
+</p>
+<h2>fs.rename(oldPath, newPath, callback)<span><a class="mark" href="#fs_fs_rename_oldpath_newpath_callback" id="fs_fs_rename_oldpath_newpath_callback">#</a></span></h2>
 <!--
 Asynchronous rename(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -307,7 +298,7 @@ Synchronous rename(2).
 <p>同期の rename(2)。
 
 </p>
-<h2>fs.ftruncate(fd, len, [callback])<span><a class="mark" href="#fs_fs_ftruncate_fd_len_callback" id="fs_fs_ftruncate_fd_len_callback">#</a></span></h2>
+<h2>fs.ftruncate(fd, len, callback)<span><a class="mark" href="#fs_fs_ftruncate_fd_len_callback" id="fs_fs_ftruncate_fd_len_callback">#</a></span></h2>
 <!--
 Asynchronous ftruncate(2). No arguments other than a possible exception are
 given to the completion callback.
@@ -324,7 +315,7 @@ Synchronous ftruncate(2).
 <p>同期の ftruncate(2)。
 
 </p>
-<h2>fs.truncate(path, len, [callback])<span><a class="mark" href="#fs_fs_truncate_path_len_callback" id="fs_fs_truncate_path_len_callback">#</a></span></h2>
+<h2>fs.truncate(path, len, callback)<span><a class="mark" href="#fs_fs_truncate_path_len_callback" id="fs_fs_truncate_path_len_callback">#</a></span></h2>
 <!--
 Asynchronous truncate(2). No arguments other than a possible exception are
 given to the completion callback.
@@ -342,7 +333,7 @@ Synchronous truncate(2).
 <p>同期の truncate(2)。
 
 </p>
-<h2>fs.chown(path, uid, gid, [callback])<span><a class="mark" href="#fs_fs_chown_path_uid_gid_callback" id="fs_fs_chown_path_uid_gid_callback">#</a></span></h2>
+<h2>fs.chown(path, uid, gid, callback)<span><a class="mark" href="#fs_fs_chown_path_uid_gid_callback" id="fs_fs_chown_path_uid_gid_callback">#</a></span></h2>
 <!--
 Asynchronous chown(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -359,7 +350,7 @@ Synchronous chown(2).
 <p>同期の chown(2)。
 
 </p>
-<h2>fs.fchown(fd, uid, gid, [callback])<span><a class="mark" href="#fs_fs_fchown_fd_uid_gid_callback" id="fs_fs_fchown_fd_uid_gid_callback">#</a></span></h2>
+<h2>fs.fchown(fd, uid, gid, callback)<span><a class="mark" href="#fs_fs_fchown_fd_uid_gid_callback" id="fs_fs_fchown_fd_uid_gid_callback">#</a></span></h2>
 <!--
 Asynchronous fchown(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -376,7 +367,7 @@ Synchronous fchown(2).
 <p>同期の fchown(2)。
 
 </p>
-<h2>fs.lchown(path, uid, gid, [callback])<span><a class="mark" href="#fs_fs_lchown_path_uid_gid_callback" id="fs_fs_lchown_path_uid_gid_callback">#</a></span></h2>
+<h2>fs.lchown(path, uid, gid, callback)<span><a class="mark" href="#fs_fs_lchown_path_uid_gid_callback" id="fs_fs_lchown_path_uid_gid_callback">#</a></span></h2>
 <!--
 Asynchronous lchown(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -393,7 +384,7 @@ Synchronous lchown(2).
 <p>同期の lchown(2)。
 
 </p>
-<h2>fs.chmod(path, mode, [callback])<span><a class="mark" href="#fs_fs_chmod_path_mode_callback" id="fs_fs_chmod_path_mode_callback">#</a></span></h2>
+<h2>fs.chmod(path, mode, callback)<span><a class="mark" href="#fs_fs_chmod_path_mode_callback" id="fs_fs_chmod_path_mode_callback">#</a></span></h2>
 <!--
 Asynchronous chmod(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -410,7 +401,7 @@ Synchronous chmod(2).
 <p>同期の chmod(2)。
 
 </p>
-<h2>fs.fchmod(fd, mode, [callback])<span><a class="mark" href="#fs_fs_fchmod_fd_mode_callback" id="fs_fs_fchmod_fd_mode_callback">#</a></span></h2>
+<h2>fs.fchmod(fd, mode, callback)<span><a class="mark" href="#fs_fs_fchmod_fd_mode_callback" id="fs_fs_fchmod_fd_mode_callback">#</a></span></h2>
 <!--
 Asynchronous fchmod(2). No arguments other than a possible exception
 are given to the completion callback.
@@ -427,7 +418,7 @@ Synchronous fchmod(2).
 <p>同期の fchmod(2)。
 
 </p>
-<h2>fs.lchmod(path, mode, [callback])<span><a class="mark" href="#fs_fs_lchmod_path_mode_callback" id="fs_fs_lchmod_path_mode_callback">#</a></span></h2>
+<h2>fs.lchmod(path, mode, callback)<span><a class="mark" href="#fs_fs_lchmod_path_mode_callback" id="fs_fs_lchmod_path_mode_callback">#</a></span></h2>
 <!--
 Asynchronous lchmod(2). No arguments other than a possible exception
 are given to the completion callback.
@@ -451,7 +442,7 @@ Synchronous lchmod(2).
 <p>同期の lchmod(2)。
 
 </p>
-<h2>fs.stat(path, [callback])<span><a class="mark" href="#fs_fs_stat_path_callback" id="fs_fs_stat_path_callback">#</a></span></h2>
+<h2>fs.stat(path, callback)<span><a class="mark" href="#fs_fs_stat_path_callback" id="fs_fs_stat_path_callback">#</a></span></h2>
 <!--
 Asynchronous stat(2). The callback gets two arguments `(err, stats)` where
 `stats` is a [fs.Stats](#fs_class_fs_stats) object.  See the [fs.Stats](#fs_class_fs_stats)
@@ -470,7 +461,7 @@ See the [fs.Stats](#fs.Stats) section below for more information.
 <p>より詳しくは後述の <a href="#fs.Stats">fs.Stats</a> の節を参照してください。
 
 </p>
-<h2>fs.lstat(path, [callback])<span><a class="mark" href="#fs_fs_lstat_path_callback" id="fs_fs_lstat_path_callback">#</a></span></h2>
+<h2>fs.lstat(path, callback)<span><a class="mark" href="#fs_fs_lstat_path_callback" id="fs_fs_lstat_path_callback">#</a></span></h2>
 <!--
 Asynchronous lstat(2). The callback gets two arguments `(err, stats)` where
 `stats` is a `fs.Stats` object. `lstat()` is identical to `stat()`, except that if
@@ -484,7 +475,7 @@ refers to.
 参照先のファイルではなくそのリンク自身が調べられる点を除いて <code>stat()</code> と同じす。
 
 </p>
-<h2>fs.fstat(fd, [callback])<span><a class="mark" href="#fs_fs_fstat_fd_callback" id="fs_fs_fstat_fd_callback">#</a></span></h2>
+<h2>fs.fstat(fd, callback)<span><a class="mark" href="#fs_fs_fstat_fd_callback" id="fs_fs_fstat_fd_callback">#</a></span></h2>
 <!--
 Asynchronous fstat(2). The callback gets two arguments `(err, stats)` where
 `stats` is a `fs.Stats` object. `fstat()` is identical to `stat()`, except that
@@ -521,7 +512,7 @@ Synchronous fstat(2). Returns an instance of `fs.Stats`.
 <p>同期の fstat(2)。<code>fs.Stats</code> のインスタンスを返します。
 
 </p>
-<h2>fs.link(srcpath, dstpath, [callback])<span><a class="mark" href="#fs_fs_link_srcpath_dstpath_callback" id="fs_fs_link_srcpath_dstpath_callback">#</a></span></h2>
+<h2>fs.link(srcpath, dstpath, callback)<span><a class="mark" href="#fs_fs_link_srcpath_dstpath_callback" id="fs_fs_link_srcpath_dstpath_callback">#</a></span></h2>
 <!--
 Asynchronous link(2). No arguments other than a possible exception are given to
 the completion callback.
@@ -538,7 +529,7 @@ Synchronous link(2).
 <p>同期の link(2)。
 
 </p>
-<h2>fs.symlink(srcpath, dstpath, [type], [callback])<span><a class="mark" href="#fs_fs_symlink_srcpath_dstpath_type_callback" id="fs_fs_symlink_srcpath_dstpath_type_callback">#</a></span></h2>
+<h2>fs.symlink(srcpath, dstpath, [type], callback)<span><a class="mark" href="#fs_fs_symlink_srcpath_dstpath_type_callback" id="fs_fs_symlink_srcpath_dstpath_type_callback">#</a></span></h2>
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -566,7 +557,7 @@ Synchronous symlink(2).
 <p>同期の symlink(2)。
 
 </p>
-<h2>fs.readlink(path, [callback])<span><a class="mark" href="#fs_fs_readlink_path_callback" id="fs_fs_readlink_path_callback">#</a></span></h2>
+<h2>fs.readlink(path, callback)<span><a class="mark" href="#fs_fs_readlink_path_callback" id="fs_fs_readlink_path_callback">#</a></span></h2>
 <!--
 Asynchronous readlink(2). The callback gets two arguments `(err,
 linkString)`.
@@ -618,7 +609,7 @@ Synchronous realpath(2). Returns the resolved path.
 <p>同期の realpath(2)。解決されたパスを返します。
 
 </p>
-<h2>fs.unlink(path, [callback])<span><a class="mark" href="#fs_fs_unlink_path_callback" id="fs_fs_unlink_path_callback">#</a></span></h2>
+<h2>fs.unlink(path, callback)<span><a class="mark" href="#fs_fs_unlink_path_callback" id="fs_fs_unlink_path_callback">#</a></span></h2>
 <!--
 Asynchronous unlink(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -635,7 +626,7 @@ Synchronous unlink(2).
 <p>同期の unlink(2)。
 
 </p>
-<h2>fs.rmdir(path, [callback])<span><a class="mark" href="#fs_fs_rmdir_path_callback" id="fs_fs_rmdir_path_callback">#</a></span></h2>
+<h2>fs.rmdir(path, callback)<span><a class="mark" href="#fs_fs_rmdir_path_callback" id="fs_fs_rmdir_path_callback">#</a></span></h2>
 <!--
 Asynchronous rmdir(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -652,7 +643,7 @@ Synchronous rmdir(2).
 <p>同期の rmdir(2)。
 
 </p>
-<h2>fs.mkdir(path, [mode], [callback])<span><a class="mark" href="#fs_fs_mkdir_path_mode_callback" id="fs_fs_mkdir_path_mode_callback">#</a></span></h2>
+<h2>fs.mkdir(path, [mode], callback)<span><a class="mark" href="#fs_fs_mkdir_path_mode_callback" id="fs_fs_mkdir_path_mode_callback">#</a></span></h2>
 <!--
 Asynchronous mkdir(2). No arguments other than a possible exception are given
 to the completion callback. `mode` defaults to `0777`.
@@ -670,7 +661,7 @@ Synchronous mkdir(2).
 <p>同期の mkdir(2)。
 
 </p>
-<h2>fs.readdir(path, [callback])<span><a class="mark" href="#fs_fs_readdir_path_callback" id="fs_fs_readdir_path_callback">#</a></span></h2>
+<h2>fs.readdir(path, callback)<span><a class="mark" href="#fs_fs_readdir_path_callback" id="fs_fs_readdir_path_callback">#</a></span></h2>
 <!--
 Asynchronous readdir(3).  Reads the contents of a directory.
 The callback gets two arguments `(err, files)` where `files` is an array of
@@ -691,7 +682,7 @@ Synchronous readdir(3). Returns an array of filenames excluding `'.'` and
 <p>同期の readdir(3)。<code>&#39;.&#39;</code> と <code>&#39;..&#39;</code> を除くディレクトリ内のファイル名の配列を返します。
 
 </p>
-<h2>fs.close(fd, [callback])<span><a class="mark" href="#fs_fs_close_fd_callback" id="fs_fs_close_fd_callback">#</a></span></h2>
+<h2>fs.close(fd, callback)<span><a class="mark" href="#fs_fs_close_fd_callback" id="fs_fs_close_fd_callback">#</a></span></h2>
 <!--
 Asynchronous close(2).  No arguments other than a possible exception are given
 to the completion callback.
@@ -708,7 +699,7 @@ Synchronous close(2).
 <p>同期の close(2)。
 
 </p>
-<h2>fs.open(path, flags, [mode], [callback])<span><a class="mark" href="#fs_fs_open_path_flags_mode_callback" id="fs_fs_open_path_flags_mode_callback">#</a></span></h2>
+<h2>fs.open(path, flags, [mode], callback)<span><a class="mark" href="#fs_fs_open_path_flags_mode_callback" id="fs_fs_open_path_flags_mode_callback">#</a></span></h2>
 <!--
 Asynchronous file open. See open(2). `flags` can be:
 
@@ -826,7 +817,7 @@ Synchronous open(2).
 <p>同期の open(2)。
 
 </p>
-<h2>fs.utimes(path, atime, mtime, [callback])<span><a class="mark" href="#fs_fs_utimes_path_atime_mtime_callback" id="fs_fs_utimes_path_atime_mtime_callback">#</a></span></h2>
+<h2>fs.utimes(path, atime, mtime, callback)<span><a class="mark" href="#fs_fs_utimes_path_atime_mtime_callback" id="fs_fs_utimes_path_atime_mtime_callback">#</a></span></h2>
 <h2>fs.utimesSync(path, atime, mtime)<span><a class="mark" href="#fs_fs_utimessync_path_atime_mtime" id="fs_fs_utimessync_path_atime_mtime">#</a></span></h2>
 <!--
 Change file timestamps.
@@ -836,7 +827,7 @@ Change file timestamps of the file referenced by the supplied path.
 <p>渡されたパスが参照するファイルのタイムスタンプを変更します。
 
 </p>
-<h2>fs.futimes(fd, atime, mtime, [callback])<span><a class="mark" href="#fs_fs_futimes_fd_atime_mtime_callback" id="fs_fs_futimes_fd_atime_mtime_callback">#</a></span></h2>
+<h2>fs.futimes(fd, atime, mtime, callback)<span><a class="mark" href="#fs_fs_futimes_fd_atime_mtime_callback" id="fs_fs_futimes_fd_atime_mtime_callback">#</a></span></h2>
 <h2>fs.futimesSync(fd, atime, mtime)<span><a class="mark" href="#fs_fs_futimessync_fd_atime_mtime" id="fs_fs_futimessync_fd_atime_mtime">#</a></span></h2>
 <!--
 Change the file timestamps of a file referenced by the supplied file
@@ -846,7 +837,7 @@ descriptor.
 <p>渡されたファイル記述子が参照するファイルのタイムスタンプを変更します。
 
 </p>
-<h2>fs.fsync(fd, [callback])<span><a class="mark" href="#fs_fs_fsync_fd_callback" id="fs_fs_fsync_fd_callback">#</a></span></h2>
+<h2>fs.fsync(fd, callback)<span><a class="mark" href="#fs_fs_fsync_fd_callback" id="fs_fs_fsync_fd_callback">#</a></span></h2>
 <!--
 Asynchronous fsync(2). No arguments other than a possible exception are given
 to the completion callback.
@@ -863,7 +854,7 @@ Synchronous fsync(2).
 <p>同期の fsync(2)。
 
 </p>
-<h2>fs.write(fd, buffer, offset, length, position, [callback])<span><a class="mark" href="#fs_fs_write_fd_buffer_offset_length_position_callback" id="fs_fs_write_fd_buffer_offset_length_position_callback">#</a></span></h2>
+<h2>fs.write(fd, buffer, offset, length, position, callback)<span><a class="mark" href="#fs_fs_write_fd_buffer_offset_length_position_callback" id="fs_fs_write_fd_buffer_offset_length_position_callback">#</a></span></h2>
 <!--
 Write `buffer` to the file specified by `fd`.
 -->
@@ -919,7 +910,7 @@ Synchronous version of `fs.write()`. Returns the number of bytes written.
 <p>同期版の <code>fs.write()</code>。書き込まれたバイト数を返します。
 
 </p>
-<h2>fs.read(fd, buffer, offset, length, position, [callback])<span><a class="mark" href="#fs_fs_read_fd_buffer_offset_length_position_callback" id="fs_fs_read_fd_buffer_offset_length_position_callback">#</a></span></h2>
+<h2>fs.read(fd, buffer, offset, length, position, callback)<span><a class="mark" href="#fs_fs_read_fd_buffer_offset_length_position_callback" id="fs_fs_read_fd_buffer_offset_length_position_callback">#</a></span></h2>
 <!--
 Read data from the file specified by `fd`.
 -->
@@ -972,12 +963,13 @@ Synchronous version of `fs.read`. Returns the number of `bytesRead`.
 <p>同期版の <code>fs.read</code>。<code>bytesRead</code> の数を返します。
 
 </p>
-<h2>fs.readFile(filename, [options], [callback])<span><a class="mark" href="#fs_fs_readfile_filename_options_callback" id="fs_fs_readfile_filename_options_callback">#</a></span></h2>
+<h2>fs.readFile(filename, [options], callback)<span><a class="mark" href="#fs_fs_readfile_filename_options_callback" id="fs_fs_readfile_filename_options_callback">#</a></span></h2>
 <!--
 * `filename` {String}
 * `options` {Object}
   * `encoding` {String | Null} default = `null`
   * `flag` {String} default = `'r'`
+* `callback` {Function}
 -->
 
 <ul>
@@ -987,6 +979,7 @@ Synchronous version of `fs.read`. Returns the number of `bytesRead`.
 <li><code>flag</code> {String} デフォルトは <code>&#39;r&#39;</code></li>
 </ul>
 </li>
+<li><code>callback</code> {Function}</li>
 </ul>
 <!--
 Asynchronously reads the entire contents of a file. Example:
@@ -1032,7 +1025,7 @@ string. Otherwise it returns a buffer.
 
 
 </p>
-<h2>fs.writeFile(filename, data, [options], [callback])<span><a class="mark" href="#fs_fs_writefile_filename_data_options_callback" id="fs_fs_writefile_filename_data_options_callback">#</a></span></h2>
+<h2>fs.writeFile(filename, data, [options], callback)<span><a class="mark" href="#fs_fs_writefile_filename_data_options_callback" id="fs_fs_writefile_filename_data_options_callback">#</a></span></h2>
 <!--
 * `filename` {String}
 * `data` {String | Buffer}
@@ -1040,6 +1033,7 @@ string. Otherwise it returns a buffer.
   * `encoding` {String | Null} default = `'utf8'`
   * `mode` {Number} default = `438` (aka `0666` in Octal)
   * `flag` {String} default = `'w'`
+* `callback` {Function}
 -->
 
 <ul>
@@ -1051,6 +1045,7 @@ string. Otherwise it returns a buffer.
 <li><code>flag</code> {String} デフォルトは <code>&#39;w&#39;</code></li>
 </ul>
 </li>
+<li><code>callback</code> {Function}</li>
 </ul>
 <!--
 Asynchronously writes data to a file, replacing the file if it already exists.
@@ -1090,7 +1085,7 @@ The synchronous version of `fs.writeFile`.
 <p>同期版の <code>fs.writeFile</code>。
 
 </p>
-<h2>fs.appendFile(filename, data, [options], [callback])<span><a class="mark" href="#fs_fs_appendfile_filename_data_options_callback" id="fs_fs_appendfile_filename_data_options_callback">#</a></span></h2>
+<h2>fs.appendFile(filename, data, [options], callback)<span><a class="mark" href="#fs_fs_appendfile_filename_data_options_callback" id="fs_fs_appendfile_filename_data_options_callback">#</a></span></h2>
 <!--
 * `filename` {String}
 * `data` {String | Buffer}
@@ -1098,6 +1093,7 @@ The synchronous version of `fs.writeFile`.
   * `encoding` {String | Null} default = `'utf8'`
   * `mode` {Number} default = `438` (aka `0666` in Octal)
   * `flag` {String} default = `'a'`
+* `callback` {Function}
 -->
 
 <ul>
@@ -1109,6 +1105,7 @@ The synchronous version of `fs.writeFile`.
 <li><code>flag</code> {String} デフォルトは <code>&#39;a&#39;</code></li>
 </ul>
 </li>
+<li><code>callback</code> {Function}</li>
 </ul>
 <!--
 Asynchronously append data to a file, creating the file if it not yet exists.
@@ -1330,7 +1327,7 @@ callback, and have some fallback logic if it is null.
     console.log(&#39;filename not provided&#39;);
   }
 });</code></pre>
-<h2>fs.exists(path, [callback])<span><a class="mark" href="#fs_fs_exists_path_callback" id="fs_fs_exists_path_callback">#</a></span></h2>
+<h2>fs.exists(path, callback)<span><a class="mark" href="#fs_fs_exists_path_callback" id="fs_fs_exists_path_callback">#</a></span></h2>
 <!--
 Test whether or not the given path exists by checking with the file system.
 Then call the `callback` argument with either true or false.  Example:
@@ -1637,7 +1634,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
