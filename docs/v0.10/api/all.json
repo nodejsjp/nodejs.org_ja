@@ -315,7 +315,7 @@
             {
               "textRaw": "process.title",
               "name": "title",
-              "desc": "<!--\nGetter/setter to set what is displayed in 'ps'.\n-->\n\n<p>&#39;ps&#39; でどのよう表示されるかを設定するための getter/setter です。\n\n\n</p>\n"
+              "desc": "<!--\nGetter/setter to set what is displayed in 'ps'.\n-->\n\n<p>&#39;ps&#39; でどのよう表示されるかを設定するための getter/setter です。\n\n</p>\n<!--\nWhen used as a setter, the maximum length is platform-specific and probably\nshort.\n-->\n\n<p>setter が使われる場合、その最大長はプラットフォーム依存で、おそらく短いです。\n\n</p>\n<!--\nOn Linux and OS X, it's limited to the size of the binary name plus the\nlength of the command line arguments because it overwrites the argv memory.\n-->\n\n<p>Linux と OS X では、それは argv のメモリを上書きするため、\nバイナリ名にコマンドライン引数を加えたものに制限されます。\n\n</p>\n<!--\nv0.8 allowed for longer process title strings by also overwriting the environ\nmemory but that was potentially insecure/confusing in some (rather obscure)\ncases.\n-->\n\n<p>v0.8 はより長いプロセスタイトル文字列で環境を上書きしていましたが、\nそれはいくつかの (はっきりしない) ケースにおいて、\n潜在的に危険で混乱していました。\n\n\n</p>\n"
             },
             {
               "textRaw": "process.arch",
@@ -1031,7 +1031,7 @@
         {
           "textRaw": "process.title",
           "name": "title",
-          "desc": "<!--\nGetter/setter to set what is displayed in 'ps'.\n-->\n\n<p>&#39;ps&#39; でどのよう表示されるかを設定するための getter/setter です。\n\n\n</p>\n"
+          "desc": "<!--\nGetter/setter to set what is displayed in 'ps'.\n-->\n\n<p>&#39;ps&#39; でどのよう表示されるかを設定するための getter/setter です。\n\n</p>\n<!--\nWhen used as a setter, the maximum length is platform-specific and probably\nshort.\n-->\n\n<p>setter が使われる場合、その最大長はプラットフォーム依存で、おそらく短いです。\n\n</p>\n<!--\nOn Linux and OS X, it's limited to the size of the binary name plus the\nlength of the command line arguments because it overwrites the argv memory.\n-->\n\n<p>Linux と OS X では、それは argv のメモリを上書きするため、\nバイナリ名にコマンドライン引数を加えたものに制限されます。\n\n</p>\n<!--\nv0.8 allowed for longer process title strings by also overwriting the environ\nmemory but that was potentially insecure/confusing in some (rather obscure)\ncases.\n-->\n\n<p>v0.8 はより長いプロセスタイトル文字列で環境を上書きしていましたが、\nそれはいくつかの (はっきりしない) ケースにおいて、\n潜在的に危険で混乱していました。\n\n\n</p>\n"
         },
         {
           "textRaw": "process.arch",
@@ -2192,7 +2192,14 @@
               "type": "event",
               "name": "newListener",
               "params": [],
-              "desc": "<!--\nThis event is emitted any time someone adds a new listener.\n-->\n\n<p>このイベントは誰かが新しいリスナーを追加するといつでも生成されます。\n\n</p>\n"
+              "desc": "<!--\nThis event is emitted any time someone adds a new listener.\n-->\n\n<p>このイベントは新しいリスナーが追加されるたびに生成されます。\n\n\n</p>\n"
+            },
+            {
+              "textRaw": "Event: 'removeListener'",
+              "type": "event",
+              "name": "removeListener",
+              "desc": "<!--\n* `event` {String} The event name\n* `listener` {Function} The event handler function\n-->\n\n<ul>\n<li><code>event</code> {String} イベント名</li>\n<li><code>listener</code> {Function} イベントハンドラ関数</li>\n</ul>\n<!--\nThis event is emitted any time someone removes a listener.\n-->\n\n<p>このイベントはリスナが取り除かれるたびに生成されます。\n\n</p>\n",
+              "params": []
             }
           ]
         }
@@ -4560,7 +4567,7 @@
               "textRaw": "transform.\\_flush(callback)",
               "type": "method",
               "name": "\\_flush",
-              "desc": "<!--\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done flushing any remaining data.\n-->\n\n<ul>\n<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It MAY be implemented\nby child classes, and if so, will be called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nIn some cases, your transform operation may need to emit a bit more\ndata at the end of the stream.  For example, a `Zlib` compression\nstream will store up some internal state so that it can optimally\ncompress the output.  At the end, however, it needs to do the best it\ncan with what is left, so that the data will be complete.\n-->\n\n<p>場合によっては、変換操作はストリームの終端でより多くのデータを\n生成する必要があります。\nたとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、\nいくつかの内部状態を持ちます。\n一方、終端ではデータが完全なものになるように、\n残されたものに最善を尽くす必要があります。\n\n</p>\n<!--\nIn those cases, you can implement a `_flush` method, which will be\ncalled at the very end, after all the written data is consumed, but\nbefore emitting `end` to signal the end of the readable side.  Just\nlike with `_transform`, call `transform.push(chunk)` zero or more\ntimes, as appropriate, and call `callback` when the flush operation is\ncomplete.\n-->\n\n<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、\nただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される\n<code>_flush</code> メソッドを実装することができます。\n<code>_transform</code> と同様、<code>transform.push(chunk)</code> を何度 (0 回以上) でも\n適切に呼び出し、フラッシュ操作が完了した時に <code>callback</code> を呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<h3>Example: <code>SimpleProtocol</code> parser</h3>\n<!--\nThe example above of a simple protocol parser can be implemented much\nmore simply by using the higher level `Transform` stream class.\n-->\n\n<p>前述した単純なプロトコルパーサの例は、より高水準な <code>Transform</code>\nストリームクラスを使うことで、さらにシンプルに実装することができます。\n\n</p>\n<!--\nIn this example, rather than providing the input as an argument, it\nwould be piped into the parser, which is a more idiomatic Node stream\napproach.\n-->\n\n<p>この例では、入力を引数で与えるのではなく、Node のストームにおける\nより慣用的なアプローチとしてパーサにパイプで送られます。\n\n</p>\n<pre><code class=\"javascript\">function SimpleProtocol(options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Transform.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Transform.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._transform = function(chunk, encoding, done) {\n  if (!this._inBody) {\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n\n      // now, because we got some extra data, emit this first.\n      this.push(b);\n    }\n  } else {\n    // from there on, just provide the data to our consumer as-is.\n    this.push(b);\n  }\n  done();\n};\n\nvar parser = new SimpleProtocol();\nsource.pipe(parser)\n\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
+              "desc": "<!--\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done flushing any remaining data.\n-->\n\n<ul>\n<li><code>callback</code> {Function} 与えられたチャンクの処理が終了した場合に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nNote: **This function MUST NOT be called directly.**  It MAY be implemented\nby child classes, and if so, will be called by the internal Transform\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるかもしれず、Transform クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nIn some cases, your transform operation may need to emit a bit more\ndata at the end of the stream.  For example, a `Zlib` compression\nstream will store up some internal state so that it can optimally\ncompress the output.  At the end, however, it needs to do the best it\ncan with what is left, so that the data will be complete.\n-->\n\n<p>場合によっては、変換操作はストリームの終端でより多くのデータを\n生成する必要があります。\nたとえば、<code>Zlib</code> 圧縮ストリームは出力を最適に圧縮できるように、\nいくつかの内部状態を持ちます。\n一方、終端ではデータが完全なものになるように、\n残されたものに最善を尽くす必要があります。\n\n</p>\n<!--\nIn those cases, you can implement a `_flush` method, which will be\ncalled at the very end, after all the written data is consumed, but\nbefore emitting `end` to signal the end of the readable side.  Just\nlike with `_transform`, call `transform.push(chunk)` zero or more\ntimes, as appropriate, and call `callback` when the flush operation is\ncomplete.\n-->\n\n<p>この場合、最後の最後 (書き込まれた全てのデータが消費された後、\nただし読み込み側の終了を知らせる <code>end</code> が生成される前) に呼び出される\n<code>_flush</code> メソッドを実装することができます。\n<code>_transform</code> と同様、<code>transform.push(chunk)</code> を何度 (0 回以上) でも\n適切に呼び出し、フラッシュ操作が完了した時に <code>callback</code> を呼び出します。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n<h3>Example: <code>SimpleProtocol</code> parser</h3>\n<!--\nThe example above of a simple protocol parser can be implemented much\nmore simply by using the higher level `Transform` stream class.\n-->\n\n<p>前述した単純なプロトコルパーサの例は、より高水準な <code>Transform</code>\nストリームクラスを使うことで、さらにシンプルに実装することができます。\n\n</p>\n<!--\nIn this example, rather than providing the input as an argument, it\nwould be piped into the parser, which is a more idiomatic Node stream\napproach.\n-->\n\n<p>この例では、入力を引数で与えるのではなく、Node のストームにおける\nより慣用的なアプローチとしてパーサにパイプで送られます。\n\n</p>\n<pre><code class=\"javascript\">function SimpleProtocol(options) {\n  if (!(this instanceof SimpleProtocol))\n    return new SimpleProtocol(options);\n\n  Transform.call(this, options);\n  this._inBody = false;\n  this._sawFirstCr = false;\n  this._rawHeader = [];\n  this.header = null;\n}\n\nSimpleProtocol.prototype = Object.create(\n  Transform.prototype, { constructor: { value: SimpleProtocol }});\n\nSimpleProtocol.prototype._transform = function(chunk, encoding, done) {\n  if (!this._inBody) {\n    // check if the chunk has a \\n\\n\n    var split = -1;\n    for (var i = 0; i &lt; chunk.length; i++) {\n      if (chunk[i] === 10) { // &#39;\\n&#39;\n        if (this._sawFirstCr) {\n          split = i;\n          break;\n        } else {\n          this._sawFirstCr = true;\n        }\n      } else {\n        this._sawFirstCr = false;\n      }\n    }\n\n    if (split === -1) {\n      // still waiting for the \\n\\n\n      // stash the chunk, and try again.\n      this._rawHeader.push(chunk);\n    } else {\n      this._inBody = true;\n      var h = chunk.slice(0, split);\n      this._rawHeader.push(h);\n      var header = Buffer.concat(this._rawHeader).toString();\n      try {\n        this.header = JSON.parse(header);\n      } catch (er) {\n        this.emit(&#39;error&#39;, new Error(&#39;invalid simple protocol data&#39;));\n        return;\n      }\n      // and let them know that we are done parsing the header.\n      this.emit(&#39;header&#39;, this.header);\n\n      // now, because we got some extra data, emit this first.\n      this.push(chunk.slice(split));\n    }\n  } else {\n    // from there on, just provide the data to our consumer as-is.\n    this.push(chunk);\n  }\n  done();\n};\n\nvar parser = new SimpleProtocol();\nsource.pipe(parser)\n\n// Now parser is a readable stream that will emit &#39;header&#39;\n// with the parsed header data.</code></pre>\n",
               "signatures": [
                 {
                   "params": [
@@ -4765,7 +4772,313 @@
               ]
             }
           ]
+        }
+      ],
+      "classes": [
+        {
+          "textRaw": "Class: Hash",
+          "type": "class",
+          "name": "Hash",
+          "desc": "<!--\nThe class for creating hash digests of data.\n-->\n\n<p>データのハッシュダイジェストを作成するためのクラスです。\n\n</p>\n<!--\nIt is a [stream](stream.html) that is both readable and writable.  The\nwritten data is used to compute the hash.  Once the writable side of\nthe stream is ended, use the `read()` method to get the computed hash\ndigest.  The legacy `update` and `digest` methods are also supported.\n-->\n\n<p>これは読み込みと書き込みの両方が可能な <a href=\"stream.html\">ストリーム</a> です。\n書き込まれたデータはハッシュを計算するために使われます。\n一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを\n読み出すために <code>read()</code> メソッドを使うことができます。\nレガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。\n\n</p>\n<!--\nReturned by `crypto.createHash`.\n-->\n\n<p><code>crypto.createHash()</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "hash.update(data, [input_encoding])",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the hash content with the given `data`, the encoding of which\nis given in `input_encoding` and can be `'utf8'`, `'ascii'` or\n`'binary'`.  If no encoding is provided, then a buffer is expected.\n-->\n\n<p>与えられた <code>data</code> でハッシュの内容を更新します。\nそのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、\nまたは <code>&#39;binary&#39;</code> を指定することができます。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "hash.digest([encoding])",
+              "type": "method",
+              "name": "digest",
+              "desc": "<!--\nCalculates the digest of all of the passed data to be hashed.  The\n`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding\nis provided, then a buffer is returned.\n-->\n\n<p>渡された全てのデータがハッシュ化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `hash` object can not be used after `digest()` method has been\ncalled.\n-->\n\n<p>注意: <code>digest()</code> メソッドが呼び出された後で <code>hash</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
+        {
+          "textRaw": "Class: Hmac",
+          "type": "class",
+          "name": "Hmac",
+          "desc": "<!--\nClass for creating cryptographic hmac content.\n\nReturned by `crypto.createHmac`.\n-->\n\n<p>hmac を作成するためのクラスです。\n\n</p>\n<p><code>crypto.createHamc</code> から返されます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "hmac.update(data)",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdate the hmac content with the given `data`.  This can be called\nmany times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> で HMAC の内容を更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "hmac.digest([encoding])",
+              "type": "method",
+              "name": "digest",
+              "desc": "<!--\nCalculates the digest of all of the passed data to the hmac.  The\n`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding\nis provided, then a buffer is returned.\n-->\n\n<p>渡された全てのデータが HMAC 化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `hmac` object can not be used after `digest()` method has been\ncalled.\n-->\n\n<p>注意: <code>digest()</code> メソッドが呼び出された後で <code>hmac</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Cipher",
+          "type": "class",
+          "name": "Cipher",
+          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n<!--\nCipher objects are [streams](stream.html) that are both readable and\nwritable.  The written plain text data is used to produce the\nencrypted data on the readable side.  The legacy `update` and `final`\nmethods are also supported.\n-->\n\n<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "cipher.update(data, [input_encoding], [output_encoding])",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the cipher with `data`, the encoding of which is given in\n`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no\nencoding is provided, then a buffer is expected.\n-->\n\n<p><code>data</code> で暗号を更新します。\n<code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<p>The <code>output_encoding</code> specifies the output format of the enciphered\ndata, and can be <code>&#39;binary&#39;</code>, <code>&#39;base64&#39;</code> or <code>&#39;hex&#39;</code>.  If no encoding is\nprovided, then a buffer is returned.\n--&gt;\n\n</p>\n<p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、\n<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code> または <code>&#39;binary&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nReturns the enciphered contents, and can be called many times with new\ndata as it is streamed.\n-->\n\n<p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "cipher.final([output_encoding])",
+              "type": "method",
+              "name": "final",
+              "desc": "<!--\nReturns any remaining enciphered contents, with `output_encoding`\nbeing one of: `'binary'`, `'base64'` or `'hex'`.  If no encoding is\nprovided, then a buffer is returned.\n-->\n\n<p>暗号化されたコンテンツの残りを返します。\n<code>output_encoding</code> は次のいずれかです: <code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code>。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `cipher` object can not be used after `final()` method has been\ncalled.\n-->\n\n<p>注意: <code>final()</code> メソッドが呼び出された後で <code>cipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "cipher.setAutoPadding(auto_padding=true)",
+              "type": "method",
+              "name": "setAutoPadding",
+              "desc": "<!--\nYou can disable automatic padding of the input data to block size. If\n`auto_padding` is false, the length of the entire input data must be a\nmultiple of the cipher's block size or `final` will fail.  Useful for\nnon-standard padding, e.g. using `0x0` instead of PKCS padding. You\nmust call this before `cipher.final`.\n-->\n\n<p>入力データが自動的にブロックサイズにパディングされることを\n抑止することができます。\n<code>auto_padding</code> が <code>false</code> の場合、入力データ全体の長さは\n暗号ブロックサイズの倍数でなければなりません。\nでなければ、<code>final()</code> は失敗します。\nこれは非標準のパディング、たとえば PKCS パディングの代わりに\n<code>0x0</code> を使う場合に便利です。\n<code>cipher.final()</code> の前に呼び出す必要があります。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "auto_padding",
+                      "default": "true"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Decipher",
+          "type": "class",
+          "name": "Decipher",
+          "desc": "<!--\nClass for decrypting data.\n\nReturned by `crypto.createDecipher` and `crypto.createDecipheriv`.\n-->\n\n<p>復号化のためのクラスです。\n\n</p>\n<p><code>crypto.createDecipher</code> および <code>crypto.createDecipheriv</code> から返されます。\n\n</p>\n<!--\nDecipher objects are [streams](stream.html) that are both readable and\nwritable.  The written enciphered data is used to produce the\nplain-text data on the the readable side.  The legacy `update` and\n`final` methods are also supported.\n-->\n\n<p>復号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれた暗号化データは、読み込み側にプレーンテキストデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "decipher.update(data, [input_encoding], [output_encoding])",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the decipher with `data`, which is encoded in `'binary'`,\n`'base64'` or `'hex'`.  If no encoding is provided, then a buffer is\nexpected.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を\n<code>data</code> で更新します。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nThe `output_decoding` specifies in what format to return the\ndeciphered plaintext: `'binary'`, `'ascii'` or `'utf8'`.  If no\nencoding is provided, then a buffer is returned.\n-->\n\n<p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、\n<code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    },
+                    {
+                      "name": "input_encoding",
+                      "optional": true
+                    },
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "decipher.final([output_encoding])",
+              "type": "method",
+              "name": "final",
+              "desc": "<!--\nReturns any remaining plaintext which is deciphered, with\n`output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.  If\nno encoding is provided, then a buffer is returned.\n-->\n\n<p>復号化されたプレーンテキストの残りを返します。\n<code>output_decoding</code> は <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `decipher` object can not be used after `final()` method has been\ncalled.\n-->\n\n<p>注意: <code>final()</code> メソッドが呼び出された後で <code>decipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "output_encoding",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "decipher.setAutoPadding(auto_padding=true)",
+              "type": "method",
+              "name": "setAutoPadding",
+              "desc": "<!--\nYou can disable auto padding if the data has been encrypted without\nstandard block padding to prevent `decipher.final` from checking and\nremoving it. Can only work if the input data's length is a multiple of\nthe ciphers block size. You must call this before streaming data to\n`decipher.update`.\n-->\n\n<p>データブロックが非標準のパディングで暗号化されている場合、\n<code>decipher.final()</code> によるチェックを無効にすることができます。\n入力データの長さが暗号ブロックサイズの倍数の場合のみ動作します。\n<code>decipher.update()</code> の前に呼び出す必要があります。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "auto_padding",
+                      "default": "true"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Sign",
+          "type": "class",
+          "name": "Sign",
+          "desc": "<!--\nClass for generating signatures.\n\nReturned by `crypto.createSign`.\n-->\n\n<p>署名を作成するためのクラスです。\n\n</p>\n<p><code>crypto.createSign</code> から返されます。\n\n</p>\n<!--\nSign objects are writable [streams](stream.html).  The written data is\nused to generate the signature.  Once all of the data has been\nwritten, the `sign` method will return the signature.  The legacy\n`update` method is also supported.\n-->\n\n<p>署名オブジェクトは書き込み可能な <a href=\"stream.html\">ストリーム</a> です。\n書き込まれたデータは署名を生成するために使われます。\n全てのデータが書き込まれると、<code>sign()</code> メソッドはその署名を返します。\nレガシーな <code>update()</code> メソッドもサポートされます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "sign.update(data)",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the sign object with data.  This can be called many times\nwith new data as it is streamed.\n-->\n\n<p>署名オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "sign.sign(private_key, [output_format])",
+              "type": "method",
+              "name": "sign",
+              "desc": "<!--\nCalculates the signature on all the updated data passed through the\nsign.  `private_key` is a string containing the PEM encoded private\nkey for signing.\n-->\n\n<p>署名オブジェクトに渡された全ての更新データで署名を計算します。\n<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。\n\n</p>\n<!--\nReturns the signature in `output_format` which can be `'binary'`,\n`'hex'` or `'base64'`. If no encoding is provided, then a buffer is\nreturned.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、あるいは <code>&#39;base64&#39;</code> のいずれかを指定した <code>output_format</code>\nによる署名を返します。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `sign` object can not be used after `sign()` method has been\ncalled.\n-->\n\n<p>注意: <code>sign()</code> メソッドが呼び出された後で <code>sign</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "private_key"
+                    },
+                    {
+                      "name": "output_format",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: Verify",
+          "type": "class",
+          "name": "Verify",
+          "desc": "<!--\nClass for verifying signatures.\n\nReturned by `crypto.createVerify`.\n-->\n\n<p>署名を検証するためのクラスです。\n\n</p>\n<p><code>crypto.createVerify</code> から返されます。\n\n</p>\n<!--\nVerify objects are writable [streams](stream.html).  The written data\nis used to validate against the supplied signature.  Once all of the\ndata has been written, the `verify` method will return true if the\nsupplied signature is valid.  The legacy `update` method is also\nsupported.\n-->\n\n<p>検証オブジェクトは書き込み可能な <a href=\"stream.html\">ストリーム</a> です。\n書き込まれたデータは与えられた署名を検証するために使われます。\n全てのデータが書き込まれると、<code>verify()</code> メソッドは与えられた署名が正しければ\n<code>true</code> を返します。\nレガシーな <code>update()</code> メソッドもサポートされます。\n\n</p>\n",
+          "methods": [
+            {
+              "textRaw": "verifier.update(data)",
+              "type": "method",
+              "name": "update",
+              "desc": "<!--\nUpdates the verifier object with data.  This can be called many times\nwith new data as it is streamed.\n-->\n\n<p>検証オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "data"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "verifier.verify(object, signature, [signature_format])",
+              "type": "method",
+              "name": "verify",
+              "desc": "<!--\nVerifies the signed data by using the `object` and `signature`.\n`object` is  a string containing a PEM encoded object, which can be\none of RSA public key, DSA public key, or X.509 certificate.\n`signature` is the previously calculated signature for the data, in\nthe `signature_format` which can be `'binary'`, `'hex'` or `'base64'`.\nIf no encoding is specified, then a buffer is expected.\n-->\n\n<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。\n<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを\nPEM でエンコードしたオブジェクトです。\n<code>signature</code> は先に計算したデータの署名で、\nその <code>signature_format</code> は <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code>\nのいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nReturns true or false depending on the validity of the signature for\nthe data and public key.\n-->\n\n<p>署名されたデータと公開鍵による検証の結果によって true または false を返します。\n\n</p>\n<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n&lt;!--\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "object"
+                    },
+                    {
+                      "name": "signature"
+                    },
+                    {
+                      "name": "signature_format",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "type": "module",
+      "displayName": "Crypto"
+    },
+    {
+      "textRaw": "Note: `verifier` object can not be used after `verify()` method been",
+      "name": "note:_`verifier`_object_can_not_be_used_after_`verify()`_method_been",
+      "desc": "<p>Note: <code>verifier</code> object can not be used after <code>verify()</code> method has been\n</p>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<blockquote>\n<p>v0.10\ncalled.\n--&gt;\n\n</p>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n</blockquote>\n<p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
+      "methods": [
         {
           "textRaw": "crypto.createDiffieHellman(prime_length)",
           "type": "method",
@@ -4906,301 +5219,6 @@
         }
       ],
       "classes": [
-        {
-          "textRaw": "Class: Hash",
-          "type": "class",
-          "name": "Hash",
-          "desc": "<!--\nThe class for creating hash digests of data.\n-->\n\n<p>データのハッシュダイジェストを作成するためのクラスです。\n\n</p>\n<!--\nIt is a [stream](stream.html) that is both readable and writable.  The\nwritten data is used to compute the hash.  Once the writable side of\nthe stream is ended, use the `read()` method to get the computed hash\ndigest.  The legacy `update` and `digest` methods are also supported.\n-->\n\n<p>これは読み込みと書き込みの両方が可能な <a href=\"stream.html\">ストリーム</a> です。\n書き込まれたデータはハッシュを計算するために使われます。\n一度ストリームの書き込み側が閉じられると、計算されたハッシュダイジェストを\n読み出すために <code>read()</code> メソッドを使うことができます。\nレガシーな <code>update()</code> および <code>digest()</code> メソッドもサポートされます。\n\n</p>\n<!--\nReturned by `crypto.createHash`.\n-->\n\n<p><code>crypto.createHash()</code> から返されます。\n\n</p>\n",
-          "methods": [
-            {
-              "textRaw": "hash.update(data, [input_encoding])",
-              "type": "method",
-              "name": "update",
-              "desc": "<!--\nUpdates the hash content with the given `data`, the encoding of which\nis given in `input_encoding` and can be `'utf8'`, `'ascii'` or\n`'binary'`.  If no encoding is provided, then a buffer is expected.\n-->\n\n<p>与えられた <code>data</code> でハッシュの内容を更新します。\nそのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、\nまたは <code>&#39;binary&#39;</code> を指定することができます。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nThis can be called many times with new data as it is streamed.\n-->\n\n<p>これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "data"
-                    },
-                    {
-                      "name": "input_encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "hash.digest([encoding])",
-              "type": "method",
-              "name": "digest",
-              "desc": "<!--\nCalculates the digest of all of the passed data to be hashed.  The\n`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding\nis provided, then a buffer is returned.\n-->\n\n<p>渡された全てのデータがハッシュ化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `hash` object can not be used after `digest()` method been\ncalled.\n-->\n\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hash</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "Class: Hmac",
-          "type": "class",
-          "name": "Hmac",
-          "desc": "<!--\nClass for creating cryptographic hmac content.\n\nReturned by `crypto.createHmac`.\n-->\n\n<p>hmac を作成するためのクラスです。\n\n</p>\n<p><code>crypto.createHamc</code> から返されます。\n\n</p>\n",
-          "methods": [
-            {
-              "textRaw": "hmac.update(data)",
-              "type": "method",
-              "name": "update",
-              "desc": "<!--\nUpdate the hmac content with the given `data`.  This can be called\nmany times with new data as it is streamed.\n-->\n\n<p>与えられた <code>data</code> で HMAC の内容を更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "data"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "hmac.digest([encoding])",
-              "type": "method",
-              "name": "digest",
-              "desc": "<!--\nCalculates the digest of all of the passed data to the hmac.  The\n`encoding` can be `'hex'`, `'binary'` or `'base64'`.  If no encoding\nis provided, then a buffer is returned.\n-->\n\n<p>渡された全てのデータが HMAC 化されたダイジェストを計算します。\n<code>encoding</code> は <code>&#39;hex&#39;</code>、<code>&#39;binary&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `hmac` object can not be used after `digest()` method been\ncalled.\n-->\n\n<p>注意: <code>digest()</code> メソッドを呼び出した後で <code>hmac</code> \nオブジェクトを使うことはできません。\n\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "Class: Cipher",
-          "type": "class",
-          "name": "Cipher",
-          "desc": "<!--\nClass for encrypting data.\n-->\n\n<p>データを暗号化するためのクラスです。\n\n</p>\n<!--\nReturned by `crypto.createCipher` and `crypto.createCipheriv`.\n-->\n\n<p><code>crypto.createCipher</code> および <code>crypto.createCipheriv</code> から返されます。\n\n</p>\n<!--\nCipher objects are [streams](stream.html) that are both readable and\nwritable.  The written plain text data is used to produce the\nencrypted data on the readable side.  The legacy `update` and `final`\nmethods are also supported.\n-->\n\n<p>暗号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれたプレーンテキストデータは、読み込み側に暗号化されたデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
-          "methods": [
-            {
-              "textRaw": "cipher.update(data, [input_encoding], [output_encoding])",
-              "type": "method",
-              "name": "update",
-              "desc": "<!--\nUpdates the cipher with `data`, the encoding of which is given in\n`input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no\nencoding is provided, then a buffer is expected.\n-->\n\n<p><code>data</code> で暗号を更新します。\n<code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<p>The <code>output_encoding</code> specifies the output format of the enciphered\ndata, and can be <code>&#39;binary&#39;</code>, <code>&#39;base64&#39;</code> or <code>&#39;hex&#39;</code>.  If no encoding is\nprovided, then a buffer iis returned.\n--&gt;\n\n</p>\n<p><code>output_encoding</code> は暗号化されたデータの出力フォーマットを指定するもので、\n<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code> または <code>&#39;binary&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nReturns the enciphered contents, and can be called many times with new\ndata as it is streamed.\n-->\n\n<p>暗号化されたコンテンツが返されます。これは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "data"
-                    },
-                    {
-                      "name": "input_encoding",
-                      "optional": true
-                    },
-                    {
-                      "name": "output_encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "cipher.final([output_encoding])",
-              "type": "method",
-              "name": "final",
-              "desc": "<!--\nReturns any remaining enciphered contents, with `output_encoding`\nbeing one of: `'binary'`, `'base64'` or `'hex'`.  If no encoding is\nprovided, then a buffer is returned.\n-->\n\n<p>暗号化されたコンテンツの残りを返します。\n<code>output_encoding</code> は次のいずれかです: <code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code>。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `cipher` object can not be used after `final()` method been\ncalled.\n-->\n\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>cipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "output_encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "cipher.setAutoPadding(auto_padding=true)",
-              "type": "method",
-              "name": "setAutoPadding",
-              "desc": "<!--\nYou can disable automatic padding of the input data to block size. If\n`auto_padding` is false, the length of the entire input data must be a\nmultiple of the cipher's block size or `final` will fail.  Useful for\nnon-standard padding, e.g. using `0x0` instead of PKCS padding. You\nmust call this before `cipher.final`.\n-->\n\n<p>入力データが自動的にブロックサイズにパディングされることを\n抑止することができます。\n<code>auto_padding</code> が <code>false</code> の場合、入力データ全体の長さは\n暗号ブロックサイズの倍数でなければなりません。\nでなければ、<code>final()</code> は失敗します。\nこれは非標準のパディング、たとえば PKCS パディングの代わりに\n<code>0x0</code> を使う場合に便利です。\n<code>cipher.final()</code> の前に呼び出す必要があります。\n\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "auto_padding",
-                      "default": "true"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "Class: Decipher",
-          "type": "class",
-          "name": "Decipher",
-          "desc": "<!--\nClass for decrypting data.\n\nReturned by `crypto.createDecipher` and `crypto.createDecipheriv`.\n-->\n\n<p>復号化のためのクラスです。\n\n</p>\n<p><code>crypto.createDecipher</code> および <code>crypto.createDecipheriv</code> から返されます。\n\n</p>\n<!--\nDecipher objects are [streams](stream.html) that are both readable and\nwritable.  The written enciphered data is used to produce the\nplain-text data on the the readable side.  The legacy `update` and\n`final` methods are also supported.\n-->\n\n<p>復号化オブジェクトは読み込みと書き込みの両方が可能な\n<a href=\"stream.html\">ストリーム</a> です。\n書き込まれた暗号化データは、読み込み側にプレーンテキストデータを\n生成するために使われます。\nレガシーな <code>update()</code> および <code>final()</code> メソッドもサポートされます。\n\n</p>\n",
-          "methods": [
-            {
-              "textRaw": "decipher.update(data, [input_encoding], [output_encoding])",
-              "type": "method",
-              "name": "update",
-              "desc": "<!--\nUpdates the decipher with `data`, which is encoded in `'binary'`,\n`'base64'` or `'hex'`.  If no encoding is provided, then a buffer is\nexpected.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を\n<code>data</code> で更新します。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nThe `output_decoding` specifies in what format to return the\ndeciphered plaintext: `'binary'`, `'ascii'` or `'utf8'`.  If no\nencoding is provided, then a buffer is returned.\n-->\n\n<p><code>output_decoding</code> は復号化されたプレーンテキストのフォーマットを指定するもので、\n<code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "data"
-                    },
-                    {
-                      "name": "input_encoding",
-                      "optional": true
-                    },
-                    {
-                      "name": "output_encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "decipher.final([output_encoding])",
-              "type": "method",
-              "name": "final",
-              "desc": "<!--\nReturns any remaining plaintext which is deciphered, with\n`output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.  If\nno encoding is provided, then a buffer is returned.\n-->\n\n<p>復号化されたプレーンテキストの残りを返します。\n<code>output_decoding</code> は <code>&#39;binary&#39;</code>、<code>&#39;ascii&#39;</code> あるいは <code>&#39;utf8&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `decipher` object can not be used after `final()` method been\ncalled.\n-->\n\n<p>注意: <code>final()</code> メソッドを呼び出した後で <code>decipher</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "output_encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "decipher.setAutoPadding(auto_padding=true)",
-              "type": "method",
-              "name": "setAutoPadding",
-              "desc": "<!--\nYou can disable auto padding if the data has been encrypted without\nstandard block padding to prevent `decipher.final` from checking and\nremoving it. Can only work if the input data's length is a multiple of\nthe ciphers block size. You must call this before streaming data to\n`decipher.update`.\n-->\n\n<p>データブロックが非標準のパディングで暗号化されている場合、\n<code>decipher.final()</code> によるチェックを無効にすることができます。\n入力データの長さが暗号ブロックサイズの倍数の場合のみ動作します。\n<code>decipher.update()</code> の前に呼び出す必要があります。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "auto_padding",
-                      "default": "true"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "Class: Sign",
-          "type": "class",
-          "name": "Sign",
-          "desc": "<!--\nClass for generating signatures.\n\nReturned by `crypto.createSign`.\n-->\n\n<p>署名を作成するためのクラスです。\n\n</p>\n<p><code>crypto.createSign</code> から返されます。\n\n</p>\n<!--\nSign objects are writable [streams](stream.html).  The written data is\nused to generate the signature.  Once all of the data has been\nwritten, the `sign` method will return the signature.  The legacy\n`update` method is also supported.\n-->\n\n<p>署名オブジェクトは書き込み可能な <a href=\"stream.html\">ストリーム</a> です。\n書き込まれたデータは署名を生成するために使われます。\n全てのデータが書き込まれると、<code>sign()</code> メソッドはその署名を返します。\nレガシーな <code>update()</code> メソッドもサポートされます。\n\n</p>\n",
-          "methods": [
-            {
-              "textRaw": "sign.update(data)",
-              "type": "method",
-              "name": "update",
-              "desc": "<!--\nUpdates the sign object with data.  This can be called many times\nwith new data as it is streamed.\n-->\n\n<p>署名オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "data"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "sign.sign(private_key, [output_format])",
-              "type": "method",
-              "name": "sign",
-              "desc": "<!--\nCalculates the signature on all the updated data passed through the\nsign.  `private_key` is a string containing the PEM encoded private\nkey for signing.\n-->\n\n<p>署名オブジェクトに渡された全ての更新データで署名を計算します。\n<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。\n\n</p>\n<!--\nReturns the signature in `output_format` which can be `'binary'`,\n`'hex'` or `'base64'`. If no encoding is provided, then a buffer is\nreturned.\n-->\n\n<p><code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、あるいは <code>&#39;base64&#39;</code> のいずれかを指定した <code>output_format</code>\nによる署名を返します。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n<!--\nNote: `sign` object can not be used after `sign()` method been\ncalled.\n-->\n\n<p>注意: <code>sign()</code> メソッドを呼び出した後で <code>sign</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "private_key"
-                    },
-                    {
-                      "name": "output_format",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "Class: Verify",
-          "type": "class",
-          "name": "Verify",
-          "desc": "<!--\nClass for verifying signatures.\n\nReturned by `crypto.createVerify`.\n-->\n\n<p>署名を検証するためのクラスです。\n\n</p>\n<p><code>crypto.createVerify</code> から返されます。\n\n</p>\n<!--\nVerify objects are writable [streams](stream.html).  The written data\nis used to validate against the supplied signature.  Once all of the\ndata has been written, the `verify` method will return true if the\nsupplied signature is valid.  The legacy `update` method is also\nsupported.\n-->\n\n<p>検証オブジェクトは書き込み可能な <a href=\"stream.html\">ストリーム</a> です。\n書き込まれたデータは与えられた署名を検証するために使われます。\n全てのデータが書き込まれると、<code>verify()</code> メソッドは与えられた署名が正しければ\n<code>true</code> を返します。\nレガシーな <code>update()</code> メソッドもサポートされます。\n\n</p>\n",
-          "methods": [
-            {
-              "textRaw": "verifier.update(data)",
-              "type": "method",
-              "name": "update",
-              "desc": "<!--\nUpdates the verifier object with data.  This can be called many times\nwith new data as it is streamed.\n-->\n\n<p>検証オブジェクトをデータで更新します。\nこれは新しいデータがストリームに流される際に何度も呼び出されます。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "data"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "verifier.verify(object, signature, [signature_format])",
-              "type": "method",
-              "name": "verify",
-              "desc": "<!--\nVerifies the signed data by using the `object` and `signature`.\n`object` is  a string containing a PEM encoded object, which can be\none of RSA public key, DSA public key, or X.509 certificate.\n`signature` is the previously calculated signature for the data, in\nthe `signature_format` which can be `'binary'`, `'hex'` or `'base64'`.\nIf no encoding is specified, then a buffer is expected.\n-->\n\n<p>署名されたデータを <code>object</code> と <code>signature</code> で検証します。\n<code>object</code> は RSA 公開鍵、DSA 公開鍵、X.509証明書のいずれかを\nPEM でエンコードしたオブジェクトです。\n<code>signature</code> は先に計算したデータの署名で、\nその <code>signature_format</code> は <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code>\nのいずれかです。\nエンコーディングが与えられなかった場合はバッファが期待されます。\n\n</p>\n<!--\nReturns true or false depending on the validity of the signature for\nthe data and public key.\n-->\n\n<p>署名されたデータと公開鍵による検証の結果によって true または false を返します。\n\n</p>\n<!--\nNote: `verifier` object can not be used after `verify()` method been\ncalled.\n-->\n\n<p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> \nオブジェクトを使うことはできません。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "object"
-                    },
-                    {
-                      "name": "signature"
-                    },
-                    {
-                      "name": "signature_format",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
         {
           "textRaw": "Class: DiffieHellman",
           "type": "class",
@@ -5368,7 +5386,7 @@
         }
       ],
       "type": "module",
-      "displayName": "Crypto"
+      "displayName": "Note: `verifier` object can not be used after `verify()` method been"
     },
     {
       "textRaw": "TLS (SSL)",
@@ -5780,10 +5798,10 @@
       "name": "fs",
       "stability": 3,
       "stabilityText": "Stable",
-      "desc": "<!--\nFile I/O is provided by simple wrappers around standard POSIX functions.  To\nuse this module do `require('fs')`. All the methods have asynchronous and\nsynchronous forms.\n-->\n\n<p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。\nこのモジュールを使用するには <code>require(&#39;fs&#39;)</code> してください。\n全てのメソッドは非同期と同期の形式があります。\n\n</p>\n<!--\nThe asynchronous form always take a completion callback as its last argument.\nThe arguments passed to the completion callback depend on the method, but the\nfirst argument is always reserved for an exception. If the operation was\ncompleted successfully, then the first argument will be `null` or `undefined`.\n\nWhen using the synchronous form any exceptions are immediately thrown.\nYou can use try/catch to handle exceptions or allow them to bubble up.\n-->\n\n<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。\n引数として渡される完了コールバックはメソッドに依存しますが、\n最初の引数は常に例外のために予約されています。\n操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります\n\n</p>\n<p>同期の形式では、全ての例外はすぐにスローされます。\n例外は try/catch で捕まえることも、そのまま通過させることもできます。\n\n</p>\n<!--\nHere is an example of the asynchronous version:\n-->\n\n<p>非同期バージョンの例です:\n\n</p>\n<pre><code>var fs = require(&#39;fs&#39;);\n\nfs.unlink(&#39;/tmp/hello&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;successfully deleted /tmp/hello&#39;);\n});</code></pre>\n<!--\nHere is the synchronous version:\n-->\n\n<p>同期バージョンです:\n\n</p>\n<pre><code>var fs = require(&#39;fs&#39;);\n\nfs.unlinkSync(&#39;/tmp/hello&#39;)\nconsole.log(&#39;successfully deleted /tmp/hello&#39;);</code></pre>\n<!--\nWith the asynchronous methods there is no guaranteed ordering. So the\nfollowing is prone to error:\n-->\n\n<p>非同期メソッドでは順序の保証はありません。\n以下のような傾向のエラーがあります。\n\n</p>\n<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;renamed complete&#39;);\n});\nfs.stat(&#39;/tmp/world&#39;, function (err, stats) {\n  if (err) throw err;\n  console.log(&#39;stats: &#39; + JSON.stringify(stats));\n});</code></pre>\n<!--\nIt could be that `fs.stat` is executed before `fs.rename`.\nThe correct way to do this is to chain the callbacks.\n-->\n\n<p><code>fs.stat</code> は <code>fs.rename</code> より先に実行される可能性がありrます。\n正しい方法はコールバックをチェーンすることです。\n\n</p>\n<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {\n  if (err) throw err;\n  fs.stat(&#39;/tmp/world&#39;, function (err, stats) {\n    if (err) throw err;\n    console.log(&#39;stats: &#39; + JSON.stringify(stats));\n  });\n});</code></pre>\n<!--\nIn busy processes, the programmer is _strongly encouraged_ to use the\nasynchronous versions of these calls. The synchronous versions will block\nthe entire process until they complete--halting all connections.\n\nRelative path to filename can be used, remember however that this path will be\nrelative to `process.cwd()`.\n-->\n\n<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。\n同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。\n\n</p>\n<p>ファイル名には相対パスを使うことが出来ます。しかし、このパスは\n<code>process.cwd()</code> からの相対パスであることを思い出してください。\n\n</p>\n<!--\nMost fs functions let you omit the callback argument. If you do, a default\ncallback is used that rethrows errors. To get a trace to the original call\nsite, set the NODE_DEBUG environment variable:\n-->\n\n<p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。\nそうすると、エラーを再スローするコールバックがデフォルトとして使用されます。\n本来の呼び出し元のトレースを取得するには、<code>NODE_DEBUG</code>\n環境変数を設定してください:\n\n</p>\n<pre><code>$ cat script.js\nfunction bad() {\n  require(&#39;fs&#39;).readFile(&#39;/&#39;);\n}\nbad();\n\n$ env NODE_DEBUG=fs node script.js\nfs.js:66\n        throw err;\n              ^\nError: EISDIR, read\n    at rethrow (fs.js:61:21)\n    at maybeCallback (fs.js:79:42)\n    at Object.fs.readFile (fs.js:153:18)\n    at bad (/path/to/script.js:2:17)\n    at Object.&lt;anonymous&gt; (/path/to/script.js:5:1)\n    &lt;etc.&gt;</code></pre>\n",
+      "desc": "<!--\nFile I/O is provided by simple wrappers around standard POSIX functions.  To\nuse this module do `require('fs')`. All the methods have asynchronous and\nsynchronous forms.\n-->\n\n<p>File I/O は POSIX 標準の関数に対する単純なラッパーとして提供されます。\nこのモジュールを使用するには <code>require(&#39;fs&#39;)</code> してください。\n全てのメソッドは非同期と同期の形式があります。\n\n</p>\n<!--\nThe asynchronous form always take a completion callback as its last argument.\nThe arguments passed to the completion callback depend on the method, but the\nfirst argument is always reserved for an exception. If the operation was\ncompleted successfully, then the first argument will be `null` or `undefined`.\n\nWhen using the synchronous form any exceptions are immediately thrown.\nYou can use try/catch to handle exceptions or allow them to bubble up.\n-->\n\n<p>非同期の形式は常に最後の引数として完了コールバックを受け取ります。\n引数として渡される完了コールバックはメソッドに依存しますが、\n最初の引数は常に例外のために予約されています。\n操作が成功で完了すると最初の引数は <code>null</code> または <code>undefined</code> となります\n\n</p>\n<p>同期の形式では、全ての例外はすぐにスローされます。\n例外は try/catch で捕まえることも、そのまま通過させることもできます。\n\n</p>\n<!--\nHere is an example of the asynchronous version:\n-->\n\n<p>非同期バージョンの例です:\n\n</p>\n<pre><code>var fs = require(&#39;fs&#39;);\n\nfs.unlink(&#39;/tmp/hello&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;successfully deleted /tmp/hello&#39;);\n});</code></pre>\n<!--\nHere is the synchronous version:\n-->\n\n<p>同期バージョンです:\n\n</p>\n<pre><code>var fs = require(&#39;fs&#39;);\n\nfs.unlinkSync(&#39;/tmp/hello&#39;)\nconsole.log(&#39;successfully deleted /tmp/hello&#39;);</code></pre>\n<!--\nWith the asynchronous methods there is no guaranteed ordering. So the\nfollowing is prone to error:\n-->\n\n<p>非同期メソッドでは順序の保証はありません。\n以下のような傾向のエラーがあります。\n\n</p>\n<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {\n  if (err) throw err;\n  console.log(&#39;renamed complete&#39;);\n});\nfs.stat(&#39;/tmp/world&#39;, function (err, stats) {\n  if (err) throw err;\n  console.log(&#39;stats: &#39; + JSON.stringify(stats));\n});</code></pre>\n<!--\nIt could be that `fs.stat` is executed before `fs.rename`.\nThe correct way to do this is to chain the callbacks.\n-->\n\n<p><code>fs.stat</code> は <code>fs.rename</code> より先に実行される可能性がありrます。\n正しい方法はコールバックをチェーンすることです。\n\n</p>\n<pre><code>fs.rename(&#39;/tmp/hello&#39;, &#39;/tmp/world&#39;, function (err) {\n  if (err) throw err;\n  fs.stat(&#39;/tmp/world&#39;, function (err, stats) {\n    if (err) throw err;\n    console.log(&#39;stats: &#39; + JSON.stringify(stats));\n  });\n});</code></pre>\n<!--\nIn busy processes, the programmer is _strongly encouraged_ to use the\nasynchronous versions of these calls. The synchronous versions will block\nthe entire process until they complete--halting all connections.\n\nRelative path to filename can be used, remember however that this path will be\nrelative to `process.cwd()`.\n-->\n\n<p>忙しいプロセスでは、プログラマはこれらの非同期バージョンを使うことが<em>強く推奨</em>されます。\n同期バージョンはそれが完了するまでプロセス全体をブロックします － 全ての接続を停止します。\n\n</p>\n<p>ファイル名には相対パスを使うことが出来ます。しかし、このパスは\n<code>process.cwd()</code> からの相対パスであることを思い出してください。\n\n</p>\n<!--\nMost fs functions let you omit the callback argument. If you do, a default\ncallback is used that ignores errors, but prints a deprecation\nwarning.\n-->\n\n<p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。\nそうすると、エラーを無視するコールバックがデフォルトとして使用され、\n廃止予定の警告が出力されます。\n\n</p>\n<!--\n**IMPORTANT**: Omitting the callback is deprecated.  v0.12 will throw the\nerrors as exceptions.\n-->\n\n<p><strong>重要</strong>: コールバックの省略は廃止予定です。v0.12 は例外をスローするでしょう。\n\n\n</p>\n",
       "methods": [
         {
-          "textRaw": "fs.rename(oldPath, newPath, [callback])",
+          "textRaw": "fs.rename(oldPath, newPath, callback)",
           "type": "method",
           "name": "rename",
           "desc": "<!--\nAsynchronous rename(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の rename(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -5797,8 +5815,7 @@
                   "name": "newPath"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -5823,7 +5840,7 @@
           ]
         },
         {
-          "textRaw": "fs.ftruncate(fd, len, [callback])",
+          "textRaw": "fs.ftruncate(fd, len, callback)",
           "type": "method",
           "name": "ftruncate",
           "desc": "<!--\nAsynchronous ftruncate(2). No arguments other than a possible exception are\ngiven to the completion callback.\n-->\n\n<p>非同期の ftruncate(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -5837,8 +5854,7 @@
                   "name": "len"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -5863,7 +5879,7 @@
           ]
         },
         {
-          "textRaw": "fs.truncate(path, len, [callback])",
+          "textRaw": "fs.truncate(path, len, callback)",
           "type": "method",
           "name": "truncate",
           "desc": "<!--\nAsynchronous truncate(2). No arguments other than a possible exception are\ngiven to the completion callback.\n-->\n\n<p>非同期の truncate(2)。\n完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -5877,8 +5893,7 @@
                   "name": "len"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -5903,7 +5918,7 @@
           ]
         },
         {
-          "textRaw": "fs.chown(path, uid, gid, [callback])",
+          "textRaw": "fs.chown(path, uid, gid, callback)",
           "type": "method",
           "name": "chown",
           "desc": "<!--\nAsynchronous chown(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の chown(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -5920,8 +5935,7 @@
                   "name": "gid"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -5949,7 +5963,7 @@
           ]
         },
         {
-          "textRaw": "fs.fchown(fd, uid, gid, [callback])",
+          "textRaw": "fs.fchown(fd, uid, gid, callback)",
           "type": "method",
           "name": "fchown",
           "desc": "<!--\nAsynchronous fchown(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の fchown(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -5966,8 +5980,7 @@
                   "name": "gid"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -5995,7 +6008,7 @@
           ]
         },
         {
-          "textRaw": "fs.lchown(path, uid, gid, [callback])",
+          "textRaw": "fs.lchown(path, uid, gid, callback)",
           "type": "method",
           "name": "lchown",
           "desc": "<!--\nAsynchronous lchown(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の lchown(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6012,8 +6025,7 @@
                   "name": "gid"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6041,7 +6053,7 @@
           ]
         },
         {
-          "textRaw": "fs.chmod(path, mode, [callback])",
+          "textRaw": "fs.chmod(path, mode, callback)",
           "type": "method",
           "name": "chmod",
           "desc": "<!--\nAsynchronous chmod(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の chmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6055,8 +6067,7 @@
                   "name": "mode"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6081,7 +6092,7 @@
           ]
         },
         {
-          "textRaw": "fs.fchmod(fd, mode, [callback])",
+          "textRaw": "fs.fchmod(fd, mode, callback)",
           "type": "method",
           "name": "fchmod",
           "desc": "<!--\nAsynchronous fchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の fchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6095,8 +6106,7 @@
                   "name": "mode"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6121,7 +6131,7 @@
           ]
         },
         {
-          "textRaw": "fs.lchmod(path, mode, [callback])",
+          "textRaw": "fs.lchmod(path, mode, callback)",
           "type": "method",
           "name": "lchmod",
           "desc": "<!--\nAsynchronous lchmod(2). No arguments other than a possible exception\nare given to the completion callback.\n-->\n\n<p>非同期の lchmod(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n<!--\nOnly available on Mac OS X.\n-->\n\n<p>Mac OS X でのみ利用可能です。\n\n</p>\n",
@@ -6135,8 +6145,7 @@
                   "name": "mode"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6161,7 +6170,7 @@
           ]
         },
         {
-          "textRaw": "fs.stat(path, [callback])",
+          "textRaw": "fs.stat(path, callback)",
           "type": "method",
           "name": "stat",
           "desc": "<!--\nAsynchronous stat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a [fs.Stats](#fs_class_fs_stats) object.  See the [fs.Stats](#fs_class_fs_stats)\nsection below for more information.\n-->\n\n<p>非同期の stat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、\n<code>stats</code> は <a href=\"#fs_class_fs_stats\">fs.Stats</a> オブジェクトです。\n詳細は <a href=\"#fs_class_fs_stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n<!--\nSee the [fs.Stats](#fs.Stats) section below for more information.\n-->\n\n<p>より詳しくは後述の <a href=\"#fs.Stats\">fs.Stats</a> の節を参照してください。\n\n</p>\n",
@@ -6172,15 +6181,14 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
           ]
         },
         {
-          "textRaw": "fs.lstat(path, [callback])",
+          "textRaw": "fs.lstat(path, callback)",
           "type": "method",
           "name": "lstat",
           "desc": "<!--\nAsynchronous lstat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a `fs.Stats` object. `lstat()` is identical to `stat()`, except that if\n`path` is a symbolic link, then the link itself is stat-ed, not the file that it\nrefers to.\n-->\n\n<p>非同期の lstat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code>で、\n<code>stats</code> は <code>fs.Stats</code> オブジェクトです。\n<code>lstat()</code> はパスがシンボリックリンクだった場合に、\n参照先のファイルではなくそのリンク自身が調べられる点を除いて <code>stat()</code> と同じす。\n\n</p>\n",
@@ -6191,15 +6199,14 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
           ]
         },
         {
-          "textRaw": "fs.fstat(fd, [callback])",
+          "textRaw": "fs.fstat(fd, callback)",
           "type": "method",
           "name": "fstat",
           "desc": "<!--\nAsynchronous fstat(2). The callback gets two arguments `(err, stats)` where\n`stats` is a `fs.Stats` object. `fstat()` is identical to `stat()`, except that\nthe file to be stat-ed is specified by the file descriptor `fd`.\n-->\n\n<p>非同期の fstat(2)。コールバックは 2 つの引数を受け取る <code>(err, stats)</code> で、\n<code>stats</code> は <code>fs.Stats</code> オブジェクトです。\n状態を取得するファイルをファイル記述子 <code>fd</code> で指定することを除いて、\n<code>fstat()</code> は <code>stat()</code> と同じです。\n\n</p>\n",
@@ -6210,8 +6217,7 @@
                   "name": "fd"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6263,7 +6269,7 @@
           ]
         },
         {
-          "textRaw": "fs.link(srcpath, dstpath, [callback])",
+          "textRaw": "fs.link(srcpath, dstpath, callback)",
           "type": "method",
           "name": "link",
           "desc": "<!--\nAsynchronous link(2). No arguments other than a possible exception are given to\nthe completion callback.\n-->\n\n<p>非同期の link(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6277,8 +6283,7 @@
                   "name": "dstpath"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6303,7 +6308,7 @@
           ]
         },
         {
-          "textRaw": "fs.symlink(srcpath, dstpath, [type], [callback])",
+          "textRaw": "fs.symlink(srcpath, dstpath, [type], callback)",
           "type": "method",
           "name": "symlink",
           "desc": "<!--\nAsynchronous symlink(2). No arguments other than a possible exception are given\nto the completion callback.\n`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only \nused on Windows (ignored on other platforms).\nNote that Windows junction points require the destination path to be absolute.  When using\n`'junction'`, the `destination` argument will automatically be normalized to absolute path.\n-->\n\n<p>非同期の symlink(2)。\n完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n<code>type</code> 引数は <code>&#39;dir&#39;</code>、<code>&#39;file&#39;</code>、または <code>&#39;junction</code>&#39; (デフォルトは <code>&#39;file&#39;</code>)\nです。\nこれは Windows でのみ使われます (他のプラットフォームでは無視されます)。\nWindows のジャンクションポイントは対象に絶対パスを要求することに\n注意してください。\n<code>&#39;junction&#39;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。\n\n</p>\n",
@@ -6321,8 +6326,7 @@
                   "optional": true
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6351,7 +6355,7 @@
           ]
         },
         {
-          "textRaw": "fs.readlink(path, [callback])",
+          "textRaw": "fs.readlink(path, callback)",
           "type": "method",
           "name": "readlink",
           "desc": "<!--\nAsynchronous readlink(2). The callback gets two arguments `(err,\nlinkString)`.\n-->\n\n<p>非同期の readlink(2)。コールバックは 2 つの引数を受け取る <code>(err, linkString)</code>です。\n\n</p>\n",
@@ -6362,8 +6366,7 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6426,7 +6429,7 @@
           ]
         },
         {
-          "textRaw": "fs.unlink(path, [callback])",
+          "textRaw": "fs.unlink(path, callback)",
           "type": "method",
           "name": "unlink",
           "desc": "<!--\nAsynchronous unlink(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の unlink(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6437,8 +6440,7 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6460,7 +6462,7 @@
           ]
         },
         {
-          "textRaw": "fs.rmdir(path, [callback])",
+          "textRaw": "fs.rmdir(path, callback)",
           "type": "method",
           "name": "rmdir",
           "desc": "<!--\nAsynchronous rmdir(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の rmdir(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6471,8 +6473,7 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6494,7 +6495,7 @@
           ]
         },
         {
-          "textRaw": "fs.mkdir(path, [mode], [callback])",
+          "textRaw": "fs.mkdir(path, [mode], callback)",
           "type": "method",
           "name": "mkdir",
           "desc": "<!--\nAsynchronous mkdir(2). No arguments other than a possible exception are given\nto the completion callback. `mode` defaults to `0777`.\n-->\n\n<p>非同期の mkdir(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n<code>mode</code> のデフォルトは <code>0777</code> です。\n\n</p>\n",
@@ -6509,8 +6510,7 @@
                   "optional": true
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6536,7 +6536,7 @@
           ]
         },
         {
-          "textRaw": "fs.readdir(path, [callback])",
+          "textRaw": "fs.readdir(path, callback)",
           "type": "method",
           "name": "readdir",
           "desc": "<!--\nAsynchronous readdir(3).  Reads the contents of a directory.\nThe callback gets two arguments `(err, files)` where `files` is an array of\nthe names of the files in the directory excluding `'.'` and `'..'`.\n-->\n\n<p>非同期の readdir(3)。ディレクトリの内容を読み込みます。\nコールバックは 2 つの引数を受け取る <code>(err, files)</code>で、\n<code>files</code> は <code>&#39;.&#39;</code> と <code>&#39;..&#39;</code> を除くディレクトリ内のファイル名の配列です。\n\n</p>\n",
@@ -6547,8 +6547,7 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6570,7 +6569,7 @@
           ]
         },
         {
-          "textRaw": "fs.close(fd, [callback])",
+          "textRaw": "fs.close(fd, callback)",
           "type": "method",
           "name": "close",
           "desc": "<!--\nAsynchronous close(2).  No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の close(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6581,8 +6580,7 @@
                   "name": "fd"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6604,7 +6602,7 @@
           ]
         },
         {
-          "textRaw": "fs.open(path, flags, [mode], [callback])",
+          "textRaw": "fs.open(path, flags, [mode], callback)",
           "type": "method",
           "name": "open",
           "desc": "<!--\nAsynchronous file open. See open(2). `flags` can be:\n\n* `'r'` - Open file for reading.\nAn exception occurs if the file does not exist.\n\n* `'r+'` - Open file for reading and writing.\nAn exception occurs if the file does not exist.\n\n* `'rs'` - Open file for reading in synchronous mode. Instructs the operating\n  system to bypass the local file system cache.\n\n  This is primarily useful for opening files on NFS mounts as it allows you to\n  skip the potentially stale local cache. It has a very real impact on I/O\n  performance so don't use this mode unless you need it.\n\n  Note that this doesn't turn `fs.open()` into a synchronous blocking call.\n  If that's what you want then you should be using `fs.openSync()`\n\n* `'rs+'` - Open file for reading and writing, telling the OS to open it\n  synchronously. See notes for `'rs'` about using this with caution.\n\n* `'w'` - Open file for writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx'` - Like `'w'` but opens the file in exclusive mode.\n\n* `'w+'` - Open file for reading and writing.\nThe file is created (if it does not exist) or truncated (if it exists).\n\n* `'wx+'` - Like `'w+'` but opens the file in exclusive mode.\n\n* `'a'` - Open file for appending.\nThe file is created if it does not exist.\n\n* `'ax'` - Like `'a'` but opens the file in exclusive mode.\n\n* `'a+'` - Open file for reading and appending.\nThe file is created if it does not exist.\n\n* `'ax+'` - Like `'a+'` but opens the file in exclusive mode.\n\n`mode` defaults to `0666`. The callback gets two arguments `(err, fd)`.\n\nExclusive mode (`O_EXCL`) ensures that `path` is newly created. `fs.open()`\nfails if a file by that name already exists. On POSIX systems, symlinks are\nnot followed. Exclusive mode may or may not work with network file systems.\n-->\n\n<p>非同期のファイルオープン。open(2) を参照してください。\nフラグは以下になります:\n\n</p>\n<ul>\n<li><p><code>&#39;r&#39;</code> - ファイルを読み込み専用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;r+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルが存在しない場合は例外が発生します。</p>\n</li>\n<li><p><code>&#39;rs&#39;</code> - ファイルを同期モードで読み込むためにオープンします。\nオペレーティングシステムにローカルファイルシステムのキャッシュを\nバイパスするように指示します。</p>\n<p>これは主に NFS にマウントされたファイルをオープンして、潜在的に古い\nローカルキャッシュをスキップするのに役立ちます。\nこれはI/O パフォーマンスにとても深刻な影響を与えるため、必要でない限り\n使用しないでください。</p>\n<p>これは <code>fs.open()</code> を同期的なブロッキング呼び出しにするわけではないことに\n注意してください。\nそれが必要な場合は <code>fs.openSync()</code> を使用すべきです。</p>\n</li>\n<li><p><code>&#39;rs+&#39;</code> - ファイルを読み書き両方でオープンし、OS に同期的にオープンするように\n伝えます。これを使用する際の警告は <code>&#39;rs&#39;</code> の注意を参照してください。</p>\n</li>\n<li><p><code>&#39;w&#39;</code> - ファイルを書き込み専用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx&#39;</code> - <code>&#39;w&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;w+&#39;</code> - ファイルを読み書き両用でオープンします。\nファイルは作成される (存在しない場合) または長さ 0 に切り詰められます\n(存在する場合)。</p>\n</li>\n<li><p><code>&#39;wx+&#39;</code> - <code>&#39;w+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a&#39;</code> - ファイルを追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax&#39;</code> - <code>&#39;a&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n<li><p><code>&#39;a+&#39;</code> - ファイルを読み込みおよび追記用でオープンします。\nファイルが存在しない場合は作成されます。</p>\n</li>\n<li><p><code>&#39;ax+&#39;</code> - <code>&#39;a+&#39;</code> と似ていますが、ファイルを排他モードでオープンします。</p>\n</li>\n</ul>\n<p><code>mode</code> のデフォルトは 0666 です。\nコールバックは 2 つの引数を受け取る <code>(err, fd)</code>です。\n\n</p>\n<p>排他モード (<code>O_EXCL</code>) は、<code>path</code> が新しいファイルとして作成されることを\n確実にします。 指定された名前のファイルが既に存在する場合、\n<code>fs.open()</code> は失敗します。\nPOSIX システムでは、シンボリックリンクは辿られません。\n排他モードはネットワークファイルシステムでは動くかもしれませんし、\n動かないかもしれません。\n\n</p>\n",
@@ -6622,8 +6620,7 @@
                   "optional": true
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6652,7 +6649,7 @@
           ]
         },
         {
-          "textRaw": "fs.utimes(path, atime, mtime, [callback])",
+          "textRaw": "fs.utimes(path, atime, mtime, callback)",
           "type": "method",
           "name": "utimes",
           "desc": "<!--\nChange file timestamps.\nChange file timestamps of the file referenced by the supplied path.\n-->\n\n<p>渡されたパスが参照するファイルのタイムスタンプを変更します。\n\n</p>\n",
@@ -6682,8 +6679,7 @@
                   "name": "mtime"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6711,7 +6707,7 @@
           ]
         },
         {
-          "textRaw": "fs.futimes(fd, atime, mtime, [callback])",
+          "textRaw": "fs.futimes(fd, atime, mtime, callback)",
           "type": "method",
           "name": "futimes",
           "desc": "<!--\nChange the file timestamps of a file referenced by the supplied file\ndescriptor.\n-->\n\n<p>渡されたファイル記述子が参照するファイルのタイムスタンプを変更します。\n\n</p>\n",
@@ -6741,8 +6737,7 @@
                   "name": "mtime"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6770,7 +6765,7 @@
           ]
         },
         {
-          "textRaw": "fs.fsync(fd, [callback])",
+          "textRaw": "fs.fsync(fd, callback)",
           "type": "method",
           "name": "fsync",
           "desc": "<!--\nAsynchronous fsync(2). No arguments other than a possible exception are given\nto the completion callback.\n-->\n\n<p>非同期の fsync(2)。完了コールバックには発生し得る例外以外に引数が渡されることはありません。\n\n</p>\n",
@@ -6781,8 +6776,7 @@
                   "name": "fd"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6804,7 +6798,7 @@
           ]
         },
         {
-          "textRaw": "fs.write(fd, buffer, offset, length, position, [callback])",
+          "textRaw": "fs.write(fd, buffer, offset, length, position, callback)",
           "type": "method",
           "name": "write",
           "desc": "<!--\nWrite `buffer` to the file specified by `fd`.\n-->\n\n<p><code>fd</code> で指定されたファイルに <code>buffer</code> を書き込みます。\n\n</p>\n<!--\n`offset` and `length` determine the part of the buffer to be written.\n-->\n\n<p><code>offset</code> と <code>length</code> は書き込まれるバッファの部分を決定します。\n\n</p>\n<!--\n`position` refers to the offset from the beginning of the file where this data\nshould be written. If `position` is `null`, the data will be written at the\ncurrent position.\nSee pwrite(2).\n-->\n\n<p><code>position</code> はデータが書き込まれる位置をファイルの先頭からのオフセットで示します。\n<code>position</code> が <code>null</code> の場合、データは現在の位置から書き込まれます。\npwrite(2) を参照してください。\n\n</p>\n<!--\nThe callback will be given two arguments `(err, written)` where `written`\nspecifies how many _bytes_ were written.\nThe callback will be given three arguments `(err, written, buffer)` where `written`\nspecifies how many _bytes_ were written from `buffer`.\n-->\n\n<p>コールバックは 3 つの引数が与えられる <code>(err, written, buffer)</code> で、\n<code>written</code> は <code>buffer</code> から書き込まれた<em>バイト数</em>を示します。\n\n</p>\n<!--\nNote that it is unsafe to use `fs.write` multiple times on the same file\nwithout waiting for the callback. For this scenario,\n`fs.createWriteStream` is strongly recommended.\n-->\n\n<p>同じファイルに対してコールバックされるのを待つことなく <code>fs.write()</code> を何度も呼び出すことは、安全ではないことに注意してください。\nこのシナリオでは、 <code>fs.createWriteStream()</code> を強く推奨します。\n\n</p>\n",
@@ -6827,8 +6821,7 @@
                   "name": "position"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6862,7 +6855,7 @@
           ]
         },
         {
-          "textRaw": "fs.read(fd, buffer, offset, length, position, [callback])",
+          "textRaw": "fs.read(fd, buffer, offset, length, position, callback)",
           "type": "method",
           "name": "read",
           "desc": "<!--\nRead data from the file specified by `fd`.\n-->\n\n<p><code>fd</code> で指定されたファイルからデータを読み込みます。\n\n</p>\n<!--\n`buffer` is the buffer that the data will be written to.\n-->\n\n<p><code>buffer</code> はデータが書き込まれるバッファです。\n\n</p>\n<!--\n`offset` is offset within the buffer where reading will start.\n-->\n\n<p><code>offset</code> は読み込みを開始するバッファ内のオフセットです。\n\n</p>\n<!--\n`length` is an integer specifying the number of bytes to read.\n-->\n\n<p><code>length</code> は読み込むバイト数を指定する整数です。\n\n</p>\n<!--\n`position` is an integer specifying where to begin reading from in the file.\nIf `position` is `null`, data will be read from the current file position.\n-->\n\n<p><code>position</code> はファイルの読み込みを開始する位置を指定する整数です。\n<code>position</code> が <code>null</code> の場合、データは現在の位置から読み込まれます。\n\n</p>\n<!--\nThe callback is given the three arguments, `(err, bytesRead, buffer)`.\n-->\n\n<p>コールバックは3つの引数が与えられる <code>(err, bytesRead, buffer)</code> です。\n\n</p>\n",
@@ -6885,8 +6878,7 @@
                   "name": "position"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6920,10 +6912,10 @@
           ]
         },
         {
-          "textRaw": "fs.readFile(filename, [options], [callback])",
+          "textRaw": "fs.readFile(filename, [options], callback)",
           "type": "method",
           "name": "readFile",
-          "* `filename` {String}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`null`\n  * `flag` {String} default = `'r'`",
+          "* `filename` {String}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`null`\n  * `flag` {String} default = `'r'`\n* `callback` {Function}",
           "signatures": [
             {
               "params": [
@@ -6953,8 +6945,9 @@
                   "optional": true
                 },
                 {
+                  "textRaw": "`callback` {Function} ",
                   "name": "callback",
-                  "optional": true
+                  "type": "Function"
                 }
               ]
             },
@@ -6968,8 +6961,7 @@
                   "optional": true
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -6996,10 +6988,10 @@
           ]
         },
         {
-          "textRaw": "fs.writeFile(filename, data, [options], [callback])",
+          "textRaw": "fs.writeFile(filename, data, [options], callback)",
           "type": "method",
           "name": "writeFile",
-          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'w'`",
+          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'w'`\n* `callback` {Function}",
           "signatures": [
             {
               "params": [
@@ -7040,8 +7032,9 @@
                   "optional": true
                 },
                 {
+                  "textRaw": "`callback` {Function} ",
                   "name": "callback",
-                  "optional": true
+                  "type": "Function"
                 }
               ]
             },
@@ -7058,8 +7051,7 @@
                   "optional": true
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -7089,10 +7081,10 @@
           ]
         },
         {
-          "textRaw": "fs.appendFile(filename, data, [options], [callback])",
+          "textRaw": "fs.appendFile(filename, data, [options], callback)",
           "type": "method",
           "name": "appendFile",
-          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'a'`",
+          "* `filename` {String}\n* `data` {String | Buffer}\n* `options` {Object}\n  * `encoding` {String | Null} default": "`'utf8'`\n  * `mode` {Number} default = `438` (aka `0666` in Octal)\n  * `flag` {String} default = `'a'`\n* `callback` {Function}",
           "signatures": [
             {
               "params": [
@@ -7133,8 +7125,9 @@
                   "optional": true
                 },
                 {
+                  "textRaw": "`callback` {Function} ",
                   "name": "callback",
-                  "optional": true
+                  "type": "Function"
                 }
               ]
             },
@@ -7151,8 +7144,7 @@
                   "optional": true
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -7274,7 +7266,7 @@
           ]
         },
         {
-          "textRaw": "fs.exists(path, [callback])",
+          "textRaw": "fs.exists(path, callback)",
           "type": "method",
           "name": "exists",
           "desc": "<!--\nTest whether or not the given path exists by checking with the file system.\nThen call the `callback` argument with either true or false.  Example:\n-->\n\n<p>与えられたパスがファイルシステム上に存在するかどうか検査します。\nそして引数の <code>callback</code> を真か偽か検査の結果とともに呼び出します。\n例:\n\n</p>\n<pre><code>fs.exists(&#39;/etc/passwd&#39;, function (exists) {\n  util.debug(exists ? &quot;it&#39;s there&quot; : &quot;no passwd!&quot;);\n});</code></pre>\n",
@@ -7285,8 +7277,7 @@
                   "name": "path"
                 },
                 {
-                  "name": "callback",
-                  "optional": true
+                  "name": "callback"
                 }
               ]
             }
@@ -7456,7 +7447,7 @@
           "textRaw": "path.join([path1], [path2], [...])",
           "type": "method",
           "name": "join",
-          "desc": "<!--\nJoin all arguments together and normalize the resulting path.\nNon-string arguments are ignored.\n-->\n\n<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。\n文字列でない引数は無視されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.join(&#39;/foo&#39;, &#39;bar&#39;, &#39;baz/asdf&#39;, &#39;quux&#39;, &#39;..&#39;)\n// returns\n&#39;/foo/bar/baz/asdf&#39;\n\npath.join(&#39;foo&#39;, {}, &#39;bar&#39;)\n// returns\n&#39;foo/bar&#39;</code></pre>\n",
+          "desc": "<!--\nJoin all arguments together and normalize the resulting path.\n-->\n\n<p>全ての引数を一つに結合し、結果として得られるパスを正規化します。\n\n</p>\n<!--\nArguments must be strings.  In v0.8, non-string arguments were\nsilently ignored.  In v0.10 and up, an exception is thrown.\n-->\n\n<p>引数は文字列でなくてはなりません。\nv0.8 では、非文字列の引数は静かに無視されていました。\nv0.10 以降では、例外がスローされます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>path.join(&#39;/foo&#39;, &#39;bar&#39;, &#39;baz/asdf&#39;, &#39;quux&#39;, &#39;..&#39;)\n// returns\n&#39;/foo/bar/baz/asdf&#39;\n\npath.join(&#39;foo&#39;, {}, &#39;bar&#39;)\n// returns\n&#39;foo/bar&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -8384,9 +8375,9 @@
       ],
       "classes": [
         {
-          "textRaw": "Class: Socket",
+          "textRaw": "Class: dgram.Socket",
           "type": "class",
-          "name": "Socket",
+          "name": "dgram.Socket",
           "desc": "<!--\nThe dgram Socket class encapsulates the datagram functionality.  It\nshould be created via `dgram.createSocket(type, [callback])`.\n-->\n\n<p>dgram Scoket クラスはデータグラム機能をカプセル化します。\nそれは <code>dgram.createSocket(type, [callback])</code> を通じて生成されます。\n\n</p>\n",
           "events": [
             {
@@ -8420,7 +8411,7 @@
           ],
           "methods": [
             {
-              "textRaw": "dgram.send(buf, offset, length, port, address, [callback])",
+              "textRaw": "socket.send(buf, offset, length, port, address, [callback])",
               "type": "method",
               "name": "send",
               "desc": "<!--\n* `buf` Buffer object.  Message to be sent\n* `offset` Integer. Offset in the buffer where the message starts.\n* `length` Integer. Number of bytes in the message.\n* `port` Integer. destination port\n* `address` String. destination IP\n* `callback` Function. Callback when message is done being delivered.\n  Optional.\n-->\n\n<ul>\n<li><code>buf</code> Buffer object.  送信されるメッセージ</li>\n<li><code>offset</code> Integer. メッセージの開始位置となるバッファ内のオフセット</li>\n<li><code>length</code> Integer. メッセージのバイト長</li>\n<li><code>port</code> Integer. 接続先のポート番号</li>\n<li><code>address</code> String. 接続先の IP</li>\n<li><code>callback</code> Function. メッセージの配信が完了した後にコールバックされる、\nOptional.</li>\n</ul>\n<!--\nFor UDP sockets, the destination port and IP address must be specified.  A string\nmay be supplied for the `address` parameter, and it will be resolved with DNS.  An\noptional callback may be specified to detect any DNS errors and when `buf` may be\nre-used.  Note that DNS lookups will delay the time that a send takes place, at\nleast until the next tick.  The only way to know for sure that a send has taken place\nis to use the callback.\n\nIf the socket has not been previously bound with a call to `bind`, it's\nassigned a random port number and bound to the \"all interfaces\" address\n(0.0.0.0 for `udp4` sockets, ::0 for `udp6` sockets).\n-->\n\n<p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。\n<code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。\nDNS エラーと <code>buf</code> が再利用可能になった時のためにオプションのコールバックを指定することができます。\nDNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。\n送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。\n\n</p>\n<p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、\nランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます\n(<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。\n<!--\nExample of sending a UDP packet to a random port on `localhost`;\n-->\n\n</p>\n<p><code>localhost</code> の適当なポートに UDP パケットを送信する例;\n\n</p>\n<pre><code>var dgram = require(&#39;dgram&#39;);\nvar message = new Buffer(&quot;Some bytes&quot;);\nvar client = dgram.createSocket(&quot;udp4&quot;);\nclient.send(message, 0, message.length, 41234, &quot;localhost&quot;, function(err, bytes) {\n  client.close();\n});</code></pre>\n<!--\n**A Note about UDP datagram size**\n\nThe maximum size of an `IPv4/v6` datagram depends on the `MTU` (_Maximum Transmission Unit_)\nand on the `Payload Length` field size.\n\n- The `Payload Length` field is `16 bits` wide, which means that a normal payload\n  cannot be larger than 64K octets including internet header and data\n  (65,507 bytes = 65,535 − 8 bytes UDP header − 20 bytes IP header);\n  this is generally true for loopback interfaces, but such long datagrams\n  are impractical for most hosts and networks.\n\n- The `MTU` is the largest size a given link layer technology can support for datagrams.\n  For any link, `IPv4` mandates a minimum `MTU` of `68` octets, while the recommended `MTU`\n  for IPv4 is `576` (typically recommended as the `MTU` for dial-up type applications),\n  whether they arrive whole or in fragments.\n\n  For `IPv6`, the minimum `MTU` is `1280` octets, however, the mandatory minimum\n  fragment reassembly buffer size is `1500` octets.\n  The value of `68` octets is very small, since most current link layer technologies have\n  a minimum `MTU` of `1500` (like Ethernet).\n\nNote that it's impossible to know in advance the MTU of each link through which\na packet might travel, and that generally sending a datagram greater than\nthe (receiver) `MTU` won't work (the packet gets silently dropped, without\ninforming the source that the data did not reach its intended recipient).\n-->\n\n<p><strong>UDP データグラムのサイズについて</strong>\n\n</p>\n<p><code>IPv4/v6</code> データグラムの最大のサイズは <code>MTU</code> (<em>Maximum Transmission Unit</em>) と、\n<code>Payload Length</code> フィールドサイズに依存します。\n\n</p>\n<ul>\n<li><p><code>Payload Length</code> フィールドサイズは 16bit 長で、これは通常のペイロードが\nIP ヘッダとデータ含めて 64K オクテットより長くなれないことを意味します\n(65,507 バイト = 65,535 − 8 バイトの UDP ヘッダ − 20 バイトの IP ヘッダ);\nこれは一般的にループバックインタフェースでは正しいものの、\nほとんどのホストとネットワークにとって長大なデータグラムは\n現実的ではありません。</p>\n</li>\n<li><p><code>MTU</code> はリンク層により大きなサイズを与える技術で、\nデータグラムもサポートできます。\nどんなリンクでも、それらが全体として到着するか断片化されるかに関わらず、\n<code>IPv4</code> は最低 <code>69</code> オクテット必要で、推奨される <code>IPv4</code> の <code>MTU</code> は <code>576</code> です\n(典型的なダイヤルアップ型アプリケーションの <code>MUT</code> 推奨値)。</p>\n<p><code>IPv6</code> では最小の <code>MTU</code> は <code>1280</code> オクテットですが、フラグメントを再構築する\nバッファサイズは最低 <code>1500</code> オクテットが必要です。\n<code>68</code> オクテットはとても小さいので、もっとも現代的なリンク層技術では、\n最小の <code>MTU</code> は <code>1500</code> です (イーサネットと同じです)。</p>\n</li>\n</ul>\n<p>パケットが通過する各リンクの MTU をあらかじめ知ることは\nできないこと、(受信側の) <code>MTU</code> より大きなデータグラムを送信しても\n通常は動作しないことに注意してください\n(パケットは送り主に知らされることなく黙って捨てられ、\n意図した受信者に到達することはありません)。\n\n\n</p>\n",
@@ -8451,7 +8442,7 @@
               ]
             },
             {
-              "textRaw": "dgram.bind(port, [address], [callback])",
+              "textRaw": "socket.bind(port, [address], [callback])",
               "type": "method",
               "name": "bind",
               "signatures": [
@@ -8495,7 +8486,7 @@
               "desc": "<!--\nFor UDP sockets, listen for datagrams on a named `port` and optional `address`.\nIf `address` is not specified, the OS will try to listen on all addresses.\n-->\n\n<p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを待ち受けます。\n<code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。\n\n</p>\n<!--\nThe `callback` argument, if provided, is added as a one-shot `'listening'`\nevent listener.\n-->\n\n<p><code>callback</code> 引数は、もし提供されると <code>&#39;listening&#39;</code> イベントの一回限りの\nリスナとして追加されます。\n\n</p>\n<!--\nExample of a UDP server listening on port 41234:\n-->\n\n<p>41234 番ポートを待ち受ける UDP サーバの例:\n\n</p>\n<pre><code>var dgram = require(&quot;dgram&quot;);\n\nvar server = dgram.createSocket(&quot;udp4&quot;);\n\nserver.on(&quot;message&quot;, function (msg, rinfo) {\n  console.log(&quot;server got: &quot; + msg + &quot; from &quot; +\n    rinfo.address + &quot;:&quot; + rinfo.port);\n});\n\nserver.on(&quot;listening&quot;, function () {\n  var address = server.address();\n  console.log(&quot;server listening &quot; +\n      address.address + &quot;:&quot; + address.port);\n});\n\nserver.bind(41234);\n// server listening 0.0.0.0:41234</code></pre>\n"
             },
             {
-              "textRaw": "dgram.close()",
+              "textRaw": "socket.close()",
               "type": "method",
               "name": "close",
               "desc": "<!--\nClose the underlying socket and stop listening for data on it.\n-->\n\n<p>下層のソケットをクローズし、データの待ち受けを終了します。\n\n</p>\n",
@@ -8506,7 +8497,7 @@
               ]
             },
             {
-              "textRaw": "dgram.address()",
+              "textRaw": "socket.address()",
               "type": "method",
               "name": "address",
               "desc": "<!--\nReturns an object containing the address information for a socket.  For UDP sockets,\nthis object will contain `address` , `family` and `port`.\n-->\n\n<p>オブジェクトが持っているソケットのアドレス情報を返します。\nこのオブジェクトは <code>address</code>、<code>port</code>、そして <code>family</code> を持っています。\n\n</p>\n",
@@ -8517,7 +8508,7 @@
               ]
             },
             {
-              "textRaw": "dgram.setBroadcast(flag)",
+              "textRaw": "socket.setBroadcast(flag)",
               "type": "method",
               "name": "setBroadcast",
               "signatures": [
@@ -8541,7 +8532,7 @@
               "desc": "<!--\nSets or clears the `SO_BROADCAST` socket option.  When this option is set, UDP packets\nmay be sent to a local interface's broadcast address.\n-->\n\n<p>ソケットのオプション <code>SO_BROADCAST</code> を設定またはクリアします。\nこのオプションが設定されると、UDP パケットはローカルインタフェースのブロードキャスト用アドレスに送信されます。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.setTTL(ttl)",
+              "textRaw": "socket.setTTL(ttl)",
               "type": "method",
               "name": "setTTL",
               "signatures": [
@@ -8565,7 +8556,7 @@
               "desc": "<!--\nSets the `IP_TTL` socket option.  TTL stands for \"Time to Live,\" but in this context it\nspecifies the number of IP hops that a packet is allowed to go through.  Each router or\ngateway that forwards a packet decrements the TTL.  If the TTL is decremented to 0 by a\nrouter, it will not be forwarded.  Changing TTL values is typically done for network\nprobes or when multicasting.\n-->\n\n<p>ソケットオプションの <code>IP_TTL</code> を設定します。\nTTL は「生存期間」を表しますが、このコンテキストではパケットが通過を許可される IP のホップ数を指定します。\n各ルータまたはゲートウェイはパケットを送出する際 TTL をデクリメントします。\nルータによって TTL がデクリメントされて 0 になるとそれは送出されません。\nTTL 値の変更は通常、ネットワークの調査やマルチキャストで使われます。\n\n</p>\n<!--\nThe argument to `setTTL()` is a number of hops between 1 and 255.  The default on most\nsystems is 64.\n-->\n\n<p><code>setTTL()</code> の引数は 1 から 255 のホップ数でです。ほとんどのシステムでデフォルトは 64 です。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.setMulticastTTL(ttl)",
+              "textRaw": "socket.setMulticastTTL(ttl)",
               "type": "method",
               "name": "setMulticastTTL",
               "signatures": [
@@ -8589,7 +8580,7 @@
               "desc": "<!--\nSets the `IP_MULTICAST_TTL` socket option.  TTL stands for \"Time to Live,\" but in this\ncontext it specifies the number of IP hops that a packet is allowed to go through,\nspecifically for multicast traffic.  Each router or gateway that forwards a packet\ndecrements the TTL. If the TTL is decremented to 0 by a router, it will not be forwarded.\n\nThe argument to `setMulticastTTL()` is a number of hops between 0 and 255.  The default on most\nsystems is 1.\n-->\n\n<p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。\nTTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。\nそれぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。\nTTL がルーターによって 0 までデクリメントされると、それは転送されません。\n<code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。\nほとんどのシステムでデフォルトは 1 です。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.setMulticastLoopback(flag)",
+              "textRaw": "socket.setMulticastLoopback(flag)",
               "type": "method",
               "name": "setMulticastLoopback",
               "signatures": [
@@ -8613,7 +8604,7 @@
               "desc": "<!--\nSets or clears the `IP_MULTICAST_LOOP` socket option.  When this option is set, multicast\npackets will also be received on the local interface.\n-->\n\n<p><code>IP_MULTICAST_LOOP</code> ソケットオプションを設定またはクリアします。\nこのオプションが設定されると、マルチキャストのパケットはローカルインタフェースでも受信できるようになります。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.addMembership(multicastAddress, [multicastInterface])",
+              "textRaw": "socket.addMembership(multicastAddress, [multicastInterface])",
               "type": "method",
               "name": "addMembership",
               "signatures": [
@@ -8647,7 +8638,7 @@
               "desc": "<!--\nTells the kernel to join a multicast group with `IP_ADD_MEMBERSHIP` socket option.\n\nIf `multicastInterface` is not specified, the OS will try to add membership to all valid\ninterfaces.\n-->\n\n<p><code>IP_ADD_MEMBERSHIP</code> ソケットオプションを設定し、マルチキャストグループに参加することをカーネルに伝えます。\n\n</p>\n<p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップに加えようとします。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.dropMembership(multicastAddress, [multicastInterface])",
+              "textRaw": "socket.dropMembership(multicastAddress, [multicastInterface])",
               "type": "method",
               "name": "dropMembership",
               "signatures": [
@@ -8681,7 +8672,7 @@
               "desc": "<!--\nOpposite of `addMembership` - tells the kernel to leave a multicast group with\n`IP_DROP_MEMBERSHIP` socket option. This is automatically called by the kernel\nwhen the socket is closed or process terminates, so most apps will never need to call\nthis.\n\nIf `multicastInterface` is not specified, the OS will try to drop membership to all valid\ninterfaces.\n-->\n\n<p><code>addMembership</code> の反対です - <code>IP_DROP_MEMBERSHIP</code> ソケットオプションによって、マルチキャストグループから抜けることをカーネルに伝えます。\nこれはソケットのクローズ時やプロセスの終了時にカーネルによって自動的に呼び出されるため、ほとんどのアプリケーションはこれを呼び出す必要がありません。\n\n</p>\n<p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップから削除しようとします。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.unref()",
+              "textRaw": "socket.unref()",
               "type": "method",
               "name": "unref",
               "desc": "<!--\nCalling `unref` on a socket will allow the program to exit if this is the only\nactive socket in the event system. If the socket is already `unref`d calling\n`unref` again will have no effect.\n-->\n\n<p>イベントシステムにおいて、このソケットだけがアクティブな場合にプログラムを\n終了することができるように、<code>unref</code> を呼び出します。\n既に <code>unref</code> されたソケットで再び <code>unref</code> が呼び出されても影響はありません。\n\n</p>\n",
@@ -8692,7 +8683,7 @@
               ]
             },
             {
-              "textRaw": "dgram.ref()",
+              "textRaw": "socket.ref()",
               "type": "method",
               "name": "ref",
               "desc": "<!--\nOpposite of `unref`, calling `ref` on a previously `unref`d socket will *not*\nlet the program exit if it's the only socket left (the default behavior). If\nthe socket is `ref`d calling `ref` again will have no effect.\n-->\n\n<p><code>unref</code> とは逆に、以前に <code>unref</code> されたソケットが唯一残ったソケットになっても、\nプログラムが終了 (デフォルトの動作です) しないように、<code>ref</code> を呼び出します。\n既に <code>ref</code> されたソケットで再び <code>ref</code> が呼び出されても影響はありません。\n\n</p>\n",

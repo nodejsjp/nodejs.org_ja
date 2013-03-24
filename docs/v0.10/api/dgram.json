@@ -30,9 +30,9 @@
       ],
       "classes": [
         {
-          "textRaw": "Class: Socket",
+          "textRaw": "Class: dgram.Socket",
           "type": "class",
-          "name": "Socket",
+          "name": "dgram.Socket",
           "desc": "<!--\nThe dgram Socket class encapsulates the datagram functionality.  It\nshould be created via `dgram.createSocket(type, [callback])`.\n-->\n\n<p>dgram Scoket クラスはデータグラム機能をカプセル化します。\nそれは <code>dgram.createSocket(type, [callback])</code> を通じて生成されます。\n\n</p>\n",
           "events": [
             {
@@ -66,7 +66,7 @@
           ],
           "methods": [
             {
-              "textRaw": "dgram.send(buf, offset, length, port, address, [callback])",
+              "textRaw": "socket.send(buf, offset, length, port, address, [callback])",
               "type": "method",
               "name": "send",
               "desc": "<!--\n* `buf` Buffer object.  Message to be sent\n* `offset` Integer. Offset in the buffer where the message starts.\n* `length` Integer. Number of bytes in the message.\n* `port` Integer. destination port\n* `address` String. destination IP\n* `callback` Function. Callback when message is done being delivered.\n  Optional.\n-->\n\n<ul>\n<li><code>buf</code> Buffer object.  送信されるメッセージ</li>\n<li><code>offset</code> Integer. メッセージの開始位置となるバッファ内のオフセット</li>\n<li><code>length</code> Integer. メッセージのバイト長</li>\n<li><code>port</code> Integer. 接続先のポート番号</li>\n<li><code>address</code> String. 接続先の IP</li>\n<li><code>callback</code> Function. メッセージの配信が完了した後にコールバックされる、\nOptional.</li>\n</ul>\n<!--\nFor UDP sockets, the destination port and IP address must be specified.  A string\nmay be supplied for the `address` parameter, and it will be resolved with DNS.  An\noptional callback may be specified to detect any DNS errors and when `buf` may be\nre-used.  Note that DNS lookups will delay the time that a send takes place, at\nleast until the next tick.  The only way to know for sure that a send has taken place\nis to use the callback.\n\nIf the socket has not been previously bound with a call to `bind`, it's\nassigned a random port number and bound to the \"all interfaces\" address\n(0.0.0.0 for `udp4` sockets, ::0 for `udp6` sockets).\n-->\n\n<p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。\n<code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。\nDNS エラーと <code>buf</code> が再利用可能になった時のためにオプションのコールバックを指定することができます。\nDNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。\n送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。\n\n</p>\n<p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、\nランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます\n(<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。\n<!--\nExample of sending a UDP packet to a random port on `localhost`;\n-->\n\n</p>\n<p><code>localhost</code> の適当なポートに UDP パケットを送信する例;\n\n</p>\n<pre><code>var dgram = require(&#39;dgram&#39;);\nvar message = new Buffer(&quot;Some bytes&quot;);\nvar client = dgram.createSocket(&quot;udp4&quot;);\nclient.send(message, 0, message.length, 41234, &quot;localhost&quot;, function(err, bytes) {\n  client.close();\n});</code></pre>\n<!--\n**A Note about UDP datagram size**\n\nThe maximum size of an `IPv4/v6` datagram depends on the `MTU` (_Maximum Transmission Unit_)\nand on the `Payload Length` field size.\n\n- The `Payload Length` field is `16 bits` wide, which means that a normal payload\n  cannot be larger than 64K octets including internet header and data\n  (65,507 bytes = 65,535 − 8 bytes UDP header − 20 bytes IP header);\n  this is generally true for loopback interfaces, but such long datagrams\n  are impractical for most hosts and networks.\n\n- The `MTU` is the largest size a given link layer technology can support for datagrams.\n  For any link, `IPv4` mandates a minimum `MTU` of `68` octets, while the recommended `MTU`\n  for IPv4 is `576` (typically recommended as the `MTU` for dial-up type applications),\n  whether they arrive whole or in fragments.\n\n  For `IPv6`, the minimum `MTU` is `1280` octets, however, the mandatory minimum\n  fragment reassembly buffer size is `1500` octets.\n  The value of `68` octets is very small, since most current link layer technologies have\n  a minimum `MTU` of `1500` (like Ethernet).\n\nNote that it's impossible to know in advance the MTU of each link through which\na packet might travel, and that generally sending a datagram greater than\nthe (receiver) `MTU` won't work (the packet gets silently dropped, without\ninforming the source that the data did not reach its intended recipient).\n-->\n\n<p><strong>UDP データグラムのサイズについて</strong>\n\n</p>\n<p><code>IPv4/v6</code> データグラムの最大のサイズは <code>MTU</code> (<em>Maximum Transmission Unit</em>) と、\n<code>Payload Length</code> フィールドサイズに依存します。\n\n</p>\n<ul>\n<li><p><code>Payload Length</code> フィールドサイズは 16bit 長で、これは通常のペイロードが\nIP ヘッダとデータ含めて 64K オクテットより長くなれないことを意味します\n(65,507 バイト = 65,535 − 8 バイトの UDP ヘッダ − 20 バイトの IP ヘッダ);\nこれは一般的にループバックインタフェースでは正しいものの、\nほとんどのホストとネットワークにとって長大なデータグラムは\n現実的ではありません。</p>\n</li>\n<li><p><code>MTU</code> はリンク層により大きなサイズを与える技術で、\nデータグラムもサポートできます。\nどんなリンクでも、それらが全体として到着するか断片化されるかに関わらず、\n<code>IPv4</code> は最低 <code>69</code> オクテット必要で、推奨される <code>IPv4</code> の <code>MTU</code> は <code>576</code> です\n(典型的なダイヤルアップ型アプリケーションの <code>MUT</code> 推奨値)。</p>\n<p><code>IPv6</code> では最小の <code>MTU</code> は <code>1280</code> オクテットですが、フラグメントを再構築する\nバッファサイズは最低 <code>1500</code> オクテットが必要です。\n<code>68</code> オクテットはとても小さいので、もっとも現代的なリンク層技術では、\n最小の <code>MTU</code> は <code>1500</code> です (イーサネットと同じです)。</p>\n</li>\n</ul>\n<p>パケットが通過する各リンクの MTU をあらかじめ知ることは\nできないこと、(受信側の) <code>MTU</code> より大きなデータグラムを送信しても\n通常は動作しないことに注意してください\n(パケットは送り主に知らされることなく黙って捨てられ、\n意図した受信者に到達することはありません)。\n\n\n</p>\n",
@@ -97,7 +97,7 @@
               ]
             },
             {
-              "textRaw": "dgram.bind(port, [address], [callback])",
+              "textRaw": "socket.bind(port, [address], [callback])",
               "type": "method",
               "name": "bind",
               "signatures": [
@@ -141,7 +141,7 @@
               "desc": "<!--\nFor UDP sockets, listen for datagrams on a named `port` and optional `address`.\nIf `address` is not specified, the OS will try to listen on all addresses.\n-->\n\n<p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを待ち受けます。\n<code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。\n\n</p>\n<!--\nThe `callback` argument, if provided, is added as a one-shot `'listening'`\nevent listener.\n-->\n\n<p><code>callback</code> 引数は、もし提供されると <code>&#39;listening&#39;</code> イベントの一回限りの\nリスナとして追加されます。\n\n</p>\n<!--\nExample of a UDP server listening on port 41234:\n-->\n\n<p>41234 番ポートを待ち受ける UDP サーバの例:\n\n</p>\n<pre><code>var dgram = require(&quot;dgram&quot;);\n\nvar server = dgram.createSocket(&quot;udp4&quot;);\n\nserver.on(&quot;message&quot;, function (msg, rinfo) {\n  console.log(&quot;server got: &quot; + msg + &quot; from &quot; +\n    rinfo.address + &quot;:&quot; + rinfo.port);\n});\n\nserver.on(&quot;listening&quot;, function () {\n  var address = server.address();\n  console.log(&quot;server listening &quot; +\n      address.address + &quot;:&quot; + address.port);\n});\n\nserver.bind(41234);\n// server listening 0.0.0.0:41234</code></pre>\n"
             },
             {
-              "textRaw": "dgram.close()",
+              "textRaw": "socket.close()",
               "type": "method",
               "name": "close",
               "desc": "<!--\nClose the underlying socket and stop listening for data on it.\n-->\n\n<p>下層のソケットをクローズし、データの待ち受けを終了します。\n\n</p>\n",
@@ -152,7 +152,7 @@
               ]
             },
             {
-              "textRaw": "dgram.address()",
+              "textRaw": "socket.address()",
               "type": "method",
               "name": "address",
               "desc": "<!--\nReturns an object containing the address information for a socket.  For UDP sockets,\nthis object will contain `address` , `family` and `port`.\n-->\n\n<p>オブジェクトが持っているソケットのアドレス情報を返します。\nこのオブジェクトは <code>address</code>、<code>port</code>、そして <code>family</code> を持っています。\n\n</p>\n",
@@ -163,7 +163,7 @@
               ]
             },
             {
-              "textRaw": "dgram.setBroadcast(flag)",
+              "textRaw": "socket.setBroadcast(flag)",
               "type": "method",
               "name": "setBroadcast",
               "signatures": [
@@ -187,7 +187,7 @@
               "desc": "<!--\nSets or clears the `SO_BROADCAST` socket option.  When this option is set, UDP packets\nmay be sent to a local interface's broadcast address.\n-->\n\n<p>ソケットのオプション <code>SO_BROADCAST</code> を設定またはクリアします。\nこのオプションが設定されると、UDP パケットはローカルインタフェースのブロードキャスト用アドレスに送信されます。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.setTTL(ttl)",
+              "textRaw": "socket.setTTL(ttl)",
               "type": "method",
               "name": "setTTL",
               "signatures": [
@@ -211,7 +211,7 @@
               "desc": "<!--\nSets the `IP_TTL` socket option.  TTL stands for \"Time to Live,\" but in this context it\nspecifies the number of IP hops that a packet is allowed to go through.  Each router or\ngateway that forwards a packet decrements the TTL.  If the TTL is decremented to 0 by a\nrouter, it will not be forwarded.  Changing TTL values is typically done for network\nprobes or when multicasting.\n-->\n\n<p>ソケットオプションの <code>IP_TTL</code> を設定します。\nTTL は「生存期間」を表しますが、このコンテキストではパケットが通過を許可される IP のホップ数を指定します。\n各ルータまたはゲートウェイはパケットを送出する際 TTL をデクリメントします。\nルータによって TTL がデクリメントされて 0 になるとそれは送出されません。\nTTL 値の変更は通常、ネットワークの調査やマルチキャストで使われます。\n\n</p>\n<!--\nThe argument to `setTTL()` is a number of hops between 1 and 255.  The default on most\nsystems is 64.\n-->\n\n<p><code>setTTL()</code> の引数は 1 から 255 のホップ数でです。ほとんどのシステムでデフォルトは 64 です。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.setMulticastTTL(ttl)",
+              "textRaw": "socket.setMulticastTTL(ttl)",
               "type": "method",
               "name": "setMulticastTTL",
               "signatures": [
@@ -235,7 +235,7 @@
               "desc": "<!--\nSets the `IP_MULTICAST_TTL` socket option.  TTL stands for \"Time to Live,\" but in this\ncontext it specifies the number of IP hops that a packet is allowed to go through,\nspecifically for multicast traffic.  Each router or gateway that forwards a packet\ndecrements the TTL. If the TTL is decremented to 0 by a router, it will not be forwarded.\n\nThe argument to `setMulticastTTL()` is a number of hops between 0 and 255.  The default on most\nsystems is 1.\n-->\n\n<p><code>IP_MULTICAST_TTL</code> ソケットオプションを設定します。\nTTL は「生存期間」を表しますが、この文脈では特にマルチキャストのトラフィックにおいてパケットが通過できるIPホップの数を指定します。\nそれぞれのルーターまたはゲートウェイは、パケットを転送する際に TTL をデクリメントします。\nTTL がルーターによって 0 までデクリメントされると、それは転送されません。\n<code>setMulticastTTL()</code> の引数はホップを表す数値で、0 から 255 の間です。\nほとんどのシステムでデフォルトは 1 です。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.setMulticastLoopback(flag)",
+              "textRaw": "socket.setMulticastLoopback(flag)",
               "type": "method",
               "name": "setMulticastLoopback",
               "signatures": [
@@ -259,7 +259,7 @@
               "desc": "<!--\nSets or clears the `IP_MULTICAST_LOOP` socket option.  When this option is set, multicast\npackets will also be received on the local interface.\n-->\n\n<p><code>IP_MULTICAST_LOOP</code> ソケットオプションを設定またはクリアします。\nこのオプションが設定されると、マルチキャストのパケットはローカルインタフェースでも受信できるようになります。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.addMembership(multicastAddress, [multicastInterface])",
+              "textRaw": "socket.addMembership(multicastAddress, [multicastInterface])",
               "type": "method",
               "name": "addMembership",
               "signatures": [
@@ -293,7 +293,7 @@
               "desc": "<!--\nTells the kernel to join a multicast group with `IP_ADD_MEMBERSHIP` socket option.\n\nIf `multicastInterface` is not specified, the OS will try to add membership to all valid\ninterfaces.\n-->\n\n<p><code>IP_ADD_MEMBERSHIP</code> ソケットオプションを設定し、マルチキャストグループに参加することをカーネルに伝えます。\n\n</p>\n<p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップに加えようとします。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.dropMembership(multicastAddress, [multicastInterface])",
+              "textRaw": "socket.dropMembership(multicastAddress, [multicastInterface])",
               "type": "method",
               "name": "dropMembership",
               "signatures": [
@@ -327,7 +327,7 @@
               "desc": "<!--\nOpposite of `addMembership` - tells the kernel to leave a multicast group with\n`IP_DROP_MEMBERSHIP` socket option. This is automatically called by the kernel\nwhen the socket is closed or process terminates, so most apps will never need to call\nthis.\n\nIf `multicastInterface` is not specified, the OS will try to drop membership to all valid\ninterfaces.\n-->\n\n<p><code>addMembership</code> の反対です - <code>IP_DROP_MEMBERSHIP</code> ソケットオプションによって、マルチキャストグループから抜けることをカーネルに伝えます。\nこれはソケットのクローズ時やプロセスの終了時にカーネルによって自動的に呼び出されるため、ほとんどのアプリケーションはこれを呼び出す必要がありません。\n\n</p>\n<p><code>multicastInterface</code> が指定されなかった場合は、全ての妥当なインタフェースをメンバーシップから削除しようとします。\n\n</p>\n"
             },
             {
-              "textRaw": "dgram.unref()",
+              "textRaw": "socket.unref()",
               "type": "method",
               "name": "unref",
               "desc": "<!--\nCalling `unref` on a socket will allow the program to exit if this is the only\nactive socket in the event system. If the socket is already `unref`d calling\n`unref` again will have no effect.\n-->\n\n<p>イベントシステムにおいて、このソケットだけがアクティブな場合にプログラムを\n終了することができるように、<code>unref</code> を呼び出します。\n既に <code>unref</code> されたソケットで再び <code>unref</code> が呼び出されても影響はありません。\n\n</p>\n",
@@ -338,7 +338,7 @@
               ]
             },
             {
-              "textRaw": "dgram.ref()",
+              "textRaw": "socket.ref()",
               "type": "method",
               "name": "ref",
               "desc": "<!--\nOpposite of `unref`, calling `ref` on a previously `unref`d socket will *not*\nlet the program exit if it's the only socket left (the default behavior). If\nthe socket is `ref`d calling `ref` again will have no effect.\n-->\n\n<p><code>unref</code> とは逆に、以前に <code>unref</code> されたソケットが唯一残ったソケットになっても、\nプログラムが終了 (デフォルトの動作です) しないように、<code>ref</code> を呼び出します。\n既に <code>ref</code> されたソケットで再び <code>ref</code> が呼び出されても影響はありません。\n</p>\n",
