@@ -19,6 +19,13 @@
               "name": "exit",
               "desc": "<p><code>function () {}</code>\n\n</p>\n<!--\nEmitted when the user exits the REPL in any of the defined ways. Namely, typing\n`.exit` at the repl, pressing Ctrl+C twice to signal SIGINT, or pressing Ctrl+D\nto signal \"end\" on the `input` stream.\n-->\n\n<p>何らかの方法でユーザが REPL を終了した場合に生成されます。\nすなわち、repl で <code>.exit</code> をタイプする、Ctrl+C を 2 回推して\nSIGINT を生成する、あるいは Ctrl+D を推して <code>input</code> ストリームで <code>&#39;end&#39;</code> を\n知らせるなどです。\n\n</p>\n<!--\nExample of listening for `exit`:\n-->\n\n<p><code>&#39;exit&#39;</code> を監視する例:\n\n</p>\n<pre><code>r.on(&#39;exit&#39;, function () {\n  console.log(&#39;Got &quot;exit&quot; event from repl!&#39;);\n  process.exit();\n});</code></pre>\n",
               "params": []
+            },
+            {
+              "textRaw": "Event: 'reset'",
+              "type": "event",
+              "name": "reset",
+              "desc": "<p><code>function (context) {}</code>\n\n</p>\n<!--\nEmitted when the REPL's context is reset. This happens when you type `.clear`.\nIf you start the repl with `{ useGlobal: true }` then this event will never\nbe emitted.\n-->\n\n<p>REPL のコンテキストがリセットされた場合に生成されます。\nこれは <code>.clear</code> をタイプした時に発生します。\nもし <code>{ useGlobal: true }</code> を指定して repl を開始した場合、\nこのイベントは決して生成されません。\n\n</p>\n<!--\nExample of listening for `reset`:\n-->\n\n<p><code>reset</code> を監視する例:\n\n</p>\n<pre><code>// Extend the initial repl context.\nr = repl.start({ options ... });\nsomeExtension.extend(r.context);\n\n// When a new context is created extend it as well.\nr.on(&#39;reset&#39;, function (context) {\n  console.log(&#39;repl has a new context&#39;);\n  someExtension.extend(context);\n});</code></pre>\n",
+              "params": []
             }
           ],
           "signatures": [

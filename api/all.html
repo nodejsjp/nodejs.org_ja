@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.1 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -219,6 +219,7 @@
 </ul>
 </li>
 <li><a href="#all_domain">Domain</a><ul>
+<li><a href="#all_warning_don_t_ignore_errors">Warning: Don&#39;t Ignore Errors!</a></li>
 <li><a href="#all_additions_to_error_objects">Additions to Error objects</a></li>
 <li><a href="#all_implicit_binding">Implicit Binding</a></li>
 <li><a href="#all_explicit_binding">Explicit Binding</a></li>
@@ -383,9 +384,6 @@
 <li><a href="#all_verifier_verify_object_signature_signature_format">verifier.verify(object, signature, [signature_format])</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#all_note_verifier_object_can_not_be_used_after_verify_method_been">Note: <code>verifier</code> object can not be used after <code>verify()</code> method been</a><ul>
 <li><a href="#all_crypto_creatediffiehellman_prime_length">crypto.createDiffieHellman(prime_length)</a></li>
 <li><a href="#all_crypto_creatediffiehellman_prime_encoding">crypto.createDiffieHellman(prime, [encoding])</a></li>
 <li><a href="#all_class_diffiehellman">Class: DiffieHellman</a><ul>
@@ -411,6 +409,7 @@
 <li><a href="#all_tls_ssl">TLS (SSL)</a><ul>
 <li><a href="#all_client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a></li>
 <li><a href="#all_npn_and_sni">NPN and SNI</a></li>
+<li><a href="#all_tls_getciphers">tls.getCiphers()</a></li>
 <li><a href="#all_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
 <li><a href="#all_tls_slab_buffer_size">tls.SLAB_BUFFER_SIZE</a></li>
 <li><a href="#all_tls_connect_options_callback">tls.connect(options, [callback])</a></li>
@@ -785,7 +784,7 @@
 <li><a href="#all_readline">Readline</a><ul>
 <li><a href="#all_readline_createinterface_options">readline.createInterface(options)</a></li>
 <li><a href="#all_class_interface">Class: Interface</a><ul>
-<li><a href="#all_rl_setprompt_prompt_length">rl.setPrompt(prompt, length)</a></li>
+<li><a href="#all_rl_setprompt_prompt">rl.setPrompt(prompt)</a></li>
 <li><a href="#all_rl_prompt_preservecursor">rl.prompt([preserveCursor])</a></li>
 <li><a href="#all_rl_question_query_callback">rl.question(query, callback)</a></li>
 <li><a href="#all_rl_pause">rl.pause()</a></li>
@@ -810,6 +809,7 @@
 <li><a href="#all_repl">REPL</a><ul>
 <li><a href="#all_repl_start_options">repl.start(options)</a><ul>
 <li><a href="#all_event_exit_1">Event: &#39;exit&#39;</a></li>
+<li><a href="#all_event_reset">Event: &#39;reset&#39;</a></li>
 </ul>
 </li>
 <li><a href="#all_repl_features">REPL Features</a></li>
@@ -835,6 +835,7 @@
 </li>
 <li><a href="#all_child_process">Child Process</a><ul>
 <li><a href="#all_class_childprocess">Class: ChildProcess</a><ul>
+<li><a href="#all_event_error_5">Event:  &#39;error&#39;</a></li>
 <li><a href="#all_event_exit_2">Event:  &#39;exit&#39;</a></li>
 <li><a href="#all_event_close_9">Event: &#39;close&#39;</a></li>
 <li><a href="#all_event_disconnect">Event: &#39;disconnect&#39;</a></li>
@@ -880,7 +881,7 @@
 <li><a href="#all_rs_setrawmode_mode">rs.setRawMode(mode)</a></li>
 </ul>
 </li>
-<li><a href="#all_class_writestream">Class WriteStream</a><ul>
+<li><a href="#all_class_writestream">Class: WriteStream</a><ul>
 <li><a href="#all_ws_columns">ws.columns</a></li>
 <li><a href="#all_ws_rows">ws.rows</a></li>
 <li><a href="#all_event_resize">Event: &#39;resize&#39;</a></li>
@@ -1540,6 +1541,37 @@ provided by most web browsers, here the output is sent to stdout or stderr.
 出力は標準出力か標準エラー出力に送られます。
 
 </p>
+<!--
+The console functions are synchronous when the destination is a terminal or
+a file (to avoid lost messages in case of premature exit) and asynchronous
+when it's a pipe (to avoid blocking for long periods of time).
+-->
+
+<p>コンソール関数は出力先がターミナルまたはファイルの場合は同期
+(早すぎる終了によりメッセージが失われるケースを防ぐため)、
+パイプの場合は非同期 (長時間ブロックすることを防ぐため) です。
+
+</p>
+<!--
+That is, in the following example, stdout is non-blocking while stderr
+is blocking:
+-->
+
+<p>つまり、以下の例では標準出力はノンブロッキングですが、
+標準エラー出力はブロッキングです:
+
+</p>
+<pre><code>$ node script.js 2&gt; error.log | tee info.log</code></pre>
+<!--
+In daily use, the blocking/non-blocking dichotomy is not something you
+should worry about unless you log huge amounts of data.
+-->
+
+<p>通常の使用では、膨大な量のデータを記録するのではない限り、
+ブロッキング／ノンブロッキングのどちらなのかを心配する必要はありません。
+
+
+</p>
 <h2>console.log([data], [...])<span><a class="mark" href="#all_console_log_data" id="all_console_log_data">#</a></span></h2>
 <!--
 Prints to stdout with newline. This function can take multiple arguments in a
@@ -1587,10 +1619,12 @@ Same as `console.error`.
 </p>
 <h2>console.dir(obj)<span><a class="mark" href="#all_console_dir_obj" id="all_console_dir_obj">#</a></span></h2>
 <!--
-Uses `util.inspect` on `obj` and prints resulting string to stdout.
+Uses `util.inspect` on `obj` and prints resulting string to stdout. This functi
+bypasses any custom `inspect()` function on `obj`.
 -->
 
 <p><code>util.inspect</code> を使って <code>obj</code> を文字列化した結果を標準出力にプリントします。
+この関数はあらゆるオブジェクトのカスタム <code>inspect()</code> 関数をバイパスします。
 
 </p>
 <h2>console.time(label)<span><a class="mark" href="#all_console_time_label" id="all_console_time_label">#</a></span></h2>
@@ -2588,8 +2622,8 @@ JavaScript のオブジェクト作成や関数呼び出し等のインタフェ
 <!--
  - [libuv](https://github.com/joyent/libuv), C event loop library.
    Anytime one needs to wait for a file descriptor to become readable,
-   wait for a timer, or wait for a signal to received one will need to
-   interface with libuv. That is, if you perform any I/O, libuv will
+   wait for a timer, or wait for a signal to be received one will need
+   to interface with libuv. That is, if you perform any I/O, libuv will
    need to be used.
 -->
 
@@ -2661,10 +2695,12 @@ First we create a file `hello.cc`:
 <pre><code>#include &lt;node.h&gt;
 #include &lt;v8.h&gt;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; Method(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
   return scope.Close(String::New(&quot;world&quot;));
 }
 
@@ -2842,19 +2878,21 @@ function calls and return a result. This is the main and only needed source
 <pre><code>#define BUILDING_NODE_EXTENSION
 #include &lt;node.h&gt;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; Add(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   if (args.Length() &lt; 2) {
     ThrowException(Exception::TypeError(String::New(&quot;Wrong number of arguments&quot;)));
-    return scope.Close(Undefined());
+    return scope.Close(Undefined(isolate));
   }
 
   if (!args[0]-&gt;IsNumber() || !args[1]-&gt;IsNumber()) {
     ThrowException(Exception::TypeError(String::New(&quot;Wrong arguments&quot;)));
-    return scope.Close(Undefined());
+    return scope.Close(Undefined(isolate));
   }
 
   Local&lt;Number&gt; num = Number::New(args[0]-&gt;NumberValue() +
@@ -2891,17 +2929,19 @@ there. Here's `addon.cc`:
 <pre><code>#define BUILDING_NODE_EXTENSION
 #include &lt;node.h&gt;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; RunCallback(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[0]);
   const unsigned argc = 1;
   Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(&quot;hello world&quot;)) };
   cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);
 
-  return scope.Close(Undefined());
+  return scope.Close(Undefined(isolate));
 }
 
 void Init(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module) {
@@ -2950,10 +2990,12 @@ the string passed to `createObject()`:
 <pre><code>#define BUILDING_NODE_EXTENSION
 #include &lt;node.h&gt;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   Local&lt;Object&gt; obj = Object::New();
   obj-&gt;Set(String::NewSymbol(&quot;msg&quot;), args[0]-&gt;ToString());
@@ -2992,15 +3034,17 @@ wraps a C++ function:
 <pre><code>#define BUILDING_NODE_EXTENSION
 #include &lt;node.h&gt;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; MyFunction(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
   return scope.Close(String::New(&quot;hello world&quot;));
 }
 
 Handle&lt;Value&gt; CreateFunction(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(MyFunction);
   Local&lt;Function&gt; fn = tpl-&gt;GetFunction();
@@ -3090,6 +3134,8 @@ prototype:
 #include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 MyObject::MyObject() {};
@@ -3104,12 +3150,12 @@ void MyObject::Init(Handle&lt;Object&gt; exports) {
   tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
       FunctionTemplate::New(PlusOne)-&gt;GetFunction());
 
-  Persistent&lt;Function&gt; constructor = Persistent&lt;Function&gt;::New(tpl-&gt;GetFunction());
+  Persistent&lt;Function&gt; constructor = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
   exports-&gt;Set(String::NewSymbol(&quot;MyObject&quot;), constructor);
 }
 
 Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   MyObject* obj = new MyObject();
   obj-&gt;counter_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
@@ -3119,7 +3165,7 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
   obj-&gt;counter_ += 1;
@@ -3163,10 +3209,12 @@ Let's register our `createObject` method in `addon.cc`:
 #include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
   return scope.Close(MyObject::NewInstance(args));
 }
 
@@ -3220,6 +3268,8 @@ The implementation is similar to the above in `myobject.cc`:
 #include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 MyObject::MyObject() {};
@@ -3236,11 +3286,11 @@ void MyObject::Init() {
   tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
       FunctionTemplate::New(PlusOne)-&gt;GetFunction());
 
-  constructor = Persistent&lt;Function&gt;::New(tpl-&gt;GetFunction());
+  constructor = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
 }
 
 Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   MyObject* obj = new MyObject();
   obj-&gt;counter_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
@@ -3250,7 +3300,7 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   const unsigned argc = 1;
   Handle&lt;Value&gt; argv[argc] = { args[0] };
@@ -3260,7 +3310,7 @@ Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
   obj-&gt;counter_ += 1;
@@ -3303,15 +3353,17 @@ In the following `addon.cc` we introduce a function `add()` that can take on two
 #include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
   return scope.Close(MyObject::NewInstance(args));
 }
 
 Handle&lt;Value&gt; Add(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   MyObject* obj1 = node::ObjectWrap::Unwrap&lt;MyObject&gt;(
       args[0]-&gt;ToObject());
@@ -3376,6 +3428,8 @@ The implementation of `myobject.cc` is similar as before:
 #include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
+Isolate* isolate = Isolate::GetCurrent();
+
 using namespace v8;
 
 MyObject::MyObject() {};
@@ -3393,7 +3447,7 @@ void MyObject::Init() {
 }
 
 Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   MyObject* obj = new MyObject();
   obj-&gt;val_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
@@ -3403,7 +3457,7 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
-  HandleScope scope;
+  HandleScope scope(isolate);
 
   const unsigned argc = 1;
   Handle&lt;Value&gt; argv[argc] = { args[0] };
@@ -3610,6 +3664,31 @@ refer to pipes, they are non-blocking like other streams.
 それらはブロックします。
 パイプを参照しているケースでは、他のストリームと同様にブロックしません。
 
+</p>
+<!--
+To check if Node is being run in a TTY context, read the `isTTY` property
+on `process.stderr`, `process.stdout`, or `process.stdin`:
+-->
+
+<p>Node が TTY のコンテキストで実行されているかチェックするには、
+<code>process.stderr</code>, <code>process.stdout</code>, または <code>process.stdin</code> の
+<code>isTTY</code> プロパティを参照します。
+
+</p>
+<pre><code>$ node -p &quot;Boolean(process.stdin.isTTY)&quot;
+true
+$ echo &quot;foo&quot; | node -p &quot;Boolean(process.stdin.isTTY)&quot;
+false
+
+$ node -p &quot;Boolean(process.stdout.isTTY)&quot;
+true
+$ node -p &quot;Boolean(process.stdout.isTTY)&quot; | cat
+false</code></pre>
+<!--
+See [the tty docs](tty.html#tty_tty) for more information.
+-->
+
+<p>より詳細は <a href="tty.html#tty_tty">the tty docs</a> を参照してください。
 
 </p>
 <h2>process.stderr<span><a class="mark" href="#all_process_stderr" id="all_process_stderr">#</a></span></h2>
@@ -4639,6 +4718,24 @@ obj.inspect = function(depth) {
 
 util.inspect(obj);
   // &quot;{nate}&quot;</code></pre>
+<!--
+You may also return another Object entirely, and the returned String will be
+formatted according to the returned Object. This is similar to how
+`JSON.stringify()` works:
+-->
+
+<p>全く別のオブジェクトを返すこともできます。
+戻り値の文字列は、そのオブジェクトに従ってフォーマットされます。
+これは <code>JSON.stringify()</code> の動作とよく似ています。
+
+</p>
+<pre><code>var obj = { foo: &#39;this will not show up in the inspect() output&#39; };
+obj.inspect = function(depth) {
+  return { bar: &#39;baz&#39; };
+};
+
+util.inspect(obj);
+  // &quot;{ bar: &#39;baz&#39; }&quot;</code></pre>
 <h2>util.isArray(object)<span><a class="mark" href="#all_util_isarray_object" id="all_util_isarray_object">#</a></span></h2>
 <!--
 Returns `true` if the given "object" is an `Array`. `false` otherwise.
@@ -4966,7 +5063,7 @@ single group.  If any of the event emitters or callbacks registered to a
 domain emit an `error` event, or throw an error, then the domain object
 will be notified, rather than losing the context of the error in the
 `process.on('uncaughtException')` handler, or causing the program to
-exit with an error code.
+exit immediately with an error code.
 -->
 
 <p>ドメインは複数の異なる I/O 操作を一つのグループとして扱う方法を
@@ -4974,8 +5071,8 @@ exit with an error code.
 もし EventEmitter またはコールバックがドメインに登録されると、
 <code>&#39;error&#39;</code> がイベントが発生したり例外がスローされた場合、
 <code>process.on(&#39;uncaughtException&#39;)</code> ハンドラでエラーのコンテキストが失われたり、
-プログラムがエラーコードと共に終了する代わりに、
-ドメインオブジェクトが通知します
+プログラムがエラーコードと共に即座に終了する代わりに、
+ドメインオブジェクトに通知されます
 
 </p>
 <!--
@@ -5004,6 +5101,199 @@ Node.js versions.
 将来の Node.js バージョンではデフォルトで有効になることが期待されます。
 
 </p>
+<h2>Warning: Don&#39;t Ignore Errors!<span><a class="mark" href="#all_warning_don_t_ignore_errors" id="all_warning_don_t_ignore_errors">#</a></span></h2>
+<!-- type=misc -->
+
+<!--
+Domain error handlers are not a substitute for closing down your
+process when an error occurs.
+-->
+
+<p>ドメインのエラーハンドラは、エラーが発生した時に
+プロセスを終了する代わりにはなりません。
+
+</p>
+<!--
+By the very nature of how `throw` works in JavaScript, there is almost
+never any way to safely "pick up where you left off", without leaking
+references, or creating some other sort of undefined brittle state.
+-->
+
+<p>JavaScript において「throw」がどのように働くかという性質により、
+参照のリークや未定義の脆弱な状態を作ることなく「中断したところを取得する」
+方法はほとんどありません。
+
+</p>
+<!--
+The safest way to respond to a thrown error is to shut down the
+process.  Of course, in a normal web server, you might have many
+connections open, and it is not reasonable to abruptly shut those down
+because an error was triggered by someone else.
+-->
+
+<p>スローされたエラーに対処するもっとも安全な方法はプロセスを終了することです。
+もちろん、通常の Web サーバは多くの接続をオープンしていており、
+他の誰かによって引き起こされたエラーのためにそれらをシャットダウンすることは
+合理的ではありません。
+
+</p>
+<!--
+The better approach is send an error response to the request that
+triggered the error, while letting the others finish in their normal
+time, and stop listening for new requests in that worker.
+-->
+
+<p>よりよいアプローチは、エラーを引き起こしたリクエストにエラーを応答し、
+それ以外の接続が正常に終了するまでの間、ワーカは新しいリクエストのリスニングを
+止めることです。
+
+</p>
+<!--
+In this way, `domain` usage goes hand-in-hand with the cluster module,
+since the master process can fork a new worker when a worker
+encounters an error.  For node programs that scale to multiple
+machines, the terminating proxy or service registry can take note of
+the failure, and react accordingly.
+-->
+
+<p>この方法では、<code>domain</code> はクラスタモジュールと手を取り合う利用方法により、
+ワーカプロセスがエラーに遭遇した場合に新しいワーカをフォークできます。
+複数のマシンにスケールする node プログラムでは、
+終端のプロキシやサービスレジストリは障害に注意し、
+それに応じて対処することができます。
+
+</p>
+<!--
+For example, this is not a good idea:
+-->
+
+<p>たとえば、これはいいアイディアではありません:
+
+</p>
+<pre><code class="javascript">// XXX WARNING!  BAD IDEA!
+
+var d = require(&#39;domain&#39;).create();
+d.on(&#39;error&#39;, function(er) {
+  // The error won&#39;t crash the process, but what it does is worse!
+  // Though we&#39;ve prevented abrupt process restarting, we are leaking
+  // resources like crazy if this ever happens.
+  // This is no better than process.on(&#39;uncaughtException&#39;)!
+  console.log(&#39;error, but oh well&#39;, er.message);
+});
+require(&#39;http&#39;).createServer(function(req, res) {
+  handleRequest(req, res);
+}).listen(PORT);</code></pre>
+<!--
+By using the context of a domain, and the resilience of separating our
+program into multiple worker processes, we can react more
+appropriately, and handle errors with much greater safety.
+-->
+
+<p>domain の利用と、プログラムを複数のワーカプロセスに分割することによる
+復元力により、とても安全にエラーを扱う、より適切な対処をすることができます。
+
+</p>
+<pre><code class="javascript">// Much better!
+
+var cluster = require(&#39;cluster&#39;);
+var PORT = +process.env.PORT || 1337;
+
+if (cluster.isMaster) {
+  // In real life, you&#39;d probably use more than just 2 workers,
+  // and perhaps not put the master and worker in the same file.
+  //
+  // You can also of course get a bit fancier about logging, and
+  // implement whatever custom logic you need to prevent DoS
+  // attacks and other bad behavior.
+  //
+  // See the options in the cluster documentation.
+  //
+  // The important thing is that the master does very little,
+  // increasing our resilience to unexpected errors.
+
+  cluster.fork();
+  cluster.fork();
+
+  cluster.on(&#39;disconnect&#39;, function(worker) {
+    console.error(&#39;disconnect!&#39;);
+    cluster.fork();
+  });
+
+} else {
+  // the worker
+  //
+  // This is where we put our bugs!
+
+  var domain = require(&#39;domain&#39;);
+
+  // See the cluster documentation for more details about using
+  // worker processes to serve requests.  How it works, caveats, etc.
+
+  var server = require(&#39;http&#39;).createServer(function(req, res) {
+    var d = domain.create();
+    d.on(&#39;error&#39;, function(er) {
+      console.error(&#39;error&#39;, er.stack);
+
+      // Note: we&#39;re in dangerous territory!
+      // By definition, something unexpected occurred,
+      // which we probably didn&#39;t want.
+      // Anything can happen now!  Be very careful!
+
+      try {
+        // make sure we close down within 30 seconds
+        var killtimer = setTimeout(function() {
+          process.exit(1);
+        }, 30000);
+        // But don&#39;t keep the process open just for that!
+        killtimer.unref();
+
+        // stop taking new requests.
+        server.close();
+
+        // Let the master know we&#39;re dead.  This will trigger a
+        // &#39;disconnect&#39; in the cluster master, and then it will fork
+        // a new worker.
+        cluster.worker.disconnect();
+
+        // try to send an error to the request that triggered the problem
+        res.statusCode = 500;
+        res.setHeader(&#39;content-type&#39;, &#39;text/plain&#39;);
+        res.end(&#39;Oops, there was a problem!\n&#39;);
+      } catch (er2) {
+        // oh well, not much we can do at this point.
+        console.error(&#39;Error sending 500!&#39;, er2.stack);
+      }
+    });
+
+    // Because req and res were created before this domain existed,
+    // we need to explicitly add them.
+    // See the explanation of implicit vs explicit binding below.
+    d.add(req);
+    d.add(res);
+
+    // Now run the handler function in the domain.
+    d.run(function() {
+      handleRequest(req, res);
+    });
+  });
+  server.listen(PORT);
+}
+
+// This part isn&#39;t important.  Just an example routing thing.
+// You&#39;d put your fancy application logic here.
+function handleRequest(req, res) {
+  switch(req.url) {
+    case &#39;/error&#39;:
+      // We do some async stuff, and then...
+      setTimeout(function() {
+        // Whoops!
+        flerb.bark();
+      });
+      break;
+    default:
+      res.end(&#39;ok&#39;);
+  }
+}</code></pre>
 <h2>Additions to Error objects<span><a class="mark" href="#all_additions_to_error_objects" id="all_additions_to_error_objects">#</a></span></h2>
 <!-- type=misc -->
 
@@ -5039,12 +5329,12 @@ are added to it.
 <!--type=misc-->
 
 <!--
-If domains are in use, then all new EventEmitter objects (including
+If domains are in use, then all **new** EventEmitter objects (including
 Stream objects, requests, responses, etc.) will be implicitly bound to
 the active domain at the time of their creation.
 -->
 
-<p>一度ドメインが作成されると、全ての新しい EventEmitter オブジェクト
+<p>一度ドメインが作成されると、全ての <strong>新しい</strong> EventEmitter オブジェクト
 (ストリームオブジェクトやリクエスト、レスポンス、その他を含む) は、
 それが作成された時点でアクティブなドメインに暗黙的に束縛されます。
 
@@ -5077,11 +5367,11 @@ from being properly garbage collected.
 </p>
 <!--
 If you *want* to nest Domain objects as children of a parent Domain,
-then you must explicitly add them, and then dispose of them later.
+then you must explicitly add them.
 -->
 
 <p>もしネストしたドメインを子として他のドメインに <em>加えたければ</em>
-明示的にそれを加えなければならず、後で破棄しなければなりません。
+明示的にそれを加えなければなりません。
 
 </p>
 <!--
@@ -5154,14 +5444,8 @@ serverDomain.run(function() {
       try {
         res.writeHead(500);
         res.end(&#39;Error occurred, sorry.&#39;);
-        res.on(&#39;close&#39;, function() {
-          // forcibly shut down any other things added to this domain
-          reqd.dispose();
-        });
       } catch (er) {
         console.error(&#39;Error sending 500&#39;, er, req.url);
-        // tried our best.  clean up anything remaining.
-        reqd.dispose();
       }
     });
   }).listen(1337);
@@ -5503,10 +5787,6 @@ encoding method.  Here are the different string encodings.
 * `'ascii'` - for 7 bit ASCII data only.  This encoding method is very fast, and
   will strip the high bit if set.
 
-  Note that when converting from string to buffer, this encoding converts a null
-  character (`'\0'` or `'\u0000'`) into `0x20` (character code of a space). If
-  you want to convert a null character into `0x00`, you should use `'utf8'`.
-
 * `'utf8'` - Multibyte encoded Unicode characters. Many web pages and other
   document formats use UTF-8.
 
@@ -5527,12 +5807,7 @@ encoding method.  Here are the different string encodings.
 
 <ul>
 <li><p><code>&#39;ascii&#39;</code> - 7bit の ASCII データ専用です。
-このエンコーディング方式はとても高速で、
-もし上位ビットがセットされていれば取り除かれます。
-文字列からバッファへの変換時、このエンコーディングは null 文字
-(<code>&#39;\0&#39;</code> または <code>&#39;\u0000&#39;</code>) を <code>0x20</code> (スペースの文字コード)
-に変換することに注意してください。
-null 文字を 0x00 に変換したい場合は <code>&#39;utf8&#39;</code> を使用してください。</p>
+このエンコーディング方式はとても高速で、もし上位ビットがセットされていれば取り除かれます。</p>
 </li>
 <li><p><code>&#39;utf8&#39;</code> - 可変長のバイト単位でエンコードされたUnicode文字。
 多くのWebページやその他のドキュメントは UTF-8 を使っています。</p>
@@ -5692,17 +5967,6 @@ Example: write a utf8 string into a buffer, then print it
 <pre><code>buf = new Buffer(256);
 len = buf.write(&#39;\u00bd + \u00bc = \u00be&#39;, 0);
 console.log(len + &quot; bytes: &quot; + buf.toString(&#39;utf8&#39;, 0, len));</code></pre>
-<!--
-The number of characters written (which may be different than the number of
-bytes written) is set in `Buffer._charsWritten` and will be overwritten the
-next time `buf.write()` is called.
--->
-
-<p>書き込まれた文字数 (書き込まれたバイト数とは異なる場合があります) は、
-次に <code>buf.write()</code> が呼び出されて上書きされるまで
-<code>Buffer._charsWritten</code> に設定されています。
-
-</p>
 <h3>buf.toString([encoding], [start], [end])<span><a class="mark" href="#all_buf_tostring_encoding_start_end" id="all_buf_tostring_encoding_start_end">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>encoding</code> String, Optional, Default: &#39;utf8&#39;</li>
@@ -8189,7 +8453,7 @@ Example:
 
 </p>
 <pre><code>var ciphers = crypto.getCiphers();
-console.log(ciphers); // [&#39;AES128-SHA&#39;, &#39;AES256-SHA&#39;, ...]</code></pre>
+console.log(ciphers); // [&#39;AES-128-CBC&#39;, &#39;AES-128-CBC-HMAC-SHA1&#39;, ...]</code></pre>
 <h2>crypto.getHashes()<span><a class="mark" href="#all_crypto_gethashes" id="all_crypto_gethashes">#</a></span></h2>
 <!--
 Returns an array with the names of the supported hash algorithms.
@@ -8881,31 +9145,11 @@ the data and public key.
 <p>署名されたデータと公開鍵による検証の結果によって true または false を返します。
 
 </p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-&lt;!--
-</p>
-<h1>Note: <code>verifier</code> object can not be used after <code>verify()</code> method been<span><a class="mark" href="#all_note_verifier_object_can_not_be_used_after_verify_method_been" id="all_note_verifier_object_can_not_be_used_after_verify_method_been">#</a></span></h1>
-<p>Note: <code>verifier</code> object can not be used after <code>verify()</code> method has been
-</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>v0.10
+<!--
+Note: `verifier` object can not be used after `verify()` method has been
 called.
---&gt;
+-->
 
-</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 <p>注意: <code>verify()</code> メソッドを呼び出した後で <code>verifier</code> 
 オブジェクトを使うことはできません。
 
@@ -9422,6 +9666,23 @@ TLS の拡張で、以下を可能にします。
 <li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li>
 <li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li>
 </ul>
+<h2>tls.getCiphers()<span><a class="mark" href="#all_tls_getciphers" id="all_tls_getciphers">#</a></span></h2>
+<!--
+Returns an array with the names of the supported SSL ciphers.
+-->
+
+<p>サポートされている SSL 暗号名の配列を返します。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>var ciphers = tls.getCiphers();
+console.log(ciphers); // [&#39;AES128-SHA&#39;, &#39;AES256-SHA&#39;, ...]</code></pre>
 <h2>tls.createServer(options, [secureConnectionListener])<span><a class="mark" href="#all_tls_createserver_options_secureconnectionlistener" id="all_tls_createserver_options_secureconnectionlistener">#</a></span></h2>
 <!--
 Creates a new [tls.Server][].  The `connectionListener` argument is
@@ -9509,6 +9770,10 @@ automatically set as a listener for the [secureConnection][] event.  The
     SecureContext). If `SNICallback` wasn't provided - default callback with
     high-level API will be used (see below).
 
+  - `sessionTimeout`: An integer specifiying the seconds after which TLS
+    session identifiers and TLS session tickets created by the server are
+    timed out. See [SSL_CTX_set_timeout] for more details.
+
   - `sessionIdContext`: A string containing a opaque identifier for session
     resumption. If `requestCert` is `true`, the default is MD5 hash value
     generated from command-line. Otherwise, the default is not provided.
@@ -9583,6 +9848,10 @@ RC4 は安全なフォールバックとして使われます。</p>
 を使用することができます)。
 <code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして
 後述する高水準 API が使用されます。</p>
+</li>
+<li><p><code>sessionTimeout</code>: サーバによって作成された TLS セッション識別子および TLS
+セッションチケットがタイムアウトするまでの秒数を指定する整数値です。
+より詳細は <a href="http://www.openssl.org/docs/ssl/SSL_CTX_set_timeout.html">SSL_CTX_set_timeout</a> を参照してください。</p>
 </li>
 <li><p><code>sessionIdContext</code>: セッション再開のための識別子となる文字列です。
 <code>requestCedrt</code> が <code>true</code> の場合、デフォルトはコマンドライン引数から
@@ -10449,24 +10718,33 @@ relative to `process.cwd()`.
 </p>
 <!--
 Most fs functions let you omit the callback argument. If you do, a default
-callback is used that ignores errors, but prints a deprecation
-warning.
+callback is used that rethrows errors. To get a trace to the original call
+site, set the NODE_DEBUG environment variable:
 -->
 
 <p>fs モジュールのほとんどの関数はコールバック引数を省略することができます。
-そうすると、エラーを無視するコールバックがデフォルトとして使用され、
-廃止予定の警告が出力されます。
+そうすると、エラーを再スローするコールバックがデフォルトとして使用されます。
+本来の呼び出し元のトレースを取得するには、<code>NODE_DEBUG</code>
+環境変数を設定してください:
 
 </p>
-<!--
-**IMPORTANT**: Omitting the callback is deprecated.  v0.12 will throw the
-errors as exceptions.
--->
+<pre><code>$ cat script.js
+function bad() {
+  require(&#39;fs&#39;).readFile(&#39;/&#39;);
+}
+bad();
 
-<p><strong>重要</strong>: コールバックの省略は廃止予定です。v0.12 は例外をスローするでしょう。
-
-
-</p>
+$ env NODE_DEBUG=fs node script.js
+fs.js:66
+        throw err;
+              ^
+Error: EISDIR, read
+    at rethrow (fs.js:61:21)
+    at maybeCallback (fs.js:79:42)
+    at Object.fs.readFile (fs.js:153:18)
+    at bad (/path/to/script.js:2:17)
+    at Object.&lt;anonymous&gt; (/path/to/script.js:5:1)
+    &lt;etc.&gt;</code></pre>
 <h2>fs.rename(oldPath, newPath, callback)<span><a class="mark" href="#all_fs_rename_oldpath_newpath_callback" id="all_fs_rename_oldpath_newpath_callback">#</a></span></h2>
 <!--
 Asynchronous rename(2). No arguments other than a possible exception are given
@@ -13662,7 +13940,7 @@ use C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread
 pool. C-Ares is much faster than `getaddrinfo` but the system resolver is
 more constant with how other programs operate. When a user does
 `net.connect(80, 'google.com')` or `http.get({ host: 'google.com' })` the
-`dns.lookup` method is used. Users who need to do a large number of look ups
+`dns.lookup` method is used. Users who need to do a large number of lookups
 quickly should use the methods that go through C-Ares.
 -->
 
@@ -14461,7 +14739,7 @@ The response implements the [Writable Stream][] interface. This is an
 
 </p>
 <!--
-Indicates that the underlaying connection was terminated before
+Indicates that the underlying connection was terminated before
 `response.end()` was called or able to flush.
 -->
 
@@ -16673,7 +16951,7 @@ stream.
 <p>入力と出力を持つ readline インタフェースを表現するクラスです。
 
 </p>
-<h3>rl.setPrompt(prompt, length)<span><a class="mark" href="#all_rl_setprompt_prompt_length" id="all_rl_setprompt_prompt_length">#</a></span></h3>
+<h3>rl.setPrompt(prompt)<span><a class="mark" href="#all_rl_setprompt_prompt" id="all_rl_setprompt_prompt">#</a></span></h3>
 <!--
 Sets the prompt, for example when you run `node` on the command line, you see
 `> `, which is node's prompt.
@@ -17267,6 +17545,38 @@ Example of listening for `exit`:
   console.log(&#39;Got &quot;exit&quot; event from repl!&#39;);
   process.exit();
 });</code></pre>
+<h3>Event: &#39;reset&#39;<span><a class="mark" href="#all_event_reset" id="all_event_reset">#</a></span></h3>
+<p><code>function (context) {}</code>
+
+</p>
+<!--
+Emitted when the REPL's context is reset. This happens when you type `.clear`.
+If you start the repl with `{ useGlobal: true }` then this event will never
+be emitted.
+-->
+
+<p>REPL のコンテキストがリセットされた場合に生成されます。
+これは <code>.clear</code> をタイプした時に発生します。
+もし <code>{ useGlobal: true }</code> を指定して repl を開始した場合、
+このイベントは決して生成されません。
+
+</p>
+<!--
+Example of listening for `reset`:
+-->
+
+<p><code>reset</code> を監視する例:
+
+</p>
+<pre><code>// Extend the initial repl context.
+r = repl.start({ options ... });
+someExtension.extend(r.context);
+
+// When a new context is created extend it as well.
+r.on(&#39;reset&#39;, function (context) {
+  console.log(&#39;repl has a new context&#39;);
+  someExtension.extend(context);
+});</code></pre>
 <h2>REPL Features<span><a class="mark" href="#all_repl_features" id="all_repl_features">#</a></span></h2>
 <!-- type=misc -->
 
@@ -17838,6 +18148,42 @@ The ChildProcess class is not intended to be used directly.  Use the
 独立したストリームオブジェクトにパイプでつながれているかもしれません。
 
 </p>
+<h3>Event:  &#39;error&#39;<span><a class="mark" href="#all_event_error_5" id="all_event_error_5">#</a></span></h3>
+<!--
+* `err` {Error Object} the error.
+-->
+
+<ul>
+<li><code>err</code> {Error Object} エラー。</li>
+</ul>
+<!--
+Emitted when:
+-->
+
+<p>次の場合に生成されます:
+
+</p>
+<!--
+1. The process could not be spawned, or
+2. The process could not be killed, or
+3. Sending a message to the child process failed for whatever reason.
+-->
+
+<ol>
+<li>プロセスを起動できなかった、または</li>
+<li>プロセスを殺すことができなかった、または</li>
+<li>何らかの理由で子プロセスにメッセージを送信することが失敗した。</li>
+</ol>
+<!--
+See also [`ChildProcess#kill()`](#child_process_child_kill_signal) and
+[`ChildProcess#send()`](#child_process_child_send_message_sendhandle).
+-->
+
+<p><a href="#child_process_child_kill_signal"><code>ChildProcess#kill()</code></a> および
+<a href="#child_process_child_send_message_sendhandle"><code>ChildProcess#send()</code></a>
+も参照してください。
+
+</p>
 <h3>Event:  &#39;exit&#39;<span><a class="mark" href="#all_event_exit_2" id="all_event_exit_2">#</a></span></h3>
 <!--
 * `code` {Number} the exit code, if it exited normally.
@@ -18038,8 +18384,26 @@ grep.on(&#39;close&#39;, function (code, signal) {
 // send SIGHUP to process
 grep.kill(&#39;SIGHUP&#39;);</code></pre>
 <!--
-Note that while the function is called `kill`, the signal delivered to the child
-process may not actually kill it.  `kill` really just sends a signal to a process.
+May emit an `'error'` event when the signal cannot be delivered. Sending a
+signal to a child process that has already exited is not an error but may
+have unforeseen consequences: if the PID (the process ID) has been reassigned
+to another process, the signal will be delivered to that process instead.
+What happens next is anyone's guess.
+-->
+
+<p>シグナルを送ることができなかった場合は <code>&#39;error&#39;</code> イベントが
+生成されるかもしれません。
+既に終了した子プロセスへシグナルを送信してもエラーにはならず、
+予想しない結果になるかもしれません:
+PID (プロセス ID) が他のプロセスに再割り当てされると、
+シグナルはそのプロセスに送信されてしまいます。
+それで何が起こるかは誰にも予想できません。
+
+</p>
+<!--
+Note that while the function is called `kill`, the signal delivered to the
+child process may not actually kill it.  `kill` really just sends a signal
+to a process.
 -->
 
 <p>この関数は <code>kill</code> と呼ばれるものの、
@@ -18132,6 +18496,15 @@ second argument to the `message` event.
 <p><code>child.send()</code> の <code>sendHandle</code> オプションは TCP サーバまたは
 ソケットオブジェクトを他のプロセスに送信するためのものです。
 子プロセスはそれを <code>&#39;message&#39;</code> イベントの第 2 引数として受信します。
+
+</p>
+<!--
+Emits an `'error'` event if the message cannot be sent, for example because
+the child process has already exited.
+-->
+
+<p>たとえば子プロセスが既に終了した場合など、メッセージを送信できなかった場合は
+<code>&#39;error&#39;</code> イベントが生成されます。
 
 </p>
 <h4>Example: sending server object<span><a class="mark" href="#all_example_sending_server_object" id="all_example_sending_server_object">#</a></span></h4>
@@ -19087,7 +19460,7 @@ to the resulting mode.
 
 
 </p>
-<h2>Class WriteStream<span><a class="mark" href="#all_class_writestream" id="all_class_writestream">#</a></span></h2>
+<h2>Class: WriteStream<span><a class="mark" href="#all_class_writestream" id="all_class_writestream">#</a></span></h2>
 <!--
 A `net.Socket` subclass that represents the writable portion of a tty. In normal
 circumstances, `process.stdout` will be the only `tty.WriteStream` instance
@@ -20104,7 +20477,7 @@ prints the active watchers. To remove a watcher, type
 * `next`, `n` - Step next
 * `step`, `s` - Step in
 * `out`, `o` - Step out
-* `pause` - Pause running code (like pause button in Developer TOols)
+* `pause` - Pause running code (like pause button in Developer Tools)
 -->
 
 <ul>
@@ -21113,7 +21486,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

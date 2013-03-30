@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>REPL Node.js v0.10.1 Manual &amp; Documentation</title>
+  <title>REPL Node.js v0.11.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/repl.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -58,6 +58,7 @@
 <li><a href="#repl_repl">REPL</a><ul>
 <li><a href="#repl_repl_start_options">repl.start(options)</a><ul>
 <li><a href="#repl_event_exit">Event: &#39;exit&#39;</a></li>
+<li><a href="#repl_event_reset">Event: &#39;reset&#39;</a></li>
 </ul>
 </li>
 <li><a href="#repl_repl_features">REPL Features</a></li>
@@ -310,6 +311,38 @@ Example of listening for `exit`:
   console.log(&#39;Got &quot;exit&quot; event from repl!&#39;);
   process.exit();
 });</code></pre>
+<h3>Event: &#39;reset&#39;<span><a class="mark" href="#repl_event_reset" id="repl_event_reset">#</a></span></h3>
+<p><code>function (context) {}</code>
+
+</p>
+<!--
+Emitted when the REPL's context is reset. This happens when you type `.clear`.
+If you start the repl with `{ useGlobal: true }` then this event will never
+be emitted.
+-->
+
+<p>REPL のコンテキストがリセットされた場合に生成されます。
+これは <code>.clear</code> をタイプした時に発生します。
+もし <code>{ useGlobal: true }</code> を指定して repl を開始した場合、
+このイベントは決して生成されません。
+
+</p>
+<!--
+Example of listening for `reset`:
+-->
+
+<p><code>reset</code> を監視する例:
+
+</p>
+<pre><code>// Extend the initial repl context.
+r = repl.start({ options ... });
+someExtension.extend(r.context);
+
+// When a new context is created extend it as well.
+r.on(&#39;reset&#39;, function (context) {
+  console.log(&#39;repl has a new context&#39;);
+  someExtension.extend(context);
+});</code></pre>
 <h2>REPL Features<span><a class="mark" href="#repl_repl_features" id="repl_repl_features">#</a></span></h2>
 <!-- type=misc -->
 
@@ -441,7 +474,7 @@ The following key combinations in the REPL have these special effects:
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
