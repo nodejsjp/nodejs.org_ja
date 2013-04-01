@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>console Node.js v0.10.1 Manual &amp; Documentation</title>
+  <title>console Node.js v0.10.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stdio.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -86,6 +86,37 @@ provided by most web browsers, here the output is sent to stdout or stderr.
 <p>標準出力と標準エラーに出力するためのものです。
 ほとんどのブラウザで提供されているコンソールオブジェクトと同様ですが、
 出力は標準出力か標準エラー出力に送られます。
+
+</p>
+<!--
+The console functions are synchronous when the destination is a terminal or
+a file (to avoid lost messages in case of premature exit) and asynchronous
+when it's a pipe (to avoid blocking for long periods of time).
+-->
+
+<p>コンソール関数は出力先がターミナルまたはファイルの場合は同期
+(早すぎる終了によりメッセージが失われるケースを防ぐため)、
+パイプの場合は非同期 (長時間ブロックすることを防ぐため) です。
+
+</p>
+<!--
+That is, in the following example, stdout is non-blocking while stderr
+is blocking:
+-->
+
+<p>つまり、以下の例では標準出力はノンブロッキングですが、
+標準エラー出力はブロッキングです:
+
+</p>
+<pre><code>$ node script.js 2&gt; error.log | tee info.log</code></pre>
+<!--
+In daily use, the blocking/non-blocking dichotomy is not something you
+should worry about unless you log huge amounts of data.
+-->
+
+<p>通常の使用では、膨大な量のデータを記録するのではない限り、
+ブロッキング／ノンブロッキングのどちらなのかを心配する必要はありません。
+
 
 </p>
 <h2>console.log([data], [...])<span><a class="mark" href="#stdio_console_log_data" id="stdio_console_log_data">#</a></span></h2>
@@ -208,7 +239,7 @@ AssertionError with `message`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

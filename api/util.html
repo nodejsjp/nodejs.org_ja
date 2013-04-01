@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>util Node.js v0.10.1 Manual &amp; Documentation</title>
+  <title>util Node.js v0.11.0 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/util.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.0 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -349,6 +349,24 @@ obj.inspect = function(depth) {
 
 util.inspect(obj);
   // &quot;{nate}&quot;</code></pre>
+<!--
+You may also return another Object entirely, and the returned String will be
+formatted according to the returned Object. This is similar to how
+`JSON.stringify()` works:
+-->
+
+<p>全く別のオブジェクトを返すこともできます。
+戻り値の文字列は、そのオブジェクトに従ってフォーマットされます。
+これは <code>JSON.stringify()</code> の動作とよく似ています。
+
+</p>
+<pre><code>var obj = { foo: &#39;this will not show up in the inspect() output&#39; };
+obj.inspect = function(depth) {
+  return { bar: &#39;baz&#39; };
+};
+
+util.inspect(obj);
+  // &quot;{ bar: &#39;baz&#39; }&quot;</code></pre>
 <h2>util.isArray(object)<span><a class="mark" href="#util_util_isarray_object" id="util_util_isarray_object">#</a></span></h2>
 <!--
 Returns `true` if the given "object" is an `Array`. `false` otherwise.
@@ -507,7 +525,7 @@ stream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;</co
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.0/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
