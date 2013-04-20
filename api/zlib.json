@@ -121,7 +121,7 @@
           ]
         },
         {
-          "textRaw": "zlib.deflate(buf, callback)",
+          "textRaw": "zlib.deflate(buf, [options], callback)",
           "type": "method",
           "name": "deflate",
           "desc": "<!--\nCompress a string with Deflate.\n-->\n\n<p>Deflate で文字列を圧縮します。\n\n</p>\n",
@@ -132,6 +132,10 @@
                   "name": "buf"
                 },
                 {
+                  "name": "options",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -139,7 +143,7 @@
           ]
         },
         {
-          "textRaw": "zlib.deflateRaw(buf, callback)",
+          "textRaw": "zlib.deflateRaw(buf, [options], callback)",
           "type": "method",
           "name": "deflateRaw",
           "desc": "<!--\nCompress a string with DeflateRaw.\n-->\n\n<p>DeflateRaw で文字列を圧縮します。\n\n</p>\n",
@@ -150,6 +154,10 @@
                   "name": "buf"
                 },
                 {
+                  "name": "options",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -157,7 +165,7 @@
           ]
         },
         {
-          "textRaw": "zlib.gzip(buf, callback)",
+          "textRaw": "zlib.gzip(buf, [options], callback)",
           "type": "method",
           "name": "gzip",
           "desc": "<!--\nCompress a string with Gzip.\n-->\n\n<p>Gzip で文字列を圧縮します。\n\n</p>\n",
@@ -168,6 +176,10 @@
                   "name": "buf"
                 },
                 {
+                  "name": "options",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -175,7 +187,7 @@
           ]
         },
         {
-          "textRaw": "zlib.gunzip(buf, callback)",
+          "textRaw": "zlib.gunzip(buf, [options], callback)",
           "type": "method",
           "name": "gunzip",
           "desc": "<!--\nDecompress a raw Buffer with Gunzip.\n-->\n\n<p>Gunzip で生のバッファを解凍します。\n\n</p>\n",
@@ -186,6 +198,10 @@
                   "name": "buf"
                 },
                 {
+                  "name": "options",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -193,7 +209,7 @@
           ]
         },
         {
-          "textRaw": "zlib.inflate(buf, callback)",
+          "textRaw": "zlib.inflate(buf, [options], callback)",
           "type": "method",
           "name": "inflate",
           "desc": "<!--\nDecompress a raw Buffer with Inflate.\n-->\n\n<p>Infrate で生のバッファを解凍します。\n\n</p>\n",
@@ -204,6 +220,10 @@
                   "name": "buf"
                 },
                 {
+                  "name": "options",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -211,7 +231,7 @@
           ]
         },
         {
-          "textRaw": "zlib.inflateRaw(buf, callback)",
+          "textRaw": "zlib.inflateRaw(buf, [options], callback)",
           "type": "method",
           "name": "inflateRaw",
           "desc": "<!--\nDecompress a raw Buffer with InflateRaw.\n-->\n\n<p>InflateRaw で生のバッファを解凍します。\n\n</p>\n",
@@ -222,6 +242,10 @@
                   "name": "buf"
                 },
                 {
+                  "name": "options",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -229,7 +253,7 @@
           ]
         },
         {
-          "textRaw": "zlib.unzip(buf, callback)",
+          "textRaw": "zlib.unzip(buf, [options], callback)",
           "type": "method",
           "name": "unzip",
           "desc": "<!--\nDecompress a raw Buffer with Unzip.\n-->\n\n<p>Unzip で生のバッファを解凍します。\n\n</p>\n",
@@ -238,6 +262,10 @@
               "params": [
                 {
                   "name": "buf"
+                },
+                {
+                  "name": "options",
+                  "optional": true
                 },
                 {
                   "name": "callback"
@@ -330,13 +358,13 @@
           "textRaw": "Convenience Methods",
           "name": "Convenience Methods",
           "type": "misc",
-          "desc": "<!--\nAll of these take a string or buffer as the first argument, and call the\nsupplied callback with `callback(error, result)`.  The\ncompression/decompression engine is created using the default settings\nin all convenience methods.  To supply different options, use the\nzlib classes directly.\n-->\n\n<p>これらは全て第 1 引数として文字列またはバッファを受け取り、\n与えられたコールバック <code>callback(error, result)</code> を呼び出します。\n全ての簡易メソッドで、圧縮・解凍エンジンはデフォルトの設定で作成されます。\n異なったオプションを与えるには、zlib のクラスを直接使用してください。\n\n</p>\n"
+          "desc": "<!--\nAll of these take a string or buffer as the first argument, an optional second\nargument to supply options to the zlib classes and will call the supplied\ncallback with `callback(error, result)`.\n-->\n\n<p>これらは全て第 1 引数として文字列またはバッファを、\n任意の第 2 引数で zlib クラスのオプションを受け取り、\n与えられたコールバック <code>callback(error, result)</code> を呼び出します。\n\n</p>\n"
         },
         {
           "textRaw": "Options",
           "name": "Options",
           "type": "misc",
-          "desc": "<!--\nEach class takes an options object.  All options are optional.  (The\nconvenience methods use the default settings for all options.)\n-->\n\n<p>どのクラスもオプションオブジェクトを受け取ります。\n全てのオプションは任意です\n(簡易メソッドは全てのオプションでデフォルト値を使用します)。\n\n</p>\n<!--\nNote that some options are only relevant when compressing, and are\nignored by the decompression classes.\n-->\n\n<p>いくつかのオプションは圧縮にだけ関連し、\n解凍するクラスでは無視されることに注意してください。\n\n</p>\n<!--\n* flush (default: `zlib.Z_NO_FLUSH`)\n* chunkSize (default: 16*1024)\n* windowBits\n* level (compression only)\n* memLevel (compression only)\n* strategy (compression only)\n* dictionary (deflate/inflate only, empty dictionary by default)\n-->\n\n<ul>\n<li>flush (デフォルト: <code>zlib.Z_NO_FLUSH</code>)</li>\n<li>chunkSize (デフォルト: 16*1024)</li>\n<li>windowBits</li>\n<li>level (圧縮のみ)</li>\n<li>memLevel (圧縮のみ)</li>\n<li>strategy (圧縮のみ)</li>\n<li>dictionary (deflate/inflate のみ、デフォルトは空の辞書です)</li>\n</ul>\n<!--\nSee the description of `deflateInit2` and `inflateInit2` at\n<http://zlib.net/manual.html#Advanced> for more information on these.\n-->\n\n<p>これらの詳細は <a href=\"http://zlib.net/manual.html#Advanced\">http://zlib.net/manual.html#Advanced</a> の\n<code>deflateInit2</code> および <code>inflateInit2</code> の説明を参照してください。\n\n</p>\n"
+          "desc": "<!--\nEach class takes an options object.  All options are optional.\n-->\n\n<p>どのクラスもオプションオブジェクトを受け取ります。\n全てのオプションは任意です\n\n</p>\n<!--\nNote that some options are only relevant when compressing, and are\nignored by the decompression classes.\n-->\n\n<p>いくつかのオプションは圧縮にだけ関連し、\n解凍するクラスでは無視されることに注意してください。\n\n</p>\n<!--\n* flush (default: `zlib.Z_NO_FLUSH`)\n* chunkSize (default: 16*1024)\n* windowBits\n* level (compression only)\n* memLevel (compression only)\n* strategy (compression only)\n* dictionary (deflate/inflate only, empty dictionary by default)\n-->\n\n<ul>\n<li>flush (デフォルト: <code>zlib.Z_NO_FLUSH</code>)</li>\n<li>chunkSize (デフォルト: 16*1024)</li>\n<li>windowBits</li>\n<li>level (圧縮のみ)</li>\n<li>memLevel (圧縮のみ)</li>\n<li>strategy (圧縮のみ)</li>\n<li>dictionary (deflate/inflate のみ、デフォルトは空の辞書です)</li>\n</ul>\n<!--\nSee the description of `deflateInit2` and `inflateInit2` at\n<http://zlib.net/manual.html#Advanced> for more information on these.\n-->\n\n<p>これらの詳細は <a href=\"http://zlib.net/manual.html#Advanced\">http://zlib.net/manual.html#Advanced</a> の\n<code>deflateInit2</code> および <code>inflateInit2</code> の説明を参照してください。\n\n</p>\n"
         },
         {
           "textRaw": "Memory Usage Tuning",

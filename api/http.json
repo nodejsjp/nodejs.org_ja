@@ -22,27 +22,13 @@
         {
           "textRaw": "http.IncomingMessage",
           "name": "IncomingMessage",
-          "desc": "<!--\nAn `IncomingMessage` object is created by `http.Server` or `http.ClientRequest`\nand passed as the first argument to the `'request'` and `'response'` event\nrespectively. It may be used to access response status, headers and data.\n-->\n\n<p><code>IncomingMessage</code> オブジェクトは <code>http.Server</code> または <code>http.ClientRequest()</code>\nによって作成され、<code>&#39;request&#39;</code> および <code>&#39;response&#39;</code> イベントそれぞれの\n最初の引数として渡されます。\nそれはステータス、ヘッダ、およびデータにアクセスするために使われます。\n\n</p>\n<!--\nIt implements the [Readable Stream][] interface. `http.IncomingMessage` is an\n[EventEmitter][] with the following events:\n-->\n\n<p>これは [Readable Stream][] インタフェースを実装します。\n<code>http.IncomingMessage</code> はは以下のイベントを持つ [EventEmitter][] です:\n\n</p>\n",
+          "desc": "<!--\nAn `IncomingMessage` object is created by `http.Server` or `http.ClientRequest`\nand passed as the first argument to the `'request'` and `'response'` event\nrespectively. It may be used to access response status, headers and data.\n-->\n\n<p><code>IncomingMessage</code> オブジェクトは <code>http.Server</code> または <code>http.ClientRequest()</code>\nによって作成され、<code>&#39;request&#39;</code> および <code>&#39;response&#39;</code> イベントそれぞれの\n最初の引数として渡されます。\nそれはステータス、ヘッダ、およびデータにアクセスするために使われます。\n\n</p>\n<!--\nIt implements the [Readable Stream][] interface, as well as the\nfollowing additional events, methods, and properties.\n-->\n\n<p>これは [Readable Stream][] インタフェースの実装で、\n以下のイベント、メソッド、およびプロパティを追加で持ちます。\n\n</p>\n",
           "events": [
-            {
-              "textRaw": "Event: 'data'",
-              "type": "event",
-              "name": "data",
-              "desc": "<p><code>function (chunk) { }</code>\n\n</p>\n<!--\nEmitted when a piece of the message body is received. The chunk is a string if\nan encoding has been set with `message.setEncoding()`, otherwise it's\na [Buffer][].\n-->\n\n<p>メッセージボディの断片を受信した場合に生成されます。\n<code>message.setEncoding()</code> によってエンコーディングが設定されている場合、\nチャンクは文字列です。それ以外の場合は [Buffer][] です。\n\n</p>\n<!--\nNote that the __data will be lost__ if there is no listener when a\n`IncomingMessage` emits a `'data'` event.\n-->\n\n<p><code>IncomingMessage</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n",
-              "params": []
-            },
-            {
-              "textRaw": "Event: 'end'",
-              "type": "event",
-              "name": "end",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nEmitted exactly once for each response. After that, no more `'data'` events\nwill be emitted on the response.\n-->\n\n<p>レスポンスごとに厳密に一回生成されます。\nその後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。\n\n</p>\n",
-              "params": []
-            },
             {
               "textRaw": "Event: 'close'",
               "type": "event",
               "name": "close",
-              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response, and no more\n`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`\nevent for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n",
+              "desc": "<p><code>function () { }</code>\n\n</p>\n<!--\nIndicates that the underlaying connection was terminated before\n`response.end()` was called or able to flush.\n-->\n\n<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、\n下層の接続が切断されたことを示します。\n\n</p>\n<!--\nJust like `'end'`, this event occurs only once per response. See\n[http.ServerResponse][]'s `'close'` event for more information.\n-->\n\n<p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、\n<code>&#39;data&#39;</code> イベントはそれ以上生成されません。\n[http.ServerResponse][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。\n\n</p>\n",
               "params": []
             }
           ],
@@ -115,44 +101,6 @@
                 }
               ],
               "desc": "<!--\nCalls `message.connection.setTimeout(msecs, callback)`.\n-->\n\n<p><code>message.connection.setTimeout(msecs, callback)</code> を呼びます。\n\n</p>\n"
-            },
-            {
-              "textRaw": "message.setEncoding([encoding])",
-              "type": "method",
-              "name": "setEncoding",
-              "desc": "<!--\nSet the encoding for data emitted by the `'data'` event. See [stream.setEncoding()][] for more\ninformation.\n-->\n\n<p><code>&#39;data&#39;</code> イベントによって生成されるデータのエンコーディングを設定します。\n詳細は [stream.setEncoding()][] を参照してください。\n\n</p>\n<!--\nShould be set before any `'data'` events have been emitted.\n-->\n\n<p>あらゆる <code>&#39;data&#39;</code> イベントが生成されるよりも前に設定されなければなりません。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": [
-                    {
-                      "name": "encoding",
-                      "optional": true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "textRaw": "message.pause()",
-              "type": "method",
-              "name": "pause",
-              "desc": "<!--\nPauses request/response from emitting events.  Useful to throttle back a download.\n-->\n\n<p>リクエスト／レスポンスによるイベントの生成を中断します。\nダウンロード速度を落とすのに便利です。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": []
-                }
-              ]
-            },
-            {
-              "textRaw": "message.resume()",
-              "type": "method",
-              "name": "resume",
-              "desc": "<!--\nResumes a paused request/response.\n-->\n\n<p>中断されたリクエスト／レスポンスを再開します。\n\n</p>\n",
-              "signatures": [
-                {
-                  "params": []
-                }
-              ]
             }
           ]
         }
@@ -249,7 +197,7 @@
               "textRaw": "Event: 'connection'",
               "type": "event",
               "name": "connection",
-              "desc": "<p><code>function (socket) { }</code>\n\n</p>\n<!--\n When a new TCP stream is established. `socket` is an object of type\n `net.Socket`. Usually users will not want to access this event. The\n `socket` can also be accessed at `request.connection`.\n-->\n\n<p>新しい TCP ストリームが確立した時。\n<code>socket</code> は <code>net.Socket</code> 型のオブジェクトです。\n通常の利用者がこのイベントにアクセスしたくなることはないでしょう。\n<code>socket</code> は <code>request.connection</code> からアクセスすることもできます。\n\n</p>\n",
+              "desc": "<p><code>function (socket) { }</code>\n\n</p>\n<!--\n When a new TCP stream is established. `socket` is an object of type\n `net.Socket`. Usually users will not want to access this event. In\n particular, the socket will not emit `readable` events because of how\n the protocol parser attaches to the socket. The `socket` can also be\n accessed at `request.connection`.\n-->\n\n<p>新しい TCP ストリームが確立した時。\n<code>socket</code> は <code>net.Socket</code> 型のオブジェクトです。\n通常の利用者がこのイベントにアクセスしたくなることはないでしょう。\nとりわけ、ソケットはプロトコルパーサにアタッチされるため、\n<code>readable</code> イベントを生成しません。\n<code>socket</code> は <code>request.connection</code> からアクセスすることもできます。\n\n</p>\n",
               "params": []
             },
             {
@@ -662,7 +610,7 @@
           "textRaw": "Class: http.ClientRequest",
           "type": "class",
           "name": "http.ClientRequest",
-          "desc": "<!--\nThis object is created internally and returned from `http.request()`.  It\nrepresents an _in-progress_ request whose header has already been queued.  The\nheader is still mutable using the `setHeader(name, value)`, `getHeader(name)`,\n`removeHeader(name)` API.  The actual header will be sent along with the first\ndata chunk or when closing the connection.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部で作成され、<code>http.request()</code> から返されます。\nそれはヘッダがキューに入れられた <em>進行中</em> のリクエストを表現します。\nヘッダは <code>setHeader(name, value)</code>, <code>getHeader(name)</code>, <code>removeHeader(name)</code> API によってまだ可変のままです。\n実際にヘッダが送信されるのは、最初のデータチャンクが送信される時またはコネクションがクローズされる時です。\n\n</p>\n<!--\nTo get the response, add a listener for `'response'` to the request object.\n`'response'` will be emitted from the request object when the response\nheaders have been received.  The `'response'` event is executed with one\nargument which is an instance of `http.IncomingMessage`.\n-->\n\n<p>レスポンスを取得するには、<code>&#39;response&#39;</code> 用のリスナーをリクエストオブジェクトに加えます。\n<code>&#39;response&#39;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。\n<code>&#39;response&#39;</code> イベントは <code>http.IncomingMessage</code> のインスタンスを唯一の引数として\n実行されます。\n\n</p>\n<!--\nDuring the `'response'` event, one can add listeners to the\nresponse object; particularly to listen for the `'data'` event. Note that\nthe `'response'` event is called before any part of the response body is received,\nso there is no need to worry about racing to catch the first part of the\nbody. As long as a listener for `'data'` is added during the `'response'`\nevent, the entire body will be caught.\n-->\n\n<p><code>&#39;response&#39;</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;\nとりわけ <code>&#39;data&#39;</code> イベントのリスナーです。\n<code>&#39;response&#39;</code> イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。\nそのため、ボディの最初の部分の受信と競合することを心配する必要はありません。\n<code>&#39;response&#39;</code> イベントの間に <code>&#39;data&#39;</code> イベントのリスナーが加えられる限り、\nボディ全体を受信することができます。\n\n\n</p>\n<pre><code>// Good\nrequest.on(&#39;response&#39;, function (response) {\n  response.on(&#39;data&#39;, function (chunk) {\n    console.log(&#39;BODY: &#39; + chunk);\n  });\n});\n\n// Bad - misses all or part of the body\nrequest.on(&#39;response&#39;, function (response) {\n  setTimeout(function () {\n    response.on(&#39;data&#39;, function (chunk) {\n      console.log(&#39;BODY: &#39; + chunk);\n    });\n  }, 10);\n});</code></pre>\n<!--\nThis is a `Writable Stream`.\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n-->\n\n<p>これは <code>Writable Stream</code> です。\n注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。\n\n</p>\n<p><code>ServerRequest</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n<!--\nThe request implements the [Writable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>リクエストは [Writable  Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です。\n\n</p>\n",
+          "desc": "<!--\nThis object is created internally and returned from `http.request()`.  It\nrepresents an _in-progress_ request whose header has already been queued.  The\nheader is still mutable using the `setHeader(name, value)`, `getHeader(name)`,\n`removeHeader(name)` API.  The actual header will be sent along with the first\ndata chunk or when closing the connection.\n-->\n\n<p>このオブジェクトは HTTP サーバ内部で作成され、<code>http.request()</code> から返されます。\nそれはヘッダがキューに入れられた <em>進行中</em> のリクエストを表現します。\nヘッダは <code>setHeader(name, value)</code>, <code>getHeader(name)</code>, <code>removeHeader(name)</code> API によってまだ可変のままです。\n実際にヘッダが送信されるのは、最初のデータチャンクが送信される時またはコネクションがクローズされる時です。\n\n</p>\n<!--\nTo get the response, add a listener for `'response'` to the request object.\n`'response'` will be emitted from the request object when the response\nheaders have been received.  The `'response'` event is executed with one\nargument which is an instance of `http.IncomingMessage`.\n-->\n\n<p>レスポンスを取得するには、<code>&#39;response&#39;</code> 用のリスナーをリクエストオブジェクトに加えます。\n<code>&#39;response&#39;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。\n<code>&#39;response&#39;</code> イベントは <code>http.IncomingMessage</code> のインスタンスを唯一の引数として\n実行されます。\n\n</p>\n<!--\nDuring the `'response'` event, one can add listeners to the\nresponse object; particularly to listen for the `'data'` event.\n-->\n\n<p><code>&#39;response&#39;</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;\nとりわけ <code>&#39;data&#39;</code> イベントのリスナーです。\n\n</p>\n<!--\nIf no `'response'` handler is added, then the response will be\nentirely discarded.  However, if you add a `'response'` event handler,\nthen you **must** consume the data from the response object, either by\ncalling `response.read()` whenever there is a `'readable'` event, or\nby adding a `'data'` handler, or by calling the `.resume()` method.\nUntil the data is consumed, the `'end'` event will not fire.\n-->\n\n<p><code>&#39;response&#39;</code> ハンドラが加えられない場合、レスポンスは完全に捨てられます。\nしかし、<code>&#39;response&#39;</code> イベントハンドラを加えた場合は、\n<code>&#39;readable&#39;</code> イベントが発生した時に <code>response.read()</code> を呼ぶか、\n<code>&#39;data&#39;</code> ハンドラを加えるか、<code>.resume()</code> メソッドを呼び出すかのいずれかにより、\nレスポンスオブジェクトからのデータを消費しなければ <em>なりません</em> 。\n\n</p>\n<!--\nThis is a `Writable Stream`.\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n\nNote: Node does not check whether Content-Length and the length of the body\nwhich has been transmitted are equal or not.\n-->\n\n<p>これは <code>Writable Stream</code> です。\n注意: Node は Content-Length と実際に送信されたリクエストボディの長さが等しいかどうかチェックしません。\n\n</p>\n<p><code>ServerRequest</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、\n<strong>データは失われる</strong>ことに注意してください。\n\n</p>\n<!--\nThe request implements the [Writable Stream][] interface. This is an\n[EventEmitter][] with the following events:\n-->\n\n<p>リクエストは [Writable  Stream][] インタフェースを実装します。\nこれは以下のイベントを持つ [EventEmitter][] です。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event 'response'",

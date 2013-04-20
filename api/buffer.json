@@ -195,7 +195,7 @@
               "textRaw": "buf.toJSON()",
               "type": "method",
               "name": "toJSON",
-              "desc": "<!--\nReturns a JSON-representation of the Buffer instance, which is identical to the\noutput for JSON Arrays. `JSON.stringify` implicitly calls this function when\nstringifying a Buffer instance.\n-->\n\n<p>バッファインスタンスの JSON 表現を返します。\nそれは配列の JSON 出力と同じです。\n<code>JSON.stringify()</code> は Buffer のインスタンスを文字列化する際に、\nこの関数を暗黙的に呼び出します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(&#39;test&#39;);\nvar json = JSON.stringify(buf);\n\nconsole.log(json);\n// &#39;[116,101,115,116]&#39;\n\nvar copy = new Buffer(JSON.parse(json));\n\nconsole.log(copy);\n// &lt;Buffer 74 65 73 74&gt;</code></pre>\n",
+              "desc": "<!--\nReturns a JSON-representation of the Buffer instance.  `JSON.stringify`\nimplicitly calls this function when stringifying a Buffer instance.\n-->\n\n<p>バッファインスタンスの JSON 表現を返します。\n<code>JSON.stringify()</code> は Buffer のインスタンスを文字列化する際に、\nこの関数を暗黙的に呼び出します。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>var buf = new Buffer(&#39;test&#39;);\nvar json = JSON.stringify(buf);\n\nconsole.log(json);\n// &#39;{&quot;type&quot;:&quot;Buffer&quot;,&quot;data&quot;:[116,101,115,116]}&#39;\n\nvar copy = JSON.parse(json, function(key, value) {\n    return value &amp;&amp; value.type === &#39;Buffer&#39;\n      ? new Buffer(value.data)\n      : value;\n  });\n\nconsole.log(copy);\n// &lt;Buffer 74 65 73 74&gt;</code></pre>\n",
               "signatures": [
                 {
                   "params": []
