@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.11.0 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.11.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -818,6 +818,17 @@ POSIX システムでは、シンボリックリンクは辿られません。
 動かないかもしれません。
 
 </p>
+<!--
+On Linux, positional writes don't work when the file is opened in append mode.
+The kernel ignores the position argument and always appends the data to
+the end of the file.
+-->
+
+<p>Linux では、ファイルを追記モードでオープンした場合、
+ポジションを指定した書き込みは動作しません。
+カーネルはポジション引数を無視し、データを常にファイルの最後に追記します。
+
+</p>
 <h2>fs.openSync(path, flags, [mode])<span><a class="mark" href="#fs_fs_opensync_path_flags_mode" id="fs_fs_opensync_path_flags_mode">#</a></span></h2>
 <!--
 Synchronous open(2).
@@ -909,6 +920,17 @@ without waiting for the callback. For this scenario,
 
 <p>同じファイルに対してコールバックされるのを待つことなく <code>fs.write()</code> を何度も呼び出すことは、安全ではないことに注意してください。
 このシナリオでは、 <code>fs.createWriteStream()</code> を強く推奨します。
+
+</p>
+<!--
+On Linux, positional writes don't work when the file is opened in append mode.
+The kernel ignores the position argument and always appends the data to
+the end of the file.
+-->
+
+<p>Linux では、ファイルを追記モードでオープンした場合、
+ポジションを指定した書き込みは動作しません。
+カーネルはポジション引数を無視し、データを常にファイルの最後に追記します。
 
 </p>
 <h2>fs.writeSync(fd, buffer, offset, length, position)<span><a class="mark" href="#fs_fs_writesync_fd_buffer_offset_length_position" id="fs_fs_writesync_fd_buffer_offset_length_position">#</a></span></h2>
@@ -1464,7 +1486,7 @@ start at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.
 </p>
 <!--
 If `autoClose` is false, then the file descriptor won't be closed, even if
-there's an error.  It is your responsiblity to close it and make sure
+there's an error.  It is your responsibility to close it and make sure
 there's no file descriptor leak.  If `autoClose` is set to true (default
 behavior), on `error` or `end` the file descriptor will be closed
 automatically.
@@ -1643,7 +1665,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

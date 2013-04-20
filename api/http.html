@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.11.0 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.11.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -116,16 +116,11 @@
 </ul>
 </li>
 <li><a href="#http_http_incomingmessage">http.IncomingMessage</a><ul>
-<li><a href="#http_event_data">Event: &#39;data&#39;</a></li>
-<li><a href="#http_event_end">Event: &#39;end&#39;</a></li>
 <li><a href="#http_event_close_2">Event: &#39;close&#39;</a></li>
 <li><a href="#http_message_httpversion">message.httpVersion</a></li>
 <li><a href="#http_message_headers">message.headers</a></li>
 <li><a href="#http_message_trailers">message.trailers</a></li>
 <li><a href="#http_message_settimeout_msecs_callback">message.setTimeout(msecs, callback)</a></li>
-<li><a href="#http_message_setencoding_encoding">message.setEncoding([encoding])</a></li>
-<li><a href="#http_message_pause">message.pause()</a></li>
-<li><a href="#http_message_resume">message.resume()</a></li>
 <li><a href="#http_message_method">message.method</a></li>
 <li><a href="#http_message_url">message.url</a></li>
 <li><a href="#http_message_statuscode">message.statusCode</a></li>
@@ -273,13 +268,17 @@ per connection (in the case of keep-alive connections).
 </p>
 <!--
  When a new TCP stream is established. `socket` is an object of type
- `net.Socket`. Usually users will not want to access this event. The
- `socket` can also be accessed at `request.connection`.
+ `net.Socket`. Usually users will not want to access this event. In
+ particular, the socket will not emit `readable` events because of how
+ the protocol parser attaches to the socket. The `socket` can also be
+ accessed at `request.connection`.
 -->
 
 <p>新しい TCP ストリームが確立した時。
 <code>socket</code> は <code>net.Socket</code> 型のオブジェクトです。
 通常の利用者がこのイベントにアクセスしたくなることはないでしょう。
+とりわけ、ソケットはプロトコルパーサにアタッチされるため、
+<code>readable</code> イベントを生成しません。
 <code>socket</code> は <code>request.connection</code> からアクセスすることもできます。
 
 </p>
@@ -1315,37 +1314,29 @@ argument which is an instance of `http.IncomingMessage`.
 </p>
 <!--
 During the `'response'` event, one can add listeners to the
-response object; particularly to listen for the `'data'` event. Note that
-the `'response'` event is called before any part of the response body is received,
-so there is no need to worry about racing to catch the first part of the
-body. As long as a listener for `'data'` is added during the `'response'`
-event, the entire body will be caught.
+response object; particularly to listen for the `'data'` event.
 -->
 
 <p><code>&#39;response&#39;</code> イベントの間、レスポンスオブジェクトにリスナーを加えることができます;
 とりわけ <code>&#39;data&#39;</code> イベントのリスナーです。
-<code>&#39;response&#39;</code> イベントはレスポンスボディのどの部分を受信するよりも前に呼び出されることに注意してください。
-そのため、ボディの最初の部分の受信と競合することを心配する必要はありません。
-<code>&#39;response&#39;</code> イベントの間に <code>&#39;data&#39;</code> イベントのリスナーが加えられる限り、
-ボディ全体を受信することができます。
-
 
 </p>
-<pre><code>// Good
-request.on(&#39;response&#39;, function (response) {
-  response.on(&#39;data&#39;, function (chunk) {
-    console.log(&#39;BODY: &#39; + chunk);
-  });
-});
+<!--
+If no `'response'` handler is added, then the response will be
+entirely discarded.  However, if you add a `'response'` event handler,
+then you **must** consume the data from the response object, either by
+calling `response.read()` whenever there is a `'readable'` event, or
+by adding a `'data'` handler, or by calling the `.resume()` method.
+Until the data is consumed, the `'end'` event will not fire.
+-->
 
-// Bad - misses all or part of the body
-request.on(&#39;response&#39;, function (response) {
-  setTimeout(function () {
-    response.on(&#39;data&#39;, function (chunk) {
-      console.log(&#39;BODY: &#39; + chunk);
-    });
-  }, 10);
-});</code></pre>
+<p><code>&#39;response&#39;</code> ハンドラが加えられない場合、レスポンスは完全に捨てられます。
+しかし、<code>&#39;response&#39;</code> イベントハンドラを加えた場合は、
+<code>&#39;readable&#39;</code> イベントが発生した時に <code>response.read()</code> を呼ぶか、
+<code>&#39;data&#39;</code> ハンドラを加えるか、<code>.resume()</code> メソッドを呼び出すかのいずれかにより、
+レスポンスオブジェクトからのデータを消費しなければ <em>なりません</em> 。
+
+</p>
 <!--
 This is a `Writable Stream`.
 Note: Node does not check whether Content-Length and the length of the body
@@ -1670,49 +1661,12 @@ respectively. It may be used to access response status, headers and data.
 
 </p>
 <!--
-It implements the [Readable Stream][] interface. `http.IncomingMessage` is an
-[EventEmitter][] with the following events:
+It implements the [Readable Stream][] interface, as well as the
+following additional events, methods, and properties.
 -->
 
-<p>これは <a href="stream.html#stream_readable_stream">Readable Stream</a> インタフェースを実装します。
-<code>http.IncomingMessage</code> はは以下のイベントを持つ <a href="events.html#events_class_events_eventemitter">EventEmitter</a> です:
-
-</p>
-<h3>Event: &#39;data&#39;<span><a class="mark" href="#http_event_data" id="http_event_data">#</a></span></h3>
-<p><code>function (chunk) { }</code>
-
-</p>
-<!--
-Emitted when a piece of the message body is received. The chunk is a string if
-an encoding has been set with `message.setEncoding()`, otherwise it's
-a [Buffer][].
--->
-
-<p>メッセージボディの断片を受信した場合に生成されます。
-<code>message.setEncoding()</code> によってエンコーディングが設定されている場合、
-チャンクは文字列です。それ以外の場合は <a href="buffer.html#buffer_buffer">Buffer</a> です。
-
-</p>
-<!--
-Note that the __data will be lost__ if there is no listener when a
-`IncomingMessage` emits a `'data'` event.
--->
-
-<p><code>IncomingMessage</code> が <code>&#39;data&#39;</code> イベントを生成した時にリスナが存在しなければ、
-<strong>データは失われる</strong>ことに注意してください。
-
-</p>
-<h3>Event: &#39;end&#39;<span><a class="mark" href="#http_event_end" id="http_event_end">#</a></span></h3>
-<p><code>function () { }</code>
-
-</p>
-<!--
-Emitted exactly once for each response. After that, no more `'data'` events
-will be emitted on the response.
--->
-
-<p>レスポンスごとに厳密に一回生成されます。
-その後、このレスポンスで <code>&#39;data&#39;</code> イベントが生成されることはありません。
+<p>これは <a href="stream.html#stream_readable_stream">Readable Stream</a> インタフェースの実装で、
+以下のイベント、メソッド、およびプロパティを追加で持ちます。
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#http_event_close_2" id="http_event_close_2">#</a></span></h3>
@@ -1729,14 +1683,13 @@ Indicates that the underlaying connection was terminated before
 
 </p>
 <!--
-Just like `'end'`, this event occurs only once per response, and no more
-`'data'` events will fire afterwards. See [http.ServerResponse][]'s `'close'`
-event for more information.
+Just like `'end'`, this event occurs only once per response. See
+[http.ServerResponse][]'s `'close'` event for more information.
 -->
 
 <p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、
 <code>&#39;data&#39;</code> イベントはそれ以上生成されません。
-[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+[http.ServerResponse][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
 
 </p>
 <h3>message.httpVersion<span><a class="mark" href="#http_message_httpversion" id="http_message_httpversion">#</a></span></h3>
@@ -1803,40 +1756,6 @@ Calls `message.connection.setTimeout(msecs, callback)`.
 -->
 
 <p><code>message.connection.setTimeout(msecs, callback)</code> を呼びます。
-
-</p>
-<h3>message.setEncoding([encoding])<span><a class="mark" href="#http_message_setencoding_encoding" id="http_message_setencoding_encoding">#</a></span></h3>
-<!--
-Set the encoding for data emitted by the `'data'` event. See [stream.setEncoding()][] for more
-information.
--->
-
-<p><code>&#39;data&#39;</code> イベントによって生成されるデータのエンコーディングを設定します。
-詳細は <a href="stream.html#stream_stream_setencoding_encoding">stream.setEncoding()</a> を参照してください。
-
-</p>
-<!--
-Should be set before any `'data'` events have been emitted.
--->
-
-<p>あらゆる <code>&#39;data&#39;</code> イベントが生成されるよりも前に設定されなければなりません。
-
-</p>
-<h3>message.pause()<span><a class="mark" href="#http_message_pause" id="http_message_pause">#</a></span></h3>
-<!--
-Pauses request/response from emitting events.  Useful to throttle back a download.
--->
-
-<p>リクエスト／レスポンスによるイベントの生成を中断します。
-ダウンロード速度を落とすのに便利です。
-
-</p>
-<h3>message.resume()<span><a class="mark" href="#http_message_resume" id="http_message_resume">#</a></span></h3>
-<!--
-Resumes a paused request/response.
--->
-
-<p>中断されたリクエスト／レスポンスを再開します。
 
 </p>
 <h3>message.method<span><a class="mark" href="#http_message_method" id="http_message_method">#</a></span></h3>
@@ -1977,7 +1896,7 @@ authentication details.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

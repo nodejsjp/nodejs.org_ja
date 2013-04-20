@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Zlib Node.js v0.11.0 Manual &amp; Documentation</title>
+  <title>Zlib Node.js v0.11.1 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/zlib.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.0 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -77,13 +77,13 @@
 <li><a href="#zlib_class_zlib_inflateraw">Class: zlib.InflateRaw</a></li>
 <li><a href="#zlib_class_zlib_unzip">Class: zlib.Unzip</a></li>
 <li><a href="#zlib_convenience_methods">Convenience Methods</a></li>
-<li><a href="#zlib_zlib_deflate_buf_callback">zlib.deflate(buf, callback)</a></li>
-<li><a href="#zlib_zlib_deflateraw_buf_callback">zlib.deflateRaw(buf, callback)</a></li>
-<li><a href="#zlib_zlib_gzip_buf_callback">zlib.gzip(buf, callback)</a></li>
-<li><a href="#zlib_zlib_gunzip_buf_callback">zlib.gunzip(buf, callback)</a></li>
-<li><a href="#zlib_zlib_inflate_buf_callback">zlib.inflate(buf, callback)</a></li>
-<li><a href="#zlib_zlib_inflateraw_buf_callback">zlib.inflateRaw(buf, callback)</a></li>
-<li><a href="#zlib_zlib_unzip_buf_callback">zlib.unzip(buf, callback)</a></li>
+<li><a href="#zlib_zlib_deflate_buf_options_callback">zlib.deflate(buf, [options], callback)</a></li>
+<li><a href="#zlib_zlib_deflateraw_buf_options_callback">zlib.deflateRaw(buf, [options], callback)</a></li>
+<li><a href="#zlib_zlib_gzip_buf_options_callback">zlib.gzip(buf, [options], callback)</a></li>
+<li><a href="#zlib_zlib_gunzip_buf_options_callback">zlib.gunzip(buf, [options], callback)</a></li>
+<li><a href="#zlib_zlib_inflate_buf_options_callback">zlib.inflate(buf, [options], callback)</a></li>
+<li><a href="#zlib_zlib_inflateraw_buf_options_callback">zlib.inflateRaw(buf, [options], callback)</a></li>
+<li><a href="#zlib_zlib_unzip_buf_options_callback">zlib.unzip(buf, [options], callback)</a></li>
 <li><a href="#zlib_options">Options</a></li>
 <li><a href="#zlib_memory_usage_tuning">Memory Usage Tuning</a></li>
 <li><a href="#zlib_constants">Constants</a></li>
@@ -396,20 +396,17 @@ the header.
 <!--type=misc-->
 
 <!--
-All of these take a string or buffer as the first argument, and call the
-supplied callback with `callback(error, result)`.  The
-compression/decompression engine is created using the default settings
-in all convenience methods.  To supply different options, use the
-zlib classes directly.
+All of these take a string or buffer as the first argument, an optional second
+argument to supply options to the zlib classes and will call the supplied
+callback with `callback(error, result)`.
 -->
 
-<p>これらは全て第 1 引数として文字列またはバッファを受け取り、
+<p>これらは全て第 1 引数として文字列またはバッファを、
+任意の第 2 引数で zlib クラスのオプションを受け取り、
 与えられたコールバック <code>callback(error, result)</code> を呼び出します。
-全ての簡易メソッドで、圧縮・解凍エンジンはデフォルトの設定で作成されます。
-異なったオプションを与えるには、zlib のクラスを直接使用してください。
 
 </p>
-<h2>zlib.deflate(buf, callback)<span><a class="mark" href="#zlib_zlib_deflate_buf_callback" id="zlib_zlib_deflate_buf_callback">#</a></span></h2>
+<h2>zlib.deflate(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_deflate_buf_options_callback" id="zlib_zlib_deflate_buf_options_callback">#</a></span></h2>
 <!--
 Compress a string with Deflate.
 -->
@@ -417,7 +414,7 @@ Compress a string with Deflate.
 <p>Deflate で文字列を圧縮します。
 
 </p>
-<h2>zlib.deflateRaw(buf, callback)<span><a class="mark" href="#zlib_zlib_deflateraw_buf_callback" id="zlib_zlib_deflateraw_buf_callback">#</a></span></h2>
+<h2>zlib.deflateRaw(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_deflateraw_buf_options_callback" id="zlib_zlib_deflateraw_buf_options_callback">#</a></span></h2>
 <!--
 Compress a string with DeflateRaw.
 -->
@@ -425,7 +422,7 @@ Compress a string with DeflateRaw.
 <p>DeflateRaw で文字列を圧縮します。
 
 </p>
-<h2>zlib.gzip(buf, callback)<span><a class="mark" href="#zlib_zlib_gzip_buf_callback" id="zlib_zlib_gzip_buf_callback">#</a></span></h2>
+<h2>zlib.gzip(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_gzip_buf_options_callback" id="zlib_zlib_gzip_buf_options_callback">#</a></span></h2>
 <!--
 Compress a string with Gzip.
 -->
@@ -433,7 +430,7 @@ Compress a string with Gzip.
 <p>Gzip で文字列を圧縮します。
 
 </p>
-<h2>zlib.gunzip(buf, callback)<span><a class="mark" href="#zlib_zlib_gunzip_buf_callback" id="zlib_zlib_gunzip_buf_callback">#</a></span></h2>
+<h2>zlib.gunzip(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_gunzip_buf_options_callback" id="zlib_zlib_gunzip_buf_options_callback">#</a></span></h2>
 <!--
 Decompress a raw Buffer with Gunzip.
 -->
@@ -441,7 +438,7 @@ Decompress a raw Buffer with Gunzip.
 <p>Gunzip で生のバッファを解凍します。
 
 </p>
-<h2>zlib.inflate(buf, callback)<span><a class="mark" href="#zlib_zlib_inflate_buf_callback" id="zlib_zlib_inflate_buf_callback">#</a></span></h2>
+<h2>zlib.inflate(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_inflate_buf_options_callback" id="zlib_zlib_inflate_buf_options_callback">#</a></span></h2>
 <!--
 Decompress a raw Buffer with Inflate.
 -->
@@ -449,7 +446,7 @@ Decompress a raw Buffer with Inflate.
 <p>Infrate で生のバッファを解凍します。
 
 </p>
-<h2>zlib.inflateRaw(buf, callback)<span><a class="mark" href="#zlib_zlib_inflateraw_buf_callback" id="zlib_zlib_inflateraw_buf_callback">#</a></span></h2>
+<h2>zlib.inflateRaw(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_inflateraw_buf_options_callback" id="zlib_zlib_inflateraw_buf_options_callback">#</a></span></h2>
 <!--
 Decompress a raw Buffer with InflateRaw.
 -->
@@ -457,7 +454,7 @@ Decompress a raw Buffer with InflateRaw.
 <p>InflateRaw で生のバッファを解凍します。
 
 </p>
-<h2>zlib.unzip(buf, callback)<span><a class="mark" href="#zlib_zlib_unzip_buf_callback" id="zlib_zlib_unzip_buf_callback">#</a></span></h2>
+<h2>zlib.unzip(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_unzip_buf_options_callback" id="zlib_zlib_unzip_buf_options_callback">#</a></span></h2>
 <!--
 Decompress a raw Buffer with Unzip.
 -->
@@ -469,13 +466,11 @@ Decompress a raw Buffer with Unzip.
 <!--type=misc-->
 
 <!--
-Each class takes an options object.  All options are optional.  (The
-convenience methods use the default settings for all options.)
+Each class takes an options object.  All options are optional.
 -->
 
 <p>どのクラスもオプションオブジェクトを受け取ります。
 全てのオプションは任意です
-(簡易メソッドは全てのオプションでデフォルト値を使用します)。
 
 </p>
 <!--
@@ -740,7 +735,7 @@ For initializing zalloc, zfree, opaque.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.0/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
