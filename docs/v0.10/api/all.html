@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.4 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.4 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.5 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -4851,11 +4851,15 @@ there aren't any strict restrictions on that, as any string will be accepted.
 </p>
 <!--
 Functions can then be attached to objects, to be executed when an event
-is emitted. These functions are called _listeners_.
+is emitted. These functions are called _listeners_. Inside a listener
+function, `this` refers to the `EventEmitter` that the listener was
+attached to.
 -->
 
 <p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。
 これらの関数は<em>リスナー</em>と呼ばれます。
+リスナ関数の中では、<code>this</code> はそのリスナがアタッチされた <code>EventEmitter</code>
+を参照します。
 
 
 </p>
@@ -7332,6 +7336,25 @@ stream._read = function(n) {
 <li>return {Boolean} より多くの追加が実行されるべきかどうか</li>
 </ul>
 <!--
+Note: **This function should usually be called by Readable consumers,
+NOT by implementors of Readable subclasses.**  It does not indicate
+the end of a `_read()` transaction in the way that
+`readable.push(chunk)` does.  If you find that you have to call
+`this.unshift(chunk)` in your Readable class, then there's a good
+chance you ought to be using the
+[stream.Transform](#stream_class_stream_transform) class instead.
+-->
+
+<p>注意: <strong>この関数は通常、Readable サブクラスの実装者ではなく、
+Readable の消費者から呼び出されるべきものです。</strong>
+それは <code>readable.push(chunk)</code> のように <code>_read()</code> トランザクションの終了を
+示すことはありません。
+もし Readable クラスの中で <code>this.unshift(chunk)</code> を呼び出す必要性を
+見出したなら、代わりに <a href="#stream_class_stream_transform">stream.Transform</a> を
+使用すべき可能性があります。
+
+</p>
+<!--
 This is the corollary of `readable.push(chunk)`.  Rather than putting
 the data at the *end* of the read queue, it puts it at the *front* of
 the read queue.
@@ -7343,21 +7366,24 @@ the read queue.
 
 </p>
 <!--
-This is useful in certain use-cases where a stream is being consumed
-by a parser, which needs to "un-consume" some data that it has
-optimistically pulled out of the source.
+This is useful in certain cases where a stream is being consumed by a
+parser, which needs to "un-consume" some data that it has
+optimistically pulled out of the source, so that the stream can be
+passed on to some other party.
 -->
 
-<p>これはストリームがパーサによって消費されるユースケースにおいて有用です。
-それはソースから楽観的に取り出したデータを「消費しなかったことにする」
-場合に必要です。
+<p>これはストリームがパーサによって消費されるケースにおいて有用です。
+それはソースから楽観的に取り出したデータを「消費しなかった」ことにして、
+ストリームが他のところにデータを渡せるようにする場合に必要です。
 
 </p>
 <pre><code class="javascript">// A parser for a simple data protocol.
 // The &quot;header&quot; is a JSON object, followed by 2 \n characters, and
 // then a message body.
 //
-// Note: This can be done more simply as a Transform stream.  See below.
+// NOTE: This can be done more simply as a Transform stream!
+// Using Readable directly for this is sub-optimal.  See the
+// alternative example below under the Transform section.
 
 function SimpleProtocol(source, options) {
   if (!(this instanceof SimpleProtocol))
@@ -12119,8 +12145,8 @@ Example:
 &#39;/foo/bar/baz/asdf&#39;
 
 path.join(&#39;foo&#39;, {}, &#39;bar&#39;)
-// returns
-&#39;foo/bar&#39;</code></pre>
+// throws exception
+TypeError: Arguments to path.join must be strings</code></pre>
 <h2>path.resolve([from ...], to)<span><a class="mark" href="#all_path_resolve_from_to" id="all_path_resolve_from_to">#</a></span></h2>
 <!--
 Resolves `to` to an absolute path.
@@ -14340,13 +14366,17 @@ per connection (in the case of keep-alive connections).
 </p>
 <!--
  When a new TCP stream is established. `socket` is an object of type
- `net.Socket`. Usually users will not want to access this event. The
- `socket` can also be accessed at `request.connection`.
+ `net.Socket`. Usually users will not want to access this event. In
+ particular, the socket will not emit `readable` events because of how
+ the protocol parser attaches to the socket. The `socket` can also be
+ accessed at `request.connection`.
 -->
 
 <p>新しい TCP ストリームが確立した時。
 <code>socket</code> は <code>net.Socket</code> 型のオブジェクトです。
 通常の利用者がこのイベントにアクセスしたくなることはないでしょう。
+とりわけ、ソケットはプロトコルパーサにアタッチされるため、
+<code>&#39;readable&#39;</code> イベントを生成しません。
 <code>socket</code> は <code>request.connection</code> からアクセスすることもできます。
 
 </p>
@@ -15756,7 +15786,7 @@ Just like `'end'`, this event occurs only once per response. See
 -->
 
 <p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成されます。
-[http.ServerRequest][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+[http.ServerResponse][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
 
 </p>
 <h3>message.httpVersion<span><a class="mark" href="#all_message_httpversion" id="all_message_httpversion">#</a></span></h3>
@@ -21345,7 +21375,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.4/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.5/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
