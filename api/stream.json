@@ -335,7 +335,7 @@
               "textRaw": "writable.\\_write(chunk, encoding, callback)",
               "type": "method",
               "name": "\\_write",
-              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be written.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  Ignore chunk is a buffer.  Note that chunk will\n  **always** be a buffer unless the `decodeStrings` option is\n  explicitly set to `false`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。\nチャンクがバッファの場合は無視されます。\n<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、\nチャンクは <em>常に</em> バッファであるべき事に注意してください。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` may be a string rather than a Buffer, and `encoding` will\nindicate the sort of string that it is.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.  If you do not explicitly set the `decodeStrings`\noption to `false`, then you can safely ignore the `encoding` argument,\nand assume that `chunk` will always be a Buffer.\n-->\n\n<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、\n<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の\n種類を示すことができます。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、\n<code>endocing</code> 引数は安全に無視することができます。\nそして <code>chunk</code> は常に Buffer であると見なせます。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n\n</p>\n",
+              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be written.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  Ignore chunk is a buffer.  Note that chunk will\n  **always** be a buffer unless the `decodeStrings` option is\n  explicitly set to `false`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。\nチャンクがバッファの場合は無視されます。\n<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、\nチャンクは <em>常に</em> バッファであるべき事に注意してください。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` may be a string rather than a Buffer, and `encoding` will\nindicate the sort of string that it is.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.  If you do not explicitly set the `decodeStrings`\noption to `false`, then you can safely ignore the `encoding` argument,\nand assume that `chunk` will always be a Buffer.\n-->\n\n<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、\n<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の\n種類を示すことができます。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、\n<code>endocing</code> 引数は安全に無視することができます。\nそして <code>chunk</code> は常に Buffer であると見なせます。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -344,6 +344,24 @@
                     },
                     {
                       "name": "encoding"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.\\_writev(chunks, callback)",
+              "type": "method",
+              "name": "\\_writev",
+              "desc": "<!--\n* `chunks` {Array} The chunks to be written.  Each chunk has following\n  format: `{ chunk: ..., encoding: ... }`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunks.\n-->\n\n<ul>\n<li><code>chunks</code> {Array} 書き込まれるチャンクの配列。\n各チャンクは次のフォーマットになります:\n<code>{ chunk: ..., encoding: ... }</code> 。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nThis function is completely optional to implement. In the most cases\nit is unnecessary.  If implemented, it will be called with all the\nchunks that are buffered in the write queue.\n-->\n\n<p>この関数の実装は完全に任意です。ほとんどのケースでは必要ありません。\nもし実装されるなら、書き込みキューにバッファリングされた全ての\nチャンクと共に呼び出されるでしょう。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunks"
                     },
                     {
                       "name": "callback"
@@ -372,6 +390,28 @@
                       "optional": true
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.cork()",
+              "type": "method",
+              "name": "cork",
+              "desc": "<!--\nForces buffering of all writes.\n-->\n\n<p>全ての書き込みを強制的にバッファリングします。\n\n</p>\n<!--\nBuffered data will be flushed either at `.uncork()` or at `.end()` call.\n-->\n\n<p>バッファリングされたデータは <code>.uncork()</code> または <code>.end()</code> のどちらかが\n呼び出されるとフラッシュされます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.uncork()",
+              "type": "method",
+              "name": "uncork",
+              "desc": "<!--\nFlush all data, buffered since `.cork()` call.\n-->\n\n<p><code>.cork()</code> の呼び出しによってバッファリングされた\n全てのデータをフラッシュします。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
                 }
               ]
             },
@@ -406,6 +446,13 @@
               "type": "event",
               "name": "drain",
               "desc": "<!--\nEmitted when the stream's write queue empties and it's safe to write\nwithout buffering again. Listen for it when `stream.write()` returns\n`false`.\n-->\n\n<p>ストリームの書き込みキューが空になり、バッファリングされることなく\n再び安全に書き込みができるようになった場合に生成されます。\n<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'error'",
+              "type": "event",
+              "name": "error",
+              "desc": "<!--\nEmitted if there was an error receiving data.\n-->\n\n<p>データ送信でエラーがあった場合に生成されます。\n\n</p>\n",
               "params": []
             },
             {
