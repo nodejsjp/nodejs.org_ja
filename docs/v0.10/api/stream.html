@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.10.5 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.10.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -20,7 +20,7 @@
                 <li><a href="/" class="home">Home</a></li>
                 <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
-                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
@@ -29,7 +29,7 @@
                <li><a href="../" class="home">ホーム</a></li>
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
-               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="http://npmjs.org/" class="npm">npm レジストリ</a></li>
                <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.5 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -60,7 +60,7 @@
 <li><a href="#stream_class_stream_readable">Class: stream.Readable</a><ul>
 <li><a href="#stream_new_stream_readable_options">new stream.Readable([options])</a></li>
 <li><a href="#stream_readable_read_size">readable._read(size)</a></li>
-<li><a href="#stream_readable_push_chunk">readable.push(chunk)</a></li>
+<li><a href="#stream_readable_push_chunk_encoding">readable.push(chunk, [encoding])</a></li>
 <li><a href="#stream_readable_unshift_chunk">readable.unshift(chunk)</a></li>
 <li><a href="#stream_readable_wrap_stream">readable.wrap(stream)</a></li>
 <li><a href="#stream_event_readable">Event: &#39;readable&#39;</a></li>
@@ -82,6 +82,7 @@
 <li><a href="#stream_writable_write_chunk_encoding_callback_1">writable.write(chunk, [encoding], [callback])</a></li>
 <li><a href="#stream_writable_end_chunk_encoding_callback">writable.end([chunk], [encoding], [callback])</a></li>
 <li><a href="#stream_event_drain">Event: &#39;drain&#39;</a></li>
+<li><a href="#stream_event_error_1">Event: &#39;error&#39;</a></li>
 <li><a href="#stream_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#stream_event_finish">Event: &#39;finish&#39;</a></li>
 <li><a href="#stream_event_pipe">Event: &#39;pipe&#39;</a></li>
@@ -382,27 +383,31 @@ TCPやTLSなど、それに関連しない実装ではこの引数は無視さ�
 たとえば <code>size</code> バイトが利用可能になるまで「待つ」必要はありません。
 
 </p>
-<h3>readable.push(chunk)<span><a class="mark" href="#stream_readable_push_chunk" id="stream_readable_push_chunk">#</a></span></h3>
+<h3>readable.push(chunk, [encoding])<span><a class="mark" href="#stream_readable_push_chunk_encoding" id="stream_readable_push_chunk_encoding">#</a></span></h3>
 <!--
 * `chunk` {Buffer | null | String} Chunk of data to push into the read queue
+* `encoding` {String} Encoding of String chunks.  Must be a valid
+  Buffer encoding, such as `'utf8'` or `'ascii'`
 * return {Boolean} Whether or not more pushes should be performed
 -->
 
 <ul>
 <li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、
 データのチャンク</li>
+<li><code>encoding</code> {String} 文字列チャンクのエンコーディング。
+<code>&#39;utf8&#39;</code> や <code>&#39;ascii&#39;</code> など、Buffer の正しいエンコーディングの必要があります。</li>
 <li>return {Boolean} まだプッシュしてもいいかどうか</li>
 </ul>
 <!--
 Note: **This function should be called by Readable implementors, NOT
-by consumers of Readable subclasses.**  The `_read()` function will not
+by consumers of Readable streams.**  The `_read()` function will not
 be called again until at least one `push(chunk)` call is made.  If no
 data is available, then you MAY call `push('')` (an empty string) to
 allow a future `_read` call, without adding any data to the queue.
 -->
 
 <p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、
-Readable のサブクラスの利用者が呼び出すべきではありません。</strong>
+Readable ストリームの利用者が呼び出すべきではありません。</strong>
 少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が
 再び呼び出されることはありません。もし利用可能なデータがない場合は、
 将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)
@@ -1129,6 +1134,14 @@ without buffering again. Listen for it when `stream.write()` returns
 <code>stream.write()</code> が <code>false</code> を返した場合に監視してください。
 
 </p>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#stream_event_error_1" id="stream_event_error_1">#</a></span></h3>
+<!--
+Emitted if there was an error receiving data.
+-->
+
+<p>データ送信でエラーがあった場合に生成されます。
+
+</p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#stream_event_close_1" id="stream_event_close_1">#</a></span></h3>
 <!--
 Emitted when the underlying resource (for example, the backing file
@@ -1552,12 +1565,13 @@ it can come in handy.
         </div>
     </div>
     <div id="footer">
+        <a href="http://joyent.com" class="joyent-logo">Joyent</a>
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
             <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
-            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
@@ -1566,7 +1580,7 @@ it can come in handy.
             <li><a href="../">Node.js</a></li>
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
-            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="http://npmjs.org/">npm レジストリ</a></li>
             <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
@@ -1575,7 +1589,7 @@ it can come in handy.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.5/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
