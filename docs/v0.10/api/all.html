@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.6 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -538,7 +538,7 @@
 </ul>
 </li>
 <li><a href="#all_fs_createwritestream_path_options">fs.createWriteStream(path, [options])</a></li>
-<li><a href="#all_fs_writestream">fs.WriteStream</a><ul>
+<li><a href="#all_class_fs_writestream">Class: fs.WriteStream</a><ul>
 <li><a href="#all_event_open_1">Event: &#39;open&#39;</a></li>
 <li><a href="#all_file_byteswritten">file.bytesWritten</a></li>
 </ul>
@@ -1428,23 +1428,32 @@ See the [module system documentation][] for more information.
 <!-- type=var -->
 
 <!--
-An object which is shared between all instances of the current module and
-made accessible through `require()`.
-`exports` is the same as the `module.exports` object.
+A reference to the `module.exports` object which is shared between all
+instances of the current module and made accessible through `require()`.
+See [module system documentation][] for details on when to use `exports` and
+when to use `module.exports`.
 `exports` isn't actually a global but rather local to each module.
-
-See the [module system documentation][] for more information.
-
-See the [module section][] for more information.
 -->
 
-<p>現在のモジュールの全てのインスタンス間で共有されるオブジェクトで、
-<code>require</code> を通じてアクセス可能になります。
-<code>exports</code> は <code>module.exports</code> と同じオブジェクトです。
+<p>現在のモジュールの全てのインスタンスで共有され、
+<code>require()</code> を通じてアクセスされる、<code>module.exports</code> オブジェクトを参照します。
+いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は、
+<a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
 <code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
+<!--
+See the [module system documentation][] for more information.
+-->
+
 <p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
+
+</p>
+<!--
+See the [module section][] for more information.
+-->
+
+<p>より詳しくは <a href="modules.html">モジュールセクション</a> を参照してください。
 
 </p>
 <h2>setTimeout(cb, ms)<span><a class="mark" href="#all_settimeout_cb_ms" id="all_settimeout_cb_ms">#</a></span></h2>
@@ -1872,22 +1881,48 @@ exports.circumference = function (r) {
 The module `circle.js` has exported the functions `area()` and
 `circumference()`.  To export an object, add to the special `exports`
 object.
+-->
 
+<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code>
+をエクスポートしています。
+オブジェクトをエクスポートするには、 <code>exports</code>
+という特別なオブジェクトに加えます。
+
+</p>
+<!--
+Note that `exports` is a reference to `module.exports` making it suitable
+for augmentation only. If you are exporting a single item such as a
+constructor you will want to use `module.exports` directly instead.
+-->
+
+<p><code>exports</code> は <code>module.exports</code> を参照しているに過ぎないことに注意してください。
+もしコンストラクタなど、一つの項目だけをエクスポートしたいのであれば、
+<code>module.exports</code> を直接使いたくなるでしょう。
+
+</p>
+<pre><code>function MyConstructor (opts) {
+  //...
+}
+
+// BROKEN: Does not modify exports
+exports = MyConstructor;
+
+// exports the constructor properly
+module.exports = MyConstructor;</code></pre>
+<!--
 Variables
 local to the module will be private. In this example the variable `PI` is
 private to `circle.js`.
-
-The module system is implemented in the `require("module")` module.
 -->
 
-<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。
-オブジェクトをエクスポートするには、 <code>exports</code> という特別なオブジェクトに加えます。
-
-</p>
 <p>モジュールのローカル変数はプライベートです。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
 
 </p>
+<!--
+The module system is implemented in the `require("module")` module.
+-->
+
 <p>モジュールシステムは <code>require(&quot;module&quot;)</code> モジュールによって実装されます。
 
 </p>
@@ -1937,7 +1972,7 @@ console.log(&#39;in main, a.done=%j, b.done=%j&#39;, a.done, b.done);</code></pr
 When `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that
 point, `b.js` tries to load `a.js`.  In order to prevent an infinite
 loop an **unfinished copy** of the `a.js` exports object is returned to the
-`b.js` module.  `b.js` then finishes loading, and its exports object is
+`b.js` module.  `b.js` then finishes loading, and its `exports` object is
 provided to the `a.js` module.
 
 By the time `main.js` has loaded both modules, they're both finished.
@@ -1948,7 +1983,7 @@ The output of this program would thus be:
 ポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。
 無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの
 <strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。
-<code>b.js</code> のロードが完了すると、エクスポートされたオブジェクトが <code>a.js</code>
+<code>b.js</code> のロードが完了すると、<code>exports</code> オブジェクトが <code>a.js</code>
 モジュールに提供されます。
 
 </p>
@@ -2199,21 +2234,21 @@ would resolve to different files.
 <h2>The <code>module</code> Object<span><a class="mark" href="#all_the_module_object" id="all_the_module_object">#</a></span></h2>
 <!-- type=var -->
 
-<p>!-- name=module --&gt;
+<!-- name=module -->
 
-</p>
 <ul>
 <li>{Object}</li>
 </ul>
 <!--
 In each module, the `module` free variable is a reference to the object
 representing the current module.  In particular
-`module.exports` is the same as the `exports` object.
+`module.exports` is accessible via the `exports` module-global.
 `module` isn't actually a global but rather local to each module.
 -->
 
 <p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを
-参照します。特に、<code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
+参照します。特に、<code>module.exports</code> はモジュールグローバルの <code>exports</code>
+を通じてアクセスすることができます。
 <code>module</code> は実際はグローバルではなく、各モジュールにローカルです。
 
 </p>
@@ -2221,14 +2256,14 @@ representing the current module.  In particular
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
 </div></ul>
-<p>The <code>exports</code> object is created by the Module system. Sometimes this is not
+<!--
+The `module.exports` object is created by the Module system. Sometimes this is not
 acceptable, many want their module to be an instance of some class. To do this
-assign the desired export object to <code>module.exports</code>. For example suppose we
-were making a module called <code>a.js</code>
---&gt;
+assign the desired export object to `module.exports`. For example suppose we
+were making a module called `a.js`
+-->
 
-</p>
-<p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。
+<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
 時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。
 それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
 例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
@@ -2278,12 +2313,12 @@ console.log(x.a);</code></pre>
 <h3>module.require(id)<span><a class="mark" href="#all_module_require_id" id="all_module_require_id">#</a></span></h3>
 <!--
 * `id` {String}
-* Return: {Object} `exports` from the resolved module
+* Return: {Object} `module.exports` from the resolved module
 -->
 
 <ul>
 <li><code>id</code> {String}</li>
-<li>Return: {Object} 解決されたモジュールの <code>exports</code></li>
+<li>Return: {Object} 解決されたモジュールの <code>module.exports</code></li>
 </ul>
 <!--
 The `module.require` method provides a way to load a module as if
@@ -2296,13 +2331,13 @@ The `module.require` method provides a way to load a module as if
 </p>
 <!--
 Note that in order to do this, you must get a reference to the `module`
-object.  Since `require()` returns the `exports`, and the `module` is
+object.  Since `require()` returns the `module.exports`, and the `module` is
 typically *only* available within a specific module's code, it must be
 explicitly exported in order to be used.
 -->
 
 <p>それには <code>module</code> オブジェクトの参照が必要なことに注意してください。
-<code>require()</code> が <code>exports</code> を返した後、一般的に <code>module</code> 
+<code>require()</code> が <code>module.exports</code> を返した後、一般的に <code>module</code> 
 はそのモジュールのコードで <em>のみ</em> 利用可能です。
 それが使われるようにするには、明示的にエクスポートする必要があります。
 
@@ -12013,10 +12048,11 @@ An example to read the last 10 bytes of a file which is 100 bytes long:
 <pre><code>fs.createReadStream(&#39;sample.txt&#39;, {start: 90, end: 99});</code></pre>
 <h2>Class: fs.ReadStream<span><a class="mark" href="#all_class_fs_readstream" id="all_class_fs_readstream">#</a></span></h2>
 <!--
-`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).
+`ReadStream` is a [Readable Stream](stream.html#stream_class_stream_readable).
 -->
 
-<p><code>ReadStream</code> は <a href="stream.html#stream_readable_stream">Readable Stream</a> です。
+<p><code>ReadStream</code> は <a href="stream.html#stream_class_stream_readable">Readable Stream</a>
+です。
 
 </p>
 <h3>Event: &#39;open&#39;<span><a class="mark" href="#all_event_open" id="all_event_open">#</a></span></h3>
@@ -12064,12 +12100,13 @@ default mode `w`.
 <code>w</code> ではなく <code>r+</code> が必要となります。
 
 </p>
-<h2>fs.WriteStream<span><a class="mark" href="#all_fs_writestream" id="all_fs_writestream">#</a></span></h2>
+<h2>Class: fs.WriteStream<span><a class="mark" href="#all_class_fs_writestream" id="all_class_fs_writestream">#</a></span></h2>
 <!--
-`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).
+`WriteStream` is a [Writable Stream](stream.html#stream_class_stream_writable).
 -->
 
-<p><code>WriteStream</code> は <a href="stream.html#stream_writable_stream">Writable Stream</a> です。
+<p><code>WriteStream</code> は <a href="stream.html#stream_class_stream_writable">Writable Stream</a>
+です。
 
 </p>
 <h3>Event: &#39;open&#39;<span><a class="mark" href="#all_event_open_1" id="all_event_open_1">#</a></span></h3>
@@ -17663,14 +17700,14 @@ JavaScript code can be compiled and run immediately or compiled, saved, and run 
 <h2>Caveats<span><a class="mark" href="#all_caveats_1" id="all_caveats_1">#</a></span></h2>
 <!--
 The `vm` module has many known issues and edge cases. If you run into
-issues or unexpected behavior, please consult
-[the open issues on GitHub](https://github.com/joyent/node/issues/search?q=vm).
+issues or unexpected behavior, please consult [the open issues on
+GitHub](https://github.com/joyent/node/search?q=vm+state%3Aopen&type=Issues).
 Some of the biggest problems are described below.
 -->
 
 <p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。
-もし問題や期待と異なる振る舞いを見つけた場合は、
-<a href="https://github.com/joyent/node/issues/search?q=vm">the open issues on GitHub</a>
+もし問題や期待と異なる振る舞いを見つけた場合は、<a href="https://github.com/joyent/node/search?q=vm+state%3Aopen&amp;type=Issues">GitHub
+の課題</a>
 に相談してください。
 大きな問題のいくつかは以下に示されます。
 
@@ -21463,7 +21500,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
