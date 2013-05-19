@@ -596,9 +596,11 @@
               "desc": "<!--\nModules are cached in this object when they are required. By deleting a key\nvalue from this object, the next `require` will reload the module.\n-->\n\n<p>モジュールが要求されると、このオブジェクトの中にキャッシュされます。\nこのオブジェクトからキーと値を削除すると、次にそのモジュールが\n<code>require</code> されたときにリロードされます。\n\n</p>\n"
             },
             {
-              "textRaw": "`extensions` {Array} ",
+              "textRaw": "`extensions` {Object} ",
               "name": "extensions",
-              "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n"
+              "stability": 0,
+              "stabilityText": "Deprecated",
+              "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n<!--\n**Deprecated**  In the past, this list has been used to load\nnon-JavaScript modules into Node by compiling them on-demand.\nHowever, in practice, there are much better ways to do this, such as\nloading modules via some other Node program, or compiling them to\nJavaScript ahead of time.\n-->\n\n<p><strong>廃止予定</strong> かつて、このリストは非 JavaScript モジュールを必要に応じて\nコンパイルし、Node にロードするために使われていました。\nしかし実際には、他の Node プログラムを通じてロードしたり、\n事前に JavaScript にコンパイルするなど、よりよい方法があります。\n\n</p>\n<!--\nSince the Module system is locked, this feature will probably never go\naway.  However, it may have subtle bugs and complexities that are best\nleft untouched.\n-->\n\n<p>モジュールシステムはロックされているので、この機能はおそらく\n無くならないでしょう。\nしかしながら、それは微妙なバグや複雑さがあってもそのまま放置されるでしょう。\n\n</p>\n"
             }
           ]
         },
@@ -710,7 +712,7 @@
             {
               "textRaw": "Breakpoints",
               "name": "breakpoints",
-              "desc": "<!--\n* `setBreakpoint()`, `sb()` - Set breakpoint on current line\n* `setBreakpoint(line)`, `sb(line)` - Set breakpoint on specific line\n* `setBreakpoint('fn()')`, `sb(...)` - Set breakpoint on a first statement in\nfunctions body\n* `setBreakpoint('script.js', 1)`, `sb(...)` - Set breakpoint on first line of\nscript.js\n* `clearBreakpoint`, `cb(...)` - Clear breakpoint\n-->\n\n<ul>\n<li><code>setBreakpoint()</code>, <code>sb()</code> - 現在行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(line)</code>, <code>sb(line)</code> - 指定した行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(&#39;fn()&#39;)</code>, <code>sb(...)</code> - 指定した関数の先頭行にブレークポイントを設定します</li>\n<li><code>setBreakpoint(&#39;script.js&#39;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>\n<li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>\n</ul>\n",
+              "desc": "<!--\n* `setBreakpoint()`, `sb()` - Set breakpoint on current line\n* `setBreakpoint(line)`, `sb(line)` - Set breakpoint on specific line\n* `setBreakpoint('fn()')`, `sb(...)` - Set breakpoint on a first statement in\nfunctions body\n* `setBreakpoint('script.js', 1)`, `sb(...)` - Set breakpoint on first line of\nscript.js\n* `clearBreakpoint`, `cb(...)` - Clear breakpoint\n-->\n\n<ul>\n<li><code>setBreakpoint()</code>, <code>sb()</code> - 現在行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(line)</code>, <code>sb(line)</code> - 指定した行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(&#39;fn()&#39;)</code>, <code>sb(...)</code> - 指定した関数の先頭行にブレークポイントを設定します</li>\n<li><code>setBreakpoint(&#39;script.js&#39;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>\n<li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>\n</ul>\n<!--\nIt is also possible to set a breakpoint in a file (module) that\nisn't loaded yet:\n-->\n\n<p>まだロードされていないファイル (モジュール) にブレークポイントを\n設定することもできます。\n\n</p>\n<pre><code>% ./node debug test/fixtures/break-in-module/main.js\n&lt; debugger listening on port 5858\nconnecting to port 5858... ok\nbreak in test/fixtures/break-in-module/main.js:1\n  1 var mod = require(&#39;./mod.js&#39;);\n  2 mod.hello();\n  3 mod.hello();\ndebug&gt; setBreakpoint(&#39;mod.js&#39;, 23)\nWarning: script &#39;mod.js&#39; was not loaded yet.\n  1 var mod = require(&#39;./mod.js&#39;);\n  2 mod.hello();\n  3 mod.hello();\ndebug&gt; c\nbreak in test/fixtures/break-in-module/mod.js:23\n 21\n 22 exports.hello = function() {\n 23   return &#39;hello from module&#39;;\n 24 };\n 25\ndebug&gt;</code></pre>\n",
               "type": "module",
               "displayName": "Breakpoints"
             },
@@ -1312,9 +1314,11 @@
           "desc": "<!--\nModules are cached in this object when they are required. By deleting a key\nvalue from this object, the next `require` will reload the module.\n-->\n\n<p>モジュールが要求されると、このオブジェクトの中にキャッシュされます。\nこのオブジェクトからキーと値を削除すると、次にそのモジュールが\n<code>require</code> されたときにリロードされます。\n\n</p>\n"
         },
         {
-          "textRaw": "`extensions` {Array} ",
+          "textRaw": "`extensions` {Object} ",
           "name": "extensions",
-          "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n"
+          "stability": 0,
+          "stabilityText": "Deprecated",
+          "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n<!--\n**Deprecated**  In the past, this list has been used to load\nnon-JavaScript modules into Node by compiling them on-demand.\nHowever, in practice, there are much better ways to do this, such as\nloading modules via some other Node program, or compiling them to\nJavaScript ahead of time.\n-->\n\n<p><strong>廃止予定</strong> かつて、このリストは非 JavaScript モジュールを必要に応じて\nコンパイルし、Node にロードするために使われていました。\nしかし実際には、他の Node プログラムを通じてロードしたり、\n事前に JavaScript にコンパイルするなど、よりよい方法があります。\n\n</p>\n<!--\nSince the Module system is locked, this feature will probably never go\naway.  However, it may have subtle bugs and complexities that are best\nleft untouched.\n-->\n\n<p>モジュールシステムはロックされているので、この機能はおそらく\n無くならないでしょう。\nしかしながら、それは微妙なバグや複雑さがあってもそのまま放置されるでしょう。\n\n</p>\n"
         }
       ]
     },
@@ -2002,7 +2006,7 @@
       "stability": 4,
       "stabilityText": "API Frozen",
       "type": "module",
-      "desc": "<!--\nMany objects in Node emit events: a `net.Server` emits an event each time\na peer connects to it, a `fs.readStream` emits an event when the file is\nopened. All objects which emit events are instances of `events.EventEmitter`.\nYou can access this module by doing: `require(\"events\");`\n-->\n\n<p>Node のオブジェクトの多くはイベントを生成します:\n<code>net.Server</code>は相手から接続するたびにイベントを生成し、\n<code>fs.readStream</code>はファイルがオープンされるたびにイベントを生成します。\nイベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。\n次のようにすることでこのモジュールにアクセスできます: <code>require(&quot;events&quot;);</code>\n\n</p>\n<!--\nTypically, event names are represented by a camel-cased string, however,\nthere aren't any strict restrictions on that, as any string will be accepted.\n-->\n\n<p>通常、イベント名はキャメル記法による文字列で表現されますが、\n厳格な制限ではなく、どんな文字列でも受け入れられます。\n\n</p>\n<!--\nFunctions can then be attached to objects, to be executed when an event\nis emitted. These functions are called _listeners_.\n-->\n\n<p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。\nこれらの関数は<em>リスナー</em>と呼ばれます。\n\n\n</p>\n",
+      "desc": "<!--\nMany objects in Node emit events: a `net.Server` emits an event each time\na peer connects to it, a `fs.readStream` emits an event when the file is\nopened. All objects which emit events are instances of `events.EventEmitter`.\nYou can access this module by doing: `require(\"events\");`\n-->\n\n<p>Node のオブジェクトの多くはイベントを生成します:\n<code>net.Server</code>は相手から接続するたびにイベントを生成し、\n<code>fs.readStream</code>はファイルがオープンされるたびにイベントを生成します。\nイベントを生成する全てのオブジェクトは <code>events.EventEmitter</code> のインスタンスです。\n次のようにすることでこのモジュールにアクセスできます: <code>require(&quot;events&quot;);</code>\n\n</p>\n<!--\nTypically, event names are represented by a camel-cased string, however,\nthere aren't any strict restrictions on that, as any string will be accepted.\n-->\n\n<p>通常、イベント名はキャメル記法による文字列で表現されますが、\n厳格な制限ではなく、どんな文字列でも受け入れられます。\n\n</p>\n<!--\nFunctions can then be attached to objects, to be executed when an event\nis emitted. These functions are called _listeners_. Inside a listener\nfunction, `this` refers to the `EventEmitter` that the listener was\nattached to.\n-->\n\n<p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。\nこれらの関数は<em>リスナ</em>と呼ばれます。\nリスナ関数の中では、<code>this</code> はリスナがアタッチされている <code>EventEmitter</code>\nを参照します。\n\n</p>\n",
       "classes": [
         {
           "textRaw": "Class: events.EventEmitter",
@@ -2014,7 +2018,7 @@
               "textRaw": "emitter.addListener(event, listener)",
               "type": "method",
               "name": "addListener",
-              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2042,7 +2046,7 @@
               "textRaw": "emitter.on(event, listener)",
               "type": "method",
               "name": "on",
-              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2060,7 +2064,7 @@
               "textRaw": "emitter.once(event, listener)",
               "type": "method",
               "name": "once",
-              "desc": "<!--\nAdds a **one time** listener for the event. This listener is\ninvoked only the next time the event is fired, after which\nit is removed.\n-->\n\n<p><strong>一回限り</strong>のリスナーをイベントに追加します。\nこのリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。\n\n</p>\n<pre><code>server.once(&#39;connection&#39;, function (stream) {\n  console.log(&#39;Ah, we have our first user!&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nAdds a **one time** listener for the event. This listener is\ninvoked only the next time the event is fired, after which\nit is removed.\n-->\n\n<p><strong>一回限り</strong>のリスナーをイベントに追加します。\nこのリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。\n\n</p>\n<pre><code>server.once(&#39;connection&#39;, function (stream) {\n  console.log(&#39;Ah, we have our first user!&#39;);\n});</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2078,7 +2082,7 @@
               "textRaw": "emitter.removeListener(event, listener)",
               "type": "method",
               "name": "removeListener",
-              "desc": "<!--\nRemove a listener from the listener array for the specified event.\n**Caution**: changes array indices in the listener array behind the listener.\n-->\n\n<p>指定されたイベントに対するリスナー配列からリスナーを削除します。\n<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。\n\n</p>\n<pre><code>var callback = function(stream) {\n  console.log(&#39;someone connected!&#39;);\n};\nserver.on(&#39;connection&#39;, callback);\n// ...\nserver.removeListener(&#39;connection&#39;, callback);</code></pre>\n",
+              "desc": "<!--\nRemove a listener from the listener array for the specified event.\n**Caution**: changes array indices in the listener array behind the listener.\n-->\n\n<p>指定されたイベントに対するリスナー配列からリスナーを削除します。\n<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。\n\n</p>\n<pre><code>var callback = function(stream) {\n  console.log(&#39;someone connected!&#39;);\n};\nserver.on(&#39;connection&#39;, callback);\n// ...\nserver.removeListener(&#39;connection&#39;, callback);</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2096,7 +2100,7 @@
               "textRaw": "emitter.removeAllListeners([event])",
               "type": "method",
               "name": "removeAllListeners",
-              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n</p>\n",
+              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n</p>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2112,7 +2116,7 @@
               "textRaw": "emitter.setMaxListeners(n)",
               "type": "method",
               "name": "setMaxListeners",
-              "desc": "<!--\nBy default EventEmitters will print a warning if more than 10 listeners are\nadded for a particular event. This is a useful default which helps finding memory leaks.\nObviously not all Emitters should be limited to 10. This function allows\nthat to be increased. Set to zero for unlimited.\n-->\n\n<p>デフォルトでは、EventEmitter は 10 を越えるリスナが特定のイベントに追加されると警告を出力します。\nこれはメモリリークを見つけるために役に立つデフォルト値です。\n全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。\nこの関数は制限を増やすことを許可します。\n0 を設定すると無制限になります。\n\n</p>\n",
+              "desc": "<!--\nBy default EventEmitters will print a warning if more than 10 listeners are\nadded for a particular event. This is a useful default which helps finding\nmemory leaks. Obviously not all Emitters should be limited to 10. This function\nallows that to be increased. Set to zero for unlimited.\n-->\n\n<p>デフォルトでは、10 を越えるリスナが特定のイベントに追加されると、\nEventEmitter は警告を出力します。\nこれはメモリリークを見つけるために役に立つデフォルト値です。\n全ての EventEmitter が 10 に制限されなければならないわけではないことは\n明らかです。この関数は制限を増やすことを許可します。\n0 を設定すると無制限になります。\n\n</p>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2142,7 +2146,7 @@
               "textRaw": "emitter.emit(event, [arg1], [arg2], [...])",
               "type": "method",
               "name": "emit",
-              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n\n</p>\n",
+              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n</p>\n<!--\nReturns `true` if event had listeners, `false` otherwise.\n-->\n\n<p>イベントに対応するリスナがあった場合は <code>true</code>、それ以外は <code>false</code> を返します。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2164,6 +2168,13 @@
                   ]
                 }
               ]
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "EventEmitter.defaultMaxListeners",
+              "name": "defaultMaxListeners",
+              "desc": "<!--\n`emitter.setMaxListeners(n)` sets the maximum on a per-instance basis.\nThis class property lets you set it for *all* `EventEmitter` instances,\ncurrent and future, effective immediately. Use with care.\n-->\n\n<p><code>emitter.setMaxListeners(n)</code> はインスタンス毎の上限を設定します。\nこのクラスプロパティは、現在と将来の <em>全ての</em> <code>EventEmitter</code>\nインスタンスの上限を即座に設定します。\n注意して使用してください。\n\n</p>\n<!--\nNote that `emitter.setMaxListeners(n)` still has precedence over\n`EventEmitter.defaultMaxListeners`.\n-->\n\n<p><code>emitter.setMaxListeners(n)</code> は <code>EventEmitter.defaultMaxListeners</code> よりも\n優先されることに注意してください。\n\n</p>\n"
             }
           ],
           "classMethods": [
@@ -4381,7 +4392,7 @@
               "textRaw": "writable.\\_write(chunk, encoding, callback)",
               "type": "method",
               "name": "\\_write",
-              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be written.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  Ignore chunk is a buffer.  Note that chunk will\n  **always** be a buffer unless the `decodeStrings` option is\n  explicitly set to `false`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。\nチャンクがバッファの場合は無視されます。\n<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、\nチャンクは <em>常に</em> バッファであるべき事に注意してください。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` may be a string rather than a Buffer, and `encoding` will\nindicate the sort of string that it is.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.  If you do not explicitly set the `decodeStrings`\noption to `false`, then you can safely ignore the `encoding` argument,\nand assume that `chunk` will always be a Buffer.\n-->\n\n<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、\n<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の\n種類を示すことができます。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、\n<code>endocing</code> 引数は安全に無視することができます。\nそして <code>chunk</code> は常に Buffer であると見なせます。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n\n</p>\n",
+              "desc": "<!--\n* `chunk` {Buffer | String} The chunk to be written.  Will always\n  be a buffer unless the `decodeStrings` option was set to `false`.\n* `encoding` {String} If the chunk is a string, then this is the\n  encoding type.  Ignore chunk is a buffer.  Note that chunk will\n  **always** be a buffer unless the `decodeStrings` option is\n  explicitly set to `false`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunk.\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | Array} 書き込まれるデータ。\n<code>decodeStrings</code> オプションが <code>false</code> に設定されない限り常にバッファです。</li>\n<li><code>encoding</code> {String} チャンクが文字列の場合のエンコーディング方式。\nチャンクがバッファの場合は無視されます。\n<code>decodeStrings</code> オプションが明示的に <code>false</code> に設定されない限り、\nチャンクは <em>常に</em> バッファであるべき事に注意してください。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nAll Writable stream implementations must provide a `_write` method to\nsend data to the underlying resource.\n-->\n\n<p>全ての Writable ストリームは、下層のリソースにデータを\n送るために <code>_write</code> メソッドを提供しなければなりません。\n\n</p>\n<!--\nNote: **This function MUST NOT be called directly.**  It should be\nimplemented by child classes, and called by the internal Writable\nclass methods only.\n-->\n\n<p>注意: <strong>この関数は直接呼び出してはいけません。</strong>\nこれはサブクラスで実装されるべきであり、Writable クラスの内部からのみ\n呼び出されるべきです。\n\n</p>\n<!--\nCall the callback using the standard `callback(error)` pattern to\nsignal that the write completed successfully or with an error.\n-->\n\n<p>コールバックは出力が成功して完了したか、エラーが発生したかを伝えるために、\n標準的な <code>callback(error)</code> パターンを使って呼び出します。\n\n</p>\n<!--\nIf the `decodeStrings` flag is set in the constructor options, then\n`chunk` may be a string rather than a Buffer, and `encoding` will\nindicate the sort of string that it is.  This is to support\nimplementations that have an optimized handling for certain string\ndata encodings.  If you do not explicitly set the `decodeStrings`\noption to `false`, then you can safely ignore the `encoding` argument,\nand assume that `chunk` will always be a Buffer.\n-->\n\n<p>コンストラクタオプションの <code>decodeStrings</code> フラグがセットされると、\n<code>chunk</code> を Buffer ではなく文字列にし、<code>encoding</code> でその文字列の\n種類を示すことができます。\nこれは、実装が文字列データのエンコーディングを最適化できるようにするためです。\n<code>decodeStrings</code> オプションを明示的に <code>false</code> に設定しない場合、\n<code>endocing</code> 引数は安全に無視することができます。\nそして <code>chunk</code> は常に Buffer であると見なせます。\n\n</p>\n<!--\nThis method is prefixed with an underscore because it is internal to\nthe class that defines it, and should not be called directly by user\nprograms.  However, you **are** expected to override this method in\nyour own extension classes.\n-->\n\n<p>このメソッドはこれを定義するクラス内部のものであり、ユーザプログラムから\n直接呼び出されるべきものではないため、アンダースコアの接頭辞を持ちます。\nしかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが\n求められて<strong>います</strong>。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4390,6 +4401,24 @@
                     },
                     {
                       "name": "encoding"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.\\_writev(chunks, callback)",
+              "type": "method",
+              "name": "\\_writev",
+              "desc": "<!--\n* `chunks` {Array} The chunks to be written.  Each chunk has following\n  format: `{ chunk: ..., encoding: ... }`.\n* `callback` {Function} Call this function (optionally with an error\n  argument) when you are done processing the supplied chunks.\n-->\n\n<ul>\n<li><code>chunks</code> {Array} 書き込まれるチャンクの配列。\n各チャンクは次のフォーマットになります:\n<code>{ chunk: ..., encoding: ... }</code> 。</li>\n<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、\n(任意のエラー引数と共に) この関数を呼び出してください。</li>\n</ul>\n<!--\nThis function is completely optional to implement. In the most cases\nit is unnecessary.  If implemented, it will be called with all the\nchunks that are buffered in the write queue.\n-->\n\n<p>この関数の実装は完全に任意です。ほとんどのケースでは必要ありません。\nもし実装されるなら、書き込みキューにバッファリングされた全ての\nチャンクと共に呼び出されるでしょう。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "chunks"
                     },
                     {
                       "name": "callback"
@@ -4418,6 +4447,28 @@
                       "optional": true
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.cork()",
+              "type": "method",
+              "name": "cork",
+              "desc": "<!--\nForces buffering of all writes.\n-->\n\n<p>全ての書き込みを強制的にバッファリングします。\n\n</p>\n<!--\nBuffered data will be flushed either at `.uncork()` or at `.end()` call.\n-->\n\n<p>バッファリングされたデータは <code>.uncork()</code> または <code>.end()</code> のどちらかが\n呼び出されるとフラッシュされます。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
+                }
+              ]
+            },
+            {
+              "textRaw": "writable.uncork()",
+              "type": "method",
+              "name": "uncork",
+              "desc": "<!--\nFlush all data, buffered since `.cork()` call.\n-->\n\n<p><code>.cork()</code> の呼び出しによってバッファリングされた\n全てのデータをフラッシュします。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": []
                 }
               ]
             },
@@ -4452,6 +4503,13 @@
               "type": "event",
               "name": "drain",
               "desc": "<!--\nEmitted when the stream's write queue empties and it's safe to write\nwithout buffering again. Listen for it when `stream.write()` returns\n`false`.\n-->\n\n<p>ストリームの書き込みキューが空になり、バッファリングされることなく\n再び安全に書き込みができるようになった場合に生成されます。\n<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'error'",
+              "type": "event",
+              "name": "error",
+              "desc": "<!--\nEmitted if there was an error receiving data.\n-->\n\n<p>データ送信でエラーがあった場合に生成されます。\n\n</p>\n",
               "params": []
             },
             {
@@ -7493,6 +7551,21 @@
           ]
         },
         {
+          "textRaw": "path.isAbsolute(path)",
+          "type": "method",
+          "name": "isAbsolute",
+          "desc": "<!--\nDetermines whether `path` is an absolute path. An absolute path will always\nresolve to the same location, regardless of the working directory.\n-->\n\n<p><code>path</code> が絶対パスかどうかを判定します。\n絶対パスは現在の作業ディレクトリに関係なく、\n常に同じ場所に解決されます。\n\n</p>\n<!--\nPosix examples:\n-->\n\n<p>Posix の例:\n\n</p>\n<pre><code>path.isAbsolute(&#39;/foo/bar&#39;) // true\npath.isAbsolute(&#39;/baz/..&#39;)  // true\npath.isAbsolute(&#39;qux/&#39;)     // false\npath.isAbsolute(&#39;.&#39;)        // false</code></pre>\n<!--\nWindows examples:\n-->\n\n<p>Windows の例:\n\n</p>\n<pre><code>path.isAbsolute(&#39;//server&#39;)  // true\npath.isAbsolute(&#39;C:/foo/..&#39;) // true\npath.isAbsolute(&#39;bar\\\\baz&#39;)   // false\npath.isAbsolute(&#39;.&#39;)         // false</code></pre>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "path"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "textRaw": "path.relative(from, to)",
           "type": "method",
           "name": "relative",
@@ -9684,22 +9757,26 @@
           "textRaw": "Class: https.Server",
           "type": "class",
           "name": "https.Server",
-          "desc": "<!--\nThis class is a subclass of `tls.Server` and emits events same as\n`http.Server`. See `http.Server` for more information.\n-->\n\n<p>このクラスは <code>tls.Server</code> のサブクラスで、<code>http.Server</code> と同様のイベントを生成します。\nより詳しくは <code>http.Server</code> を参照してください。\n\n</p>\n"
-        },
-        {
-          "textRaw": "Class: https.Agent",
-          "type": "class",
-          "name": "https.Agent",
-          "desc": "<!--\nAn Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]\nfor more information.\n-->\n\n<p>HTTPS 用の Agent オブジェクトで，[http.Agent][] と同様です。\n詳細は [https.request()][] を参照してください。\n\n</p>\n"
-        }
-      ],
-      "methods": [
-        {
-          "textRaw": "https.createServer(options, [requestListener])",
-          "type": "method",
-          "name": "createServer",
-          "desc": "<!--\nReturns a new HTTPS web server object. The `options` is similar to\n[tls.createServer()][].  The `requestListener` is a function which is\nautomatically added to the `'request'` event.\n-->\n\n<p>新しい HTTPS Web サーバオブジェクトを返します。\n<code>option</code> は [tls.createServer()][] と同じです。\n<code>requestListener</code> は関数で、 <code>&#39;request&#39;</code> イベントに自動的に追加されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// curl -k https://localhost:8000/\nvar https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;server.pfx&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n",
+          "desc": "<!--\nThis class is a subclass of `tls.Server` and emits events same as\n`http.Server`. See `http.Server` for more information.\n-->\n\n<p>このクラスは <code>tls.Server</code> のサブクラスで、<code>http.Server</code> と同様のイベントを生成します。\nより詳しくは <code>http.Server</code> を参照してください。\n\n</p>\n",
           "methods": [
+            {
+              "textRaw": "server.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "desc": "<!--\nSee [http.Server#setTimeout()][].\n-->\n\n<p>[http.Server#setTimeout()][] を参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
             {
               "textRaw": "server.listen(path, [callback])",
               "type": "method",
@@ -9766,20 +9843,22 @@
               ]
             }
           ],
-          "signatures": [
+          "properties": [
             {
-              "params": [
-                {
-                  "name": "options"
-                },
-                {
-                  "name": "requestListener",
-                  "optional": true
-                }
-              ]
+              "textRaw": "server.timeout",
+              "name": "timeout",
+              "desc": "<!--\nSee [http.Server#timeout][].\n\n[http.Server#timeout][] を参照してください。\n\n## https.createServer(options, [requestListener])\n\n<!--\nReturns a new HTTPS web server object. The `options` is similar to\n[tls.createServer()][].  The `requestListener` is a function which is\nautomatically added to the `'request'` event.\n-->\n\n<p>新しい HTTPS Web サーバオブジェクトを返します。\n<code>option</code> は [tls.createServer()][] と同じです。\n<code>requestListener</code> は関数で、 <code>&#39;request&#39;</code> イベントに自動的に追加されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// curl -k https://localhost:8000/\nvar https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;server.pfx&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n"
             }
           ]
         },
+        {
+          "textRaw": "Class: https.Agent",
+          "type": "class",
+          "name": "https.Agent",
+          "desc": "<!--\nAn Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]\nfor more information.\n-->\n\n<p>HTTPS 用の Agent オブジェクトで，[http.Agent][] と同様です。\n詳細は [https.request()][] を参照してください。\n\n</p>\n"
+        }
+      ],
+      "methods": [
         {
           "textRaw": "https.request(options, callback)",
           "type": "method",
@@ -10366,10 +10445,10 @@
           ]
         },
         {
-          "textRaw": "vm.runInNewContext(code, [sandbox], [filename])",
+          "textRaw": "vm.runInNewContext(code, [sandbox], [filename], [timeout])",
           "type": "method",
           "name": "runInNewContext",
-          "desc": "<!--\n`vm.runInNewContext` compiles `code`, then runs it in `sandbox` and returns the\nresult. Running code does not have access to local scope. The object `sandbox`\nwill be used as the global object for `code`.\n`sandbox` and `filename` are optional, `filename` is only used in stack traces.\n-->\n\n<p><code>vm.runInNewContext</code> は <code>code</code> をコンパイルし、それを <code>sandbox</code> の中で実行して\n結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>sandbox</code> および <code>filename</code> はオプションで、<code>filename</code> \nスタックトレースでのみ使用されます。\n\n</p>\n<!--\nExample: compile and execute code that increments a global variable and sets a new one.\nThese globals are contained in the sandbox.\n-->\n\n<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。\nこれらのグローバル変数はサンドボックスに含まれます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;),\n    vm = require(&#39;vm&#39;),\n    sandbox = {\n      animal: &#39;cat&#39;,\n      count: 2\n    };\n\nvm.runInNewContext(&#39;count += 1; name = &quot;kitty&quot;&#39;, sandbox, &#39;myfile.vm&#39;);\nconsole.log(util.inspect(sandbox));\n\n// { animal: &#39;cat&#39;, count: 3, name: &#39;kitty&#39; }</code></pre>\n<!--\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInNewContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n-->\n\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInNewContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n</p>\n<!--\nIn case of syntax error in `code`, `vm.runInNewContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>code</code> が文法エラーとなるケースでは、\n<code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。\n\n</p>\n",
+          "desc": "<!--\n`vm.runInNewContext` compiles `code`, then runs it in `sandbox` and returns the\nresult. Running code does not have access to local scope. The object `sandbox`\nwill be used as the global object for `code`.\n`sandbox` and `filename` are optional, `filename` is only used in stack traces.\n`timeout` specifies an optional number of milliseconds to execute `code` before\nterminating execution. If execution is terminated, `null` will be thrown.\n-->\n\n<p><code>vm.runInNewContext</code> は <code>code</code> をコンパイルし、それを <code>sandbox</code> の中で実行して\n結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>sandbox</code> および <code>filename</code> はオプションで、<code>filename</code> \nスタックトレースでのみ使用されます。\n<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を\nミリ秒単位の数値で指定します。\n実行が打ち切られると、<code>null</code> がスローされます。\n\n</p>\n<!--\nExample: compile and execute code that increments a global variable and sets a new one.\nThese globals are contained in the sandbox.\n-->\n\n<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。\nこれらのグローバル変数はサンドボックスに含まれます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;),\n    vm = require(&#39;vm&#39;),\n    sandbox = {\n      animal: &#39;cat&#39;,\n      count: 2\n    };\n\nvm.runInNewContext(&#39;count += 1; name = &quot;kitty&quot;&#39;, sandbox, &#39;myfile.vm&#39;);\nconsole.log(util.inspect(sandbox));\n\n// { animal: &#39;cat&#39;, count: 3, name: &#39;kitty&#39; }</code></pre>\n<!--\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInNewContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n-->\n\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInNewContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n</p>\n<!--\nIn case of syntax error in `code`, `vm.runInNewContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>code</code> が文法エラーとなるケースでは、\n<code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -10383,16 +10462,20 @@
                 {
                   "name": "filename",
                   "optional": true
+                },
+                {
+                  "name": "timeout",
+                  "optional": true
                 }
               ]
             }
           ]
         },
         {
-          "textRaw": "vm.runInContext(code, context, [filename])",
+          "textRaw": "vm.runInContext(code, context, [filename], [timeout])",
           "type": "method",
           "name": "runInContext",
-          "desc": "<!--\n`vm.runInContext` compiles `code`, then runs it in `context` and returns the\nresult. A (V8) context comprises a global object, together with a set of\nbuilt-in objects and functions. Running code does not have access to local scope\nand the global object held within `context` will be used as the global object\nfor `code`.\n`filename` is optional, it's used only in stack traces.\n\nExample: compile and execute code in a existing context.\n-->\n\n<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、\n<code>context</code> をコンテキストとして実行し、その結果を返します。\n(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、\nグローバルオブジェクトを含みます。\n実行されるコードはローカルスコープにアクセスせず、\n<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n\n</p>\n<p>例: コードをコンパイルして既存のコンテキストで実行します。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;),\n    vm = require(&#39;vm&#39;),\n    initSandbox = {\n      animal: &#39;cat&#39;,\n      count: 2\n    },\n    context = vm.createContext(initSandbox);\n\nvm.runInContext(&#39;count += 1; name = &quot;CATT&quot;&#39;, context, &#39;myfile.vm&#39;);\nconsole.log(util.inspect(context));\n\n// { animal: &#39;cat&#39;, count: 3, name: &#39;CATT&#39; }</code></pre>\n<!--\nNote that `createContext` will perform a shallow clone of the supplied sandbox object in order to\ninitialize the global object of the freshly constructed context.\n\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n\nIn case of syntax error in `code`, `vm.runInContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを\n初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを\n作成することに注意してください。\n\n</p>\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n\n</p>\n",
+          "desc": "<!--\n`vm.runInContext` compiles `code`, then runs it in `context` and returns the\nresult. A (V8) context comprises a global object, together with a set of\nbuilt-in objects and functions. Running code does not have access to local scope\nand the global object held within `context` will be used as the global object\nfor `code`.\n`filename` is optional, it's used only in stack traces.\n`timeout` specifies an optional number of milliseconds to execute `code` before\nterminating execution. If execution is terminated, `null` will be thrown.\n-->\n\n<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、\n<code>context</code> をコンテキストとして実行し、その結果を返します。\n(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、\nグローバルオブジェクトを含みます。\n実行されるコードはローカルスコープにアクセスせず、\n<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。\n<code>filename</code> はオプションで、スタックトレースでのみ使用されます。\n<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を\nミリ秒単位の数値で指定します。\n実行が打ち切られると、<code>null</code> がスローされます。\n\n</p>\n<!--\nExample: compile and execute code in a existing context.\n-->\n\n<p>例: コードをコンパイルして既存のコンテキストで実行します。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;),\n    vm = require(&#39;vm&#39;),\n    initSandbox = {\n      animal: &#39;cat&#39;,\n      count: 2\n    },\n    context = vm.createContext(initSandbox);\n\nvm.runInContext(&#39;count += 1; name = &quot;CATT&quot;&#39;, context, &#39;myfile.vm&#39;);\nconsole.log(util.inspect(context));\n\n// { animal: &#39;cat&#39;, count: 3, name: &#39;CATT&#39; }</code></pre>\n<!--\nNote that `createContext` will perform a shallow clone of the supplied sandbox object in order to\ninitialize the global object of the freshly constructed context.\n\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n\nIn case of syntax error in `code`, `vm.runInContext` emits the syntax error to stderr\nand throws an exception.\n-->\n\n<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを\n初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを\n作成することに注意してください。\n\n</p>\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -10404,6 +10487,10 @@
                 },
                 {
                   "name": "filename",
+                  "optional": true
+                },
+                {
+                  "name": "timeout",
                   "optional": true
                 }
               ]
@@ -10454,26 +10541,35 @@
           "desc": "<!--\nA class for running scripts.  Returned by vm.createScript.\n-->\n\n<p>スクリプトを実行するクラスです。<code>vm.createScript()</code> によって返されます。\n\n</p>\n",
           "methods": [
             {
-              "textRaw": "script.runInThisContext()",
+              "textRaw": "script.runInThisContext([timeout])",
               "type": "method",
               "name": "runInThisContext",
-              "desc": "<!--\nSimilar to `vm.runInThisContext` but a method of a precompiled `Script` object.\n`script.runInThisContext` runs the code of `script` and returns the result.\nRunning code does not have access to local scope, but does have access to the `global` object\n(v8: in actual context).\n-->\n\n<p><code>vm.runInThisContext</code> と同様ですが、\nこちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。\n<code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。\n実行されるコードはローカルスコープにアクセスしませんが、\n<code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。\n\n</p>\n<!--\nExample of using `script.runInThisContext` to compile code once and run it multiple times:\n-->\n\n<p><code>script.runInThisContext</code> を使ってコードを一度だけコンパイルし、複数回実行する例:\n\n</p>\n<pre><code>var vm = require(&#39;vm&#39;);\n\nglobalVar = 0;\n\nvar script = vm.createScript(&#39;globalVar += 1&#39;, &#39;myfile.vm&#39;);\n\nfor (var i = 0; i &lt; 1000 ; i += 1) {\n  script.runInThisContext();\n}\n\nconsole.log(globalVar);\n\n// 1000</code></pre>\n",
+              "desc": "<!--\nSimilar to `vm.runInThisContext` but a method of a precompiled `Script` object.\n`script.runInThisContext` runs the code of `script` and returns the result.\nRunning code does not have access to local scope, but does have access to the `global` object\n(v8: in actual context).\n`timeout` specifies an optional number of milliseconds to execute `code` before\nterminating execution. If execution is terminated, `null` will be thrown.\n-->\n\n<p><code>vm.runInThisContext</code> と同様ですが、\nこちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。\n<code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。\n実行されるコードはローカルスコープにアクセスしませんが、\n<code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。\n<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を\nミリ秒単位の数値で指定します。\n実行が打ち切られると、<code>null</code> がスローされます。\n\n</p>\n<!--\nExample of using `script.runInThisContext` to compile code once and run it multiple times:\n-->\n\n<p><code>script.runInThisContext</code> を使ってコードを一度だけコンパイルし、複数回実行する例:\n\n</p>\n<pre><code>var vm = require(&#39;vm&#39;);\n\nglobalVar = 0;\n\nvar script = vm.createScript(&#39;globalVar += 1&#39;, &#39;myfile.vm&#39;);\n\nfor (var i = 0; i &lt; 1000 ; i += 1) {\n  script.runInThisContext();\n}\n\nconsole.log(globalVar);\n\n// 1000</code></pre>\n",
               "signatures": [
                 {
-                  "params": []
+                  "params": [
+                    {
+                      "name": "timeout",
+                      "optional": true
+                    }
+                  ]
                 }
               ]
             },
             {
-              "textRaw": "script.runInNewContext([sandbox])",
+              "textRaw": "script.runInNewContext([sandbox], [timeout])",
               "type": "method",
               "name": "runInNewContext",
-              "desc": "<!--\nSimilar to `vm.runInNewContext` a method of a precompiled `Script` object.\n`script.runInNewContext` runs the code of `script` with `sandbox` as the global object and returns the result.\nRunning code does not have access to local scope. `sandbox` is optional.\n-->\n\n<p><code>vm.runInNewContext</code> と同様ですが、\nこちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。\n<code>script.runInNewContext</code> は <code>sandbox</code> がグローバルオブジェクトであるかのように\n<code>script</code> のコードを実行してその結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>sandbox</code> はオプションです。\n\n</p>\n<!--\nExample: compile code that increments a global variable and sets one, then execute this code multiple times.\nThese globals are contained in the sandbox.\n-->\n\n<p>例: グローバル変数をインクリメントしてセットするコードをコンパイルして、このコードを複数回実行します。\nこれらのグローバル変数はサンドボックスに含まれます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;),\n    vm = require(&#39;vm&#39;),\n    sandbox = {\n      animal: &#39;cat&#39;,\n      count: 2\n    };\n\nvar script = vm.createScript(&#39;count += 1; name = &quot;kitty&quot;&#39;, &#39;myfile.vm&#39;);\n\nfor (var i = 0; i &lt; 10 ; i += 1) {\n  script.runInNewContext(sandbox);\n}\n\nconsole.log(util.inspect(sandbox));\n\n// { animal: &#39;cat&#39;, count: 12, name: &#39;kitty&#39; }</code></pre>\n<!--\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `script.runInNewContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n-->\n\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>script.runInNewContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n</p>\n",
+              "desc": "<!--\nSimilar to `vm.runInNewContext` a method of a precompiled `Script` object.\n`script.runInNewContext` runs the code of `script` with `sandbox` as the global object and returns the result.\nRunning code does not have access to local scope. `sandbox` is optional.\n`timeout` specifies an optional number of milliseconds to execute `code` before\nterminating execution. If execution is terminated, `null` will be thrown.\n-->\n\n<p><code>vm.runInNewContext</code> と同様ですが、\nこちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。\n<code>script.runInNewContext</code> は <code>sandbox</code> がグローバルオブジェクトであるかのように\n<code>script</code> のコードを実行してその結果を返します。\n実行されるコードはローカルスコープにアクセスしません。\n<code>sandbox</code> はオプションです。\n<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を\nミリ秒単位の数値で指定します。\n実行が打ち切られると、<code>null</code> がスローされます。\n\n</p>\n<!--\nExample: compile code that increments a global variable and sets one, then execute this code multiple times.\nThese globals are contained in the sandbox.\n-->\n\n<p>例: グローバル変数をインクリメントしてセットするコードをコンパイルして、このコードを複数回実行します。\nこれらのグローバル変数はサンドボックスに含まれます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;),\n    vm = require(&#39;vm&#39;),\n    sandbox = {\n      animal: &#39;cat&#39;,\n      count: 2\n    };\n\nvar script = vm.createScript(&#39;count += 1; name = &quot;kitty&quot;&#39;, &#39;myfile.vm&#39;);\n\nfor (var i = 0; i &lt; 10 ; i += 1) {\n  script.runInNewContext(sandbox);\n}\n\nconsole.log(util.inspect(sandbox));\n\n// { animal: &#39;cat&#39;, count: 12, name: &#39;kitty&#39; }</code></pre>\n<!--\nNote that running untrusted code is a tricky business requiring great care.  To prevent accidental\nglobal variable leakage, `script.runInNewContext` is quite useful, but safely running untrusted code\nrequires a separate process.\n-->\n\n<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。\n偶然グローバル変数が漏れてしまうことを防ぐために、<code>script.runInNewContext</code> はとても役立ちますが、\n信頼できないコードを安全に実行するために別のプロセスを要求します。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
                     {
                       "name": "sandbox",
+                      "optional": true
+                    },
+                    {
+                      "name": "timeout",
                       "optional": true
                     }
                   ]
@@ -10660,7 +10756,7 @@
           "textRaw": "child_process.exec(command, [options], callback)",
           "type": "method",
           "name": "exec",
-          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `stdio` {Array|String} Child's stdio configuration. (See above)\n    Only stdin is configurable, anything else will lead to unpredictable\n    results.\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See above)\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。\n標準入力のみが構成可能です。その他は予期しない結果を招くでしょう。</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (前述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var exec = require(&#39;child_process&#39;).exec,\n    child;\n\nchild = exec(&#39;cat *.js bad_file | wc -l&#39;,\n  function (error, stdout, stderr) {\n    console.log(&#39;stdout: &#39; + stdout);\n    console.log(&#39;stderr: &#39; + stderr);\n    if (error !== null) {\n      console.log(&#39;exec error: &#39; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `err.code`\nwill be the exit code of the child process, and `err.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>err.code</code> は子プロセスの終了コード、\n<code>err.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &#39;utf8&#39;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &#39;SIGTERM&#39;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&#39;SIGTERM&#39;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
+          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var exec = require(&#39;child_process&#39;).exec,\n    child;\n\nchild = exec(&#39;cat *.js bad_file | wc -l&#39;,\n  function (error, stdout, stderr) {\n    console.log(&#39;stdout: &#39; + stdout);\n    console.log(&#39;stderr: &#39; + stderr);\n    if (error !== null) {\n      console.log(&#39;exec error: &#39; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `err.code`\nwill be the exit code of the child process, and `err.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>err.code</code> は子プロセスの終了コード、\n<code>err.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &#39;utf8&#39;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &#39;SIGTERM&#39;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&#39;SIGTERM&#39;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -10682,7 +10778,7 @@
           "textRaw": "child_process.execFile(file, args, options, callback)",
           "type": "method",
           "name": "execFile",
-          "desc": "<!--\n* `file` {String} The filename of the program to run\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `stdio` {Array|String} Child's stdio configuration. (See above)\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See above)\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200\\*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>file</code> {String} 実行するプログラムのファイル名</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (前述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nThis is similar to `child_process.exec()` except it does not execute a\nsubshell but rather the specified file directly. This makes it slightly\nleaner than `child_process.exec`. It has the same options.\n-->\n\n<p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて\n<code>child_process.exec()</code> と同様です。\nこれは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。\n\n\n</p>\n",
+          "desc": "<!--\n* `file` {String} The filename of the program to run\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200\\*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>file</code> {String} 実行するプログラムのファイル名</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nThis is similar to `child_process.exec()` except it does not execute a\nsubshell but rather the specified file directly. This makes it slightly\nleaner than `child_process.exec`. It has the same options.\n-->\n\n<p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて\n<code>child_process.exec()</code> と同様です。\nこれは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -11610,7 +11706,7 @@
           "textRaw": "os.networkInterfaces()",
           "type": "method",
           "name": "networkInterfaces",
-          "desc": "<!--\nGet a list of network interfaces:\n-->\n\n<p>ネットワークインタフェースの一覧を取得します。\n\n</p>\n<pre><code>{ lo0: \n   [ { address: &#39;::1&#39;, family: &#39;IPv6&#39;, internal: true },\n     { address: &#39;fe80::1&#39;, family: &#39;IPv6&#39;, internal: true },\n     { address: &#39;127.0.0.1&#39;, family: &#39;IPv4&#39;, internal: true } ],\n  en1: \n   [ { address: &#39;fe80::cabc:c8ff:feef:f996&#39;, family: &#39;IPv6&#39;,\n       internal: false },\n     { address: &#39;10.0.1.123&#39;, family: &#39;IPv4&#39;, internal: false } ],\n  vmnet1: [ { address: &#39;10.99.99.254&#39;, family: &#39;IPv4&#39;, internal: false } ],\n  vmnet8: [ { address: &#39;10.88.88.1&#39;, family: &#39;IPv4&#39;, internal: false } ],\n  ppp0: [ { address: &#39;10.2.0.231&#39;, family: &#39;IPv4&#39;, internal: false } ] }</code></pre>\n",
+          "desc": "<!--\nGet a list of network interfaces:\n-->\n\n<p>ネットワークインタフェースの一覧を取得します。\n\n</p>\n<pre><code>{ lo0:\n   [ { address: &#39;fe80::1&#39;, netmask: &#39;ffff:ffff:ffff:ffff::&#39;,\n       family: &#39;IPv6&#39;, internal: true },\n     { address: &#39;127.0.0.1&#39;, netmask: &#39;255.0.0.0&#39;,\n       family: &#39;IPv4&#39;, internal: true },\n     { address: &#39;::1&#39;, netmask: &#39;ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff&#39;,\n       family: &#39;IPv6&#39;, internal: true } ],\n  en1:\n   [ { address: &#39;fe80::226:8ff:fedc:1dd&#39;, netmask: &#39;ffff:ffff:ffff:ffff::&#39;,\n       family: &#39;IPv6&#39;, internal: false },\n     { address: &#39;10.0.1.6&#39;, netmask: &#39;255.255.255.0&#39;,\n       family: &#39;IPv4&#39;, internal: false } ],\n  vmnet1:\n   [ { address: &#39;192.168.252.1&#39;, netmask: &#39;255.255.255.0&#39;,\n       family: &#39;IPv4&#39;, internal: false } ],\n  vmnet8:\n   [ { address: &#39;192.168.207.1&#39;, netmask: &#39;255.255.255.0&#39;,\n       family: &#39;IPv4&#39;, internal: false } ] }</code></pre>\n",
           "signatures": [
             {
               "params": []
@@ -11639,10 +11735,15 @@
           "textRaw": "How It Works",
           "name": "How It Works",
           "type": "misc",
-          "desc": "<!--\nThe worker processes are spawned using the `child_process.fork` method,\nso that they can communicate with the parent via IPC and pass server\nhandles back and forth.\n-->\n\n<p>ワーカプロセスは <code>child_process.fork</code> メソッドを使って起動されるため、\n親プロセスと IPC で通信したり、サーバハンドルをやり取りしたりすることが\nできます。\n\n</p>\n<!--\nWhen you call `server.listen(...)` in a worker, it serializes the\narguments and passes the request to the master process.  If the master\nprocess already has a listening server matching the worker's\nrequirements, then it passes the handle to the worker.  If it does not\nalready have a listening server matching that requirement, then it will\ncreate one, and pass the handle to the child.\n-->\n\n<p>ワーカが <code>server.listen(...)</code> を呼び出すと、引数がシリアライズされて\nマスタプロセスにリクエストが渡されます。\nマスタプロセスは、ワーカのリクエストにマッチするリスニングサーバが既に\n存在すればそのハンドルをワーカに渡します。\nリクエストにマッチするリスニングサーバが存在しなければ、それが作成されて\n子プロセスに渡されます。\n\n</p>\n<!--\nThis causes potentially surprising behavior in three edge cases:\n-->\n\n<p>これは三つの極端なケースで驚くような振る舞いを引き起こすかもしれません。\n\n</p>\n<!--\n1. `server.listen({fd: 7})` Because the message is passed to the master,\n   file descriptor 7 **in the parent** will be listened on, and the\n   handle passed to the worker, rather than listening to the worker's\n   idea of what the number 7 file descriptor references.\n2. `server.listen(handle)` Listening on handles explicitly will cause\n   the worker to use the supplied handle, rather than talk to the master\n   process.  If the worker already has the handle, then it's presumed\n   that you know what you are doing.\n3. `server.listen(0)` Normally, this will cause servers to listen on a\n   random port.  However, in a cluster, each worker will receive the\n   same \"random\" port each time they do `listen(0)`.  In essence, the\n   port is random the first time, but predictable thereafter.  If you\n   want to listen on a unique port, generate a port number based on the\n   cluster worker ID.\n-->\n\n<ol>\n<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、\nワーカのファイル記述子 7 が参照するものではなく、\n<strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに\n渡されます。</li>\n<li><code>server.listen(handle)</code> 明示的なハンドルをリスニングするとマスタプロセスは\n関与することなく、ワーカは与えられたハンドルを使うことになります。\nワーカがすでにハンドルを持っているなら、何をしようとしているか\nあなたは分かっているでしょう。</li>\n<li><code>&#39;server.listen(0)</code> 通常、これはサーバがランダムなポートをリッスンすることを\n意味します。しかしながらクラスタでは、各ワーカは <code>listen(0)</code> によって\n同じ &quot;ランダムな&quot; ポートを受信します。\nすなわち、初回はポートはランダムになりますが、その後はそうではありません。\nもしユニークなポートをリッスンしたければ、クラスタのワーカ ID に基づいて\nポート番号を生成してください。</li>\n</ol>\n<!--\nWhen multiple processes are all `accept()`ing on the same underlying\nresource, the operating system load-balances across them very\nefficiently.  There is no routing logic in Node.js, or in your program,\nand no shared state between the workers.  Therefore, it is important to\ndesign your program such that it does not rely too heavily on in-memory\ndata objects for things like sessions and login.\n-->\n\n<p>複数のプロセスが同じリソースを <code>accept()</code> する時、オペレーティングシステムは\nとても効率的にそれら全体をロードバランスします。\nNode.js にもあなたのプログラムにも、ルーティングのためのロジックや\nワーカ間で共有される状態はありません。\nしたがって、あなたのプログラムがセッションやログインのためにメモリ内の\nデータオブジェクトに過度に頼らないように設計することが重要です。\n\n</p>\n<!--\nBecause workers are all separate processes, they can be killed or\nre-spawned depending on your program's needs, without affecting other\nworkers.  As long as there are some workers still alive, the server will\ncontinue to accept connections.  Node does not automatically manage the\nnumber of workers for you, however.  It is your responsibility to manage\nthe worker pool for your application's needs.\n-->\n\n<p>全てのワーカは独立したプロセスなので、他のワーカに影響を与えることなく\nプログラムのニーズに応じてそれらを殺したり再起動したりすることができます。\nいくつかのワーカが生きている限り、サーバは接続を受け付け続けます。\nしかしながら、Node はワーカの数を自動的に管理することはありません。\nアプリケーションのニーズに応じてワーカのプールを管理することは、\nあなたの責務です。\n\n</p>\n"
+          "desc": "<!--\nThe worker processes are spawned using the `child_process.fork` method,\nso that they can communicate with the parent via IPC and pass server\nhandles back and forth.\n-->\n\n<p>ワーカプロセスは <code>child_process.fork</code> メソッドを使って起動されるため、\n親プロセスと IPC で通信したり、サーバハンドルをやり取りしたりすることが\nできます。\n\n</p>\n<!--\nThe cluster module supports two methods of distributing incoming\nconnections.\n-->\n\n<p>クラスタモジュールは到着する接続を分散する方法を二種類提供します。\n\n</p>\n<!--\nThe first one (and the default one on all platforms except Windows),\nis the round-robin approach, where the master process listens on a\nport, accepts new connections and distributes them across the workers\nin a round-robin fashion, with some built-in smarts to avoid\noverloading a worker process.\n-->\n\n<p>一つ目 (Windows 以外の全てのプラットフォームでデフォルト)\nはラウンドロビン方式で、マスタプロセスがポートをリッスンし、\n新しい接続を受け付けるとラウンドロビン方式でワーカに分散します\n(ワーカの過負荷を避ける工夫が組み込まれています)。\n\n</p>\n<!--\nThe second approach is where the master process creates the listen\nsocket and sends it to interested workers. The workers then accept\nincoming connections directly.\n-->\n\n<p>二つ目の方法は、マスタプロセスがリスニングソケットを作成し、\nワーカに送信します。ワーカは到着する接続を直接受け付けます。\n\n</p>\n<!--\nThe second approach should, in theory, give the best performance.\nIn practice however, distribution tends to be very unbalanced due\nto operating system scheduler vagaries. Loads have been observed\nwhere over 70% of all connections ended up in just two processes,\nout of a total of eight.\n-->\n\n<p>二つ目の方法は、原則的には、ベストなパフォーマンスであるべきです。\nしかし実際には、OS の予測不可能なスケジューラにより、\n非常に不均衡に分散される傾向があります。\n全 8 プロセス中の 2 プロセスに 70% 以上の接続が割り当てられたことも\n観測されました。\n\n</p>\n<!--\nBecause `server.listen()` hands off most of the work to the master\nprocess, there are three cases where the behavior between a normal\nnode.js process and a cluster worker differs:\n-->\n\n<p><code>server.listen()</code> は仕事の大部分をマスタプロセスに渡すため、\n通常の node.js プロセスとクラスタのワーカプロセスの間には\n振る舞いが異なるケースが 3 つあります。\n\n</p>\n<!--\n1. `server.listen({fd: 7})` Because the message is passed to the master,\n   file descriptor 7 **in the parent** will be listened on, and the\n   handle passed to the worker, rather than listening to the worker's\n   idea of what the number 7 file descriptor references.\n2. `server.listen(handle)` Listening on handles explicitly will cause\n   the worker to use the supplied handle, rather than talk to the master\n   process.  If the worker already has the handle, then it's presumed\n   that you know what you are doing.\n3. `server.listen(0)` Normally, this will cause servers to listen on a\n   random port.  However, in a cluster, each worker will receive the\n   same \"random\" port each time they do `listen(0)`.  In essence, the\n   port is random the first time, but predictable thereafter.  If you\n   want to listen on a unique port, generate a port number based on the\n   cluster worker ID.\n-->\n\n<ol>\n<li><code>server.listen({fd: 7})</code> メッセージはマスタに渡されてるため、\nワーカのファイル記述子 7 が参照するものではなく、\n<strong>親プロセスの</strong> ファイル記述子 7 がリスニングされてそのハンドルがワーカに\n渡されます。</li>\n<li><code>server.listen(handle)</code> 明示的なハンドルをリスニングするとマスタプロセスは\n関与することなく、ワーカは与えられたハンドルを使うことになります。\nワーカがすでにハンドルを持っているなら、何をしようとしているか\nあなたは分かっているでしょう。</li>\n<li><code>&#39;server.listen(0)</code> 通常、これはサーバがランダムなポートをリッスンすることを\n意味します。しかしながらクラスタでは、各ワーカは <code>listen(0)</code> によって\n同じ &quot;ランダムな&quot; ポートを受信します。\nすなわち、初回はポートはランダムになりますが、その後はそうではありません。\nもしユニークなポートをリッスンしたければ、クラスタのワーカ ID に基づいて\nポート番号を生成してください。</li>\n</ol>\n<!--\nThere is no routing logic in Node.js, or in your program, and no shared\nstate between the workers.  Therefore, it is important to design your\nprogram such that it does not rely too heavily on in-memory data objects\nfor things like sessions and login.\n-->\n\n<p>Node.js にもあなたのプログラムにも、ルーティングのためのロジックや\nワーカ間で共有される状態はありません。\nしたがって、あなたのプログラムがセッションやログインのためにメモリ内の\nデータオブジェクトに過度に頼らないように設計することが重要です。\n\n</p>\n<!--\nBecause workers are all separate processes, they can be killed or\nre-spawned depending on your program's needs, without affecting other\nworkers.  As long as there are some workers still alive, the server will\ncontinue to accept connections.  Node does not automatically manage the\nnumber of workers for you, however.  It is your responsibility to manage\nthe worker pool for your application's needs.\n-->\n\n<p>全てのワーカは独立したプロセスなので、他のワーカに影響を与えることなく\nプログラムのニーズに応じてそれらを殺したり再起動したりすることができます。\nいくつかのワーカが生きている限り、サーバは接続を受け付け続けます。\nしかしながら、Node はワーカの数を自動的に管理することはありません。\nアプリケーションのニーズに応じてワーカのプールを管理することは、\nあなたの責務です。\n\n</p>\n"
         }
       ],
       "properties": [
+        {
+          "textRaw": "cluster.schedulingPolicy",
+          "name": "schedulingPolicy",
+          "desc": "<!--\nThe scheduling policy, either `cluster.SCHED_RR` for round-robin or\n`cluster.SCHED_NONE` to leave it to the operating system. This is a\nglobal setting and effectively frozen once you spawn the first worker\nor call `cluster.setupMaster()`, whatever comes first.\n-->\n\n<p>スケジューリングポリシーは、ラウンドロビンの <code>cluster.SCHED_RR</code> または、\nOS に任せる <code>cluster.SCHED_NONE</code> のどちらかです。\nこれはグローバルな設定で、その効果は最初のワーカを起動する時か、\n<code>cluster.setupMaster()</code> を呼び出した時、どちらかが最初に行われた時点で\n凍結されます。\n\n</p>\n<!--\n`SCHED_RR` is the default on all operating systems except Windows.\nWindows will change to `SCHED_RR` once libuv is able to effectively\ndistribute IOCP handles without incurring a large performance hit.\n-->\n\n<p><code>SCHED_RR</code> は Windows 以外の全ての OS でデフォルトです。\nWindows では、libuv が大きなパフォーマンス低下を招くことなく\nIOCP ハンドルを分散することが可能であれば、<code>SCHED_RR</code> に切り替わります。\n\n</p>\n<!--\n`cluster.schedulingPolicy` can also be set through the\n`NODE_CLUSTER_SCHED_POLICY` environment variable. Valid\nvalues are `\"rr\"` and `\"none\"`.\n-->\n\n<p><code>cluster.schedulingPolicy</code> は、<code>NODE_CLUSTER_SCHED_POLICY</code> 環境変数を\n通じて設定することもできます。適切な値は <code>&quot;rr&quot;</code> または <code>&quot;none&quot;</code> です。\n\n</p>\n"
+        },
         {
           "textRaw": "`settings` {Object} ",
           "name": "settings",
@@ -11894,7 +11995,7 @@
               "textRaw": "worker.disconnect()",
               "type": "method",
               "name": "disconnect",
-              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.kill()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.kill()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
+              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.kill()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.kill()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.close();\n    }\n  });\n}</code></pre>\n",
               "signatures": [
                 {
                   "params": []

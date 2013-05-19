@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Events Node.js v0.11.1 Manual &amp; Documentation</title>
+  <title>Events Node.js v0.11.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/events.html">
@@ -20,7 +20,7 @@
                 <li><a href="/" class="home">Home</a></li>
                 <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
-                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
@@ -29,7 +29,7 @@
                <li><a href="../" class="home">ホーム</a></li>
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
-               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="http://npmjs.org/" class="npm">npm レジストリ</a></li>
                <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -63,6 +63,7 @@
 <li><a href="#events_emitter_removelistener_event_listener">emitter.removeListener(event, listener)</a></li>
 <li><a href="#events_emitter_removealllisteners_event">emitter.removeAllListeners([event])</a></li>
 <li><a href="#events_emitter_setmaxlisteners_n">emitter.setMaxListeners(n)</a></li>
+<li><a href="#events_eventemitter_defaultmaxlisteners">EventEmitter.defaultMaxListeners</a></li>
 <li><a href="#events_emitter_listeners_event">emitter.listeners(event)</a></li>
 <li><a href="#events_emitter_emit_event_arg1_arg2">emitter.emit(event, [arg1], [arg2], [...])</a></li>
 <li><a href="#events_class_method_eventemitter_listenercount_emitter_event">Class Method: EventEmitter.listenerCount(emitter, event)</a></li>
@@ -105,12 +106,15 @@ there aren't any strict restrictions on that, as any string will be accepted.
 </p>
 <!--
 Functions can then be attached to objects, to be executed when an event
-is emitted. These functions are called _listeners_.
+is emitted. These functions are called _listeners_. Inside a listener
+function, `this` refers to the `EventEmitter` that the listener was
+attached to.
 -->
 
 <p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。
-これらの関数は<em>リスナー</em>と呼ばれます。
-
+これらの関数は<em>リスナ</em>と呼ばれます。
+リスナ関数の中では、<code>this</code> はリスナがアタッチされている <code>EventEmitter</code>
+を参照します。
 
 </p>
 <h2>Class: events.EventEmitter<span><a class="mark" href="#events_class_events_eventemitter" id="events_class_events_eventemitter">#</a></span></h2>
@@ -154,6 +158,13 @@ Adds a listener to the end of the listeners array for the specified event.
 <pre><code>server.on(&#39;connection&#39;, function (stream) {
   console.log(&#39;someone connected!&#39;);
 });</code></pre>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.once(event, listener)<span><a class="mark" href="#events_emitter_once_event_listener" id="events_emitter_once_event_listener">#</a></span></h3>
 <!--
 Adds a **one time** listener for the event. This listener is
@@ -168,6 +179,13 @@ it is removed.
 <pre><code>server.once(&#39;connection&#39;, function (stream) {
   console.log(&#39;Ah, we have our first user!&#39;);
 });</code></pre>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.removeListener(event, listener)<span><a class="mark" href="#events_emitter_removelistener_event_listener" id="events_emitter_removelistener_event_listener">#</a></span></h3>
 <!--
 Remove a listener from the listener array for the specified event.
@@ -184,6 +202,13 @@ Remove a listener from the listener array for the specified event.
 server.on(&#39;connection&#39;, callback);
 // ...
 server.removeListener(&#39;connection&#39;, callback);</code></pre>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.removeAllListeners([event])<span><a class="mark" href="#events_emitter_removealllisteners_event" id="events_emitter_removealllisteners_event">#</a></span></h3>
 <!--
 Removes all listeners, or those of the specified event.
@@ -192,19 +217,56 @@ Removes all listeners, or those of the specified event.
 <p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。
 
 </p>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.setMaxListeners(n)<span><a class="mark" href="#events_emitter_setmaxlisteners_n" id="events_emitter_setmaxlisteners_n">#</a></span></h3>
 <!--
 By default EventEmitters will print a warning if more than 10 listeners are
-added for a particular event. This is a useful default which helps finding memory leaks.
-Obviously not all Emitters should be limited to 10. This function allows
-that to be increased. Set to zero for unlimited.
+added for a particular event. This is a useful default which helps finding
+memory leaks. Obviously not all Emitters should be limited to 10. This function
+allows that to be increased. Set to zero for unlimited.
 -->
 
-<p>デフォルトでは、EventEmitter は 10 を越えるリスナが特定のイベントに追加されると警告を出力します。
+<p>デフォルトでは、10 を越えるリスナが特定のイベントに追加されると、
+EventEmitter は警告を出力します。
 これはメモリリークを見つけるために役に立つデフォルト値です。
-全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。
-この関数は制限を増やすことを許可します。
+全ての EventEmitter が 10 に制限されなければならないわけではないことは
+明らかです。この関数は制限を増やすことを許可します。
 0 を設定すると無制限になります。
+
+</p>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
+<h3>EventEmitter.defaultMaxListeners<span><a class="mark" href="#events_eventemitter_defaultmaxlisteners" id="events_eventemitter_defaultmaxlisteners">#</a></span></h3>
+<!--
+`emitter.setMaxListeners(n)` sets the maximum on a per-instance basis.
+This class property lets you set it for *all* `EventEmitter` instances,
+current and future, effective immediately. Use with care.
+-->
+
+<p><code>emitter.setMaxListeners(n)</code> はインスタンス毎の上限を設定します。
+このクラスプロパティは、現在と将来の <em>全ての</em> <code>EventEmitter</code>
+インスタンスの上限を即座に設定します。
+注意して使用してください。
+
+</p>
+<!--
+Note that `emitter.setMaxListeners(n)` still has precedence over
+`EventEmitter.defaultMaxListeners`.
+-->
+
+<p><code>emitter.setMaxListeners(n)</code> は <code>EventEmitter.defaultMaxListeners</code> よりも
+優先されることに注意してください。
 
 </p>
 <h3>emitter.listeners(event)<span><a class="mark" href="#events_emitter_listeners_event" id="events_emitter_listeners_event">#</a></span></h3>
@@ -225,6 +287,13 @@ Execute each of the listeners in order with the supplied arguments.
 -->
 
 <p>提供された引数の並びでそれぞれのリスナーを実行します。
+
+</p>
+<!--
+Returns `true` if event had listeners, `false` otherwise.
+-->
+
+<p>イベントに対応するリスナがあった場合は <code>true</code>、それ以外は <code>false</code> を返します。
 
 
 </p>
@@ -271,12 +340,13 @@ This event is emitted any time someone removes a listener.
         </div>
     </div>
     <div id="footer">
+        <a href="http://joyent.com" class="joyent-logo">Joyent</a>
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
             <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
-            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
@@ -285,7 +355,7 @@ This event is emitted any time someone removes a listener.
             <li><a href="../">Node.js</a></li>
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
-            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="http://npmjs.org/">npm レジストリ</a></li>
             <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
@@ -294,7 +364,7 @@ This event is emitted any time someone removes a listener.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

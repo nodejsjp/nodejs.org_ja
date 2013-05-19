@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Path Node.js v0.11.1 Manual &amp; Documentation</title>
+  <title>Path Node.js v0.11.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/path.html">
@@ -20,7 +20,7 @@
                 <li><a href="/" class="home">Home</a></li>
                 <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
-                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
@@ -29,7 +29,7 @@
                <li><a href="../" class="home">ホーム</a></li>
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
-               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="http://npmjs.org/" class="npm">npm レジストリ</a></li>
                <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -59,6 +59,7 @@
 <li><a href="#path_path_normalize_p">path.normalize(p)</a></li>
 <li><a href="#path_path_join_path1_path2">path.join([path1], [path2], [...])</a></li>
 <li><a href="#path_path_resolve_from_to">path.resolve([from ...], to)</a></li>
+<li><a href="#path_path_isabsolute_path">path.isAbsolute(path)</a></li>
 <li><a href="#path_path_relative_from_to">path.relative(from, to)</a></li>
 <li><a href="#path_path_dirname_p">path.dirname(p)</a></li>
 <li><a href="#path_path_basename_p_ext">path.basename(p, [ext])</a></li>
@@ -225,6 +226,39 @@ path.resolve(&#39;/foo/bar&#39;, &#39;/tmp/file/&#39;)
 path.resolve(&#39;wwwroot&#39;, &#39;static_files/png/&#39;, &#39;../gif/image.gif&#39;)
 // if currently in /home/myself/node, it returns
 &#39;/home/myself/node/wwwroot/static_files/gif/image.gif&#39;</code></pre>
+<h2>path.isAbsolute(path)<span><a class="mark" href="#path_path_isabsolute_path" id="path_path_isabsolute_path">#</a></span></h2>
+<!--
+Determines whether `path` is an absolute path. An absolute path will always
+resolve to the same location, regardless of the working directory.
+-->
+
+<p><code>path</code> が絶対パスかどうかを判定します。
+絶対パスは現在の作業ディレクトリに関係なく、
+常に同じ場所に解決されます。
+
+</p>
+<!--
+Posix examples:
+-->
+
+<p>Posix の例:
+
+</p>
+<pre><code>path.isAbsolute(&#39;/foo/bar&#39;) // true
+path.isAbsolute(&#39;/baz/..&#39;)  // true
+path.isAbsolute(&#39;qux/&#39;)     // false
+path.isAbsolute(&#39;.&#39;)        // false</code></pre>
+<!--
+Windows examples:
+-->
+
+<p>Windows の例:
+
+</p>
+<pre><code>path.isAbsolute(&#39;//server&#39;)  // true
+path.isAbsolute(&#39;C:/foo/..&#39;) // true
+path.isAbsolute(&#39;bar\\baz&#39;)   // false
+path.isAbsolute(&#39;.&#39;)         // false</code></pre>
 <h2>path.relative(from, to)<span><a class="mark" href="#path_path_relative_from_to" id="path_path_relative_from_to">#</a></span></h2>
 <!--
 Solve the relative path from `from` to `to`.
@@ -390,12 +424,13 @@ process.env.PATH.split(path.delimiter)
         </div>
     </div>
     <div id="footer">
+        <a href="http://joyent.com" class="joyent-logo">Joyent</a>
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
             <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
-            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
@@ -404,7 +439,7 @@ process.env.PATH.split(path.delimiter)
             <li><a href="../">Node.js</a></li>
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
-            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="http://npmjs.org/">npm レジストリ</a></li>
             <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
@@ -413,7 +448,7 @@ process.env.PATH.split(path.delimiter)
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
