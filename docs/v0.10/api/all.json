@@ -596,9 +596,11 @@
               "desc": "<!--\nModules are cached in this object when they are required. By deleting a key\nvalue from this object, the next `require` will reload the module.\n-->\n\n<p>モジュールが要求されると、このオブジェクトの中にキャッシュされます。\nこのオブジェクトからキーと値を削除すると、次にそのモジュールが\n<code>require</code> されたときにリロードされます。\n\n</p>\n"
             },
             {
-              "textRaw": "`extensions` {Array} ",
+              "textRaw": "`extensions` {Object} ",
               "name": "extensions",
-              "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n"
+              "stability": 0,
+              "stabilityText": "Deprecated",
+              "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n<!--\n**Deprecated**  In the past, this list has been used to load\nnon-JavaScript modules into Node by compiling them on-demand.\nHowever, in practice, there are much better ways to do this, such as\nloading modules via some other Node program, or compiling them to\nJavaScript ahead of time.\n-->\n\n<p><strong>廃止予定</strong> かつて、このリストは非 JavaScript モジュールを必要に応じて\nコンパイルし、Node にロードするために使われていました。\nしかし実際には、他の Node プログラムを通じてロードしたり、\n事前に JavaScript にコンパイルするなど、よりよい方法があります。\n\n</p>\n<!--\nSince the Module system is locked, this feature will probably never go\naway.  However, it may have subtle bugs and complexities that are best\nleft untouched.\n-->\n\n<p>モジュールシステムはロックされているので、この機能はおそらく\n無くならないでしょう。\nしかしながら、それは微妙なバグや複雑さがあってもそのまま放置されるでしょう。\n\n</p>\n"
             }
           ]
         },
@@ -624,7 +626,7 @@
           "textRaw": "exports",
           "name": "exports",
           "type": "var",
-          "desc": "<!--\nAn object which is shared between all instances of the current module and\nmade accessible through `require()`.\n`exports` is the same as the `module.exports` object.\n`exports` isn't actually a global but rather local to each module.\n\nSee the [module system documentation][] for more information.\n\nSee the [module section][] for more information.\n-->\n\n<p>現在のモジュールの全てのインスタンス間で共有されるオブジェクトで、\n<code>require</code> を通じてアクセス可能になります。\n<code>exports</code> は <code>module.exports</code> と同じオブジェクトです。\n<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。\n\n</p>\n<p>より詳しくは [モジュールシステムのドキュメント][] を参照してください。\n\n</p>\n"
+          "desc": "<!--\nA reference to the `module.exports` object which is shared between all\ninstances of the current module and made accessible through `require()`.\nSee [module system documentation][] for details on when to use `exports` and\nwhen to use `module.exports`.\n`exports` isn't actually a global but rather local to each module.\n-->\n\n<p>現在のモジュールの全てのインスタンスで共有され、\n<code>require()</code> を通じてアクセスされる、<code>module.exports</code> オブジェクトを参照します。\nいつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は、\n[モジュールシステムのドキュメント][] を参照してください。\n<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。\n\n</p>\n<!--\nSee the [module system documentation][] for more information.\n-->\n\n<p>より詳しくは [モジュールシステムのドキュメント][] を参照してください。\n\n</p>\n<!--\nSee the [module section][] for more information.\n-->\n\n<p>より詳しくは [モジュールセクション][] を参照してください。\n\n</p>\n"
         }
       ],
       "methods": [
@@ -710,7 +712,7 @@
             {
               "textRaw": "Breakpoints",
               "name": "breakpoints",
-              "desc": "<!--\n* `setBreakpoint()`, `sb()` - Set breakpoint on current line\n* `setBreakpoint(line)`, `sb(line)` - Set breakpoint on specific line\n* `setBreakpoint('fn()')`, `sb(...)` - Set breakpoint on a first statement in\nfunctions body\n* `setBreakpoint('script.js', 1)`, `sb(...)` - Set breakpoint on first line of\nscript.js\n* `clearBreakpoint`, `cb(...)` - Clear breakpoint\n-->\n\n<ul>\n<li><code>setBreakpoint()</code>, <code>sb()</code> - 現在行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(line)</code>, <code>sb(line)</code> - 指定した行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(&#39;fn()&#39;)</code>, <code>sb(...)</code> - 指定した関数の先頭行にブレークポイントを設定します</li>\n<li><code>setBreakpoint(&#39;script.js&#39;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>\n<li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>\n</ul>\n",
+              "desc": "<!--\n* `setBreakpoint()`, `sb()` - Set breakpoint on current line\n* `setBreakpoint(line)`, `sb(line)` - Set breakpoint on specific line\n* `setBreakpoint('fn()')`, `sb(...)` - Set breakpoint on a first statement in\nfunctions body\n* `setBreakpoint('script.js', 1)`, `sb(...)` - Set breakpoint on first line of\nscript.js\n* `clearBreakpoint`, `cb(...)` - Clear breakpoint\n-->\n\n<ul>\n<li><code>setBreakpoint()</code>, <code>sb()</code> - 現在行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(line)</code>, <code>sb(line)</code> - 指定した行にブレークポイントを設定します。</li>\n<li><code>setBreakpoint(&#39;fn()&#39;)</code>, <code>sb(...)</code> - 指定した関数の先頭行にブレークポイントを設定します</li>\n<li><code>setBreakpoint(&#39;script.js&#39;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>\n<li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>\n</ul>\n<!--\nIt is also possible to set a breakpoint in a file (module) that\nisn't loaded yet:\n-->\n\n<p>まだロードされていないファイル (モジュール) にブレークポイントを\n設定することもできます。\n\n</p>\n<pre><code>% ./node debug test/fixtures/break-in-module/main.js\n&lt; debugger listening on port 5858\nconnecting to port 5858... ok\nbreak in test/fixtures/break-in-module/main.js:1\n  1 var mod = require(&#39;./mod.js&#39;);\n  2 mod.hello();\n  3 mod.hello();\ndebug&gt; setBreakpoint(&#39;mod.js&#39;, 23)\nWarning: script &#39;mod.js&#39; was not loaded yet.\n  1 var mod = require(&#39;./mod.js&#39;);\n  2 mod.hello();\n  3 mod.hello();\ndebug&gt; c\nbreak in test/fixtures/break-in-module/mod.js:23\n 21\n 22 exports.hello = function() {\n 23   return &#39;hello from module&#39;;\n 24 };\n 25\ndebug&gt;</code></pre>\n",
               "type": "module",
               "displayName": "Breakpoints"
             },
@@ -1312,9 +1314,11 @@
           "desc": "<!--\nModules are cached in this object when they are required. By deleting a key\nvalue from this object, the next `require` will reload the module.\n-->\n\n<p>モジュールが要求されると、このオブジェクトの中にキャッシュされます。\nこのオブジェクトからキーと値を削除すると、次にそのモジュールが\n<code>require</code> されたときにリロードされます。\n\n</p>\n"
         },
         {
-          "textRaw": "`extensions` {Array} ",
+          "textRaw": "`extensions` {Object} ",
           "name": "extensions",
-          "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n"
+          "stability": 0,
+          "stabilityText": "Deprecated",
+          "desc": "<!--\nInstruct `require` on how to handle certain file extensions.\n\nProcess files with the extension `.sjs` as `.js`:\n-->\n\n<p><code>require</code> にファイル拡張子を扱う方法を教えます。\n\n</p>\n<p>拡張子が <code>.sjs</code> であるファイルの処理を <code>.js</code> と同じにするには:\n\n</p>\n<pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>\n<!--\n**Deprecated**  In the past, this list has been used to load\nnon-JavaScript modules into Node by compiling them on-demand.\nHowever, in practice, there are much better ways to do this, such as\nloading modules via some other Node program, or compiling them to\nJavaScript ahead of time.\n-->\n\n<p><strong>廃止予定</strong> かつて、このリストは非 JavaScript モジュールを必要に応じて\nコンパイルし、Node にロードするために使われていました。\nしかし実際には、他の Node プログラムを通じてロードしたり、\n事前に JavaScript にコンパイルするなど、よりよい方法があります。\n\n</p>\n<!--\nSince the Module system is locked, this feature will probably never go\naway.  However, it may have subtle bugs and complexities that are best\nleft untouched.\n-->\n\n<p>モジュールシステムはロックされているので、この機能はおそらく\n無くならないでしょう。\nしかしながら、それは微妙なバグや複雑さがあってもそのまま放置されるでしょう。\n\n</p>\n"
         }
       ]
     },
@@ -1340,7 +1344,7 @@
       "textRaw": "exports",
       "name": "exports",
       "type": "var",
-      "desc": "<!--\nAn object which is shared between all instances of the current module and\nmade accessible through `require()`.\n`exports` is the same as the `module.exports` object.\n`exports` isn't actually a global but rather local to each module.\n\nSee the [module system documentation][] for more information.\n\nSee the [module section][] for more information.\n-->\n\n<p>現在のモジュールの全てのインスタンス間で共有されるオブジェクトで、\n<code>require</code> を通じてアクセス可能になります。\n<code>exports</code> は <code>module.exports</code> と同じオブジェクトです。\n<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。\n\n</p>\n<p>より詳しくは [モジュールシステムのドキュメント][] を参照してください。\n\n</p>\n"
+      "desc": "<!--\nA reference to the `module.exports` object which is shared between all\ninstances of the current module and made accessible through `require()`.\nSee [module system documentation][] for details on when to use `exports` and\nwhen to use `module.exports`.\n`exports` isn't actually a global but rather local to each module.\n-->\n\n<p>現在のモジュールの全てのインスタンスで共有され、\n<code>require()</code> を通じてアクセスされる、<code>module.exports</code> オブジェクトを参照します。\nいつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は、\n[モジュールシステムのドキュメント][] を参照してください。\n<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。\n\n</p>\n<!--\nSee the [module system documentation][] for more information.\n-->\n\n<p>より詳しくは [モジュールシステムのドキュメント][] を参照してください。\n\n</p>\n<!--\nSee the [module section][] for more information.\n-->\n\n<p>より詳しくは [モジュールセクション][] を参照してください。\n\n</p>\n"
     }
   ],
   "methods": [
@@ -1555,13 +1559,13 @@
       "name": "module",
       "stability": 5,
       "stabilityText": "Locked",
-      "desc": "<!--\nNode has a simple module loading system.  In Node, files and modules are in\none-to-one correspondence.  As an example, `foo.js` loads the module\n`circle.js` in the same directory.\n-->\n\n<p>Node はシンプルなモジュールローディングシステムを持ちます。\nNode では、ファイルとモジュールは１対１に対応します。\n例として、 <code>foo.js</code> は、同じディレクトリにある <code>circle.js</code> をロードしています。\n\n</p>\n<!--\nThe contents of `foo.js`:\n-->\n\n<p><code>foo.js</code> の内容:\n\n</p>\n<pre><code>var circle = require(&#39;./circle.js&#39;);\nconsole.log( &#39;The area of a circle of radius 4 is &#39;\n           + circle.area(4));</code></pre>\n<!--\nThe contents of `circle.js`:\n-->\n\n<p><code>circle.js</code> の内容:\n\n</p>\n<pre><code>var PI = Math.PI;\n\nexports.area = function (r) {\n  return PI * r * r;\n};\n\nexports.circumference = function (r) {\n  return 2 * PI * r;\n};</code></pre>\n<!--\nThe module `circle.js` has exported the functions `area()` and\n`circumference()`.  To export an object, add to the special `exports`\nobject.\n\nVariables\nlocal to the module will be private. In this example the variable `PI` is\nprivate to `circle.js`.\n\nThe module system is implemented in the `require(\"module\")` module.\n-->\n\n<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。\nオブジェクトをエクスポートするには、 <code>exports</code> という特別なオブジェクトに加えます。\n\n</p>\n<p>モジュールのローカル変数はプライベートです。\nこの例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。\n\n</p>\n<p>モジュールシステムは <code>require(&quot;module&quot;)</code> モジュールによって実装されます。\n\n</p>\n",
+      "desc": "<!--\nNode has a simple module loading system.  In Node, files and modules are in\none-to-one correspondence.  As an example, `foo.js` loads the module\n`circle.js` in the same directory.\n-->\n\n<p>Node はシンプルなモジュールローディングシステムを持ちます。\nNode では、ファイルとモジュールは１対１に対応します。\n例として、 <code>foo.js</code> は、同じディレクトリにある <code>circle.js</code> をロードしています。\n\n</p>\n<!--\nThe contents of `foo.js`:\n-->\n\n<p><code>foo.js</code> の内容:\n\n</p>\n<pre><code>var circle = require(&#39;./circle.js&#39;);\nconsole.log( &#39;The area of a circle of radius 4 is &#39;\n           + circle.area(4));</code></pre>\n<!--\nThe contents of `circle.js`:\n-->\n\n<p><code>circle.js</code> の内容:\n\n</p>\n<pre><code>var PI = Math.PI;\n\nexports.area = function (r) {\n  return PI * r * r;\n};\n\nexports.circumference = function (r) {\n  return 2 * PI * r;\n};</code></pre>\n<!--\nThe module `circle.js` has exported the functions `area()` and\n`circumference()`.  To export an object, add to the special `exports`\nobject.\n-->\n\n<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code>\nをエクスポートしています。\nオブジェクトをエクスポートするには、 <code>exports</code>\nという特別なオブジェクトに加えます。\n\n</p>\n<!--\nNote that `exports` is a reference to `module.exports` making it suitable\nfor augmentation only. If you are exporting a single item such as a\nconstructor you will want to use `module.exports` directly instead.\n-->\n\n<p><code>exports</code> は <code>module.exports</code> を参照しているに過ぎないことに注意してください。\nもしコンストラクタなど、一つの項目だけをエクスポートしたいのであれば、\n<code>module.exports</code> を直接使いたくなるでしょう。\n\n</p>\n<pre><code>function MyConstructor (opts) {\n  //...\n}\n\n// BROKEN: Does not modify exports\nexports = MyConstructor;\n\n// exports the constructor properly\nmodule.exports = MyConstructor;</code></pre>\n<!--\nVariables\nlocal to the module will be private. In this example the variable `PI` is\nprivate to `circle.js`.\n-->\n\n<p>モジュールのローカル変数はプライベートです。\nこの例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。\n\n</p>\n<!--\nThe module system is implemented in the `require(\"module\")` module.\n-->\n\n<p>モジュールシステムは <code>require(&quot;module&quot;)</code> モジュールによって実装されます。\n\n</p>\n",
       "miscs": [
         {
           "textRaw": "Cycles",
           "name": "Cycles",
           "type": "misc",
-          "desc": "<!--\nWhen there are circular `require()` calls, a module might not be\ndone being executed when it is returned.\n\nConsider this situation:\n-->\n\n<p><code>require()</code> が循環的に呼び出される場合、実行が完了していないモジュールが\n返されることがあります。\n\n</p>\n<p>次の状況を考えてください:\n\n</p>\n<p><code>a.js</code>:\n\n</p>\n<pre><code>console.log(&#39;a starting&#39;);\nexports.done = false;\nvar b = require(&#39;./b.js&#39;);\nconsole.log(&#39;in a, b.done = %j&#39;, b.done);\nexports.done = true;\nconsole.log(&#39;a done&#39;);</code></pre>\n<p><code>b.js</code>:\n\n</p>\n<pre><code>console.log(&#39;b starting&#39;);\nexports.done = false;\nvar a = require(&#39;./a.js&#39;);\nconsole.log(&#39;in b, a.done = %j&#39;, a.done);\nexports.done = true;\nconsole.log(&#39;b done&#39;);</code></pre>\n<p><code>main.js</code>:\n\n</p>\n<pre><code>console.log(&#39;main starting&#39;);\nvar a = require(&#39;./a.js&#39;);\nvar b = require(&#39;./b.js&#39;);\nconsole.log(&#39;in main, a.done=%j, b.done=%j&#39;, a.done, b.done);</code></pre>\n<!--\nWhen `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that\npoint, `b.js` tries to load `a.js`.  In order to prevent an infinite\nloop an **unfinished copy** of the `a.js` exports object is returned to the\n`b.js` module.  `b.js` then finishes loading, and its exports object is\nprovided to the `a.js` module.\n\nBy the time `main.js` has loaded both modules, they're both finished.\nThe output of this program would thus be:\n-->\n\n<p><code>main.js</code> が <code>a.js</code> をロードすると、<code>a.js</code> は <code>b.js</code> をロードします。\nポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。\n無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの\n<strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。\n<code>b.js</code> のロードが完了すると、エクスポートされたオブジェクトが <code>a.js</code>\nモジュールに提供されます。\n\n</p>\n<p><code>main.js</code> が両方のモジュールをロードするまでには、どちらも完了します。\nこのプログラムの出力はこのようになります:\n\n</p>\n<pre><code>$ node main.js\nmain starting\na starting\nb starting\nin b, a.done = false\nb done\nin a, b.done = true\na done\nin main, a.done=true, b.done=true</code></pre>\n<!--\nIf you have cyclic module dependencies in your program, make sure to\nplan accordingly.\n-->\n\n<p>プログラムが循環参照するモジュールを持つ場合は、計画が適切か確認してください。\n\n\n</p>\n"
+          "desc": "<!--\nWhen there are circular `require()` calls, a module might not be\ndone being executed when it is returned.\n\nConsider this situation:\n-->\n\n<p><code>require()</code> が循環的に呼び出される場合、実行が完了していないモジュールが\n返されることがあります。\n\n</p>\n<p>次の状況を考えてください:\n\n</p>\n<p><code>a.js</code>:\n\n</p>\n<pre><code>console.log(&#39;a starting&#39;);\nexports.done = false;\nvar b = require(&#39;./b.js&#39;);\nconsole.log(&#39;in a, b.done = %j&#39;, b.done);\nexports.done = true;\nconsole.log(&#39;a done&#39;);</code></pre>\n<p><code>b.js</code>:\n\n</p>\n<pre><code>console.log(&#39;b starting&#39;);\nexports.done = false;\nvar a = require(&#39;./a.js&#39;);\nconsole.log(&#39;in b, a.done = %j&#39;, a.done);\nexports.done = true;\nconsole.log(&#39;b done&#39;);</code></pre>\n<p><code>main.js</code>:\n\n</p>\n<pre><code>console.log(&#39;main starting&#39;);\nvar a = require(&#39;./a.js&#39;);\nvar b = require(&#39;./b.js&#39;);\nconsole.log(&#39;in main, a.done=%j, b.done=%j&#39;, a.done, b.done);</code></pre>\n<!--\nWhen `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that\npoint, `b.js` tries to load `a.js`.  In order to prevent an infinite\nloop an **unfinished copy** of the `a.js` exports object is returned to the\n`b.js` module.  `b.js` then finishes loading, and its `exports` object is\nprovided to the `a.js` module.\n\nBy the time `main.js` has loaded both modules, they're both finished.\nThe output of this program would thus be:\n-->\n\n<p><code>main.js</code> が <code>a.js</code> をロードすると、<code>a.js</code> は <code>b.js</code> をロードします。\nポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。\n無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの\n<strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。\n<code>b.js</code> のロードが完了すると、<code>exports</code> オブジェクトが <code>a.js</code>\nモジュールに提供されます。\n\n</p>\n<p><code>main.js</code> が両方のモジュールをロードするまでには、どちらも完了します。\nこのプログラムの出力はこのようになります:\n\n</p>\n<pre><code>$ node main.js\nmain starting\na starting\nb starting\nin b, a.done = false\nb done\nin a, b.done = true\na done\nin main, a.done=true, b.done=true</code></pre>\n<!--\nIf you have cyclic module dependencies in your program, make sure to\nplan accordingly.\n-->\n\n<p>プログラムが循環参照するモジュールを持つ場合は、計画が適切か確認してください。\n\n\n</p>\n"
         },
         {
           "textRaw": "Core Modules",
@@ -1629,14 +1633,14 @@
       "vars": [
         {
           "textRaw": "The `module` Object",
-          "name": "The `module` Object",
+          "name": "module",
           "type": "var",
-          "desc": "<p>!-- name=module --&gt;\n\n</p>\n<ul>\n<li>{Object}</li>\n</ul>\n<!--\nIn each module, the `module` free variable is a reference to the object\nrepresenting the current module.  In particular\n`module.exports` is the same as the `exports` object.\n`module` isn't actually a global but rather local to each module.\n-->\n\n<p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを\n参照します。特に、<code>module.exports</code> は <code>exports</code> オブジェクトと同じです。\n<code>module</code> は実際はグローバルではなく、各モジュールにローカルです。\n\n</p>\n",
+          "desc": "<!--\nIn each module, the `module` free variable is a reference to the object\nrepresenting the current module.  In particular\n`module.exports` is accessible via the `exports` module-global.\n`module` isn't actually a global but rather local to each module.\n-->\n\n<p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを\n参照します。特に、<code>module.exports</code> はモジュールグローバルの <code>exports</code>\nを通じてアクセスすることができます。\n<code>module</code> は実際はグローバルではなく、各モジュールにローカルです。\n\n</p>\n",
           "properties": [
             {
               "textRaw": "`exports` {Object} ",
               "name": "exports",
-              "desc": "<p>The <code>exports</code> object is created by the Module system. Sometimes this is not\nacceptable, many want their module to be an instance of some class. To do this\nassign the desired export object to <code>module.exports</code>. For example suppose we\nwere making a module called <code>a.js</code>\n--&gt;\n\n</p>\n<p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。\n時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。\nそれには公開したいオブジェクトを <code>module.exports</code> に割り当てます。\n例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら\n\n\n</p>\n<pre><code>var EventEmitter = require(&#39;events&#39;).EventEmitter;\n\nmodule.exports = new EventEmitter();\n\n// Do some work, and after some time emit\n// the &#39;ready&#39; event from the module itself.\nsetTimeout(function() {\n  module.exports.emit(&#39;ready&#39;);\n}, 1000);</code></pre>\n<!--\nThen in another file we could do\n-->\n\n<p>そして別のファイルで\n\n</p>\n<pre><code>var a = require(&#39;./a&#39;);\na.on(&#39;ready&#39;, function() {\n  console.log(&#39;module a is ready&#39;);\n});</code></pre>\n<!--\nNote that assignment to `module.exports` must be done immediately. It cannot be\ndone in any callbacks.  This does not work:\n-->\n\n<p><code>module.exports</code> への代入はすぐに行わなければなりません。\nコールバックの中ではできません。以下は動きません。\n\n</p>\n<p>x.js:\n\n</p>\n<pre><code>setTimeout(function() {\n  module.exports = { a: &quot;hello&quot; };\n}, 0);</code></pre>\n<p>y.js:\n\n</p>\n<pre><code>var x = require(&#39;./x&#39;);\nconsole.log(x.a);</code></pre>\n"
+              "desc": "<!--\nThe `module.exports` object is created by the Module system. Sometimes this is not\nacceptable, many want their module to be an instance of some class. To do this\nassign the desired export object to `module.exports`. For example suppose we\nwere making a module called `a.js`\n-->\n\n<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。\n時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。\nそれには公開したいオブジェクトを <code>module.exports</code> に割り当てます。\n例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら\n\n\n</p>\n<pre><code>var EventEmitter = require(&#39;events&#39;).EventEmitter;\n\nmodule.exports = new EventEmitter();\n\n// Do some work, and after some time emit\n// the &#39;ready&#39; event from the module itself.\nsetTimeout(function() {\n  module.exports.emit(&#39;ready&#39;);\n}, 1000);</code></pre>\n<!--\nThen in another file we could do\n-->\n\n<p>そして別のファイルで\n\n</p>\n<pre><code>var a = require(&#39;./a&#39;);\na.on(&#39;ready&#39;, function() {\n  console.log(&#39;module a is ready&#39;);\n});</code></pre>\n<!--\nNote that assignment to `module.exports` must be done immediately. It cannot be\ndone in any callbacks.  This does not work:\n-->\n\n<p><code>module.exports</code> への代入はすぐに行わなければなりません。\nコールバックの中ではできません。以下は動きません。\n\n</p>\n<p>x.js:\n\n</p>\n<pre><code>setTimeout(function() {\n  module.exports = { a: &quot;hello&quot; };\n}, 0);</code></pre>\n<p>y.js:\n\n</p>\n<pre><code>var x = require(&#39;./x&#39;);\nconsole.log(x.a);</code></pre>\n"
             },
             {
               "textRaw": "`id` {String} ",
@@ -1669,7 +1673,7 @@
               "textRaw": "module.require(id)",
               "type": "method",
               "name": "require",
-              "desc": "<!--\n* `id` {String}\n* Return: {Object} `exports` from the resolved module\n-->\n\n<ul>\n<li><code>id</code> {String}</li>\n<li>Return: {Object} 解決されたモジュールの <code>exports</code></li>\n</ul>\n<!--\nThe `module.require` method provides a way to load a module as if\n`require()` was called from the original module.\n-->\n\n<p><code>module.require</code> メソッドは、元のモジュールが <code>require()</code>\nを呼び出したかのようにモジュールをロードするために提供されています。\n\n</p>\n<!--\nNote that in order to do this, you must get a reference to the `module`\nobject.  Since `require()` returns the `exports`, and the `module` is\ntypically *only* available within a specific module's code, it must be\nexplicitly exported in order to be used.\n-->\n\n<p>それには <code>module</code> オブジェクトの参照が必要なことに注意してください。\n<code>require()</code> が <code>exports</code> を返した後、一般的に <code>module</code> \nはそのモジュールのコードで <em>のみ</em> 利用可能です。\nそれが使われるようにするには、明示的にエクスポートする必要があります。\n\n</p>\n",
+              "desc": "<!--\n* `id` {String}\n* Return: {Object} `module.exports` from the resolved module\n-->\n\n<ul>\n<li><code>id</code> {String}</li>\n<li>Return: {Object} 解決されたモジュールの <code>module.exports</code></li>\n</ul>\n<!--\nThe `module.require` method provides a way to load a module as if\n`require()` was called from the original module.\n-->\n\n<p><code>module.require</code> メソッドは、元のモジュールが <code>require()</code>\nを呼び出したかのようにモジュールをロードするために提供されています。\n\n</p>\n<!--\nNote that in order to do this, you must get a reference to the `module`\nobject.  Since `require()` returns the `module.exports`, and the `module` is\ntypically *only* available within a specific module's code, it must be\nexplicitly exported in order to be used.\n-->\n\n<p>それには <code>module</code> オブジェクトの参照が必要なことに注意してください。\n<code>require()</code> が <code>module.exports</code> を返した後、一般的に <code>module</code> \nはそのモジュールのコードで <em>のみ</em> 利用可能です。\nそれが使われるようにするには、明示的にエクスポートする必要があります。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2014,7 +2018,7 @@
               "textRaw": "emitter.addListener(event, listener)",
               "type": "method",
               "name": "addListener",
-              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2042,7 +2046,7 @@
               "textRaw": "emitter.on(event, listener)",
               "type": "method",
               "name": "on",
-              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nAdds a listener to the end of the listeners array for the specified event.\n-->\n\n<p>指定されたイベントに対するリスナー配列の最後にリスナーを追加します。\n\n</p>\n<pre><code>server.on(&#39;connection&#39;, function (stream) {\n  console.log(&#39;someone connected!&#39;);\n});</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2060,7 +2064,7 @@
               "textRaw": "emitter.once(event, listener)",
               "type": "method",
               "name": "once",
-              "desc": "<!--\nAdds a **one time** listener for the event. This listener is\ninvoked only the next time the event is fired, after which\nit is removed.\n-->\n\n<p><strong>一回限り</strong>のリスナーをイベントに追加します。\nこのリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。\n\n</p>\n<pre><code>server.once(&#39;connection&#39;, function (stream) {\n  console.log(&#39;Ah, we have our first user!&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nAdds a **one time** listener for the event. This listener is\ninvoked only the next time the event is fired, after which\nit is removed.\n-->\n\n<p><strong>一回限り</strong>のリスナーをイベントに追加します。\nこのリスナーは次にイベントが発生した時に限り起動され、その後で削除されます。\n\n</p>\n<pre><code>server.once(&#39;connection&#39;, function (stream) {\n  console.log(&#39;Ah, we have our first user!&#39;);\n});</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2078,7 +2082,7 @@
               "textRaw": "emitter.removeListener(event, listener)",
               "type": "method",
               "name": "removeListener",
-              "desc": "<!--\nRemove a listener from the listener array for the specified event.\n**Caution**: changes array indices in the listener array behind the listener.\n-->\n\n<p>指定されたイベントに対するリスナー配列からリスナーを削除します。\n<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。\n\n</p>\n<pre><code>var callback = function(stream) {\n  console.log(&#39;someone connected!&#39;);\n};\nserver.on(&#39;connection&#39;, callback);\n// ...\nserver.removeListener(&#39;connection&#39;, callback);</code></pre>\n",
+              "desc": "<!--\nRemove a listener from the listener array for the specified event.\n**Caution**: changes array indices in the listener array behind the listener.\n-->\n\n<p>指定されたイベントに対するリスナー配列からリスナーを削除します。\n<strong>注意</strong>: リスナーの背後にあるリスナー配列のインデックスが変化します。\n\n</p>\n<pre><code>var callback = function(stream) {\n  console.log(&#39;someone connected!&#39;);\n};\nserver.on(&#39;connection&#39;, callback);\n// ...\nserver.removeListener(&#39;connection&#39;, callback);</code></pre>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2096,7 +2100,7 @@
               "textRaw": "emitter.removeAllListeners([event])",
               "type": "method",
               "name": "removeAllListeners",
-              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n</p>\n",
+              "desc": "<!--\nRemoves all listeners, or those of the specified event.\n-->\n\n<p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。\n\n</p>\n<!--\nReturns emitter, so calls can be chained.\n-->\n\n<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -2142,7 +2146,7 @@
               "textRaw": "emitter.emit(event, [arg1], [arg2], [...])",
               "type": "method",
               "name": "emit",
-              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n\n</p>\n",
+              "desc": "<!--\nExecute each of the listeners in order with the supplied arguments.\n-->\n\n<p>提供された引数の並びでそれぞれのリスナーを実行します。\n\n</p>\n<!--\nReturns `true` if event had listeners, `false` otherwise.\n-->\n\n<p>イベントに対応するリスナがあった場合は <code>true</code>、それ以外は <code>false</code> を返します。\n\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -4133,15 +4137,19 @@
               ]
             },
             {
-              "textRaw": "readable.push(chunk)",
+              "textRaw": "readable.push(chunk, [encoding])",
               "type": "method",
               "name": "push",
-              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to push into the read queue\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、\nデータのチャンク</li>\n<li>return {Boolean} まだプッシュしてもいいかどうか</li>\n</ul>\n<!--\nNote: **This function should be called by Readable implementors, NOT\nby consumers of Readable subclasses.**  The `_read()` function will not\nbe called again until at least one `push(chunk)` call is made.  If no\ndata is available, then you MAY call `push('')` (an empty string) to\nallow a future `_read` call, without adding any data to the queue.\n-->\n\n<p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、\nReadable のサブクラスの利用者が呼び出すべきではありません。</strong>\n少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が\n再び呼び出されることはありません。もし利用可能なデータがない場合は、\n将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)\nを呼び出すことができます。\n\n</p>\n<!--\nThe `Readable` class works by putting data into a read queue to be\npulled out later by calling the `read()` method when the `'readable'`\nevent fires.\n-->\n\n<p><code>Readable</code> クラスは、<code>&#39;readable&#39;</code> イベントの生成時に <code>read()</code>\nメソッドが呼び出されることで後から取り出されるデータを、\n読み込みキューに入れておくことによって機能します。\n\n</p>\n<!--\nThe `push()` method will explicitly insert some data into the read\nqueue.  If it is called with `null` then it will signal the end of the\ndata.\n-->\n\n<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。\nもし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。\n\n</p>\n<!--\nIn some cases, you may be wrapping a lower-level source which has some\nsort of pause/resume mechanism, and a data callback.  In those cases,\nyou could wrap the low-level source object by doing something like\nthis:\n-->\n\n<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ\n低水準のソースをラップするかもしれません。\nそれらのケースでは、次のように低水準なソースオブジェクトを\nラップすることができます:\n\n</p>\n<pre><code class=\"javascript\">// source is an object with readStop() and readStart() methods,\n// and an `ondata` member that gets called when it has data, and\n// an `onend` member that gets called when the data is over.\n\nvar stream = new Readable();\n\nsource.ondata = function(chunk) {\n  // if push() returns false, then we need to stop reading from source\n  if (!stream.push(chunk))\n    source.readStop();\n};\n\nsource.onend = function() {\n  stream.push(null);\n};\n\n// _read will be called when the stream wants to pull more data in\n// the advisory size argument is ignored in this case.\nstream._read = function(n) {\n  source.readStart();\n};</code></pre>\n",
+              "desc": "<!--\n* `chunk` {Buffer | null | String} Chunk of data to push into the read queue\n* `encoding` {String} Encoding of String chunks.  Must be a valid\n  Buffer encoding, such as `'utf8'` or `'ascii'`\n* return {Boolean} Whether or not more pushes should be performed\n-->\n\n<ul>\n<li><code>chunk</code> {Buffer | null | String} 読み込みキューにプッシュされる、\nデータのチャンク</li>\n<li><code>encoding</code> {String} 文字列チャンクのエンコーディング。\n<code>&#39;utf8&#39;</code> や <code>&#39;ascii&#39;</code> など、Buffer の正しいエンコーディングの必要があります。</li>\n<li>return {Boolean} まだプッシュしてもいいかどうか</li>\n</ul>\n<!--\nNote: **This function should be called by Readable implementors, NOT\nby consumers of Readable streams.**  The `_read()` function will not\nbe called again until at least one `push(chunk)` call is made.  If no\ndata is available, then you MAY call `push('')` (an empty string) to\nallow a future `_read` call, without adding any data to the queue.\n-->\n\n<p>注意: <strong>この関数は Readable の実装から呼び出されるべきものであり、\nReadable ストリームの利用者が呼び出すべきではありません。</strong>\n少なくとも一回は <code>push(chunk)</code> が呼び出されないと、<code>_read()</code> 関数が\n再び呼び出されることはありません。もし利用可能なデータがない場合は、\n将来 <code>_read</code> が呼び出されるように <code>push(&#39;&#39;</code>)` (空文字列)\nを呼び出すことができます。\n\n</p>\n<!--\nThe `Readable` class works by putting data into a read queue to be\npulled out later by calling the `read()` method when the `'readable'`\nevent fires.\n-->\n\n<p><code>Readable</code> クラスは、<code>&#39;readable&#39;</code> イベントの生成時に <code>read()</code>\nメソッドが呼び出されることで後から取り出されるデータを、\n読み込みキューに入れておくことによって機能します。\n\n</p>\n<!--\nThe `push()` method will explicitly insert some data into the read\nqueue.  If it is called with `null` then it will signal the end of the\ndata.\n-->\n\n<p><code>push()</code> メソッドはいくつかのデータを明示的に読み込みキューに挿入します。\nもし <code>null</code> と共に呼び出されると、それはデータが終了したことを伝えます。\n\n</p>\n<!--\nIn some cases, you may be wrapping a lower-level source which has some\nsort of pause/resume mechanism, and a data callback.  In those cases,\nyou could wrap the low-level source object by doing something like\nthis:\n-->\n\n<p>場合によっては、pause/resume メカニズムとデータのコールバックを持つ\n低水準のソースをラップするかもしれません。\nそれらのケースでは、次のように低水準なソースオブジェクトを\nラップすることができます:\n\n</p>\n<pre><code class=\"javascript\">// source is an object with readStop() and readStart() methods,\n// and an `ondata` member that gets called when it has data, and\n// an `onend` member that gets called when the data is over.\n\nvar stream = new Readable();\n\nsource.ondata = function(chunk) {\n  // if push() returns false, then we need to stop reading from source\n  if (!stream.push(chunk))\n    source.readStop();\n};\n\nsource.onend = function() {\n  stream.push(null);\n};\n\n// _read will be called when the stream wants to pull more data in\n// the advisory size argument is ignored in this case.\nstream._read = function(n) {\n  source.readStart();\n};</code></pre>\n",
               "signatures": [
                 {
                   "params": [
                     {
                       "name": "chunk"
+                    },
+                    {
+                      "name": "encoding",
+                      "optional": true
                     }
                   ]
                 }
@@ -4452,6 +4460,13 @@
               "type": "event",
               "name": "drain",
               "desc": "<!--\nEmitted when the stream's write queue empties and it's safe to write\nwithout buffering again. Listen for it when `stream.write()` returns\n`false`.\n-->\n\n<p>ストリームの書き込みキューが空になり、バッファリングされることなく\n再び安全に書き込みができるようになった場合に生成されます。\n<code>stream.write()</code> が <code>false</code> を返した場合に監視してください。\n\n</p>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'error'",
+              "type": "event",
+              "name": "error",
+              "desc": "<!--\nEmitted if there was an error receiving data.\n-->\n\n<p>データ送信でエラーがあった場合に生成されます。\n\n</p>\n",
               "params": []
             },
             {
@@ -7354,7 +7369,7 @@
           "textRaw": "Class: fs.ReadStream",
           "type": "class",
           "name": "fs.ReadStream",
-          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#stream_readable_stream\">Readable Stream</a> です。\n\n</p>\n",
+          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#stream_class_stream_readable).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#stream_class_stream_readable\">Readable Stream</a>\nです。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event: 'open'",
@@ -7362,6 +7377,28 @@
               "name": "open",
               "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the ReadStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} ReadStream で使われる ファイル記述子。</li>\n</ul>\n<p>ReadStream のファイルがオープンされた場合に生成されます。\n\n\n</p>\n",
               "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: fs.WriteStream",
+          "type": "class",
+          "name": "fs.WriteStream",
+          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#stream_class_stream_writable).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#stream_class_stream_writable\">Writable Stream</a>\nです。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'open'",
+              "type": "event",
+              "name": "open",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the WriteStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "file.bytesWritten",
+              "name": "bytesWritten",
+              "desc": "<!--\nThe number of bytes written so far. Does not include data that is still queued\nfor writing.\n-->\n\n<p>これまでに書き込まれたバイト数。\n書き込みがキューイングされたままのデータは含まれません。\n\n</p>\n"
             }
           ]
         },
@@ -7397,29 +7434,6 @@
               "name": "error",
               "params": [],
               "desc": "<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n\n</p>\n"
-            }
-          ]
-        }
-      ],
-      "properties": [
-        {
-          "textRaw": "fs.WriteStream",
-          "name": "WriteStream",
-          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#stream_writable_stream\">Writable Stream</a> です。\n\n</p>\n",
-          "events": [
-            {
-              "textRaw": "Event: 'open'",
-              "type": "event",
-              "name": "open",
-              "desc": "<!--\n* `fd` {Integer} file descriptor used by the WriteStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
-              "params": []
-            }
-          ],
-          "properties": [
-            {
-              "textRaw": "file.bytesWritten",
-              "name": "bytesWritten",
-              "desc": "<!--\nThe number of bytes written so far. Does not include data that is still queued\nfor writing.\n-->\n\n<p>これまでに書き込まれたバイト数。\n書き込みがキューイングされたままのデータは含まれません。\n\n</p>\n"
             }
           ]
         }
@@ -10318,8 +10332,8 @@
         {
           "textRaw": "Caveats",
           "name": "caveats",
-          "The `vm` module has many known issues and edge cases. If you run into\nissues or unexpected behavior, please consult\n[the open issues on GitHub](https://github.com/joyent/node/issues/search?q": "vm).\nSome of the biggest problems are described below.",
-          "desc": "<p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。\nもし問題や期待と異なる振る舞いを見つけた場合は、\n<a href=\"https://github.com/joyent/node/issues/search?q=vm\">the open issues on GitHub</a>\nに相談してください。\n大きな問題のいくつかは以下に示されます。\n\n</p>\n",
+          "The `vm` module has many known issues and edge cases. If you run into\nissues or unexpected behavior, please consult [the open issues on\nGitHub](https://github.com/joyent/node/search?q": "vm+state%3Aopen&type=Issues).\nSome of the biggest problems are described below.",
+          "desc": "<p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。\nもし問題や期待と異なる振る舞いを見つけた場合は、<a href=\"https://github.com/joyent/node/search?q=vm+state%3Aopen&amp;type=Issues\">GitHub\nの課題</a>\nに相談してください。\n大きな問題のいくつかは以下に示されます。\n\n</p>\n",
           "modules": [
             {
               "textRaw": "Sandboxes",
@@ -10656,7 +10670,7 @@
           "textRaw": "child_process.exec(command, [options], callback)",
           "type": "method",
           "name": "exec",
-          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `stdio` {Array|String} Child's stdio configuration. (See above)\n    Only stdin is configurable, anything else will lead to unpredictable\n    results.\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See above)\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。\n標準入力のみが構成可能です。その他は予期しない結果を招くでしょう。</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (前述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var exec = require(&#39;child_process&#39;).exec,\n    child;\n\nchild = exec(&#39;cat *.js bad_file | wc -l&#39;,\n  function (error, stdout, stderr) {\n    console.log(&#39;stdout: &#39; + stdout);\n    console.log(&#39;stderr: &#39; + stderr);\n    if (error !== null) {\n      console.log(&#39;exec error: &#39; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `err.code`\nwill be the exit code of the child process, and `err.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>err.code</code> は子プロセスの終了コード、\n<code>err.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &#39;utf8&#39;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &#39;SIGTERM&#39;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&#39;SIGTERM&#39;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
+          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var exec = require(&#39;child_process&#39;).exec,\n    child;\n\nchild = exec(&#39;cat *.js bad_file | wc -l&#39;,\n  function (error, stdout, stderr) {\n    console.log(&#39;stdout: &#39; + stdout);\n    console.log(&#39;stderr: &#39; + stderr);\n    if (error !== null) {\n      console.log(&#39;exec error: &#39; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `err.code`\nwill be the exit code of the child process, and `err.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>err.code</code> は子プロセスの終了コード、\n<code>err.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &#39;utf8&#39;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &#39;SIGTERM&#39;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&#39;SIGTERM&#39;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -10678,7 +10692,7 @@
           "textRaw": "child_process.execFile(file, args, options, callback)",
           "type": "method",
           "name": "execFile",
-          "desc": "<!--\n* `file` {String} The filename of the program to run\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `stdio` {Array|String} Child's stdio configuration. (See above)\n  * `customFds` {Array} **Deprecated** File descriptors for the child to use\n    for stdio.  (See above)\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200\\*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>file</code> {String} 実行するプログラムのファイル名</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。</li>\n<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する\nファイル記述子の配列 (前述)</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nThis is similar to `child_process.exec()` except it does not execute a\nsubshell but rather the specified file directly. This makes it slightly\nleaner than `child_process.exec`. It has the same options.\n-->\n\n<p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて\n<code>child_process.exec()</code> と同様です。\nこれは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。\n\n\n</p>\n",
+          "desc": "<!--\n* `file` {String} The filename of the program to run\n* `args` {Array} List of string arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: 200\\*1024)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>file</code> {String} 実行するプログラムのファイル名</li>\n<li><code>args</code> {Array} 文字列による引数の配列</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: ChildProcess object</li>\n</ul>\n<!--\nThis is similar to `child_process.exec()` except it does not execute a\nsubshell but rather the specified file directly. This makes it slightly\nleaner than `child_process.exec`. It has the same options.\n-->\n\n<p>子シェルで実行する代わりに指定されたファイルを直接実行することを除いて\n<code>child_process.exec()</code> と同様です。\nこれは <code>child_process.exec</code> より若干効率的で、同じオプションを持ちます。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -11862,7 +11876,7 @@
               "textRaw": "worker.disconnect()",
               "type": "method",
               "name": "disconnect",
-              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.kill()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.kill()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.destroy();\n    }\n  });\n}</code></pre>\n",
+              "desc": "<!--\nWhen calling this function the worker will no longer accept new connections, but\nthey will be handled by any other listening worker. Existing connection will be\nallowed to exit as usual. When no more connections exist, the IPC channel to the worker\nwill close allowing it to die graceful. When the IPC channel is closed the `disconnect`\nevent will emit, this is then followed by the `exit` event, there is emitted when\nthe worker finally die.\n-->\n\n<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続\n(それらは他のワーカによって扱われます) を受け付けなくなります。\n既存の接続は通常通りに\nコネクションが無くなると、ワーカを正常に終了するために IPC チャネルは\n閉じられます。\nIPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、\nその後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。\n\n</p>\n<!--\nBecause there might be long living connections, it is useful to implement a timeout.\nThis example ask the worker to disconnect and after 2 seconds it will destroy the\nserver. An alternative would be to execute `worker.kill()` after 2 seconds, but\nthat would normally not allow the worker to do any cleanup if needed.\n-->\n\n<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために\n有益です。\nこの例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。\n他の方法として <code>worker.kill()</code> を呼び出してから\n2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを\n行えないかもしれません。\n\n</p>\n<pre><code>if (cluster.isMaster) {\n  var worker = cluster.fork();\n  var timeout;\n\n  worker.on(&#39;listening&#39;, function(address) {\n    worker.disconnect();\n    timeout = setTimeout(function() {\n      worker.send(&#39;force kill&#39;);\n    }, 2000);\n  });\n\n  worker.on(&#39;disconnect&#39;, function() {\n    clearTimeout(timeout);\n  });\n\n} else if (cluster.isWorker) {\n  var net = require(&#39;net&#39;);\n  var server = net.createServer(function(socket) {\n    // connection never end\n  });\n\n  server.listen(8000);\n\n  server.on(&#39;close&#39;, function() {\n    // cleanup\n  });\n\n  process.on(&#39;message&#39;, function(msg) {\n    if (msg === &#39;force kill&#39;) {\n      server.close();\n    }\n  });\n}</code></pre>\n",
               "signatures": [
                 {
                   "params": []

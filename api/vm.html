@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Executing JavaScript Node.js v0.11.1 Manual &amp; Documentation</title>
+  <title>Executing JavaScript Node.js v0.11.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/vm.html">
@@ -20,7 +20,7 @@
                 <li><a href="/" class="home">Home</a></li>
                 <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
-                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
@@ -29,7 +29,7 @@
                <li><a href="../" class="home">ホーム</a></li>
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
-               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="http://npmjs.org/" class="npm">npm レジストリ</a></li>
                <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -62,13 +62,13 @@
 </ul>
 </li>
 <li><a href="#vm_vm_runinthiscontext_code_filename">vm.runInThisContext(code, [filename])</a></li>
-<li><a href="#vm_vm_runinnewcontext_code_sandbox_filename">vm.runInNewContext(code, [sandbox], [filename])</a></li>
-<li><a href="#vm_vm_runincontext_code_context_filename">vm.runInContext(code, context, [filename])</a></li>
+<li><a href="#vm_vm_runinnewcontext_code_sandbox_filename_timeout">vm.runInNewContext(code, [sandbox], [filename], [timeout])</a></li>
+<li><a href="#vm_vm_runincontext_code_context_filename_timeout">vm.runInContext(code, context, [filename], [timeout])</a></li>
 <li><a href="#vm_vm_createcontext_initsandbox">vm.createContext([initSandbox])</a></li>
 <li><a href="#vm_vm_createscript_code_filename">vm.createScript(code, [filename])</a></li>
 <li><a href="#vm_class_script">Class: Script</a><ul>
-<li><a href="#vm_script_runinthiscontext">script.runInThisContext()</a></li>
-<li><a href="#vm_script_runinnewcontext_sandbox">script.runInNewContext([sandbox])</a></li>
+<li><a href="#vm_script_runinthiscontext_timeout">script.runInThisContext([timeout])</a></li>
+<li><a href="#vm_script_runinnewcontext_sandbox_timeout">script.runInNewContext([sandbox], [timeout])</a></li>
 </ul>
 </li>
 </ul>
@@ -234,12 +234,14 @@ and throws an exception.
 
 
 </p>
-<h2>vm.runInNewContext(code, [sandbox], [filename])<span><a class="mark" href="#vm_vm_runinnewcontext_code_sandbox_filename" id="vm_vm_runinnewcontext_code_sandbox_filename">#</a></span></h2>
+<h2>vm.runInNewContext(code, [sandbox], [filename], [timeout])<span><a class="mark" href="#vm_vm_runinnewcontext_code_sandbox_filename_timeout" id="vm_vm_runinnewcontext_code_sandbox_filename_timeout">#</a></span></h2>
 <!--
 `vm.runInNewContext` compiles `code`, then runs it in `sandbox` and returns the
 result. Running code does not have access to local scope. The object `sandbox`
 will be used as the global object for `code`.
 `sandbox` and `filename` are optional, `filename` is only used in stack traces.
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInNewContext</code> は <code>code</code> をコンパイルし、それを <code>sandbox</code> の中で実行して
@@ -248,6 +250,9 @@ will be used as the global object for `code`.
 <code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
 <code>sandbox</code> および <code>filename</code> はオプションで、<code>filename</code> 
 スタックトレースでのみ使用されます。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
 <!--
@@ -290,7 +295,7 @@ and throws an exception.
 <code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。
 
 </p>
-<h2>vm.runInContext(code, context, [filename])<span><a class="mark" href="#vm_vm_runincontext_code_context_filename" id="vm_vm_runincontext_code_context_filename">#</a></span></h2>
+<h2>vm.runInContext(code, context, [filename], [timeout])<span><a class="mark" href="#vm_vm_runincontext_code_context_filename_timeout" id="vm_vm_runincontext_code_context_filename_timeout">#</a></span></h2>
 <!--
 `vm.runInContext` compiles `code`, then runs it in `context` and returns the
 result. A (V8) context comprises a global object, together with a set of
@@ -298,8 +303,8 @@ built-in objects and functions. Running code does not have access to local scope
 and the global object held within `context` will be used as the global object
 for `code`.
 `filename` is optional, it's used only in stack traces.
-
-Example: compile and execute code in a existing context.
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、
@@ -309,8 +314,15 @@ Example: compile and execute code in a existing context.
 実行されるコードはローカルスコープにアクセスせず、
 <code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
 <code>filename</code> はオプションで、スタックトレースでのみ使用されます。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
+<!--
+Example: compile and execute code in a existing context.
+-->
+
 <p>例: コードをコンパイルして既存のコンテキストで実行します。
 
 </p>
@@ -400,12 +412,14 @@ A class for running scripts.  Returned by vm.createScript.
 <p>スクリプトを実行するクラスです。<code>vm.createScript()</code> によって返されます。
 
 </p>
-<h3>script.runInThisContext()<span><a class="mark" href="#vm_script_runinthiscontext" id="vm_script_runinthiscontext">#</a></span></h3>
+<h3>script.runInThisContext([timeout])<span><a class="mark" href="#vm_script_runinthiscontext_timeout" id="vm_script_runinthiscontext_timeout">#</a></span></h3>
 <!--
 Similar to `vm.runInThisContext` but a method of a precompiled `Script` object.
 `script.runInThisContext` runs the code of `script` and returns the result.
 Running code does not have access to local scope, but does have access to the `global` object
 (v8: in actual context).
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInThisContext</code> と同様ですが、
@@ -413,6 +427,9 @@ Running code does not have access to local scope, but does have access to the `g
 <code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。
 実行されるコードはローカルスコープにアクセスしませんが、
 <code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
 <!--
@@ -435,11 +452,13 @@ for (var i = 0; i &lt; 1000 ; i += 1) {
 console.log(globalVar);
 
 // 1000</code></pre>
-<h3>script.runInNewContext([sandbox])<span><a class="mark" href="#vm_script_runinnewcontext_sandbox" id="vm_script_runinnewcontext_sandbox">#</a></span></h3>
+<h3>script.runInNewContext([sandbox], [timeout])<span><a class="mark" href="#vm_script_runinnewcontext_sandbox_timeout" id="vm_script_runinnewcontext_sandbox_timeout">#</a></span></h3>
 <!--
 Similar to `vm.runInNewContext` a method of a precompiled `Script` object.
 `script.runInNewContext` runs the code of `script` with `sandbox` as the global object and returns the result.
 Running code does not have access to local scope. `sandbox` is optional.
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInNewContext</code> と同様ですが、
@@ -448,6 +467,9 @@ Running code does not have access to local scope. `sandbox` is optional.
 <code>script</code> のコードを実行してその結果を返します。
 実行されるコードはローカルスコープにアクセスしません。
 <code>sandbox</code> はオプションです。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
 <!--
@@ -490,12 +512,13 @@ requires a separate process.
         </div>
     </div>
     <div id="footer">
+        <a href="http://joyent.com" class="joyent-logo">Joyent</a>
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
             <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
-            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
@@ -504,7 +527,7 @@ requires a separate process.
             <li><a href="../">Node.js</a></li>
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
-            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="http://npmjs.org/">npm レジストリ</a></li>
             <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
@@ -513,7 +536,7 @@ requires a separate process.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

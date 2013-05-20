@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.11.1 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.2 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -20,7 +20,7 @@
                 <li><a href="/" class="home">Home</a></li>
                 <li><a href="/download/" class="download">Download</a></li>
                 <li><a href="/about/" class="about">About</a></li>
-                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://npmjs.org/" class="npm">npm Registry</a></li>
                 <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
                 <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
                 <li><a href="/community/" class="community">Community</a></li>
@@ -29,7 +29,7 @@
                <li><a href="../" class="home">ホーム</a></li>
                <li><a href="../#download" class="download">ダウンロード</a></li>
                <li><a href="../about/" class="about">概要</a></li>
-               <li><a href="http://search.npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="http://npmjs.org/" class="npm">npm レジストリ</a></li>
                <li><a href="../api/" class="docs current">ドキュメント</a></li>
                <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
                <li><a href="../community/" class="community">コミュニティ</a></li>
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.1 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.2 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -209,6 +209,7 @@
 <li><a href="#all_emitter_removelistener_event_listener">emitter.removeListener(event, listener)</a></li>
 <li><a href="#all_emitter_removealllisteners_event">emitter.removeAllListeners([event])</a></li>
 <li><a href="#all_emitter_setmaxlisteners_n">emitter.setMaxListeners(n)</a></li>
+<li><a href="#all_eventemitter_defaultmaxlisteners">EventEmitter.defaultMaxListeners</a></li>
 <li><a href="#all_emitter_listeners_event">emitter.listeners(event)</a></li>
 <li><a href="#all_emitter_emit_event_arg1_arg2">emitter.emit(event, [arg1], [arg2], [...])</a></li>
 <li><a href="#all_class_method_eventemitter_listenercount_emitter_event">Class Method: EventEmitter.listenerCount(emitter, event)</a></li>
@@ -317,9 +318,13 @@
 <li><a href="#all_class_stream_writable">Class: stream.Writable</a><ul>
 <li><a href="#all_new_stream_writable_options">new stream.Writable([options])</a></li>
 <li><a href="#all_writable_write_chunk_encoding_callback">writable._write(chunk, encoding, callback)</a></li>
+<li><a href="#all_writable_writev_chunks_callback">writable._writev(chunks, callback)</a></li>
 <li><a href="#all_writable_write_chunk_encoding_callback_1">writable.write(chunk, [encoding], [callback])</a></li>
+<li><a href="#all_writable_cork">writable.cork()</a></li>
+<li><a href="#all_writable_uncork">writable.uncork()</a></li>
 <li><a href="#all_writable_end_chunk_encoding_callback">writable.end([chunk], [encoding], [callback])</a></li>
 <li><a href="#all_event_drain">Event: &#39;drain&#39;</a></li>
+<li><a href="#all_event_error_1">Event: &#39;error&#39;</a></li>
 <li><a href="#all_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#all_event_finish">Event: &#39;finish&#39;</a></li>
 <li><a href="#all_event_pipe">Event: &#39;pipe&#39;</a></li>
@@ -545,7 +550,7 @@
 <li><a href="#all_class_fs_fswatcher">Class: fs.FSWatcher</a><ul>
 <li><a href="#all_watcher_close">watcher.close()</a></li>
 <li><a href="#all_event_change">Event: &#39;change&#39;</a></li>
-<li><a href="#all_event_error_1">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_2">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 </ul>
@@ -554,6 +559,7 @@
 <li><a href="#all_path_normalize_p">path.normalize(p)</a></li>
 <li><a href="#all_path_join_path1_path2">path.join([path1], [path2], [...])</a></li>
 <li><a href="#all_path_resolve_from_to">path.resolve([from ...], to)</a></li>
+<li><a href="#all_path_isabsolute_path">path.isAbsolute(path)</a></li>
 <li><a href="#all_path_relative_from_to">path.relative(from, to)</a></li>
 <li><a href="#all_path_dirname_p">path.dirname(p)</a></li>
 <li><a href="#all_path_basename_p_ext">path.basename(p, [ext])</a></li>
@@ -584,7 +590,7 @@
 <li><a href="#all_event_listening">Event: &#39;listening&#39;</a></li>
 <li><a href="#all_event_connection">Event: &#39;connection&#39;</a></li>
 <li><a href="#all_event_close_2">Event: &#39;close&#39;</a></li>
-<li><a href="#all_event_error_2">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_3">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 <li><a href="#all_class_net_socket">Class: net.Socket</a><ul>
@@ -615,7 +621,7 @@
 <li><a href="#all_event_end_1">Event: &#39;end&#39;</a></li>
 <li><a href="#all_event_timeout">Event: &#39;timeout&#39;</a></li>
 <li><a href="#all_event_drain_1">Event: &#39;drain&#39;</a></li>
-<li><a href="#all_event_error_3">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_4">Event: &#39;error&#39;</a></li>
 <li><a href="#all_event_close_3">Event: &#39;close&#39;</a></li>
 </ul>
 </li>
@@ -630,7 +636,7 @@
 <li><a href="#all_event_message">Event: &#39;message&#39;</a></li>
 <li><a href="#all_event_listening_1">Event: &#39;listening&#39;</a></li>
 <li><a href="#all_event_close_4">Event: &#39;close&#39;</a></li>
-<li><a href="#all_event_error_4">Event: &#39;error&#39;</a></li>
+<li><a href="#all_event_error_5">Event: &#39;error&#39;</a></li>
 <li><a href="#all_socket_send_buf_offset_length_port_address_callback">socket.send(buf, offset, length, port, address, [callback])</a></li>
 <li><a href="#all_socket_bind_port_address_callback">socket.bind(port, [address], [callback])</a></li>
 <li><a href="#all_socket_close">socket.close()</a></li>
@@ -736,8 +742,9 @@
 </ul>
 </li>
 <li><a href="#all_https">HTTPS</a><ul>
-<li><a href="#all_class_https_server">Class: https.Server</a></li>
-<li><a href="#all_https_createserver_options_requestlistener">https.createServer(options, [requestListener])</a><ul>
+<li><a href="#all_class_https_server">Class: https.Server</a><ul>
+<li><a href="#all_server_settimeout_msecs_callback_1">server.setTimeout(msecs, callback)</a></li>
+<li><a href="#all_server_timeout_1">server.timeout</a></li>
 <li><a href="#all_server_listen_port_host_backlog_callback_1">server.listen(port, [host], [backlog], [callback])</a></li>
 <li><a href="#all_server_listen_path_callback_2">server.listen(path, [callback])</a></li>
 <li><a href="#all_server_listen_handle_callback_2">server.listen(handle, [callback])</a></li>
@@ -817,20 +824,20 @@
 </ul>
 </li>
 <li><a href="#all_vm_runinthiscontext_code_filename">vm.runInThisContext(code, [filename])</a></li>
-<li><a href="#all_vm_runinnewcontext_code_sandbox_filename">vm.runInNewContext(code, [sandbox], [filename])</a></li>
-<li><a href="#all_vm_runincontext_code_context_filename">vm.runInContext(code, context, [filename])</a></li>
+<li><a href="#all_vm_runinnewcontext_code_sandbox_filename_timeout">vm.runInNewContext(code, [sandbox], [filename], [timeout])</a></li>
+<li><a href="#all_vm_runincontext_code_context_filename_timeout">vm.runInContext(code, context, [filename], [timeout])</a></li>
 <li><a href="#all_vm_createcontext_initsandbox">vm.createContext([initSandbox])</a></li>
 <li><a href="#all_vm_createscript_code_filename">vm.createScript(code, [filename])</a></li>
 <li><a href="#all_class_script">Class: Script</a><ul>
-<li><a href="#all_script_runinthiscontext">script.runInThisContext()</a></li>
-<li><a href="#all_script_runinnewcontext_sandbox">script.runInNewContext([sandbox])</a></li>
+<li><a href="#all_script_runinthiscontext_timeout">script.runInThisContext([timeout])</a></li>
+<li><a href="#all_script_runinnewcontext_sandbox_timeout">script.runInNewContext([sandbox], [timeout])</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a href="#all_child_process">Child Process</a><ul>
 <li><a href="#all_class_childprocess">Class: ChildProcess</a><ul>
-<li><a href="#all_event_error_5">Event:  &#39;error&#39;</a></li>
+<li><a href="#all_event_error_6">Event:  &#39;error&#39;</a></li>
 <li><a href="#all_event_exit_2">Event:  &#39;exit&#39;</a></li>
 <li><a href="#all_event_close_9">Event: &#39;close&#39;</a></li>
 <li><a href="#all_event_disconnect">Event: &#39;disconnect&#39;</a></li>
@@ -950,6 +957,7 @@
 </li>
 <li><a href="#all_cluster">Cluster</a><ul>
 <li><a href="#all_how_it_works">How It Works</a></li>
+<li><a href="#all_cluster_schedulingpolicy">cluster.schedulingPolicy</a></li>
 <li><a href="#all_cluster_settings">cluster.settings</a></li>
 <li><a href="#all_cluster_ismaster">cluster.isMaster</a></li>
 <li><a href="#all_cluster_isworker">cluster.isWorker</a></li>
@@ -1296,8 +1304,8 @@ value from this object, the next `require` will reload the module.
 
 </p>
 <h3>require.extensions<span><a class="mark" href="#all_require_extensions" id="all_require_extensions">#</a></span></h3>
-<div class="signature"><ul>
-<li><span class="type">Array</span></li>
+<pre class="api_stability_0">Stability: 0 - Deprecated</pre><div class="signature"><ul>
+<li><span class="type">Object</span></li>
 </div></ul>
 <!--
 Instruct `require` on how to handle certain file extensions.
@@ -1312,6 +1320,31 @@ Process files with the extension `.sjs` as `.js`:
 
 </p>
 <pre><code>require.extensions[&#39;.sjs&#39;] = require.extensions[&#39;.js&#39;];</code></pre>
+<!--
+**Deprecated**  In the past, this list has been used to load
+non-JavaScript modules into Node by compiling them on-demand.
+However, in practice, there are much better ways to do this, such as
+loading modules via some other Node program, or compiling them to
+JavaScript ahead of time.
+-->
+
+<p><strong>廃止予定</strong> かつて、このリストは非 JavaScript モジュールを必要に応じて
+コンパイルし、Node にロードするために使われていました。
+しかし実際には、他の Node プログラムを通じてロードしたり、
+事前に JavaScript にコンパイルするなど、よりよい方法があります。
+
+</p>
+<!--
+Since the Module system is locked, this feature will probably never go
+away.  However, it may have subtle bugs and complexities that are best
+left untouched.
+-->
+
+<p>モジュールシステムはロックされているので、この機能はおそらく
+無くならないでしょう。
+しかしながら、それは微妙なバグや複雑さがあってもそのまま放置されるでしょう。
+
+</p>
 <h2>__filename<span><a class="mark" href="#all_filename" id="all_filename">#</a></span></h2>
 <!-- type=var -->
 
@@ -4892,12 +4925,15 @@ there aren't any strict restrictions on that, as any string will be accepted.
 </p>
 <!--
 Functions can then be attached to objects, to be executed when an event
-is emitted. These functions are called _listeners_.
+is emitted. These functions are called _listeners_. Inside a listener
+function, `this` refers to the `EventEmitter` that the listener was
+attached to.
 -->
 
 <p>関数をオブジェクトにアタッチすることができ、それはイベントが生成された時に実行されます。
-これらの関数は<em>リスナー</em>と呼ばれます。
-
+これらの関数は<em>リスナ</em>と呼ばれます。
+リスナ関数の中では、<code>this</code> はリスナがアタッチされている <code>EventEmitter</code>
+を参照します。
 
 </p>
 <h2>Class: events.EventEmitter<span><a class="mark" href="#all_class_events_eventemitter" id="all_class_events_eventemitter">#</a></span></h2>
@@ -4941,6 +4977,13 @@ Adds a listener to the end of the listeners array for the specified event.
 <pre><code>server.on(&#39;connection&#39;, function (stream) {
   console.log(&#39;someone connected!&#39;);
 });</code></pre>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.once(event, listener)<span><a class="mark" href="#all_emitter_once_event_listener" id="all_emitter_once_event_listener">#</a></span></h3>
 <!--
 Adds a **one time** listener for the event. This listener is
@@ -4955,6 +4998,13 @@ it is removed.
 <pre><code>server.once(&#39;connection&#39;, function (stream) {
   console.log(&#39;Ah, we have our first user!&#39;);
 });</code></pre>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.removeListener(event, listener)<span><a class="mark" href="#all_emitter_removelistener_event_listener" id="all_emitter_removelistener_event_listener">#</a></span></h3>
 <!--
 Remove a listener from the listener array for the specified event.
@@ -4971,6 +5021,13 @@ Remove a listener from the listener array for the specified event.
 server.on(&#39;connection&#39;, callback);
 // ...
 server.removeListener(&#39;connection&#39;, callback);</code></pre>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.removeAllListeners([event])<span><a class="mark" href="#all_emitter_removealllisteners_event" id="all_emitter_removealllisteners_event">#</a></span></h3>
 <!--
 Removes all listeners, or those of the specified event.
@@ -4979,19 +5036,56 @@ Removes all listeners, or those of the specified event.
 <p>全てのリスナーまたは指定されたイベントに対するリスナーを削除します。
 
 </p>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
 <h3>emitter.setMaxListeners(n)<span><a class="mark" href="#all_emitter_setmaxlisteners_n" id="all_emitter_setmaxlisteners_n">#</a></span></h3>
 <!--
 By default EventEmitters will print a warning if more than 10 listeners are
-added for a particular event. This is a useful default which helps finding memory leaks.
-Obviously not all Emitters should be limited to 10. This function allows
-that to be increased. Set to zero for unlimited.
+added for a particular event. This is a useful default which helps finding
+memory leaks. Obviously not all Emitters should be limited to 10. This function
+allows that to be increased. Set to zero for unlimited.
 -->
 
-<p>デフォルトでは、EventEmitter は 10 を越えるリスナが特定のイベントに追加されると警告を出力します。
+<p>デフォルトでは、10 を越えるリスナが特定のイベントに追加されると、
+EventEmitter は警告を出力します。
 これはメモリリークを見つけるために役に立つデフォルト値です。
-全ての EventEmitter が 10 に制限されなければならないわけではないことは明らかです。
-この関数は制限を増やすことを許可します。
+全ての EventEmitter が 10 に制限されなければならないわけではないことは
+明らかです。この関数は制限を増やすことを許可します。
 0 を設定すると無制限になります。
+
+</p>
+<!--
+Returns emitter, so calls can be chained.
+-->
+
+<p>EventEmitter 自身を返すので、呼び出しをチェーンすることができます。
+
+</p>
+<h3>EventEmitter.defaultMaxListeners<span><a class="mark" href="#all_eventemitter_defaultmaxlisteners" id="all_eventemitter_defaultmaxlisteners">#</a></span></h3>
+<!--
+`emitter.setMaxListeners(n)` sets the maximum on a per-instance basis.
+This class property lets you set it for *all* `EventEmitter` instances,
+current and future, effective immediately. Use with care.
+-->
+
+<p><code>emitter.setMaxListeners(n)</code> はインスタンス毎の上限を設定します。
+このクラスプロパティは、現在と将来の <em>全ての</em> <code>EventEmitter</code>
+インスタンスの上限を即座に設定します。
+注意して使用してください。
+
+</p>
+<!--
+Note that `emitter.setMaxListeners(n)` still has precedence over
+`EventEmitter.defaultMaxListeners`.
+-->
+
+<p><code>emitter.setMaxListeners(n)</code> は <code>EventEmitter.defaultMaxListeners</code> よりも
+優先されることに注意してください。
 
 </p>
 <h3>emitter.listeners(event)<span><a class="mark" href="#all_emitter_listeners_event" id="all_emitter_listeners_event">#</a></span></h3>
@@ -5012,6 +5106,13 @@ Execute each of the listeners in order with the supplied arguments.
 -->
 
 <p>提供された引数の並びでそれぞれのリスナーを実行します。
+
+</p>
+<!--
+Returns `true` if event had listeners, `false` otherwise.
+-->
+
+<p>イベントに対応するリスナがあった場合は <code>true</code>、それ以外は <code>false</code> を返します。
 
 
 </p>
@@ -7930,6 +8031,31 @@ your own extension classes.
 しかしながら、あなたの拡張クラスではこのメソッドをオーバーライドすることが
 求められて<strong>います</strong>。
 
+</p>
+<h3>writable._writev(chunks, callback)<span><a class="mark" href="#all_writable_writev_chunks_callback" id="all_writable_writev_chunks_callback">#</a></span></h3>
+<!--
+* `chunks` {Array} The chunks to be written.  Each chunk has following
+  format: `{ chunk: ..., encoding: ... }`.
+* `callback` {Function} Call this function (optionally with an error
+  argument) when you are done processing the supplied chunks.
+-->
+
+<ul>
+<li><code>chunks</code> {Array} 書き込まれるチャンクの配列。
+各チャンクは次のフォーマットになります:
+<code>{ chunk: ..., encoding: ... }</code> 。</li>
+<li><code>callback</code> {Function} チャンクを提供する処理が終了した時に、
+(任意のエラー引数と共に) この関数を呼び出してください。</li>
+</ul>
+<!--
+This function is completely optional to implement. In the most cases
+it is unnecessary.  If implemented, it will be called with all the
+chunks that are buffered in the write queue.
+-->
+
+<p>この関数の実装は完全に任意です。ほとんどのケースでは必要ありません。
+もし実装されるなら、書き込みキューにバッファリングされた全ての
+チャンクと共に呼び出されるでしょう。
 
 </p>
 <h3>writable.write(chunk, [encoding], [callback])<span><a class="mark" href="#all_writable_write_chunk_encoding_callback_1" id="all_writable_write_chunk_encoding_callback_1">#</a></span></h3>
@@ -7972,6 +8098,31 @@ the `highWaterMark` option provided to the constructor.
 <code>highWaterMark</code> オプションによって決定されます。
 
 </p>
+<h3>writable.cork()<span><a class="mark" href="#all_writable_cork" id="all_writable_cork">#</a></span></h3>
+<!--
+Forces buffering of all writes.
+-->
+
+<p>全ての書き込みを強制的にバッファリングします。
+
+</p>
+<!--
+Buffered data will be flushed either at `.uncork()` or at `.end()` call.
+-->
+
+<p>バッファリングされたデータは <code>.uncork()</code> または <code>.end()</code> のどちらかが
+呼び出されるとフラッシュされます。
+
+</p>
+<h3>writable.uncork()<span><a class="mark" href="#all_writable_uncork" id="all_writable_uncork">#</a></span></h3>
+<!--
+Flush all data, buffered since `.cork()` call.
+-->
+
+<p><code>.cork()</code> の呼び出しによってバッファリングされた
+全てのデータをフラッシュします。
+
+</p>
 <h3>writable.end([chunk], [encoding], [callback])<span><a class="mark" href="#all_writable_end_chunk_encoding_callback" id="all_writable_end_chunk_encoding_callback">#</a></span></h3>
 <!--
 * `chunk` {Buffer | String} Optional final data to be written
@@ -8007,6 +8158,14 @@ without buffering again. Listen for it when `stream.write()` returns
 <p>ストリームの書き込みキューが空になり、バッファリングされることなく
 再び安全に書き込みができるようになった場合に生成されます。
 <code>stream.write()</code> が <code>false</code> を返した場合に監視してください。
+
+</p>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_1" id="all_event_error_1">#</a></span></h3>
+<!--
+Emitted if there was an error receiving data.
+-->
+
+<p>データ送信でエラーがあった場合に生成されます。
 
 </p>
 <h3>Event: &#39;close&#39;<span><a class="mark" href="#all_event_close_1" id="all_event_close_1">#</a></span></h3>
@@ -12106,7 +12265,7 @@ See more details in [fs.watch](#fs_fs_watch_filename_options_listener).
 を参照してください。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_1" id="all_event_error_1">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_2" id="all_event_error_2">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>error</code> <span class="type">Error object</span></li>
 </div></ul>
@@ -12270,6 +12429,39 @@ path.resolve(&#39;/foo/bar&#39;, &#39;/tmp/file/&#39;)
 path.resolve(&#39;wwwroot&#39;, &#39;static_files/png/&#39;, &#39;../gif/image.gif&#39;)
 // if currently in /home/myself/node, it returns
 &#39;/home/myself/node/wwwroot/static_files/gif/image.gif&#39;</code></pre>
+<h2>path.isAbsolute(path)<span><a class="mark" href="#all_path_isabsolute_path" id="all_path_isabsolute_path">#</a></span></h2>
+<!--
+Determines whether `path` is an absolute path. An absolute path will always
+resolve to the same location, regardless of the working directory.
+-->
+
+<p><code>path</code> が絶対パスかどうかを判定します。
+絶対パスは現在の作業ディレクトリに関係なく、
+常に同じ場所に解決されます。
+
+</p>
+<!--
+Posix examples:
+-->
+
+<p>Posix の例:
+
+</p>
+<pre><code>path.isAbsolute(&#39;/foo/bar&#39;) // true
+path.isAbsolute(&#39;/baz/..&#39;)  // true
+path.isAbsolute(&#39;qux/&#39;)     // false
+path.isAbsolute(&#39;.&#39;)        // false</code></pre>
+<!--
+Windows examples:
+-->
+
+<p>Windows の例:
+
+</p>
+<pre><code>path.isAbsolute(&#39;//server&#39;)  // true
+path.isAbsolute(&#39;C:/foo/..&#39;) // true
+path.isAbsolute(&#39;bar\\baz&#39;)   // false
+path.isAbsolute(&#39;.&#39;)         // false</code></pre>
 <h2>path.relative(from, to)<span><a class="mark" href="#all_path_relative_from_to" id="all_path_relative_from_to">#</a></span></h2>
 <!--
 Solve the relative path from `from` to `to`.
@@ -12968,7 +13160,7 @@ event is not emitted until all connections are ended.
 生成されないことに注意してください。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_2" id="all_event_error_2">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_3" id="all_event_error_3">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Error Object</span></li>
 </div></ul>
@@ -13465,7 +13657,7 @@ See also: the return values of `socket.write()`
 <p><code>socket.write()</code> の戻り値を参照してください。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_3" id="all_event_error_3">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_4" id="all_event_error_4">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Error object</span></li>
 </div></ul>
@@ -13644,7 +13836,7 @@ on this socket.
 このソケットでは新しい <code>message</code> イベントは生成されなくなります。
 
 </p>
-<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_4" id="all_event_error_4">#</a></span></h3>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_5" id="all_event_error_5">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>exception</code> Error object</li>
 </div></ul>
@@ -16034,7 +16226,22 @@ This class is a subclass of `tls.Server` and emits events same as
 より詳しくは <code>http.Server</code> を参照してください。
 
 </p>
-<h2>https.createServer(options, [requestListener])<span><a class="mark" href="#all_https_createserver_options_requestlistener" id="all_https_createserver_options_requestlistener">#</a></span></h2>
+<h3>server.setTimeout(msecs, callback)<span><a class="mark" href="#all_server_settimeout_msecs_callback_1" id="all_server_settimeout_msecs_callback_1">#</a></span></h3>
+<!--
+See [http.Server#setTimeout()][].
+-->
+
+<p><a href="http.html#http_server_settimeout_msecs_callback">http.Server#setTimeout()</a> を参照してください。
+
+</p>
+<h3>server.timeout<span><a class="mark" href="#all_server_timeout_1" id="all_server_timeout_1">#</a></span></h3>
+<!--
+See [http.Server#timeout][].
+
+[http.Server#timeout][] を参照してください。
+
+## https.createServer(options, [requestListener])
+
 <!--
 Returns a new HTTPS web server object. The `options` is similar to
 [tls.createServer()][].  The `requestListener` is a function which is
@@ -17806,12 +18013,14 @@ and throws an exception.
 
 
 </p>
-<h2>vm.runInNewContext(code, [sandbox], [filename])<span><a class="mark" href="#all_vm_runinnewcontext_code_sandbox_filename" id="all_vm_runinnewcontext_code_sandbox_filename">#</a></span></h2>
+<h2>vm.runInNewContext(code, [sandbox], [filename], [timeout])<span><a class="mark" href="#all_vm_runinnewcontext_code_sandbox_filename_timeout" id="all_vm_runinnewcontext_code_sandbox_filename_timeout">#</a></span></h2>
 <!--
 `vm.runInNewContext` compiles `code`, then runs it in `sandbox` and returns the
 result. Running code does not have access to local scope. The object `sandbox`
 will be used as the global object for `code`.
 `sandbox` and `filename` are optional, `filename` is only used in stack traces.
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInNewContext</code> は <code>code</code> をコンパイルし、それを <code>sandbox</code> の中で実行して
@@ -17820,6 +18029,9 @@ will be used as the global object for `code`.
 <code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
 <code>sandbox</code> および <code>filename</code> はオプションで、<code>filename</code> 
 スタックトレースでのみ使用されます。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
 <!--
@@ -17862,7 +18074,7 @@ and throws an exception.
 <code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。
 
 </p>
-<h2>vm.runInContext(code, context, [filename])<span><a class="mark" href="#all_vm_runincontext_code_context_filename" id="all_vm_runincontext_code_context_filename">#</a></span></h2>
+<h2>vm.runInContext(code, context, [filename], [timeout])<span><a class="mark" href="#all_vm_runincontext_code_context_filename_timeout" id="all_vm_runincontext_code_context_filename_timeout">#</a></span></h2>
 <!--
 `vm.runInContext` compiles `code`, then runs it in `context` and returns the
 result. A (V8) context comprises a global object, together with a set of
@@ -17870,8 +18082,8 @@ built-in objects and functions. Running code does not have access to local scope
 and the global object held within `context` will be used as the global object
 for `code`.
 `filename` is optional, it's used only in stack traces.
-
-Example: compile and execute code in a existing context.
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、
@@ -17881,8 +18093,15 @@ Example: compile and execute code in a existing context.
 実行されるコードはローカルスコープにアクセスせず、
 <code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
 <code>filename</code> はオプションで、スタックトレースでのみ使用されます。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
+<!--
+Example: compile and execute code in a existing context.
+-->
+
 <p>例: コードをコンパイルして既存のコンテキストで実行します。
 
 </p>
@@ -17972,12 +18191,14 @@ A class for running scripts.  Returned by vm.createScript.
 <p>スクリプトを実行するクラスです。<code>vm.createScript()</code> によって返されます。
 
 </p>
-<h3>script.runInThisContext()<span><a class="mark" href="#all_script_runinthiscontext" id="all_script_runinthiscontext">#</a></span></h3>
+<h3>script.runInThisContext([timeout])<span><a class="mark" href="#all_script_runinthiscontext_timeout" id="all_script_runinthiscontext_timeout">#</a></span></h3>
 <!--
 Similar to `vm.runInThisContext` but a method of a precompiled `Script` object.
 `script.runInThisContext` runs the code of `script` and returns the result.
 Running code does not have access to local scope, but does have access to the `global` object
 (v8: in actual context).
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInThisContext</code> と同様ですが、
@@ -17985,6 +18206,9 @@ Running code does not have access to local scope, but does have access to the `g
 <code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。
 実行されるコードはローカルスコープにアクセスしませんが、
 <code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
 <!--
@@ -18007,11 +18231,13 @@ for (var i = 0; i &lt; 1000 ; i += 1) {
 console.log(globalVar);
 
 // 1000</code></pre>
-<h3>script.runInNewContext([sandbox])<span><a class="mark" href="#all_script_runinnewcontext_sandbox" id="all_script_runinnewcontext_sandbox">#</a></span></h3>
+<h3>script.runInNewContext([sandbox], [timeout])<span><a class="mark" href="#all_script_runinnewcontext_sandbox_timeout" id="all_script_runinnewcontext_sandbox_timeout">#</a></span></h3>
 <!--
 Similar to `vm.runInNewContext` a method of a precompiled `Script` object.
 `script.runInNewContext` runs the code of `script` with `sandbox` as the global object and returns the result.
 Running code does not have access to local scope. `sandbox` is optional.
+`timeout` specifies an optional number of milliseconds to execute `code` before
+terminating execution. If execution is terminated, `null` will be thrown.
 -->
 
 <p><code>vm.runInNewContext</code> と同様ですが、
@@ -18020,6 +18246,9 @@ Running code does not have access to local scope. `sandbox` is optional.
 <code>script</code> のコードを実行してその結果を返します。
 実行されるコードはローカルスコープにアクセスしません。
 <code>sandbox</code> はオプションです。
+<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
+ミリ秒単位の数値で指定します。
+実行が打ち切られると、<code>null</code> がスローされます。
 
 </p>
 <!--
@@ -18118,7 +18347,7 @@ The ChildProcess class is not intended to be used directly.  Use the
 独立したストリームオブジェクトにパイプでつながれているかもしれません。
 
 </p>
-<h3>Event:  &#39;error&#39;<span><a class="mark" href="#all_event_error_5" id="all_event_error_5">#</a></span></h3>
+<h3>Event:  &#39;error&#39;<span><a class="mark" href="#all_event_error_6" id="all_event_error_6">#</a></span></h3>
 <!--
 * `err` {Error Object} the error.
 -->
@@ -18953,11 +19182,6 @@ Node のドキュメント化されていない API と同様に、
 * `command` {String} The command to run, with space-separated arguments
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
-  * `stdio` {Array|String} Child's stdio configuration. (See above)
-    Only stdin is configurable, anything else will lead to unpredictable
-    results.
-  * `customFds` {Array} **Deprecated** File descriptors for the child to use
-    for stdio.  (See above)
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
@@ -18974,10 +19198,6 @@ Node のドキュメント化されていない API と同様に、
 <li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
-<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。
-標準入力のみが構成可能です。その他は予期しない結果を招くでしょう。</li>
-<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
-ファイル記述子の配列 (前述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
 <li><code>timeout</code> {Number} (Default: 0)</li>
@@ -19061,9 +19281,6 @@ the child process is killed.
 * `args` {Array} List of string arguments
 * `options` {Object}
   * `cwd` {String} Current working directory of the child process
-  * `stdio` {Array|String} Child's stdio configuration. (See above)
-  * `customFds` {Array} **Deprecated** File descriptors for the child to use
-    for stdio.  (See above)
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
@@ -19081,9 +19298,6 @@ the child process is killed.
 <li><code>args</code> {Array} 文字列による引数の配列</li>
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
-<li><code>stdio</code> {Array|String} 子プロセスの標準入出力の設定 (前述)。</li>
-<li><code>customFds</code> {Array} <strong>Deprecated</strong> 子プロセスが標準入出力として使用する
-ファイル記述子の配列 (前述)</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
 <li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
 <li><code>timeout</code> {Number} (Default: 0)</li>
@@ -20284,17 +20498,24 @@ Get a list of network interfaces:
 <p>ネットワークインタフェースの一覧を取得します。
 
 </p>
-<pre><code>{ lo0: 
-   [ { address: &#39;::1&#39;, family: &#39;IPv6&#39;, internal: true },
-     { address: &#39;fe80::1&#39;, family: &#39;IPv6&#39;, internal: true },
-     { address: &#39;127.0.0.1&#39;, family: &#39;IPv4&#39;, internal: true } ],
-  en1: 
-   [ { address: &#39;fe80::cabc:c8ff:feef:f996&#39;, family: &#39;IPv6&#39;,
-       internal: false },
-     { address: &#39;10.0.1.123&#39;, family: &#39;IPv4&#39;, internal: false } ],
-  vmnet1: [ { address: &#39;10.99.99.254&#39;, family: &#39;IPv4&#39;, internal: false } ],
-  vmnet8: [ { address: &#39;10.88.88.1&#39;, family: &#39;IPv4&#39;, internal: false } ],
-  ppp0: [ { address: &#39;10.2.0.231&#39;, family: &#39;IPv4&#39;, internal: false } ] }</code></pre>
+<pre><code>{ lo0:
+   [ { address: &#39;fe80::1&#39;, netmask: &#39;ffff:ffff:ffff:ffff::&#39;,
+       family: &#39;IPv6&#39;, internal: true },
+     { address: &#39;127.0.0.1&#39;, netmask: &#39;255.0.0.0&#39;,
+       family: &#39;IPv4&#39;, internal: true },
+     { address: &#39;::1&#39;, netmask: &#39;ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff&#39;,
+       family: &#39;IPv6&#39;, internal: true } ],
+  en1:
+   [ { address: &#39;fe80::226:8ff:fedc:1dd&#39;, netmask: &#39;ffff:ffff:ffff:ffff::&#39;,
+       family: &#39;IPv6&#39;, internal: false },
+     { address: &#39;10.0.1.6&#39;, netmask: &#39;255.255.255.0&#39;,
+       family: &#39;IPv4&#39;, internal: false } ],
+  vmnet1:
+   [ { address: &#39;192.168.252.1&#39;, netmask: &#39;255.255.255.0&#39;,
+       family: &#39;IPv4&#39;, internal: false } ],
+  vmnet8:
+   [ { address: &#39;192.168.207.1&#39;, netmask: &#39;255.255.255.0&#39;,
+       family: &#39;IPv4&#39;, internal: false } ] }</code></pre>
 <h2>os.EOL<span><a class="mark" href="#all_os_eol" id="all_os_eol">#</a></span></h2>
 <!--
 A constant defining the appropriate End-of-line marker for the operating system.
@@ -20471,6 +20692,35 @@ script.js
 <li><code>setBreakpoint(&#39;script.js&#39;, 1)</code>, <code>sb(...)</code> - 指定したスクリプトファイルの指定した行にブレークポイントを設定します。</li>
 <li><code>clearBreakpoint</code>, <code>cb(...)</code> - ブレークポイントを削除します。</li>
 </ul>
+<!--
+It is also possible to set a breakpoint in a file (module) that
+isn't loaded yet:
+-->
+
+<p>まだロードされていないファイル (モジュール) にブレークポイントを
+設定することもできます。
+
+</p>
+<pre><code>% ./node debug test/fixtures/break-in-module/main.js
+&lt; debugger listening on port 5858
+connecting to port 5858... ok
+break in test/fixtures/break-in-module/main.js:1
+  1 var mod = require(&#39;./mod.js&#39;);
+  2 mod.hello();
+  3 mod.hello();
+debug&gt; setBreakpoint(&#39;mod.js&#39;, 23)
+Warning: script &#39;mod.js&#39; was not loaded yet.
+  1 var mod = require(&#39;./mod.js&#39;);
+  2 mod.hello();
+  3 mod.hello();
+debug&gt; c
+break in test/fixtures/break-in-module/mod.js:23
+ 21
+ 22 exports.hello = function() {
+ 23   return &#39;hello from module&#39;;
+ 24 };
+ 25
+debug&gt;</code></pre>
 <h3>Info<span><a class="mark" href="#all_info" id="all_info">#</a></span></h3>
 <!--
 * `backtrace`, `bt` - Print backtrace of current execution frame
@@ -20630,27 +20880,61 @@ handles back and forth.
 
 </p>
 <!--
-When you call `server.listen(...)` in a worker, it serializes the
-arguments and passes the request to the master process.  If the master
-process already has a listening server matching the worker's
-requirements, then it passes the handle to the worker.  If it does not
-already have a listening server matching that requirement, then it will
-create one, and pass the handle to the child.
+The cluster module supports two methods of distributing incoming
+connections.
 -->
 
-<p>ワーカが <code>server.listen(...)</code> を呼び出すと、引数がシリアライズされて
-マスタプロセスにリクエストが渡されます。
-マスタプロセスは、ワーカのリクエストにマッチするリスニングサーバが既に
-存在すればそのハンドルをワーカに渡します。
-リクエストにマッチするリスニングサーバが存在しなければ、それが作成されて
-子プロセスに渡されます。
+<p>クラスタモジュールは到着する接続を分散する方法を二種類提供します。
 
 </p>
 <!--
-This causes potentially surprising behavior in three edge cases:
+The first one (and the default one on all platforms except Windows),
+is the round-robin approach, where the master process listens on a
+port, accepts new connections and distributes them across the workers
+in a round-robin fashion, with some built-in smarts to avoid
+overloading a worker process.
 -->
 
-<p>これは三つの極端なケースで驚くような振る舞いを引き起こすかもしれません。
+<p>一つ目 (Windows 以外の全てのプラットフォームでデフォルト)
+はラウンドロビン方式で、マスタプロセスがポートをリッスンし、
+新しい接続を受け付けるとラウンドロビン方式でワーカに分散します
+(ワーカの過負荷を避ける工夫が組み込まれています)。
+
+</p>
+<!--
+The second approach is where the master process creates the listen
+socket and sends it to interested workers. The workers then accept
+incoming connections directly.
+-->
+
+<p>二つ目の方法は、マスタプロセスがリスニングソケットを作成し、
+ワーカに送信します。ワーカは到着する接続を直接受け付けます。
+
+</p>
+<!--
+The second approach should, in theory, give the best performance.
+In practice however, distribution tends to be very unbalanced due
+to operating system scheduler vagaries. Loads have been observed
+where over 70% of all connections ended up in just two processes,
+out of a total of eight.
+-->
+
+<p>二つ目の方法は、原則的には、ベストなパフォーマンスであるべきです。
+しかし実際には、OS の予測不可能なスケジューラにより、
+非常に不均衡に分散される傾向があります。
+全 8 プロセス中の 2 プロセスに 70% 以上の接続が割り当てられたことも
+観測されました。
+
+</p>
+<!--
+Because `server.listen()` hands off most of the work to the master
+process, there are three cases where the behavior between a normal
+node.js process and a cluster worker differs:
+-->
+
+<p><code>server.listen()</code> は仕事の大部分をマスタプロセスに渡すため、
+通常の node.js プロセスとクラスタのワーカプロセスの間には
+振る舞いが異なるケースが 3 つあります。
 
 </p>
 <!--
@@ -20687,17 +20971,13 @@ This causes potentially surprising behavior in three edge cases:
 ポート番号を生成してください。</li>
 </ol>
 <!--
-When multiple processes are all `accept()`ing on the same underlying
-resource, the operating system load-balances across them very
-efficiently.  There is no routing logic in Node.js, or in your program,
-and no shared state between the workers.  Therefore, it is important to
-design your program such that it does not rely too heavily on in-memory
-data objects for things like sessions and login.
+There is no routing logic in Node.js, or in your program, and no shared
+state between the workers.  Therefore, it is important to design your
+program such that it does not rely too heavily on in-memory data objects
+for things like sessions and login.
 -->
 
-<p>複数のプロセスが同じリソースを <code>accept()</code> する時、オペレーティングシステムは
-とても効率的にそれら全体をロードバランスします。
-Node.js にもあなたのプログラムにも、ルーティングのためのロジックや
+<p>Node.js にもあなたのプログラムにも、ルーティングのためのロジックや
 ワーカ間で共有される状態はありません。
 したがって、あなたのプログラムがセッションやログインのためにメモリ内の
 データオブジェクトに過度に頼らないように設計することが重要です。
@@ -20718,6 +20998,42 @@ the worker pool for your application's needs.
 しかしながら、Node はワーカの数を自動的に管理することはありません。
 アプリケーションのニーズに応じてワーカのプールを管理することは、
 あなたの責務です。
+
+</p>
+<h2>cluster.schedulingPolicy<span><a class="mark" href="#all_cluster_schedulingpolicy" id="all_cluster_schedulingpolicy">#</a></span></h2>
+<!--
+The scheduling policy, either `cluster.SCHED_RR` for round-robin or
+`cluster.SCHED_NONE` to leave it to the operating system. This is a
+global setting and effectively frozen once you spawn the first worker
+or call `cluster.setupMaster()`, whatever comes first.
+-->
+
+<p>スケジューリングポリシーは、ラウンドロビンの <code>cluster.SCHED_RR</code> または、
+OS に任せる <code>cluster.SCHED_NONE</code> のどちらかです。
+これはグローバルな設定で、その効果は最初のワーカを起動する時か、
+<code>cluster.setupMaster()</code> を呼び出した時、どちらかが最初に行われた時点で
+凍結されます。
+
+</p>
+<!--
+`SCHED_RR` is the default on all operating systems except Windows.
+Windows will change to `SCHED_RR` once libuv is able to effectively
+distribute IOCP handles without incurring a large performance hit.
+-->
+
+<p><code>SCHED_RR</code> は Windows 以外の全ての OS でデフォルトです。
+Windows では、libuv が大きなパフォーマンス低下を招くことなく
+IOCP ハンドルを分散することが可能であれば、<code>SCHED_RR</code> に切り替わります。
+
+</p>
+<!--
+`cluster.schedulingPolicy` can also be set through the
+`NODE_CLUSTER_SCHED_POLICY` environment variable. Valid
+values are `"rr"` and `"none"`.
+-->
+
+<p><code>cluster.schedulingPolicy</code> は、<code>NODE_CLUSTER_SCHED_POLICY</code> 環境変数を
+通じて設定することもできます。適切な値は <code>&quot;rr&quot;</code> または <code>&quot;none&quot;</code> です。
 
 </p>
 <h2>cluster.settings<span><a class="mark" href="#all_cluster_settings" id="all_cluster_settings">#</a></span></h2>
@@ -21284,7 +21600,7 @@ that would normally not allow the worker to do any cleanup if needed.
 
   process.on(&#39;message&#39;, function(msg) {
     if (msg === &#39;force kill&#39;) {
-      server.destroy();
+      server.close();
     }
   });
 }</code></pre>
@@ -21428,12 +21744,13 @@ worker.on(&#39;exit&#39;, function(code, signal) {
         </div>
     </div>
     <div id="footer">
+        <a href="http://joyent.com" class="joyent-logo">Joyent</a>
         <ul class="clearfix">
             <!--
             <li><a href="/">Node.js</a></li>
             <li><a href="/download/">Download</a></li>
             <li><a href="/about/">About</a></li>
-            <li><a href="http://search.npmjs.org/">npm Registry</a></li>
+            <li><a href="http://npmjs.org/">npm Registry</a></li>
             <li><a href="http://nodejs.org/api/">Docs</a></li>
             <li><a href="http://blog.nodejs.org">Blog</a></li>
             <li><a href="/community/">Community</a></li>
@@ -21442,7 +21759,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="../">Node.js</a></li>
             <li><a href="../#download">ダウンロード</a></li>
             <li><a href="../about/">概要</a></li>
-            <li><a href="http://search.npmjs.org/">npm レジストリ</a></li>
+            <li><a href="http://npmjs.org/">npm レジストリ</a></li>
             <li><a href="../api/">ドキュメント</a></li>
             <li><a href="http://blog.nodejs.org">ブログ</a></li>
             <li><a href="../community/">コミュニティ</a></li>
@@ -21451,7 +21768,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.1/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.2/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

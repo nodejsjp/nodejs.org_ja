@@ -12,22 +12,26 @@
           "textRaw": "Class: https.Server",
           "type": "class",
           "name": "https.Server",
-          "desc": "<!--\nThis class is a subclass of `tls.Server` and emits events same as\n`http.Server`. See `http.Server` for more information.\n-->\n\n<p>このクラスは <code>tls.Server</code> のサブクラスで、<code>http.Server</code> と同様のイベントを生成します。\nより詳しくは <code>http.Server</code> を参照してください。\n\n</p>\n"
-        },
-        {
-          "textRaw": "Class: https.Agent",
-          "type": "class",
-          "name": "https.Agent",
-          "desc": "<!--\nAn Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]\nfor more information.\n-->\n\n<p>HTTPS 用の Agent オブジェクトで，[http.Agent][] と同様です。\n詳細は [https.request()][] を参照してください。\n\n</p>\n"
-        }
-      ],
-      "methods": [
-        {
-          "textRaw": "https.createServer(options, [requestListener])",
-          "type": "method",
-          "name": "createServer",
-          "desc": "<!--\nReturns a new HTTPS web server object. The `options` is similar to\n[tls.createServer()][].  The `requestListener` is a function which is\nautomatically added to the `'request'` event.\n-->\n\n<p>新しい HTTPS Web サーバオブジェクトを返します。\n<code>option</code> は [tls.createServer()][] と同じです。\n<code>requestListener</code> は関数で、 <code>&#39;request&#39;</code> イベントに自動的に追加されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// curl -k https://localhost:8000/\nvar https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;server.pfx&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n",
+          "desc": "<!--\nThis class is a subclass of `tls.Server` and emits events same as\n`http.Server`. See `http.Server` for more information.\n-->\n\n<p>このクラスは <code>tls.Server</code> のサブクラスで、<code>http.Server</code> と同様のイベントを生成します。\nより詳しくは <code>http.Server</code> を参照してください。\n\n</p>\n",
           "methods": [
+            {
+              "textRaw": "server.setTimeout(msecs, callback)",
+              "type": "method",
+              "name": "setTimeout",
+              "desc": "<!--\nSee [http.Server#setTimeout()][].\n-->\n\n<p>[http.Server#setTimeout()][] を参照してください。\n\n</p>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "msecs"
+                    },
+                    {
+                      "name": "callback"
+                    }
+                  ]
+                }
+              ]
+            },
             {
               "textRaw": "server.listen(path, [callback])",
               "type": "method",
@@ -94,20 +98,22 @@
               ]
             }
           ],
-          "signatures": [
+          "properties": [
             {
-              "params": [
-                {
-                  "name": "options"
-                },
-                {
-                  "name": "requestListener",
-                  "optional": true
-                }
-              ]
+              "textRaw": "server.timeout",
+              "name": "timeout",
+              "desc": "<!--\nSee [http.Server#timeout][].\n\n[http.Server#timeout][] を参照してください。\n\n## https.createServer(options, [requestListener])\n\n<!--\nReturns a new HTTPS web server object. The `options` is similar to\n[tls.createServer()][].  The `requestListener` is a function which is\nautomatically added to the `'request'` event.\n-->\n\n<p>新しい HTTPS Web サーバオブジェクトを返します。\n<code>option</code> は [tls.createServer()][] と同じです。\n<code>requestListener</code> は関数で、 <code>&#39;request&#39;</code> イベントに自動的に追加されます。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>// curl -k https://localhost:8000/\nvar https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  key: fs.readFileSync(&#39;test/fixtures/keys/agent2-key.pem&#39;),\n  cert: fs.readFileSync(&#39;test/fixtures/keys/agent2-cert.pem&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n<!--\nOr\n-->\n\n<p>または:\n\n</p>\n<pre><code>var https = require(&#39;https&#39;);\nvar fs = require(&#39;fs&#39;);\n\nvar options = {\n  pfx: fs.readFileSync(&#39;server.pfx&#39;)\n};\n\nhttps.createServer(options, function (req, res) {\n  res.writeHead(200);\n  res.end(&quot;hello world\\n&quot;);\n}).listen(8000);</code></pre>\n"
             }
           ]
         },
+        {
+          "textRaw": "Class: https.Agent",
+          "type": "class",
+          "name": "https.Agent",
+          "desc": "<!--\nAn Agent object for HTTPS similar to [http.Agent][].  See [https.request()][]\nfor more information.\n-->\n\n<p>HTTPS 用の Agent オブジェクトで，[http.Agent][] と同様です。\n詳細は [https.request()][] を参照してください。\n\n</p>\n"
+        }
+      ],
+      "methods": [
         {
           "textRaw": "https.request(options, callback)",
           "type": "method",
