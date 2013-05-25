@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.10.7 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.10.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -329,7 +329,7 @@ not be emitted.
 
 </p>
 <h3>Event: &#39;connect&#39;<span><a class="mark" href="#http_event_connect" id="http_event_connect">#</a></span></h3>
-<p><code>function (request, socket, head) { }</code>
+<p><code>function (request, socket) { }</code>
 
 </p>
 <!--
@@ -346,15 +346,11 @@ connections closed.
 * `request` is the arguments for the http request, as it is in the request
   event.
 * `socket` is the network socket between the server and client.
-* `head` is an instance of Buffer, the first packet of the tunneling stream,
-  this may be empty.
 -->
 
 <ul>
 <li><code>request</code> はリクエストイベントの引数と同様に HTTP リクエストです。</li>
 <li><code>socket</code> はサーバとクライアントの間のネットワークソケットです。</li>
-<li><code>head</code> はトンネリングストリームの最初のパケットを持つ Buffer のインスタンスです。
-空の場合もあります。</li>
 </ul>
 <!--
 After this event is emitted, the request's socket will not have a `data`
@@ -367,7 +363,7 @@ sent to the server on that socket.
 
 </p>
 <h3>Event: &#39;upgrade&#39;<span><a class="mark" href="#http_event_upgrade" id="http_event_upgrade">#</a></span></h3>
-<p><code>function (request, socket, head) { }</code>
+<p><code>function (request, socket) { }</code>
 
 </p>
 <!--
@@ -384,15 +380,11 @@ closed.
 * `request` is the arguments for the http request, as it is in the request
   event.
 * `socket` is the network socket between the server and client.
-* `head` is an instance of Buffer, the first packet of the upgraded stream,
-  this may be empty.
 -->
 
 <ul>
 <li><code>request</code> はリクエストイベントの引数と同様に HTTP リクエストです。</li>
 <li><code>socket</code> はサーバとクライアントの間のネットワークソケットです。</li>
-<li><code>head</code> はアップグレードストリームの最初のパケットを持つ Buffer のインスタンスです。
-空の場合もあります。</li>
 </ul>
 <!--
 After this event is emitted, the request's socket will not have a `data`
@@ -1407,7 +1399,7 @@ Emitted after a socket is assigned to this request.
 
 </p>
 <h3>Event: &#39;connect&#39;<span><a class="mark" href="#http_event_connect_1" id="http_event_connect_1">#</a></span></h3>
-<p><code>function (response, socket, head) { }</code>
+<p><code>function (response, socket) { }</code>
 
 </p>
 <!--
@@ -1438,14 +1430,13 @@ var proxy = http.createServer(function (req, res) {
   res.writeHead(200, {&#39;Content-Type&#39;: &#39;text/plain&#39;});
   res.end(&#39;okay&#39;);
 });
-proxy.on(&#39;connect&#39;, function(req, cltSocket, head) {
+proxy.on(&#39;connect&#39;, function(req, cltSocket) {
   // connect to an origin server
   var srvUrl = url.parse(&#39;http://&#39; + req.url);
   var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, function() {
     cltSocket.write(&#39;HTTP/1.1 200 Connection Established\r\n&#39; +
                     &#39;Proxy-agent: Node-Proxy\r\n&#39; +
                     &#39;\r\n&#39;);
-    srvSocket.write(head);
     srvSocket.pipe(cltSocket);
     cltSocket.pipe(srvSocket);
   });
@@ -1465,7 +1456,7 @@ proxy.listen(1337, &#39;127.0.0.1&#39;, function() {
   var req = http.request(options);
   req.end();
 
-  req.on(&#39;connect&#39;, function(res, socket, head) {
+  req.on(&#39;connect&#39;, function(res, socket) {
     console.log(&#39;got connected!&#39;);
 
     // make a request over an HTTP tunnel
@@ -1482,7 +1473,7 @@ proxy.listen(1337, &#39;127.0.0.1&#39;, function() {
   });
 });</code></pre>
 <h3>Event: &#39;upgrade&#39;<span><a class="mark" href="#http_event_upgrade_1" id="http_event_upgrade_1">#</a></span></h3>
-<p><code>function (response, socket, head) { }</code>
+<p><code>function (response, socket) { }</code>
 
 </p>
 <!--
@@ -1509,7 +1500,7 @@ var srv = http.createServer(function (req, res) {
   res.writeHead(200, {&#39;Content-Type&#39;: &#39;text/plain&#39;});
   res.end(&#39;okay&#39;);
 });
-srv.on(&#39;upgrade&#39;, function(req, socket, head) {
+srv.on(&#39;upgrade&#39;, function(req, socket) {
   socket.write(&#39;HTTP/1.1 101 Web Socket Protocol Handshake\r\n&#39; +
                &#39;Upgrade: WebSocket\r\n&#39; +
                &#39;Connection: Upgrade\r\n&#39; +
@@ -1534,7 +1525,7 @@ srv.listen(1337, &#39;127.0.0.1&#39;, function() {
   var req = http.request(options);
   req.end();
 
-  req.on(&#39;upgrade&#39;, function(res, socket, upgradeHead) {
+  req.on(&#39;upgrade&#39;, function(res, socket) {
     console.log(&#39;got upgraded!&#39;);
     socket.end();
     process.exit(0);
@@ -1896,7 +1887,7 @@ authentication details.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
