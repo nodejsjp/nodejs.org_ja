@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.8 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -10099,6 +10099,10 @@ Creates a new client connection to the given `port` and `host` (old API) or
     usually be much simpler: `['hello', 'world']`.)
 
   - `servername`: Servername for SNI (Server Name Indication) TLS extension.
+
+  - `secureProtocol`: The SSL method to use, e.g. `SSLv3_method` to force
+    SSL version 3. The possible values depend on your installation of
+    OpenSSL and are defined in the constant [SSL_METHODS][].
 -->
 
 <ul>
@@ -10137,6 +10141,10 @@ Creates a new client connection to the given `port` and `host` (old API) or
 (通常、配列を渡す方がシンプルです: <code>[&#39;hello&#39;, &#39;world&#39;]</code>)。</p>
 </li>
 <li><p><code>servername</code>: TLS 拡張である SNI (Server Name Indication) のサーバ名です。</p>
+</li>
+<li><p><code>secureProtocol</code>: 使用する SSL 方式、たとえば <code>SSLv3_method</code> は
+SSL バージョン 3 を強制します。可能な値はインストールされている OpenSSL
+と、その定数 <a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS">SSL_METHODS</a> の定義に依存します。</p>
 </li>
 </ul>
 <!--
@@ -10665,6 +10673,7 @@ The numeric representation of the remote port. For example, `443`.
 ['secureConnect']: #tls_event_secureconnect
 [secureConnection]: #tls_event_secureconnection
 [Stream]: stream.html#stream_stream
+[SSL_METHODS]: http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS
 [tls.Server]: #tls_class_tls_server
 -->
 
@@ -12008,7 +12017,6 @@ Returns a new ReadStream object (See `Readable Stream`).
   encoding: null,
   fd: null,
   mode: 0666,
-  bufferSize: 64 * 1024,
   autoClose: true
 }</code></pre>
 <!--
@@ -16277,6 +16285,9 @@ The following options from [tls.connect()][] can also be specified. However, a
   the list of supplied CAs. An `'error'` event is emitted if verification
   fails. Verification happens at the connection level, *before* the HTTP
   request is sent. Default `true`.
+- `secureProtocol`: The SSL method to use, e.g. `SSLv3_method` to force
+  SSL version 3. The possible values depend on your installation of
+  OpenSSL and are defined in the constant [SSL_METHODS][].
 -->
 
 <ul>
@@ -16295,6 +16306,9 @@ The following options from [tls.connect()][] can also be specified. However, a
 認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。
 認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
 デフォルトは <code>true</code> です。</li>
+<li><code>secureProtocol</code>: 使用する SSL 方式、たとえば <code>SSLv3_method</code> は
+SSL バージョン 3 を強制します。可能な値はインストールされている OpenSSL と、
+その定数 <a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS">SSL_METHODS</a> の定義に依存します。</li>
 </ul>
 <!--
 In order to specify these options, use a custom `Agent`.
@@ -18541,12 +18555,13 @@ that some connections will be handled by the parent and some by the child.
 <!--
 For `dgram` servers the workflow is exactly the same.  Here you listen on
 a `message` event instead of `connection` and use `server.bind` instead of
-`server.listen`.
+`server.listen`.  (Currently only supported on UNIX platforms.)
 -->
 
 <p><code>dgram</code> サーバのワークフローも同じです。
 <code>connection</code> イベントの代わりに <code>message</code> イベントを監視し、
-<code>server.listen</code> の代わりに <code>server.bind</code> を使用してください。
+<code>server.listen</code> の代わりに <code>server.bind</code> を使用してください
+(現時点では UNIX プラットフォームでのみサポートされています)。
 
 </p>
 <h4>Example: sending socket object<span><a class="mark" href="#all_example_sending_socket_object" id="all_example_sending_socket_object">#</a></span></h4>
@@ -21491,7 +21506,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
