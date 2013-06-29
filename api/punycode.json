@@ -12,7 +12,7 @@
           "textRaw": "punycode.decode(string)",
           "type": "method",
           "name": "decode",
-          "desc": "<!--\nConverts a Punycode string of ASCII code points to a string of Unicode code\npoints.\n-->\n\n<p>ASCII コードポイントによる Punycode 文字列を Unicode コードポイントに\n変換します。\n\n</p>\n<pre><code>// decode domain name parts\npunycode.decode(&#39;maana-pta&#39;); // &#39;mañana&#39;\npunycode.decode(&#39;--dqo34k&#39;); // &#39;☃-⌘&#39;</code></pre>\n",
+          "desc": "<!--\nConverts a Punycode string of ASCII-only symbols to a string of Unicode symbols.-->\n\n<p>ASCII 文字のみによる Punycode 文字列を Unicode 文字による文字列に変換します。\n\n\n</p>\n<pre><code>// decode domain name parts\npunycode.decode(&#39;maana-pta&#39;); // &#39;mañana&#39;\npunycode.decode(&#39;--dqo34k&#39;); // &#39;☃-⌘&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -27,7 +27,7 @@
           "textRaw": "punycode.encode(string)",
           "type": "method",
           "name": "encode",
-          "desc": "<!--\nConverts a string of Unicode code points to a Punycode string of ASCII code\npoints.\n-->\n\n<p>Unicode コードポイントを ASCII コードポイントによる Punycode 文字列に\n変換します。\n\n</p>\n<pre><code>// encode domain name parts\npunycode.encode(&#39;mañana&#39;); // &#39;maana-pta&#39;\npunycode.encode(&#39;☃-⌘&#39;); // &#39;--dqo34k&#39;</code></pre>\n",
+          "desc": "<!--\nConverts a string of Unicode symbols to a Punycode string of ASCII-only symbols.-->\n\n<p>Unicode 文字による文字列を ASCII 文字による Punycode 文字列に変換します。\n\n\n</p>\n<pre><code>// encode domain name parts\npunycode.encode(&#39;mañana&#39;); // &#39;maana-pta&#39;\npunycode.encode(&#39;☃-⌘&#39;); // &#39;--dqo34k&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -77,14 +77,14 @@
             {
               "textRaw": "punycode.ucs2.decode(string)",
               "name": "punycode.ucs2.decode(string)",
-              "desc": "<!--\nCreates an array containing the decimal code points of each Unicode character\nin the string. While [JavaScript uses UCS-2\ninternally](http://mathiasbynens.be/notes/javascript-encoding), this function\nwill convert a pair of surrogate halves (each of which UCS-2 exposes as\nseparate characters) into a single code point, matching UTF-16.\n-->\n\n<p>文字列中の Unicode 文字のコードポイントに対応する数値を含む配列を作成します。\n<a href=\"http://mathiasbynens.be/notes/javascript-encoding\">JavaScript uses UCS-2 internally</a>\nのように、この関数はサロゲートペア (それぞれは UCS-2 の独立した文字) を\nUTF-16 にマッチする一つのコードポイントに変換します。\n\n</p>\n<pre><code>punycode.ucs2.decode(&#39;abc&#39;); // [97, 98, 99]\n// surrogate pair for U+1D306 tetragram for centre:\npunycode.ucs2.decode(&#39;\\uD834\\uDF06&#39;); // [0x1D306]</code></pre>\n",
+              "desc": "<!--\nCreates an array containing the numeric code point values of each Unicode\nsymbol in the string. While [JavaScript uses UCS-2\ninternally](http://mathiasbynens.be/notes/javascript-encoding), this function\nwill convert a pair of surrogate halves (each of which UCS-2 exposes as\nseparate characters) into a single code point, matching UTF-16.\n-->\n\n<p>文字列中の Unicode 文字のコードポイントに対応する数値を含む配列を作成します。\n<a href=\"http://mathiasbynens.be/notes/javascript-encoding\">JavaScript uses UCS-2 internally</a>\nのように、この関数はサロゲートペア (それぞれは 16bit の独立した文字) を\n対応する Unicode の一つのコードポイントに変換します。\n\n</p>\n<pre><code>punycode.ucs2.decode(&#39;abc&#39;); // [0x61, 0x62, 0x63]\n// surrogate pair for U+1D306 tetragram for centre:\npunycode.ucs2.decode(&#39;\\uD834\\uDF06&#39;); // [0x1D306]</code></pre>\n",
               "type": "module",
               "displayName": "punycode.ucs2.decode(string)"
             },
             {
               "textRaw": "punycode.ucs2.encode(codePoints)",
               "name": "punycode.ucs2.encode(codepoints)",
-              "desc": "<!--\nCreates a string based on an array of decimal code points.\n-->\n\n<p>コードポイントの数値を含む配列を元に文字列を作成します。\n\n</p>\n<pre><code>punycode.ucs2.encode([97, 98, 99]); // &#39;abc&#39;\npunycode.ucs2.encode([0x1D306]); // &#39;\\uD834\\uDF06&#39;</code></pre>\n",
+              "desc": "<!--\nCreates a string based on an array of numeric code point values.\n-->\n\n<p>コードポイントの数値を含む配列を元に文字列を作成します。\n\n</p>\n<pre><code>punycode.ucs2.encode([0x61, 0x62, 0x63]); // &#39;abc&#39;\npunycode.ucs2.encode([0x1D306]); // &#39;\\uD834\\uDF06&#39;</code></pre>\n",
               "type": "module",
               "displayName": "punycode.ucs2.encode(codePoints)"
             }

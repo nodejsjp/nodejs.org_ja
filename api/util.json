@@ -6,8 +6,25 @@
       "name": "util",
       "stability": 5,
       "stabilityText": "Locked",
-      "desc": "<!--\nThese functions are in the module `'util'`. Use `require('util')` to access\nthem.\n-->\n\n<p>これらの関数はモジュール <code>&#39;util&#39;</code> 内にあります。\n<code>require(&#39;util&#39;)</code> を使うことでこれらにアクセスします。\n\n\n</p>\n",
+      "desc": "<!--\nThese functions are in the module `'util'`. Use `require('util')` to\naccess them.\n-->\n\n<p>これらの関数はモジュール <code>&#39;util&#39;</code> 内にあります。\n<code>require(&#39;util&#39;)</code> を使うことでこれらにアクセスします。\n\n</p>\n<!--\nThe `util` module is primarily designed to support the needs of Node's\ninternal APIs.  Many of these utilities are useful for your own\nprograms.  If you find that these functions are lacking for your\npurposes, however, you are encouraged to write your own utilities.  We\nare not interested in any future additions to the `util` module that\nare unnecessary for Node's internal functionality.\n-->\n\n<p><code>util</code> モジュールは、主に Node 自身の内部 API によるニーズを満たすために\n設計されています。\nこれらのユーティリティの多くはあなたのプログラムでも役に立つでしょう。\nしかしながら、もしこれらの機能にあなたの目的とするものが欠けているとしたら、\nその時はあなた自身のユーティリティを作成する時です。\n私たちは Node 内部の機能のために不必要などんな特性も\n<code>util</code> モジュールに加えることに関心がありません。\n\n</p>\n",
       "methods": [
+        {
+          "textRaw": "util.debuglog(section)",
+          "type": "method",
+          "name": "debuglog",
+          "desc": "<!--\n* `section` {String} The section of the program to be debugged\n* Returns: {Function} The logging function\n-->\n\n<ul>\n<li><code>section</code> {String} デバッグするプログラムのセクション</li>\n<li>Returns: {Function} ロギング関数</li>\n</ul>\n<!--\nThis is used to create a function which conditionally writes to stderr\nbased on the existence of a `NODE_DEBUG` environment variable.  If the\n`section` name appears in that environment variable, then the returned\nfunction will be similar to `console.error()`.  If not, then the\nreturned function is a no-op.\n-->\n\n<p>これは、<code>NDOE_DEBUG</code> 環境変数の有無に基づいて標準エラー出力に\n条件付きで出力する関数を作成して返します。\nもし <code>section</code> 名が環境変数に出現するなら、返される関数は\n<code>console.error()</code> と同じです。そうでなければ、何もしない関数が返されます。\n\n</p>\n<!--\nFor example:\n-->\n\n<p>例:\n\n</p>\n<pre><code class=\"javascript\">var debuglog = util.debuglog(&#39;foo&#39;);\n\nvar bar = 123;\ndebuglog(&#39;hello from foo [%d]&#39;, bar);</code></pre>\n<p>もしプログラムが環境 <code>NODE_DEBUG=foo</code> で実行されると、\nこれは次のように出力します。\n\n</p>\n<pre><code>FOO 3245: hello from foo [123]</code></pre>\n<!--\nwhere `3245` is the process id.  If it is not run with that\nenvironment variable set, then it will not print anything.\n-->\n\n<p><code>3245</code> はプロセス ID です。\n環境を設定することなく実行すると、これは出力されません。\n\n</p>\n<p><code>NODE_DEBUG</code> 環境変数はカンマ区切りで複数の値を設定することができます。\nたとえば、<code>NODE_DEBUG=fs,net,tls</code> 。\n\n</p>\n",
+          "If this program is run with `NODE_DEBUG": "foo` in the environment, then\nit will output something like:",
+          "You may separate multiple `NODE_DEBUG` environment variables with a\ncomma.  For example, `NODE_DEBUG": "fs,net,tls`.",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "section"
+                }
+              ]
+            }
+          ]
+        },
         {
           "textRaw": "util.format(format, [...])",
           "type": "method",
@@ -19,69 +36,6 @@
                 {
                   "name": "format"
                 },
-                {
-                  "name": "...",
-                  "optional": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "util.debug(string)",
-          "type": "method",
-          "name": "debug",
-          "desc": "<!--\nA synchronous output function. Will block the process and\noutput `string` immediately to `stderr`.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして即座に <code>string</code> を <code>stderr</code> に出力します。\n\n</p>\n<pre><code>require(&#39;util&#39;).debug(&#39;message on stderr&#39;);</code></pre>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "string"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "util.error([...])",
-          "type": "method",
-          "name": "error",
-          "desc": "<!--\nSame as `util.debug()` except this will output all arguments immediately to\n`stderr`.\n-->\n\n<p>全ての引数をすぐに <code>stderr</code> に出力することを除いて <code>util.debug()</code> と同じです。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "...",
-                  "optional": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "util.puts([...])",
-          "type": "method",
-          "name": "puts",
-          "desc": "<!--\nA synchronous output function. Will block the process and output all arguments\nto `stdout` with newlines after each argument.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして即座に <code>stdout</code> に出力します。\n各引数は改行が付加されます。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "...",
-                  "optional": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "textRaw": "util.print([...])",
-          "type": "method",
-          "name": "print",
-          "desc": "<!--\nA synchronous output function. Will block the process, cast each argument to a\nstring then output to `stdout`. Does not place newlines after each argument.\n-->\n\n<p>同期的な出力関数です。\nプロセスをブロックして、引数を文字列に変換して <code>stdout</code> に出力します。\n各引数に改行は付加されません。\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
                 {
                   "name": "...",
                   "optional": true
@@ -110,13 +64,12 @@
           "type": "method",
           "name": "inspect",
           "desc": "<!--\nReturn a string representation of `object`, which is useful for debugging.\n-->\n\n<p>デバッグで有用な、<code>object</code> の文字列表現を返します。\n\n</p>\n<!--\nAn optional *options* object may be passed that alters certain aspects of the\nformatted string:\n-->\n\n<p>オプションの <em>options</em> オブジェクトは、フォーマット化された文字列の\n特定の側面を変更するために渡すことができます。\n\n</p>\n<!--\n - `showHidden` - if `true` then the object's non-enumerable properties will be\n   shown too. Defaults to `false`.\n-->\n\n<ul>\n<li><code>showHidden</code> - <code>true</code> の場合、\nオブジェクトの Enumerable でないプロパティも表示されます。\nデフォルトは <code>false</code> です。</li>\n</ul>\n<!--\n - `depth` - tells `inspect` how many times to recurse while formatting the\n   object. This is useful for inspecting large complicated objects. Defaults to\n   `2`. To make it recurse indefinitely pass `null`.\n-->\n\n<ul>\n<li><code>depth</code> - オブジェクトをフォーマットするために何回再帰するかを\n<code>inspect</code> に伝えます。\nこれは巨大で複雑なオブジェクトを調査する場合に便利です。\nデフォルトは <code>2</code> です。\n無限に再帰するには、<code>null</code> を渡します。</li>\n</ul>\n<!--\n - `colors` - if `true`, then the output will be styled with ANSI color codes.\n   Defaults to `false`. Colors are customizable, see below.\n-->\n\n<ul>\n<li><code>colors</code> - <code>true</code> の場合、出力は ANSI カラーコードで色づけされます。\nデフォルトは <code>false</code> です。\n後述するように、色はカスタマイズ可能です。</li>\n</ul>\n<!--\n - `customInspect` - if `false`, then custom `inspect()` functions defined on the\n   objects being inspected won't be called. Defaults to `true`.\n-->\n\n<ul>\n<li><code>customInspect</code> - <code>false</code> の場合、オブジェクト独自の <code>inspect()</code> 関数は\n呼び出されません。デフォルトは <code>false</code> です。</li>\n</ul>\n<!--\nExample of inspecting all properties of the `util` object:\n-->\n\n<p><code>util</code> オブジェクトの全てのプロパティを調査する例:\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nconsole.log(util.inspect(util, { showHidden: true, depth: null }));</code></pre>\n",
-          "modules": [
+          "miscs": [
             {
               "textRaw": "Customizing `util.inspect` colors",
-              "name": "customizing_`util.inspect`_colors",
-              "desc": "<!--\nColor output (if enabled) of `util.inspect` is customizable globally\nvia `util.inspect.styles` and `util.inspect.colors` objects.\n-->\n\n<p><code>util.inspect</code> が出力する色は、(有効であれば) <code>util.inspect.styles</code> および\n<code>util.inspect.colors</code> オブジェクトを通じてグローバルにカスタマイズすることが\n可能です。\n\n</p>\n<!--\n`util.inspect.styles` is a map assigning each style a color\nfrom `util.inspect.colors`.\nHighlighted styles and their default values are:\n-->\n\n<p><code>util.inspect.styles</code> は各スタイルと <code>util.inspect.colors</code> に\n定義された色を割り当てたマッピングです。\n強調されるスタイルとそれらのデフォルト値は:\n\n</p>\n<!--\n * `number` (yellow)\n * `boolean` (yellow)\n * `string` (green)\n * `date` (magenta)\n * `regexp` (red)\n * `null` (bold)\n * `undefined` (grey)\n * `special` - only function at this time (cyan)\n * `name` (intentionally no styling)\n-->\n\n<ul>\n<li><code>number</code> (黄)</li>\n<li><code>boolean</code> (黄)</li>\n<li><code>string</code> (緑)</li>\n<li><code>date</code> (紫)</li>\n<li><code>regexp</code> (赤)</li>\n<li><code>null</code> (太字)</li>\n<li><code>undefined</code> (灰)</li>\n<li><code>special</code> - only function at this time (水色)</li>\n<li><code>name</code> (意図的にスタイル無し)</li>\n</ul>\n<!--\nPredefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, \n`green`, `magenta`, `red` and `yellow`.\nThere are also `bold`, `italic`, `underline` and `inverse` codes.\n-->\n\n<p>事前に定義された色は: <code>white</code>、<code>grey</code>、<code>black</code>、<code>blue</code>、<code>cyan</code>、\n<code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。\n<code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。\n\n</p>\n<!--\nObjects also may define their own `inspect(depth)` function which `util.inspect()`\nwill invoke and use the result of when inspecting the object:\n-->\n\n<p>オブジェクトは <code>util.inspect()</code> から呼び出される自前の <code>inspect(depth)</code>\n関数を持つことができ、その結果はオブジェクトを調査するために使われます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nvar obj = { name: &#39;nate&#39; };\nobj.inspect = function(depth) {\n  return &#39;{&#39; + this.name + &#39;}&#39;;\n};\n\nutil.inspect(obj);\n  // &quot;{nate}&quot;</code></pre>\n<!--\nYou may also return another Object entirely, and the returned String will be\nformatted according to the returned Object. This is similar to how\n`JSON.stringify()` works:\n-->\n\n<p>全く別のオブジェクトを返すこともできます。\n戻り値の文字列は、そのオブジェクトに従ってフォーマットされます。\nこれは <code>JSON.stringify()</code> の動作とよく似ています。\n\n</p>\n<pre><code>var obj = { foo: &#39;this will not show up in the inspect() output&#39; };\nobj.inspect = function(depth) {\n  return { bar: &#39;baz&#39; };\n};\n\nutil.inspect(obj);\n  // &quot;{ bar: &#39;baz&#39; }&quot;</code></pre>\n",
-              "type": "module",
-              "displayName": "Customizing `util.inspect` colors"
+              "name": "Customizing `util.inspect` colors",
+              "type": "misc",
+              "desc": "<!--\nColor output (if enabled) of `util.inspect` is customizable globally\nvia `util.inspect.styles` and `util.inspect.colors` objects.\n-->\n\n<p><code>util.inspect</code> が出力する色は、(有効であれば) <code>util.inspect.styles</code> および\n<code>util.inspect.colors</code> オブジェクトを通じてグローバルにカスタマイズすることが\n可能です。\n\n</p>\n<!--\n`util.inspect.styles` is a map assigning each style a color\nfrom `util.inspect.colors`.\nHighlighted styles and their default values are:\n-->\n\n<p><code>util.inspect.styles</code> は各スタイルと <code>util.inspect.colors</code> に\n定義された色を割り当てたマッピングです。\n強調されるスタイルとそれらのデフォルト値は:\n\n</p>\n<!--\n * `number` (yellow)\n * `boolean` (yellow)\n * `string` (green)\n * `date` (magenta)\n * `regexp` (red)\n * `null` (bold)\n * `undefined` (grey)\n * `special` - only function at this time (cyan)\n * `name` (intentionally no styling)\n-->\n\n<ul>\n<li><code>number</code> (黄)</li>\n<li><code>boolean</code> (黄)</li>\n<li><code>string</code> (緑)</li>\n<li><code>date</code> (紫)</li>\n<li><code>regexp</code> (赤)</li>\n<li><code>null</code> (太字)</li>\n<li><code>undefined</code> (灰)</li>\n<li><code>special</code> - only function at this time (水色)</li>\n<li><code>name</code> (意図的にスタイル無し)</li>\n</ul>\n<!--\nPredefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, \n`green`, `magenta`, `red` and `yellow`.\nThere are also `bold`, `italic`, `underline` and `inverse` codes.\n-->\n\n<p>事前に定義された色は: <code>white</code>、<code>grey</code>、<code>black</code>、<code>blue</code>、<code>cyan</code>、\n<code>green</code>、<code>magenta</code>、<code>red</code>、および <code>yellow</code> です。\n<code>bold</code>、<code>italic</code>、<code>underline</code>、および <code>inverse</code> コードを使うこともできます。\n\n</p>\n<!--\nObjects also may define their own `inspect(depth)` function which `util.inspect()`\nwill invoke and use the result of when inspecting the object:\n-->\n\n<p>オブジェクトは <code>util.inspect()</code> から呼び出される自前の <code>inspect(depth)</code>\n関数を持つことができ、その結果はオブジェクトを調査するために使われます。\n\n</p>\n<pre><code>var util = require(&#39;util&#39;);\n\nvar obj = { name: &#39;nate&#39; };\nobj.inspect = function(depth) {\n  return &#39;{&#39; + this.name + &#39;}&#39;;\n};\n\nutil.inspect(obj);\n  // &quot;{nate}&quot;</code></pre>\n<!--\nYou may also return another Object entirely, and the returned String will be\nformatted according to the returned Object. This is similar to how\n`JSON.stringify()` works:\n-->\n\n<p>全く別のオブジェクトを返すこともできます。\n戻り値の文字列は、そのオブジェクトに従ってフォーマットされます。\nこれは <code>JSON.stringify()</code> の動作とよく似ています。\n\n</p>\n<pre><code>var obj = { foo: &#39;this will not show up in the inspect() output&#39; };\nobj.inspect = function(depth) {\n  return { bar: &#39;baz&#39; };\n};\n\nutil.inspect(obj);\n  // &quot;{ bar: &#39;baz&#39; }&quot;</code></pre>\n"
             }
           ],
           "signatures": [
@@ -194,28 +147,6 @@
           ]
         },
         {
-          "textRaw": "util.pump(readableStream, writableStream, [callback])",
-          "type": "method",
-          "name": "pump",
-          "desc": "<!--\n    Stability: 0 - Deprecated: Use readableStream.pipe(writableStream)\n-->\n\n<pre><code>Stability: 0 - Deprecated: `readableStream.pipe(writableStream)` を使ってください。</code></pre>\n<!--\nRead the data from `readableStream` and send it to the `writableStream`.\nWhen `writableStream.write(data)` returns `false` `readableStream` will be\npaused until the `drain` event occurs on the `writableStream`. `callback` gets\nan error as its only argument and is called when `writableStream` is closed or\nwhen an error occurs.\n-->\n\n<p><code>readableStream</code> からデータを読み、それ を<code>writableStream</code> に送ります。\n<code>writableStream.write(data)</code> が <code>false</code> を返す場合、\n<code>writableStream</code> が <code>drain</code> イベントを生成するまで、\n<code>readableStream</code> は中断します。\n<code>writableStream</code> がクローズされるかエラーが発生すると、<code>callback</code> は error を唯一の引数として呼び出されます。\n\n\n</p>\n",
-          "signatures": [
-            {
-              "params": [
-                {
-                  "name": "readableStream"
-                },
-                {
-                  "name": "writableStream"
-                },
-                {
-                  "name": "callback",
-                  "optional": true
-                }
-              ]
-            }
-          ]
-        },
-        {
           "textRaw": "util.inherits(constructor, superConstructor)",
           "type": "method",
           "name": "inherits",
@@ -228,6 +159,101 @@
                 },
                 {
                   "name": "superConstructor"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.debug(string)",
+          "type": "method",
+          "name": "debug",
+          "stability": 0,
+          "stabilityText": "Deprecated: use console.error() instead.",
+          "desc": "<!--\nDeprecated predecessor of `console.error`.\n-->\n\n<p><code>console.error()</code> に置き換えられて廃止予定です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "string"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.error([...])",
+          "type": "method",
+          "name": "error",
+          "stability": 0,
+          "stabilityText": "Deprecated: Use console.error() instead.",
+          "desc": "<!--\nDeprecated predecessor of `console.error`.\n-->\n\n<p><code>console.error()</code> に置き換えられて廃止予定です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.puts([...])",
+          "type": "method",
+          "name": "puts",
+          "stability": 0,
+          "stabilityText": "Deprecated: Use console.log() instead.",
+          "desc": "<!--\nDeprecated predecessor of `console.log`.\n-->\n\n<p><code>console.log()</code> に置き換えられて廃止予定です。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.print([...])",
+          "type": "method",
+          "name": "print",
+          "stability": 0,
+          "stabilityText": "Deprecated: Use `console.log` instead.",
+          "desc": "<!--\nDeprecated predecessor of `console.log`.\n-->\n\n<p><code>console.log()</code> に置き換えられて廃止予定です。\n\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "...",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "util.pump(readableStream, writableStream, [callback])",
+          "type": "method",
+          "name": "pump",
+          "stability": 0,
+          "stabilityText": "Deprecated: Use readableStream.pipe(writableStream)",
+          "desc": "<!--\nDeprecated predecessor of `stream.pipe()`.\n-->\n\n<p><code>stream.pipe()</code> に置き換えられて廃止予定です。\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "readableStream"
+                },
+                {
+                  "name": "writableStream"
+                },
+                {
+                  "name": "callback",
+                  "optional": true
                 }
               ]
             }
