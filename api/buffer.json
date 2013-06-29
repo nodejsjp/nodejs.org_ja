@@ -62,27 +62,8 @@
               "textRaw": "Class Method: Buffer.byteLength(string, [encoding])",
               "type": "classMethod",
               "name": "byteLength",
+              "desc": "<!--\n* `string` String\n* `encoding` String, Optional, Default: 'utf8'\n* Return: Number\n-->\n\n<ul>\n<li><code>string</code> String</li>\n<li><code>encoding</code> String, 任意, デフォルト: &#39;utf8&#39;</li>\n<li>Return: Number</li>\n</ul>\n<!--\nGives the actual byte length of a string. `encoding` defaults to `'utf8'`.\nThis is not the same as `String.prototype.length` since that returns the\nnumber of *characters* in a string.\n-->\n\n<p>文字列の実際のバイト数を返します。<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。\nこれは文字列の<em>文字</em>数を返す <code>String.prototype.length</code> と同じではありません。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>str = &#39;\\u00bd + \\u00bc = \\u00be&#39;;\n\nconsole.log(str + &quot;: &quot; + str.length + &quot; characters, &quot; +\n  Buffer.byteLength(str, &#39;utf8&#39;) + &quot; bytes&quot;);\n\n// ½ + ¼ = ¾: 9 characters, 12 bytes</code></pre>\n",
               "signatures": [
-                {
-                  "return": {
-                    "textRaw": "Return: Number ",
-                    "name": "return",
-                    "desc": "Number"
-                  },
-                  "params": [
-                    {
-                      "textRaw": "`string` String ",
-                      "name": "string",
-                      "desc": "String"
-                    },
-                    {
-                      "textRaw": "`encoding` String, Optional, Default: 'utf8' ",
-                      "name": "encoding",
-                      "desc": "String, Optional, Default: 'utf8'",
-                      "optional": true
-                    }
-                  ]
-                },
                 {
                   "params": [
                     {
@@ -94,8 +75,7 @@
                     }
                   ]
                 }
-              ],
-              "desc": "<!--\nGives the actual byte length of a string. `encoding` defaults to `'utf8'`.\nThis is not the same as `String.prototype.length` since that returns the\nnumber of *characters* in a string.\n-->\n\n<p>文字列の実際のバイト数を返します。<code>encoding</code> のデフォルトは <code>&#39;utf8&#39;</code> です。\nこれは文字列の<em>文字</em>数を返す <code>String.prototype.length</code> と同じではありません。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>str = &#39;\\u00bd + \\u00bc = \\u00be&#39;;\n\nconsole.log(str + &quot;: &quot; + str.length + &quot; characters, &quot; +\n  Buffer.byteLength(str, &#39;utf8&#39;) + &quot; bytes&quot;);\n\n// ½ + ¼ = ¾: 9 characters, 12 bytes</code></pre>\n"
+              ]
             },
             {
               "textRaw": "Class Method: Buffer.concat(list, [totalLength])",
@@ -115,6 +95,62 @@
                   ]
                 }
               ]
+            },
+            {
+              "textRaw": "Class Method: Buffer.alloc(length, [receiver])",
+              "type": "classMethod",
+              "name": "alloc",
+              "desc": "<!--\n* `length` Number\n* `receiver` Object, Optional, Default: `new Object`\n-->\n\n<ul>\n<li><code>length</code> Number</li>\n<li><code>receiver</code> Object, 任意, デフォルト: <code>new Object</code></li>\n</ul>\n<!--\n**(EXPERIMENTAL)** Returns object with allocated external array data.\n-->\n\n<p><strong>(実験的)</strong> オブジェクトを外部配列のデータに割り当てて返します。\n\n</p>\n<!--\nBuffers are backed by a simple allocator that only handles the assignation of\nexternal raw memory. This exposes that functionality.\n-->\n\n<p>Buffer は外部にある生のメモリを割り当てるだけの単純なアロケータによって\n扱われます。これはその機能を公開します。\n\n</p>\n<!--\nNo pooling is performed for these allocations. So there's no form of memory\nleak.\n-->\n\n<p>これらの割り当てにプーリングは適用されません。\nそのため、メモリリークする形式はありません。\n\n</p>\n<!--\nThis can be used to create your own Buffer-like classes.\n-->\n\n<p>これは Buffer に似た独自のクラスを作成するために使用することができます。\n\n</p>\n<pre><code>function SimpleData(n) {\n  this.length = n;\n  Buffer.alloc(this.length, this);\n}\n\nSimpleData.prototype = { /* ... */ };</code></pre>\n",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "name": "length"
+                    },
+                    {
+                      "name": "receiver",
+                      "optional": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "textRaw": "Class Method: Buffer.dispose(obj)",
+              "type": "classMethod",
+              "name": "dispose",
+              "signatures": [
+                {
+                  "params": [
+                    {
+                      "textRaw": "`obj` Object ",
+                      "name": "obj",
+                      "desc": "Object"
+                    }
+                  ]
+                },
+                {
+                  "params": [
+                    {
+                      "name": "obj"
+                    }
+                  ]
+                }
+              ],
+              "desc": "<!--\n**(EXPERIMENTAL)** Free memory that has been allocated to an object via\n`Buffer.alloc`.\n-->\n\n<p><strong>(実験的)</strong> <code>Buffer.alloc()</code> によって割り当てられたオブジェクトを解放します。\n\n</p>\n<pre><code>var a = {};\nBuffer.alloc(3, a);\n\n// { &#39;0&#39;: 0, &#39;1&#39;: 0, &#39;2&#39;: 0 }\n\nBuffer.dispose(a);\n\n// {}</code></pre>\n"
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "`length` Number ",
+              "name": "length",
+              "desc": "<!--\nThe size of the buffer in bytes.  Note that this is not necessarily the size\nof the contents. `length` refers to the amount of memory allocated for the\nbuffer object.  It does not change when the contents of the buffer are changed.\n-->\n\n<p>バイト数によるバッファのサイズ。\nこれは実際の内容のサイズではないことに注意してください。\n<code>length</code> はバッファオブジェクトに割り当てられたメモリ全体を参照します。\n\n</p>\n<pre><code>buf = new Buffer(1234);\n\nconsole.log(buf.length);\nbuf.write(&quot;some string&quot;, 0, &quot;ascii&quot;);\nconsole.log(buf.length);\n\n// 1234\n// 1234</code></pre>\n",
+              "shortDesc": "Number"
+            },
+            {
+              "textRaw": "buf[index]",
+              "name": "[index]",
+              "desc": "<!--\nGet and set the octet at `index`. The values refer to individual bytes,\nso the legal range is between `0x00` and `0xFF` hex or `0` and `255`.\n-->\n\n<p><code>index</code> の位置のオクテットを取得および設定します。\nその値は個々のバイトを参照するので、妥当な範囲は 16 進の <code>0x00</code> から <code>0xFF</code>\nまたは <code>0</code> から<code>255</code>までの間です。\n\n</p>\n<!--\nExample: copy an ASCII string into a buffer, one byte at a time:\n-->\n\n<p>例: ASCII 文字列を 1 バイトずつバッファにコピーします\n\n</p>\n<pre><code>str = &quot;node.js&quot;;\nbuf = new Buffer(str.length);\n\nfor (var i = 0; i &lt; str.length ; i++) {\n  buf[i] = str.charCodeAt(i);\n}\n\nconsole.log(buf);\n\n// node.js</code></pre>\n"
             }
           ],
           "methods": [
@@ -1593,19 +1629,6 @@
               "desc": "<!--\nFills the buffer with the specified value. If the `offset` (defaults to `0`)\nand `end` (defaults to `buffer.length`) are not given it will fill the entire\nbuffer.\n-->\n\n<p>指定された値でバッファを埋めます。\n<code>offset</code> (デフォルトは <code>0</code>) と <code>end</code> (デフォルトは <code>buffer.length</code>)\nFが与えられなかった場合はバッファ全体を埋めます。\n\n</p>\n<pre><code>var b = new Buffer(50);\nb.fill(&quot;h&quot;);</code></pre>\n"
             }
           ],
-          "properties": [
-            {
-              "textRaw": "buf[index]",
-              "name": "[index]",
-              "desc": "<!--\nGet and set the octet at `index`. The values refer to individual bytes,\nso the legal range is between `0x00` and `0xFF` hex or `0` and `255`.\n-->\n\n<p><code>index</code> の位置のオクテットを取得および設定します。\nその値は個々のバイトを参照するので、妥当な範囲は 16 進の <code>0x00</code> から <code>0xFF</code>\nまたは <code>0</code> から<code>255</code>までの間です。\n\n</p>\n<!--\nExample: copy an ASCII string into a buffer, one byte at a time:\n-->\n\n<p>例: ASCII 文字列を 1 バイトずつバッファにコピーします\n\n</p>\n<pre><code>str = &quot;node.js&quot;;\nbuf = new Buffer(str.length);\n\nfor (var i = 0; i &lt; str.length ; i++) {\n  buf[i] = str.charCodeAt(i);\n}\n\nconsole.log(buf);\n\n// node.js</code></pre>\n"
-            },
-            {
-              "textRaw": "`length` Number ",
-              "name": "length",
-              "desc": "<!--\nThe size of the buffer in bytes.  Note that this is not necessarily the size\nof the contents. `length` refers to the amount of memory allocated for the\nbuffer object.  It does not change when the contents of the buffer are changed.\n-->\n\n<p>バイト数によるバッファのサイズ。\nこれは実際の内容のサイズではないことに注意してください。\n<code>length</code> はバッファオブジェクトに割り当てられたメモリ全体を参照します。\n\n</p>\n<pre><code>buf = new Buffer(1234);\n\nconsole.log(buf.length);\nbuf.write(&quot;some string&quot;, 0, &quot;ascii&quot;);\nconsole.log(buf.length);\n\n// 1234\n// 1234</code></pre>\n",
-              "shortDesc": "Number"
-            }
-          ],
           "signatures": [
             {
               "params": [
@@ -1661,7 +1684,7 @@
           "textRaw": "Class: SlowBuffer",
           "type": "class",
           "name": "SlowBuffer",
-          "desc": "<!--\nThis class is primarily for internal use.  JavaScript programs should\nuse Buffer instead of using SlowBuffer.\n\nIn order to avoid the overhead of allocating many C++ Buffer objects for\nsmall blocks of memory in the lifetime of a server, Node allocates memory\nin 8Kb (8192 byte) chunks.  If a buffer is smaller than this size, then it\nwill be backed by a parent SlowBuffer object.  If it is larger than this,\nthen Node will allocate a SlowBuffer slab for it directly.\n-->\n\n<p>このクラスは主に内部利用のためのものです。JavaScsript プログラムは SlowBuffer\nよりも Buffer を使用すべきです。\n\n</p>\n<p>サーバの動作中に、小さなメモリブロックのために多くの C++ バッファオブジェクトが\n割り当てられるオーバーヘッドを避けるため、Node はメモリを 8Kb (8192 バイト) の\nチャンク内に割り当てます。もしバッファがこのサイズより小さければ、それは\n親の SlowBuffer に支えられます。それより大きければ、Node は SlowBuffer を\n直接割り当てます。\n</p>\n"
+          "desc": "<!--\nReturns an un-pooled `Buffer`.\n-->\n\n<p>プールされていない <code>Buffer</code> オブジェクトを返します。\n\n</p>\n<!--\nIn order to avoid the garbage collection overhead of creating many individually\nallocated Buffers, by default allocations under 4KB are sliced from a single\nlarger allocated object. This approach improves both performance and memory\nusage since v8 does not need to track and cleanup as many `Persistent` objects.\n-->\n\n<p>多くの独立したバッファを割り当てることによるガーベッジコレクションの\nオーバーヘッドを避けるため、デフォルトでは 4KB 以下のバッファは大きな\n単一のバッファから切り出されて割り当てられます。\nこのアプローチは、v8 が多くの「永続的な」オブジェクトを追跡して\nクリーンアップする必要を無くすため、パフォーマンスとメモリ使用量の両方を\n改善します。\n\n</p>\n<!--\nIn the case where a developer may need to retain a small chunk of memory from a\npool for an indeterminate amount of time it may be appropriate to create an\nun-pooled Buffer instance using SlowBuffer and copy out the relevant bits.\n-->\n\n<p>プールから得た小さなメモリ片を不確定の時間保持する必要がある場合は、\n<code>SlowBuffer</code> を使ってプールされていない <code>Buffer</code> のインスタンスを作成し、\n関連したビットを全てコピーすることが適切な場合があります。\n\n</p>\n<pre><code>// need to keep around a few small chunks of memory\nvar store = [];\n\nsocket.on(&#39;readable&#39;, function() {\n  var data = socket.read();\n  // allocate for retained data\n  var sb = new SlowBuffer(10);\n  // copy the data into the new allocation\n  data.copy(sb, 0, 0, 10);\n  store.push(sb);\n});</code></pre>\n<!--\nThough this should used sparingly and only be a last resort *after* a developer\nhas actively observed undue memory retention in their applications.\n-->\n\n<p>しかし、これはアプリケーションで不適切なメモリの保持が盛大に観測された <em>後で</em>、\n最後の手段として控えめに使用されるべきです。\n</p>\n"
         }
       ],
       "properties": [

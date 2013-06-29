@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Addons Node.js v0.11.2 Manual &amp; Documentation</title>
+  <title>Addons Node.js v0.11.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/addons.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -175,13 +175,11 @@ First we create a file `hello.cc`:
 
 </p>
 <pre><code>#include &lt;node.h&gt;
-#include &lt;v8.h&gt;
-
-Isolate* isolate = Isolate::GetCurrent();
 
 using namespace v8;
 
 Handle&lt;Value&gt; Method(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
   return scope.Close(String::New(&quot;world&quot;));
 }
@@ -203,7 +201,8 @@ Note that all Node addons must export an initialization function:
 <pre><code>void Initialize (Handle&lt;Object&gt; exports);
 NODE_MODULE(module_name, Initialize)</code></pre>
 <!--
-There is no semi-colon after `NODE_MODULE` as it's not a function (see `node.h`).
+There is no semi-colon after `NODE_MODULE` as it's not a function (see
+`node.h`).
 
 The `module_name` needs to match the filename of the final binary (minus the
 .node suffix).
@@ -268,8 +267,8 @@ in `build/Release/`.
 
 </p>
 <!--
-You can now use the binary addon in a Node project `hello.js` by pointing `require` to
-the recently built `hello.node` module:
+You can now use the binary addon in a Node project `hello.js` by pointing
+`require` to the recently built `hello.node` module:
 -->
 
 <p>ビルドされた <code>hello.node</code> モジュールを <code>require</code> で指定することにより、
@@ -327,8 +326,8 @@ Create the following `binding.gyp` file:
   ]
 }</code></pre>
 <!--
-In cases where there is more than one `.cc` file, simply add the file name to the
-`sources` array, e.g.:
+In cases where there is more than one `.cc` file, simply add the file name to
+the `sources` array, e.g.:
 -->
 
 <p>一つ以上の <code>.cc</code> ファイルがある場合は、単純に <code>sources</code> 配列にファイル名を
@@ -357,18 +356,17 @@ function calls and return a result. This is the main and only needed source
 結果を返す方法を示します。これは <code>addon.cc</code> でのみ必要となります。
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
-
-Isolate* isolate = Isolate::GetCurrent();
+<pre><code>#include &lt;node.h&gt;
 
 using namespace v8;
 
 Handle&lt;Value&gt; Add(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   if (args.Length() &lt; 2) {
-    ThrowException(Exception::TypeError(String::New(&quot;Wrong number of arguments&quot;)));
+    ThrowException(Exception::TypeError(
+        String::New(&quot;Wrong number of arguments&quot;)));
     return scope.Close(Undefined(isolate));
   }
 
@@ -408,19 +406,17 @@ there. Here's `addon.cc`:
 これは <code>addon.cc</code> です:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
-
-Isolate* isolate = Isolate::GetCurrent();
+<pre><code>#include &lt;node.h&gt;
 
 using namespace v8;
 
 Handle&lt;Value&gt; RunCallback(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[0]);
   const unsigned argc = 1;
-  Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(&quot;hello world&quot;)) };
+  Local&lt;Value&gt; argv[argc] = { String::New(&quot;hello world&quot;) };
   cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);
 
   return scope.Close(Undefined(isolate));
@@ -469,14 +465,12 @@ the string passed to `createObject()`:
 反映する <code>msg</code> プロパティを持ったオブジェクトを返します。
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
-
-Isolate* isolate = Isolate::GetCurrent();
+<pre><code>#include &lt;node.h&gt;
 
 using namespace v8;
 
 Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   Local&lt;Object&gt; obj = Object::New();
@@ -513,24 +507,25 @@ wraps a C++ function:
 示します。
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
-
-Isolate* isolate = Isolate::GetCurrent();
+<pre><code>#include &lt;node.h&gt;
 
 using namespace v8;
 
 Handle&lt;Value&gt; MyFunction(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
   return scope.Close(String::New(&quot;hello world&quot;));
 }
 
 Handle&lt;Value&gt; CreateFunction(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(MyFunction);
   Local&lt;Function&gt; fn = tpl-&gt;GetFunction();
-  fn-&gt;SetName(String::NewSymbol(&quot;theFunction&quot;)); // omit this to make it anonymous
+
+  // omit this to make it anonymous
+  fn-&gt;SetName(String::NewSymbol(&quot;theFunction&quot;));
 
   return scope.Close(fn);
 }
@@ -565,8 +560,7 @@ C++ オブジェクト／クラスをラップし、JavaScript から new 演算
 最初にメインモジュール <code>addon.cc</code> を準備します:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
+<pre><code>#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
@@ -612,11 +606,8 @@ prototype:
 ここでは、コンストラクタに渡された値に加算する <code>plusOne</code> を公開しています:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
+<pre><code>#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
-
-Isolate* isolate = Isolate::GetCurrent();
 
 using namespace v8;
 
@@ -624,19 +615,25 @@ MyObject::MyObject() {};
 MyObject::~MyObject() {};
 
 void MyObject::Init(Handle&lt;Object&gt; exports) {
+  Isolate* isolate = Isolate::GetCurrent();
+
   // Prepare constructor template
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
   tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
   tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
+
   // Prototype
   tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
       FunctionTemplate::New(PlusOne)-&gt;GetFunction());
 
-  Persistent&lt;Function&gt; constructor = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
+  Persistent&lt;Function&gt; constructor
+      = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
+
   exports-&gt;Set(String::NewSymbol(&quot;MyObject&quot;), constructor);
 }
 
 Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = new MyObject();
@@ -647,6 +644,7 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
@@ -687,15 +685,13 @@ Let's register our `createObject` method in `addon.cc`:
 <p>createObject<code> を </code>addon.cc` に登録しましょう:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
+<pre><code>#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
-
-Isolate* isolate = Isolate::GetCurrent();
 
 using namespace v8;
 
 Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
   return scope.Close(MyObject::NewInstance(args));
 }
@@ -717,8 +713,7 @@ care of instantiating the object (i.e. it does the job of `new` in JavaScript):
 導入しましょう (すなわち，それが JavaScript 内の <code>new</code> の働きをします)。
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#ifndef MYOBJECT_H
+<pre><code>#ifndef MYOBJECT_H
 #define MYOBJECT_H
 
 #include &lt;node.h&gt;
@@ -746,11 +741,8 @@ The implementation is similar to the above in `myobject.cc`:
 <p>実装は前述の <code>myobject.cc</code> と同様です:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
+<pre><code>#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
-
-Isolate* isolate = Isolate::GetCurrent();
 
 using namespace v8;
 
@@ -760,10 +752,12 @@ MyObject::~MyObject() {};
 Persistent&lt;Function&gt; MyObject::constructor;
 
 void MyObject::Init() {
+  Isolate* isolate = Isolate::GetCurrent();
   // Prepare constructor template
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
   tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
   tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
+
   // Prototype
   tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
       FunctionTemplate::New(PlusOne)-&gt;GetFunction());
@@ -772,6 +766,7 @@ void MyObject::Init() {
 }
 
 Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = new MyObject();
@@ -782,6 +777,7 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   const unsigned argc = 1;
@@ -792,6 +788,7 @@ Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
@@ -831,20 +828,19 @@ In the following `addon.cc` we introduce a function `add()` that can take on two
 関数を導入します:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
+<pre><code>#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
-
-Isolate* isolate = Isolate::GetCurrent();
 
 using namespace v8;
 
 Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
   return scope.Close(MyObject::NewInstance(args));
 }
 
 Handle&lt;Value&gt; Add(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj1 = node::ObjectWrap::Unwrap&lt;MyObject&gt;(
@@ -877,8 +873,7 @@ can probe private values after unwrapping the object:
 できます。
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#ifndef MYOBJECT_H
+<pre><code>#ifndef MYOBJECT_H
 #define MYOBJECT_H
 
 #include &lt;node.h&gt;
@@ -906,11 +901,8 @@ The implementation of `myobject.cc` is similar as before:
 <p><code>myobject.cc</code> の実装はこれまでと同様です:
 
 </p>
-<pre><code>#define BUILDING_NODE_EXTENSION
-#include &lt;node.h&gt;
+<pre><code>#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
-
-Isolate* isolate = Isolate::GetCurrent();
 
 using namespace v8;
 
@@ -920,15 +912,18 @@ MyObject::~MyObject() {};
 Persistent&lt;Function&gt; MyObject::constructor;
 
 void MyObject::Init() {
+  Isolate* isolate = Isolate::GetCurrent();
+
   // Prepare constructor template
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
   tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
   tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
 
-  constructor = Persistent&lt;Function&gt;::New(tpl-&gt;GetFunction());
+  constructor = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
 }
 
 Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = new MyObject();
@@ -939,6 +934,7 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
 }
 
 Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
+  Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   const unsigned argc = 1;
@@ -990,7 +986,7 @@ console.log(result); // 30</code></pre>
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
