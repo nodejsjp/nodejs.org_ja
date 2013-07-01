@@ -1410,7 +1410,7 @@
           "type": "method",
           "name": "unwatchFile",
           "stability": 2,
-          "stabilityText": "Unstable.  Use fs.watch instead, if available.",
+          "stabilityText": "Unstable.  Use fs.watch instead, if possible.",
           "desc": "<!--\nStop watching for changes on `filename`. If `listener` is specified, only that\nparticular listener is removed. Otherwise, *all* listeners are removed and you\nhave effectively stopped watching `filename`.\n\nCalling `fs.unwatchFile()` with a filename that is not being watched is a\nno-op, not an error.\n-->\n\n<p><code>filename</code> の変更に対する監視を終了します。\n<code>listener</code> が指定された場合は該当の <code>listener</code> だけが取り除かれます。\nそうでなければ、<em>全ての</em> リスナが取り除かれ、\n<code>filenam</code> の監視は事実上終了します。\n\n</p>\n<p>監視されていないファイル名を指定した <code>fs.unwatchFile()</code> の呼び出しは\nエラーになるのではなく、何もしません。\n\n</p>\n",
           "signatures": [
             {
@@ -1510,7 +1510,7 @@
           "textRaw": "fs.createReadStream(path, [options])",
           "type": "method",
           "name": "createReadStream",
-          "desc": "<!--\nReturns a new ReadStream object (See `Readable Stream`).\n-->\n\n<p>新しい ReadStream オブジェクトを返します (<code>Readable Stream</code> を参照してください)。\n\n</p>\n<!--\n`options` is an object with the following defaults:\n-->\n\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ flags: &#39;r&#39;,\n  encoding: null,\n  fd: null,\n  mode: 0666,\n  bufferSize: 64 * 1024,\n  autoClose: true\n}</code></pre>\n<!--\n`options` can include `start` and `end` values to read a range of bytes from\nthe file instead of the entire file.  Both `start` and `end` are inclusive and\nstart at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.\n-->\n\n<p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、\n<code>options</code> に <code>start</code> および <code>end</code> を含めることができます。\n<code>start</code> と <code>end</code> はどちらも包含的で0から始まります。\n<code>encoding</code> は <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、または <code>&#39;base64&#39;</code> です。\n\n</p>\n<!--\nIf `autoClose` is false, then the file descriptor won't be closed, even if\nthere's an error.  It is your responsibility to close it and make sure\nthere's no file descriptor leak.  If `autoClose` is set to true (default\nbehavior), on `error` or `end` the file descriptor will be closed\nautomatically.\n-->\n\n<p><code>autoClose</code> が <code>false</code> の場合、エラーが発生しない限りファイル記述子は\nクローズされません。ファイルをクローズし、ファイル記述子が\nリークしないようにするのはあなたの責務です。\n<code>autoClose</code> が <code>true</code> に設定されると (デフォルトの振る舞いです)、\n<code>error</code> または <code>end</code> によってファイル記述子は自動的にクローズされます。\n\n</p>\n<!--\nAn example to read the last 10 bytes of a file which is 100 bytes long:\n-->\n\n<p>100 バイトの長さを持つファイルの最後の 10 バイトを読み込む例:\n\n</p>\n<pre><code>fs.createReadStream(&#39;sample.txt&#39;, {start: 90, end: 99});</code></pre>\n",
+          "desc": "<!--\nReturns a new ReadStream object (See `Readable Stream`).\n-->\n\n<p>新しい ReadStream オブジェクトを返します (<code>Readable Stream</code> を参照してください)。\n\n</p>\n<!--\n`options` is an object with the following defaults:\n-->\n\n<p><code>options</code> は以下のデフォルト値を持つオブジェクトです:\n\n</p>\n<pre><code>{ flags: &#39;r&#39;,\n  encoding: null,\n  fd: null,\n  mode: 0666,\n  autoClose: true\n}</code></pre>\n<!--\n`options` can include `start` and `end` values to read a range of bytes from\nthe file instead of the entire file.  Both `start` and `end` are inclusive and\nstart at 0. The `encoding` can be `'utf8'`, `'ascii'`, or `'base64'`.\n-->\n\n<p>ファイル全体を読み込む代わりに一部の範囲を読み込むため、\n<code>options</code> に <code>start</code> および <code>end</code> を含めることができます。\n<code>start</code> と <code>end</code> はどちらも包含的で0から始まります。\n<code>encoding</code> は <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、または <code>&#39;base64&#39;</code> です。\n\n</p>\n<!--\nIf `autoClose` is false, then the file descriptor won't be closed, even if\nthere's an error.  It is your responsibility to close it and make sure\nthere's no file descriptor leak.  If `autoClose` is set to true (default\nbehavior), on `error` or `end` the file descriptor will be closed\nautomatically.\n-->\n\n<p><code>autoClose</code> が <code>false</code> の場合、エラーが発生しない限りファイル記述子は\nクローズされません。ファイルをクローズし、ファイル記述子が\nリークしないようにするのはあなたの責務です。\n<code>autoClose</code> が <code>true</code> に設定されると (デフォルトの振る舞いです)、\n<code>error</code> または <code>end</code> によってファイル記述子は自動的にクローズされます。\n\n</p>\n<!--\nAn example to read the last 10 bytes of a file which is 100 bytes long:\n-->\n\n<p>100 バイトの長さを持つファイルの最後の 10 バイトを読み込む例:\n\n</p>\n<pre><code>fs.createReadStream(&#39;sample.txt&#39;, {start: 90, end: 99});</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -1556,7 +1556,7 @@
           "textRaw": "Class: fs.ReadStream",
           "type": "class",
           "name": "fs.ReadStream",
-          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#stream_readable_stream).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#stream_readable_stream\">Readable Stream</a> です。\n\n</p>\n",
+          "desc": "<!--\n`ReadStream` is a [Readable Stream](stream.html#stream_class_stream_readable).\n-->\n\n<p><code>ReadStream</code> は <a href=\"stream.html#stream_class_stream_readable\">Readable Stream</a>\nです。\n\n</p>\n",
           "events": [
             {
               "textRaw": "Event: 'open'",
@@ -1564,6 +1564,28 @@
               "name": "open",
               "desc": "<!--\n* `fd` {Integer} file descriptor used by the ReadStream.\n\nEmitted when the ReadStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} ReadStream で使われる ファイル記述子。</li>\n</ul>\n<p>ReadStream のファイルがオープンされた場合に生成されます。\n\n\n</p>\n",
               "params": []
+            }
+          ]
+        },
+        {
+          "textRaw": "Class: fs.WriteStream",
+          "type": "class",
+          "name": "fs.WriteStream",
+          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#stream_class_stream_writable).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#stream_class_stream_writable\">Writable Stream</a>\nです。\n\n</p>\n",
+          "events": [
+            {
+              "textRaw": "Event: 'open'",
+              "type": "event",
+              "name": "open",
+              "desc": "<!--\n* `fd` {Integer} file descriptor used by the WriteStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
+              "params": []
+            }
+          ],
+          "properties": [
+            {
+              "textRaw": "file.bytesWritten",
+              "name": "bytesWritten",
+              "desc": "<!--\nThe number of bytes written so far. Does not include data that is still queued\nfor writing.\n-->\n\n<p>これまでに書き込まれたバイト数。\n書き込みがキューイングされたままのデータは含まれません。\n\n</p>\n"
             }
           ]
         },
@@ -1599,29 +1621,6 @@
               "name": "error",
               "params": [],
               "desc": "<!--\nEmitted when an error occurs.\n-->\n\n<p>エラーが発生すると生成されます。\n</p>\n"
-            }
-          ]
-        }
-      ],
-      "properties": [
-        {
-          "textRaw": "fs.WriteStream",
-          "name": "WriteStream",
-          "desc": "<!--\n`WriteStream` is a [Writable Stream](stream.html#stream_writable_stream).\n-->\n\n<p><code>WriteStream</code> は <a href=\"stream.html#stream_writable_stream\">Writable Stream</a> です。\n\n</p>\n",
-          "events": [
-            {
-              "textRaw": "Event: 'open'",
-              "type": "event",
-              "name": "open",
-              "desc": "<!--\n* `fd` {Integer} file descriptor used by the WriteStream.\n\nEmitted when the WriteStream's file is opened.\n-->\n\n<ul>\n<li><code>fd</code> {Integer} WriteStream で使われる ファイル記述子。</li>\n</ul>\n<p>WriteStream のファイルがオープンされた場合に生成されます。\n\n</p>\n",
-              "params": []
-            }
-          ],
-          "properties": [
-            {
-              "textRaw": "file.bytesWritten",
-              "name": "bytesWritten",
-              "desc": "<!--\nThe number of bytes written so far. Does not include data that is still queued\nfor writing.\n-->\n\n<p>これまでに書き込まれたバイト数。\n書き込みがキューイングされたままのデータは含まれません。\n\n</p>\n"
             }
           ]
         }

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Modules Node.js v0.11.2 Manual &amp; Documentation</title>
+  <title>Modules Node.js v0.11.3 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/modules.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.2 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.3 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -130,22 +130,46 @@ exports.circumference = function (r) {
 The module `circle.js` has exported the functions `area()` and
 `circumference()`.  To export an object, add to the special `exports`
 object.
+-->
 
+<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> を公開しています。
+オブジェクトを公開するには、 <code>exports</code> という特別なオブジェクトに加えます。
+
+</p>
+<!--
+Note that `exports` is a reference to `module.exports` making it suitable
+for augmentation only. If you are exporting a single item such as a
+constructor you will want to use `module.exports` directly instead.
+-->
+
+<p><code>exports</code> は <code>module.exports</code> を参照しているに過ぎないことに注意してください。
+もしコンストラクタなど単一の項目を公開する場合は、<code>module.exports</code> を直接
+使いたくなるでしょう。
+
+</p>
+<pre><code>function MyConstructor (opts) {
+  //...
+}
+
+// BROKEN: Does not modify exports
+exports = MyConstructor;
+
+// exports the constructor properly
+module.exports = MyConstructor;</code></pre>
+<!--
 Variables
 local to the module will be private. In this example the variable `PI` is
 private to `circle.js`.
-
-The module system is implemented in the `require("module")` module.
 -->
 
-<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> をエクスポートしています。
-オブジェクトをエクスポートするには、 <code>exports</code> という特別なオブジェクトに加えます。
-
-</p>
 <p>モジュールのローカル変数はプライベートです。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
 
 </p>
+<!--
+The module system is implemented in the `require("module")` module.
+-->
+
 <p>モジュールシステムは <code>require(&quot;module&quot;)</code> モジュールによって実装されます。
 
 </p>
@@ -195,7 +219,7 @@ console.log(&#39;in main, a.done=%j, b.done=%j&#39;, a.done, b.done);</code></pr
 When `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that
 point, `b.js` tries to load `a.js`.  In order to prevent an infinite
 loop an **unfinished copy** of the `a.js` exports object is returned to the
-`b.js` module.  `b.js` then finishes loading, and its exports object is
+`b.js` module.  `b.js` then finishes loading, and its `exports` object is
 provided to the `a.js` module.
 
 By the time `main.js` has loaded both modules, they're both finished.
@@ -206,8 +230,8 @@ The output of this program would thus be:
 ポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。
 無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの
 <strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。
-<code>b.js</code> のロードが完了すると、エクスポートされたオブジェクトが <code>a.js</code>
-モジュールに提供されます。
+<code>b.js</code> のロードが完了すると、<code>exports</code> オブジェクトが <code>a.js</code> モジュールに
+提供されます。
 
 </p>
 <p><code>main.js</code> が両方のモジュールをロードするまでには、どちらも完了します。
@@ -466,12 +490,13 @@ would resolve to different files.
 <!--
 In each module, the `module` free variable is a reference to the object
 representing the current module.  In particular
-`module.exports` is the same as the `exports` object.
+`module.exports` is accessible via the `exports` module-global.
 `module` isn't actually a global but rather local to each module.
 -->
 
 <p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを
-参照します。特に、<code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
+参照します。
+特に <code>module.exports</code> は <code>exports</code> オブジェクトを通じて参照することもできます。
 <code>module</code> は実際はグローバルではなく、各モジュールにローカルです。
 
 </p>
@@ -479,15 +504,16 @@ representing the current module.  In particular
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
 </div></ul>
-<p>The <code>exports</code> object is created by the Module system. Sometimes this is not
+<p>The <code>module.exports</code> object is created by the Module system. Sometimes this is not
 acceptable, many want their module to be an instance of some class. To do this
 assign the desired export object to <code>module.exports</code>. For example suppose we
 were making a module called <code>a.js</code>
 --&gt;
 
 </p>
-<p><code>exports</code> オブジェクトはモジュールシステムによって作成されます。
-時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。
+<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
+時々これは受け入れられず、多くのモジュールは何らかのクラスの
+インスタンスであることを望みます。
 それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
 例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
 
@@ -536,12 +562,12 @@ console.log(x.a);</code></pre>
 <h3>module.require(id)<span><a class="mark" href="#modules_module_require_id" id="modules_module_require_id">#</a></span></h3>
 <!--
 * `id` {String}
-* Return: {Object} `exports` from the resolved module
+* Return: {Object} `module.exports` from the resolved module
 -->
 
 <ul>
 <li><code>id</code> {String}</li>
-<li>Return: {Object} 解決されたモジュールの <code>exports</code></li>
+<li>Return: {Object} 解決されたモジュールの <code>module.exports</code></li>
 </ul>
 <!--
 The `module.require` method provides a way to load a module as if
@@ -554,13 +580,13 @@ The `module.require` method provides a way to load a module as if
 </p>
 <!--
 Note that in order to do this, you must get a reference to the `module`
-object.  Since `require()` returns the `exports`, and the `module` is
+object.  Since `require()` returns the `module.exports`, and the `module` is
 typically *only* available within a specific module's code, it must be
 explicitly exported in order to be used.
 -->
 
 <p>それには <code>module</code> オブジェクトの参照が必要なことに注意してください。
-<code>require()</code> が <code>exports</code> を返した後、一般的に <code>module</code> 
+<code>require()</code> が <code>module.exports</code> を返した後、一般的に <code>module</code> 
 はそのモジュールのコードで <em>のみ</em> 利用可能です。
 それが使われるようにするには、明示的にエクスポートする必要があります。
 
@@ -896,7 +922,7 @@ relative, and based on the real path of the files making the calls to
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.2/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.3/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
