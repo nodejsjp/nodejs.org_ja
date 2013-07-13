@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Timers Node.js v0.11.3 Manual &amp; Documentation</title>
+  <title>Timers Node.js v0.11.4 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/timers.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -189,22 +189,17 @@ can also pass arguments to the callback.
 
 </p>
 <!--
-Immediates are queued in the order created, and are popped off the queue once
-per loop iteration. This is different from `process.nextTick` which will
-execute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`
-will yield to the event loop after firing a queued callback to make sure I/O is
-not being starved. While order is preserved for execution, other I/O events may
-fire between any two scheduled immediate callbacks.
+Callbacks for immediates are queued in the order in which they were created.
+The entire callback queue is processed every event loop iteration. If you queue
+an immediate from a inside an executing callback that immediate won't fire
+until the next event loop iteration.
 -->
 
-<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの
-繰り返し毎に一度、キューから取り出されます。
-これは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに
-入れられた関数が実行される <code>process.nextTick()</code> とは異なります。
-<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが
-呼び出された後イベントループに制御を譲ります。
-二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、
-他の I/O が間に挟まるかもしれません。
+<p>即時実行のコールバックは、それが作られた順でキューイングされます。
+コールバックのキューは全体が各イベントループの繰り返し毎に処理されます。
+もし即時実行のコールバックが実行されている中から <code>setImmediate()</code>
+を呼び出しても、そのコールバックは次のイベントループの繰り返しまで
+呼び出されません。
 
 </p>
 <h2>clearImmediate(immediateId)<span><a class="mark" href="#timers_clearimmediate_immediateid" id="timers_clearimmediate_immediateid">#</a></span></h2>
@@ -243,7 +238,7 @@ Stops an immediate from triggering.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
