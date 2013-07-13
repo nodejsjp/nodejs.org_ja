@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.11.3 Manual &amp; Documentation</title>
+  <title>process Node.js v0.11.4 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -86,7 +86,6 @@
 <li><a href="#process_process_platform">process.platform</a></li>
 <li><a href="#process_process_memoryusage">process.memoryUsage()</a></li>
 <li><a href="#process_process_nexttick_callback">process.nextTick(callback)</a></li>
-<li><a href="#process_process_maxtickdepth">process.maxTickDepth</a></li>
 <li><a href="#process_process_umask_mask">process.umask([mask])</a></li>
 <li><a href="#process_process_uptime">process.uptime()</a></li>
 <li><a href="#process_process_hrtime">process.hrtime()</a></li>
@@ -886,7 +885,7 @@ This will generate:
 On the next loop around the event loop call this callback.
 This is *not* a simple alias to `setTimeout(fn, 0)`, it's much more
 efficient.  It typically runs before any other I/O events fire, but there
-are some exceptions.  See `process.maxTickDepth` below.
+are some exceptions.
 -->
 
 <p>イベントループの次以降のループでコールバックを呼び出します。
@@ -894,7 +893,6 @@ are some exceptions.  See `process.maxTickDepth` below.
 はるかに効率的です。
 これは通常他の I/O イベントが発生するよりも前に実行されますが、
 いくつかの例外があります。
-後述の <code>process.maxTickDepth</code> を参照してください。
 
 </p>
 <pre><code>process.nextTick(function() {
@@ -974,52 +972,6 @@ This approach is much better:
 
   fs.stat(&#39;file&#39;, cb);
 }</code></pre>
-<h2>process.maxTickDepth<span><a class="mark" href="#process_process_maxtickdepth" id="process_process_maxtickdepth">#</a></span></h2>
-<div class="signature"><ul>
-<li><span class="type">Number</span> Default = 1000</li>
-</div></ul>
-<!--
-Callbacks passed to `process.nextTick` will *usually* be called at the
-end of the current flow of execution, and are thus approximately as fast
-as calling a function synchronously.  Left unchecked, this would starve
-the event loop, preventing any I/O from occurring.
--->
-
-<p><code>process.nextTick()</code> に渡されたコールバックは、<em>通常</em> 現在の実行フローの
-後で呼び出され、それは関数を同期的に呼び出すのと同じくらい高速です。
-これを放置するとあらゆる I/O が阻まれ、イベントループは飢餓状態となるでしょう。
-
-</p>
-<!--
-Consider this code:
--->
-
-<p>以下のコードを考えてみてください。
-
-</p>
-<pre><code>process.nextTick(function foo() {
-  process.nextTick(foo);
-});</code></pre>
-<!--
-In order to avoid the situation where Node is blocked by an infinite
-loop of recursive series of nextTick calls, it defers to allow some I/O
-to be done every so often.
--->
-
-<p>nextTick の再帰が連鎖する無限ループによって Node がブロックする状況を
-避けるには、それを先送りして時々 I/O を可能にします。
-
-</p>
-<!--
-The `process.maxTickDepth` value is the maximum depth of
-nextTick-calling nextTick-callbacks that will be evaluated before
-allowing other forms of I/O to occur.
--->
-
-<p><code>process.maxTickDepth</code> の値は、nextTick が nextTick のコールバックを呼び出す
-最大の深さで、他の I/O を可能にする前に評価されます。
-
-</p>
 <h2>process.umask([mask])<span><a class="mark" href="#process_process_umask_mask" id="process_process_umask_mask">#</a></span></h2>
 <!--
 Sets or reads the process's file mode creation mask. Child processes inherit
@@ -1105,7 +1057,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
