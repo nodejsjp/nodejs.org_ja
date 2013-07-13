@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.11.3 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.4 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -176,7 +176,6 @@
 <li><a href="#all_process_platform">process.platform</a></li>
 <li><a href="#all_process_memoryusage">process.memoryUsage()</a></li>
 <li><a href="#all_process_nexttick_callback">process.nextTick(callback)</a></li>
-<li><a href="#all_process_maxtickdepth">process.maxTickDepth</a></li>
 <li><a href="#all_process_umask_mask">process.umask([mask])</a></li>
 <li><a href="#all_process_uptime">process.uptime()</a></li>
 <li><a href="#all_process_hrtime">process.hrtime()</a></li>
@@ -421,6 +420,8 @@
 <li><a href="#all_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
 <li><a href="#all_tls_connect_options_callback">tls.connect(options, [callback])</a></li>
 <li><a href="#all_tls_connect_port_host_options_callback">tls.connect(port, [host], [options], [callback])</a></li>
+<li><a href="#all_class_tls_tlssocket">Class: tls.TLSSocket</a></li>
+<li><a href="#all_new_tls_tlssocket_socket_options">new tls.TLSSocket(socket, options)</a></li>
 <li><a href="#all_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])</a></li>
 <li><a href="#all_class_securepair">Class: SecurePair</a><ul>
 <li><a href="#all_event_secure">Event: &#39;secure&#39;</a></li>
@@ -443,7 +444,7 @@
 <li><a href="#all_cryptostream_byteswritten">cryptoStream.bytesWritten</a></li>
 </ul>
 </li>
-<li><a href="#all_class_tls_tlssocket">Class: tls.TLSSocket</a><ul>
+<li><a href="#all_class_tls_tlssocket_1">Class: tls.TLSSocket</a><ul>
 <li><a href="#all_event_secureconnect">Event: &#39;secureConnect&#39;</a></li>
 <li><a href="#all_tlssocket_authorized">tlsSocket.authorized</a></li>
 <li><a href="#all_tlssocket_authorizationerror">tlsSocket.authorizationError</a></li>
@@ -908,7 +909,8 @@
 <li><a href="#all_zlib_createinflateraw_options">zlib.createInflateRaw([options])</a></li>
 <li><a href="#all_zlib_createunzip_options">zlib.createUnzip([options])</a></li>
 <li><a href="#all_class_zlib_zlib">Class: zlib.Zlib</a><ul>
-<li><a href="#all_zlib_flush_callback">zlib.flush(callback)</a></li>
+<li><a href="#all_zlib_flush_kind_callback">zlib.flush([kind], callback)</a></li>
+<li><a href="#all_zlib_params_level_strategy_callback">zlib.params(level, strategy, callback)</a></li>
 <li><a href="#all_zlib_reset">zlib.reset()</a></li>
 </ul>
 </li>
@@ -1823,22 +1825,17 @@ can also pass arguments to the callback.
 
 </p>
 <!--
-Immediates are queued in the order created, and are popped off the queue once
-per loop iteration. This is different from `process.nextTick` which will
-execute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`
-will yield to the event loop after firing a queued callback to make sure I/O is
-not being starved. While order is preserved for execution, other I/O events may
-fire between any two scheduled immediate callbacks.
+Callbacks for immediates are queued in the order in which they were created.
+The entire callback queue is processed every event loop iteration. If you queue
+an immediate from a inside an executing callback that immediate won't fire
+until the next event loop iteration.
 -->
 
-<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの
-繰り返し毎に一度、キューから取り出されます。
-これは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに
-入れられた関数が実行される <code>process.nextTick()</code> とは異なります。
-<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが
-呼び出された後イベントループに制御を譲ります。
-二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、
-他の I/O が間に挟まるかもしれません。
+<p>即時実行のコールバックは、それが作られた順でキューイングされます。
+コールバックのキューは全体が各イベントループの繰り返し毎に処理されます。
+もし即時実行のコールバックが実行されている中から <code>setImmediate()</code>
+を呼び出しても、そのコールバックは次のイベントループの繰り返しまで
+呼び出されません。
 
 </p>
 <h2>clearImmediate(immediateId)<span><a class="mark" href="#all_clearimmediate_immediateid" id="all_clearimmediate_immediateid">#</a></span></h2>
@@ -4329,7 +4326,7 @@ This will generate:
 On the next loop around the event loop call this callback.
 This is *not* a simple alias to `setTimeout(fn, 0)`, it's much more
 efficient.  It typically runs before any other I/O events fire, but there
-are some exceptions.  See `process.maxTickDepth` below.
+are some exceptions.
 -->
 
 <p>イベントループの次以降のループでコールバックを呼び出します。
@@ -4337,7 +4334,6 @@ are some exceptions.  See `process.maxTickDepth` below.
 はるかに効率的です。
 これは通常他の I/O イベントが発生するよりも前に実行されますが、
 いくつかの例外があります。
-後述の <code>process.maxTickDepth</code> を参照してください。
 
 </p>
 <pre><code>process.nextTick(function() {
@@ -4417,52 +4413,6 @@ This approach is much better:
 
   fs.stat(&#39;file&#39;, cb);
 }</code></pre>
-<h2>process.maxTickDepth<span><a class="mark" href="#all_process_maxtickdepth" id="all_process_maxtickdepth">#</a></span></h2>
-<div class="signature"><ul>
-<li><span class="type">Number</span> Default = 1000</li>
-</div></ul>
-<!--
-Callbacks passed to `process.nextTick` will *usually* be called at the
-end of the current flow of execution, and are thus approximately as fast
-as calling a function synchronously.  Left unchecked, this would starve
-the event loop, preventing any I/O from occurring.
--->
-
-<p><code>process.nextTick()</code> に渡されたコールバックは、<em>通常</em> 現在の実行フローの
-後で呼び出され、それは関数を同期的に呼び出すのと同じくらい高速です。
-これを放置するとあらゆる I/O が阻まれ、イベントループは飢餓状態となるでしょう。
-
-</p>
-<!--
-Consider this code:
--->
-
-<p>以下のコードを考えてみてください。
-
-</p>
-<pre><code>process.nextTick(function foo() {
-  process.nextTick(foo);
-});</code></pre>
-<!--
-In order to avoid the situation where Node is blocked by an infinite
-loop of recursive series of nextTick calls, it defers to allow some I/O
-to be done every so often.
--->
-
-<p>nextTick の再帰が連鎖する無限ループによって Node がブロックする状況を
-避けるには、それを先送りして時々 I/O を可能にします。
-
-</p>
-<!--
-The `process.maxTickDepth` value is the maximum depth of
-nextTick-calling nextTick-callbacks that will be evaluated before
-allowing other forms of I/O to occur.
--->
-
-<p><code>process.maxTickDepth</code> の値は、nextTick が nextTick のコールバックを呼び出す
-最大の深さで、他の I/O を可能にする前に評価されます。
-
-</p>
 <h2>process.umask([mask])<span><a class="mark" href="#all_process_umask_mask" id="all_process_umask_mask">#</a></span></h2>
 <!--
 Sets or reads the process's file mode creation mask. Child processes inherit
@@ -6030,38 +5980,6 @@ Unicode 文字。
 <li><p><code>&#39;hex&#39;</code> - 各バイトを 2 桁の16進数文字列でエンコードします。</p>
 </li>
 </ul>
-<!--
-A `Buffer` object can also be used with typed arrays.  The buffer object is
-cloned to an `ArrayBuffer` that is used as the backing store for the typed
-array.  The memory of the buffer and the `ArrayBuffer` is not shared.
--->
-
-<p><code>Buffer</code> は Typed Array として使うことができます。
-バッファオブジェクトは、Typed Array のバッキングストアとして使われる
-<code>ArrayBuffer</code> から複製されます。
-バッファと <code>Typed Array</code> はメモリを共有しません。
-
-</p>
-<!--
-NOTE: Node.js v0.8 simply retained a reference to the buffer in `array.buffer`
-instead of cloning it.
--->
-
-<p>Node.js の v0.8 では、バッファを複製するのではなく、単純に <code>array.buffer</code>
-に参照を維持していました。
-
-</p>
-<!--
-While more efficient, it introduces subtle incompatibilities with the typed
-arrays specification.  `ArrayBuffer#slice()` makes a copy of the slice while
-`Buffer#slice()` creates a view.
--->
-
-<p>それは効率的ではあったものの、Typed Array との微妙な非互換性をもたらしました。
-<code>ArrayBuffer#slice()</code> はスライスのコピーを作成する一方、
-<code>Buffer#slice()</code> はビューを作成します。
-
-</p>
 <h2>Class: Buffer<span><a class="mark" href="#all_class_buffer_1" id="all_class_buffer_1">#</a></span></h2>
 <!--
 The Buffer class is a global type for dealing with binary data directly.
@@ -10001,7 +9919,7 @@ exceeded. The limits are configurable:
   - `tls.CLIENT_RENEG_LIMIT`: renegotiation limit, default is 3.
 
   - `tls.CLIENT_RENEG_WINDOW`: renegotiation window in seconds, default is
-                               10 minutes.
+    10 minutes.
 
 Don't change the defaults unless you know what you are doing.
 
@@ -10026,8 +9944,8 @@ times.
 <ul>
 <li><p><code>tls.CLIENT_RENEG_LIMIT</code>: 再ネゴシエーションの上限、デフォルトは 3 です。</p>
 </li>
-<li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 秒単位の再ネゴシエーションウィンドウ、</p>
-<pre><code>                       デフォルトは 10 分です。</code></pre>
+<li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 秒単位の再ネゴシエーションウィンドウ、
+デフォルトは 10 分です。</p>
 </li>
 </ul>
 <p>あなたが何をしようとしているか十分に理解していない限り、
@@ -10117,14 +10035,13 @@ automatically set as a listener for the [secureConnection][] event.  The
     conjunction with the `honorCipherOrder` option described below to
     prioritize the non-CBC cipher.
 
-    Defaults to
-    `ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
+    Defaults to `AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
     Consult the [OpenSSL cipher list format documentation] for details on the
-    format.
+    format. ECDH (Elliptic Curve Diffie-Hellman) ciphers are not yet supported.
 
-    `ECDHE-RSA-AES128-SHA256` and `AES128-GCM-SHA256` are used when node.js is
-    linked against OpenSSL 1.0.1 or newer and the client speaks TLS 1.2, RC4 is
-    used as a secure fallback.
+
+    `AES128-GCM-SHA256` is used when node.js is linked against OpenSSL 1.0.1
+    or newer and the client speaks TLS 1.2, RC4 is used as a secure fallback.
 
     **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an
     acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
@@ -10197,13 +10114,11 @@ automatically set as a listener for the [secureConnection][] event.  The
 <li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。</p>
 <p><a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a>を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
 を共に使って、非 CBC 暗号を優先することを推奨します。</p>
-<p>デフォルトは
-<code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code>
-です。
-詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。</p>
-<p><code>ECDHE-RSA-AES128-SHA256</code> と <code>AES128-GCM-SHA256</code> は、Node.js が
-OpenSSL 1.0.1 以降とリンクされていて、クライアントが TLS 1.2 を
-サポートしている場合に使われます。
+<p>デフォルトは <code>AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code> です。
+詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。
+ECDH (Elliptic Curve Diffie-Hellman) 暗号はまだサポートされていません。</p>
+<p><code>AES128-GCM-SHA256</code> は、Node.js が OpenSSL 1.0.1 以降とリンクされていて、
+クライアントが TLS 1.2 をサポートしている場合に使われます。
 RC4 は安全なフォールバックとして使われます。</p>
 <p><strong>注意</strong>: 以前のバージョンのこのセクションは <code>AES256-SHA</code> を
 受け入れ可能な暗号であるかのように示していました。
@@ -10487,6 +10402,74 @@ socket.on(&#39;data&#39;, function(data) {
 socket.on(&#39;end&#39;, function() {
   server.close();
 });</code></pre>
+<h2>Class: tls.TLSSocket<span><a class="mark" href="#all_class_tls_tlssocket" id="all_class_tls_tlssocket">#</a></span></h2>
+<!--
+Wrapper for instance of [net.Socket][], replaces internal socket read/write
+routines to perform transparent encryption/decryption of incoming/outgoing data.
+-->
+
+
+<p><a href="net.html#net_class_net_socket">net.Socket</a> のラッパーです。内部的なソケットの read/write 処理を、
+入出力データを透過的に暗号化／復号化するように置き換えます。
+
+
+</p>
+<h2>new tls.TLSSocket(socket, options)<span><a class="mark" href="#all_new_tls_tlssocket_socket_options" id="all_new_tls_tlssocket_socket_options">#</a></span></h2>
+<!--
+Construct a new TLSSocket object from existing TCP socket.
+-->
+
+<p>既存の TCP ソケットから新しい TLSSocket オブジェクトを構築します。
+
+</p>
+<!--
+`socket` is an instance of [net.Socket][]
+-->
+
+<p><code>socket</code> は <a href="net.html#net_class_net_socket">net.Socket</a> のインスタンスです。
+
+</p>
+<!--
+`options` is an object that might contain following properties:
+-->
+
+<p><code>options</code> は以下のプロパティを持つことができるオブジェクトです。
+
+</p>
+<!--
+  - `credentials`: An optional credentials object from
+     `crypto.createCredentials( ... )`
+
+  - `isServer`: If true - TLS socket will be instantiated in server-mode
+
+  - `server`: An optional [net.Server][] instance
+
+  - `requestCert`: Optional, see [tls.createSecurePair][]
+
+  - `rejectUnauthorized`: Optional, see [tls.createSecurePair][]
+
+  - `NPNProtocols`: Optional, see [tls.createServer][]
+
+  - `SNICallback`: Optional, see [tls.createServer][]
+-->
+
+<ul>
+<li><p><code>credentials</code>: <code>crypto.createCredentials( ... )</code> から得られる
+オプションの認証情報</p>
+</li>
+<li><p><code>isServer</code>: もし <code>true</code> なら、TLS ソケットはサーバも土で作成されます</p>
+</li>
+<li><p><code>server</code>: オプションの <a href="net.html#net_class_net_server">net.Server</a> インスタンス</p>
+</li>
+<li><p><code>requestCert</code>: オプション、<a href="#tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair</a> を参照</p>
+</li>
+<li><p><code>rejectUnauthorized</code>: オプション、<a href="#tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">tls.createSecurePair</a> を参照</p>
+</li>
+<li><p><code>NPNProtocols</code>: オプション、<a href="#tls_tls_createserver_options_secureconnectionlistener">tls.createServer</a> を参照</p>
+</li>
+<li><p><code>SNICallback</code>: オプション、<a href="#tls_tls_createserver_options_secureconnectionlistener">tls.createServer</a> を参照</p>
+</li>
+</ul>
 <h2>tls.createSecurePair([credentials], [isServer], [requestCert], [rejectUnauthorized])<span><a class="mark" href="#all_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized" id="all_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized">#</a></span></h2>
 <pre class="api_stability_0">Stability: 0 - Deprecated. Use tls.TLSSocket instead.</pre><!--
 Creates a new secure pair object with two streams, one of which reads/writes
@@ -10790,7 +10773,7 @@ the total bytes written to the socket, *including the TLS overhead*.
 返します。
 
 </p>
-<h2>Class: tls.TLSSocket<span><a class="mark" href="#all_class_tls_tlssocket" id="all_class_tls_tlssocket">#</a></span></h2>
+<h2>Class: tls.TLSSocket<span><a class="mark" href="#all_class_tls_tlssocket_1" id="all_class_tls_tlssocket_1">#</a></span></h2>
 <!--
 This is a wrapped version of [net.Socket][] that does transparent encryption
 of written data and all required TLS negotiation.
@@ -10974,7 +10957,11 @@ The numeric representation of the local port.
 <!--
 [OpenSSL cipher list format documentation]: http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT
 [BEAST attacks]: http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html
+[tls.createServer]: #tls_tls_createserver_options_secureconnectionlistener
+[tls.createSecurePair]: #tls_tls_createsecurepair_credentials_isserver_requestcert_rejectunauthorized
 [tls.TLSSocket]: #tls_class_tls_tlssocket
+[net.Server]: net.html#net_class_net_server
+[net.Socket]: net.html#net_class_net_socket
 [net.Server.address()]: net.html#net_server_address
 ['secureConnect']: #tls_event_secureconnect
 [secureConnection]: #tls_event_secureconnection
@@ -18179,13 +18166,13 @@ JavaScript code can be compiled and run immediately or compiled, saved, and run 
 <!--
 The `vm` module has many known issues and edge cases. If you run into
 issues or unexpected behavior, please consult [the open issues on
-GitHub](https://github.com/joyent/node/search?q=vm+state%3Aopen&type=Issues).
+GitHub](https://github.com/joyent/node/issues?labels=vm&state=open).
 Some of the biggest problems are described below.
 -->
 
 <p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。
 もし問題や期待と異なる振る舞いを見つけた場合は、
-<a href="https://github.com/joyent/node/search?q=vm+state%3Aopen&amp;type=Issues">GitHub 上の課題</a>
+<a href="https://github.com/joyent/node/issues?labels=vm&amp;state=open">GitHub 上の課題</a>
 に相談してください。大きな問題のいくつかは以下に示されます。
 
 </p>
@@ -19452,10 +19439,6 @@ With `customFds` it was possible to hook up the new process' `[stdin, stdout,
 stderr]` to existing streams; `-1` meant that a new stream should be created.
 Use at your own risk.
 
-There are several internal options. In particular `stdinStream`,
-`stdoutStream`, `stderrStream`. They are for INTERNAL USE ONLY. As with all
-undocumented APIs in Node, they should not be used.
-
 See also: `child_process.exec()` and `child_process.fork()`
 -->
 
@@ -19465,13 +19448,6 @@ See also: `child_process.exec()` and `child_process.fork()`
 <code>customFds</code> は新しいプロセスの <code>[stdin, stdout, stderr]</code> を既存のストリームに接続することを可能にしました;
 <code>-1</code> は新しいストリームが作られなければならないことを意味していました。
 使用する場合は自己責任で。
-
-</p>
-<p>よく似た内部的なオプションがあります。
-具体的には <code>stdinStream</code>、<code>stdoutStream</code>、<code>stderrStream</code> です。
-これらは <strong>内部用途</strong>です。
-Node のドキュメント化されていない API と同様に、
-これらを使用すべきではありません。
 
 </p>
 <p>関連項目: <code>child_process.exec()</code> および <code>child_process.fork()</code>
@@ -20213,7 +20189,14 @@ class of the compressor/decompressor classes.
 ここで文書化するのは圧縮／解凍クラスのベースクラスだからです。
 
 </p>
-<h3>zlib.flush(callback)<span><a class="mark" href="#all_zlib_flush_callback" id="all_zlib_flush_callback">#</a></span></h3>
+<h3>zlib.flush([kind], callback)<span><a class="mark" href="#all_zlib_flush_kind_callback" id="all_zlib_flush_kind_callback">#</a></span></h3>
+<!--
+`kind` defaults to `zlib.Z_FULL_FLUSH`.
+-->
+
+<p><code>kind</code> のデフォルトは <code>zlib.Z_FULL_FLUSH</code> です。
+
+</p>
 <!--
 Flush pending data. Don't call this frivolously, premature flushes negatively
 impact the effectiveness of the compression algorithm.
@@ -20224,6 +20207,16 @@ impact the effectiveness of the compression algorithm.
 ネガティブな影響を与えます。
 
 </p>
+<h3>zlib.params(level, strategy, callback)<span><a class="mark" href="#all_zlib_params_level_strategy_callback" id="all_zlib_params_level_strategy_callback">#</a></span></h3>
+<!--
+Dynamically update the compression level and compression strategy.
+Only applicable to deflate algorithm.
+-->
+
+<p>圧縮のレベルと戦略を動的に更新します。
+deflate アルゴリズムにだけ適用されます。
+
+</p>
 <h3>zlib.reset()<span><a class="mark" href="#all_zlib_reset" id="all_zlib_reset">#</a></span></h3>
 <!--
 Reset the compressor/decompressor to factory defaults. Only applicable to
@@ -20231,7 +20224,7 @@ the inflate and deflate algorithms.
 -->
 
 <p>圧縮／解凍をファクトリのデフォルトにリセットします。
-infrate および defrate アルゴリズムにのみ効果があります。
+inflate および deflate アルゴリズムにのみ効果があります。
 
 </p>
 <h2>Class: zlib.Gzip<span><a class="mark" href="#all_class_zlib_gzip" id="all_class_zlib_gzip">#</a></span></h2>
@@ -20342,7 +20335,7 @@ Decompress a raw Buffer with Gunzip.
 Decompress a raw Buffer with Inflate.
 -->
 
-<p>Infrate で生のバッファを解凍します。
+<p>Inflate で生のバッファを解凍します。
 
 </p>
 <h2>zlib.inflateRaw(buf, [options], callback)<span><a class="mark" href="#all_zlib_inflateraw_buf_options_callback" id="all_zlib_inflateraw_buf_options_callback">#</a></span></h2>
@@ -22068,7 +22061,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

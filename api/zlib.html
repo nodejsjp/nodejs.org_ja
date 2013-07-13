@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Zlib Node.js v0.11.3 Manual &amp; Documentation</title>
+  <title>Zlib Node.js v0.11.4 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/zlib.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.3 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -65,7 +65,8 @@
 <li><a href="#zlib_zlib_createinflateraw_options">zlib.createInflateRaw([options])</a></li>
 <li><a href="#zlib_zlib_createunzip_options">zlib.createUnzip([options])</a></li>
 <li><a href="#zlib_class_zlib_zlib">Class: zlib.Zlib</a><ul>
-<li><a href="#zlib_zlib_flush_callback">zlib.flush(callback)</a></li>
+<li><a href="#zlib_zlib_flush_kind_callback">zlib.flush([kind], callback)</a></li>
+<li><a href="#zlib_zlib_params_level_strategy_callback">zlib.params(level, strategy, callback)</a></li>
 <li><a href="#zlib_zlib_reset">zlib.reset()</a></li>
 </ul>
 </li>
@@ -314,7 +315,14 @@ class of the compressor/decompressor classes.
 ここで文書化するのは圧縮／解凍クラスのベースクラスだからです。
 
 </p>
-<h3>zlib.flush(callback)<span><a class="mark" href="#zlib_zlib_flush_callback" id="zlib_zlib_flush_callback">#</a></span></h3>
+<h3>zlib.flush([kind], callback)<span><a class="mark" href="#zlib_zlib_flush_kind_callback" id="zlib_zlib_flush_kind_callback">#</a></span></h3>
+<!--
+`kind` defaults to `zlib.Z_FULL_FLUSH`.
+-->
+
+<p><code>kind</code> のデフォルトは <code>zlib.Z_FULL_FLUSH</code> です。
+
+</p>
 <!--
 Flush pending data. Don't call this frivolously, premature flushes negatively
 impact the effectiveness of the compression algorithm.
@@ -325,6 +333,16 @@ impact the effectiveness of the compression algorithm.
 ネガティブな影響を与えます。
 
 </p>
+<h3>zlib.params(level, strategy, callback)<span><a class="mark" href="#zlib_zlib_params_level_strategy_callback" id="zlib_zlib_params_level_strategy_callback">#</a></span></h3>
+<!--
+Dynamically update the compression level and compression strategy.
+Only applicable to deflate algorithm.
+-->
+
+<p>圧縮のレベルと戦略を動的に更新します。
+deflate アルゴリズムにだけ適用されます。
+
+</p>
 <h3>zlib.reset()<span><a class="mark" href="#zlib_zlib_reset" id="zlib_zlib_reset">#</a></span></h3>
 <!--
 Reset the compressor/decompressor to factory defaults. Only applicable to
@@ -332,7 +350,7 @@ the inflate and deflate algorithms.
 -->
 
 <p>圧縮／解凍をファクトリのデフォルトにリセットします。
-infrate および defrate アルゴリズムにのみ効果があります。
+inflate および deflate アルゴリズムにのみ効果があります。
 
 </p>
 <h2>Class: zlib.Gzip<span><a class="mark" href="#zlib_class_zlib_gzip" id="zlib_class_zlib_gzip">#</a></span></h2>
@@ -443,7 +461,7 @@ Decompress a raw Buffer with Gunzip.
 Decompress a raw Buffer with Inflate.
 -->
 
-<p>Infrate で生のバッファを解凍します。
+<p>Inflate で生のバッファを解凍します。
 
 </p>
 <h2>zlib.inflateRaw(buf, [options], callback)<span><a class="mark" href="#zlib_zlib_inflateraw_buf_options_callback" id="zlib_zlib_inflateraw_buf_options_callback">#</a></span></h2>
@@ -736,7 +754,7 @@ For initializing zalloc, zfree, opaque.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.3/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

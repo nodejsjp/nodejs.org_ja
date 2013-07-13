@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.12 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.13 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.12 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.13 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -1235,11 +1235,11 @@ The process object. See the [process object][] section.
 <li>{Object}</li>
 </ul>
 <!--
-Used to print to stdout and stderr. See the [stdio][] section.
+Used to print to stdout and stderr. See the [console][] section.
 -->
 
 <p>標準出力および標準エラー出力へのプリントに使われます。
-<a href="stdio.html">標準入出力</a> を参照してください。
+<a href="console.html">コンソール</a> を参照してください。
 
 </p>
 <h2>Class: Buffer<span><a class="mark" href="#all_class_buffer" id="all_class_buffer">#</a></span></h2>
@@ -1435,25 +1435,20 @@ when to use `module.exports`.
 `exports` isn't actually a global but rather local to each module.
 -->
 
-<p>現在のモジュールの全てのインスタンスで共有され、
-<code>require()</code> を通じてアクセスされる、<code>module.exports</code> オブジェクトを参照します。
-いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は、
+<p>現在のモジュールの全てのインスタンス間で共有される <code>module.exports</code>
+を参照するオブジェクトで、<code>require()</code> を通じてアクセス可能になります。
+いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は
 <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
 <code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
 <!--
 See the [module system documentation][] for more information.
--->
 
-<p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
-
-</p>
-<!--
 See the [module section][] for more information.
 -->
 
-<p>より詳しくは <a href="modules.html">モジュールセクション</a> を参照してください。
+<p>より詳しくは <a href="modules.html#modules_modules">モジュール</a> を参照してください。
 
 </p>
 <h2>setTimeout(cb, ms)<span><a class="mark" href="#all_settimeout_cb_ms" id="all_settimeout_cb_ms">#</a></span></h2>
@@ -1550,7 +1545,7 @@ The timer functions are global variables. See the [timers][] section.
 [module system documentation]: modules.html
 [Modules]: modules.html#modules_modules
 [process object]: process.html#process_process
-[stdio]: stdio.html
+[console]: console.html
 [timers]: timers.html
 -->
 
@@ -9720,7 +9715,7 @@ exceeded. The limits are configurable:
   - `tls.CLIENT_RENEG_LIMIT`: renegotiation limit, default is 3.
 
   - `tls.CLIENT_RENEG_WINDOW`: renegotiation window in seconds, default is
-                               10 minutes.
+    10 minutes.
 
 Don't change the defaults unless you know what you are doing.
 
@@ -9745,8 +9740,8 @@ times.
 <ul>
 <li><p><code>tls.CLIENT_RENEG_LIMIT</code>: 再ネゴシエーションの上限、デフォルトは 3 です。</p>
 </li>
-<li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 秒単位の再ネゴシエーションウィンドウ、</p>
-<pre><code>                       デフォルトは 10 分です。</code></pre>
+<li><p><code>tls.CLIENT_RENEG_WINDOW</code>: 秒単位の再ネゴシエーションウィンドウ、
+デフォルトは 10 分です。</p>
 </li>
 </ul>
 <p>あなたが何をしようとしているか十分に理解していない限り、
@@ -9836,14 +9831,13 @@ automatically set as a listener for the [secureConnection][] event.  The
     conjunction with the `honorCipherOrder` option described below to
     prioritize the non-CBC cipher.
 
-    Defaults to
-    `ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
+    Defaults to `AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
     Consult the [OpenSSL cipher list format documentation] for details on the
-    format.
+    format. ECDH (Elliptic Curve Diffie-Hellman) ciphers are not yet supported.
 
-    `ECDHE-RSA-AES128-SHA256` and `AES128-GCM-SHA256` are used when node.js is
-    linked against OpenSSL 1.0.1 or newer and the client speaks TLS 1.2, RC4 is
-    used as a secure fallback.
+
+    `AES128-GCM-SHA256` is used when node.js is linked against OpenSSL 1.0.1
+    or newer and the client speaks TLS 1.2, RC4 is used as a secure fallback.
 
     **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an
     acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
@@ -9912,13 +9906,11 @@ automatically set as a listener for the [secureConnection][] event.  The
 <li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。</p>
 <p><a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a>を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
 を共に使って、非 CBC 暗号を優先することを推奨します。</p>
-<p>デフォルトは
-<code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code>
-です。
-詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。</p>
-<p><code>ECDHE-RSA-AES128-SHA256</code> と <code>AES128-GCM-SHA256</code> は、Node.js が
-OpenSSL 1.0.1 以降とリンクされていて、クライアントが TLS 1.2 を
-サポートしている場合に使われます。
+<p>デフォルトは <code>AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code> です。
+詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。
+ECDH (Elliptic Curve Diffie-Hellman) 暗号はまだサポートされていません。</p>
+<p><code>AES128-GCM-SHA256</code> は、Node.js が OpenSSL 1.0.1 以降とリンクされていて、
+クライアントが TLS 1.2 をサポートしている場合に使われます。
 RC4 は安全なフォールバックとして使われます。</p>
 <p><strong>注意</strong>: 以前のバージョンのこのセクションは <code>AES256-SHA</code> を
 受け入れ可能な暗号であるかのように示していました。
@@ -11767,7 +11759,7 @@ you need to compare `curr.mtime` and `prev.mtime`.
 
 </p>
 <h2>fs.unwatchFile(filename, [listener])<span><a class="mark" href="#all_fs_unwatchfile_filename_listener" id="all_fs_unwatchfile_filename_listener">#</a></span></h2>
-<pre class="api_stability_2">Stability: 2 - Unstable.  Use fs.watch instead, if available.</pre><!--
+<pre class="api_stability_2">Stability: 2 - Unstable.  Use fs.watch instead, if possible.</pre><!--
 Stop watching for changes on `filename`. If `listener` is specified, only that
 particular listener is removed. Otherwise, *all* listeners are removed and you
 have effectively stopped watching `filename`.
@@ -17715,15 +17707,14 @@ JavaScript code can be compiled and run immediately or compiled, saved, and run 
 <!--
 The `vm` module has many known issues and edge cases. If you run into
 issues or unexpected behavior, please consult [the open issues on
-GitHub](https://github.com/joyent/node/search?q=vm+state%3Aopen&type=Issues).
+GitHub](https://github.com/joyent/node/issues?labels=vm&state=open).
 Some of the biggest problems are described below.
 -->
 
 <p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。
-もし問題や期待と異なる振る舞いを見つけた場合は、<a href="https://github.com/joyent/node/search?q=vm+state%3Aopen&amp;type=Issues">GitHub
-の課題</a>
-に相談してください。
-大きな問題のいくつかは以下に示されます。
+もし問題や期待と異なる振る舞いを見つけた場合は、
+<a href="https://github.com/joyent/node/issues?labels=vm&amp;state=open">GitHub 上の課題</a>
+に相談してください。大きな問題のいくつかは以下に示されます。
 
 </p>
 <h3>Sandboxes<span><a class="mark" href="#all_sandboxes" id="all_sandboxes">#</a></span></h3>
@@ -18967,10 +18958,6 @@ With `customFds` it was possible to hook up the new process' `[stdin, stdout,
 stderr]` to existing streams; `-1` meant that a new stream should be created.
 Use at your own risk.
 
-There are several internal options. In particular `stdinStream`,
-`stdoutStream`, `stderrStream`. They are for INTERNAL USE ONLY. As with all
-undocumented APIs in Node, they should not be used.
-
 See also: `child_process.exec()` and `child_process.fork()`
 -->
 
@@ -18980,13 +18967,6 @@ See also: `child_process.exec()` and `child_process.fork()`
 <code>customFds</code> は新しいプロセスの <code>[stdin, stdout, stderr]</code> を既存のストリームに接続することを可能にしました;
 <code>-1</code> は新しいストリームが作られなければならないことを意味していました。
 使用する場合は自己責任で。
-
-</p>
-<p>よく似た内部的なオプションがあります。
-具体的には <code>stdinStream</code>、<code>stdoutStream</code>、<code>stderrStream</code> です。
-これらは <strong>内部用途</strong>です。
-Node のドキュメント化されていない API と同様に、
-これらを使用すべきではありません。
 
 </p>
 <p>関連項目: <code>child_process.exec()</code> および <code>child_process.fork()</code>
@@ -21515,7 +21495,7 @@ worker.on(&#39;exit&#39;, function(code, signal) {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.12/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.13/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
