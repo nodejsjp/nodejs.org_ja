@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Smalloc Node.js v0.11.5 Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/smalloc.html">
+</head>
+<body class="alt apidoc" id="api-section-smalloc">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <!--
+                <li><a href="/" class="home">Home</a></li>
+                <li><a href="/download/" class="download">Download</a></li>
+                <li><a href="/about/" class="about">About</a></li>
+                <li><a href="http://npmjs.org/" class="npm">npm Registry</a></li>
+                <li><a href="http://nodejs.org/api/" class="docs current">Docs</a></li>
+                <li><a href="http://blog.nodejs.org" class="blog">Blog</a></li>
+                <li><a href="/community/" class="community">Community</a></li>
+                <li><a href="/logos/" class="logos">Logos</a></li>
+                -->
+               <li><a href="../" class="home">ホーム</a></li>
+               <li><a href="../#download" class="download">ダウンロード</a></li>
+               <li><a href="../about/" class="about">概要</a></li>
+               <li><a href="http://npmjs.org/" class="npm">npm レジストリ</a></li>
+               <li><a href="../api/" class="docs current">ドキュメント</a></li>
+               <li><a href="http://blog.nodejs.org" class="blog">ブログ</a></li>
+               <li><a href="../community/" class="community">コミュニティ</a></li>
+               <li><a href="../logos/" class="logos">ロゴ</a></li>
+                <li><a href="http://jobs.nodejs.org/" class="jobs">Jobs</a></li>
+            </ul>
+            <p class="twitter"><a href="http://twitter.com/nodejs">@nodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.11.5 マニュアル &amp; ドキュメンテーション</h1>
+            <div id="gtoc">
+              <p>
+                <a href="index.html" name="toc">Index</a> |
+                <a href="all.html">View on single page</a> |
+                <a href="smalloc.json">View as JSON</a>
+              </p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+<li><a href="#smalloc_smalloc">Smalloc</a><ul>
+<li><a href="#smalloc_smalloc_alloc_length_receiver">smalloc.alloc(length[, receiver])</a></li>
+<li><a href="#smalloc_smalloc_copyonto_source_sourcestart_dest_deststart_copylength">smalloc.copyOnto(source, sourceStart, dest, destStart, copyLength);</a></li>
+<li><a href="#smalloc_smalloc_dispose_obj">smalloc.dispose(obj)</a></li>
+<li><a href="#smalloc_smalloc_kmaxlength">smalloc.kMaxLength</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>Smalloc<span><a class="mark" href="#smalloc_smalloc" id="smalloc_smalloc">#</a></span></h1>
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><h2>smalloc.alloc(length[, receiver])<span><a class="mark" href="#smalloc_smalloc_alloc_length_receiver" id="smalloc_smalloc_alloc_length_receiver">#</a></span></h2>
+<!--
+* `length` Number `<= smalloc.kMaxLength`
+* `receiver` Object, Optional, Default: `new Object`
+-->
+
+<ul>
+<li><code>length</code> Number <code>&lt;= smalloc.kMaxLength</code></li>
+<li><code>receiver</code> Object, オプション、デフォルトは <code>new Object</code></li>
+</ul>
+<!--
+Returns `receiver` with allocated external array data. If no `receiver` is
+passed then a new Object will be created and returned.
+-->
+
+<p>外部の配列データが割り当てられた <code>receiver</code> を返します。
+<code>receiver</code> が渡されなかった場合は新しいオブジェクトが作成されて返されます。
+
+</p>
+<!--
+Buffers are backed by a simple allocator that only handles the assignation of
+external raw memory. Smalloc exposes that functionality.
+-->
+
+<p>バッファは、外部の生のメモリを割り当てるだけの単純なアロケータに
+支えられています。Smallocはその機能を公開します。
+
+</p>
+<!--
+This can be used to create your own Buffer-like classes. No other properties are
+set, so the user will need to keep track of other necessary information (e.g.
+`length` of the allocation).
+-->
+
+<p>これはバッファのような独自クラスの作成に用いることができます。
+他のどんなプロパティも設定されないので、利用者は必要な情報
+(例えば割り当てた長さの <code>length</code>) を追跡できるようにする必要があります。
+
+</p>
+<pre><code>function SimpleData(n) {
+  this.length = n;
+  smalloc.alloc(this.length, this);
+}
+
+SimpleData.prototype = { /* ... */ };</code></pre>
+<!--
+It only checks if the `receiver` is an Object, and also not an Array. Because of
+this it is possible to allocate external array data to more than a plain Object.
+-->
+
+<p><code>receiver</code> は配列以外のオブジェクトであることがチェックされるだけです。
+このため、外部の配列データをプレーンなオブジェクト以上のものに
+割り当てることができます。
+
+</p>
+<pre><code>function allocMe() { }
+smalloc.alloc(3, allocMe);
+
+// { [Function allocMe] &#39;0&#39;: 0, &#39;1&#39;: 0, &#39;2&#39;: 0 }</code></pre>
+<!--
+v8 does not support allocating external array data to an Array, and if passed
+will throw.
+-->
+
+<p>v8は外部の配列データを Array オブジェクトに割り当てることを
+サポートしていないため、もし渡すと例外がスローされます。
+
+</p>
+<h2>smalloc.copyOnto(source, sourceStart, dest, destStart, copyLength);<span><a class="mark" href="#smalloc_smalloc_copyonto_source_sourcestart_dest_deststart_copylength" id="smalloc_smalloc_copyonto_source_sourcestart_dest_deststart_copylength">#</a></span></h2>
+<!--
+* `source` Object with external array allocation
+* `sourceStart` Position to begin copying from
+* `dest` Object with external array allocation
+* `destStart` Position to begin copying onto
+* `copyLength` Length of copy
+-->
+
+<ul>
+<li><code>source</code> 外部の配列が割り当てられたオブジェクト</li>
+<li><code>sourceStart</code> コピーを開始する位置</li>
+<li><code>dest</code> 外部の配列が割り当てられたオブジェクト</li>
+<li><code>destStart</code> コピーを開始する位置</li>
+<li><code>copyLength</code> コピーする長さ</li>
+</ul>
+<!--
+Copy memory from one external array allocation to another. No arguments are
+optional, and any violation will throw.
+-->
+
+<p>外部の配列に割り当てられたメモリの一つから別のメモリへコピーします。
+全ての引数は必須で、どんな違反でも例外がスローされます。
+
+</p>
+<pre><code>var a = smalloc.alloc(4);
+var b = smalloc.alloc(4);
+
+for (var i = 0; i &lt; 4; i++) {
+  a[i] = i;
+  b[i] = i * 2;
+}
+
+// { &#39;0&#39;: 0, &#39;1&#39;: 1, &#39;2&#39;: 2, &#39;3&#39;: 3 }
+// { &#39;0&#39;: 0, &#39;1&#39;: 2, &#39;2&#39;: 4, &#39;3&#39;: 6 }
+
+smalloc.copyOnto(b, 2, a, 0, 2);
+
+// { &#39;0&#39;: 4, &#39;1&#39;: 6, &#39;2&#39;: 2, &#39;3&#39;: 3 }</code></pre>
+<!--
+`copyOnto` automatically detects the length of the allocation internally, so no
+need to set any additional properties for this to work.
+-->
+
+<p><code>copyOnto()</code> は内部で割り当てられた長さを自動的に検出するので、
+これが動作するために追加のプロパティを設定する必要はありません。
+
+</p>
+<h2>smalloc.dispose(obj)<span><a class="mark" href="#smalloc_smalloc_dispose_obj" id="smalloc_smalloc_dispose_obj">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>obj</code> Object</li>
+</div></ul>
+<!--
+Free memory that has been allocated to an object via `smalloc.alloc`.
+-->
+
+<p><code>smalloc.alloc()</code> によってオブジェクトに割り当てられたメモリを解放します。
+
+</p>
+<pre><code>var a = {};
+smalloc.alloc(3, a);
+
+// { &#39;0&#39;: 0, &#39;1&#39;: 0, &#39;2&#39;: 0 }
+
+smalloc.dispose(a);
+
+// {}</code></pre>
+<!--
+This is useful to reduce strain on the garbage collector, but developers must be
+careful. Cryptic errors may arise in applications that are difficult to trace.
+-->
+
+<p>これはガーベッジコレクションの負荷を軽減しますが、開発者は注意が必要です。
+不可解なエラーが追跡の難しいアプリケーションで発生するかもしれません。
+
+</p>
+<pre><code>var a = smalloc.alloc(4);
+var b = smalloc.alloc(4);
+
+// perform this somewhere along the line
+smalloc.dispose(b);
+
+// now trying to copy some data out
+smalloc.copyOnto(b, 2, a, 0, 2);
+
+// now results in:
+// Error: source has no external array data</code></pre>
+<!--
+`dispose()` does not support Buffers, and will throw if passed.
+-->
+
+<p><code>dispose()</code> は <code>Buffer</code> をサポートしません。もし渡されると例外をスローします。
+
+</p>
+<h2>smalloc.kMaxLength<span><a class="mark" href="#smalloc_smalloc_kmaxlength" id="smalloc_smalloc_kmaxlength">#</a></span></h2>
+<!--
+Size of maximum allocation. This is also applicable to Buffer creation.
+-->
+
+<p>割り当てられる最大長です。
+これは <code>Buffer</code> を作成する際にも適用されます。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <a href="http://joyent.com" class="joyent-logo">Joyent</a>
+        <ul class="clearfix">
+            <!--
+            <li><a href="/">Node.js</a></li>
+            <li><a href="/download/">Download</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="http://npmjs.org/">npm Registry</a></li>
+            <li><a href="http://nodejs.org/api/">Docs</a></li>
+            <li><a href="http://blog.nodejs.org">Blog</a></li>
+            <li><a href="/community/">Community</a></li>
+            <li><a href="/logos/">Logos</a></li>
+            -->
+            <li><a href="../">Node.js</a></li>
+            <li><a href="../#download">ダウンロード</a></li>
+            <li><a href="../about/">概要</a></li>
+            <li><a href="http://npmjs.org/">npm レジストリ</a></li>
+            <li><a href="../api/">ドキュメント</a></li>
+            <li><a href="http://blog.nodejs.org">ブログ</a></li>
+            <li><a href="../community/">コミュニティ</a></li>
+            <li><a href="../logos/">ロゴ</a></li>
+            <li><a href="http://jobs.nodejs.org/">Jobs</a></li>
+            <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
+        </ul>
+
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.5/LICENSE">license</a>.</p>
+    </div>
+
+  <script src="../sh_main.js"></script>
+  <script src="../sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+  <script>
+    window._gaq = [['_setAccount', 'UA-10874194-2'], ['_trackPageview']];
+    (function(d, t) {
+      var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      g.src = '//www.google-analytics.com/ga.js';
+      s.parentNode.insertBefore(g, s);
+    }(document, 'script'));
+  </script>
+</body>
+</html>
+
