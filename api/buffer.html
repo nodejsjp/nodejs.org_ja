@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Buffer Node.js v0.11.4 Manual &amp; Documentation</title>
+  <title>Buffer Node.js v0.11.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/buffer.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.5 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -64,8 +64,6 @@
 <li><a href="#buffer_class_method_buffer_isbuffer_obj">Class Method: Buffer.isBuffer(obj)</a></li>
 <li><a href="#buffer_class_method_buffer_bytelength_string_encoding">Class Method: Buffer.byteLength(string, [encoding])</a></li>
 <li><a href="#buffer_class_method_buffer_concat_list_totallength">Class Method: Buffer.concat(list, [totalLength])</a></li>
-<li><a href="#buffer_class_method_buffer_alloc_length_receiver">Class Method: Buffer.alloc(length, [receiver])</a></li>
-<li><a href="#buffer_class_method_buffer_dispose_obj">Class Method: Buffer.dispose(obj)</a></li>
 <li><a href="#buffer_buf_length">buf.length</a></li>
 <li><a href="#buffer_buf_write_string_offset_length_encoding">buf.write(string, [offset], [length], [encoding])</a></li>
 <li><a href="#buffer_buf_tostring_encoding_start_end">buf.toString([encoding], [start], [end])</a></li>
@@ -367,74 +365,6 @@ to provide the length explicitly.
 高速です。
 
 </p>
-<h3>Class Method: Buffer.alloc(length, [receiver])<span><a class="mark" href="#buffer_class_method_buffer_alloc_length_receiver" id="buffer_class_method_buffer_alloc_length_receiver">#</a></span></h3>
-<!--
-* `length` Number
-* `receiver` Object, Optional, Default: `new Object`
--->
-
-<ul>
-<li><code>length</code> Number</li>
-<li><code>receiver</code> Object, 任意, デフォルト: <code>new Object</code></li>
-</ul>
-<!--
-**(EXPERIMENTAL)** Returns object with allocated external array data.
--->
-
-<p><strong>(実験的)</strong> オブジェクトを外部配列のデータに割り当てて返します。
-
-</p>
-<!--
-Buffers are backed by a simple allocator that only handles the assignation of
-external raw memory. This exposes that functionality.
--->
-
-<p>Buffer は外部にある生のメモリを割り当てるだけの単純なアロケータによって
-扱われます。これはその機能を公開します。
-
-</p>
-<!--
-No pooling is performed for these allocations. So there's no form of memory
-leak.
--->
-
-<p>これらの割り当てにプーリングは適用されません。
-そのため、メモリリークする形式はありません。
-
-</p>
-<!--
-This can be used to create your own Buffer-like classes.
--->
-
-<p>これは Buffer に似た独自のクラスを作成するために使用することができます。
-
-</p>
-<pre><code>function SimpleData(n) {
-  this.length = n;
-  Buffer.alloc(this.length, this);
-}
-
-SimpleData.prototype = { /* ... */ };</code></pre>
-<h3>Class Method: Buffer.dispose(obj)<span><a class="mark" href="#buffer_class_method_buffer_dispose_obj" id="buffer_class_method_buffer_dispose_obj">#</a></span></h3>
-<div class="signature"><ul>
-<li><code>obj</code> Object</li>
-</div></ul>
-<!--
-**(EXPERIMENTAL)** Free memory that has been allocated to an object via
-`Buffer.alloc`.
--->
-
-<p><strong>(実験的)</strong> <code>Buffer.alloc()</code> によって割り当てられたオブジェクトを解放します。
-
-</p>
-<pre><code>var a = {};
-Buffer.alloc(3, a);
-
-// { &#39;0&#39;: 0, &#39;1&#39;: 0, &#39;2&#39;: 0 }
-
-Buffer.dispose(a);
-
-// {}</code></pre>
 <h3>buf.length<span><a class="mark" href="#buffer_buf_length" id="buffer_buf_length">#</a></span></h3>
 <div class="signature"><ul>
 <li>Number</li>
@@ -1461,7 +1391,7 @@ has actively observed undue memory retention in their applications.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.5/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

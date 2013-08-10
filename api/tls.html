@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.11.4 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.11.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.5 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -358,9 +358,10 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `NPNProtocols`: An array or `Buffer` of possible NPN protocols. (Protocols
     should be ordered by their priority).
 
-  - `SNICallback`: A function that will be called if client supports SNI TLS
-    extension. Only one argument will be passed to it: `servername`. And
-    `SNICallback` should return SecureContext instance.
+  - `SNICallback(servername, cb)`: A function that will be called if client
+    supports SNI TLS extension. Two argument will be passed to it: `servername`,
+    and `cb`. `SNICallback` should invoke `cb(null, ctx)`, where `ctx` is a
+    SecureContext instance.
     (You can use `crypto.createCredentials(...).context` to get proper
     SecureContext). If `SNICallback` wasn't provided - default callback with
     high-level API will be used (see below).
@@ -372,6 +373,10 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `sessionIdContext`: A string containing a opaque identifier for session
     resumption. If `requestCert` is `true`, the default is MD5 hash value
     generated from command-line. Otherwise, the default is not provided.
+
+  - `secureProtocol`: The SSL method to use, e.g. `SSLv3_method` to force
+    SSL version 3. The possible values depend on your installation of
+    OpenSSL and are defined in the constant [SSL_METHODS][].
 
 -->
 
@@ -433,10 +438,11 @@ RC4 は安全なフォールバックとして使われます。</p>
 <li><p><code>NPNProtocols</code>: NPN プロトコルで使用可能な文字列または <code>Buffer</code> の配列
 (プロトコルはその優先度に応じて並んでいる必要があります)。</p>
 </li>
-<li><p><code>SNICallback</code>: クライアントが TLS 拡張の SNI をサポートしている場合に
-呼び出される関数です。
-<code>servername</code> が唯一の引数として渡されます。
-<code>SNICallback</code> は SecureContext のインスタンスを返す必要があります
+<li><p><code>SNICallback(servername, cb)</code>: クライアントが TLS 拡張の SNI を
+サポートしている場合に呼び出される関数です。
+二つの引数、<code>servername</code> と <code>cb</code> が渡されます。
+<code>SNICallback</code> は、<code>cb(null, ctx)</code> を呼び出す必要があります。
+<code>ctx</code> はSecureContext のインスタンスです
 (SecureContext を取得するために <code>crypto.createCredentials(...).context</code>
 を使用することができます)。
 <code>SNICallback</code> が渡されなかった場合は、デフォルトのコールバックとして
@@ -450,6 +456,10 @@ RC4 は安全なフォールバックとして使われます。</p>
 <code>requestCedrt</code> が <code>true</code> の場合、デフォルトはコマンドライン引数から
 生成された MD5 ハッシュ値となります。
 そうでない場合はデフォルトは提供されません。</p>
+</li>
+<li><p><code>secureProtocol</code>: 使用する SSL メソッド、たとえば <code>SSLv3_method</code> は
+SSL version 3 の使用を強制します。可能な値は使用する OpenSSL によって
+定義される <a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS">SSL_METHODS</a> 定数に依存します。</p>
 </li>
 </ul>
 <!--
@@ -1284,7 +1294,7 @@ The numeric representation of the local port.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.5/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
