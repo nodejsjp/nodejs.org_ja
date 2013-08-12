@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.11.4 Manual &amp; Documentation</title>
+  <title>process Node.js v0.11.5 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.4 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.5 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -881,23 +881,38 @@ This will generate:
 
 </p>
 <h2>process.nextTick(callback)<span><a class="mark" href="#process_process_nexttick_callback" id="process_process_nexttick_callback">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
 <!--
-On the next loop around the event loop call this callback.
-This is *not* a simple alias to `setTimeout(fn, 0)`, it's much more
-efficient.  It typically runs before any other I/O events fire, but there
-are some exceptions.
+Once the current event loop turn runs to completion, call the callback
+function.
 -->
 
-<p>イベントループの次以降のループでコールバックを呼び出します。
-これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、
-はるかに効率的です。
-これは通常他の I/O イベントが発生するよりも前に実行されますが、
-いくつかの例外があります。
+<p>現在のイベントループが完了した後、コールバック関数を呼び出します。
 
 </p>
-<pre><code>process.nextTick(function() {
+<!--
+This is *not* a simple alias to `setTimeout(fn, 0)`, it's much more
+efficient.  It runs before any additional I/O events (including
+timers) fire in subsequent ticks of the event loop.
+-->
+
+<p>これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、
+はるかに効率的です。
+これは他のどの I/O イベント (タイマを含みます) が発生するよりも前に
+実行されます。
+
+</p>
+<pre><code>console.log(&#39;start&#39;);
+process.nextTick(function() {
   console.log(&#39;nextTick callback&#39;);
-});</code></pre>
+});
+console.log(&#39;scheduled&#39;);
+// Output:
+// start
+// scheduled
+// nextTick callback</code></pre>
 <!--
 This is important in developing APIs where you want to give the user the
 chance to assign event handlers after an object has been constructed,
@@ -972,6 +987,19 @@ This approach is much better:
 
   fs.stat(&#39;file&#39;, cb);
 }</code></pre>
+<!--
+Note: the nextTick queue is completely drained on each pass of the
+event loop **before** additional I/O is processed.  As a result,
+recursively setting nextTick callbacks will block any I/O from
+happening, just like a `while(true);` loop.
+-->
+
+<p>注意: イベントループの各繰り返しでは、I/O が処理される <strong>前</strong> に
+nextTick のキューが完全に空にされます。
+この結果、再帰的に設定された nextTick のコールバックは、
+<code>while (true);</code> ループのように全てのI/O をブロックします
+
+</p>
 <h2>process.umask([mask])<span><a class="mark" href="#process_process_umask_mask" id="process_process_umask_mask">#</a></span></h2>
 <!--
 Sets or reads the process's file mode creation mask. Child processes inherit
@@ -1057,7 +1085,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.4/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.5/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

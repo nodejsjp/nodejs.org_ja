@@ -280,8 +280,16 @@
           "textRaw": "process.nextTick(callback)",
           "type": "method",
           "name": "nextTick",
-          "desc": "<!--\nOn the next loop around the event loop call this callback.\nThis is *not* a simple alias to `setTimeout(fn, 0)`, it's much more\nefficient.  It typically runs before any other I/O events fire, but there\nare some exceptions.\n-->\n\n<p>イベントループの次以降のループでコールバックを呼び出します。\nこれは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、\nはるかに効率的です。\nこれは通常他の I/O イベントが発生するよりも前に実行されますが、\nいくつかの例外があります。\n\n</p>\n<pre><code>process.nextTick(function() {\n  console.log(&#39;nextTick callback&#39;);\n});</code></pre>\n<!--\nThis is important in developing APIs where you want to give the user the\nchance to assign event handlers after an object has been constructed,\nbut before any I/O has occurred.\n-->\n\n<p>これは API の開発において、オブジェクトが構築された後で\nどんな I/O イベントが発生するよりも前に、\nイベントハンドラを割り当てるチャンスをユーザに与えたい場合に重要になります。\n\n</p>\n<pre><code>function MyThing(options) {\n  this.setupOptions(options);\n\n  process.nextTick(function() {\n    this.startDoingStuff();\n  }.bind(this));\n}\n\nvar thing = new MyThing();\nthing.getReadyForStuff();\n\n// thing.startDoingStuff() gets called now, not before.</code></pre>\n<!--\nIt is very important for APIs to be either 100% synchronous or 100%\nasynchronous.  Consider this example:\n-->\n\n<p>API は 100% 同期的か、100% 非同期的かのどちらかであることがとても重要です。\nこの例を考えてみてください:\n\n</p>\n<pre><code>// WARNING!  DO NOT USE!  BAD UNSAFE HAZARD!\nfunction maybeSync(arg, cb) {\n  if (arg) {\n    cb();\n    return;\n  }\n\n  fs.stat(&#39;file&#39;, cb);\n}</code></pre>\n<!--\nThis API is hazardous.  If you do this:\n-->\n\n<p>この API は危険です。こうすると:\n\n</p>\n<pre><code>maybeSync(true, function() {\n  foo();\n});\nbar();</code></pre>\n<!--\nthen it's not clear whether `foo()` or `bar()` will be called first.\n-->\n\n<p><code>foo()</code> と <code>bar()</code> のどちらが先に呼び出されるか不明瞭になります。\n\n</p>\n<!--\nThis approach is much better:\n-->\n\n<p>以下のアプローチはずっと優れています:\n\n</p>\n<pre><code>function definitelyAsync(arg, cb) {\n  if (arg) {\n    process.nextTick(cb);\n    return;\n  }\n\n  fs.stat(&#39;file&#39;, cb);\n}</code></pre>\n",
           "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`callback` {Function} ",
+                  "name": "callback",
+                  "type": "Function"
+                }
+              ]
+            },
             {
               "params": [
                 {
@@ -289,7 +297,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "desc": "<!--\nOnce the current event loop turn runs to completion, call the callback\nfunction.\n-->\n\n<p>現在のイベントループが完了した後、コールバック関数を呼び出します。\n\n</p>\n<!--\nThis is *not* a simple alias to `setTimeout(fn, 0)`, it's much more\nefficient.  It runs before any additional I/O events (including\ntimers) fire in subsequent ticks of the event loop.\n-->\n\n<p>これは <code>setTimeout(fn, 0)</code> の単純なエイリアス<em>ではなく</em>、\nはるかに効率的です。\nこれは他のどの I/O イベント (タイマを含みます) が発生するよりも前に\n実行されます。\n\n</p>\n<pre><code>console.log(&#39;start&#39;);\nprocess.nextTick(function() {\n  console.log(&#39;nextTick callback&#39;);\n});\nconsole.log(&#39;scheduled&#39;);\n// Output:\n// start\n// scheduled\n// nextTick callback</code></pre>\n<!--\nThis is important in developing APIs where you want to give the user the\nchance to assign event handlers after an object has been constructed,\nbut before any I/O has occurred.\n-->\n\n<p>これは API の開発において、オブジェクトが構築された後で\nどんな I/O イベントが発生するよりも前に、\nイベントハンドラを割り当てるチャンスをユーザに与えたい場合に重要になります。\n\n</p>\n<pre><code>function MyThing(options) {\n  this.setupOptions(options);\n\n  process.nextTick(function() {\n    this.startDoingStuff();\n  }.bind(this));\n}\n\nvar thing = new MyThing();\nthing.getReadyForStuff();\n\n// thing.startDoingStuff() gets called now, not before.</code></pre>\n<!--\nIt is very important for APIs to be either 100% synchronous or 100%\nasynchronous.  Consider this example:\n-->\n\n<p>API は 100% 同期的か、100% 非同期的かのどちらかであることがとても重要です。\nこの例を考えてみてください:\n\n</p>\n<pre><code>// WARNING!  DO NOT USE!  BAD UNSAFE HAZARD!\nfunction maybeSync(arg, cb) {\n  if (arg) {\n    cb();\n    return;\n  }\n\n  fs.stat(&#39;file&#39;, cb);\n}</code></pre>\n<!--\nThis API is hazardous.  If you do this:\n-->\n\n<p>この API は危険です。こうすると:\n\n</p>\n<pre><code>maybeSync(true, function() {\n  foo();\n});\nbar();</code></pre>\n<!--\nthen it's not clear whether `foo()` or `bar()` will be called first.\n-->\n\n<p><code>foo()</code> と <code>bar()</code> のどちらが先に呼び出されるか不明瞭になります。\n\n</p>\n<!--\nThis approach is much better:\n-->\n\n<p>以下のアプローチはずっと優れています:\n\n</p>\n<pre><code>function definitelyAsync(arg, cb) {\n  if (arg) {\n    process.nextTick(cb);\n    return;\n  }\n\n  fs.stat(&#39;file&#39;, cb);\n}</code></pre>\n<!--\nNote: the nextTick queue is completely drained on each pass of the\nevent loop **before** additional I/O is processed.  As a result,\nrecursively setting nextTick callbacks will block any I/O from\nhappening, just like a `while(true);` loop.\n-->\n\n<p>注意: イベントループの各繰り返しでは、I/O が処理される <strong>前</strong> に\nnextTick のキューが完全に空にされます。\nこの結果、再帰的に設定された nextTick のコールバックは、\n<code>while (true);</code> ループのように全てのI/O をブロックします\n\n</p>\n"
         },
         {
           "textRaw": "process.umask([mask])",
