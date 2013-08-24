@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Smalloc Node.js v0.11.5 Manual &amp; Documentation</title>
+  <title>Smalloc Node.js v0.11.6 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/smalloc.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.5 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.6 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,10 +56,11 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#smalloc_smalloc">Smalloc</a><ul>
-<li><a href="#smalloc_smalloc_alloc_length_receiver">smalloc.alloc(length[, receiver])</a></li>
+<li><a href="#smalloc_smalloc_alloc_length_receiver_type">smalloc.alloc(length[, receiver][, type])</a></li>
 <li><a href="#smalloc_smalloc_copyonto_source_sourcestart_dest_deststart_copylength">smalloc.copyOnto(source, sourceStart, dest, destStart, copyLength);</a></li>
 <li><a href="#smalloc_smalloc_dispose_obj">smalloc.dispose(obj)</a></li>
 <li><a href="#smalloc_smalloc_kmaxlength">smalloc.kMaxLength</a></li>
+<li><a href="#smalloc_smalloc_types">smalloc.Types</a></li>
 </ul>
 </li>
 </ul>
@@ -68,15 +69,17 @@
 
           <div id="apicontent">
             <h1>Smalloc<span><a class="mark" href="#smalloc_smalloc" id="smalloc_smalloc">#</a></span></h1>
-<pre class="api_stability_1">Stability: 1 - Experimental</pre><h2>smalloc.alloc(length[, receiver])<span><a class="mark" href="#smalloc_smalloc_alloc_length_receiver" id="smalloc_smalloc_alloc_length_receiver">#</a></span></h2>
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><h2>smalloc.alloc(length[, receiver][, type])<span><a class="mark" href="#smalloc_smalloc_alloc_length_receiver_type" id="smalloc_smalloc_alloc_length_receiver_type">#</a></span></h2>
 <!--
-* `length` Number `<= smalloc.kMaxLength`
-* `receiver` Object, Optional, Default: `new Object`
+* `length` {Number} `<= smalloc.kMaxLength`
+* `receiver` {Object}, Optional, Default: `new Object`
+* `type` {Enum}, Optional, Default: `Uint8`
 -->
 
 <ul>
-<li><code>length</code> Number <code>&lt;= smalloc.kMaxLength</code></li>
-<li><code>receiver</code> Object, オプション、デフォルトは <code>new Object</code></li>
+<li><code>length</code> {Number} <code>&lt;= smalloc.kMaxLength</code></li>
+<li><code>receiver</code> {Object} オプション、デフォルトは <code>new Object</code></li>
+<li><code>type</code> {Enum} オプション、デフォルトは <code>Uint8</code></li>
 </ul>
 <!--
 Returns `receiver` with allocated external array data. If no `receiver` is
@@ -136,6 +139,21 @@ will throw.
 サポートしていないため、もし渡すと例外がスローされます。
 
 </p>
+<!--
+It's possible is to specify the type of external array data you would like. All
+possible options are listed in `smalloc.Types`. Example usage:
+-->
+
+<p>外部の配列データの型を指定することができます。
+全ての可能なオプションは <code>smalloc.Types</code> に列挙されています。使用例:
+
+</p>
+<pre><code>var doubleArr = smalloc.alloc(3, smalloc.Types.Double);
+
+for (var i = 0; i &lt; 3; i++)
+  doubleArr = i / 10;
+
+// { &#39;0&#39;: 0, &#39;1&#39;: 0.1, &#39;2&#39;: 0.2 }</code></pre>
 <h2>smalloc.copyOnto(source, sourceStart, dest, destStart, copyLength);<span><a class="mark" href="#smalloc_smalloc_copyonto_source_sourcestart_dest_deststart_copylength" id="smalloc_smalloc_copyonto_source_sourcestart_dest_deststart_copylength">#</a></span></h2>
 <!--
 * `source` Object with external array allocation
@@ -237,7 +255,27 @@ Size of maximum allocation. This is also applicable to Buffer creation.
 
 <p>割り当てられる最大長です。
 これは <code>Buffer</code> を作成する際にも適用されます。
+
 </p>
+<h2>smalloc.Types<span><a class="mark" href="#smalloc_smalloc_types" id="smalloc_smalloc_types">#</a></span></h2>
+<!--
+Enum of possible external array types. Contains:
+-->
+
+<p>外部の配列で可能な型の列挙です。以下を含みます:
+
+</p>
+<ul>
+<li><code>Int8</code></li>
+<li><code>Uint8</code></li>
+<li><code>Int16</code></li>
+<li><code>Uint16</code></li>
+<li><code>Int32</code></li>
+<li><code>Uint32</code></li>
+<li><code>Float</code></li>
+<li><code>Double</code></li>
+<li><code>Uint8Clamped</code></li>
+</ul>
 
           </div>
         </div>
@@ -267,7 +305,7 @@ Size of maximum allocation. This is also applicable to Buffer creation.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.5/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.6/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
