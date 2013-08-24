@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>UDP / Datagram Sockets Node.js v0.10.16 Manual &amp; Documentation</title>
+  <title>UDP / Datagram Sockets Node.js v0.10.17 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/dgram.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.16 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.17 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -337,27 +337,54 @@ IP ヘッダとデータ含めて 64K オクテットより長くなれないこ
 
 </p>
 <h3>socket.bind(port, [address], [callback])<span><a class="mark" href="#dgram_socket_bind_port_address_callback" id="dgram_socket_bind_port_address_callback">#</a></span></h3>
-<div class="signature"><ul>
-<li><code>port</code> Integer</li>
-<li><code>address</code> String, Optional</li>
-<li><code>callback</code> Function, Optional</li>
-</div></ul>
 <!--
-For UDP sockets, listen for datagrams on a named `port` and optional `address`.
-If `address` is not specified, the OS will try to listen on all addresses.
+* `port` Integer
+* `address` String, Optional
+* `callback` Function with no parameters, Optional. Callback when
+  binding is done.
 -->
 
-<p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを待ち受けます。
+<ul>
+<li><code>port</code> Integer</li>
+<li><code>address</code> String、任意</li>
+<li><code>callback</code> 引数のない関数、任意。バインディングが終了した時に
+コールバックされます。</li>
+</ul>
+<!--
+For UDP sockets, listen for datagrams on a named `port` and optional
+`address`. If `address` is not specified, the OS will try to listen on
+all addresses.  After binding is done, a "listening" event is emitted
+and the `callback`(if specified) is called. Specifying both a
+"listening" event listener and `callback` is not harmful but not very
+useful.
+-->
+
+<p>UDP ソケットに対して、<code>port</code> とオプションの <code>address</code> でデータグラムを
+待ち受けます。
 <code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。
+バインディングが完了すると、<code>&#39;listening&#39;</code> イベントが生成され、
+(もし指定されていれば) <code>callback</code> が呼び出されます。
+<code>&#39;listening&#39;</code> イベントリスナと <code>callback</code> の両方を指定しても有害ではありませんが
+あまり役には立ちません。
 
 </p>
 <!--
-The `callback` argument, if provided, is added as a one-shot `'listening'`
-event listener.
+A bound datagram socket keeps the node process running to receive
+datagrams.
 -->
 
-<p><code>callback</code> 引数は、もし提供されると <code>&#39;listening&#39;</code> イベントの一回限りの
-リスナとして追加されます。
+<p>束縛されたデータグラムソケットはデータグラムを受信するために node プロセスの
+実行を維持し続けます。
+
+</p>
+<!--
+If binding fails, an "error" event is generated. In rare case (e.g.
+binding a closed socket), an `Error` may be thrown by this method.
+-->
+
+<p>バインディングが失敗すると、<code>&#39;error&#39;</code> イベントが生成されます。
+まれなケース (たとえばクローズしたソケットへのバインディング) では、
+このメソッドは <code>Error</code> をスローすることがあります。
 
 </p>
 <!--
@@ -370,6 +397,11 @@ Example of a UDP server listening on port 41234:
 <pre><code>var dgram = require(&quot;dgram&quot;);
 
 var server = dgram.createSocket(&quot;udp4&quot;);
+
+server.on(&quot;error&quot;, function (err) {
+  console.log(&quot;server error:\n&quot; + err.stack);
+  server.close();
+});
 
 server.on(&quot;message&quot;, function (msg, rinfo) {
   console.log(&quot;server got: &quot; + msg + &quot; from &quot; +
@@ -569,7 +601,7 @@ the socket is `ref`d calling `ref` again will have no effect.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.16/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.17/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

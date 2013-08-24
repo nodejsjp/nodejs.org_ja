@@ -100,28 +100,8 @@
               "textRaw": "socket.bind(port, [address], [callback])",
               "type": "method",
               "name": "bind",
+              "desc": "<!--\n* `port` Integer\n* `address` String, Optional\n* `callback` Function with no parameters, Optional. Callback when\n  binding is done.\n-->\n\n<ul>\n<li><code>port</code> Integer</li>\n<li><code>address</code> String、任意</li>\n<li><code>callback</code> 引数のない関数、任意。バインディングが終了した時に\nコールバックされます。</li>\n</ul>\n<!--\nFor UDP sockets, listen for datagrams on a named `port` and optional\n`address`. If `address` is not specified, the OS will try to listen on\nall addresses.  After binding is done, a \"listening\" event is emitted\nand the `callback`(if specified) is called. Specifying both a\n\"listening\" event listener and `callback` is not harmful but not very\nuseful.\n-->\n\n<p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを\n待ち受けます。\n<code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。\nバインディングが完了すると、<code>&#39;listening&#39;</code> イベントが生成され、\n(もし指定されていれば) <code>callback</code> が呼び出されます。\n<code>&#39;listening&#39;</code> イベントリスナと <code>callback</code> の両方を指定しても有害ではありませんが\nあまり役には立ちません。\n\n</p>\n<!--\nA bound datagram socket keeps the node process running to receive\ndatagrams.\n-->\n\n<p>束縛されたデータグラムソケットはデータグラムを受信するために node プロセスの\n実行を維持し続けます。\n\n</p>\n<!--\nIf binding fails, an \"error\" event is generated. In rare case (e.g.\nbinding a closed socket), an `Error` may be thrown by this method.\n-->\n\n<p>バインディングが失敗すると、<code>&#39;error&#39;</code> イベントが生成されます。\nまれなケース (たとえばクローズしたソケットへのバインディング) では、\nこのメソッドは <code>Error</code> をスローすることがあります。\n\n</p>\n<!--\nExample of a UDP server listening on port 41234:\n-->\n\n<p>41234 番ポートを待ち受ける UDP サーバの例:\n\n</p>\n<pre><code>var dgram = require(&quot;dgram&quot;);\n\nvar server = dgram.createSocket(&quot;udp4&quot;);\n\nserver.on(&quot;error&quot;, function (err) {\n  console.log(&quot;server error:\\n&quot; + err.stack);\n  server.close();\n});\n\nserver.on(&quot;message&quot;, function (msg, rinfo) {\n  console.log(&quot;server got: &quot; + msg + &quot; from &quot; +\n    rinfo.address + &quot;:&quot; + rinfo.port);\n});\n\nserver.on(&quot;listening&quot;, function () {\n  var address = server.address();\n  console.log(&quot;server listening &quot; +\n      address.address + &quot;:&quot; + address.port);\n});\n\nserver.bind(41234);\n// server listening 0.0.0.0:41234</code></pre>\n",
               "signatures": [
-                {
-                  "params": [
-                    {
-                      "textRaw": "`port` Integer ",
-                      "name": "port",
-                      "desc": "Integer"
-                    },
-                    {
-                      "textRaw": "`address` String, Optional ",
-                      "name": "address",
-                      "optional": true,
-                      "desc": "String"
-                    },
-                    {
-                      "textRaw": "`callback` Function, Optional ",
-                      "name": "callback",
-                      "optional": true,
-                      "desc": "Function"
-                    }
-                  ]
-                },
                 {
                   "params": [
                     {
@@ -137,8 +117,7 @@
                     }
                   ]
                 }
-              ],
-              "desc": "<!--\nFor UDP sockets, listen for datagrams on a named `port` and optional `address`.\nIf `address` is not specified, the OS will try to listen on all addresses.\n-->\n\n<p>UDP ソケット用です。<code>port</code> とオプションの <code>address</code> でデータグラムを待ち受けます。\n<code>address</code> が指定されなければ、OS は全てのアドレスからの待ち受けを試みます。\n\n</p>\n<!--\nThe `callback` argument, if provided, is added as a one-shot `'listening'`\nevent listener.\n-->\n\n<p><code>callback</code> 引数は、もし提供されると <code>&#39;listening&#39;</code> イベントの一回限りの\nリスナとして追加されます。\n\n</p>\n<!--\nExample of a UDP server listening on port 41234:\n-->\n\n<p>41234 番ポートを待ち受ける UDP サーバの例:\n\n</p>\n<pre><code>var dgram = require(&quot;dgram&quot;);\n\nvar server = dgram.createSocket(&quot;udp4&quot;);\n\nserver.on(&quot;message&quot;, function (msg, rinfo) {\n  console.log(&quot;server got: &quot; + msg + &quot; from &quot; +\n    rinfo.address + &quot;:&quot; + rinfo.port);\n});\n\nserver.on(&quot;listening&quot;, function () {\n  var address = server.address();\n  console.log(&quot;server listening &quot; +\n      address.address + &quot;:&quot; + address.port);\n});\n\nserver.bind(41234);\n// server listening 0.0.0.0:41234</code></pre>\n"
+              ]
             },
             {
               "textRaw": "socket.close()",
