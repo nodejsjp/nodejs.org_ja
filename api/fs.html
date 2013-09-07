@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.11.6 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.11.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -130,7 +130,10 @@
 </li>
 <li><a href="#fs_fs_exists_path_callback">fs.exists(path, callback)</a></li>
 <li><a href="#fs_fs_existssync_path">fs.existsSync(path)</a></li>
-<li><a href="#fs_class_fs_stats">Class: fs.Stats</a></li>
+<li><a href="#fs_class_fs_stats">Class: fs.Stats</a><ul>
+<li><a href="#fs_stat_time_values">Stat Time Values</a></li>
+</ul>
+</li>
 <li><a href="#fs_fs_createreadstream_path_options">fs.createReadStream(path, [options])</a></li>
 <li><a href="#fs_class_fs_readstream">Class: fs.ReadStream</a><ul>
 <li><a href="#fs_event_open">Event: &#39;open&#39;</a></li>
@@ -1555,25 +1558,79 @@ similar to this:
   blocks: 8,
   atime: Mon, 10 Oct 2011 23:24:11 GMT,
   mtime: Mon, 10 Oct 2011 23:24:11 GMT,
-  ctime: Mon, 10 Oct 2011 23:24:11 GMT }</code></pre>
+  ctime: Mon, 10 Oct 2011 23:24:11 GMT,
+  birthtime: Mon, 10 Oct 2011 23:24:11 GMT }</code></pre>
 <!--
-Please note that `atime`, `mtime` and `ctime` are instances
-of [Date][MDN-Date] object and to compare the values of
-these objects you should use appropriate methods. For most
-general uses [getTime()][MDN-Date-getTime] will return
-the number of milliseconds elapsed since _1 January 1970
-00:00:00 UTC_ and this integer should be sufficient for
-any comparison, however there additional methods which can
-be used for displaying fuzzy information. More details can
-be found in the [MDN JavaScript Reference][MDN-Date] page.
+Please note that `atime`, `mtime`, `birthtime`, and `ctime` are
+instances of [Date][MDN-Date] object and to compare the values of
+these objects you should use appropriate methods. For most general
+uses [getTime()][MDN-Date-getTime] will return the number of
+milliseconds elapsed since _1 January 1970 00:00:00 UTC_ and this
+integer should be sufficient for any comparison, however there
+additional methods which can be used for displaying fuzzy information.
+More details can be found in the [MDN JavaScript Reference][MDN-Date]
+page.
 -->
 
-<p><code>atime</code>、<code>mtime</code>、そして <code>ctime</code> は <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date">Date</a> オブジェクトであり、
-その値を比較するには適切な方法があるということに注意してください。
-もっとも一般的に使われる <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/getTime">getTime()</a> は <em>1970 年 1 月
-1 日</em>からの経過時間をミリ秒単位で返します。
+<p><code>atime</code>、<code>mtime</code>、<code>birthtime</code>、そして <code>ctime</code> は <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date">Date</a>
+オブジェクトであり、その値を比較するには適切な方法があるということに
+注意してください。もっとも一般的に使われる <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/getTime">getTime()</a> は
+<em>1970年 1月 1日</em> からの経過時間をミリ秒単位で返します。
 それは比較には十分ですが、曖昧な情報を表示するには別の方法を使ってください。
 より詳しい情報は <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date">MDN JavaScript Reference</a> で探すことができます。
+
+</p>
+<h3>Stat Time Values<span><a class="mark" href="#fs_stat_time_values" id="fs_stat_time_values">#</a></span></h3>
+<!--
+The times in the stat object have the following semantics:
+-->
+
+<p>stat オブジェクト中の時間は以下の意味を持ちます。
+
+</p>
+<!--
+* `atime` "Access Time" - Time when file data last accessed.  Changed
+  by the `mknod(2)`, `utimes(2)`, and `read(2)` system calls.
+* `mtime` "Modified Time" - Time when file data last modified.
+  Changed by the `mknod(2)`, `utimes(2)`, and `write(2)` system calls.
+* `ctime` "Change Time" - Time when file status was last changed
+  (inode data modification).  Changed by the `chmod(2)`, `chown(2)`,
+  `link(2)`, `mknod(2)`, `rename(2)`, `unlink(2)`, `utimes(2)`,
+  `read(2)`, and `write(2)` system calls.
+* `birthtime` "Birth Time" -  Time of file creation. Set once when the
+  file is created.  On filesystems where birthtime is not available,
+  this field may instead hold either the `ctime` or
+  `1970-01-01T00:00Z` (ie, unix epoch timestamp `0`).  On Darwin and
+  other FreeBSD variants, also set if the `atime` is explicitly set to
+  an earlier value than the current `birthtime` using the `utimes(2)`
+  system call.
+-->
+
+<ul>
+<li><code>atime</code> &quot;Access Time&quot; - ファイルが最後にアクセスされた時間。
+<code>mknod(2)</code>、<code>utimes(2)、そして </code>read(2)` システムコールによって変更されます。</li>
+<li><code>mtime</code> &quot;Modified TIme&quot; - ファイルが最後に変更された時間。
+<code>mknod(2)</code>、<code>utimes(2)、そして </code>write(2)` システムコールによって変更されます。</li>
+<li><code>ctime</code> &quot;Change Time&quot; - ファイルの属性 (iノードのデータ) が最後に変更された
+時間
+<code>chmod(2)</code>、<code>chown(2)</code>、<code>link(2)</code>、<code>mknod(2)</code>、<code>rename(2)</code>、<code>unlink(2)</code>、
+<code>utimes(2)</code>、<code>read(2)</code>、そして<code>write(2)</code>システムコールによって変更されます。</li>
+<li><code>birthtime</code> &quot;Birth Time&quot; - ファイルが作成された時間。
+<code>birthtime</code> を利用できないファイルシステムでは、このフィールドは <code>citme</code>
+と同じか、<code>1970-01-01T00:00Z</code> (Unix エポック時刻の <code>0</code>) を持ちます。
+Darwin およびその他の FreeBSD 方言は、<code>utimes(2)</code> システムコールによって
+現在の <code>birthtime</code> より前の時間を <code>atime</code> に明示的に設定した場合も
+変更されます。</li>
+</ul>
+<!--
+Prior to Node v0.12, the `ctime` held the `birthtime` on Windows
+systems.  Note that as of v0.12, `ctime` is not "creation time", and
+on Unix systems, it never was.
+-->
+
+<p>Node v0.12 より前、Windows システムでは <code>ctime</code> は <code>birthtime</code>
+を保持していました。v0.12 では、Unix システムでは決してそうではなかったように
+<code>ctime</code> は &quot;creation time&quot; ではないことに注意してください。
 
 </p>
 <h2>fs.createReadStream(path, [options])<span><a class="mark" href="#fs_fs_createreadstream_path_options" id="fs_fs_createreadstream_path_options">#</a></span></h2>
@@ -1793,7 +1850,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.11.6 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -565,7 +565,10 @@
 </li>
 <li><a href="#all_fs_exists_path_callback">fs.exists(path, callback)</a></li>
 <li><a href="#all_fs_existssync_path">fs.existsSync(path)</a></li>
-<li><a href="#all_class_fs_stats">Class: fs.Stats</a></li>
+<li><a href="#all_class_fs_stats">Class: fs.Stats</a><ul>
+<li><a href="#all_stat_time_values">Stat Time Values</a></li>
+</ul>
+</li>
 <li><a href="#all_fs_createreadstream_path_options">fs.createReadStream(path, [options])</a></li>
 <li><a href="#all_class_fs_readstream">Class: fs.ReadStream</a><ul>
 <li><a href="#all_event_open">Event: &#39;open&#39;</a></li>
@@ -858,19 +861,16 @@
 </ul>
 </li>
 <li><a href="#all_executing_javascript">Executing JavaScript</a><ul>
-<li><a href="#all_caveats_1">Caveats</a><ul>
-<li><a href="#all_sandboxes">Sandboxes</a></li>
-<li><a href="#all_globals">Globals</a></li>
-</ul>
-</li>
-<li><a href="#all_vm_runinthiscontext_code_filename">vm.runInThisContext(code, [filename])</a></li>
-<li><a href="#all_vm_runinnewcontext_code_sandbox_filename_timeout">vm.runInNewContext(code, [sandbox], [filename], [timeout])</a></li>
-<li><a href="#all_vm_runincontext_code_context_filename_timeout">vm.runInContext(code, context, [filename], [timeout])</a></li>
-<li><a href="#all_vm_createcontext_initsandbox">vm.createContext([initSandbox])</a></li>
-<li><a href="#all_vm_createscript_code_filename">vm.createScript(code, [filename])</a></li>
+<li><a href="#all_vm_runinthiscontext_code_options">vm.runInThisContext(code, [options])</a></li>
+<li><a href="#all_vm_createcontext_sandbox">vm.createContext([sandbox])</a></li>
+<li><a href="#all_vm_iscontext_sandbox">vm.isContext(sandbox)</a></li>
+<li><a href="#all_vm_runincontext_code_contextifiedsandbox_options">vm.runInContext(code, contextifiedSandbox, [options])</a></li>
+<li><a href="#all_vm_runinnewcontext_code_sandbox_options">vm.runInNewContext(code, [sandbox], [options])</a></li>
 <li><a href="#all_class_script">Class: Script</a><ul>
-<li><a href="#all_script_runinthiscontext_timeout">script.runInThisContext([timeout])</a></li>
-<li><a href="#all_script_runinnewcontext_sandbox_timeout">script.runInNewContext([sandbox], [timeout])</a></li>
+<li><a href="#all_new_vm_script_code_options">new vm.Script(code, options)</a></li>
+<li><a href="#all_script_runinthiscontext_options">script.runInThisContext([options])</a></li>
+<li><a href="#all_script_runincontext_contextifiedsandbox_options">script.runInContext(contextifiedSandbox, [options])</a></li>
+<li><a href="#all_script_runinnewcontext_sandbox_options">script.runInNewContext([sandbox], [options])</a></li>
 </ul>
 </li>
 </ul>
@@ -4580,7 +4580,7 @@ setTimeout(function() {
   // benchmark took 1000000527 nanoseconds
 }, 1000);</code></pre>
 <h1>util<span><a class="mark" href="#all_util" id="all_util">#</a></span></h1>
-<pre class="api_stability_5">Stability: 5 - Locked</pre><!--
+<pre class="api_stability_4">Stability: 4 - API Frozen</pre><!--
 These functions are in the module `'util'`. Use `require('util')` to
 access them.
 -->
@@ -4797,13 +4797,13 @@ formatted string:
 後述するように、色はカスタマイズ可能です。</li>
 </ul>
 <!--
- - `customInspect` - if `false`, then custom `inspect()` functions defined on the
-   objects being inspected won't be called. Defaults to `true`.
+ - `customInspect` - if `false`, then custom `inspect(depth, opts)` functions
+   defined on the objects being inspected won't be called. Defaults to `true`.
 -->
 
 <ul>
-<li><code>customInspect</code> - <code>false</code> の場合、オブジェクト独自の <code>inspect()</code> 関数は
-呼び出されません。デフォルトは <code>false</code> です。</li>
+<li><code>customInspect</code> - <code>false</code> の場合、オブジェクト独自の <code>inspect(depth, opts)</code>
+関数は呼び出されません。デフォルトは <code>false</code> です。</li>
 </ul>
 <!--
 Example of inspecting all properties of the `util` object:
@@ -4815,6 +4815,17 @@ Example of inspecting all properties of the `util` object:
 <pre><code>var util = require(&#39;util&#39;);
 
 console.log(util.inspect(util, { showHidden: true, depth: null }));</code></pre>
+<!--
+Values may supply their own custom `inspect(depth, opts)` functions, when
+called they receive the current depth in the recursive inspection, as well as
+the options object passed to `util.inspect()`.
+-->
+
+<p>値はそれ自身のカスタム <code>inspect(depth, opts)</code> 関数を提供するかもしれません。
+それは呼び出される時、現在の再帰的な深さおよび <code>util.inspect()</code> に渡された
+<code>options</code> オブジェクトを受け取ります。
+
+</p>
 <h3>Customizing <code>util.inspect</code> colors<span><a class="mark" href="#all_customizing_util_inspect_colors" id="all_customizing_util_inspect_colors">#</a></span></h3>
 <!-- type=misc -->
 
@@ -6048,49 +6059,20 @@ without exiting the domain.
 </p>
 <h3>domain.dispose()<span><a class="mark" href="#all_domain_dispose" id="all_domain_dispose">#</a></span></h3>
 <!--
-The dispose method destroys a domain, and makes a best effort attempt to
-clean up any and all IO that is associated with the domain.  Streams are
-aborted, ended, closed, and/or destroyed.  Timers are cleared.
-Explicitly bound callbacks are no longer called.  Any error events that
-are raised as a result of this are ignored.
+    Stability: 0 - Deprecated.  Please recover from failed IO actions
+    explicitly via error event handlers set on the domain.
 -->
 
-<p><code>dispose()</code> メソッドはドメインを破棄し、ドメインに関連づけられた全ての
-I/O を可能な限りクリーンナップしようと試みます。
-ストリームはアボートされ、終了され、クローズされ、そして／または破棄されます。
-タイマはクリアされます。明示的に束縛されたコールバックはもう呼び出されません。
-結果として発生するどんなエラーイベントも無視されます。
-
-</p>
-<!--
-The intention of calling `dispose` is generally to prevent cascading
-errors when a critical part of the Domain context is found to be in an
-error state.
+<pre class="api_stability_0">Stability: 0 - Deprecated.  IO 操作の明らかな失敗から回復するには、
+ドメインに設定したエラーハンドラを通じておこなってください。</pre><!--
+Once `dispose` has been called, the domain will no longer be used by callbacks
+bound into the domain via `run`, `bind`, or `intercept`, and a `dispose` event
+is emitted.
 -->
 
-<p><code>dispose()</code> を呼び出す意図は通常、エラー状態の中でドメインコンテキストの
-クリティカルな部分が見つかった場合に、カスケードしたエラーを防ぐことです。
-
-</p>
-<!--
-Once the domain is disposed the `dispose` event will emit.
--->
-
-<p>ドメインが破棄されると、<code>&#39;dispose&#39;</code> イベントが生成されます。
-
-</p>
-<!--
-Note that IO might still be performed.  However, to the highest degree
-possible, once a domain is disposed, further errors from the emitters in
-that set will be ignored.  So, even if some remaining actions are still
-in flight, Node.js will not communicate further about them.
--->
-
-<p>I/O がまだ行われているかもしれないことに注意してください。
-しかしながら、可能な限り高い視点から見ると、一度ドメインが破棄されれば、
-その集合の中の EventEmitter からのさらなるエラーは無視されます。
-そのため、たとえ残りのアクションがまだ実行中だとしても、
-Node.js はそれらとコミュニケートしません。
+<p>一度 <code>dispose()</code> が呼び出されると、<code>run()</code>、<code>bind()</code>、または <code>intercept()</code>
+によってドメインに束縛されたコールバックはもうドメインが使われなくなります。
+そして <code>&#39;dispose&#39;</code> イベントが生成されます。
 
 </p>
 <h1>Buffer<span><a class="mark" href="#all_buffer" id="all_buffer">#</a></span></h1>
@@ -7814,6 +7796,7 @@ emission of a [`'data'` event][].
 <h4>readable.setEncoding(encoding)<span><a class="mark" href="#all_readable_setencoding_encoding" id="all_readable_setencoding_encoding">#</a></span></h4>
 <!--
 * `encoding` {String} The encoding to use.
+* Return: `this`
 -->
 
 <ul>
@@ -7856,6 +7839,9 @@ readable.on(&#39;data&#39;, function(chunk) {
   console.log(&#39;got %d characters of string data&#39;, chunk.length);
 })</code></pre>
 <h4>readable.resume()<span><a class="mark" href="#all_readable_resume" id="all_readable_resume">#</a></span></h4>
+<div class="signature"><ul>
+<li>Return: <code>this</code></li>
+</div></ul>
 <!--
 This method will cause the readable stream to resume emitting `data`
 events.
@@ -7884,6 +7870,9 @@ readable.on(&#39;end&#39;, function(chunk) {
   console.log(&#39;got to the end, but did not read anything&#39;);
 })</code></pre>
 <h4>readable.pause()<span><a class="mark" href="#all_readable_pause" id="all_readable_pause">#</a></span></h4>
+<div class="signature"><ul>
+<li>Return: <code>this</code></li>
+</div></ul>
 <!--
 This method will cause a stream in flowing mode to stop emitting
 `data` events, switching out of flowing mode.  Any data that becomes
@@ -8819,7 +8808,7 @@ SimpleProtocol.prototype._read = function(n) {
 * `options` {Object}
   * `highWaterMark` {Number} The maximum number of bytes to store in
     the internal buffer before ceasing to read from the underlying
-    resource.  Default=16kb
+    resource.  Default=16kb, or 16 for `objectMode` streams
   * `encoding` {String} If specified, then buffers will be decoded to
     strings using the specified encoding.  Default=null
   * `objectMode` {Boolean} Whether this stream should behave
@@ -8830,7 +8819,8 @@ SimpleProtocol.prototype._read = function(n) {
 <ul>
 <li><code>options</code> {Object} (任意)<ul>
 <li><code>highWaterMark</code> {Number} 下層のリソースから読み込むのを中断するまで
-内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
+内部バッファに貯めておくバイト数の最大値。
+デフォルトは 16kb、あるいは <code>objectMode</code> では 16。</li>
 <li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
 デコードされます。デフォルトは <code>null</code>。</li>
 <li><code>objectMode</code> {Boolean} このストリームがオブジェクトストリームとして
@@ -9055,7 +9045,7 @@ how to implement Writable streams in your programs.
 <!--
 * `options` {Object}
   * `highWaterMark` {Number} Buffer level when [`write()`][] starts
-    returning false. Default=16kb
+    returning false. Default=16kb, or 16 for `objectMode` streams
   * `decodeStrings` {Boolean} Whether or not to decode strings into
     Buffers before passing them to [`_write()`][].  Default=true
 -->
@@ -9063,7 +9053,7 @@ how to implement Writable streams in your programs.
 <ul>
 <li><code>options</code> {Object} (任意)<ul>
 <li><code>highWaterMark</code> {Number} <a href="#stream_writable_write_chunk_encoding_callback"><code>write()</code></a> が <code>false</code> を返し始める
-バッファレベル。デフォルトは 16kb。</li>
+バッファレベル。デフォルトは 16kb、あるいは <code>objectMode</code> では 16。</li>
 <li><code>decodeStrings</code> {Boolean} 文字列が <a href="#stream_writable_write_chunk_encoding_callback_1"><code>_write()</code></a> に渡される前に
 バッファにデコードするかどうか。デフォルトは <code>true</code>。</li>
 </ul>
@@ -13760,25 +13750,79 @@ similar to this:
   blocks: 8,
   atime: Mon, 10 Oct 2011 23:24:11 GMT,
   mtime: Mon, 10 Oct 2011 23:24:11 GMT,
-  ctime: Mon, 10 Oct 2011 23:24:11 GMT }</code></pre>
+  ctime: Mon, 10 Oct 2011 23:24:11 GMT,
+  birthtime: Mon, 10 Oct 2011 23:24:11 GMT }</code></pre>
 <!--
-Please note that `atime`, `mtime` and `ctime` are instances
-of [Date][MDN-Date] object and to compare the values of
-these objects you should use appropriate methods. For most
-general uses [getTime()][MDN-Date-getTime] will return
-the number of milliseconds elapsed since _1 January 1970
-00:00:00 UTC_ and this integer should be sufficient for
-any comparison, however there additional methods which can
-be used for displaying fuzzy information. More details can
-be found in the [MDN JavaScript Reference][MDN-Date] page.
+Please note that `atime`, `mtime`, `birthtime`, and `ctime` are
+instances of [Date][MDN-Date] object and to compare the values of
+these objects you should use appropriate methods. For most general
+uses [getTime()][MDN-Date-getTime] will return the number of
+milliseconds elapsed since _1 January 1970 00:00:00 UTC_ and this
+integer should be sufficient for any comparison, however there
+additional methods which can be used for displaying fuzzy information.
+More details can be found in the [MDN JavaScript Reference][MDN-Date]
+page.
 -->
 
-<p><code>atime</code>、<code>mtime</code>、そして <code>ctime</code> は <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date">Date</a> オブジェクトであり、
-その値を比較するには適切な方法があるということに注意してください。
-もっとも一般的に使われる <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/getTime">getTime()</a> は <em>1970 年 1 月
-1 日</em>からの経過時間をミリ秒単位で返します。
+<p><code>atime</code>、<code>mtime</code>、<code>birthtime</code>、そして <code>ctime</code> は <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date">Date</a>
+オブジェクトであり、その値を比較するには適切な方法があるということに
+注意してください。もっとも一般的に使われる <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/getTime">getTime()</a> は
+<em>1970年 1月 1日</em> からの経過時間をミリ秒単位で返します。
 それは比較には十分ですが、曖昧な情報を表示するには別の方法を使ってください。
 より詳しい情報は <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date">MDN JavaScript Reference</a> で探すことができます。
+
+</p>
+<h3>Stat Time Values<span><a class="mark" href="#all_stat_time_values" id="all_stat_time_values">#</a></span></h3>
+<!--
+The times in the stat object have the following semantics:
+-->
+
+<p>stat オブジェクト中の時間は以下の意味を持ちます。
+
+</p>
+<!--
+* `atime` "Access Time" - Time when file data last accessed.  Changed
+  by the `mknod(2)`, `utimes(2)`, and `read(2)` system calls.
+* `mtime` "Modified Time" - Time when file data last modified.
+  Changed by the `mknod(2)`, `utimes(2)`, and `write(2)` system calls.
+* `ctime` "Change Time" - Time when file status was last changed
+  (inode data modification).  Changed by the `chmod(2)`, `chown(2)`,
+  `link(2)`, `mknod(2)`, `rename(2)`, `unlink(2)`, `utimes(2)`,
+  `read(2)`, and `write(2)` system calls.
+* `birthtime` "Birth Time" -  Time of file creation. Set once when the
+  file is created.  On filesystems where birthtime is not available,
+  this field may instead hold either the `ctime` or
+  `1970-01-01T00:00Z` (ie, unix epoch timestamp `0`).  On Darwin and
+  other FreeBSD variants, also set if the `atime` is explicitly set to
+  an earlier value than the current `birthtime` using the `utimes(2)`
+  system call.
+-->
+
+<ul>
+<li><code>atime</code> &quot;Access Time&quot; - ファイルが最後にアクセスされた時間。
+<code>mknod(2)</code>、<code>utimes(2)、そして </code>read(2)` システムコールによって変更されます。</li>
+<li><code>mtime</code> &quot;Modified TIme&quot; - ファイルが最後に変更された時間。
+<code>mknod(2)</code>、<code>utimes(2)、そして </code>write(2)` システムコールによって変更されます。</li>
+<li><code>ctime</code> &quot;Change Time&quot; - ファイルの属性 (iノードのデータ) が最後に変更された
+時間
+<code>chmod(2)</code>、<code>chown(2)</code>、<code>link(2)</code>、<code>mknod(2)</code>、<code>rename(2)</code>、<code>unlink(2)</code>、
+<code>utimes(2)</code>、<code>read(2)</code>、そして<code>write(2)</code>システムコールによって変更されます。</li>
+<li><code>birthtime</code> &quot;Birth Time&quot; - ファイルが作成された時間。
+<code>birthtime</code> を利用できないファイルシステムでは、このフィールドは <code>citme</code>
+と同じか、<code>1970-01-01T00:00Z</code> (Unix エポック時刻の <code>0</code>) を持ちます。
+Darwin およびその他の FreeBSD 方言は、<code>utimes(2)</code> システムコールによって
+現在の <code>birthtime</code> より前の時間を <code>atime</code> に明示的に設定した場合も
+変更されます。</li>
+</ul>
+<!--
+Prior to Node v0.12, the `ctime` held the `birthtime` on Windows
+systems.  Note that as of v0.12, `ctime` is not "creation time", and
+on Unix systems, it never was.
+-->
+
+<p>Node v0.12 より前、Windows システムでは <code>ctime</code> は <code>birthtime</code>
+を保持していました。v0.12 では、Unix システムでは決してそうではなかったように
+<code>ctime</code> は &quot;creation time&quot; ではないことに注意してください。
 
 </p>
 <h2>fs.createReadStream(path, [options])<span><a class="mark" href="#all_fs_createreadstream_path_options" id="all_fs_createreadstream_path_options">#</a></span></h2>
@@ -19496,7 +19540,7 @@ rl.on(&#39;line&#39;, function(line) {
   process.exit(0);
 });</code></pre>
 <h1>REPL<span><a class="mark" href="#all_repl" id="all_repl">#</a></span></h1>
-<!--
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 A Read-Eval-Print-Loop (REPL) is available both as a standalone program and
 easily includable in other programs. The REPL provides a way to interactively
 run JavaScript and see the results.  It can be used for debugging, testing, or
@@ -19873,7 +19917,7 @@ The following key combinations in the REPL have these special effects:
 <li><code>&lt;ctrl&gt;D</code> - <code>.exit</code> キーワードと同様です。</li>
 </ul>
 <h1>Executing JavaScript<span><a class="mark" href="#all_executing_javascript" id="all_executing_javascript">#</a></span></h1>
-<pre class="api_stability_2">Stability: 2 - Unstable. See Caveats, below.</pre><!--name=vm-->
+<pre class="api_stability_3">Stability: 3 - Stable</pre><!--name=vm-->
 
 <!--
 You can access this module with:
@@ -19884,107 +19928,23 @@ You can access this module with:
 </p>
 <pre><code>var vm = require(&#39;vm&#39;);</code></pre>
 <!--
-JavaScript code can be compiled and run immediately or compiled, saved, and run later.
+JavaScript code can be compiled and run immediately or compiled, saved, and run
+later.
 -->
 
 <p>JavaScript コードは、コンパイルされてすぐに実行されるか、コンパイルおよび保存されて後から実行されます。
 
 </p>
-<h2>Caveats<span><a class="mark" href="#all_caveats_1" id="all_caveats_1">#</a></span></h2>
-<!--
-The `vm` module has many known issues and edge cases. If you run into
-issues or unexpected behavior, please consult [the open issues on
-GitHub](https://github.com/joyent/node/issues?labels=vm&state=open).
-Some of the biggest problems are described below.
--->
-
-<p><code>vm</code> モジュールには既知の課題や特殊ケースがたくさんあります。
-もし問題や期待と異なる振る舞いを見つけた場合は、
-<a href="https://github.com/joyent/node/issues?labels=vm&amp;state=open">GitHub 上の課題</a>
-に相談してください。大きな問題のいくつかは以下に示されます。
-
-</p>
-<h3>Sandboxes<span><a class="mark" href="#all_sandboxes" id="all_sandboxes">#</a></span></h3>
-<!--
-The `sandbox` argument to `vm.runInNewContext` and `vm.createContext`,
-along with the `initSandbox` argument to `vm.createContext`, do not
-behave as one might normally expect and their behavior varies
-between different versions of Node.
--->
-
-<p><code>vm.runInNewContext</code> と、<code>vm.createContext</code> に <code>initSandbox</code> と共に渡される
-<code>sandbox</code> 引数は、通常期待される振る舞いをせず、それは Node のバージョン間で
-異なった振る舞いをします。
-
-</p>
-<!--
-The key issue to be aware of is that V8 provides no way to directly
-control the global object used within a context. As a result, while
-properties of your `sandbox` object will be available in the context,
-any properties from the `prototype`s of the `sandbox` may not be
-available. Furthermore, the `this` expression within the global scope
-of the context evaluates to the empty object (`{}`) instead of to
-your sandbox.
--->
-
-<p>知られている重要問題は、コンテキスト内で使用されるグローバルオブジェクトを
-直接制御する方法を V8 が提供しないことです。
-その結果、<code>sandbox</code> オブジェクトのプロパティがコンテキストから
-利用可能な間、<code>sandbox</code> のプロトタイプのプロパティを利用することが
-できないかもしれません。
-さらには、コンテキスト内のグローバルスコープにおける <code>this</code> が
-サンドボックスではなく、空のオブジェクト (<code>{}</code>) に評価されます。
-
-</p>
-<!--
-Your sandbox's properties are also not shared directly with the script.
-Instead, the properties of the sandbox are copied into the context at
-the beginning of execution, and then after execution, the properties
-are copied back out in an attempt to propagate any changes.
--->
-
-<p>サンドボックスのプロパティはまた、スクリプトに直接共有されません。
-代わりに、サンドボックスのプロパティは実行前にコンテキストにコピーされ、
-実行後、変更を伝播するためにプロパティはサンドボックスにコピーされます。
-
-</p>
-<h3>Globals<span><a class="mark" href="#all_globals" id="all_globals">#</a></span></h3>
-<!--
-Properties of the global object, like `Array` and `String`, have
-different values inside of a context. This means that common
-expressions like `[] instanceof Array` or
-`Object.getPrototypeOf([]) === Array.prototype` may not produce
-expected results when used inside of scripts evaluated via the `vm` module.
--->
-
-<p><code>Array</code> や <code>String</code> などのグローバルオブジェクトのプロパティは、
-コンテキストの中では異なる値を持ちます。
-これは  <code>[] instanceof Array</code> や
-<code>Object.getPrototypeOf([]) === Array.prototype</code> などのよくある式は、
-<code>vm</code> モジュールによって評価されるスクリプトの中で使われると、
-期待した結果にならないことを意味します。
-
-</p>
-<!--
-Some of these problems have known workarounds listed in the issues for
-`vm` on GitHub. for example, `Array.isArray` works around
-the example problem with `Array`.
--->
-
-<p>GitHub 上の <code>vm</code> に関する課題には、これらの問題に対する回避策があります。
-例えば、<code>Array.isArray</code> は <code>Array</code> に関する問題の例でもうまく動きます。
-
-</p>
-<h2>vm.runInThisContext(code, [filename])<span><a class="mark" href="#all_vm_runinthiscontext_code_filename" id="all_vm_runinthiscontext_code_filename">#</a></span></h2>
+<h2>vm.runInThisContext(code, [options])<span><a class="mark" href="#all_vm_runinthiscontext_code_options" id="all_vm_runinthiscontext_code_options">#</a></span></h2>
 <!--
 `vm.runInThisContext()` compiles `code`, runs it and returns the result. Running
-code does not have access to local scope. `filename` is optional, it's used only
-in stack traces.
+code does not have access to local scope, but does have access to the current
+`global` object.
 -->
 
 <p><code>vm.runInThisContext()</code> は <code>code</code> をコンパイルして実行し、結果を返します。
-実行されるコードはローカルスコープにアクセスしません。
-<code>filename</code> はオプションで、スタックトレースでのみ使用されます。
+実行されるコードはローカルスコープにアクセスしませんが、現在の <code>global</code>
+オブジェクトにアクセスすることはできます。
 
 </p>
 <!--
@@ -19994,311 +19954,451 @@ Example of using `vm.runInThisContext` and `eval` to run the same code:
 <p><code>vm.runInThisContext</code> と <code>eval</code> で同じコードを実行する例:
 
 </p>
-<pre><code>var localVar = 123,
-    usingscript, evaled,
-    vm = require(&#39;vm&#39;);
+<pre><code>var localVar = &#39;initial value&#39;;
 
-usingscript = vm.runInThisContext(&#39;localVar = 1;&#39;,
-  &#39;myfile.vm&#39;);
-console.log(&#39;localVar: &#39; + localVar + &#39;, usingscript: &#39; +
-  usingscript);
-evaled = eval(&#39;localVar = 1;&#39;);
-console.log(&#39;localVar: &#39; + localVar + &#39;, evaled: &#39; +
-  evaled);
+var vmResult = vm.runInThisContext(&#39;localVar = &quot;vm&quot;;&#39;);
+console.log(&#39;vmResult: &#39;, vmResult);
+console.log(&#39;localVar: &#39;, localVar);
 
-// localVar: 123, usingscript: 1
-// localVar: 1, evaled: 1</code></pre>
+var evalResult = eval(&#39;localVar = &quot;eval&quot;;&#39;);
+console.log(&#39;evalResult: &#39;, evalResult);
+console.log(&#39;localVar: &#39;, localVar);
+
+// vmResult: &#39;vm&#39;, localVar: &#39;initial value&#39;
+// evalResult: &#39;eval&#39;, localVar: &#39;eval&#39;</code></pre>
 <!--
-`vm.runInThisContext` does not have access to the local scope, so `localVar` is unchanged.
-`eval` does have access to the local scope, so `localVar` is changed.
+`vm.runInThisContext` does not have access to the local scope, so `localVar` is
+unchanged. `eval` does have access to the local scope, so `localVar` is changed.
 -->
 
-<p><code>vm.runInThisContext</code> はローカルスコープにアクセスしないので、<code>localVar</code> は変更されません。
-<code>eval</code> はローカルスコープにアクセスするので、<code>localVar</code> は変更されます。
+<p><code>vm.runInThisContext()</code> はローカルスコープにアクセスしないので、
+<code>localVar</code> は変更されません。
+<code>eval()</code> はローカルスコープにアクセスするので、<code>localVar</code> は変更されます。
 
 </p>
 <!--
-In case of syntax error in `code`, `vm.runInThisContext` emits the syntax error to stderr
-and throws an exception.
+In this way `vm.runInThisContext` is much like an [indirect `eval` call][1],
+e.g. `(0,eval)('code')`. However, it also has the following additional options:
 -->
 
-<p><code>code</code> が文法エラーとなるケースでは、<code>vm.runInThisContext</code> は標準エラーに文法エラーを出力し、
-例外をスローします。
+<p>この方法では、<code>vm.runInThisContext()</code> は <a href="http://es5.github.io/#x10.4.2">間接的な <code>eval</code> 呼び出し</a>
+とほぼ同じですが (例: <code>(0,eval)(&#39;code&#39;)</code>)。
+しかし、それに加えて以下のオプションがあります。
+
+</p>
+<!--
+- `filename`: allows you to control the filename that shows up in any stack
+  traces produced.
+- `displayErrors`: whether or not to print any errors to stderr, with the
+  line of code that caused them highlighted, before throwing an exception.
+  Will capture both syntax errors from compiling `code` and runtime errors
+  thrown by executing the compiled code. Defaults to `true`.
+- `timeout`: a number of milliseconds to execute `code` before terminating
+  execution. If execution is terminated, an `Error` will be thrown.
+-->
+
+<ul>
+<li><code>filename</code>: 生成されるスタックトレースに表示されるファイル名を
+制御することができます。</li>
+<li><code>displayErrors</code>: 例外をスローする前に、エラーの原因となったコードの行を
+ハイライトして標準エラー出力にプリントするか否か。
+<code>code</code> をコンパイルした場合の文法エラーと、コンパイルされたコードを
+実行した際のランタイムエラーの両方を捕まえます。</li>
+<li><code>timeout</code>: <code>code</code> の実行が終了するまでのミリ秒単位の時間。
+もし実行が終了しなければ、<code>Error</code> がスローされます。</li>
+</ul>
+<h2>vm.createContext([sandbox])<span><a class="mark" href="#all_vm_createcontext_sandbox" id="all_vm_createcontext_sandbox">#</a></span></h2>
+<!--
+If given a `sandbox` object, will "contextify" that sandbox so that it can be
+used in calls to `vm.runInContext` or `script.runInContext`. Inside scripts run
+as such, `sandbox` will be the global object, retaining all its existing
+properties but also having the built-in objects and functions any standard
+[global object][2] has. Outside of scripts run by the vm module, `sandbox` will
+be unchanged.
+-->
+
+<p>もし <code>sandbox</code> オブジェクトが与えられると、<code>vm.runInContext()</code> や
+<code>script.runInContext()</code> の呼び出しで利用できるようにサンドボックスを
+「コンテキスト化された」します。
+実行中のスクリプト内では、<code>sandbox</code> はグローバルオブジェクトとなります。
+それは存在するプロパティに加えて、標準の <a href="http://es5.github.io/#x15.1">グローバルオブジェクト</a>
+が持つ組込のオブジェクトや関数などを保持します。
+vm モジュールによって実行されているスクリプトの外側では、<code>sandbox</code>
+は変更されません。
+
+</p>
+<!--
+If not given a sandbox object, returns a new, empty contextified sandbox object
+you can use.
+-->
+
+<p>サンドボックスオブジェクトが与えられなかった場合は、
+新しくて空のコンテキスト化されたサンドボックスオブジェクトが返されます。
+
+</p>
+<!--
+This function is useful for creating a sandbox that can be used to run multiple
+scripts, e.g. if you were emulating a web browser it could be used to create a
+single sandbox representing a window's global object, then run all `<script>`
+tags together inside that sandbox.
+-->
+
+<p>この関数は複数のスクリプトから利用可能なサンドボックスを作るのに便利です。
+たとえば、Webブラウザをエミュレートするためにグローバルオブジェクトである
+window を表現する単一のサンドボックスを作成し、全ての <code>&lt;script&gt;</code> タグを
+そのサンドボックス内で一緒に実行します。
+
+</p>
+<h2>vm.isContext(sandbox)<span><a class="mark" href="#all_vm_iscontext_sandbox" id="all_vm_iscontext_sandbox">#</a></span></h2>
+<!--
+Returns whether or not a sandbox object has been contextified by calling
+`vm.createContext` on it.
+-->
+
+<p>サンドボックスオブジェクトが <code>vm.createContext()</code> によって
+コンテキスト化されているかどうかを返します。
 
 
 </p>
-<h2>vm.runInNewContext(code, [sandbox], [filename], [timeout])<span><a class="mark" href="#all_vm_runinnewcontext_code_sandbox_filename_timeout" id="all_vm_runinnewcontext_code_sandbox_filename_timeout">#</a></span></h2>
+<h2>vm.runInContext(code, contextifiedSandbox, [options])<span><a class="mark" href="#all_vm_runincontext_code_contextifiedsandbox_options" id="all_vm_runincontext_code_contextifiedsandbox_options">#</a></span></h2>
 <!--
-`vm.runInNewContext` compiles `code`, then runs it in `sandbox` and returns the
-result. Running code does not have access to local scope. The object `sandbox`
-will be used as the global object for `code`.
-`sandbox` and `filename` are optional, `filename` is only used in stack traces.
-`timeout` specifies an optional number of milliseconds to execute `code` before
-terminating execution. If execution is terminated, an `Error` will be thrown.
+`vm.runInContext` compiles `code`, then runs it in `contextifiedSandbox` and
+returns the result. Running code does not have access to local scope. The
+`contextifiedSandbox` object must have been previously contextified via
+`vm.createContext`; it will be used as the global object for `code`.
 -->
 
-<p><code>vm.runInNewContext</code> は <code>code</code> をコンパイルし、それを <code>sandbox</code> の中で実行して
-結果を返します。
+<p><code>vm.runInContext()</code> は、<code>code</code> をコンパイルしてそれを <code>contextifiedSandbox</code>
+の中で実行し、その結果を返します。
 実行されるコードはローカルスコープにアクセスしません。
-<code>sandbox</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
-<code>sandbox</code> および <code>filename</code> はオプションで、<code>filename</code> 
-スタックトレースでのみ使用されます。
-<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
-ミリ秒単位の数値で指定します。
-実行が打ち切られると、<code>Error</code> がスローされます。
+<code>contextifiedSandbox</code> オブジェクトは <code>vm.createContext()</code> を通じて事前に
+コンテキスト化されていなければなりません;
+それは <code>code</code> のグローバルオブジェクトとして使われます。
 
 </p>
 <!--
-Example: compile and execute code that increments a global variable and sets a new one.
-These globals are contained in the sandbox.
+`vm.runInContext` takes the same options as `vm.runInThisContext`.
 -->
 
-<p>例: グローバル変数をインクリメントして新しい値をセットするコードをコンパイルおよび実行します。
-これらのグローバル変数はサンドボックスに含まれます。
+<p><code>vm.runInContext()</code> は <code>vm.runInThisContext()</code> と同じオプションを受け取ります。
 
 </p>
-<pre><code>var util = require(&#39;util&#39;),
-    vm = require(&#39;vm&#39;),
-    sandbox = {
-      animal: &#39;cat&#39;,
-      count: 2
-    };
+<!--
+Example: compile and execute differnt scripts in a single existing context.
+-->
 
-vm.runInNewContext(&#39;count += 1; name = &quot;kitty&quot;&#39;, sandbox, &#39;myfile.vm&#39;);
+<p>例: 異なるスクリプトを単一の既存コンテキスト中でコンパイルして実行します。
+
+</p>
+<pre><code>var util = require(&#39;util&#39;);
+var vm = require(&#39;vm&#39;);
+
+var sandbox = { globalVar: 1 };
+vm.createContext(sandbox);
+
+for (var i = 0; i &lt; 10; ++i) {
+    vm.runInContext(&#39;globalVar *= 2;&#39;, sandbox);
+}
+console.log(util.inspect(sandbox));
+
+// { globalVar: 1024 }</code></pre>
+<p>&lt;!-
+Note that running untrusted code is a tricky business requiring great care.
+<code>vm.runInContext</code> is quite useful, but safely running untrusted code requires a
+separate process.
+--&gt;
+
+</p>
+<p>信頼できないコードの実行は、細心の注意が求められることに注意してください。
+<code>vm.runInContext()</code> は有用ですが、信頼できないコードを安全に実行するには
+別のプロセスが必要となります。
+
+
+</p>
+<h2>vm.runInNewContext(code, [sandbox], [options])<span><a class="mark" href="#all_vm_runinnewcontext_code_sandbox_options" id="all_vm_runinnewcontext_code_sandbox_options">#</a></span></h2>
+<!--
+`vm.runInNewContext` compiles `code`, contextifies `sandbox` if passed or
+creates a new contextified sandbox if it's omitted, and then runs the code with
+the sandbox as the global object and returns the result.
+-->
+
+<p><code>vm.runInNewContext()</code> は <code>code</code> をコンパイルし、<code>sandbox</code> が与えられれば
+それをコンテキスト化し、または省略された場合は新しいコンテキスト化された
+サンドボックスを作成し、サンドボックスをグローバルオブジェクトとしてコードを
+実行し、その結果を返します。
+
+</p>
+<!--
+`vm.runInNewContext` takes the same options as `vm.runInThisContext`.
+-->
+
+<p><code>vm.runInNewContext()</code> は <code>vm.runInThisContext()</code> と同じオプションを
+受け取ります。
+
+</p>
+<!--
+Example: compile and execute code that increments a global variable and sets a
+new one. These globals are contained in the sandbox.
+-->
+
+<p>例: コードをコンパイルして実行し、グローバル変数をインクリメントし、
+新しい値を設定します。そのグローバルはサンドボックスに含まれます。
+
+</p>
+<pre><code>var util = require(&#39;util&#39;);
+var vm = require(&#39;vm&#39;),
+
+var sandbox = {
+  animal: &#39;cat&#39;,
+  count: 2
+};
+
+vm.runInNewContext(&#39;count += 1; name = &quot;kitty&quot;&#39;, sandbox);
 console.log(util.inspect(sandbox));
 
 // { animal: &#39;cat&#39;, count: 3, name: &#39;kitty&#39; }</code></pre>
 <!--
-Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
-global variable leakage, `vm.runInNewContext` is quite useful, but safely running untrusted code
-requires a separate process.
+Note that running untrusted code is a tricky business requiring great care.
+`vm.runInNewContext` is quite useful, but safely running untrusted code requires
+a separate process.
 -->
 
-<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
-偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInNewContext</code> はとても役立ちますが、
-信頼できないコードを安全に実行するために別のプロセスを要求します。
-
-</p>
-<!--
-In case of syntax error in `code`, `vm.runInNewContext` emits the syntax error to stderr
-and throws an exception.
--->
-
-<p><code>code</code> が文法エラーとなるケースでは、
-<code>vm.runInNewContext</code> は標準エラーに文法エラーを出力し、例外をスローします。
-
-</p>
-<h2>vm.runInContext(code, context, [filename], [timeout])<span><a class="mark" href="#all_vm_runincontext_code_context_filename_timeout" id="all_vm_runincontext_code_context_filename_timeout">#</a></span></h2>
-<!--
-`vm.runInContext` compiles `code`, then runs it in `context` and returns the
-result. A (V8) context comprises a global object, together with a set of
-built-in objects and functions. Running code does not have access to local scope
-and the global object held within `context` will be used as the global object
-for `code`.
-`filename` is optional, it's used only in stack traces.
-`timeout` specifies an optional number of milliseconds to execute `code` before
-terminating execution. If execution is terminated, an `Error` will be thrown.
--->
-
-<p><code>vm.runInContext</code> は <code>code</code> をコンパイルして、
-<code>context</code> をコンテキストとして実行し、その結果を返します。
-(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、
-グローバルオブジェクトを含みます。
-実行されるコードはローカルスコープにアクセスせず、
-<code>context</code> が <code>code</code> にとってのグローバルオブジェクトとして使われます。
-<code>filename</code> はオプションで、スタックトレースでのみ使用されます。
-<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
-ミリ秒単位の数値で指定します。
-実行が打ち切られると、<code>Error</code> がスローされます。
-
-</p>
-<!--
-Example: compile and execute code in a existing context.
--->
-
-<p>例: コードをコンパイルして既存のコンテキストで実行します。
-
-</p>
-<pre><code>var util = require(&#39;util&#39;),
-    vm = require(&#39;vm&#39;),
-    initSandbox = {
-      animal: &#39;cat&#39;,
-      count: 2
-    },
-    context = vm.createContext(initSandbox);
-
-vm.runInContext(&#39;count += 1; name = &quot;CATT&quot;&#39;, context, &#39;myfile.vm&#39;);
-console.log(util.inspect(context));
-
-// { animal: &#39;cat&#39;, count: 3, name: &#39;CATT&#39; }</code></pre>
-<!--
-Note that `createContext` will perform a shallow clone of the supplied sandbox object in order to
-initialize the global object of the freshly constructed context.
-
-Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
-global variable leakage, `vm.runInContext` is quite useful, but safely running untrusted code
-requires a separate process.
-
-In case of syntax error in `code`, `vm.runInContext` emits the syntax error to stderr
-and throws an exception.
--->
-
-<p><code>createContext</code> は、新たに構築されたコンテキストのグローバルオブジェクトを
-初期化するために、与えられた <code>context</code> オブジェクトの浅いクローンを
-作成することに注意してください。
-
-</p>
-<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
-偶然グローバル変数が漏れてしまうことを防ぐために、<code>vm.runInContext</code> はとても役立ちますが、
-信頼できないコードを安全に実行するために別のプロセスを要求します。
-
-
-</p>
-<h2>vm.createContext([initSandbox])<span><a class="mark" href="#all_vm_createcontext_initsandbox" id="all_vm_createcontext_initsandbox">#</a></span></h2>
-<!--
-`vm.createContext` creates a new context which is suitable for use as the 2nd argument of a subsequent
-call to `vm.runInContext`. A (V8) context comprises a global object together with a set of
-build-in objects and functions. The optional argument `initSandbox` will be shallow-copied
-to seed the initial contents of the global object used by the context.
--->
-
-<p><code>vm.createContext</code> は、続けて呼び出される <code>vm.runInContext</code> の第 2 引数として
-使用するのに適した新しいコンテキストを作成します。
-(V8 の) コンテキストは組み込みのオブジェクトと関数と共に、
-グローバルオブジェクトを含みます。
-オプションの引数 <code>initSandbox</code> は、このコンテキストで使用される
-グローバルオブジェクトの初期値としてシャローコピーされます。
-
-</p>
-<h2>vm.createScript(code, [filename])<span><a class="mark" href="#all_vm_createscript_code_filename" id="all_vm_createscript_code_filename">#</a></span></h2>
-<!--
-`createScript` compiles `code` but does not run it. Instead, it returns a
-`vm.Script` object representing this compiled code. This script can be run
-later many times using methods below. The returned script is not bound to any
-global object. It is bound before each run, just for that run. `filename` is
-optional, it's only used in stack traces.
--->
-
-<p><code>createScript</code> は <code>code</code> をコンパイルしますが、実行はしません。
-代わりに、コンパイルされたコードを表現する <code>vm.Script</code> オブジェクトを返します。
-このスクリプトは後述のメソッドを使って後から何度でも実行することができます。
-返されるスクリプトはどのグローバルオブジェクトとも結びつけられていません。
-それぞれの実行前に結びつけることで、そのとおりに実行されます。
-<code>filename</code> はオプションで、スタックトレースでのみ使用されます。
-
-</p>
-<!--
-In case of syntax error in `code`, `createScript` prints the syntax error to stderr
-and throws an exception.
--->
-
-<p><code>code</code> が文法エラーとなるケースでは、
-<code>createScript</code> は標準エラーに文法エラーを出力して例外をスローします。
+<p>信頼できないコードの実行は、細心の注意が求められることに注意してください。
+<code>vm.runInNewContext()</code> は有用ですが、信頼できないコードを安全に実行するには
+別のプロセスが必要となります。
 
 
 </p>
 <h2>Class: Script<span><a class="mark" href="#all_class_script" id="all_class_script">#</a></span></h2>
 <!--
-A class for running scripts.  Returned by vm.createScript.
+A class for holding precompiled scripts, and running them in specific sandboxes.
 -->
 
-<p>スクリプトを実行するクラスです。<code>vm.createScript()</code> によって返されます。
+<p>事前にコンパイルされたスクリプトを保持し、指定されたサンドボックス中で
+実行するためのクラスです。
+
 
 </p>
-<h3>script.runInThisContext([timeout])<span><a class="mark" href="#all_script_runinthiscontext_timeout" id="all_script_runinthiscontext_timeout">#</a></span></h3>
+<h3>new vm.Script(code, options)<span><a class="mark" href="#all_new_vm_script_code_options" id="all_new_vm_script_code_options">#</a></span></h3>
+<!--
+Creating a new `Script` compiles `code` but does not run it. Instead, the
+created `vm.Script` object represents this compiled code. This script can be run
+later many times using methods below. The returned script is not bound to any
+global object. It is bound before each run, just for that run.
+-->
+
+<p><code>code</code> をコンパイルして新しい <code>Script</code> を作成しますが、実行はしません。
+作成された <code>vm.Script</code> オブジェクトはコンパイルされたコードを表現します。
+スクリプトは後述するメソッドを使って後から何度でも実行することができます。
+返されたスクリプトオブジェクトは、どのグローバルオブジェクトにも
+束縛されていません。それは実行される前に、その実行だけに束縛されます。
+
+</p>
+<!--
+The options when creating a script are:
+-->
+
+<p>スクリプトを作成するためのオプションは:
+
+</p>
+<!--
+- `filename`: allows you to control the filename that shows up in any stack
+  traces produced from this script.
+- `displayErrors`: whether or not to print any errors to stderr, with the
+  line of code that caused them highlighted, before throwing an exception.
+  Applies only to syntax errors compiling the code; errors while running the
+  code are controlled by the options to the script's methods.
+-->
+
+<ul>
+<li><code>filename</code>: 生成されるスタックトレースに表示されるファイル名を
+制御することができます。</li>
+<li><code>displayErrors</code>: 例外をスローする前に、エラーの原因となったコードの行を
+ハイライトして標準エラー出力にプリントするか否か。
+<code>code</code> をコンパイルした場合の文法エラーにだけ適用されます;
+コードを実行した際のエラーはスクリプトのメソッドに与えられる
+オプションによって制御されます。</li>
+</ul>
+<h3>script.runInThisContext([options])<span><a class="mark" href="#all_script_runinthiscontext_options" id="all_script_runinthiscontext_options">#</a></span></h3>
 <!--
 Similar to `vm.runInThisContext` but a method of a precompiled `Script` object.
-`script.runInThisContext` runs the code of `script` and returns the result.
-Running code does not have access to local scope, but does have access to the `global` object
-(v8: in actual context).
-`timeout` specifies an optional number of milliseconds to execute `code` before
-terminating execution. If execution is terminated, an `Error` will be thrown.
+`script.runInThisContext` runs `script`'s compiled code and returns the result.
+Running code does not have access to local scope, but does have access to the
+current `global` object.
 -->
 
-<p><code>vm.runInThisContext</code> と同様ですが、
-こちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。
-<code>script.runInThisContext</code> は <code>script</code> のコードを実行してその結果を返します。
-実行されるコードはローカルスコープにアクセスしませんが、
-<code>global</code> オブジェクト (v8: 実際のコンテキスト) にはアクセスします。
-<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
-ミリ秒単位の数値で指定します。
-実行が打ち切られると、<code>Error</code> がスローされます。
+<p><code>vm.runInThisContext()</code> と似ていますが、事前にコンパイルされた <code>Script</code>
+オブジェクトのメソッドです。<code>script.runInThisContext()</code> はコンパイルされた
+<code>script</code> のコードを実行し、その結果を返します。
+実行されるコードはローカルスコープにアクセスしませんが、現在の <code>global</code>
+オブジェクトにアクセスすることはできます。
 
 </p>
 <!--
-Example of using `script.runInThisContext` to compile code once and run it multiple times:
+Example of using `script.runInThisContext` to compile code once and run it
+multiple times:
 -->
 
-<p><code>script.runInThisContext</code> を使ってコードを一度だけコンパイルし、複数回実行する例:
+<p><code>script.runInThisContext()</code> を使ってコードを一度だけコンパイルし、
+複数回実行する例:
 
 </p>
 <pre><code>var vm = require(&#39;vm&#39;);
 
-globalVar = 0;
+global.globalVar = 0;
 
-var script = vm.createScript(&#39;globalVar += 1&#39;, &#39;myfile.vm&#39;);
+var script = new vm.Script(&#39;globalVar += 1&#39;, { filename: &#39;myfile.vm&#39; });
 
-for (var i = 0; i &lt; 1000 ; i += 1) {
+for (var i = 0; i &lt; 1000; ++i) {
   script.runInThisContext();
 }
 
 console.log(globalVar);
 
 // 1000</code></pre>
-<h3>script.runInNewContext([sandbox], [timeout])<span><a class="mark" href="#all_script_runinnewcontext_sandbox_timeout" id="all_script_runinnewcontext_sandbox_timeout">#</a></span></h3>
 <!--
-Similar to `vm.runInNewContext` a method of a precompiled `Script` object.
-`script.runInNewContext` runs the code of `script` with `sandbox` as the global object and returns the result.
-Running code does not have access to local scope. `sandbox` is optional.
-`timeout` specifies an optional number of milliseconds to execute `code` before
-terminating execution. If execution is terminated, an `Error` will be thrown.
+The options for running a script are:
 -->
 
-<p><code>vm.runInNewContext</code> と同様ですが、
-こちらはプリコンパイル済みの <code>Script</code> オブジェクトのメソッドです。
-<code>script.runInNewContext</code> は <code>sandbox</code> がグローバルオブジェクトであるかのように
-<code>script</code> のコードを実行してその結果を返します。
+<p>スクリプトを実行するためのオプションは:
+
+</p>
+<!--
+- `displayErrors`: whether or not to print any runtime errors to stderr, with
+  the line of code that caused them highlighted, before throwing an exception.
+  Applies only to runtime errors executing the code; it is impossible to create
+  a `Script` instance with syntax errors, as the constructor will throw.
+- `timeout`: a number of milliseconds to execute the script before terminating
+  execution. If execution is terminated, an `Error` will be thrown.
+-->
+
+<ul>
+<li><code>displayErrors</code>: 例外をスローする前に、実行時エラーの原因となったコードの行を
+ハイライトして標準エラー出力にプリントするか否か。
+<code>code</code> を実行した場合の実行時エラーにだけ適用されます;
+<code>Script</code> のコンストラクタが例外をスローするため、文法エラーのある <code>Script</code>
+のインスタンスを生成することは不可能です。</li>
+<li><code>timeout</code>: <code>code</code> の実行が終了するまでのミリ秒単位の時間。
+もし実行が終了しなければ、<code>Error</code> がスローされます。</li>
+</ul>
+<h3>script.runInContext(contextifiedSandbox, [options])<span><a class="mark" href="#all_script_runincontext_contextifiedsandbox_options" id="all_script_runincontext_contextifiedsandbox_options">#</a></span></h3>
+<!--
+Similar to `vm.runInContext` but a method of a precompiled `Script` object.
+`script.runInContext` runs `script`'s compiled code in `contextifiedSandbox`
+and returns the result. Running code does not have access to local scope.
+-->
+
+<p><code>vm.runInContext()</code> と似ていますが、事前にコンパイルされた <code>Script</code>
+オブジェクトのメソッドです。<code>script.runInContext()</code> はコンパイルされた
+<code>script</code> のコードを <code>contextifiedSandbox</code> の中で実行し、その結果を返します。
 実行されるコードはローカルスコープにアクセスしません。
-<code>sandbox</code> はオプションです。
-<code>timeout</code> はオプションで、<code>code</code> の実行が打ち切られるまでの時間を
-ミリ秒単位の数値で指定します。
-実行が打ち切られると、<code>Error</code> がスローされます。
 
 </p>
 <!--
-Example: compile code that increments a global variable and sets one, then execute this code multiple times.
-These globals are contained in the sandbox.
+`script.runInContext` takes the same options as `script.runInThisContext`.
 -->
 
-<p>例: グローバル変数をインクリメントしてセットするコードをコンパイルして、このコードを複数回実行します。
-これらのグローバル変数はサンドボックスに含まれます。
+<p><code>script.runInContext()</code> は <code>script.runInThisContext()</code> と同じオプションを
+受け取ります。
 
 </p>
-<pre><code>var util = require(&#39;util&#39;),
-    vm = require(&#39;vm&#39;),
-    sandbox = {
-      animal: &#39;cat&#39;,
-      count: 2
-    };
+<!--
+Example: compile code that increments a global variable and sets one, then
+execute the code multiple times. These globals are contained in the sandbox.
+-->
 
-var script = vm.createScript(&#39;count += 1; name = &quot;kitty&quot;&#39;, &#39;myfile.vm&#39;);
+<p>例: コードをコンパイルして実行し、グローバル変数をインクリメントし、
+新しい値を設定します。そのグローバルはサンドボックスに含まれます。
 
-for (var i = 0; i &lt; 10 ; i += 1) {
-  script.runInNewContext(sandbox);
+</p>
+<pre><code>var util = require(&#39;util&#39;);
+var vm = require(&#39;vm&#39;);
+
+var sandbox = {
+  animal: &#39;cat&#39;,
+  count: 2
+};
+
+var script = new vm.Script(&#39;count += 1; name = &quot;kitty&quot;&#39;);
+
+for (var i = 0; i &lt; 10; ++i) {
+  script.runInContext(sandbox);
 }
 
 console.log(util.inspect(sandbox));
 
 // { animal: &#39;cat&#39;, count: 12, name: &#39;kitty&#39; }</code></pre>
 <!--
-Note that running untrusted code is a tricky business requiring great care.  To prevent accidental
-global variable leakage, `script.runInNewContext` is quite useful, but safely running untrusted code
+Note that running untrusted code is a tricky business requiring great care.
+`script.runInContext` is quite useful, but safely running untrusted code
 requires a separate process.
 -->
 
-<p>慎重を要するビジネスでは、信頼できないコードの実行は細心の注意が求められることに注意してください。
-偶然グローバル変数が漏れてしまうことを防ぐために、<code>script.runInNewContext</code> はとても役立ちますが、
-信頼できないコードを安全に実行するために別のプロセスを要求します。
+<p>信頼できないコードの実行は、細心の注意が求められることに注意してください。
+<code>script.runInContext()</code> は有用ですが、信頼できないコードを安全に実行するには
+別のプロセスが必要となります。
+
+
+</p>
+<h3>script.runInNewContext([sandbox], [options])<span><a class="mark" href="#all_script_runinnewcontext_sandbox_options" id="all_script_runinnewcontext_sandbox_options">#</a></span></h3>
+<!--
+Similar to `vm.runInNewContext` but a method of a precompiled `Script` object.
+`script.runInNewContext` contextifies `sandbox` if passed or creates a new
+contextified sandbox if it's omitted, and then runs `script`'s compiled code
+with the sandbox as the global object and returns the result. Running code does
+not have access to local scope.
+-->
+
+<p><code>vm.runInNewContext()</code> と似ていますが、事前にコンパイルされた <code>Script</code>
+オブジェクトのメソッドです。
+<code>script.runInNewContext()</code> は、<code>sandbox</code> が与えられればそれをコンテキスト化し、
+または省略された場合は新しいコンテキスト化されたサンドボックスを作成し、
+サンドボックスをグローバルオブジェクトとして <code>script</code> のコンパイルされたコードを
+実行し、その結果を返します。
+実行されるコードはローカルスコープにアクセスしません。
+
+</p>
+<!--
+`script.runInNewContext` takes the same options as `script.runInThisContext`.
+-->
+
+<p><code>script.runInNewContext()</code> は <code>script.runInThisContext()</code> と同じオプションを
+受け取ります。
+
+</p>
+<!--
+Example: compile code that sets a global variable, then execute the code
+multiple times in different contexts. These globals are set on and contained in
+the sandboxes.
+-->
+
+<p>例: グローバル変数を設定するコードをコンパイルし、異なったコンテキストで
+複数回実行します。それらのグローバルはそれぞれのサンドボックスに設定されます。
+
+</p>
+<pre><code>var util = require(&#39;util&#39;);
+var vm = require(&#39;vm&#39;);
+
+var sandboxes = [{}, {}, {}];
+
+var script = new vm.Script(&#39;globalVar = &quot;set&quot;&#39;);
+
+sandboxes.forEach(function (sandbox) {
+  script.runInNewContext(sandbox);
+});
+
+console.log(util.inspect(sandboxes));
+
+// [{ globalVar: &#39;set&#39; }, { globalVar: &#39;set&#39; }, { globalVar: &#39;set&#39; }]</code></pre>
+<!--
+Note that running untrusted code is a tricky business requiring great care.
+`script.runInNewContext` is quite useful, but safely running untrusted code
+requires a separate process.
+-->
+
+<p>信頼できないコードの実行は、細心の注意が求められることに注意してください。
+<code>script.runInNewContext()</code> は有用ですが、信頼できないコードを安全に実行するには
+別のプロセスが必要となります。
 
 </p>
 <h1>Child Process<span><a class="mark" href="#all_child_process" id="all_child_process">#</a></span></h1>
@@ -24012,7 +24112,7 @@ Enum of possible external array types. Contains:
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
