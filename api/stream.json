@@ -71,7 +71,7 @@
               "textRaw": "readable.setEncoding(encoding)",
               "type": "method",
               "name": "setEncoding",
-              "desc": "<!--\n* `encoding` {String} The encoding to use.\n-->\n\n<ul>\n<li><code>encoding</code> {String} 使用するエンコーディング。</li>\n</ul>\n<!--\nCall this function to cause the stream to return strings of the\nspecified encoding instead of Buffer objects.  For example, if you do\n`readable.setEncoding('utf8')`, then the output data will be\ninterpreted as UTF-8 data, and returned as strings.  If you do\n`readable.setEncoding('hex')`, then the data will be encoded in\nhexadecimal string format.\n-->\n\n<p>この関数を呼び出すと、ストリームは Buffer オブジェクトの代わりに\n指定されたエンコーディングによる文字列を返すようになります。\n例えば、<code>readable.setEncoding(&#39;utf8&#39;)</code> とすると、得られるデータは\nUTF-8 のデータとして解釈され、文字列が返されます。\n<code>readable.setEncoding(&#39;hex&#39;)</code> とすると、データは 16 進フォーマットの\n文字列にエンコードされます。\n\n</p>\n<!--\nThis properly handles multi-byte characters that would otherwise be\npotentially mangled if you simply pulled the Buffers directly and\ncalled `buf.toString(encoding)` on them.  If you want to read the data\nas strings, always use this method.\n-->\n\n<p>これは、Buffer を直接取得して単純に <code>buf.toString(encoding)</code>\nを呼び出した場合は潜在的にめちゃくちゃになるのとは異なり、\nマルチバイト文字を正しく扱います。\nデータを文字列として読み込みたければ、常にこのメソッドを使用してください。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.setEncoding(&#39;utf8&#39;);\nreadable.on(&#39;data&#39;, function(chunk) {\n  assert.equal(typeof chunk, &#39;string&#39;);\n  console.log(&#39;got %d characters of string data&#39;, chunk.length);\n})</code></pre>\n",
+              "desc": "<!--\n* `encoding` {String} The encoding to use.\n* Return: `this`\n-->\n\n<ul>\n<li><code>encoding</code> {String} 使用するエンコーディング。</li>\n</ul>\n<!--\nCall this function to cause the stream to return strings of the\nspecified encoding instead of Buffer objects.  For example, if you do\n`readable.setEncoding('utf8')`, then the output data will be\ninterpreted as UTF-8 data, and returned as strings.  If you do\n`readable.setEncoding('hex')`, then the data will be encoded in\nhexadecimal string format.\n-->\n\n<p>この関数を呼び出すと、ストリームは Buffer オブジェクトの代わりに\n指定されたエンコーディングによる文字列を返すようになります。\n例えば、<code>readable.setEncoding(&#39;utf8&#39;)</code> とすると、得られるデータは\nUTF-8 のデータとして解釈され、文字列が返されます。\n<code>readable.setEncoding(&#39;hex&#39;)</code> とすると、データは 16 進フォーマットの\n文字列にエンコードされます。\n\n</p>\n<!--\nThis properly handles multi-byte characters that would otherwise be\npotentially mangled if you simply pulled the Buffers directly and\ncalled `buf.toString(encoding)` on them.  If you want to read the data\nas strings, always use this method.\n-->\n\n<p>これは、Buffer を直接取得して単純に <code>buf.toString(encoding)</code>\nを呼び出した場合は潜在的にめちゃくちゃになるのとは異なり、\nマルチバイト文字を正しく扱います。\nデータを文字列として読み込みたければ、常にこのメソッドを使用してください。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.setEncoding(&#39;utf8&#39;);\nreadable.on(&#39;data&#39;, function(chunk) {\n  assert.equal(typeof chunk, &#39;string&#39;);\n  console.log(&#39;got %d characters of string data&#39;, chunk.length);\n})</code></pre>\n",
               "signatures": [
                 {
                   "params": [
@@ -86,23 +86,39 @@
               "textRaw": "readable.resume()",
               "type": "method",
               "name": "resume",
-              "desc": "<!--\nThis method will cause the readable stream to resume emitting `data`\nevents.\n-->\n\n<p>このメソッドは Readable ストリームが <code>&#39;data&#39;</code> イベントの生成を\n再開するようにします。\n\n</p>\n<!--\nThis method will switch the stream into flowing mode.  If you do *not*\nwant to consume the data from a stream, but you *do* want to get to\nits `end` event, you can call [`readable.resume()`][] to open the flow of\ndata.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えます。\nもしストリームからのデータを消費する必要が <em>なく</em>、しかし <code>&#39;end&#39;</code> イベントを\n受け取る必要が <em>ある</em> なら、[<code>readable.resume()</code>][] を呼び出してデータの\nフローを開くことができます。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.resume();\nreadable.on(&#39;end&#39;, function(chunk) {\n  console.log(&#39;got to the end, but did not read anything&#39;);\n})</code></pre>\n",
               "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: `this` ",
+                    "name": "return",
+                    "desc": "`this`"
+                  },
+                  "params": []
+                },
                 {
                   "params": []
                 }
-              ]
+              ],
+              "desc": "<!--\nThis method will cause the readable stream to resume emitting `data`\nevents.\n-->\n\n<p>このメソッドは Readable ストリームが <code>&#39;data&#39;</code> イベントの生成を\n再開するようにします。\n\n</p>\n<!--\nThis method will switch the stream into flowing mode.  If you do *not*\nwant to consume the data from a stream, but you *do* want to get to\nits `end` event, you can call [`readable.resume()`][] to open the flow of\ndata.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えます。\nもしストリームからのデータを消費する必要が <em>なく</em>、しかし <code>&#39;end&#39;</code> イベントを\n受け取る必要が <em>ある</em> なら、[<code>readable.resume()</code>][] を呼び出してデータの\nフローを開くことができます。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.resume();\nreadable.on(&#39;end&#39;, function(chunk) {\n  console.log(&#39;got to the end, but did not read anything&#39;);\n})</code></pre>\n"
             },
             {
               "textRaw": "readable.pause()",
               "type": "method",
               "name": "pause",
-              "desc": "<!--\nThis method will cause a stream in flowing mode to stop emitting\n`data` events, switching out of flowing mode.  Any data that becomes\navailable will remain in the internal buffer.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えて、\n<code>&#39;data&#39;</code> イベントの生成を中断します。\n利用可能になったデータは内部バッファの中に残ったままとなります。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.on(&#39;data&#39;, function(chunk) {\n  console.log(&#39;got %d bytes of data&#39;, chunk.length);\n  readable.pause();\n  console.log(&#39;there will be no more data for 1 second&#39;);\n  setTimeout(function() {\n    console.log(&#39;now data will start flowing again&#39;);\n    readable.resume();\n  }, 1000);\n})</code></pre>\n",
               "signatures": [
+                {
+                  "return": {
+                    "textRaw": "Return: `this` ",
+                    "name": "return",
+                    "desc": "`this`"
+                  },
+                  "params": []
+                },
                 {
                   "params": []
                 }
-              ]
+              ],
+              "desc": "<!--\nThis method will cause a stream in flowing mode to stop emitting\n`data` events, switching out of flowing mode.  Any data that becomes\navailable will remain in the internal buffer.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えて、\n<code>&#39;data&#39;</code> イベントの生成を中断します。\n利用可能になったデータは内部バッファの中に残ったままとなります。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.on(&#39;data&#39;, function(chunk) {\n  console.log(&#39;got %d bytes of data&#39;, chunk.length);\n  readable.pause();\n  console.log(&#39;there will be no more data for 1 second&#39;);\n  setTimeout(function() {\n    console.log(&#39;now data will start flowing again&#39;);\n    readable.resume();\n  }, 1000);\n})</code></pre>\n"
             },
             {
               "textRaw": "readable.pipe(destination, [options])",
@@ -387,7 +403,7 @@
                   "textRaw": "readable.setEncoding(encoding)",
                   "type": "method",
                   "name": "setEncoding",
-                  "desc": "<!--\n* `encoding` {String} The encoding to use.\n-->\n\n<ul>\n<li><code>encoding</code> {String} 使用するエンコーディング。</li>\n</ul>\n<!--\nCall this function to cause the stream to return strings of the\nspecified encoding instead of Buffer objects.  For example, if you do\n`readable.setEncoding('utf8')`, then the output data will be\ninterpreted as UTF-8 data, and returned as strings.  If you do\n`readable.setEncoding('hex')`, then the data will be encoded in\nhexadecimal string format.\n-->\n\n<p>この関数を呼び出すと、ストリームは Buffer オブジェクトの代わりに\n指定されたエンコーディングによる文字列を返すようになります。\n例えば、<code>readable.setEncoding(&#39;utf8&#39;)</code> とすると、得られるデータは\nUTF-8 のデータとして解釈され、文字列が返されます。\n<code>readable.setEncoding(&#39;hex&#39;)</code> とすると、データは 16 進フォーマットの\n文字列にエンコードされます。\n\n</p>\n<!--\nThis properly handles multi-byte characters that would otherwise be\npotentially mangled if you simply pulled the Buffers directly and\ncalled `buf.toString(encoding)` on them.  If you want to read the data\nas strings, always use this method.\n-->\n\n<p>これは、Buffer を直接取得して単純に <code>buf.toString(encoding)</code>\nを呼び出した場合は潜在的にめちゃくちゃになるのとは異なり、\nマルチバイト文字を正しく扱います。\nデータを文字列として読み込みたければ、常にこのメソッドを使用してください。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.setEncoding(&#39;utf8&#39;);\nreadable.on(&#39;data&#39;, function(chunk) {\n  assert.equal(typeof chunk, &#39;string&#39;);\n  console.log(&#39;got %d characters of string data&#39;, chunk.length);\n})</code></pre>\n",
+                  "desc": "<!--\n* `encoding` {String} The encoding to use.\n* Return: `this`\n-->\n\n<ul>\n<li><code>encoding</code> {String} 使用するエンコーディング。</li>\n</ul>\n<!--\nCall this function to cause the stream to return strings of the\nspecified encoding instead of Buffer objects.  For example, if you do\n`readable.setEncoding('utf8')`, then the output data will be\ninterpreted as UTF-8 data, and returned as strings.  If you do\n`readable.setEncoding('hex')`, then the data will be encoded in\nhexadecimal string format.\n-->\n\n<p>この関数を呼び出すと、ストリームは Buffer オブジェクトの代わりに\n指定されたエンコーディングによる文字列を返すようになります。\n例えば、<code>readable.setEncoding(&#39;utf8&#39;)</code> とすると、得られるデータは\nUTF-8 のデータとして解釈され、文字列が返されます。\n<code>readable.setEncoding(&#39;hex&#39;)</code> とすると、データは 16 進フォーマットの\n文字列にエンコードされます。\n\n</p>\n<!--\nThis properly handles multi-byte characters that would otherwise be\npotentially mangled if you simply pulled the Buffers directly and\ncalled `buf.toString(encoding)` on them.  If you want to read the data\nas strings, always use this method.\n-->\n\n<p>これは、Buffer を直接取得して単純に <code>buf.toString(encoding)</code>\nを呼び出した場合は潜在的にめちゃくちゃになるのとは異なり、\nマルチバイト文字を正しく扱います。\nデータを文字列として読み込みたければ、常にこのメソッドを使用してください。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.setEncoding(&#39;utf8&#39;);\nreadable.on(&#39;data&#39;, function(chunk) {\n  assert.equal(typeof chunk, &#39;string&#39;);\n  console.log(&#39;got %d characters of string data&#39;, chunk.length);\n})</code></pre>\n",
                   "signatures": [
                     {
                       "params": [
@@ -402,23 +418,39 @@
                   "textRaw": "readable.resume()",
                   "type": "method",
                   "name": "resume",
-                  "desc": "<!--\nThis method will cause the readable stream to resume emitting `data`\nevents.\n-->\n\n<p>このメソッドは Readable ストリームが <code>&#39;data&#39;</code> イベントの生成を\n再開するようにします。\n\n</p>\n<!--\nThis method will switch the stream into flowing mode.  If you do *not*\nwant to consume the data from a stream, but you *do* want to get to\nits `end` event, you can call [`readable.resume()`][] to open the flow of\ndata.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えます。\nもしストリームからのデータを消費する必要が <em>なく</em>、しかし <code>&#39;end&#39;</code> イベントを\n受け取る必要が <em>ある</em> なら、[<code>readable.resume()</code>][] を呼び出してデータの\nフローを開くことができます。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.resume();\nreadable.on(&#39;end&#39;, function(chunk) {\n  console.log(&#39;got to the end, but did not read anything&#39;);\n})</code></pre>\n",
                   "signatures": [
+                    {
+                      "return": {
+                        "textRaw": "Return: `this` ",
+                        "name": "return",
+                        "desc": "`this`"
+                      },
+                      "params": []
+                    },
                     {
                       "params": []
                     }
-                  ]
+                  ],
+                  "desc": "<!--\nThis method will cause the readable stream to resume emitting `data`\nevents.\n-->\n\n<p>このメソッドは Readable ストリームが <code>&#39;data&#39;</code> イベントの生成を\n再開するようにします。\n\n</p>\n<!--\nThis method will switch the stream into flowing mode.  If you do *not*\nwant to consume the data from a stream, but you *do* want to get to\nits `end` event, you can call [`readable.resume()`][] to open the flow of\ndata.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えます。\nもしストリームからのデータを消費する必要が <em>なく</em>、しかし <code>&#39;end&#39;</code> イベントを\n受け取る必要が <em>ある</em> なら、[<code>readable.resume()</code>][] を呼び出してデータの\nフローを開くことができます。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.resume();\nreadable.on(&#39;end&#39;, function(chunk) {\n  console.log(&#39;got to the end, but did not read anything&#39;);\n})</code></pre>\n"
                 },
                 {
                   "textRaw": "readable.pause()",
                   "type": "method",
                   "name": "pause",
-                  "desc": "<!--\nThis method will cause a stream in flowing mode to stop emitting\n`data` events, switching out of flowing mode.  Any data that becomes\navailable will remain in the internal buffer.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えて、\n<code>&#39;data&#39;</code> イベントの生成を中断します。\n利用可能になったデータは内部バッファの中に残ったままとなります。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.on(&#39;data&#39;, function(chunk) {\n  console.log(&#39;got %d bytes of data&#39;, chunk.length);\n  readable.pause();\n  console.log(&#39;there will be no more data for 1 second&#39;);\n  setTimeout(function() {\n    console.log(&#39;now data will start flowing again&#39;);\n    readable.resume();\n  }, 1000);\n})</code></pre>\n",
                   "signatures": [
+                    {
+                      "return": {
+                        "textRaw": "Return: `this` ",
+                        "name": "return",
+                        "desc": "`this`"
+                      },
+                      "params": []
+                    },
                     {
                       "params": []
                     }
-                  ]
+                  ],
+                  "desc": "<!--\nThis method will cause a stream in flowing mode to stop emitting\n`data` events, switching out of flowing mode.  Any data that becomes\navailable will remain in the internal buffer.\n-->\n\n<p>このメソッドはストリームを flowing モードに切り替えて、\n<code>&#39;data&#39;</code> イベントの生成を中断します。\n利用可能になったデータは内部バッファの中に残ったままとなります。\n\n</p>\n<pre><code class=\"javascript\">var readable = getReadableStreamSomehow();\nreadable.on(&#39;data&#39;, function(chunk) {\n  console.log(&#39;got %d bytes of data&#39;, chunk.length);\n  readable.pause();\n  console.log(&#39;there will be no more data for 1 second&#39;);\n  setTimeout(function() {\n    console.log(&#39;now data will start flowing again&#39;);\n    readable.resume();\n  }, 1000);\n})</code></pre>\n"
                 },
                 {
                   "textRaw": "readable.pipe(destination, [options])",
@@ -650,7 +682,7 @@
                   "textRaw": "new stream.Readable([options])",
                   "type": "method",
                   "name": "Readable",
-                  "* `options` {Object}\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default": "16kb\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
+                  "* `options` {Object}\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default": "16kb, or 16 for `objectMode` streams\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
                   "signatures": [
                     {
                       "params": [
@@ -658,10 +690,10 @@
                           "textRaw": "`options` {Object} (任意) ",
                           "options": [
                             {
-                              "textRaw": "`highWaterMark` {Number} 下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。 ",
+                              "textRaw": "`highWaterMark` {Number} 下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。 デフォルトは 16kb、あるいは `objectMode` では 16。 ",
                               "name": "highWaterMark",
                               "type": "Number",
-                              "desc": "下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。"
+                              "desc": "下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。 デフォルトは 16kb、あるいは `objectMode` では 16。"
                             },
                             {
                               "textRaw": "`encoding` {String} 指定されるとバッファは指定のエンコーディングで デコードされます。デフォルトは `null`。 ",
@@ -742,7 +774,7 @@
                   "textRaw": "new stream.Writable([options])",
                   "type": "method",
                   "name": "Writable",
-                  "* `options` {Object}\n  * `highWaterMark` {Number} Buffer level when [`write()`][] starts\n    returning false. Default": "16kb\n  * `decodeStrings` {Boolean} Whether or not to decode strings into\n    Buffers before passing them to [`_write()`][].  Default=true",
+                  "* `options` {Object}\n  * `highWaterMark` {Number} Buffer level when [`write()`][] starts\n    returning false. Default": "16kb, or 16 for `objectMode` streams\n  * `decodeStrings` {Boolean} Whether or not to decode strings into\n    Buffers before passing them to [`_write()`][].  Default=true",
                   "signatures": [
                     {
                       "params": [
@@ -750,10 +782,10 @@
                           "textRaw": "`options` {Object} (任意) ",
                           "options": [
                             {
-                              "textRaw": "`highWaterMark` {Number} [`write()`][] が `false` を返し始める バッファレベル。デフォルトは 16kb。 ",
+                              "textRaw": "`highWaterMark` {Number} [`write()`][] が `false` を返し始める バッファレベル。デフォルトは 16kb、あるいは `objectMode` では 16。 ",
                               "name": "highWaterMark",
                               "type": "Number",
-                              "desc": "[`write()`][] が `false` を返し始める バッファレベル。デフォルトは 16kb。"
+                              "desc": "[`write()`][] が `false` を返し始める バッファレベル。デフォルトは 16kb、あるいは `objectMode` では 16。"
                             },
                             {
                               "textRaw": "`decodeStrings` {Boolean} 文字列が [`_write()`][] に渡される前に バッファにデコードするかどうか。デフォルトは `true`。 ",
@@ -991,7 +1023,7 @@
               "textRaw": "new stream.Readable([options])",
               "type": "method",
               "name": "Readable",
-              "* `options` {Object}\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default": "16kb\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
+              "* `options` {Object}\n  * `highWaterMark` {Number} The maximum number of bytes to store in\n    the internal buffer before ceasing to read from the underlying\n    resource.  Default": "16kb, or 16 for `objectMode` streams\n  * `encoding` {String} If specified, then buffers will be decoded to\n    strings using the specified encoding.  Default=null\n  * `objectMode` {Boolean} Whether this stream should behave\n    as a stream of objects. Meaning that stream.read(n) returns\n    a single value instead of a Buffer of size n",
               "signatures": [
                 {
                   "params": [
@@ -999,10 +1031,10 @@
                       "textRaw": "`options` {Object} (任意) ",
                       "options": [
                         {
-                          "textRaw": "`highWaterMark` {Number} 下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。 ",
+                          "textRaw": "`highWaterMark` {Number} 下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。 デフォルトは 16kb、あるいは `objectMode` では 16。 ",
                           "name": "highWaterMark",
                           "type": "Number",
-                          "desc": "下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。"
+                          "desc": "下層のリソースから読み込むのを中断するまで 内部バッファに貯めておくバイト数の最大値。 デフォルトは 16kb、あるいは `objectMode` では 16。"
                         },
                         {
                           "textRaw": "`encoding` {String} 指定されるとバッファは指定のエンコーディングで デコードされます。デフォルトは `null`。 ",

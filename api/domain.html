@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Domain Node.js v0.11.6 Manual &amp; Documentation</title>
+  <title>Domain Node.js v0.11.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/domain.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -810,49 +810,20 @@ without exiting the domain.
 </p>
 <h3>domain.dispose()<span><a class="mark" href="#domain_domain_dispose" id="domain_domain_dispose">#</a></span></h3>
 <!--
-The dispose method destroys a domain, and makes a best effort attempt to
-clean up any and all IO that is associated with the domain.  Streams are
-aborted, ended, closed, and/or destroyed.  Timers are cleared.
-Explicitly bound callbacks are no longer called.  Any error events that
-are raised as a result of this are ignored.
+    Stability: 0 - Deprecated.  Please recover from failed IO actions
+    explicitly via error event handlers set on the domain.
 -->
 
-<p><code>dispose()</code> メソッドはドメインを破棄し、ドメインに関連づけられた全ての
-I/O を可能な限りクリーンナップしようと試みます。
-ストリームはアボートされ、終了され、クローズされ、そして／または破棄されます。
-タイマはクリアされます。明示的に束縛されたコールバックはもう呼び出されません。
-結果として発生するどんなエラーイベントも無視されます。
-
-</p>
-<!--
-The intention of calling `dispose` is generally to prevent cascading
-errors when a critical part of the Domain context is found to be in an
-error state.
+<pre class="api_stability_0">Stability: 0 - Deprecated.  IO 操作の明らかな失敗から回復するには、
+ドメインに設定したエラーハンドラを通じておこなってください。</pre><!--
+Once `dispose` has been called, the domain will no longer be used by callbacks
+bound into the domain via `run`, `bind`, or `intercept`, and a `dispose` event
+is emitted.
 -->
 
-<p><code>dispose()</code> を呼び出す意図は通常、エラー状態の中でドメインコンテキストの
-クリティカルな部分が見つかった場合に、カスケードしたエラーを防ぐことです。
-
-</p>
-<!--
-Once the domain is disposed the `dispose` event will emit.
--->
-
-<p>ドメインが破棄されると、<code>&#39;dispose&#39;</code> イベントが生成されます。
-
-</p>
-<!--
-Note that IO might still be performed.  However, to the highest degree
-possible, once a domain is disposed, further errors from the emitters in
-that set will be ignored.  So, even if some remaining actions are still
-in flight, Node.js will not communicate further about them.
--->
-
-<p>I/O がまだ行われているかもしれないことに注意してください。
-しかしながら、可能な限り高い視点から見ると、一度ドメインが破棄されれば、
-その集合の中の EventEmitter からのさらなるエラーは無視されます。
-そのため、たとえ残りのアクションがまだ実行中だとしても、
-Node.js はそれらとコミュニケートしません。
+<p>一度 <code>dispose()</code> が呼び出されると、<code>run()</code>、<code>bind()</code>、または <code>intercept()</code>
+によってドメインに束縛されたコールバックはもうドメインが使われなくなります。
+そして <code>&#39;dispose&#39;</code> イベントが生成されます。
 
 </p>
 
@@ -884,7 +855,7 @@ Node.js はそれらとコミュニケートしません。
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

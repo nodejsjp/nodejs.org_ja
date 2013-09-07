@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Stream Node.js v0.11.6 Manual &amp; Documentation</title>
+  <title>Stream Node.js v0.11.7 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/stream.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.6 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -602,6 +602,7 @@ emission of a [`'data'` event][].
 <h4>readable.setEncoding(encoding)<span><a class="mark" href="#stream_readable_setencoding_encoding" id="stream_readable_setencoding_encoding">#</a></span></h4>
 <!--
 * `encoding` {String} The encoding to use.
+* Return: `this`
 -->
 
 <ul>
@@ -644,6 +645,9 @@ readable.on(&#39;data&#39;, function(chunk) {
   console.log(&#39;got %d characters of string data&#39;, chunk.length);
 })</code></pre>
 <h4>readable.resume()<span><a class="mark" href="#stream_readable_resume" id="stream_readable_resume">#</a></span></h4>
+<div class="signature"><ul>
+<li>Return: <code>this</code></li>
+</div></ul>
 <!--
 This method will cause the readable stream to resume emitting `data`
 events.
@@ -672,6 +676,9 @@ readable.on(&#39;end&#39;, function(chunk) {
   console.log(&#39;got to the end, but did not read anything&#39;);
 })</code></pre>
 <h4>readable.pause()<span><a class="mark" href="#stream_readable_pause" id="stream_readable_pause">#</a></span></h4>
+<div class="signature"><ul>
+<li>Return: <code>this</code></li>
+</div></ul>
 <!--
 This method will cause a stream in flowing mode to stop emitting
 `data` events, switching out of flowing mode.  Any data that becomes
@@ -1607,7 +1614,7 @@ SimpleProtocol.prototype._read = function(n) {
 * `options` {Object}
   * `highWaterMark` {Number} The maximum number of bytes to store in
     the internal buffer before ceasing to read from the underlying
-    resource.  Default=16kb
+    resource.  Default=16kb, or 16 for `objectMode` streams
   * `encoding` {String} If specified, then buffers will be decoded to
     strings using the specified encoding.  Default=null
   * `objectMode` {Boolean} Whether this stream should behave
@@ -1618,7 +1625,8 @@ SimpleProtocol.prototype._read = function(n) {
 <ul>
 <li><code>options</code> {Object} (任意)<ul>
 <li><code>highWaterMark</code> {Number} 下層のリソースから読み込むのを中断するまで
-内部バッファに貯めておくバイト数の最大値。デフォルトは 16kb。</li>
+内部バッファに貯めておくバイト数の最大値。
+デフォルトは 16kb、あるいは <code>objectMode</code> では 16。</li>
 <li><code>encoding</code> {String} 指定されるとバッファは指定のエンコーディングで
 デコードされます。デフォルトは <code>null</code>。</li>
 <li><code>objectMode</code> {Boolean} このストリームがオブジェクトストリームとして
@@ -1843,7 +1851,7 @@ how to implement Writable streams in your programs.
 <!--
 * `options` {Object}
   * `highWaterMark` {Number} Buffer level when [`write()`][] starts
-    returning false. Default=16kb
+    returning false. Default=16kb, or 16 for `objectMode` streams
   * `decodeStrings` {Boolean} Whether or not to decode strings into
     Buffers before passing them to [`_write()`][].  Default=true
 -->
@@ -1851,7 +1859,7 @@ how to implement Writable streams in your programs.
 <ul>
 <li><code>options</code> {Object} (任意)<ul>
 <li><code>highWaterMark</code> {Number} <a href="#stream_writable_write_chunk_encoding_callback"><code>write()</code></a> が <code>false</code> を返し始める
-バッファレベル。デフォルトは 16kb。</li>
+バッファレベル。デフォルトは 16kb、あるいは <code>objectMode</code> では 16。</li>
 <li><code>decodeStrings</code> {Boolean} 文字列が <a href="#stream_writable_write_chunk_encoding_callback_1"><code>_write()</code></a> に渡される前に
 バッファにデコードするかどうか。デフォルトは <code>true</code>。</li>
 </ul>
@@ -2866,7 +2874,7 @@ modify them.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.6/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
