@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.10.18 Manual &amp; Documentation</title>
+  <title>process Node.js v0.10.19 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.18 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.19 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -219,15 +219,15 @@ You have been warned.
 </p>
 <h2>Signal Events<span><a class="mark" href="#process_signal_events" id="process_signal_events">#</a></span></h2>
 <!--type=event-->
-<!--name=SIGINT, SIGUSR1, etc.-->
+<!--name=SIGINT, SIGHUP, etc.-->
 
 <!--
 Emitted when the processes receives a signal. See sigaction(2) for a list of
-standard POSIX signal names such as SIGINT, SIGUSR1, etc.
+standard POSIX signal names such as SIGINT, SIGHUP, etc.
 -->
 
 <p>プロセスがシグナルを受信した場合に生成されます。
-SIGINT、SIGUSR1、その他の POSIX 標準シグナル名の一覧について は sigaction(2) を参照してください。
+SIGINT、SIGHUP、その他の POSIX 標準シグナル名の一覧について は sigaction(2) を参照してください。
 
 </p>
 <!--
@@ -250,6 +250,15 @@ programs.
 
 <p>多くの端末プログラムで簡単に <code>SIGINT</code> を送る方法は <code>Control-C</code> を押すことです。
 
+</p>
+<!--
+Note: SIGUSR1 is reserved by node.js to kickstart the debugger.  It's possible
+to install a listener but that won't stop the debugger from starting.
+-->
+
+<p>注意: SIGUSR1はnode.jsによって受信され、デバッガを起動します。
+SIGUSR1のリスナを登録することは可能ですが、
+デバッガの開始を止めることはできません。
 
 </p>
 <h2>process.stdout<span><a class="mark" href="#process_process_stdout" id="process_process_stdout">#</a></span></h2>
@@ -781,13 +790,13 @@ JavaScript で表現したオブジェクトを保持します。
 <!--
 Send a signal to a process. `pid` is the process id and `signal` is the
 string describing the signal to send.  Signal names are strings like
-'SIGINT' or 'SIGUSR1'.  If omitted, the signal will be 'SIGTERM'.
+'SIGINT' or 'SIGHUP'.  If omitted, the signal will be 'SIGTERM'.
 See kill(2) for more information.
 -->
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
-シグナルの名前は &#39;SIGINT&#39; や &#39;SIGUSR1&#39; のような文字列です。
+シグナルの名前は &#39;SIGINT&#39; や &#39;SIGHUP&#39; のような文字列です。
 省略すると、シグナルは &#39;SIGTERM&#39; となります。
 詳細は kill(2) を参照してください。
 
@@ -820,6 +829,15 @@ setTimeout(function() {
 }, 100);
 
 process.kill(process.pid, &#39;SIGHUP&#39;);</code></pre>
+<!--
+Note: SIGUSR1 is reserved by node.js.  It can be used to kickstart the
+debugger.
+-->
+
+<p>注意: SIGUSR1はnode.jsによって予約されています。
+それはデバッガを開始するために使われます。
+
+</p>
 <h2>process.pid<span><a class="mark" href="#process_process_pid" id="process_process_pid">#</a></span></h2>
 <!--
 The PID of the process.
@@ -1141,7 +1159,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.18/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.19/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
