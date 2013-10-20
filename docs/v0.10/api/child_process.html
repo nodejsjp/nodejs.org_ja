@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Child Process Node.js v0.10.20 Manual &amp; Documentation</title>
+  <title>Child Process Node.js v0.10.21 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/child_process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.20 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.21 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -66,6 +66,7 @@
 <li><a href="#child_process_child_stdout">child.stdout</a></li>
 <li><a href="#child_process_child_stderr">child.stderr</a></li>
 <li><a href="#child_process_child_pid">child.pid</a></li>
+<li><a href="#child_process_child_connected">child.connected</a></li>
 <li><a href="#child_process_child_kill_signal">child.kill([signal])</a></li>
 <li><a href="#child_process_child_send_message_sendhandle">child.send(message, [sendHandle])</a><ul>
 <li><a href="#child_process_example_sending_server_object">Example: sending server object</a></li>
@@ -217,6 +218,16 @@ Note that the child process stdio streams might still be open.
 
 </p>
 <!--
+Also, note that node establishes signal handlers for `'SIGINT'` and `'SIGTERM`',
+so it will not terminate due to receipt of those signals, it will exit.
+-->
+
+<p>また、Node が &#39;SIGINT&#39;<code> および </code>&#39;SIGTERM<code>&#39; に対するシグナルハンドラを
+確立するため、子プロセスがそれらのシグナルを受けとって終了しても、
+</code>signal` にはそれらのシグナルの名前が設定されないことに注意してください。
+
+</p>
+<!--
 See `waitpid(2)`.
 -->
 
@@ -249,17 +260,15 @@ might share the same stdio streams.
 </p>
 <h3>Event: &#39;disconnect&#39;<span><a class="mark" href="#child_process_event_disconnect" id="child_process_event_disconnect">#</a></span></h3>
 <!--
-This event is emitted after using the `.disconnect()` method in the parent or
-in the child. After disconnecting it is no longer possible to send messages.
-An alternative way to check if you can send messages is to see if the
-`child.connected` property is `true`.
+This event is emitted after calling the `.disconnect()` method in the parent
+or in the child. After disconnecting it is no longer possible to send messages,
+and the `.connected` property is false.
 -->
 
-<p>このイベントは、親プロセスまたは子プロセスで <code>disconnect()</code> メソッドが
+<p>このイベントは、親プロセスまたは子プロセスで <code>.disconnect()</code> メソッドが
 呼び出された場合に生成されます。
-この後では、プロセス間でのメッセージ送信はもうできません。
-メッセージを送信できるかを調べるには、<code>child.connected</code> プロパティが <code>true</code>
-かチェックしてください。
+切断の後では、プロセス間でメッセージを送信することはできず、
+<code>.connected</code> プロパティは <code>false</code> になります。
 
 </p>
 <h3>Event: &#39;message&#39;<span><a class="mark" href="#child_process_event_message" id="child_process_event_message">#</a></span></h3>
@@ -357,6 +366,21 @@ Example:
 
 console.log(&#39;Spawned child pid: &#39; + grep.pid);
 grep.stdin.end();</code></pre>
+<h3>child.connected<span><a class="mark" href="#child_process_child_connected" id="child_process_child_connected">#</a></span></h3>
+<!--
+* {Boolean} Set to false after `.disconnect' is called
+-->
+
+<ul>
+<li>{Boolean} <code>.disconnect&#39; が呼び出されると </code>false` に設定される</li>
+</ul>
+<!--
+If `.connected` is false, it is no longer possible to send messages.
+-->
+
+<p><code>.connected</code> が <code>false</code> の場合、メッセージを送信することはできません。
+
+</p>
 <h3>child.kill([signal])<span><a class="mark" href="#child_process_child_kill_signal" id="child_process_child_kill_signal">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>signal</code> <span class="type">String</span></li>
@@ -614,22 +638,32 @@ It is also recommended not to use `.maxConnections` in this condition.
 </p>
 <h3>child.disconnect()<span><a class="mark" href="#child_process_child_disconnect" id="child_process_child_disconnect">#</a></span></h3>
 <!--
-To close the IPC connection between parent and child use the
-`child.disconnect()` method. This allows the child to exit gracefully since
-there is no IPC channel keeping it alive. When calling this method the
-`disconnect` event will be emitted in both parent and child, and the
-`connected` flag will be set to `false`. Please note that you can also call
-`process.disconnect()` in the child process.
+Close the IPC channel between parent and child, allowing the child to exit
+gracefully once there are no other connections keeping it alive. After calling
+this method the `.connected` flag will be set to `false` in both the parent and
+child, and it is no longer possible to send messages.
 -->
 
-<p>親プロセスと子プロセス間の IPC コネクションをクローズするには
-<code>child.disconnect()</code> メソッドを使用します。
-これは、子プロセスが IPC チャネルを保持しないことにより、強制的ではない
-終了を可能にします。
-このメソッドを呼び出すと親プロセスと子プロセスの両方で <code>&#39;disconnect&#39;</code>
-イベントが生成され、<code>connected</code> フラグが <code>false</code> に設定されます。
-子プロセスで <code>process.disconnect()</code> を呼び出すことも可能であることに
-注意してください。
+<p>親プロセスと子プロセス間の IPC コネクションをクローズし、
+他の接続を持たない子プロセスが自然に終了することを可能にします。
+このメソッドを呼び出すと、親プロセスと子プロセスの両方で <code>.connected</code> は
+<code>false</code> に設定され、メッセージを送信することはできなくなります。
+
+</p>
+<!--
+The 'disconnect' event will be emitted when there are no messages in the process
+of being received, most likely immediately.
+-->
+
+<p>プロセスが受信するメッセージがなければ、おそらくはすぐに <code>&#39;disconnect&#39;</code>
+イベントが生成されます。
+
+</p>
+<!--
+Note that you can also call `process.disconnect()` in the child process.
+-->
+
+<p>子プロセスでも <code>process.disconnect()</code> を呼び出せることに注意してください。
 
 </p>
 <h2>child_process.spawn(command, [args], [options])<span><a class="mark" href="#child_process_child_process_spawn_command_args_options" id="child_process_child_process_spawn_command_args_options">#</a></span></h2>
@@ -974,7 +1008,7 @@ See also: `child_process.exec()` and `child_process.fork()`
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
   * `timeout` {Number} (Default: 0)
-  * `maxBuffer` {Number} (Default: 200*1024)
+  * `maxBuffer` {Number} (Default: `200*1024`)
   * `killSignal` {String} (Default: 'SIGTERM')
 * `callback` {Function} called with the output when process terminates
   * `error` {Error}
@@ -1123,6 +1157,8 @@ leaner than `child_process.exec`. It has the same options.
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
   * `execPath` {String} Executable used to create the child process
+  * `silent` {Boolean} If true, prevent stdout and stderr in the spawned node
+    process from being associated with the parent's (default is false)
 * Return: ChildProcess object
 -->
 
@@ -1132,8 +1168,10 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
-<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
+<li><code>encoding</code> {String} (デフォルト: &#39;utf8&#39;)</li>
 <li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
+<li><code>silent</code> {Boolean} <code>true</code> の場合、起動された子プロセスの標準入力と標準出力が
+親プロセスに関連づけられるのを抑止します (デフォルトは <code>false</code>)。</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -1149,27 +1187,6 @@ instance, the returned object has a communication channel built-in. See
 返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
 組み込みの通信チャネルを持ちます。
 詳細は <code>child.send(message, [sendHandle])</code> を参照してください。
-
-</p>
-<!--
-By default the spawned Node process will have the stdout, stderr associated
-with the parent's. To change this behavior set the `silent` property in the
-`options` object to `true`.
--->
-
-<p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準出力と
-標準エラー出力を持ちます。これを変更するには <code>options</code> オブジェクトの
-<code>silent</code> プロパティを <code>true</code> に設定します。
-
-</p>
-<!--
-The child process does not automatically exit once it's done, you need to call
-`process.exit()` explicitly. This limitation may be lifted in the future.
--->
-
-<p>子プロセスは自動的に終了するわけではないので、
-明示的に <code>process.exit()</code> を呼び出す必要があります。
-この制限は将来取り除かれるかもしれません。
 
 </p>
 <!--
@@ -1228,7 +1245,7 @@ output on this fd is expected to be line delimited JSON objects.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.20/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.21/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
