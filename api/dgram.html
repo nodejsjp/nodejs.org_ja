@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>UDP / Datagram Sockets Node.js v0.11.7 Manual &amp; Documentation</title>
+  <title>UDP / Datagram Sockets Node.js v0.11.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/dgram.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -223,7 +223,7 @@ Emitted when an error occurs.
 </p>
 <h3>socket.send(buf, offset, length, port, address, [callback])<span><a class="mark" href="#dgram_socket_send_buf_offset_length_port_address_callback" id="dgram_socket_send_buf_offset_length_port_address_callback">#</a></span></h3>
 <!--
-* `buf` Buffer object.  Message to be sent
+* `buf` Buffer object or string.  Message to be sent
 * `offset` Integer. Offset in the buffer where the message starts.
 * `length` Integer. Number of bytes in the message.
 * `port` Integer. destination port
@@ -233,13 +233,13 @@ Emitted when an error occurs.
 -->
 
 <ul>
-<li><code>buf</code> Buffer object.  送信されるメッセージ</li>
-<li><code>offset</code> Integer. メッセージの開始位置となるバッファ内のオフセット</li>
-<li><code>length</code> Integer. メッセージのバイト長</li>
-<li><code>port</code> Integer. 接続先のポート番号</li>
-<li><code>address</code> String. 接続先の IP</li>
-<li><code>callback</code> Function. メッセージの配信が完了した後にコールバックされる、
-Optional.</li>
+<li><code>buf</code> Buffer オブジェクトまたは文字列。送信されるメッセージ</li>
+<li><code>offset</code> Integer。メッセージの開始位置となるバッファ内のオフセット</li>
+<li><code>length</code> Integer。メッセージのバイト長</li>
+<li><code>port</code> Integer。接続先のポート番号</li>
+<li><code>address</code> String。接続先の IP</li>
+<li><code>callback</code> 関数。メッセージの配信が完了した後にコールバックされる、
+任意。</li>
 </ul>
 <!--
 For UDP sockets, the destination port and IP address must be specified.  A string
@@ -264,11 +264,25 @@ DNS ルックアップは送信を少なくとも次の機会まで遅らせる�
 <p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、
 ランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます
 (<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。
+
+</p>
+<!--
+With consideration for multi-byte characters, `offset` and `length` will
+be calculated with respect to
+[byte length](buffer.html#buffer_class_method_buffer_bytelength_string_encoding)
+and not the character position.
+-->
+
+<p>マルチバイト文字を考慮してください。
+<code>offset</code> および <code>length</code> は文字の位置ではなく、
+<a href="buffer.html#buffer_class_method_buffer_bytelength_string_encoding">バイト位置</a>
+に関係します。
+
+</p>
 <!--
 Example of sending a UDP packet to a random port on `localhost`;
 -->
 
-</p>
 <p><code>localhost</code> の適当なポートに UDP パケットを送信する例;
 
 </p>
@@ -605,7 +619,7 @@ the socket is `ref`d calling `ref` again will have no effect.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

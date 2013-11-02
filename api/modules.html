@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Modules Node.js v0.11.7 Manual &amp; Documentation</title>
+  <title>Modules Node.js v0.11.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/modules.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -66,7 +66,10 @@
 </ul>
 </li>
 <li><a href="#modules_the_module_object">The <code>module</code> Object</a><ul>
-<li><a href="#modules_module_exports">module.exports</a></li>
+<li><a href="#modules_module_exports">module.exports</a><ul>
+<li><a href="#modules_exports_alias">exports alias</a></li>
+</ul>
+</li>
 <li><a href="#modules_module_require_id">module.require(id)</a></li>
 <li><a href="#modules_module_id">module.id</a></li>
 <li><a href="#modules_module_filename">module.filename</a></li>
@@ -128,44 +131,62 @@ exports.circumference = function (r) {
 };</code></pre>
 <!--
 The module `circle.js` has exported the functions `area()` and
-`circumference()`.  To export an object, add to the special `exports`
-object.
+`circumference()`.  To add functions and objects to the root of your module,
+you can add them to the special `exports` object.
 -->
 
 <p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> を公開しています。
-オブジェクトを公開するには、 <code>exports</code> という特別なオブジェクトに加えます。
+関数やオブジェクトをモジュールのルートに加えるには、
+<code>exports</code> という特別なオブジェクトに加えます。
 
 </p>
 <!--
-Note that `exports` is a reference to `module.exports` making it suitable
-for augmentation only. If you are exporting a single item such as a
-constructor you will want to use `module.exports` directly instead.
+Variables local to the module will be private, as though the module was wrapped
+in a function. In this example the variable `PI` is private to `circle.js`.
 -->
 
-<p><code>exports</code> は <code>module.exports</code> を参照しているに過ぎないことに注意してください。
-もしコンストラクタなど単一の項目を公開する場合は、<code>module.exports</code> を直接
-使いたくなるでしょう。
-
-</p>
-<pre><code>function MyConstructor (opts) {
-  //...
-}
-
-// BROKEN: Does not modify exports
-exports = MyConstructor;
-
-// exports the constructor properly
-module.exports = MyConstructor;</code></pre>
-<!--
-Variables
-local to the module will be private. In this example the variable `PI` is
-private to `circle.js`.
--->
-
-<p>モジュールのローカル変数はプライベートです。
+<p>モジュールのローカル変数は関数に包まれているかのようにプライベートになります。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
 
 </p>
+<!--
+If you want the root of your module's export to be a function (such as a
+constructor) or if you want to export a complete object in one assignment
+instead of building it one property at a time, assign it to `module.exports`
+instead of `exports`.
+-->
+
+<p>モジュールのルートとして関数 (たとえばコンストラクタ) を後悔したり、
+プロパティを一つずつ代入するのではなく、完全なオブジェクトを一度に
+公開したければ、<code>exports</code> の代わりに <code>module.exports</code>に代入します。
+
+</p>
+<!--
+Below, `bar.js` makes use of the `square` module, which exports a constructor:
+-->
+
+<p>以下では、<code>bar.js</code> は <code>square</code> モジュールが公開するコンストラクタを
+使用しています。
+
+</p>
+<pre><code>var square = require(&#39;./square.js&#39;);
+var mySquare = square(2);
+console.log(&#39;The area of my square is &#39; + mySquare.area());</code></pre>
+<!--
+The `square` module is defined in `square.js`:
+-->
+
+<p><code>square.js</code> モジュールは <code>square.js</code> で定義されています。
+
+</p>
+<pre><code>// assigning to exports will not modify module, must use module.exports
+module.exports = function(width) {
+  return {
+    area: function() {
+      return width * width;
+    }
+  };
+}</code></pre>
 <!--
 The module system is implemented in the `require("module")` module.
 -->
@@ -489,34 +510,44 @@ would resolve to different files.
 </ul>
 <!--
 In each module, the `module` free variable is a reference to the object
-representing the current module.  In particular
-`module.exports` is accessible via the `exports` module-global.
-`module` isn't actually a global but rather local to each module.
+representing the current module.  For convenience, `module.exports` is
+also accessible via the `exports` module-global. `module` isn't actually
+a global but rather local to each module.
 -->
 
 <p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを
 参照します。
-特に <code>module.exports</code> は <code>exports</code> オブジェクトを通じて参照することもできます。
-<code>module</code> は実際はグローバルではなく、各モジュールにローカルです。
+利便性のため、<code>module.exports</code> は <code>exports</code> オブジェクトを通じて
+参照することもできます。
+<code>module</code> は実際はグローバルではなく、各モジュールのローカル変数です。
 
 </p>
 <h3>module.exports<span><a class="mark" href="#modules_module_exports" id="modules_module_exports">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
 </div></ul>
-<p>The <code>module.exports</code> object is created by the Module system. Sometimes this is not
-acceptable, many want their module to be an instance of some class. To do this
-assign the desired export object to <code>module.exports</code>. For example suppose we
-were making a module called <code>a.js</code>
---&gt;
+<!--
+The `module.exports` object is created by the Module system. Sometimes this is not
+acceptable; many want their module to be an instance of some class. To do this
+assign the desired export object to `module.exports`. Note that assigning the
+desired object to `exports` will simply rebind the local `exports` variable,
+which is probably not what you want to do.
+-->
+
+<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
+時々これは受け入れらません;
+多くの人々は、モジュールが何らかのクラスのインスタンスであることを望みます。
+それには、公開したいオブジェクトを <code>module.exports</code> に割り当てます。
+望ましいオブジェクトを <code>exports</code> へ代入することは、ローカル変数 <code>exports</code> への
+再代入に過ぎずないことに注意すべきです。
+それはおそらく、やりたかったことではないでしょう。
 
 </p>
-<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
-時々これは受け入れられず、多くのモジュールは何らかのクラスの
-インスタンスであることを望みます。
-それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
-例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
+<!--
+For example suppose we were making a module called `a.js`
+-->
 
+<p>例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
 
 </p>
 <pre><code>var EventEmitter = require(&#39;events&#39;).EventEmitter;
@@ -559,6 +590,45 @@ done in any callbacks.  This does not work:
 </p>
 <pre><code>var x = require(&#39;./x&#39;);
 console.log(x.a);</code></pre>
+<h4>exports alias<span><a class="mark" href="#modules_exports_alias" id="modules_exports_alias">#</a></span></h4>
+<!--
+The `exports` variable that is available within a module starts as a reference
+to `module.exports`. As with any variable, if you assign a new value to it, it
+is no longer bound to the previous value.
+-->
+
+<p>モジュール内で利用出来る <code>exports</code> 変数は、最初は <code>module.exports</code>
+への参照です。
+他の変数と同様、それに新しい値を割り当てると元の値はもはや束縛されません。
+
+</p>
+<!--
+To illustrate the behaviour, imagine this hypothetical implementation of
+`require()`:
+-->
+
+<p>その振る舞いを示すために、この仮定の実装を想像してください。
+
+</p>
+<pre><code>function require(...) {
+  // ...
+  function (module, exports) {
+    // Your module code here
+    exports = some_func;        // re-assigns exports, exports is no longer
+                                // a shortcut, and nothing is exported.
+    module.exports = some_func; // makes your module export 0
+  } (module, module.exports);
+  return module;
+}</code></pre>
+<!--
+As a guideline, if the relationship between `exports` and `module.exports`
+seems like magic to you, ignore `exports` and only use `module.exports`.
+-->
+
+<p>ガイドラインとして、もし <code>exports</code> と <code>module.exports</code> の間の関係が魔法のように
+見えるなら、<code>exports</code> を無視して <code>module.exports</code> だけを使うようにしてください。
+
+</p>
 <h3>module.require(id)<span><a class="mark" href="#modules_module_require_id" id="modules_module_require_id">#</a></span></h3>
 <!--
 * `id` {String}
@@ -922,7 +992,7 @@ relative, and based on the real path of the files making the calls to
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

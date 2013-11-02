@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.11.7 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.11.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -93,6 +93,9 @@
 <li><a href="#crypto_sign_sign_private_key_output_format">sign.sign(private_key, [output_format])</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#crypto_private_key_pem"><code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。</a><ul>
 <li><a href="#crypto_crypto_createverify_algorithm">crypto.createVerify(algorithm)</a></li>
 <li><a href="#crypto_class_verify">Class: Verify</a><ul>
 <li><a href="#crypto_verifier_update_data">verifier.update(data)</a></li>
@@ -117,6 +120,12 @@
 <li><a href="#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
 <li><a href="#crypto_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
 <li><a href="#crypto_crypto_pseudorandombytes_size_callback">crypto.pseudoRandomBytes(size, [callback])</a></li>
+<li><a href="#crypto_class_certificate">Class: Certificate</a><ul>
+<li><a href="#crypto_certificate_verifyspkac_spkac">Certificate.verifySpkac(spkac)</a></li>
+<li><a href="#crypto_certificate_exportchallenge_spkac">Certificate.exportChallenge(spkac)</a></li>
+<li><a href="#crypto_certificate_exportpublickey_spkac">Certificate.exportPublicKey(spkac)</a></li>
+</ul>
+</li>
 <li><a href="#crypto_crypto_default_encoding">crypto.DEFAULT_ENCODING</a></li>
 <li><a href="#crypto_recent_api_changes">Recent API Changes</a></li>
 </ul>
@@ -766,14 +775,43 @@ with new data as it is streamed.
 <h3>sign.sign(private_key, [output_format])<span><a class="mark" href="#crypto_sign_sign_private_key_output_format" id="crypto_sign_sign_private_key_output_format">#</a></span></h3>
 <!--
 Calculates the signature on all the updated data passed through the
+<<<<<<< HEAD
 sign.  `private_key` is a string containing the PEM encoded private
 key for signing.
 -->
 
 <p>署名オブジェクトに渡された全ての更新データで署名を計算します。
-<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。
+</p>
+<h1><code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。<span><a class="mark" href="#crypto_private_key_pem" id="crypto_private_key_pem">#</a></span></h1>
+<p>sign.
 
 </p>
+<p><code>private_key</code> can be an object or a string. If <code>private_key</code> is a string, it is
+treated as the key with no passphrase.
+
+</p>
+<p><code>private_key</code>:
+
+</p>
+<ul>
+<li><code>key</code> : A string holding the PEM encoded private key</li>
+<li><code>passphrase</code> : A string of passphrase for the private key<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>v0.11.8</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+</ul>
 <!--
 Returns the signature in `output_format` which can be `'binary'`,
 `'hex'` or `'base64'`. If no encoding is provided, then a buffer is
@@ -1139,6 +1177,27 @@ Usage is otherwise identical to `crypto.randomBytes`.
 <p>他の使い方は <code>crypto.randomBytes</code> と同じです。
 
 </p>
+<h2>Class: Certificate<span><a class="mark" href="#crypto_class_certificate" id="crypto_class_certificate">#</a></span></h2>
+<p>The class used for working with signed public key &amp; challenges. The most
+common usage for this series of functions is when dealing with the <code>&lt;keygen&gt;</code>
+element. <a href="http://www.openssl.org/docs/apps/spkac.html">http://www.openssl.org/docs/apps/spkac.html</a>
+
+</p>
+<p>Returned by <code>crypto.Certificate</code>.
+
+</p>
+<h3>Certificate.verifySpkac(spkac)<span><a class="mark" href="#crypto_certificate_verifyspkac_spkac" id="crypto_certificate_verifyspkac_spkac">#</a></span></h3>
+<p>Returns true of false based on the validity of the SPKAC.
+
+</p>
+<h3>Certificate.exportChallenge(spkac)<span><a class="mark" href="#crypto_certificate_exportchallenge_spkac" id="crypto_certificate_exportchallenge_spkac">#</a></span></h3>
+<p>Exports the encoded public key from the supplied SPKAC.
+
+</p>
+<h3>Certificate.exportPublicKey(spkac)<span><a class="mark" href="#crypto_certificate_exportpublickey_spkac" id="crypto_certificate_exportpublickey_spkac">#</a></span></h3>
+<p>Exports the encoded challenge associated with the SPKAC.
+
+</p>
 <h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#crypto_crypto_default_encoding" id="crypto_crypto_default_encoding">#</a></span></h2>
 <!--
 The default encoding to use for functions that can take either strings
@@ -1262,7 +1321,7 @@ temporary measure.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

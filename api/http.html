@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>HTTP Node.js v0.11.7 Manual &amp; Documentation</title>
+  <title>HTTP Node.js v0.11.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/http.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,6 +56,7 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#http_http">HTTP</a><ul>
+<li><a href="#http_http_methods">http.METHODS</a></li>
 <li><a href="#http_http_status_codes">http.STATUS_CODES</a></li>
 <li><a href="#http_http_createserver_requestlistener">http.createServer([requestListener])</a></li>
 <li><a href="#http_http_createclient_port_host">http.createClient([port], [host])</a></li>
@@ -79,9 +80,10 @@
 <li><a href="#http_class_http_serverresponse">Class: http.ServerResponse</a><ul>
 <li><a href="#http_event_close_1">Event: &#39;close&#39;</a></li>
 <li><a href="#http_response_writecontinue">response.writeContinue()</a></li>
-<li><a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li>
+<li><a href="#http_response_writehead_statuscode_statusmessage_headers">response.writeHead(statusCode, [statusMessage], [headers])</a></li>
 <li><a href="#http_response_settimeout_msecs_callback">response.setTimeout(msecs, callback)</a></li>
 <li><a href="#http_response_statuscode">response.statusCode</a></li>
+<li><a href="#http_response_statusmessage">response.statusMessage</a></li>
 <li><a href="#http_response_setheader_name_value">response.setHeader(name, value)</a></li>
 <li><a href="#http_response_headerssent">response.headersSent</a></li>
 <li><a href="#http_response_senddate">response.sendDate</a></li>
@@ -228,6 +230,17 @@ list like the following:
   &#39;CONNECTION&#39;, &#39;keep-alive&#39;,
   &#39;Host&#39;, &#39;mysite.com&#39;,
   &#39;accepT&#39;, &#39;*/*&#39; ]</code></pre>
+<h2>http.METHODS<span><a class="mark" href="#http_http_methods" id="http_http_methods">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Array</span></li>
+</div></ul>
+<!--
+A list of the HTTP methods that are supported by the parser.
+-->
+
+<p>パーサによってサポートされているHTTPメソッドの配列です。
+
+</p>
 <h2>http.STATUS_CODES<span><a class="mark" href="#http_http_status_codes" id="http_http_status_codes">#</a></span></h2>
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
@@ -286,15 +299,15 @@ This is an [EventEmitter][] with the following events:
 <!--
 Emitted each time there is a request. Note that there may be multiple requests
 per connection (in the case of keep-alive connections).
-`request` is an instance of `http.IncomingMessage` and `response` is
-an instance of `http.ServerResponse`
+ `request` is an instance of [http.IncomingMessage][] and `response` is
+an instance of [http.ServerResponse][].
 -->
 
 <p>リクエストの度に生成されます。
 コネクションごとに複数のリクエストがあるかもしれないことに注意してください
 (Keep Alive なコネクションの場合)。
-<code>request</code> は <code>http.IncomingMessage</code> のインスタンス、
-<code>response</code> は <code>http.ServerResponse</code> のインスタンスです。
+<code>request</code> は <a href="#http_http_incomingmessage">http.IncomingMessage</a> のインスタンス、
+<code>response</code> は <a href="#http_class_http_serverresponse">http.ServerResponse</a> のインスタンスです。
 
 </p>
 <h3>Event: &#39;connection&#39;<span><a class="mark" href="#http_event_connection" id="http_event_connection">#</a></span></h3>
@@ -343,14 +356,14 @@ with a 100 Continue as appropriate.
 
 </p>
 <!--
-Handling this event involves calling `response.writeContinue` if the client
+Handling this event involves calling [response.writeContinue()][] if the client
 should continue to send the request body, or generating an appropriate HTTP
 response (e.g., 400 Bad Request) if the client should not continue to send the
 request body.
 -->
 
 <p>このイベントを処理する場合、クライアントがリクエストボディを送信し続けるべきなら
-<code>response.writeContinue</code> を呼び出す必要があります。
+<a href="#http_response_writecontinue">response.writeContinue()</a> を呼び出す必要があります。
 あるいは、クライアントがリクエストボディを送信し続けるべきでないなら、
 適切な HTTP レスポンス (例えば 400 Bad Request) を生成します。
 
@@ -679,10 +692,10 @@ The response implements the [Writable Stream][] interface. This is an
 </p>
 <!--
 Indicates that the underlying connection was terminated before
-`response.end()` was called or able to flush.
+[response.end()][] was called or able to flush.
 -->
 
-<p><code>response.end()</code> が呼び出されたりフラッシュされる前に、
+<p><a href="#http_response_end_data_encoding">response.end()</a> が呼び出されたりフラッシュされる前に、
 下層の接続が切断されたことを示します。
 
 </p>
@@ -697,18 +710,18 @@ the request body should be sent. See the ['checkContinue'][] event on `Server`.
 <code>Server</code>の <a href="#http_event_checkcontinue">&#39;checkContinue&#39;</a> イベントを参照してください。
 
 </p>
-<h3>response.writeHead(statusCode, [reasonPhrase], [headers])<span><a class="mark" href="#http_response_writehead_statuscode_reasonphrase_headers" id="http_response_writehead_statuscode_reasonphrase_headers">#</a></span></h3>
+<h3>response.writeHead(statusCode, [statusMessage], [headers])<span><a class="mark" href="#http_response_writehead_statuscode_statusmessage_headers" id="http_response_writehead_statuscode_statusmessage_headers">#</a></span></h3>
 <!--
 Sends a response header to the request. The status code is a 3-digit HTTP
 status code, like `404`. The last argument, `headers`, are the response headers.
-Optionally one can give a human-readable `reasonPhrase` as the second
+Optionally one can give a human-readable `statusMessage` as the second
 argument.
 -->
 
 <p>レスポンスヘッダを送信します。
 ステータスコードは <code>404</code> のような 3 桁の数字による HTTP ステータスコードです。
 最後の引数 <code>headers</code> は、レスポンスヘッダです。
-オプションとして人に読める形式の <code>reasonPhrase</code> を第 2 引数で与えることができます。
+オプションとして人に読める形式の <code>statusMessage</code> を第 2 引数で与えることができます。
 
 </p>
 <!--
@@ -724,17 +737,19 @@ response.writeHead(200, {
   &#39;Content-Type&#39;: &#39;text/plain&#39; });</code></pre>
 <!--
 This method must only be called once on a message and it must
-be called before `response.end()` is called.
+be called before [response.end()][] is called.
 
-If you call `response.write()` or `response.end()` before calling this, the
+If you call [response.write()][] or [response.end()][] before calling this, the
 implicit/mutable headers will be calculated and call this function for you.
 -->
 
 <p>このメソッドはメッセージごとに 1 回だけ呼び出されなくてはならず、
-<code>response.end()</code> の前に呼び出されなければなりません。
+<a href="#http_response_end_data_encoding">response.end()</a> の前に呼び出されなければなりません。
 
 </p>
-<p>もしこのメソッドが呼び出される前に <code>response.write()</code> または <code>response.end()</code> が呼ばれると、暗黙的で可変のヘッダが算出されてこの関数が呼び出されます。
+<p>もしこのメソッドが呼び出される前に <a href="#http_response_write_chunk_encoding">response.write()</a> または
+<a href="#http_response_end_data_encoding">response.end()</a> が呼ばれると、暗黙的で可変のヘッダが算出されて
+この関数が呼び出されます。
 
 </p>
 <!--
@@ -785,12 +800,14 @@ sockets.
 </p>
 <h3>response.statusCode<span><a class="mark" href="#http_response_statuscode" id="http_response_statuscode">#</a></span></h3>
 <!--
-When using implicit headers (not calling `response.writeHead()` explicitly), this property
-controls the status code that will be sent to the client when the headers get
-flushed.
+When using implicit headers (not calling [response.writeHead()][] explicitly),
+this property controls the status code that will be sent to the client when
+the headers get flushed.
 -->
 
-<p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。
+<p>(<a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead()</a> が明示的に呼ばれないために) 
+暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時に
+クライアントへ送信されるステータスコードを制御します。
 
 </p>
 <!--
@@ -808,6 +825,38 @@ status code which was sent out.
 
 <p>レスポンスヘッダがクライアントに送信された後、
 このプロパティは送信されたステータスコードを示します。
+
+</p>
+<h3>response.statusMessage<span><a class="mark" href="#http_response_statusmessage" id="http_response_statusmessage">#</a></span></h3>
+<!--
+When using implicit headers (not calling `response.writeHead()` explicitly), this property
+controls the status message that will be sent to the client when the headers get
+flushed. If this is left as `undefined` then the standard message for the status
+code will be used.
+-->
+
+<p>(<a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead()</a> が明示的に呼ばれないために) 
+暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時に
+クライアントへ送信されるステータスメッセージを制御します。
+もし <code>undefined</code> のままの場合はステータスコードに対応する標準のメッセージが
+使われます。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>response.statusMessage = &#39;Not found&#39;;</code></pre>
+<!--
+After response header was sent to the client, this property indicates the
+status message which was sent out.
+-->
+
+<p>レスポンスヘッダがクライアントに送信された後、
+このプロパティは送信されたステータスメッセージを示します。
 
 </p>
 <h3>response.setHeader(name, value)<span><a class="mark" href="#http_response_setheader_name_value" id="http_response_setheader_name_value">#</a></span></h3>
@@ -904,14 +953,14 @@ Example:
 <pre><code>response.removeHeader(&quot;Content-Encoding&quot;);</code></pre>
 <h3>response.write(chunk, [encoding])<span><a class="mark" href="#http_response_write_chunk_encoding" id="http_response_write_chunk_encoding">#</a></span></h3>
 <!--
-If this method is called and `response.writeHead()` has not been called, it will
-switch to implicit header mode and flush the implicit headers.
+If this method is called and [response.writeHead()][] has not been called,
+it will switch to implicit header mode and flush the implicit headers.
 
 This sends a chunk of the response body. This method may
 be called multiple times to provide successive parts of the body.
 -->
 
-<p>このメソッドが呼び出され、<code>response.writeHead()</code> が呼び出されなければ、
+<p>このメソッドが呼び出され、<a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead()</a> が呼び出されなければ、
 暗黙的ヘッダモードに切り替わり、暗黙的ヘッダはフラッシュされます。
 
 </p>
@@ -1109,12 +1158,12 @@ Options:
 </li>
 </ul>
 <!--
-`http.request()` returns an instance of the `http.ClientRequest`
+`http.request()` returns an instance of the [http.ClientRequest][]
 class. The `ClientRequest` instance is a writable stream. If one needs to
 upload a file with a POST request, then write to the `ClientRequest` object.
 -->
 
-<p><code>http.request()</code> は <code>http.ClientRequest</code> クラスのインスタンスを返します。
+<p><code>http.request()</code> は <a href="#http_class_http_clientrequest">http.ClientRequest</a> クラスのインスタンスを返します。
 <code>http.ClientRequest</code> のインスタンスは書き込み可能なストリームです。
 もし POST リクエストでファイルのアップロードがしたければ、
 <code>http.ClientRequest</code> オブジェクトに出力してください。
@@ -1491,13 +1540,13 @@ data chunk or when closing the connection.
 To get the response, add a listener for `'response'` to the request object.
 `'response'` will be emitted from the request object when the response
 headers have been received.  The `'response'` event is executed with one
-argument which is an instance of `http.IncomingMessage`.
+argument which is an instance of [http.IncomingMessage][].
 -->
 
 <p>レスポンスを取得するには、<code>&#39;response&#39;</code> 用のリスナーをリクエストオブジェクトに加えます。
 <code>&#39;response&#39;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。
-<code>&#39;response&#39;</code> イベントは <code>http.IncomingMessage</code> のインスタンスを唯一の引数として
-実行されます。
+<code>&#39;response&#39;</code> イベントは <a href="#http_http_incomingmessage">http.IncomingMessage</a> のインスタンスを
+唯一の引数として実行されます。
 
 </p>
 <!--
@@ -1553,12 +1602,12 @@ The request implements the [Writable Stream][] interface. This is an
 </p>
 <!--
 Emitted when a response is received to this request. This event is emitted only
-once. The `response` argument will be an instance of `http.IncomingMessage`.
+once. The `response` argument will be an instance of [http.IncomingMessage][].
 -->
 
 <p>このリクエストに対するレスポンスを受信した時に生成されます。
 このイベントは一回だけ生成されます。
-<code>response</code> 引数は <code>http.IncomingMessage</code> のインスタンスです。
+<code>response</code> 引数は <a href="#http_http_incomingmessage">http.IncomingMessage</a> のインスタンスです。
 
 </p>
 <!--
@@ -1833,12 +1882,13 @@ Once a socket is assigned to this request and is connected
 </p>
 <h2>http.IncomingMessage<span><a class="mark" href="#http_http_incomingmessage" id="http_http_incomingmessage">#</a></span></h2>
 <!--
-An `IncomingMessage` object is created by `http.Server` or `http.ClientRequest`
-and passed as the first argument to the `'request'` and `'response'` event
-respectively. It may be used to access response status, headers and data.
+An `IncomingMessage` object is created by [http.Server][] or
+[http.ClientRequest][] and passed as the first argument to the `'request'`
+and `'response'` event respectively. It may be used to access response status,
+headers and data.
 -->
 
-<p><code>IncomingMessage</code> オブジェクトは <code>http.Server</code> または <code>http.ClientRequest()</code>
+<p><code>IncomingMessage</code> オブジェクトは <a href="#http_class_http_server">http.Server</a> または <a href="#http_class_http_clientrequest">http.ClientRequest</a>
 によって作成され、<code>&#39;request&#39;</code> および <code>&#39;response&#39;</code> イベントそれぞれの
 最初の引数として渡されます。
 それはステータス、ヘッダ、およびデータにアクセスするために使われます。
@@ -1858,12 +1908,12 @@ following additional events, methods, and properties.
 
 </p>
 <!--
-Indicates that the underlaying connection was terminated before
-`response.end()` was called or able to flush.
+Indicates that the underlaying connection was closed.
+Just like `'end'`, this event occurs only once per response.
 -->
 
-<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、
-下層の接続が切断されたことを示します。
+<p>下層の接続が切断されたことを示します。
+<code>&#39;end&#39;</code> と同様、このイベントはレスポンス毎に一度だけ生成されます。
 
 </p>
 <!--
@@ -1873,7 +1923,7 @@ Just like `'end'`, this event occurs only once per response. See
 
 <p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、
 <code>&#39;data&#39;</code> イベントはそれ以上生成されません。
-[http.ServerResponse][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+<a href="#http_class_http_serverresponse">http.ServerResponse</a> の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
 
 </p>
 <h3>message.httpVersion<span><a class="mark" href="#http_message_httpversion" id="http_message_httpversion">#</a></span></h3>
@@ -1991,10 +2041,10 @@ Calls `message.connection.setTimeout(msecs, callback)`.
 </p>
 <h3>message.method<span><a class="mark" href="#http_message_method" id="http_message_method">#</a></span></h3>
 <!--
-**Only valid for request obtained from `http.Server`.**
+**Only valid for request obtained from [http.Server][].**
 -->
 
-<p><strong> <code>http.Server</code> から得たリクエストでのみ有効です </strong>
+<p><strong> <a href="#http_class_http_server">http.Server</a> から得たリクエストでのみ有効です </strong>
 
 </p>
 <!--
@@ -2008,10 +2058,10 @@ The request method as a string. Read only. Example:
 </p>
 <h3>message.url<span><a class="mark" href="#http_message_url" id="http_message_url">#</a></span></h3>
 <!--
-**Only valid for request obtained from `http.Server`.**
+**Only valid for request obtained from [http.Server][].**
 -->
 
-<p><strong> <code>http.Server</code> から得たリクエストでのみ有効です </strong>
+<p><strong> <a href="#http_class_http_server">http.Server</a> から得たリクエストでのみ有効です </strong>
 
 </p>
 <!--
@@ -2128,7 +2178,7 @@ authentication details.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
