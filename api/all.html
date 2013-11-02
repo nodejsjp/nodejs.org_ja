@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.11.7 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -116,7 +116,10 @@
 </ul>
 </li>
 <li><a href="#all_the_module_object">The <code>module</code> Object</a><ul>
-<li><a href="#all_module_exports">module.exports</a></li>
+<li><a href="#all_module_exports">module.exports</a><ul>
+<li><a href="#all_exports_alias">exports alias</a></li>
+</ul>
+</li>
 <li><a href="#all_module_require_id">module.require(id)</a></li>
 <li><a href="#all_module_id">module.id</a></li>
 <li><a href="#all_module_filename">module.filename</a></li>
@@ -146,6 +149,7 @@
 </ul>
 </li>
 <li><a href="#all_process_1">process</a><ul>
+<li><a href="#all_exit_codes">Exit Codes</a></li>
 <li><a href="#all_event_exit">Event: &#39;exit&#39;</a></li>
 <li><a href="#all_event_uncaughtexception">Event: &#39;uncaughtException&#39;</a></li>
 <li><a href="#all_signal_events">Signal Events</a></li>
@@ -160,6 +164,7 @@
 <li><a href="#all_process_cwd">process.cwd()</a></li>
 <li><a href="#all_process_env">process.env</a></li>
 <li><a href="#all_process_exit_code">process.exit([code])</a></li>
+<li><a href="#all_process_exitcode">process.exitCode</a></li>
 <li><a href="#all_process_getgid">process.getgid()</a></li>
 <li><a href="#all_process_setgid_id">process.setgid(id)</a></li>
 <li><a href="#all_process_getuid">process.getuid()</a></li>
@@ -291,6 +296,7 @@
 <li><a href="#all_buf_writedoublele_value_offset_noassert">buf.writeDoubleLE(value, offset, [noAssert])</a></li>
 <li><a href="#all_buf_writedoublebe_value_offset_noassert">buf.writeDoubleBE(value, offset, [noAssert])</a></li>
 <li><a href="#all_buf_fill_value_offset_end">buf.fill(value, [offset], [end])</a></li>
+<li><a href="#all_buf_toarraybuffer">buf.toArrayBuffer()</a></li>
 </ul>
 </li>
 <li><a href="#all_buffer_inspect_max_bytes">buffer.INSPECT_MAX_BYTES</a></li>
@@ -408,6 +414,9 @@
 <li><a href="#all_sign_sign_private_key_output_format">sign.sign(private_key, [output_format])</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#all_private_key_pem"><code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。</a><ul>
 <li><a href="#all_crypto_createverify_algorithm">crypto.createVerify(algorithm)</a></li>
 <li><a href="#all_class_verify">Class: Verify</a><ul>
 <li><a href="#all_verifier_update_data">verifier.update(data)</a></li>
@@ -432,6 +441,12 @@
 <li><a href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
 <li><a href="#all_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
 <li><a href="#all_crypto_pseudorandombytes_size_callback">crypto.pseudoRandomBytes(size, [callback])</a></li>
+<li><a href="#all_class_certificate">Class: Certificate</a><ul>
+<li><a href="#all_certificate_verifyspkac_spkac">Certificate.verifySpkac(spkac)</a></li>
+<li><a href="#all_certificate_exportchallenge_spkac">Certificate.exportChallenge(spkac)</a></li>
+<li><a href="#all_certificate_exportpublickey_spkac">Certificate.exportPublicKey(spkac)</a></li>
+</ul>
+</li>
 <li><a href="#all_crypto_default_encoding">crypto.DEFAULT_ENCODING</a></li>
 <li><a href="#all_recent_api_changes">Recent API Changes</a></li>
 </ul>
@@ -473,6 +488,7 @@
 <li><a href="#all_tlssocket_authorizationerror">tlsSocket.authorizationError</a></li>
 <li><a href="#all_tlssocket_getpeercertificate">tlsSocket.getPeerCertificate()</a></li>
 <li><a href="#all_tlssocket_getcipher">tlsSocket.getCipher()</a></li>
+<li><a href="#all_tlssocket_renegotiate_options_callback">tlsSocket.renegotiate(options, callback)</a></li>
 <li><a href="#all_tlssocket_address">tlsSocket.address()</a></li>
 <li><a href="#all_tlssocket_remoteaddress">tlsSocket.remoteAddress</a></li>
 <li><a href="#all_tlssocket_remoteport">tlsSocket.remotePort</a></li>
@@ -688,15 +704,15 @@
 </ul>
 </li>
 <li><a href="#all_dns">DNS</a><ul>
-<li><a href="#all_dns_lookup_domain_family_callback">dns.lookup(domain, [family], callback)</a></li>
-<li><a href="#all_dns_resolve_domain_rrtype_callback">dns.resolve(domain, [rrtype], callback)</a></li>
-<li><a href="#all_dns_resolve4_domain_callback">dns.resolve4(domain, callback)</a></li>
-<li><a href="#all_dns_resolve6_domain_callback">dns.resolve6(domain, callback)</a></li>
-<li><a href="#all_dns_resolvemx_domain_callback">dns.resolveMx(domain, callback)</a></li>
-<li><a href="#all_dns_resolvetxt_domain_callback">dns.resolveTxt(domain, callback)</a></li>
-<li><a href="#all_dns_resolvesrv_domain_callback">dns.resolveSrv(domain, callback)</a></li>
-<li><a href="#all_dns_resolvens_domain_callback">dns.resolveNs(domain, callback)</a></li>
-<li><a href="#all_dns_resolvecname_domain_callback">dns.resolveCname(domain, callback)</a></li>
+<li><a href="#all_dns_lookup_hostname_family_callback">dns.lookup(hostname, [family], callback)</a></li>
+<li><a href="#all_dns_resolve_hostname_rrtype_callback">dns.resolve(hostname, [rrtype], callback)</a></li>
+<li><a href="#all_dns_resolve4_hostname_callback">dns.resolve4(hostname, callback)</a></li>
+<li><a href="#all_dns_resolve6_hostname_callback">dns.resolve6(hostname, callback)</a></li>
+<li><a href="#all_dns_resolvemx_hostname_callback">dns.resolveMx(hostname, callback)</a></li>
+<li><a href="#all_dns_resolvetxt_hostname_callback">dns.resolveTxt(hostname, callback)</a></li>
+<li><a href="#all_dns_resolvesrv_hostname_callback">dns.resolveSrv(hostname, callback)</a></li>
+<li><a href="#all_dns_resolvens_hostname_callback">dns.resolveNs(hostname, callback)</a></li>
+<li><a href="#all_dns_resolvecname_hostname_callback">dns.resolveCname(hostname, callback)</a></li>
 <li><a href="#all_dns_reverse_ip_callback">dns.reverse(ip, callback)</a></li>
 <li><a href="#all_dns_getservers">dns.getServers()</a></li>
 <li><a href="#all_dns_setservers_servers">dns.setServers(servers)</a></li>
@@ -704,6 +720,7 @@
 </ul>
 </li>
 <li><a href="#all_http">HTTP</a><ul>
+<li><a href="#all_http_methods">http.METHODS</a></li>
 <li><a href="#all_http_status_codes">http.STATUS_CODES</a></li>
 <li><a href="#all_http_createserver_requestlistener">http.createServer([requestListener])</a></li>
 <li><a href="#all_http_createclient_port_host">http.createClient([port], [host])</a></li>
@@ -727,9 +744,10 @@
 <li><a href="#all_class_http_serverresponse">Class: http.ServerResponse</a><ul>
 <li><a href="#all_event_close_5">Event: &#39;close&#39;</a></li>
 <li><a href="#all_response_writecontinue">response.writeContinue()</a></li>
-<li><a href="#all_response_writehead_statuscode_reasonphrase_headers">response.writeHead(statusCode, [reasonPhrase], [headers])</a></li>
+<li><a href="#all_response_writehead_statuscode_statusmessage_headers">response.writeHead(statusCode, [statusMessage], [headers])</a></li>
 <li><a href="#all_response_settimeout_msecs_callback">response.setTimeout(msecs, callback)</a></li>
 <li><a href="#all_response_statuscode">response.statusCode</a></li>
+<li><a href="#all_response_statusmessage">response.statusMessage</a></li>
 <li><a href="#all_response_setheader_name_value">response.setHeader(name, value)</a></li>
 <li><a href="#all_response_headerssent">response.headersSent</a></li>
 <li><a href="#all_response_senddate">response.sendDate</a></li>
@@ -886,6 +904,7 @@
 <li><a href="#all_child_stdout">child.stdout</a></li>
 <li><a href="#all_child_stderr">child.stderr</a></li>
 <li><a href="#all_child_pid">child.pid</a></li>
+<li><a href="#all_child_connected">child.connected</a></li>
 <li><a href="#all_child_kill_signal">child.kill([signal])</a></li>
 <li><a href="#all_child_send_message_sendhandle">child.send(message, [sendHandle])</a><ul>
 <li><a href="#all_example_sending_server_object">Example: sending server object</a></li>
@@ -1025,6 +1044,7 @@
 <li><a href="#all_event_listening_3">Event: &#39;listening&#39;</a></li>
 <li><a href="#all_event_disconnect_2">Event: &#39;disconnect&#39;</a></li>
 <li><a href="#all_event_exit_4">Event: &#39;exit&#39;</a></li>
+<li><a href="#all_event_error_6">Event: &#39;error&#39;</a></li>
 </ul>
 </li>
 </ul>
@@ -1467,17 +1487,26 @@ Example: running `node example.js` from `/Users/mjr`
 </ul>
 <!--
 A reference to the current module. In particular
-`module.exports` is the same as the `exports` object.
-`module` isn't actually a global but rather local to each module.
-
-See the [module system documentation][] for more information.
+`module.exports` is used for defining what a module exports and makes
+available through `require()`.
 -->
 
 <p>現在のモジュールへの参照です。
-特に <code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
-<code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。
+<code>module.exports</code> は、モジュールが公開して <code>require()</code> を通じて利用可能になる
+ものを定めるために使われます。
 
 </p>
+<!--
+`module` isn't actually a global but rather local to each module.
+-->
+
+<p><code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。
+
+</p>
+<!--
+See the [module system documentation][] for more information.
+-->
+
 <p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
 
 </p>
@@ -1485,18 +1514,21 @@ See the [module system documentation][] for more information.
 <!-- type=var -->
 
 <!--
-A reference to the `module.exports` object which is shared between all
-instances of the current module and made accessible through `require()`.
+A reference to the `module.exports` that is shorter to type.
 See [module system documentation][] for details on when to use `exports` and
 when to use `module.exports`.
+-->
+
+<p><code>module.exports</code> への参照です。
+いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は
+<a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
+
+</p>
+<!--
 `exports` isn't actually a global but rather local to each module.
 -->
 
-<p>現在のモジュールの全てのインスタンス間で共有される <code>module.exports</code>
-を参照するオブジェクトで、<code>require()</code> を通じてアクセス可能になります。
-いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は
-<a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
-<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
+<p><code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
 <!--
@@ -1928,44 +1960,62 @@ exports.circumference = function (r) {
 };</code></pre>
 <!--
 The module `circle.js` has exported the functions `area()` and
-`circumference()`.  To export an object, add to the special `exports`
-object.
+`circumference()`.  To add functions and objects to the root of your module,
+you can add them to the special `exports` object.
 -->
 
 <p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> を公開しています。
-オブジェクトを公開するには、 <code>exports</code> という特別なオブジェクトに加えます。
+関数やオブジェクトをモジュールのルートに加えるには、
+<code>exports</code> という特別なオブジェクトに加えます。
 
 </p>
 <!--
-Note that `exports` is a reference to `module.exports` making it suitable
-for augmentation only. If you are exporting a single item such as a
-constructor you will want to use `module.exports` directly instead.
+Variables local to the module will be private, as though the module was wrapped
+in a function. In this example the variable `PI` is private to `circle.js`.
 -->
 
-<p><code>exports</code> は <code>module.exports</code> を参照しているに過ぎないことに注意してください。
-もしコンストラクタなど単一の項目を公開する場合は、<code>module.exports</code> を直接
-使いたくなるでしょう。
-
-</p>
-<pre><code>function MyConstructor (opts) {
-  //...
-}
-
-// BROKEN: Does not modify exports
-exports = MyConstructor;
-
-// exports the constructor properly
-module.exports = MyConstructor;</code></pre>
-<!--
-Variables
-local to the module will be private. In this example the variable `PI` is
-private to `circle.js`.
--->
-
-<p>モジュールのローカル変数はプライベートです。
+<p>モジュールのローカル変数は関数に包まれているかのようにプライベートになります。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
 
 </p>
+<!--
+If you want the root of your module's export to be a function (such as a
+constructor) or if you want to export a complete object in one assignment
+instead of building it one property at a time, assign it to `module.exports`
+instead of `exports`.
+-->
+
+<p>モジュールのルートとして関数 (たとえばコンストラクタ) を後悔したり、
+プロパティを一つずつ代入するのではなく、完全なオブジェクトを一度に
+公開したければ、<code>exports</code> の代わりに <code>module.exports</code>に代入します。
+
+</p>
+<!--
+Below, `bar.js` makes use of the `square` module, which exports a constructor:
+-->
+
+<p>以下では、<code>bar.js</code> は <code>square</code> モジュールが公開するコンストラクタを
+使用しています。
+
+</p>
+<pre><code>var square = require(&#39;./square.js&#39;);
+var mySquare = square(2);
+console.log(&#39;The area of my square is &#39; + mySquare.area());</code></pre>
+<!--
+The `square` module is defined in `square.js`:
+-->
+
+<p><code>square.js</code> モジュールは <code>square.js</code> で定義されています。
+
+</p>
+<pre><code>// assigning to exports will not modify module, must use module.exports
+module.exports = function(width) {
+  return {
+    area: function() {
+      return width * width;
+    }
+  };
+}</code></pre>
 <!--
 The module system is implemented in the `require("module")` module.
 -->
@@ -2289,34 +2339,44 @@ would resolve to different files.
 </ul>
 <!--
 In each module, the `module` free variable is a reference to the object
-representing the current module.  In particular
-`module.exports` is accessible via the `exports` module-global.
-`module` isn't actually a global but rather local to each module.
+representing the current module.  For convenience, `module.exports` is
+also accessible via the `exports` module-global. `module` isn't actually
+a global but rather local to each module.
 -->
 
 <p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを
 参照します。
-特に <code>module.exports</code> は <code>exports</code> オブジェクトを通じて参照することもできます。
-<code>module</code> は実際はグローバルではなく、各モジュールにローカルです。
+利便性のため、<code>module.exports</code> は <code>exports</code> オブジェクトを通じて
+参照することもできます。
+<code>module</code> は実際はグローバルではなく、各モジュールのローカル変数です。
 
 </p>
 <h3>module.exports<span><a class="mark" href="#all_module_exports" id="all_module_exports">#</a></span></h3>
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
 </div></ul>
-<p>The <code>module.exports</code> object is created by the Module system. Sometimes this is not
-acceptable, many want their module to be an instance of some class. To do this
-assign the desired export object to <code>module.exports</code>. For example suppose we
-were making a module called <code>a.js</code>
---&gt;
+<!--
+The `module.exports` object is created by the Module system. Sometimes this is not
+acceptable; many want their module to be an instance of some class. To do this
+assign the desired export object to `module.exports`. Note that assigning the
+desired object to `exports` will simply rebind the local `exports` variable,
+which is probably not what you want to do.
+-->
+
+<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
+時々これは受け入れらません;
+多くの人々は、モジュールが何らかのクラスのインスタンスであることを望みます。
+それには、公開したいオブジェクトを <code>module.exports</code> に割り当てます。
+望ましいオブジェクトを <code>exports</code> へ代入することは、ローカル変数 <code>exports</code> への
+再代入に過ぎずないことに注意すべきです。
+それはおそらく、やりたかったことではないでしょう。
 
 </p>
-<p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
-時々これは受け入れられず、多くのモジュールは何らかのクラスの
-インスタンスであることを望みます。
-それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
-例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
+<!--
+For example suppose we were making a module called `a.js`
+-->
 
+<p>例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
 
 </p>
 <pre><code>var EventEmitter = require(&#39;events&#39;).EventEmitter;
@@ -2359,6 +2419,45 @@ done in any callbacks.  This does not work:
 </p>
 <pre><code>var x = require(&#39;./x&#39;);
 console.log(x.a);</code></pre>
+<h4>exports alias<span><a class="mark" href="#all_exports_alias" id="all_exports_alias">#</a></span></h4>
+<!--
+The `exports` variable that is available within a module starts as a reference
+to `module.exports`. As with any variable, if you assign a new value to it, it
+is no longer bound to the previous value.
+-->
+
+<p>モジュール内で利用出来る <code>exports</code> 変数は、最初は <code>module.exports</code>
+への参照です。
+他の変数と同様、それに新しい値を割り当てると元の値はもはや束縛されません。
+
+</p>
+<!--
+To illustrate the behaviour, imagine this hypothetical implementation of
+`require()`:
+-->
+
+<p>その振る舞いを示すために、この仮定の実装を想像してください。
+
+</p>
+<pre><code>function require(...) {
+  // ...
+  function (module, exports) {
+    // Your module code here
+    exports = some_func;        // re-assigns exports, exports is no longer
+                                // a shortcut, and nothing is exported.
+    module.exports = some_func; // makes your module export 0
+  } (module, module.exports);
+  return module;
+}</code></pre>
+<!--
+As a guideline, if the relationship between `exports` and `module.exports`
+seems like magic to you, ignore `exports` and only use `module.exports`.
+-->
+
+<p>ガイドラインとして、もし <code>exports</code> と <code>module.exports</code> の間の関係が魔法のように
+見えるなら、<code>exports</code> を無視して <code>module.exports</code> だけを使うようにしてください。
+
+</p>
 <h3>module.require(id)<span><a class="mark" href="#all_module_require_id" id="all_module_require_id">#</a></span></h3>
 <!--
 * `id` {String}
@@ -3207,12 +3306,13 @@ class MyObject : public node::ObjectWrap {
   static void Init(v8::Handle&lt;v8::Object&gt; exports);
 
  private:
-  MyObject();
+  explicit MyObject(double value = 0);
   ~MyObject();
 
   static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
   static v8::Handle&lt;v8::Value&gt; PlusOne(const v8::Arguments&amp; args);
-  double counter_;
+  static v8::Persistent&lt;v8::Function&gt; constructor;
+  double value_;
 };
 
 #endif</code></pre>
@@ -3227,12 +3327,18 @@ prototype:
 
 </p>
 <pre><code>#include &lt;node.h&gt;
+#include &lt;node_object_wrap.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
 
-MyObject::MyObject() {};
-MyObject::~MyObject() {};
+Persistent&lt;Function&gt; MyObject::constructor;
+
+MyObject::MyObject(double value) : value_(value) {
+}
+
+MyObject::~MyObject() {
+}
 
 void MyObject::Init(Handle&lt;Object&gt; exports) {
   Isolate* isolate = Isolate::GetCurrent();
@@ -3256,11 +3362,18 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
-  MyObject* obj = new MyObject();
-  obj-&gt;counter_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
-  obj-&gt;Wrap(args.This());
-
-  return args.This();
+  if (args.IsConstructCall()) {
+    // Invoked as constructor: `new MyObject(...)`
+    double value = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
+    MyObject* obj = new MyObject(value);
+    obj-&gt;Wrap(args.This());
+    return args.This();
+  } else {
+    // Invoked as plain function `MyObject(...)`, turn into construct call.
+    const int argc = 1;
+    Local&lt;Value&gt; argv[argc] = { args[0] };
+    return scope.Close(constructor-&gt;NewInstance(argc, argv));
+  }
 }
 
 Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
@@ -3268,9 +3381,9 @@ Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
   HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
-  obj-&gt;counter_ += 1;
+  obj-&gt;value_ += 1;
 
-  return scope.Close(Number::New(obj-&gt;counter_));
+  return scope.Close(Number::New(obj-&gt;value_));
 }</code></pre>
 <!--
 Test it with:
@@ -3344,13 +3457,13 @@ class MyObject : public node::ObjectWrap {
   static v8::Handle&lt;v8::Value&gt; NewInstance(const v8::Arguments&amp; args);
 
  private:
-  MyObject();
+  explicit MyObject(double value = 0);
   ~MyObject();
 
-  static v8::Persistent&lt;v8::Function&gt; constructor;
   static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
   static v8::Handle&lt;v8::Value&gt; PlusOne(const v8::Arguments&amp; args);
-  double counter_;
+  static v8::Persistent&lt;v8::Function&gt; constructor;
+  double value_;
 };
 
 #endif</code></pre>
@@ -3366,10 +3479,13 @@ The implementation is similar to the above in `myobject.cc`:
 
 using namespace v8;
 
-MyObject::MyObject() {};
-MyObject::~MyObject() {};
-
 Persistent&lt;Function&gt; MyObject::constructor;
+
+MyObject::MyObject(double value) : value_(value) {
+}
+
+MyObject::~MyObject() {
+}
 
 void MyObject::Init() {
   Isolate* isolate = Isolate::GetCurrent();
@@ -3389,11 +3505,18 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
-  MyObject* obj = new MyObject();
-  obj-&gt;counter_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
-  obj-&gt;Wrap(args.This());
-
-  return args.This();
+  if (args.IsConstructCall()) {
+    // Invoked as constructor: `new MyObject(...)`
+    double value = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
+    MyObject* obj = new MyObject(value);
+    obj-&gt;Wrap(args.This());
+    return args.This();
+  } else {
+    // Invoked as plain function `MyObject(...)`, turn into construct call.
+    const int argc = 1;
+    Local&lt;Value&gt; argv[argc] = { args[0] };
+    return scope.Close(constructor-&gt;NewInstance(argc, argv));
+  }
 }
 
 Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
@@ -3412,9 +3535,9 @@ Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
   HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
-  obj-&gt;counter_ += 1;
+  obj-&gt;value_ += 1;
 
-  return scope.Close(Number::New(obj-&gt;counter_));
+  return scope.Close(Number::New(obj-&gt;value_));
 }</code></pre>
 <!--
 Test it with:
@@ -3449,6 +3572,7 @@ In the following `addon.cc` we introduce a function `add()` that can take on two
 
 </p>
 <pre><code>#include &lt;node.h&gt;
+#include &lt;node_object_wrap.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
@@ -3468,7 +3592,7 @@ Handle&lt;Value&gt; Add(const Arguments&amp; args) {
   MyObject* obj2 = node::ObjectWrap::Unwrap&lt;MyObject&gt;(
       args[1]-&gt;ToObject());
 
-  double sum = obj1-&gt;Val() + obj2-&gt;Val();
+  double sum = obj1-&gt;Value() + obj2-&gt;Value();
   return scope.Close(Number::New(sum));
 }
 
@@ -3497,20 +3621,21 @@ can probe private values after unwrapping the object:
 #define MYOBJECT_H
 
 #include &lt;node.h&gt;
+#include &lt;node_object_wrap.h&gt;
 
 class MyObject : public node::ObjectWrap {
  public:
   static void Init();
   static v8::Handle&lt;v8::Value&gt; NewInstance(const v8::Arguments&amp; args);
-  double Val() const { return val_; }
+  double Value() const { return value_; }
 
  private:
-  MyObject();
+  explicit MyObject(double value = 0);
   ~MyObject();
 
-  static v8::Persistent&lt;v8::Function&gt; constructor;
   static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
-  double val_;
+  static v8::Persistent&lt;v8::Function&gt; constructor;
+  double value_;
 };
 
 #endif</code></pre>
@@ -3526,10 +3651,13 @@ The implementation of `myobject.cc` is similar as before:
 
 using namespace v8;
 
-MyObject::MyObject() {};
-MyObject::~MyObject() {};
-
 Persistent&lt;Function&gt; MyObject::constructor;
+
+MyObject::MyObject(double value) : value_(value) {
+}
+
+MyObject::~MyObject() {
+}
 
 void MyObject::Init() {
   Isolate* isolate = Isolate::GetCurrent();
@@ -3546,11 +3674,18 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
-  MyObject* obj = new MyObject();
-  obj-&gt;val_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
-  obj-&gt;Wrap(args.This());
-
-  return args.This();
+  if (args.IsConstructCall()) {
+    // Invoked as constructor: `new MyObject(...)`
+    double value = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
+    MyObject* obj = new MyObject(value);
+    obj-&gt;Wrap(args.This());
+    return args.This();
+  } else {
+    // Invoked as plain function `MyObject(...)`, turn into construct call.
+    const int argc = 1;
+    Local&lt;Value&gt; argv[argc] = { args[0] };
+    return scope.Close(constructor-&gt;NewInstance(argc, argv));
+  }
 }
 
 Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
@@ -3588,8 +3723,97 @@ It is an instance of [EventEmitter][].
 <p><code>process</code> はグローバルオブジェクトで、どこからでもアクセスすることができます。
 それは <a href="events.html#events_class_events_eventemitter">EventEmitter</a> のインスタンスです。
 
+</p>
+<h2>Exit Codes<span><a class="mark" href="#all_exit_codes" id="all_exit_codes">#</a></span></h2>
+<!--
+Node will normally exit with a `0` status code when no more async
+operations are pending.  The following status codes are used in other
+cases:
+-->
+
+<p>未完了の非同期な操作が無くなると、Node はステータスコード <code>0</code> で正常に
+終了します。その他のケースでは、以下のステータスコードが使われます。
 
 </p>
+<!--
+* `1` **Uncaught Fatal Exception** - There was an uncaught exception,
+  and it was not handled by a domain or an `uncaughtException` event
+  handler.
+* `2` - Unused (reserved by Bash for builtin misuse)
+* `3` **Internal JavaScript Parse Error** - The JavaScript source code
+  internal in Node's bootstrapping process caused a parse error.  This
+  is extremely rare, and generally can only happen during development
+  of Node itself.
+* `4` **Internal JavaScript Evaluation Failure** - The JavaScript
+  source code internal in Node's bootstrapping process failed to
+  return a function value when evaluated.  This is extremely rare, and
+  generally can only happen during development of Node itself.
+* `5` **Fatal Error** - There was a fatal unrecoverable error in V8.
+  Typically a message will be printed to stderr with the prefix `FATAL
+  ERROR`.
+* `6` **Non-function Internal Exception Handler** - There was an
+  uncaught exception, but the internal fatal exception handler
+  function was somehow set to a non-function, and could not be called.
+* `7` **Internal Exception Handler Run-Time Failure** - There was an
+  uncaught exception, and the internal fatal exception handler
+  function itself threw an error while attempting to handle it.  This
+  can happen, for example, if a `process.on('uncaughtException')` or
+  `domain.on('error')` handler throws an error.
+* `8` - Unused.  In previous versions of Node, exit code 8 sometimes
+  indicated an uncaught exception.
+* `9` - **Invalid Argument** - Either an unknown option was specified,
+  or an option requiring a value was provided without a value.
+* `10` **Internal JavaScript Run-Time Failure** - The JavaScript
+  source code internal in Node's bootstrapping process threw an error
+  when the bootstrapping function was called.  This is extremely rare,
+  and generally can only happen during development of Node itself.
+* `12` **Invalid Debug Argument** - The `--debug` and/or `--debug-brk`
+  options were set, but an invalid port number was chosen.
+* `>128` **Signal Exits** - If Node receives a fatal signal such as
+  `SIGKILL` or `SIGHUP`, then its exit code will be `128` plus the
+  value of the signal code.  This is a standard Unix practice, since
+  exit codes are defined to be 7-bit integers, and signal exits set
+  the high-order bit, and then contain the value of the signal code.
+-->
+
+<ul>
+<li><code>1</code> <strong>捕捉されなかった致命的な例外</strong> - 捕捉されなかった例外があり、
+それがドメインや <code>uncaughtException</code> イベントハンドラによって
+処理されなかった。</li>
+<li><code>2</code> - 未使用 (Bashに組み込まれた誤用のために予約)。</li>
+<li><code>3</code> <strong>内部的な JavaScript のパースエラー</strong> - Node がプロセスを
+ブートストラップする内部用の JavaScript ソースコードでパースエラーが
+発生した。
+これはきわめてまれで、通常 Node 自身を開発している時にしか起こりません。</li>
+<li><code>4</code> <strong>内部的な JavaScript の評価失敗 </strong> - Node がプロセスを
+ブートストラップする内部用の JavaScript ソースコードが評価された際、
+関数を返すことに失敗した。
+これはきわめてまれで、通常 Node 自身を開発している時にしか起こりません。</li>
+<li><code>5</code> <strong>致命的なエラー</strong> - 致命的で回復不可能なエラーが V8 で発生した。
+通常、標準エラー出力に接頭辞 <code>FATAL ERROR</code> とともにメッセージが出力されます。</li>
+<li><code>6</code> <strong>内部的エラーハンドラが関数ではない</strong> - 捕捉されない例外が発生したが、
+内部的な例外ハンドラにどういうわけか関数ではないものが設定されていて
+呼び出せなかった。</li>
+<li><code>7</code> <strong>内部的なエラーハンドラが実行時に失敗</strong> - 捕捉されない例外が発生し、
+それを処理していた内部的な例外ハンドラ自身も例外をスローした。
+これはたとえば、<code>process.on(&#39;uncaughtException&#39;)</code> または
+<code>domain.on(&#39;error&#39;)</code> のハンドラが例外をスローした場合に発生します。</li>
+<li><code>8</code> - 未使用。以前のバージョンの Node では、終了コード 8 は捕捉されない例外を
+示すことがありました。</li>
+<li><code>9</code> <strong>不正な引数</strong> - 未知のオプションが指定された、あるいは値が必須の
+オプションが値無しで指定された。</li>
+<li><code>10</code> <strong>内部的な JavaScript の実行時失敗</strong> - Node がプロセスを
+ブートストラップする内部用の JavaScript ソースコードが評価された際、
+例外をスローした。
+これはきわめてまれで、通常 Node 自身を開発している時にしか起こりません。</li>
+<li><code>12</code> <strong>不正なデバッグ引数</strong> - <code>--debug</code> または <code>--debug-brk</code> が指定されたが、
+不正なポート番号が選ばれた。</li>
+<li><code>&gt;128</code> <strong>シグナルによる終了</strong> - Node が <code>SIGKILL</code> や <code>SIGHUP</code>
+などの致命的なシグナルを受け取ると、終了コードは <code>128</code> にシグナルコードを
+加えた値になります。
+これは終了コードが 7bit 整数で定義された時からの Unix の標準的な慣習で、
+シグナルによる終了は最上位のビットを設定し、シグナルコードの値を含みます。</li>
+</ul>
 <h2>Event: &#39;exit&#39;<span><a class="mark" href="#all_event_exit" id="all_event_exit">#</a></span></h2>
 <!--
 Emitted when the process is about to exit.  This is a good hook to perform
@@ -3698,15 +3922,15 @@ You have been warned.
 </p>
 <h2>Signal Events<span><a class="mark" href="#all_signal_events" id="all_signal_events">#</a></span></h2>
 <!--type=event-->
-<!--name=SIGINT, SIGUSR1, etc.-->
+<!--name=SIGINT, SIGHUP, etc.-->
 
 <!--
 Emitted when the processes receives a signal. See sigaction(2) for a list of
-standard POSIX signal names such as SIGINT, SIGUSR1, etc.
+standard POSIX signal names such as SIGINT, SIGHUP, etc.
 -->
 
 <p>プロセスがシグナルを受信した場合に生成されます。
-SIGINT、SIGUSR1、その他の POSIX 標準シグナル名の一覧について は sigaction(2) を参照してください。
+SIGINT、SIGHUP、その他の POSIX 標準シグナル名の一覧について は sigaction(2) を参照してください。
 
 </p>
 <!--
@@ -3729,6 +3953,14 @@ programs.
 
 <p>多くの端末プログラムで簡単に <code>SIGINT</code> を送る方法は <code>Control-C</code> を押すことです。
 
+</p>
+<!--
+Note: SIGUSR1 is reserved by node.js to kickstart the debugger.  It's possible
+to install a listener but that won't stop the debugger from starting.
+-->
+
+<p>注意: <code>SIGUSR1</code> は Node.js がデバッガを起動するために予約されています。
+リスナを登録することは出来ますが、デバッガの起動を止めることは出来ません。
 
 </p>
 <h2>process.stdout<span><a class="mark" href="#all_process_stdout" id="all_process_stdout">#</a></span></h2>
@@ -3993,6 +4225,27 @@ The shell that executed node should see the exit code as 1.
 -->
 
 <p>node を実行したシェルで終了コードが 1 であることを見ることができるでしょう。
+
+
+</p>
+<h2>process.exitCode<span><a class="mark" href="#all_process_exitcode" id="all_process_exitcode">#</a></span></h2>
+<!--
+A number which will be the process exit code, when the process either
+exits gracefully, or is exited via `process.exit()` without specifying
+a code.
+-->
+
+<p>プロセスが正常終了する場合や、<code>process.exit()</code> でコードが指定されなかった
+場合に、終了コードとなる数値。
+
+</p>
+<!--
+Specifying a code to `process.exit(code)` will override any previous
+setting of `process.exitCode`.
+-->
+
+<p><code>process.exit(code)</code> でコードが指定されると、以前 <code>process.exitCode</code> に
+設定された値は上書きされます。
 
 
 </p>
@@ -4267,14 +4520,14 @@ JavaScript で表現したオブジェクトを保持します。
 <!--
 Send a signal to a process. `pid` is the process id and `signal` is the
 string describing the signal to send.  Signal names are strings like
-'SIGINT' or 'SIGUSR1'.  If omitted, the signal will be 'SIGTERM'.
+'SIGINT' or 'SIGHUP'.  If omitted, the signal will be 'SIGTERM'.
 See kill(2) for more information.
 -->
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
-シグナルの名前は &#39;SIGINT&#39; や &#39;SIGUSR1&#39; のような文字列です。
-省略すると、シグナルは &#39;SIGTERM&#39; となります。
+シグナルの名前は <code>&#39;SIGINT&#39;</code> や <code>&#39;SIGHUP&#39;</code> のような文字列です。
+省略すると、シグナルは <code>&#39;SIGTERM&#39;</code> となります。
 詳細は kill(2) を参照してください。
 
 </p>
@@ -4306,6 +4559,14 @@ setTimeout(function() {
 }, 100);
 
 process.kill(process.pid, &#39;SIGHUP&#39;);</code></pre>
+<!--
+Note: SIGUSR1 is reserved by node.js.  It can be used to kickstart the
+debugger.
+-->
+
+<p>注意: SIGUSR1 は Node.js によって予約されています。それはデバッガを起動します。
+
+</p>
 <h2>process.pid<span><a class="mark" href="#all_process_pid" id="all_process_pid">#</a></span></h2>
 <!--
 The PID of the process.
@@ -7253,6 +7514,14 @@ Fが与えられなかった場合はバッファ全体を埋めます。
 </p>
 <pre><code>var b = new Buffer(50);
 b.fill(&quot;h&quot;);</code></pre>
+<h3>buf.toArrayBuffer()<span><a class="mark" href="#all_buf_toarraybuffer" id="all_buf_toarraybuffer">#</a></span></h3>
+<!--
+Creates a new `ArrayBuffer` with the copied memory of the buffer instance.
+-->
+
+<p>バッファインスタンスのメモリをコピーした新しい <code>ArrayBuffer</code> を作成します。
+
+</p>
 <h2>buffer.INSPECT_MAX_BYTES<span><a class="mark" href="#all_buffer_inspect_max_bytes" id="all_buffer_inspect_max_bytes">#</a></span></h2>
 <div class="signature"><ul>
 <li>Number, Default: 50</li>
@@ -8813,7 +9082,7 @@ SimpleProtocol.prototype._read = function(n) {
     strings using the specified encoding.  Default=null
   * `objectMode` {Boolean} Whether this stream should behave
     as a stream of objects. Meaning that stream.read(n) returns
-    a single value instead of a Buffer of size n
+    a single value instead of a Buffer of size n.  Default=false
 -->
 
 <ul>
@@ -8825,7 +9094,7 @@ SimpleProtocol.prototype._read = function(n) {
 デコードされます。デフォルトは <code>null</code>。</li>
 <li><code>objectMode</code> {Boolean} このストリームがオブジェクトストリームとして
 振る舞うべきかどうか。これは <code>stream.read(n)</code> がサイズ n のバッファではなく
-一つの値を返すことを意味します。</li>
+一つの値を返すことを意味します。デフォルトは <code>false</code>。</li>
 </ul>
 </li>
 </ul>
@@ -10023,6 +10292,7 @@ modify them.
 [`_read(size)`]: #stream_readable_read_size_1
 [`_read()`]: #stream_readable_read_size_1
 [_read]: #stream_readable_read_size_1
+[`writable.write(chunk)`]: #stream_writable_write_chunk_encoding_callback
 [`write(chunk, encoding, callback)`]: #stream_writable_write_chunk_encoding_callback
 [`write()`]: #stream_writable_write_chunk_encoding_callback
 [`stream.write(chunk)`]: #stream_writable_write_chunk_encoding_callback
@@ -10679,14 +10949,43 @@ with new data as it is streamed.
 <h3>sign.sign(private_key, [output_format])<span><a class="mark" href="#all_sign_sign_private_key_output_format" id="all_sign_sign_private_key_output_format">#</a></span></h3>
 <!--
 Calculates the signature on all the updated data passed through the
+<<<<<<< HEAD
 sign.  `private_key` is a string containing the PEM encoded private
 key for signing.
 -->
 
 <p>署名オブジェクトに渡された全ての更新データで署名を計算します。
-<code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。
+</p>
+<h1><code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。<span><a class="mark" href="#all_private_key_pem" id="all_private_key_pem">#</a></span></h1>
+<p>sign.
 
 </p>
+<p><code>private_key</code> can be an object or a string. If <code>private_key</code> is a string, it is
+treated as the key with no passphrase.
+
+</p>
+<p><code>private_key</code>:
+
+</p>
+<ul>
+<li><code>key</code> : A string holding the PEM encoded private key</li>
+<li><code>passphrase</code> : A string of passphrase for the private key<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>v0.11.8</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+</ul>
 <!--
 Returns the signature in `output_format` which can be `'binary'`,
 `'hex'` or `'base64'`. If no encoding is provided, then a buffer is
@@ -11052,6 +11351,27 @@ Usage is otherwise identical to `crypto.randomBytes`.
 <p>他の使い方は <code>crypto.randomBytes</code> と同じです。
 
 </p>
+<h2>Class: Certificate<span><a class="mark" href="#all_class_certificate" id="all_class_certificate">#</a></span></h2>
+<p>The class used for working with signed public key &amp; challenges. The most
+common usage for this series of functions is when dealing with the <code>&lt;keygen&gt;</code>
+element. <a href="http://www.openssl.org/docs/apps/spkac.html">http://www.openssl.org/docs/apps/spkac.html</a>
+
+</p>
+<p>Returned by <code>crypto.Certificate</code>.
+
+</p>
+<h3>Certificate.verifySpkac(spkac)<span><a class="mark" href="#all_certificate_verifyspkac_spkac" id="all_certificate_verifyspkac_spkac">#</a></span></h3>
+<p>Returns true of false based on the validity of the SPKAC.
+
+</p>
+<h3>Certificate.exportChallenge(spkac)<span><a class="mark" href="#all_certificate_exportchallenge_spkac" id="all_certificate_exportchallenge_spkac">#</a></span></h3>
+<p>Exports the encoded public key from the supplied SPKAC.
+
+</p>
+<h3>Certificate.exportPublicKey(spkac)<span><a class="mark" href="#all_certificate_exportpublickey_spkac" id="all_certificate_exportpublickey_spkac">#</a></span></h3>
+<p>Exports the encoded challenge associated with the SPKAC.
+
+</p>
 <h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#all_crypto_default_encoding" id="all_crypto_default_encoding">#</a></span></h2>
 <!--
 The default encoding to use for functions that can take either strings
@@ -11346,9 +11666,9 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `cert`: A string or `Buffer` containing the certificate key of the server in
     PEM format. (Required)
 
-  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is
-    omitted several well known "root" CAs will be used, like VeriSign.
-    These are used to authorize connections.
+  - `ca`: An array of strings or `Buffer`s of trusted certificates in PEM
+    format. If this is omitted several well known "root" CAs will be used,
+    like VeriSign. These are used to authorize connections.
 
   - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate
     Revocation List)
@@ -11433,7 +11753,8 @@ automatically set as a listener for the [secureConnection][] event.  The
 <li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
 (必須)。</p>
 </li>
-<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
+<li><p><code>ca</code>: PEM フォーマットによる信頼できる証明書の文字列または
+<code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
 これらはコネクションの認証に使われます。</p>
 </li>
@@ -11603,16 +11924,16 @@ Creates a new client connection to the given `port` and `host` (old API) or
   - `cert`: A string or `Buffer` containing the certificate key of the client in
     PEM format.
 
-  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is
-    omitted several well known "root" CAs will be used, like VeriSign.
-    These are used to authorize connections.
+  - `ca`: An array of strings or `Buffer`s of trusted certificates in PEM
+    format. If this is omitted several well known "root" CAs will be used,
+    like VeriSign. These are used to authorize connections.
 
   - `rejectUnauthorized`: If `true`, the server certificate is verified against
     the list of supplied CAs. An `'error'` event is emitted if verification
     fails. Default: `true`.
 
-  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN
-    protocols. `Buffer` should have following format: `0x05hello0x05world`,
+  - `NPNProtocols`: An array of strings or `Buffer`s containing supported NPN
+    protocols. `Buffer`s should have following format: `0x05hello0x05world`,
     where first byte is next protocol name's length. (Passing array should
     usually be much simpler: `['hello', 'world']`.)
 
@@ -11642,7 +11963,8 @@ Creates a new client connection to the given `port` and `host` (old API) or
 SSL version 3. The possible values depend on your installation of
 OpenSSL and are defined in the constant <a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS">SSL_METHODS</a>.</p>
 </li>
-<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
+<li><p><code>ca</code>: PEM フォーマットによる信頼できる証明書の文字列または
+<code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
 これらはコネクションの認証に使われます。</p>
 </li>
@@ -12239,6 +12561,38 @@ information.
 参照してください。
 
 </p>
+<h3>tlsSocket.renegotiate(options, callback)<span><a class="mark" href="#all_tlssocket_renegotiate_options_callback" id="all_tlssocket_renegotiate_options_callback">#</a></span></h3>
+<!--
+Initiate TLS renegotiation process. The `options` may contain the following
+fields: `rejectUnauthorized`, `requestCert` (See [tls.createServer][]
+for details). `callback(err)` will be executed with `null` as `err`,
+once the renegotiation is successfully completed.
+-->
+
+<p>TLSの再ネゴシエーションを開始します。
+<code>options</code>は以下のフィールドを含むことが出来ます:
+<code>rejectUnauthorized</code>、<code>requestCert</code> (詳細は <a href="#tls_tls_createserver_options_secureconnectionlistener">tls.createServer</a> 参照)。
+<code>callback(err)</code> は再ネゴシエーションが成功で完了すると、<code>err</code> が <code>null</code> で
+実行されます。
+
+</p>
+<!--
+NOTE: Can be used to request peer's certificate after the secure connection
+has been established.
+-->
+
+<p>注意: 相手側の証明書は、セキュアな接続が確立された後で利用可能になります。
+
+</p>
+<!--
+ANOTHER NOTE: When running as the server, socket will be destroyed
+with an error after `handshakeTimeout` timeout.
+-->
+
+<p>更に注意: サーバとして実行される場合、<code>handshakeTimeout</code> 時間が経過した後、
+ソケットはエラーと共に破棄されます。
+
+</p>
 <h3>tlsSocket.address()<span><a class="mark" href="#all_tlssocket_address" id="all_tlssocket_address">#</a></span></h3>
 <!--
 Returns the bound address, the address family name and port of the
@@ -12739,17 +13093,17 @@ Synchronous link(2).
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
-`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only 
-used on Windows (ignored on other platforms).
+The `type` argument can be set to `'dir'`, `'file'`, or `'junction'` (default
+is `'file'`) and is only available on Windows (ignored on other platforms).
 Note that Windows junction points require the destination path to be absolute.  When using
 `'junction'`, the `destination` argument will automatically be normalized to absolute path.
 -->
 
 <p>非同期の symlink(2)。
 完了コールバックには発生し得る例外以外に引数が渡されることはありません。
-<code>type</code> 引数は <code>&#39;dir&#39;</code>、<code>&#39;file&#39;</code>、または <code>&#39;junction</code>&#39; (デフォルトは <code>&#39;file&#39;</code>)
-です。
-これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
+<code>type</code> 引数に指定出来るのは <code>&#39;dir&#39;</code>、<code>&#39;file&#39;</code>、または <code>&#39;junction</code>&#39;
+(デフォルトは <code>&#39;file&#39;</code>) で、これは Windows でのみ有効です
+(他のプラットフォームでは無視されます)。
 Windows のジャンクションポイントは対象に絶対パスを要求することに
 注意してください。
 <code>&#39;junction&#39;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
@@ -13693,6 +14047,29 @@ Then call the `callback` argument with either true or false.  Example:
 <pre><code>fs.exists(&#39;/etc/passwd&#39;, function (exists) {
   util.debug(exists ? &quot;it&#39;s there&quot; : &quot;no passwd!&quot;);
 });</code></pre>
+<!--
+`fs.exists()` is an anachronism and exists only for historical reasons.
+There should almost never be a reason to use it in your own code.
+-->
+
+<p><code>fs.exists()</code> は時代錯誤で、存在する理由は歴史的経緯だけです。
+あなたのコードでこれを使うべき理由があってはいけません。
+
+</p>
+<!--
+In particular, checking if a file exists before opening it is an anti-pattern
+that leaves you vulnerable to race conditions: another process may remove the
+file between the calls to `fs.exists()` and `fs.open()`.  Just open the file
+and handle the error when it's not there.
+-->
+
+<p>とりわけ、ファイルをオープンする前に存在をチェックするのは、
+あなたのコードを競合条件に対して脆弱にするアンチパターンです:
+<code>fs.exists()</code> と <code>fs.open()</code> の間に別のプロセスがファイルを
+削除するかもしれません。
+単純にファイルをオープンして、それが存在しない時はエラーを処理してください。
+
+</p>
 <h2>fs.existsSync(path)<span><a class="mark" href="#all_fs_existssync_path" id="all_fs_existssync_path">#</a></span></h2>
 <!--
 Synchronous version of `fs.exists`.
@@ -14586,11 +14963,9 @@ The `connectListener` parameter will be added as an listener for the
 <h2>Class: net.Server<span><a class="mark" href="#all_class_net_server" id="all_class_net_server">#</a></span></h2>
 <!--
 This class is used to create a TCP or UNIX server.
-A server is a `net.Socket` that can listen for new incoming connections.
 -->
 
 <p>このクラスは TCP または UNIX ドメインのサーバを作成するために使われます。
-サーバは <code>net.Scoket</code> であり、新たに到着する接続を待ち受けることができます。
 
 </p>
 <h3>server.listen(port, [host], [backlog], [callback])<span><a class="mark" href="#all_server_listen_port_host_backlog_callback" id="all_server_listen_port_host_backlog_callback">#</a></span></h3>
@@ -15616,7 +15991,7 @@ Emitted when an error occurs.
 </p>
 <h3>socket.send(buf, offset, length, port, address, [callback])<span><a class="mark" href="#all_socket_send_buf_offset_length_port_address_callback" id="all_socket_send_buf_offset_length_port_address_callback">#</a></span></h3>
 <!--
-* `buf` Buffer object.  Message to be sent
+* `buf` Buffer object or string.  Message to be sent
 * `offset` Integer. Offset in the buffer where the message starts.
 * `length` Integer. Number of bytes in the message.
 * `port` Integer. destination port
@@ -15626,13 +16001,13 @@ Emitted when an error occurs.
 -->
 
 <ul>
-<li><code>buf</code> Buffer object.  送信されるメッセージ</li>
-<li><code>offset</code> Integer. メッセージの開始位置となるバッファ内のオフセット</li>
-<li><code>length</code> Integer. メッセージのバイト長</li>
-<li><code>port</code> Integer. 接続先のポート番号</li>
-<li><code>address</code> String. 接続先の IP</li>
-<li><code>callback</code> Function. メッセージの配信が完了した後にコールバックされる、
-Optional.</li>
+<li><code>buf</code> Buffer オブジェクトまたは文字列。送信されるメッセージ</li>
+<li><code>offset</code> Integer。メッセージの開始位置となるバッファ内のオフセット</li>
+<li><code>length</code> Integer。メッセージのバイト長</li>
+<li><code>port</code> Integer。接続先のポート番号</li>
+<li><code>address</code> String。接続先の IP</li>
+<li><code>callback</code> 関数。メッセージの配信が完了した後にコールバックされる、
+任意。</li>
 </ul>
 <!--
 For UDP sockets, the destination port and IP address must be specified.  A string
@@ -15657,11 +16032,25 @@ DNS ルックアップは送信を少なくとも次の機会まで遅らせる�
 <p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、
 ランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます
 (<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。
+
+</p>
+<!--
+With consideration for multi-byte characters, `offset` and `length` will
+be calculated with respect to
+[byte length](buffer.html#buffer_class_method_buffer_bytelength_string_encoding)
+and not the character position.
+-->
+
+<p>マルチバイト文字を考慮してください。
+<code>offset</code> および <code>length</code> は文字の位置ではなく、
+<a href="buffer.html#buffer_class_method_buffer_bytelength_string_encoding">バイト位置</a>
+に関係します。
+
+</p>
 <!--
 Example of sending a UDP packet to a random port on `localhost`;
 -->
 
-</p>
 <p><code>localhost</code> の適当なポートに UDP パケットを送信する例;
 
 </p>
@@ -16009,24 +16398,24 @@ dns.resolve4(&#39;www.google.com&#39;, function (err, addresses) {
   console.log(&#39;addresses: &#39; + JSON.stringify(addresses));
 
   addresses.forEach(function (a) {
-    dns.reverse(a, function (err, domains) {
+    dns.reverse(a, function (err, hostnames) {
       if (err) {
         throw err;
       }
 
-      console.log(&#39;reverse for &#39; + a + &#39;: &#39; + JSON.stringify(domains));
+      console.log(&#39;reverse for &#39; + a + &#39;: &#39; + JSON.stringify(hostnames));
     });
   });
 });</code></pre>
-<h2>dns.lookup(domain, [family], callback)<span><a class="mark" href="#all_dns_lookup_domain_family_callback" id="all_dns_lookup_domain_family_callback">#</a></span></h2>
+<h2>dns.lookup(hostname, [family], callback)<span><a class="mark" href="#all_dns_lookup_hostname_family_callback" id="all_dns_lookup_hostname_family_callback">#</a></span></h2>
 <!--
-Resolves a domain (e.g. `'google.com'`) into the first found A (IPv4) or
+Resolves a hostname (e.g. `'google.com'`) into the first found A (IPv4) or
 AAAA (IPv6) record.
 The `family` can be the integer `4` or `6`. Defaults to `null` that indicates
 both Ip v4 and v6 address family.
 -->
 
-<p>ドメイン (例 <code>&#39;google.com&#39;</code>) を解決して最初に見つかった
+<p>ホスト名 (例 <code>&#39;google.com&#39;</code>) を解決して最初に見つかった
 A (IPv4) または AAAA (IPv6) レコードにします。
 <code>family</code> は整数の <code>4</code> または <code>6</code> を指定することができます。
 デフォルトは <code>null</code> で、IP v4 と v6 の両方をアドレスファミリーを意味します。
@@ -16048,27 +16437,27 @@ necessarily the value initially passed to `lookup`).
 <!--
 On error, `err` is an `Error` object, where `err.code` is the error code.
 Keep in mind that `err.code` will be set to `'ENOENT'` not only when
-the domain does not exist but also when the lookup fails in other ways
+the hostname does not exist but also when the lookup fails in other ways
 such as no available file descriptors.
 -->
 
 <p>エラー時、<code>err</code> は <code>Error</code> オブジェクトで、<code>err.code</code> はエラーコードです。
-<code>err.code</code> が <code>&#39;ENOENT&#39;</code> に設定されるのはドメインが存在しない場合だけではなく、
+<code>err.code</code> が <code>&#39;ENOENT&#39;</code> に設定されるのはホスト名が存在しない場合だけではなく、
 ファイル記述子が使えないなどルックアップが失敗した場合もあることに
 注意してください。
 
 
 </p>
-<h2>dns.resolve(domain, [rrtype], callback)<span><a class="mark" href="#all_dns_resolve_domain_rrtype_callback" id="all_dns_resolve_domain_rrtype_callback">#</a></span></h2>
+<h2>dns.resolve(hostname, [rrtype], callback)<span><a class="mark" href="#all_dns_resolve_hostname_rrtype_callback" id="all_dns_resolve_hostname_rrtype_callback">#</a></span></h2>
 <!--
-Resolves a domain (e.g. `'google.com'`) into an array of the record types
+Resolves a hostname (e.g. `'google.com'`) into an array of the record types
 specified by rrtype. Valid rrtypes are `'A'` (IPV4 addresses, default),
 `'AAAA'` (IPV6 addresses), `'MX'` (mail exchange records), `'TXT'` (text
 records), `'SRV'` (SRV records), `'PTR'` (used for reverse IP lookups),
 `'NS'` (name server records) and `'CNAME'` (canonical name records).
 -->
 
-<p>ドメイン (例 <code>&#39;google.com&#39;</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
+<p>ホスト名 (例 <code>&#39;google.com&#39;</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
 妥当な <code>rrtype</code> は <code>&#39;A&#39;</code> (IPV4アドレス)、<code>&#39;AAAA&#39;</code> (IPV6アドレス)、
 <code>&#39;MX&#39;</code> (mail exchangeレコード), <code>&#39;TXT&#39;</code> (テキストレコード)、
 <code>&#39;SRV&#39;</code> (SRVレコード)、<code>&#39;PTR&#39;</code> (IP を逆引きでルックアップするために使われる)、
@@ -16096,7 +16485,7 @@ one of the error codes listed below.
 
 
 </p>
-<h2>dns.resolve4(domain, callback)<span><a class="mark" href="#all_dns_resolve4_domain_callback" id="all_dns_resolve4_domain_callback">#</a></span></h2>
+<h2>dns.resolve4(hostname, callback)<span><a class="mark" href="#all_dns_resolve4_hostname_callback" id="all_dns_resolve4_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for IPv4 queries (`A` records).
 `addresses` is an array of IPv4 addresses (e.g.
@@ -16108,7 +16497,7 @@ The same as `dns.resolve()`, but only for IPv4 queries (`A` records).
 <code>[&#39;74.125.79.104&#39;, &#39;74.125.79.105&#39;, &#39;74.125.79.106&#39;]</code>)
 
 </p>
-<h2>dns.resolve6(domain, callback)<span><a class="mark" href="#all_dns_resolve6_domain_callback" id="all_dns_resolve6_domain_callback">#</a></span></h2>
+<h2>dns.resolve6(hostname, callback)<span><a class="mark" href="#all_dns_resolve6_hostname_callback" id="all_dns_resolve6_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve4()` except for IPv6 queries (an `AAAA` query).
 -->
@@ -16117,7 +16506,7 @@ The same as `dns.resolve4()` except for IPv6 queries (an `AAAA` query).
 
 
 </p>
-<h2>dns.resolveMx(domain, callback)<span><a class="mark" href="#all_dns_resolvemx_domain_callback" id="all_dns_resolvemx_domain_callback">#</a></span></h2>
+<h2>dns.resolveMx(hostname, callback)<span><a class="mark" href="#all_dns_resolvemx_hostname_callback" id="all_dns_resolvemx_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for mail exchange queries (`MX` records).
 -->
@@ -16134,71 +16523,71 @@ attribute (e.g. `[{'priority': 10, 'exchange': 'mx.example.com'},...]`).
 (例 <code>[{&#39;priority&#39;: 10, &#39;exchange&#39;: &#39;mx.example.com&#39;},...]</code>)。
 
 </p>
-<h2>dns.resolveTxt(domain, callback)<span><a class="mark" href="#all_dns_resolvetxt_domain_callback" id="all_dns_resolvetxt_domain_callback">#</a></span></h2>
+<h2>dns.resolveTxt(hostname, callback)<span><a class="mark" href="#all_dns_resolvetxt_hostname_callback" id="all_dns_resolvetxt_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for text queries (`TXT` records).
-`addresses` is an array of the text records available for `domain` (e.g.,
+`addresses` is an array of the text records available for `hostname` (e.g.,
 `['v=spf1 ip4:0.0.0.0 ~all']`).
 -->
 
 <p><code>dns.resolve()</code> と同じですが、テキスト (<code>TXT</code> レコード) だけを問い合わせます。
-<code>addresses</code> は <code>domain</code> で利用可能なテキストレコードの配列です。
+<code>addresses</code> は <code>hostname</code> で利用可能なテキストレコードの配列です。
 (例、<code>[&#39;v=spf1 ip4:0.0.0.0 ~all&#39;]</code>)
 
 </p>
-<h2>dns.resolveSrv(domain, callback)<span><a class="mark" href="#all_dns_resolvesrv_domain_callback" id="all_dns_resolvesrv_domain_callback">#</a></span></h2>
+<h2>dns.resolveSrv(hostname, callback)<span><a class="mark" href="#all_dns_resolvesrv_hostname_callback" id="all_dns_resolvesrv_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for service records (`SRV` records).
-`addresses` is an array of the SRV records available for `domain`. Properties
+`addresses` is an array of the SRV records available for `hostname`. Properties
 of SRV records are priority, weight, port, and name (e.g.,
 `[{'priority': 10, {'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]`).
 -->
 
 <p><code>dns.resolve()</code> と同じですが、サービスレコード (<code>SRV</code> レコード) だけを問い合わせます。
-<code>addresses</code> は <code>domain</code> で利用可能な SRV レコードの配列です。
+<code>addresses</code> は <code>hostname</code> で利用可能な SRV レコードの配列です。
 SRV レコードのプロパティは priority、weight、port、そして name です
 (例 <code>[{&#39;priority&#39;: 10, {&#39;weight&#39;: 5, &#39;port&#39;: 21223, &#39;name&#39;: &#39;service.example.com&#39;}, ...]</code>)。
 
 </p>
-<h2>dns.resolveNs(domain, callback)<span><a class="mark" href="#all_dns_resolvens_domain_callback" id="all_dns_resolvens_domain_callback">#</a></span></h2>
+<h2>dns.resolveNs(hostname, callback)<span><a class="mark" href="#all_dns_resolvens_hostname_callback" id="all_dns_resolvens_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for name server records (`NS` records).
-`addresses` is an array of the name server records available for `domain`
+`addresses` is an array of the name server records available for `hostname`
 (e.g., `['ns1.example.com', 'ns2.example.com']`).
 -->
 
 <p><code>dns.resolve()</code> と同じですが、ネームサーバレコード (<code>NS</code> レコード) 
 だけを問い合わせます。
-<code>address</code> は <code>domain</code> で利用可能なネームサーバレコードの配列です
+<code>address</code> は <code>hostname</code> で利用可能なネームサーバレコードの配列です
 (例 <code>[&#39;ns1.example.com&#39;, &#39;ns2.example.com&#39;]</code>)。
 
 </p>
-<h2>dns.resolveCname(domain, callback)<span><a class="mark" href="#all_dns_resolvecname_domain_callback" id="all_dns_resolvecname_domain_callback">#</a></span></h2>
+<h2>dns.resolveCname(hostname, callback)<span><a class="mark" href="#all_dns_resolvecname_hostname_callback" id="all_dns_resolvecname_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for canonical name records (`CNAME`
 records). `addresses` is an array of the canonical name records available for
-`domain` (e.g., `['bar.example.com']`).
+`hostname` (e.g., `['bar.example.com']`).
 -->
 
 <p><code>dns.resolve()</code> と同じですが、別名レコード (<code>CNAME</code> レコード) 
 だけを問い合わせます。
 <code>address</code> は <code>domain</code> で利用可能な別名レコードの配列です
-<code>domain</code> (e.g., <code>[&#39;bar.example.com&#39;]</code>)。
+<code>hostname</code> (e.g., <code>[&#39;bar.example.com&#39;]</code>)。
 
 </p>
 <h2>dns.reverse(ip, callback)<span><a class="mark" href="#all_dns_reverse_ip_callback" id="all_dns_reverse_ip_callback">#</a></span></h2>
 <!--
-Reverse resolves an ip address to an array of domain names.
+Reverse resolves an ip address to an array of hostnames.
 -->
 
-<p>IP アドレスからドメイン名の配列へ逆引きで解決します。
+<p>IP アドレスからホスト名の配列へ逆引きで解決します。
 
 </p>
 <!--
-The callback has arguments `(err, domains)`.
+The callback has arguments `(err, hostnames)`.
 -->
 
-<p>コールバックは引数 <code>(err, domains)</code> を持ちます。
+<p>コールバックは引数 <code>(err, hostname)</code> を持ちます。
 
 </p>
 <!--
@@ -16260,7 +16649,7 @@ Each DNS query can return one of the following error codes:
 - `dns.NOTIMP`: DNS server does not implement requested operation.
 - `dns.REFUSED`: DNS server refused query.
 - `dns.BADQUERY`: Misformatted DNS query.
-- `dns.BADNAME`: Misformatted domain name.
+- `dns.BADNAME`: Misformatted hostname.
 - `dns.BADFAMILY`: Unsupported address family.
 - `dns.BADRESP`: Misformatted DNS reply.
 - `dns.CONNREFUSED`: Could not contact DNS servers.
@@ -16287,7 +16676,7 @@ Each DNS query can return one of the following error codes:
 <li><code>dns.NOTIMP</code>: DNS サーバは要求された操作を実装していない。</li>
 <li><code>dns.REFUSED</code>: DNS サーバが問い合わせを拒否した。</li>
 <li><code>dns.BADQUERY</code>: DNS 問い合わせのフォーマットが不正。</li>
-<li><code>dns.BADNAME</code>: ドメイン名のフォーマットが不正。</li>
+<li><code>dns.BADNAME</code>: ホスト名のフォーマットが不正。</li>
 <li><code>dns.BADFAMILY</code>: サポートされないアドレスファミリー。</li>
 <li><code>dns.BADRESP</code>: DNS 応答のフォーマットが不正。</li>
 <li><code>dns.CONNREFUSED</code>: DNS サーバに接続できない。</li>
@@ -16392,6 +16781,17 @@ list like the following:
   &#39;CONNECTION&#39;, &#39;keep-alive&#39;,
   &#39;Host&#39;, &#39;mysite.com&#39;,
   &#39;accepT&#39;, &#39;*/*&#39; ]</code></pre>
+<h2>http.METHODS<span><a class="mark" href="#all_http_methods" id="all_http_methods">#</a></span></h2>
+<div class="signature"><ul>
+<li><span class="type">Array</span></li>
+</div></ul>
+<!--
+A list of the HTTP methods that are supported by the parser.
+-->
+
+<p>パーサによってサポートされているHTTPメソッドの配列です。
+
+</p>
 <h2>http.STATUS_CODES<span><a class="mark" href="#all_http_status_codes" id="all_http_status_codes">#</a></span></h2>
 <div class="signature"><ul>
 <li><span class="type">Object</span></li>
@@ -16450,15 +16850,15 @@ This is an [EventEmitter][] with the following events:
 <!--
 Emitted each time there is a request. Note that there may be multiple requests
 per connection (in the case of keep-alive connections).
-`request` is an instance of `http.IncomingMessage` and `response` is
-an instance of `http.ServerResponse`
+ `request` is an instance of [http.IncomingMessage][] and `response` is
+an instance of [http.ServerResponse][].
 -->
 
 <p>リクエストの度に生成されます。
 コネクションごとに複数のリクエストがあるかもしれないことに注意してください
 (Keep Alive なコネクションの場合)。
-<code>request</code> は <code>http.IncomingMessage</code> のインスタンス、
-<code>response</code> は <code>http.ServerResponse</code> のインスタンスです。
+<code>request</code> は <a href="#http_http_incomingmessage">http.IncomingMessage</a> のインスタンス、
+<code>response</code> は <a href="#http_class_http_serverresponse">http.ServerResponse</a> のインスタンスです。
 
 </p>
 <h3>Event: &#39;connection&#39;<span><a class="mark" href="#all_event_connection_1" id="all_event_connection_1">#</a></span></h3>
@@ -16507,14 +16907,14 @@ with a 100 Continue as appropriate.
 
 </p>
 <!--
-Handling this event involves calling `response.writeContinue` if the client
+Handling this event involves calling [response.writeContinue()][] if the client
 should continue to send the request body, or generating an appropriate HTTP
 response (e.g., 400 Bad Request) if the client should not continue to send the
 request body.
 -->
 
 <p>このイベントを処理する場合、クライアントがリクエストボディを送信し続けるべきなら
-<code>response.writeContinue</code> を呼び出す必要があります。
+<a href="#http_response_writecontinue">response.writeContinue()</a> を呼び出す必要があります。
 あるいは、クライアントがリクエストボディを送信し続けるべきでないなら、
 適切な HTTP レスポンス (例えば 400 Bad Request) を生成します。
 
@@ -16843,10 +17243,10 @@ The response implements the [Writable Stream][] interface. This is an
 </p>
 <!--
 Indicates that the underlying connection was terminated before
-`response.end()` was called or able to flush.
+[response.end()][] was called or able to flush.
 -->
 
-<p><code>response.end()</code> が呼び出されたりフラッシュされる前に、
+<p><a href="#http_response_end_data_encoding">response.end()</a> が呼び出されたりフラッシュされる前に、
 下層の接続が切断されたことを示します。
 
 </p>
@@ -16861,18 +17261,18 @@ the request body should be sent. See the ['checkContinue'][] event on `Server`.
 <code>Server</code>の <a href="#http_event_checkcontinue">&#39;checkContinue&#39;</a> イベントを参照してください。
 
 </p>
-<h3>response.writeHead(statusCode, [reasonPhrase], [headers])<span><a class="mark" href="#all_response_writehead_statuscode_reasonphrase_headers" id="all_response_writehead_statuscode_reasonphrase_headers">#</a></span></h3>
+<h3>response.writeHead(statusCode, [statusMessage], [headers])<span><a class="mark" href="#all_response_writehead_statuscode_statusmessage_headers" id="all_response_writehead_statuscode_statusmessage_headers">#</a></span></h3>
 <!--
 Sends a response header to the request. The status code is a 3-digit HTTP
 status code, like `404`. The last argument, `headers`, are the response headers.
-Optionally one can give a human-readable `reasonPhrase` as the second
+Optionally one can give a human-readable `statusMessage` as the second
 argument.
 -->
 
 <p>レスポンスヘッダを送信します。
 ステータスコードは <code>404</code> のような 3 桁の数字による HTTP ステータスコードです。
 最後の引数 <code>headers</code> は、レスポンスヘッダです。
-オプションとして人に読める形式の <code>reasonPhrase</code> を第 2 引数で与えることができます。
+オプションとして人に読める形式の <code>statusMessage</code> を第 2 引数で与えることができます。
 
 </p>
 <!--
@@ -16888,17 +17288,19 @@ response.writeHead(200, {
   &#39;Content-Type&#39;: &#39;text/plain&#39; });</code></pre>
 <!--
 This method must only be called once on a message and it must
-be called before `response.end()` is called.
+be called before [response.end()][] is called.
 
-If you call `response.write()` or `response.end()` before calling this, the
+If you call [response.write()][] or [response.end()][] before calling this, the
 implicit/mutable headers will be calculated and call this function for you.
 -->
 
 <p>このメソッドはメッセージごとに 1 回だけ呼び出されなくてはならず、
-<code>response.end()</code> の前に呼び出されなければなりません。
+<a href="#http_response_end_data_encoding">response.end()</a> の前に呼び出されなければなりません。
 
 </p>
-<p>もしこのメソッドが呼び出される前に <code>response.write()</code> または <code>response.end()</code> が呼ばれると、暗黙的で可変のヘッダが算出されてこの関数が呼び出されます。
+<p>もしこのメソッドが呼び出される前に <a href="#http_response_write_chunk_encoding">response.write()</a> または
+<a href="#http_response_end_data_encoding">response.end()</a> が呼ばれると、暗黙的で可変のヘッダが算出されて
+この関数が呼び出されます。
 
 </p>
 <!--
@@ -16949,12 +17351,14 @@ sockets.
 </p>
 <h3>response.statusCode<span><a class="mark" href="#all_response_statuscode" id="all_response_statuscode">#</a></span></h3>
 <!--
-When using implicit headers (not calling `response.writeHead()` explicitly), this property
-controls the status code that will be sent to the client when the headers get
-flushed.
+When using implicit headers (not calling [response.writeHead()][] explicitly),
+this property controls the status code that will be sent to the client when
+the headers get flushed.
 -->
 
-<p>(<code>response.writeHead()</code> が明示的に呼ばれないために) 暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時にクライアントへ送信されるステータスコードを制御します。
+<p>(<a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead()</a> が明示的に呼ばれないために) 
+暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時に
+クライアントへ送信されるステータスコードを制御します。
 
 </p>
 <!--
@@ -16972,6 +17376,38 @@ status code which was sent out.
 
 <p>レスポンスヘッダがクライアントに送信された後、
 このプロパティは送信されたステータスコードを示します。
+
+</p>
+<h3>response.statusMessage<span><a class="mark" href="#all_response_statusmessage" id="all_response_statusmessage">#</a></span></h3>
+<!--
+When using implicit headers (not calling `response.writeHead()` explicitly), this property
+controls the status message that will be sent to the client when the headers get
+flushed. If this is left as `undefined` then the standard message for the status
+code will be used.
+-->
+
+<p>(<a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead()</a> が明示的に呼ばれないために) 
+暗黙的なヘッダが使われる場合、このプロパティはヘッダがフラッシュされる時に
+クライアントへ送信されるステータスメッセージを制御します。
+もし <code>undefined</code> のままの場合はステータスコードに対応する標準のメッセージが
+使われます。
+
+</p>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>response.statusMessage = &#39;Not found&#39;;</code></pre>
+<!--
+After response header was sent to the client, this property indicates the
+status message which was sent out.
+-->
+
+<p>レスポンスヘッダがクライアントに送信された後、
+このプロパティは送信されたステータスメッセージを示します。
 
 </p>
 <h3>response.setHeader(name, value)<span><a class="mark" href="#all_response_setheader_name_value" id="all_response_setheader_name_value">#</a></span></h3>
@@ -17068,14 +17504,14 @@ Example:
 <pre><code>response.removeHeader(&quot;Content-Encoding&quot;);</code></pre>
 <h3>response.write(chunk, [encoding])<span><a class="mark" href="#all_response_write_chunk_encoding" id="all_response_write_chunk_encoding">#</a></span></h3>
 <!--
-If this method is called and `response.writeHead()` has not been called, it will
-switch to implicit header mode and flush the implicit headers.
+If this method is called and [response.writeHead()][] has not been called,
+it will switch to implicit header mode and flush the implicit headers.
 
 This sends a chunk of the response body. This method may
 be called multiple times to provide successive parts of the body.
 -->
 
-<p>このメソッドが呼び出され、<code>response.writeHead()</code> が呼び出されなければ、
+<p>このメソッドが呼び出され、<a href="#http_response_writehead_statuscode_reasonphrase_headers">response.writeHead()</a> が呼び出されなければ、
 暗黙的ヘッダモードに切り替わり、暗黙的ヘッダはフラッシュされます。
 
 </p>
@@ -17273,12 +17709,12 @@ Options:
 </li>
 </ul>
 <!--
-`http.request()` returns an instance of the `http.ClientRequest`
+`http.request()` returns an instance of the [http.ClientRequest][]
 class. The `ClientRequest` instance is a writable stream. If one needs to
 upload a file with a POST request, then write to the `ClientRequest` object.
 -->
 
-<p><code>http.request()</code> は <code>http.ClientRequest</code> クラスのインスタンスを返します。
+<p><code>http.request()</code> は <a href="#http_class_http_clientrequest">http.ClientRequest</a> クラスのインスタンスを返します。
 <code>http.ClientRequest</code> のインスタンスは書き込み可能なストリームです。
 もし POST リクエストでファイルのアップロードがしたければ、
 <code>http.ClientRequest</code> オブジェクトに出力してください。
@@ -17655,13 +18091,13 @@ data chunk or when closing the connection.
 To get the response, add a listener for `'response'` to the request object.
 `'response'` will be emitted from the request object when the response
 headers have been received.  The `'response'` event is executed with one
-argument which is an instance of `http.IncomingMessage`.
+argument which is an instance of [http.IncomingMessage][].
 -->
 
 <p>レスポンスを取得するには、<code>&#39;response&#39;</code> 用のリスナーをリクエストオブジェクトに加えます。
 <code>&#39;response&#39;</code> イベントはレスポンスヘッダを受信するとリクエストオブジェクトによって生成されます。
-<code>&#39;response&#39;</code> イベントは <code>http.IncomingMessage</code> のインスタンスを唯一の引数として
-実行されます。
+<code>&#39;response&#39;</code> イベントは <a href="#http_http_incomingmessage">http.IncomingMessage</a> のインスタンスを
+唯一の引数として実行されます。
 
 </p>
 <!--
@@ -17717,12 +18153,12 @@ The request implements the [Writable Stream][] interface. This is an
 </p>
 <!--
 Emitted when a response is received to this request. This event is emitted only
-once. The `response` argument will be an instance of `http.IncomingMessage`.
+once. The `response` argument will be an instance of [http.IncomingMessage][].
 -->
 
 <p>このリクエストに対するレスポンスを受信した時に生成されます。
 このイベントは一回だけ生成されます。
-<code>response</code> 引数は <code>http.IncomingMessage</code> のインスタンスです。
+<code>response</code> 引数は <a href="#http_http_incomingmessage">http.IncomingMessage</a> のインスタンスです。
 
 </p>
 <!--
@@ -17997,12 +18433,13 @@ Once a socket is assigned to this request and is connected
 </p>
 <h2>http.IncomingMessage<span><a class="mark" href="#all_http_incomingmessage" id="all_http_incomingmessage">#</a></span></h2>
 <!--
-An `IncomingMessage` object is created by `http.Server` or `http.ClientRequest`
-and passed as the first argument to the `'request'` and `'response'` event
-respectively. It may be used to access response status, headers and data.
+An `IncomingMessage` object is created by [http.Server][] or
+[http.ClientRequest][] and passed as the first argument to the `'request'`
+and `'response'` event respectively. It may be used to access response status,
+headers and data.
 -->
 
-<p><code>IncomingMessage</code> オブジェクトは <code>http.Server</code> または <code>http.ClientRequest()</code>
+<p><code>IncomingMessage</code> オブジェクトは <a href="#http_class_http_server">http.Server</a> または <a href="#http_class_http_clientrequest">http.ClientRequest</a>
 によって作成され、<code>&#39;request&#39;</code> および <code>&#39;response&#39;</code> イベントそれぞれの
 最初の引数として渡されます。
 それはステータス、ヘッダ、およびデータにアクセスするために使われます。
@@ -18022,12 +18459,12 @@ following additional events, methods, and properties.
 
 </p>
 <!--
-Indicates that the underlaying connection was terminated before
-`response.end()` was called or able to flush.
+Indicates that the underlaying connection was closed.
+Just like `'end'`, this event occurs only once per response.
 -->
 
-<p><code>response.end()</code> が呼ばれたりフラッシュ可能になる前に、
-下層の接続が切断されたことを示します。
+<p>下層の接続が切断されたことを示します。
+<code>&#39;end&#39;</code> と同様、このイベントはレスポンス毎に一度だけ生成されます。
 
 </p>
 <!--
@@ -18037,7 +18474,7 @@ Just like `'end'`, this event occurs only once per response. See
 
 <p><code>&#39;end&#39;</code> のように、このイベントはレスポンス毎に一回生成され、
 <code>&#39;data&#39;</code> イベントはそれ以上生成されません。
-[http.ServerResponse][] の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
+<a href="#http_class_http_serverresponse">http.ServerResponse</a> の <code>&#39;close&#39;</code> イベントにより多くの情報があります。
 
 </p>
 <h3>message.httpVersion<span><a class="mark" href="#all_message_httpversion" id="all_message_httpversion">#</a></span></h3>
@@ -18155,10 +18592,10 @@ Calls `message.connection.setTimeout(msecs, callback)`.
 </p>
 <h3>message.method<span><a class="mark" href="#all_message_method" id="all_message_method">#</a></span></h3>
 <!--
-**Only valid for request obtained from `http.Server`.**
+**Only valid for request obtained from [http.Server][].**
 -->
 
-<p><strong> <code>http.Server</code> から得たリクエストでのみ有効です </strong>
+<p><strong> <a href="#http_class_http_server">http.Server</a> から得たリクエストでのみ有効です </strong>
 
 </p>
 <!--
@@ -18172,10 +18609,10 @@ The request method as a string. Read only. Example:
 </p>
 <h3>message.url<span><a class="mark" href="#all_message_url" id="all_message_url">#</a></span></h3>
 <!--
-**Only valid for request obtained from `http.Server`.**
+**Only valid for request obtained from [http.Server][].**
 -->
 
-<p><strong> <code>http.Server</code> から得たリクエストでのみ有効です </strong>
+<p><strong> <a href="#http_class_http_server">http.Server</a> から得たリクエストでのみ有効です </strong>
 
 </p>
 <!--
@@ -20532,6 +20969,16 @@ Note that the child process stdio streams might still be open.
 
 </p>
 <!--
+Also, note that node establishes signal handlers for `'SIGINT'` and `'SIGTERM`',
+so it will not terminate due to receipt of those signals, it will exit.
+-->
+
+<p>また、Node が &#39;SIGINT&#39;<code> および </code>&#39;SIGTERM<code>&#39; に対するシグナルハンドラを
+確立するため、子プロセスがそれらのシグナルを受けとって終了しても、
+</code>signal` にはそれらのシグナルの名前が設定されないことに注意してください。
+
+</p>
+<!--
 See `waitpid(2)`.
 -->
 
@@ -20564,17 +21011,15 @@ might share the same stdio streams.
 </p>
 <h3>Event: &#39;disconnect&#39;<span><a class="mark" href="#all_event_disconnect" id="all_event_disconnect">#</a></span></h3>
 <!--
-This event is emitted after using the `.disconnect()` method in the parent or
-in the child. After disconnecting it is no longer possible to send messages.
-An alternative way to check if you can send messages is to see if the
-`child.connected` property is `true`.
+This event is emitted after calling the `.disconnect()` method in the parent
+or in the child. After disconnecting it is no longer possible to send messages,
+and the `.connected` property is false.
 -->
 
-<p>このイベントは、親プロセスまたは子プロセスで <code>disconnect()</code> メソッドが
+<p>このイベントは、親プロセスまたは子プロセスで <code>.disconnect()</code> メソッドが
 呼び出された場合に生成されます。
-この後では、プロセス間でのメッセージ送信はもうできません。
-メッセージを送信できるかを調べるには、<code>child.connected</code> プロパティが <code>true</code>
-かチェックしてください。
+切断の後では、プロセス間でメッセージを送信することはできず、
+<code>.connected</code> プロパティは <code>false</code> になります。
 
 </p>
 <h3>Event: &#39;message&#39;<span><a class="mark" href="#all_event_message_1" id="all_event_message_1">#</a></span></h3>
@@ -20672,6 +21117,21 @@ Example:
 
 console.log(&#39;Spawned child pid: &#39; + grep.pid);
 grep.stdin.end();</code></pre>
+<h3>child.connected<span><a class="mark" href="#all_child_connected" id="all_child_connected">#</a></span></h3>
+<!--
+* {Boolean} Set to false after `.disconnect' is called
+-->
+
+<ul>
+<li>{Boolean} <code>.disconnect&#39; が呼び出されると </code>false` に設定される</li>
+</ul>
+<!--
+If `.connected` is false, it is no longer possible to send messages.
+-->
+
+<p><code>.connected</code> が <code>false</code> の場合、メッセージを送信することはできません。
+
+</p>
 <h3>child.kill([signal])<span><a class="mark" href="#all_child_kill_signal" id="all_child_kill_signal">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>signal</code> <span class="type">String</span></li>
@@ -20870,7 +21330,7 @@ a `message` event instead of `connection` and use `server.bind` instead of
 <p><code>dgram</code> サーバのワークフローも同じです。
 <code>connection</code> イベントの代わりに <code>message</code> イベントを監視し、
 <code>server.listen</code> の代わりに <code>server.bind</code> を使用してください
-(現在は UNIX プラットフォームでのみサポートされています)。
+(現時点では UNIX プラットフォームでのみサポートされています)。
 
 </p>
 <h4>Example: sending socket object<span><a class="mark" href="#all_example_sending_socket_object" id="all_example_sending_socket_object">#</a></span></h4>
@@ -20929,22 +21389,32 @@ It is also recommended not to use `.maxConnections` in this condition.
 </p>
 <h3>child.disconnect()<span><a class="mark" href="#all_child_disconnect" id="all_child_disconnect">#</a></span></h3>
 <!--
-To close the IPC connection between parent and child use the
-`child.disconnect()` method. This allows the child to exit gracefully since
-there is no IPC channel keeping it alive. When calling this method the
-`disconnect` event will be emitted in both parent and child, and the
-`connected` flag will be set to `false`. Please note that you can also call
-`process.disconnect()` in the child process.
+Close the IPC channel between parent and child, allowing the child to exit
+gracefully once there are no other connections keeping it alive. After calling
+this method the `.connected` flag will be set to `false` in both the parent and
+child, and it is no longer possible to send messages.
 -->
 
-<p>親プロセスと子プロセス間の IPC コネクションをクローズするには
-<code>child.disconnect()</code> メソッドを使用します。
-これは、子プロセスが IPC チャネルを保持しないことにより、強制的ではない
-終了を可能にします。
-このメソッドを呼び出すと親プロセスと子プロセスの両方で <code>&#39;disconnect&#39;</code>
-イベントが生成され、<code>connected</code> フラグが <code>false</code> に設定されます。
-子プロセスで <code>process.disconnect()</code> を呼び出すことも可能であることに
-注意してください。
+<p>親プロセスと子プロセス間の IPC コネクションをクローズし、
+他の接続を持たない子プロセスが自然に終了することを可能にします。
+このメソッドを呼び出すと、親プロセスと子プロセスの両方で <code>.connected</code> は
+<code>false</code> に設定され、メッセージを送信することはできなくなります。
+
+</p>
+<!--
+The 'disconnect' event will be emitted when there are no messages in the process
+of being received, most likely immediately.
+-->
+
+<p>プロセスが受信するメッセージがなければ、おそらくはすぐに <code>&#39;disconnect&#39;</code>
+イベントが生成されます。
+
+</p>
+<!--
+Note that you can also call `process.disconnect()` in the child process.
+-->
+
+<p>子プロセスでも <code>process.disconnect()</code> を呼び出せることに注意してください。
 
 </p>
 <h2>child_process.spawn(command, [args], [options])<span><a class="mark" href="#all_child_process_spawn_command_args_options" id="all_child_process_spawn_command_args_options">#</a></span></h2>
@@ -21293,7 +21763,7 @@ See also: `child_process.exec()` and `child_process.fork()`
      understand the `-c` switch on UNIX or `/s /c` on Windows. On Windows,
      command line parsing should be compatible with `cmd.exe`.)
   * `timeout` {Number} (Default: 0)
-  * `maxBuffer` {Number} (Default: 200*1024)
+  * `maxBuffer` {Number} (Default: `200*1024`)
   * `killSignal` {String} (Default: 'SIGTERM')
 * `callback` {Function} called with the output when process terminates
   * `error` {Error}
@@ -21446,6 +21916,8 @@ leaner than `child_process.exec`. It has the same options.
   * `env` {Object} Environment key-value pairs
   * `encoding` {String} (Default: 'utf8')
   * `execPath` {String} Executable used to create the child process
+  * `silent` {Boolean} If true, prevent stdout and stderr in the spawned node
+    process from being associated with the parent's (default is false)
 * Return: ChildProcess object
 -->
 
@@ -21455,8 +21927,10 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>options</code> {Object}<ul>
 <li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>
 <li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>
-<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>
+<li><code>encoding</code> {String} (デフォルト: &#39;utf8&#39;)</li>
 <li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
+<li><code>silent</code> {Boolean} <code>true</code> の場合、起動された子プロセスの標準入力と標準出力が
+親プロセスに関連づけられるのを抑止します (デフォルトは <code>false</code>)。</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -21472,27 +21946,6 @@ instance, the returned object has a communication channel built-in. See
 返されるオブジェクトは通常の ChildProcess の全てのメソッドに加えて、
 組み込みの通信チャネルを持ちます。
 詳細は <code>child.send(message, [sendHandle])</code> を参照してください。
-
-</p>
-<!--
-By default the spawned Node process will have the stdout, stderr associated
-with the parent's. To change this behavior set the `silent` property in the
-`options` object to `true`.
--->
-
-<p>デフォルトでは、起動された Node プロセスは親プロセスに関連づけられた標準出力と
-標準エラー出力を持ちます。これを変更するには <code>options</code> オブジェクトの
-<code>silent</code> プロパティを <code>true</code> に設定します。
-
-</p>
-<!--
-The child process does not automatically exit once it's done, you need to call
-`process.exit()` explicitly. This limitation may be lifted in the future.
--->
-
-<p>子プロセスは自動的に終了するわけではないので、
-明示的に <code>process.exit()</code> を呼び出す必要があります。
-この制限は将来取り除かれるかもしれません。
 
 </p>
 <!--
@@ -21563,7 +22016,7 @@ Tests shallow, coercive equality with the equal comparison operator ( `==` ).
 Tests shallow, coercive non-equality with the not equal comparison operator ( `!=` ).
 -->
 
-<p><code>==</code> 演算子を強制して浅い非同値性をテストします。
+<p><code>!=</code> 演算子を強制して浅い非同値性をテストします。
 
 </p>
 <h2>assert.deepEqual(actual, expected, [message])<span><a class="mark" href="#all_assert_deepequal_actual_expected_message" id="all_assert_deepequal_actual_expected_message">#</a></span></h2>
@@ -22523,6 +22976,28 @@ Returns an array containing the 1, 5, and 15 minute load averages.
 <p>1 分、5 分、15 分間のロードアベレージを含んだ配列を返します。
 
 </p>
+<!--
+The load average is a measure of system activity, calculated by the operating
+system and expressed as a fractional number.  As a rule of thumb, the load
+average should ideally be less than the number of logical CPUs in the system.
+-->
+
+<p>ロードアベレージはオペレーティングシステムによって測定されて小数で表される
+システム活動の測定値です。経験則として、ロードアベレージは理想的には
+システムの論理 CPU 数よりも小さくあるべきです。
+
+</p>
+<!--
+The load average is a very UNIX-y concept; there is no real equivalent on
+Windows platforms.  That is why this function always returns `[0, 0, 0]` on
+Windows.
+-->
+
+<p>ロードアベレージはとても Unix 的な概念です; それと完全に対応するものは
+Windows にはありません。そのため、Windows ではこの関数は常に <code>[0, 0, 0]</code>
+を返します。
+
+</p>
 <h2>os.totalmem()<span><a class="mark" href="#all_os_totalmem" id="all_os_totalmem">#</a></span></h2>
 <!--
 Returns the total amount of system memory in bytes.
@@ -22941,12 +23416,12 @@ processes to handle the load.
 
 </p>
 <!--
-The cluster module allows you to easily create a network of processes that
+The cluster module allows you to easily create child processes that
 all share server ports.
 -->
 
-<p>クラスタモジュールは、サーバポートを共有するプロセスのネットワークを
-簡単に構築することを可能にします。
+<p>クラスタモジュールは、サーバポートを共有する複数の子プロセスを簡単に
+構築することを可能にします。
 
 </p>
 <pre><code>var cluster = require(&#39;cluster&#39;);
@@ -23175,7 +23650,7 @@ values are `"rr"` and `"none"`.
 <h2>cluster.settings<span><a class="mark" href="#all_cluster_settings" id="all_cluster_settings">#</a></span></h2>
 <!--
 * {Object}
-  * `exec` {String} file path to worker file.  (Default=`__filename`)
+  * `exec` {String} file path to worker file.  (Default=`process.argv[1]`)
   * `args` {Array} string arguments passed to worker.
     (Default=`process.argv.slice(2)`)
   * `silent` {Boolean} whether or not to send output to parent's stdio.
@@ -23185,7 +23660,7 @@ values are `"rr"` and `"none"`.
 <ul>
 <li>{Object}<ul>
 <li><code>exec</code> {String} ワーカで実行するファイルへのパス.
-(デフォルトは <code>__filename</code>)</li>
+(デフォルトは <code>process.argv[1]</code>)</li>
 <li><code>args</code> {Array} ワーカに渡される引数となる文字列。
 (デフォルトは <code>process.argv.slice(2)</code>)</li>
 <li><code>silent</code> {Boolean} 出力を親プロセスに送るかどうか。
@@ -23194,13 +23669,28 @@ values are `"rr"` and `"none"`.
 </li>
 </ul>
 <!--
-All settings set by the `.setupMaster` is stored in this settings object.
+After calling `.setupMaster()` (or `.fork()`) this settings object will contain
+the settings, including the default values.
+-->
+
+<p><code>.setupMaster()</code> (または <code>.fork()</code>) が呼び出された後、この <code>settings</code>
+オブジェクトはデフォルト値を含む設定オブジェクトを持ちます。
+
+</p>
+<!--
+It is effectively frozen after being set, because `.setupMaster()` can
+only be called once.
+-->
+
+<p><code>.setupMaster()</code> は一度しか呼び出せないため、それは設定された後で事実上
+凍結されます。
+
+</p>
+<!--
 This object is not supposed to be changed or set manually, by you.
 -->
 
-<p><code>cluster.setupMaster()</code> によってセットされた全ての情報は設定オブジェクトに
-保存されます。
-このオブジェクトはあなたによって変更されることを想定していません。
+<p>このオブジェクトはあなたによって変更されることを想定していません。
 
 </p>
 <h2>cluster.isMaster<span><a class="mark" href="#all_cluster_ismaster" id="all_cluster_ismaster">#</a></span></h2>
@@ -23223,15 +23713,10 @@ undefined, then `isMaster` is `true`.
 <li><span class="type">Boolean</span></li>
 </div></ul>
 <!--
-This boolean flag is true if the process is a worker forked from a master.
-If the `process.env.NODE_UNIQUE_ID` is set to a value, then
-`isWorker` is `true`.
+True if the process is not a master (it is the negation of `cluster.isMaster`).
 -->
 
-<p>現在のプロセスがマスタからフォークされたワーカの場合、
-この論理値型のフラグは <code>true</code> です。
-<code>process.env.NODE_UNIQUE_ID</code> に値が設定されていると、
-<code>isWorker</code> は <code>true</code> になります。
+<p>このプロセスがマスタでなければ <code>true</code> (これは <code>cluster.isMaster</code> の否定です)。
 
 </p>
 <h2>Event: &#39;fork&#39;<span><a class="mark" href="#all_event_fork" id="all_event_fork">#</a></span></h2>
@@ -23268,18 +23753,16 @@ cluster.on(&#39;exit&#39;, function(worker, code, signal) {
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
 <!--
-After forking a new worker, the worker should respond with a online message.
-When the master receives a online message it will emit such event.
+After forking a new worker, the worker should respond with an online message.
+When the master receives an online message it will emit this event.
 The difference between 'fork' and 'online' is that fork is emitted when the
-master tries to fork a worker, and 'online' is emitted when the worker is
-being executed.
+master forks a worker, and 'online' is emitted when the worker is running.
 -->
 
 <p>新しいワーカをフォークした後、ワーカはオンラインメッセージを応答します。
 マスタがオンラインメッセージを受信すると、このイベントが生成されます。
-<code>&#39;fork&#39;</code> と <code>&#39;online&#39;</code> の違いは、<code>&#39;fork&#39;</code> はマスタがワーカのフォークを
-試みた時点で生成されるのに対し、<code>&#39;online&#39;</code> はワーカの実行が開始されてから
-生成される点です。
+<code>&#39;fork&#39;</code> と <code>&#39;online&#39;</code> の違いは、<code>&#39;fork&#39;</code> はマスタがワーカをフォークした時点で
+生成されるのに対し、<code>&#39;online&#39;</code> はワーカが実行されてから生成される点です。
 
 </p>
 <pre><code>cluster.on(&#39;online&#39;, function(worker) {
@@ -23291,15 +23774,13 @@ being executed.
 <li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
 <!--
-When calling `listen()` from a worker, a 'listening' event is automatically assigned
-to the server instance. When the server is listening a message is send to the master
-where the 'listening' event is emitted.
+After calling `listen()` from a worker, when the 'listening' event is emitted on
+the server, a listening event will also be emitted on `cluster` in the master.
 -->
 
-<p>ワーカが <code>net.Server.listen()</code> を呼び出すと、<code>&#39;listening&#39;</code> イベントは自動的に
-<code>net.Server</code> インスタンスに割り当てられます。
-<code>net.Server</code> が <code>&#39;listening&#39;</code> メッセージをマスタに送信すると、
-<code>&#39;listening&#39;</code> イベントが生成されます。
+<p>ワーカが <code>net.Server.listen()</code> を呼び出した後、(net や http などの) サーバでは
+<code>&#39;listening&#39;</code> イベントが生成され、マスタの <code>cluster</code> でも <code>&#39;listening&#39;</code>
+イベントが生成されます。
 
 </p>
 <!--
@@ -23319,31 +23800,50 @@ on more than one address.
 <pre><code>cluster.on(&#39;listening&#39;, function(worker, address) {
   console.log(&quot;A worker is now connected to &quot; + address.address + &quot;:&quot; + address.port);
 });</code></pre>
+<!--
+The `addressType` is one of:
+-->
+
+<p><code>addressType</code> は以下のいずれかです:
+
+</p>
+<!--
+* `4` (TCPv4)
+* `6` (TCPv6)
+* `-1` (unix domain socket)
+* `"udp4"` or `"udp6"` (UDP v4 or v6)
+-->
+
+<ul>
+<li><code>4</code> (TCPv4)</li>
+<li><code>6</code> (TCPv6)</li>
+<li><code>-1</code> (unix ドメインソケット)</li>
+<li><code>&quot;udp4&quot;</code> または <code>&quot;udp6&quot;</code> (UDP v4 または v6)</li>
+</ul>
 <h2>Event: &#39;disconnect&#39;<span><a class="mark" href="#all_event_disconnect_1" id="all_event_disconnect_1">#</a></span></h2>
 <div class="signature"><ul>
 <li><code>worker</code> <span class="type">Worker object</span></li>
 </div></ul>
 <!--
-When a workers IPC channel has disconnected this event is emitted.
-This will happen when the worker dies, usually after calling
-`.kill()`.
+Emitted after the worker IPC channel has disconnected. This can occur when a
+worker exits gracefully, is killed, or is disconnected manually (such as with
+worker.disconnect()).
 -->
 
-<p>ワーカの IPC チャネルが切断された場合に生成されます。
-それはワーカが終了した場合や、<code>.kill()</code> を呼び出した後に発生します。
+<p>ワーカとの IPC チャネルが切断された後で生成されます。
+それはワーカが自然に終了したり、殺されたり、あるいは (<code>worker.disconnect()</code>
+により) 手動で切断された場合に発生します。
 
 </p>
 <!--
-When calling `.disconnect()`, there may be a delay between the
-`disconnect` and `exit` events.  This event can be used to detect if
-the process is stuck in a cleanup or if there are long-living
-connections.
+There may be a delay between the `disconnect` and `exit` events.  These events
+can be used to detect if the process is stuck in a cleanup or if there are
+long-living connections.
 -->
 
-<p><code>.disconnect()</code> を呼び出した後、<code>&#39;disconnect&#39;</code> と <code>&#39;exit&#39;</code> の間には
-遅延があるかもしれません。このイベントはプロセスがクリーンナップで
-行き詰まったり、長時間生きている接続がないかを検出することに
-使用できます。
+<p><code>&#39;disconnect&#39;</code> と <code>&#39;exit&#39;</code> の間には遅延があるかもしれません。
+このイベントはプロセスがクリーンナップで行き詰まったり、長時間生きている接続が
+ないかを検出することに使用できます。
 
 </p>
 <pre><code>cluster.on(&#39;disconnect&#39;, function(worker) {
@@ -23365,38 +23865,39 @@ connections.
 </ul>
 <!--
 When any of the workers die the cluster module will emit the 'exit' event.
-This can be used to restart the worker by calling `fork()` again.
 -->
 
 <p>どのワーカが死んだ場合でも、クラスタモジュールは <code>&#39;exit&#39;</code> イベントを
 生成します。
-これは <code>fork()</code> を呼び出してワーカを再開する場合に使用することができます。
+
+</p>
+<!--
+This can be used to restart the worker by calling `.fork()` again.
+-->
+
+<p>これは <code>.fork()</code> を呼び出してワーカを再開する場合に使用することができます。
 
 </p>
 <pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {
-  var exitCode = worker.process.exitCode;
-  console.log(&#39;worker &#39; + worker.process.pid + &#39; died (&#39;+exitCode+&#39;). restarting...&#39;);
+  console.log(&#39;worker %d died (%s). restarting...&#39;,
+    worker.process.pid, signal || code);
   cluster.fork();
 });</code></pre>
+<p>See <a href="child_process.html#child_process_event_exit">child_process event: &#39;exit&#39;</a>.
+
+</p>
 <h2>Event: &#39;setup&#39;<span><a class="mark" href="#all_event_setup" id="all_event_setup">#</a></span></h2>
-<div class="signature"><ul>
-<li><code>worker</code> <span class="type">Worker object</span></li>
-</div></ul>
 <!--
-When the `.setupMaster()` function has been executed this event emits.
-If `.setupMaster()` was not executed before `fork()` this function will
-call `.setupMaster()` with no arguments.
+Emitted the first time that `.setupMaster()` is called.
 -->
 
-<p><code>setupMaster()</code> が実行された時、このイベントが生成されます。
-<code>fork()</code> の前に<code>setupMaster()</code> が呼ばれなかった場合、
-この関数は引数無しで <code>setupMaster()</code> を呼び出します。
+<p><code>setupMaster()</code> が最初に呼ばれた時に生成されます。
 
 </p>
 <h2>cluster.setupMaster([settings])<span><a class="mark" href="#all_cluster_setupmaster_settings" id="all_cluster_setupmaster_settings">#</a></span></h2>
 <!--
 * `settings` {Object}
-  * `exec` {String} file path to worker file.  (Default=`__filename`)
+  * `exec` {String} file path to worker file.  (Default=`process.argv[1]`)
   * `args` {Array} string arguments passed to worker.
     (Default=`process.argv.slice(2)`)
   * `silent` {Boolean} whether or not to send output to parent's stdio.
@@ -23406,7 +23907,7 @@ call `.setupMaster()` with no arguments.
 <ul>
 <li><code>settings</code> {Object}<ul>
 <li><code>exec</code> {String} ワーカで実行するファイルへのパス.
-(デフォルトは <code>__filename</code>)</li>
+(デフォルトは <code>process.argv[1]</code>)</li>
 <li><code>args</code> {Array} ワーカに渡される引数となる文字列。
 (デフォルトは <code>process.argv.slice(2)</code>)</li>
 <li><code>silent</code> {Boolean} 出力を親プロセスに送るかどうか。
@@ -23415,14 +23916,40 @@ call `.setupMaster()` with no arguments.
 </li>
 </ul>
 <!--
-`setupMaster` is used to change the default 'fork' behavior. The new settings
-are effective immediately and permanently, they cannot be changed later on.
+`setupMaster` is used to change the default 'fork' behavior. Once called,
+the settings will be present in `cluster.settings`.
 -->
 
 <p><code>setupMaster()</code> は &#39;fork&#39; のデフォルト動作を変更するために使われます。
-新しい設定は即時かつ永続的に有効で、後から変更することはできません。
+一度呼び出されると、その設定は <code>cluster.settings</code> に反映されます。
 
 </p>
+<!--
+Note that:
+-->
+
+<p>注意事項:
+
+</p>
+<!--
+* Only the first call to `.setupMaster()` has any effect, subsequent calls are
+  ignored
+* That because of the above, the *only* attribute of a worker that may be
+  customized per-worker is the `env` passed to `.fork()`
+* `.fork()` calls `.setupMaster()` internally to establish the defaults, so to
+  have any effect, `.setupMaster()` must be called *before* any calls to
+  `.fork()`
+-->
+
+<ul>
+<li><code>.setupMaster()</code> の最初の呼び出しだけ効果があります。
+その後の呼び出しは無視されます。</li>
+<li>上記のため、ワーカごとにカスタマイズできる属性は <code>.fork()</code> に渡すことのできる
+<code>env</code> <em>だけ</em> です。</li>
+<li><code>.fork()</code> はデフォルト値を反映するために内部で <code>.setupMaster()</code>
+を呼び出すため、<code>.setupMaster()</code> が効果を持つには <code>.fork()</code> よりも前に
+呼び出す必要があります。</li>
+</ul>
 <!--
 Example:
 -->
@@ -23437,27 +23964,41 @@ cluster.setupMaster({
   silent : true
 });
 cluster.fork();</code></pre>
+<!--
+This can only be called from the master process.
+-->
+
+<p>これはマスタプロセスからのみ、呼び出すことができます。
+
+</p>
 <h2>cluster.fork([env])<span><a class="mark" href="#all_cluster_fork_env" id="all_cluster_fork_env">#</a></span></h2>
 <!--
-* `env` {Object} Key/value pairs to add to child process environment.
+* `env` {Object} Key/value pairs to add to worker process environment.
 * return {Worker object}
 -->
 
 <ul>
-<li><code>env</code> {Object} 子プロセスの環境に加えられるキーと値のペア。</li>
+<li><code>env</code> {Object} ワーカプロセスの環境に加えられるキーと値のペア。</li>
 <li>return {Worker object}</li>
 </ul>
 <!--
-Spawn a new worker process. This can only be called from the master process.
+Spawn a new worker process.
 -->
 
 <p>新しいワーカプロセスを起動します。
-これはマスタプロセスからのみ呼び出すことができます。
+
+</p>
+<!--
+This can only be called from the master process.
+-->
+
+<p>これはマスタプロセスからのみ呼び出すことができます。
 
 </p>
 <h2>cluster.disconnect([callback])<span><a class="mark" href="#all_cluster_disconnect_callback" id="all_cluster_disconnect_callback">#</a></span></h2>
 <!--
-* `callback` {Function} called when all workers are disconnected and handlers are closed
+* `callback` {Function} called when all workers are disconnected and handles are
+  closed
 -->
 
 <ul>
@@ -23465,15 +24006,19 @@ Spawn a new worker process. This can only be called from the master process.
 呼び出されます。</li>
 </ul>
 <!--
-When calling this method, all workers will commit a graceful suicide. When they are
-disconnected all internal handlers will be closed, allowing the master process to
-die graceful if no other event is waiting.
+Calls `.disconnect()` on each worker in `cluster.workers`.
 -->
 
-<p>このメソッドを呼び出すと、全てのワーカは強制的でない終了に向かいます。
-それらの内部的なハンドルが全てクローズされると、
-他に待機しているイベントがなければ、
-マスタプロセスを非強制的に終了することができます。
+<p><code>cluster.workers</code> 内の各ワーカに対して <code>.disconnect()</code> を呼び出します。
+
+</p>
+<!--
+When they are disconnected all internal handles will be closed, allowing the
+master process to die gracefully if no other event is waiting.
+-->
+
+<p>ワーカとの接続が切断して内部的なハンドルが全てクローズされると、
+他に待機しているイベントがなければ、マスタプロセスは自然に終了します。
 
 </p>
 <!--
@@ -23481,6 +24026,13 @@ The method takes an optional callback argument which will be called when finishe
 -->
 
 <p>このメソッドはオプションの引数としてコールバックを受け取ります。
+
+</p>
+<!--
+This can only be called from the master process.
+-->
+
+<p>これはマスタプロセスからのみ呼び出すことができます。
 
 </p>
 <h2>cluster.worker<span><a class="mark" href="#all_cluster_worker" id="all_cluster_worker">#</a></span></h2>
@@ -23517,6 +24069,15 @@ process.
 <p><code>id</code> をキーとしてアクティブなワーカオブジェクトを保存しているハッシュです。
 これは全てのワーカに対して繰り返しを行うことを容易にします。
 マスタプロセスでのみ利用可能です。
+
+</p>
+<!--
+A worker is removed from cluster.workers just before the `'disconnect'` or
+`'exit'` event is emitted.
+-->
+
+<p>ワーカは <code>&#39;disconnect&#39;</code> や <code>&#39;exit&#39;</code> が生成される前に <code>cluster.worker</code> から
+削除されます。
 
 </p>
 <pre><code>// Go through all workers
@@ -23577,16 +24138,32 @@ cluster.workers
 </div></ul>
 <!--
 All workers are created using `child_process.fork()`, the returned object
-from this function is stored in process.
-
-See: [Child Process module](child_process.html)
+from this function is stored as `.process`. In a worker, the global `process`
+is stored.
 -->
 
 <p>全てのワーカは <code>child_process.fork()</code> によって作成されます。
-その戻り値が <code>process</code> に設定されます。
+その戻り値は <code>.process</code> に設定されます。
+ワーカでは、グローバルの <code>process</code> に設定されます。
 
 </p>
-<p>参照: <a href="child_process.html">Child Process module</a>
+<!--
+See: [Child Process module](
+child_process.html#child_process_child_process_fork_modulepath_args_options)
+-->
+
+<p>参照: <a href="child_process.html#child_process_child_process_fork_modulepath_args_options">Child Process module</a>
+
+</p>
+<!--
+Note that workers will call `process.exit(0)` if the `'disconnect'` event occurs
+on `process` and `.suicide` is not `true`. This protects against accidental
+disconnection.
+-->
+
+<p><code>process</code> で <code>&#39;disconnect&#39;</code> イベントが生成されるとワーカが <code>process.exit(0)</code>
+を呼び出し、<code>.suicide</code> が <code>true</code> にならないことに注意してください。
+これは偶発的な切断を防ぎます。
 
 </p>
 <h3>worker.suicide<span><a class="mark" href="#all_worker_suicide" id="all_worker_suicide">#</a></span></h3>
@@ -23594,17 +24171,31 @@ See: [Child Process module](child_process.html)
 <li><span class="type">Boolean</span></li>
 </div></ul>
 <!--
-This property is a boolean. It is set when a worker dies after calling
-`.kill()` or immediately after calling the `.disconnect()` method.
-Until then it is `undefined`.
+Set by calling `.kill()` or `.disconnect()`, until then it is `undefined`.
 -->
 
-<p>このプロパティは論理値型です。
-これはワーカが <code>.kill()</code> を呼び出して終了するか、
-<code>.disconnect()</code> メソッドを呼び出した後に設定されます。
+<p><code>.kill()</code> または <code>.disconnect()</code> によって設定されます。
 それまでは <code>undefined</code> です。
 
 </p>
+<!--
+The boolean `worker.suicide` lets you distinguish between voluntary and accidental
+exit, the master may choose not to respawn a worker based on this value.
+-->
+
+<p>真偽値の <code>worker.suicide</code> は、ワーカが自発的に終了したのか偶発的に終了したのかを
+区別します。
+マスタはこの値に基づいて、ワーカを再起動しないことを選ぶことができます。
+
+</p>
+<pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {
+  if (worker.suicide === true) {
+    console.log(&#39;Oh, it was just suicide\&#39; – no need to worry&#39;).
+  }
+});
+
+// kill worker
+worker.kill();</code></pre>
 <h3>worker.send(message, [sendHandle])<span><a class="mark" href="#all_worker_send_message_sendhandle" id="all_worker_send_message_sendhandle">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>message</code> <span class="type">Object</span></li>
@@ -23613,19 +24204,27 @@ Until then it is `undefined`.
 <!--
 This function is equal to the send methods provided by
 `child_process.fork()`.  In the master you should use this function to
-send a message to a specific worker.  However in a worker you can also use
-`process.send(message)`, since this is the same function.
-
-This example will echo back all messages from the master:
+send a message to a specific worker.
 -->
 
 <p>この関数は <code>child_process.fork()</code> が返すオブジェクトの <code>send()</code>
-メソッドと同じです．
+メソッドと同じです。
 マスタは特定のワーカにメッセージを送信するためにこの関数を
 使用することができます。
-しかし、ワーカでは <code>process.send(message)</code> を使うこともできます。
 
 </p>
+<!--
+In a worker you can also use `process.send(message)`, it is the same function.
+-->
+
+<p>ワーカでは <code>process.send(message)</code> を使うこともできます。
+それは同じ関数です。
+
+</p>
+<!--
+This example will echo back all messages from the master:
+-->
+
 <p>この例はマスタからのメッセージをエコーバックします。
 
 </p>
@@ -23648,63 +24247,114 @@ This example will echo back all messages from the master:
 <li><code>signal</code> {String} ワーカプロセスに送られるシグナルの名前です。</li>
 </ul>
 <!--
-This function will kill the worker, and inform the master to not spawn a
-new worker.  The boolean `suicide` lets you distinguish between voluntary
-and accidental exit.
+This function will kill the worker. In the master, it does this by disconnecting
+the `worker.process`, and once disconnected, killing with `signal`. In the
+worker, it does it by disconnecting the channel, and then exiting with code `0`.
 -->
 
-<p>この関数はワーカを終了し、マスタに新しいワーカを起動しないように伝えます。
-boolean の <code>suicide</code> により、自発的かアクシデントによる終了かを識別できます。
+<p>この関数はワーカを終了します。
+マスタでは、これは <code>worker.process</code> と切断することによって行われます。
+そして切断されると、<code>signal</code> によってワーカを殺します。
+ワーカでは、これはチャネルの切断によって行われ、コード <code>0</code> で終了します。
 
 </p>
-<pre><code>cluster.on(&#39;exit&#39;, function(worker, code, signal) {
-  if (worker.suicide === true) {
-    console.log(&#39;Oh, it was just suicide\&#39; – no need to worry&#39;).
-  }
-});
-
-// kill worker
-worker.kill();</code></pre>
 <!--
-This method is aliased as `worker.destroy()` for backwards
-compatibility.
+Causes `.suicide` to be set.
+-->
+
+<p><code>.suicide</code> が設定される原因となります。
+
+</p>
+<!--
+This method is aliased as `worker.destroy()` for backwards compatibility.
 -->
 
 <p>後方互換性のため、このメソッドには <code>worker.destroy()</code> という別名があります。
 
 </p>
-<h3>worker.disconnect()<span><a class="mark" href="#all_worker_disconnect" id="all_worker_disconnect">#</a></span></h3>
 <!--
-When calling this function the worker will no longer accept new connections, but
-they will be handled by any other listening worker. Existing connection will be
-allowed to exit as usual. When no more connections exist, the IPC channel to the worker
-will close allowing it to die graceful. When the IPC channel is closed the `disconnect`
-event will emit, this is then followed by the `exit` event, there is emitted when
-the worker finally die.
+Note that in a worker, `process.kill()` exists, but it is not this function,
+it is [kill](process.html#process_process_kill_pid_signal).
 -->
 
-<p>この関数を呼び出すと、そのワーカはそれ以上新しい接続
-(それらは他のワーカによって扱われます) を受け付けなくなります。
-既存の接続は通常通りに
-コネクションが無くなると、ワーカを正常に終了するために IPC チャネルは
-閉じられます。
-IPC チャネルが閉じられると <code>&#39;disconnect&#39;</code> イベントが生成され、
-その後ワーカが終了すると <code>&#39;exit&#39;</code> イベントが生成されます。
+<p>ワーカでは、<code>process.kill()</code> は存在するものの、それは関数ではないことに
+注意してください。
+<a href="process.html#process_process_kill_pid_signal">kill</a> を参照してください。
+
+</p>
+<h3>worker.disconnect()<span><a class="mark" href="#all_worker_disconnect" id="all_worker_disconnect">#</a></span></h3>
+<!--
+In a worker, this function will close all servers, wait for the 'close' event on
+those servers, and then disconnect the IPC channel.
+-->
+
+<p>ワーカでは、この関数は全てのサーバをクローズし、それらのサーバの <code>&#39;close&#39;</code>
+イベントを待機し、そして IPC チャネルを切断します。
 
 </p>
 <!--
-Because there might be long living connections, it is useful to implement a timeout.
-This example ask the worker to disconnect and after 2 seconds it will destroy the
-server. An alternative would be to execute `worker.kill()` after 2 seconds, but
-that would normally not allow the worker to do any cleanup if needed.
+In the master, an internal message is sent to the worker causing it to call
+`.disconnect()` on itself.
 -->
 
-<p>長時間にわたる接続があるかもしれないため、これはタイムアウトを実装するために
-有益です。
-この例はワーカが IPC チャネルを閉じた後、2 秒でサーバから終了されます。
-他の方法として <code>worker.kill()</code> を呼び出してから
-2 秒後とすることもできますが、その場合はワーカが必要なクリーンナップを
-行えないかもしれません。
+<p>マスタでは、ワーカが自分の <code>.disconnect()</code> を呼び出すことになる内部メッセージを
+ワーカに送ります。
+
+</p>
+<!--
+Causes `.suicide` to be set.
+-->
+
+<p><code>.suicide</code> が設定される原因となります。
+
+</p>
+<!--
+Note that after a server is closed, it will no longer accept new connections,
+but connections may be accepted by any other listening worker. Existing
+connections will be allowed to close as usual. When no more connections exist,
+see [server.close()](net.html#net_event_close), the IPC channel to the worker
+will close allowing it to die gracefully.
+-->
+
+<p>サーバがクローズした後、それはもう新たな接続を受け付けなくなりますが、
+他のワーカによって接続は受け付けられることに注意してください。
+既存のコネクションは通常通りクローズすることができます。
+コネクションが無くなると (<a href="net.html#net_event_close">server.close()</a> 参照)、
+ワーカが自然に終了できるように IPC チャネルはクローズされます。
+
+</p>
+<!--
+The above applies *only* to server connections, client connections are not
+automatically closed by workers, and disconnect does not wait for them to close
+before exiting.
+-->
+
+<p>上記はサーバ側のコネクションにのみ適用されます。
+クライアント側のコネクションはワーカによって自動的にクローズされることはなく、
+終了する前にそれらがクローズすることを待つこともありません。
+
+</p>
+<!--
+Note that in a worker, `process.disconnect` exists, but it is not this function,
+it is [disconnect](child_process.html#child_process_child_disconnect).
+-->
+
+<p>ワーカでは、<code>process.disconnect</code> は存在しますが、それはここで説明した関数では
+ありません。それは
+<a href="child_process.html#child_process_child_disconnect">disconnect</a> です。
+
+</p>
+<!--
+Because long living server connections may block workers from disconnecting, it
+may be useful to send a message, so application specific actions may be taken to
+close them. It also may be useful to implement a timeout, killing a worker if
+the `disconnect` event has not been emitted after some time.
+-->
+
+<p>長時間生きているサーバ側のコネクションはワーカが切断することを妨げるため、
+それらをクローズするためにアプリケーション固有のメッセージを送ることは有用です。
+加えて、一定の時間が経過しても <code>&#39;disconnect&#39;</code> イベントが発生しなかった場合に
+ワーカを強制終了する実装も有用です。
 
 </p>
 <pre><code>if (cluster.isMaster) {
@@ -23712,9 +24362,10 @@ that would normally not allow the worker to do any cleanup if needed.
   var timeout;
 
   worker.on(&#39;listening&#39;, function(address) {
+    worker.send(&#39;shutdown&#39;);
     worker.disconnect();
     timeout = setTimeout(function() {
-      worker.send(&#39;force kill&#39;);
+      worker.kill();
     }, 2000);
   });
 
@@ -23725,18 +24376,14 @@ that would normally not allow the worker to do any cleanup if needed.
 } else if (cluster.isWorker) {
   var net = require(&#39;net&#39;);
   var server = net.createServer(function(socket) {
-    // connection never end
+    // connections never end
   });
 
   server.listen(8000);
 
-  server.on(&#39;close&#39;, function() {
-    // cleanup
-  });
-
   process.on(&#39;message&#39;, function(msg) {
-    if (msg === &#39;force kill&#39;) {
-      server.close();
+    if(msg === &#39;shutdown&#39;) {
+      // initiate graceful close of any connections to server
     }
   });
 }</code></pre>
@@ -23746,18 +24393,23 @@ that would normally not allow the worker to do any cleanup if needed.
 </div></ul>
 <!--
 This event is the same as the one provided by `child_process.fork()`.
-In the master you should use this event, however in a worker you can also use
-`process.on('message')`
+-->
 
+<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。
+
+</p>
+<!--
+In a worker you can also use `process.on('message')`.
+-->
+
+<p>ワーカでは、<code>process.on(&#39;message&#39;)</code> を使うこともできます。
+
+</p>
+<!--
 As an example, here is a cluster that keeps count of the number of requests
 in the master process using the message system:
 -->
 
-<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。
-マスタではこのイベントを使うべきですが、ワーカでは <code>process.on(&#39;message&#39;)</code>
-を使うこともできます。
-
-</p>
 <p>メッセージシステムを使用してクラスタ全体のリクエスト数を
 マスタプロセスで保持する例です:
 
@@ -23803,41 +24455,49 @@ if (cluster.isMaster) {
 }</code></pre>
 <h3>Event: &#39;online&#39;<span><a class="mark" href="#all_event_online_1" id="all_event_online_1">#</a></span></h3>
 <!--
-Same as the `cluster.on('online')` event, but emits only when the state change
-on the specified worker.
+Similar to the `cluster.on('online')` event, but specific to this worker.
 -->
 
-<p><code>cluster.on(&#39;online&#39;)</code> と同様ですが，特定のワーカの状態が変化した場合のみ
-イベントを生成します。
+<p><code>cluster.on(&#39;online&#39;)</code> と同様ですが、このワーカに特化しています。
 
 </p>
 <pre><code>cluster.fork().on(&#39;online&#39;, function() {
   // Worker is online
 });</code></pre>
+<!--
+It is not emitted in the worker.
+-->
+
+<p>このイベントはワーカでは生成されません。
+
+</p>
 <h3>Event: &#39;listening&#39;<span><a class="mark" href="#all_event_listening_3" id="all_event_listening_3">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>address</code> <span class="type">Object</span></li>
 </div></ul>
 <!--
-Same as the `cluster.on('listening')` event, but emits only when the state change
-on the specified worker.
+Similar to the `cluster.on('listening')` event, but specific to this worker.
 -->
 
-<p><code>cluster.on(&#39;listening&#39;)</code> と同様ですが、特定のワーカの状態が変化した場合のみ
-イベントを生成します。
+<p><code>cluster.on(&#39;listening&#39;)</code> と同様ですが、このワーカに特化しています。
 
 </p>
 <pre><code>cluster.fork().on(&#39;listening&#39;, function(address) {
   // Worker is listening
 });</code></pre>
-<h3>Event: &#39;disconnect&#39;<span><a class="mark" href="#all_event_disconnect_2" id="all_event_disconnect_2">#</a></span></h3>
 <!--
-Same as the `cluster.on('disconnect')` event, but emits only when the state change
-on the specified worker.
+It is not emitted in the worker.
 -->
 
-<p><code>cluster.on(&#39;disconnect&#39;)</code> と同じですが、指定されたワーカの状態が
-変更された場合のみ生成されます。
+<p>このイベントはワーカでは生成されません。
+
+</p>
+<h3>Event: &#39;disconnect&#39;<span><a class="mark" href="#all_event_disconnect_2" id="all_event_disconnect_2">#</a></span></h3>
+<!--
+Similar to the `cluster.on('disconnect')` event, but specfic to this worker.
+-->
+
+<p><code>cluster.on(&#39;disconnect&#39;)</code> と同様ですが、このワーカに特化しています。
 
 </p>
 <pre><code>cluster.fork().on(&#39;disconnect&#39;, function() {
@@ -23856,13 +24516,10 @@ on the specified worker.
 (例: <code>&#39;SIGHUP&#39;</code>)。</li>
 </ul>
 <!--
-Emitted by the individual worker instance, when the underlying child process
-is terminated.  See [child_process event: 'exit'](child_process.html#child_process_event_exit).
+Similar to the `cluster.on('exit')` event, but specific to this worker.
 -->
 
-<p>子プロセスが終了すると、ワーカのインスタンスによって生成されます。
-<a href="child_process.html#child_process_event_exit">child_process event: &#39;exit&#39;</a>
-を参照してください。
+<p><code>cluster.on(&#39;exit&#39;)</code> と同様ですが、このワーカに特化しています。
 
 </p>
 <pre><code>var worker = cluster.fork();
@@ -23875,6 +24532,21 @@ worker.on(&#39;exit&#39;, function(code, signal) {
     console.log(&quot;worker success!&quot;);
   }
 });</code></pre>
+<h3>Event: &#39;error&#39;<span><a class="mark" href="#all_event_error_6" id="all_event_error_6">#</a></span></h3>
+<!--
+This event is the same as the one provided by `child_process.fork()`.
+-->
+
+<p>このイベントは <code>child_process.fork()</code> が提供するものと同じです。
+
+</p>
+<!--
+In a worker you can also use `process.on('error')`.
+-->
+
+<p>ワーカでは <code>process.on(&#39;error&#39;)</code> を使うこともできます。
+
+</p>
 <h1>Smalloc<span><a class="mark" href="#all_smalloc" id="all_smalloc">#</a></span></h1>
 <pre class="api_stability_1">Stability: 1 - Experimental</pre><h2>smalloc.alloc(length[, receiver][, type])<span><a class="mark" href="#all_smalloc_alloc_length_receiver_type" id="all_smalloc_alloc_length_receiver_type">#</a></span></h2>
 <!--
@@ -24112,7 +24784,7 @@ Enum of possible external array types. Contains:
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

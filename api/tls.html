@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.11.7 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.11.8 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.7 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -92,6 +92,7 @@
 <li><a href="#tls_tlssocket_authorizationerror">tlsSocket.authorizationError</a></li>
 <li><a href="#tls_tlssocket_getpeercertificate">tlsSocket.getPeerCertificate()</a></li>
 <li><a href="#tls_tlssocket_getcipher">tlsSocket.getCipher()</a></li>
+<li><a href="#tls_tlssocket_renegotiate_options_callback">tlsSocket.renegotiate(options, callback)</a></li>
 <li><a href="#tls_tlssocket_address">tlsSocket.address()</a></li>
 <li><a href="#tls_tlssocket_remoteaddress">tlsSocket.remoteAddress</a></li>
 <li><a href="#tls_tlssocket_remoteport">tlsSocket.remotePort</a></li>
@@ -306,9 +307,9 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `cert`: A string or `Buffer` containing the certificate key of the server in
     PEM format. (Required)
 
-  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is
-    omitted several well known "root" CAs will be used, like VeriSign.
-    These are used to authorize connections.
+  - `ca`: An array of strings or `Buffer`s of trusted certificates in PEM
+    format. If this is omitted several well known "root" CAs will be used,
+    like VeriSign. These are used to authorize connections.
 
   - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate
     Revocation List)
@@ -393,7 +394,8 @@ automatically set as a listener for the [secureConnection][] event.  The
 <li><p><code>cert</code>: PEM フォーマットによる証明書の鍵を持つ文字列または <code>Buffer</code> です
 (必須)。</p>
 </li>
-<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
+<li><p><code>ca</code>: PEM フォーマットによる信頼できる証明書の文字列または
+<code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
 これらはコネクションの認証に使われます。</p>
 </li>
@@ -563,16 +565,16 @@ Creates a new client connection to the given `port` and `host` (old API) or
   - `cert`: A string or `Buffer` containing the certificate key of the client in
     PEM format.
 
-  - `ca`: An array of strings or `Buffer`s of trusted certificates. If this is
-    omitted several well known "root" CAs will be used, like VeriSign.
-    These are used to authorize connections.
+  - `ca`: An array of strings or `Buffer`s of trusted certificates in PEM
+    format. If this is omitted several well known "root" CAs will be used,
+    like VeriSign. These are used to authorize connections.
 
   - `rejectUnauthorized`: If `true`, the server certificate is verified against
     the list of supplied CAs. An `'error'` event is emitted if verification
     fails. Default: `true`.
 
-  - `NPNProtocols`: An array of string or `Buffer` containing supported NPN
-    protocols. `Buffer` should have following format: `0x05hello0x05world`,
+  - `NPNProtocols`: An array of strings or `Buffer`s containing supported NPN
+    protocols. `Buffer`s should have following format: `0x05hello0x05world`,
     where first byte is next protocol name's length. (Passing array should
     usually be much simpler: `['hello', 'world']`.)
 
@@ -602,7 +604,8 @@ Creates a new client connection to the given `port` and `host` (old API) or
 SSL version 3. The possible values depend on your installation of
 OpenSSL and are defined in the constant <a href="http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS">SSL_METHODS</a>.</p>
 </li>
-<li><p><code>ca</code>: 信頼できる証明書の文字列または <code>Buffer</code> の配列です。
+<li><p><code>ca</code>: PEM フォーマットによる信頼できる証明書の文字列または
+<code>Buffer</code> の配列です。
 省略された場合、ベリサインなどのよく知られた「ルート」認証局が使われます。
 これらはコネクションの認証に使われます。</p>
 </li>
@@ -1199,6 +1202,38 @@ information.
 参照してください。
 
 </p>
+<h3>tlsSocket.renegotiate(options, callback)<span><a class="mark" href="#tls_tlssocket_renegotiate_options_callback" id="tls_tlssocket_renegotiate_options_callback">#</a></span></h3>
+<!--
+Initiate TLS renegotiation process. The `options` may contain the following
+fields: `rejectUnauthorized`, `requestCert` (See [tls.createServer][]
+for details). `callback(err)` will be executed with `null` as `err`,
+once the renegotiation is successfully completed.
+-->
+
+<p>TLSの再ネゴシエーションを開始します。
+<code>options</code>は以下のフィールドを含むことが出来ます:
+<code>rejectUnauthorized</code>、<code>requestCert</code> (詳細は <a href="#tls_tls_createserver_options_secureconnectionlistener">tls.createServer</a> 参照)。
+<code>callback(err)</code> は再ネゴシエーションが成功で完了すると、<code>err</code> が <code>null</code> で
+実行されます。
+
+</p>
+<!--
+NOTE: Can be used to request peer's certificate after the secure connection
+has been established.
+-->
+
+<p>注意: 相手側の証明書は、セキュアな接続が確立された後で利用可能になります。
+
+</p>
+<!--
+ANOTHER NOTE: When running as the server, socket will be destroyed
+with an error after `handshakeTimeout` timeout.
+-->
+
+<p>更に注意: サーバとして実行される場合、<code>handshakeTimeout</code> 時間が経過した後、
+ソケットはエラーと共に破棄されます。
+
+</p>
 <h3>tlsSocket.address()<span><a class="mark" href="#tls_tlssocket_address" id="tls_tlssocket_address">#</a></span></h3>
 <!--
 Returns the bound address, the address family name and port of the
@@ -1294,7 +1329,7 @@ The numeric representation of the local port.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.7/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
