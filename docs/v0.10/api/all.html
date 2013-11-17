@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.21 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.22 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.21 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.22 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -116,7 +116,10 @@
 </ul>
 </li>
 <li><a href="#all_the_module_object">The <code>module</code> Object</a><ul>
-<li><a href="#all_module_exports">module.exports</a></li>
+<li><a href="#all_module_exports">module.exports</a><ul>
+<li><a href="#all_exports_alias">exports alias</a></li>
+</ul>
+</li>
 <li><a href="#all_module_require_id">module.require(id)</a></li>
 <li><a href="#all_module_id">module.id</a></li>
 <li><a href="#all_module_filename">module.filename</a></li>
@@ -1437,17 +1440,26 @@ Example: running `node example.js` from `/Users/mjr`
 </ul>
 <!--
 A reference to the current module. In particular
-`module.exports` is the same as the `exports` object.
-`module` isn't actually a global but rather local to each module.
-
-See the [module system documentation][] for more information.
+`module.exports` is used for defining what a module exports and makes
+available through `require()`.
 -->
 
 <p>現在のモジュールへの参照です。
-特に <code>module.exports</code> は <code>exports</code> オブジェクトと同じです。
-<code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。
+<code>module.exports</code> は、モジュールが公開して <code>require()</code> を通じて利用可能になる
+ものを定めるために使われます。
 
 </p>
+<!--
+`module` isn't actually a global but rather local to each module.
+-->
+
+<p><code>module</code> は実際はグローバルではなく、各モジュール毎のローカルです。
+
+</p>
+<!--
+See the [module system documentation][] for more information.
+-->
+
 <p>より詳しくは <a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
 
 </p>
@@ -1455,18 +1467,21 @@ See the [module system documentation][] for more information.
 <!-- type=var -->
 
 <!--
-A reference to the `module.exports` object which is shared between all
-instances of the current module and made accessible through `require()`.
+A reference to the `module.exports` that is shorter to type.
 See [module system documentation][] for details on when to use `exports` and
 when to use `module.exports`.
+-->
+
+<p><code>module.exports</code> への参照です。
+いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は
+<a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
+
+</p>
+<!--
 `exports` isn't actually a global but rather local to each module.
 -->
 
-<p>現在のモジュールの全てのインスタンス間で共有される <code>module.exports</code>
-を参照するオブジェクトで、<code>require()</code> を通じてアクセス可能になります。
-いつ <code>exports</code> を使い、いつ <code>module.exports</code> を使うかの詳細は
-<a href="modules.html">モジュールシステムのドキュメント</a> を参照してください。
-<code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
+<p><code>exports</code> は実際はグローバルではなく、各モジュール毎のローカルです。
 
 </p>
 <!--
@@ -1901,46 +1916,62 @@ exports.circumference = function (r) {
 };</code></pre>
 <!--
 The module `circle.js` has exported the functions `area()` and
-`circumference()`.  To export an object, add to the special `exports`
-object.
+`circumference()`.  To add functions and objects to the root of your module,
+you can add them to the special `exports` object.
 -->
 
-<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code>
-をエクスポートしています。
-オブジェクトをエクスポートするには、 <code>exports</code>
-という特別なオブジェクトに加えます。
+<p><code>circle.js</code> モジュールは <code>area()</code> と <code>circumference()</code> を公開しています。
+関数やオブジェクトをモジュールのルートに加えるには、
+<code>exports</code> という特別なオブジェクトに加えます。
 
 </p>
 <!--
-Note that `exports` is a reference to `module.exports` making it suitable
-for augmentation only. If you are exporting a single item such as a
-constructor you will want to use `module.exports` directly instead.
+Variables local to the module will be private, as though the module was wrapped
+in a function. In this example the variable `PI` is private to `circle.js`.
 -->
 
-<p><code>exports</code> は <code>module.exports</code> を参照しているに過ぎないことに注意してください。
-もしコンストラクタなど、一つの項目だけをエクスポートしたいのであれば、
-<code>module.exports</code> を直接使いたくなるでしょう。
-
-</p>
-<pre><code>function MyConstructor (opts) {
-  //...
-}
-
-// BROKEN: Does not modify exports
-exports = MyConstructor;
-
-// exports the constructor properly
-module.exports = MyConstructor;</code></pre>
-<!--
-Variables
-local to the module will be private. In this example the variable `PI` is
-private to `circle.js`.
--->
-
-<p>モジュールのローカル変数はプライベートです。
+<p>モジュールのローカル変数は関数に包まれているかのようにプライベートになります。
 この例の場合、変数 <code>PI</code> は <code>circle.js</code> のプライベート変数です。
 
 </p>
+<!--
+If you want the root of your module's export to be a function (such as a
+constructor) or if you want to export a complete object in one assignment
+instead of building it one property at a time, assign it to `module.exports`
+instead of `exports`.
+-->
+
+<p>モジュールのルートとして関数 (たとえばコンストラクタ) を後悔したり、
+プロパティを一つずつ代入するのではなく、完全なオブジェクトを一度に
+公開したければ、<code>exports</code> の代わりに <code>module.exports</code>に代入します。
+
+</p>
+<!--
+Below, `bar.js` makes use of the `square` module, which exports a constructor:
+-->
+
+<p>以下では、<code>bar.js</code> は <code>square</code> モジュールが公開するコンストラクタを
+使用しています。
+
+</p>
+<pre><code>var square = require(&#39;./square.js&#39;);
+var mySquare = square(2);
+console.log(&#39;The area of my square is &#39; + mySquare.area());</code></pre>
+<!--
+The `square` module is defined in `square.js`:
+-->
+
+<p><code>square.js</code> モジュールは <code>square.js</code> で定義されています。
+
+</p>
+<pre><code>// assigning to exports will not modify module, must use module.exports
+module.exports = function(width) {
+  return {
+    area: function() {
+      return width * width;
+    }
+  };
+}</code></pre>
 <!--
 The module system is implemented in the `require("module")` module.
 -->
@@ -2005,8 +2036,8 @@ The output of this program would thus be:
 ポイントは、<code>b.js</code> は <code>a.js</code> のロードを試みることです。
 無限ループを避けるため、<code>a.js</code> がエクスポートしたオブジェクトの
 <strong>未完了のコピー</strong> が <code>b.js</code> モジュールに返されます。
-<code>b.js</code> のロードが完了すると、<code>exports</code> オブジェクトが <code>a.js</code>
-モジュールに提供されます。
+<code>b.js</code> のロードが完了すると、<code>exports</code> オブジェクトが <code>a.js</code> モジュールに
+提供されます。
 
 </p>
 <p><code>main.js</code> が両方のモジュールをロードするまでには、どちらも完了します。
@@ -2256,22 +2287,24 @@ would resolve to different files.
 <h2>The <code>module</code> Object<span><a class="mark" href="#all_the_module_object" id="all_the_module_object">#</a></span></h2>
 <!-- type=var -->
 
-<!-- name=module -->
+<p>!-- name=module --&gt;
 
+</p>
 <ul>
 <li>{Object}</li>
 </ul>
 <!--
 In each module, the `module` free variable is a reference to the object
-representing the current module.  In particular
-`module.exports` is accessible via the `exports` module-global.
-`module` isn't actually a global but rather local to each module.
+representing the current module.  For convenience, `module.exports` is
+also accessible via the `exports` module-global. `module` isn't actually
+a global but rather local to each module.
 -->
 
 <p>どのモジュールでも、<code>module</code> 自由変数は現在のモジュールを表現するオブジェクトを
-参照します。特に、<code>module.exports</code> はモジュールグローバルの <code>exports</code>
-を通じてアクセスすることができます。
-<code>module</code> は実際はグローバルではなく、各モジュールにローカルです。
+参照します。
+利便性のため、<code>module.exports</code> は <code>exports</code> オブジェクトを通じて
+参照することもできます。
+<code>module</code> は実際はグローバルではなく、各モジュールのローカル変数です。
 
 </p>
 <h3>module.exports<span><a class="mark" href="#all_module_exports" id="all_module_exports">#</a></span></h3>
@@ -2280,16 +2313,26 @@ representing the current module.  In particular
 </div></ul>
 <!--
 The `module.exports` object is created by the Module system. Sometimes this is not
-acceptable, many want their module to be an instance of some class. To do this
-assign the desired export object to `module.exports`. For example suppose we
-were making a module called `a.js`
+acceptable; many want their module to be an instance of some class. To do this
+assign the desired export object to `module.exports`. Note that assigning the
+desired object to `exports` will simply rebind the local `exports` variable,
+which is probably not what you want to do.
 -->
 
 <p><code>module.exports</code> オブジェクトはモジュールシステムによって作成されます。
-時々これは受け入れられず、多くのモジュールは何らかのクラスのインスタンスであることを望みます。
-それには公開したいオブジェクトを <code>module.exports</code> に割り当てます。
-例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
+時々これは受け入れらません;
+多くの人々は、モジュールが何らかのクラスのインスタンスであることを望みます。
+それには、公開したいオブジェクトを <code>module.exports</code> に割り当てます。
+望ましいオブジェクトを <code>exports</code> へ代入することは、ローカル変数 <code>exports</code> への
+再代入に過ぎずないことに注意すべきです。
+それはおそらく、やりたかったことではないでしょう。
 
+</p>
+<!--
+For example suppose we were making a module called `a.js`
+-->
+
+<p>例えば <code>a.js</code> と呼ばれるモジュールを作るとしたら
 
 </p>
 <pre><code>var EventEmitter = require(&#39;events&#39;).EventEmitter;
@@ -2332,6 +2375,45 @@ done in any callbacks.  This does not work:
 </p>
 <pre><code>var x = require(&#39;./x&#39;);
 console.log(x.a);</code></pre>
+<h4>exports alias<span><a class="mark" href="#all_exports_alias" id="all_exports_alias">#</a></span></h4>
+<!--
+The `exports` variable that is available within a module starts as a reference
+to `module.exports`. As with any variable, if you assign a new value to it, it
+is no longer bound to the previous value.
+-->
+
+<p>モジュール内で利用出来る <code>exports</code> 変数は、最初は <code>module.exports</code>
+への参照です。
+他の変数と同様、それに新しい値を割り当てると元の値はもはや束縛されません。
+
+</p>
+<!--
+To illustrate the behaviour, imagine this hypothetical implementation of
+`require()`:
+-->
+
+<p>その振る舞いを示すために、この仮定の実装を想像してください。
+
+</p>
+<pre><code>function require(...) {
+  // ...
+  function (module, exports) {
+    // Your module code here
+    exports = some_func;        // re-assigns exports, exports is no longer
+                                // a shortcut, and nothing is exported.
+    module.exports = some_func; // makes your module export 0
+  } (module, module.exports);
+  return module;
+}</code></pre>
+<!--
+As a guideline, if the relationship between `exports` and `module.exports`
+seems like magic to you, ignore `exports` and only use `module.exports`.
+-->
+
+<p>ガイドラインとして、もし <code>exports</code> と <code>module.exports</code> の間の関係が魔法のように
+見えるなら、<code>exports</code> を無視して <code>module.exports</code> だけを使うようにしてください。
+
+</p>
 <h3>module.require(id)<span><a class="mark" href="#all_module_require_id" id="all_module_require_id">#</a></span></h3>
 <!--
 * `id` {String}
@@ -3718,15 +3800,72 @@ programs.
 
 </p>
 <!--
-Note: SIGUSR1 is reserved by node.js to kickstart the debugger.  It's possible
-to install a listener but that won't stop the debugger from starting.
+Note:
 -->
 
-<p>注意: SIGUSR1はnode.jsによって受信され、デバッガを起動します。
-SIGUSR1のリスナを登録することは可能ですが、
-デバッガの開始を止めることはできません。
+<p>注意:
 
 </p>
+<!--
+- `SIGUSR1` is reserved by node.js to start the debugger.  It's possible to
+  install a listener but that won't stop the debugger from starting.
+- `SIGTERM` and `SIGINT` have default handlers on non-Windows platforms that resets
+  the terminal mode before exiting with code `128 + signal number`. If one of
+  these signals has a listener installed, its default behaviour will be removed
+  (node will no longer exit).
+- `SIGPIPE` is ignored by default, it can have a listener installed.
+- `SIGHUP` is generated on Windows when the console window is closed, and on other
+  platforms under various similar conditions, see signal(7). It can have a
+  listener installed, however node will be unconditionally terminated by Windows
+  about 10 seconds later. On non-Windows platforms, the default behaviour of
+  `SIGHUP` is to terminate node, but once a listener has been installed its
+  default behaviour will be removed.
+- `SIGTERM` is not supported on Windows, it can be listened on.
+- `SIGINT` is supported on all platforms, and can usually be generated with
+  `CTRL+C` (though this may be configurable). It is not generated when terminal
+  raw mode is enabled.
+- `SIGBREAK` is delivered on Windows when `CTRL+BREAK` is pressed, on non-Windows
+  platforms it can be listened on, but there is no way to send or generate it.
+- `SIGWINCH` is delivered when the console has been resized. On Windows, this will
+  only happen on write to the console when the cursor is being moved, or when a
+  readable tty is used in raw mode.
+- `SIGKILL` cannot have a listener installed, it will unconditionally terminate
+  node on all platforms.
+- `SIGSTOP` cannot have a listener installed.
+-->
+
+<ul>
+<li><code>SIGUSR1</code> は Node.js がデバッガを起動するために予約されています。
+リスナを登録することは出来ますが、デバッガの起動を止めることは出来ません。</li>
+<li><code>SIGTERM</code> および <code>SIGINT</code> は、Windows 以外のプラットフォームでは
+<code>128</code> + シグナル番号で終了する前にターミナルのモードをリセットする
+デフォルトのハンドラを持ちます。
+これらのシグナルのどちらかにリスナが登録されると、デフォルトの振る舞いは
+削除されます (node は終了しなくなります)。</li>
+<li><code>SIGPIPE</code> はデフォルトでは無視され、リスナを登録することが出来ます。</li>
+<li><code>SIGHUP</code> は Windows ではコンソールウィンドウが閉じられると発生します。
+他のプラットフォームでも同様の条件で発生します。詳細は signal(7)
+を参照してください。
+リスナを登録することは出来ますが、Windows では約 10 秒後に node は無条件に
+Windows によって終了されます。
+Windows 以外のプラットフォームでは、<code>SIGHUP</code> のデフォルトの振る舞いは
+nodeを終了することですが、リスナを登録するとデフォルトの振る舞いは
+削除されます。</li>
+<li><code>SIGTERM</code> は Windows ではサポートされません。
+しかし、リスナを登録することは可能です。</li>
+<li><code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
+(おそらく設定可能でしょう) によって生成されます。
+ターミナルが raw モードの場合は生成されません。</li>
+<li><code>SIGBREAK</code> は Windows において <code>CTRL+BREAK</code> が推された時に送られます。
+Windows 以外のプラットフォームでもリスナを登録することは出来ますが、
+それを生成したり送信する方法はありません。</li>
+<li><code>SIGWINCH</code> はコンソールのサイズが変更された場合に送られます。
+Windows では、カーソルが移動するか、tty が raw モードの場合に、
+コンソールへ書き込むと発生します。</li>
+<li><code>SIGKILL</code> のリスナを組み込むことは出来ません。
+それは全てのプラットフォームで node を無条件に終了します。</li>
+<li><code>SIGSTOP</code> のリスナを組み込むことは出来ません。</li>
+</ul>
 <h2>process.stdout<span><a class="mark" href="#all_process_stdout" id="all_process_stdout">#</a></span></h2>
 <!--
 A `Writable Stream` to `stdout`.
@@ -8657,7 +8796,7 @@ SimpleProtocol.prototype._read = function(n) {
     strings using the specified encoding.  Default=null
   * `objectMode` {Boolean} Whether this stream should behave
     as a stream of objects. Meaning that stream.read(n) returns
-    a single value instead of a Buffer of size n
+    a single value instead of a Buffer of size n.  Default=false
 -->
 
 <ul>
@@ -8668,7 +8807,7 @@ SimpleProtocol.prototype._read = function(n) {
 デコードされます。デフォルトは <code>null</code>。</li>
 <li><code>objectMode</code> {Boolean} このストリームがオブジェクトストリームとして
 振る舞うべきかどうか。これは <code>stream.read(n)</code> がサイズ n のバッファではなく
-一つの値を返すことを意味します。</li>
+一つの値を返すことを意味します。デフォルトは <code>false</code> です。</li>
 </ul>
 </li>
 </ul>
@@ -10039,12 +10178,14 @@ Returned by `crypto.createHash`.
 Updates the hash content with the given `data`, the encoding of which
 is given in `input_encoding` and can be `'utf8'`, `'ascii'` or
 `'binary'`.  If no encoding is provided, then a buffer is expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p>与えられた <code>data</code> でハッシュの内容を更新します。
 そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、
 または <code>&#39;binary&#39;</code> を指定することができます。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <!--
@@ -10255,11 +10396,13 @@ methods are also supported.
 Updates the cipher with `data`, the encoding of which is given in
 `input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no
 encoding is provided, then a buffer is expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p><code>data</code> で暗号を更新します。
 <code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <p>The <code>output_encoding</code> specifies the output format of the enciphered
@@ -10374,11 +10517,13 @@ plain-text data on the the readable side.  The legacy `update` and
 Updates the decipher with `data`, which is encoded in `'binary'`,
 `'base64'` or `'hex'`.  If no encoding is provided, then a buffer is
 expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を
 <code>data</code> で更新します。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <!--
@@ -12432,8 +12577,8 @@ Synchronous link(2).
 <!--
 Asynchronous symlink(2). No arguments other than a possible exception are given
 to the completion callback.
-`type` argument can be either `'dir'`, `'file'`, or `'junction'` (default is `'file'`).  It is only 
-used on Windows (ignored on other platforms).
+The `type` argument can be set to `'dir'`, `'file'`, or `'junction'` (default
+is `'file'`) and is only available on Windows (ignored on other platforms).
 Note that Windows junction points require the destination path to be absolute.  When using
 `'junction'`, the `destination` argument will automatically be normalized to absolute path.
 -->
@@ -12441,8 +12586,8 @@ Note that Windows junction points require the destination path to be absolute.  
 <p>非同期の symlink(2)。
 完了コールバックには発生し得る例外以外に引数が渡されることはありません。
 <code>type</code> 引数は <code>&#39;dir&#39;</code>、<code>&#39;file&#39;</code>、または <code>&#39;junction</code>&#39; (デフォルトは <code>&#39;file&#39;</code>)
-です。
-これは Windows でのみ使われます (他のプラットフォームでは無視されます)。
+に設定することができ、Windows でのみ利用可能です
+(他のプラットフォームでは無視されます)。
 Windows のジャンクションポイントは対象に絶対パスを要求することに
 注意してください。
 <code>&#39;junction&#39;</code> を使うと、<code>destination</code> 引数は自動的に絶対パスに正規化されます。
@@ -15136,49 +15281,69 @@ Emitted when an error occurs.
 * `buf` Buffer object.  Message to be sent
 * `offset` Integer. Offset in the buffer where the message starts.
 * `length` Integer. Number of bytes in the message.
-* `port` Integer. destination port
-* `address` String. destination IP
-* `callback` Function. Callback when message is done being delivered.
-  Optional.
+* `port` Integer. Destination port.
+* `address` String. Destination hostname or IP address.
+* `callback` Function. Called when the message has been sent. Optional.
 -->
 
 <ul>
-<li><code>buf</code> Buffer object.  送信されるメッセージ</li>
-<li><code>offset</code> Integer. メッセージの開始位置となるバッファ内のオフセット</li>
-<li><code>length</code> Integer. メッセージのバイト長</li>
-<li><code>port</code> Integer. 接続先のポート番号</li>
-<li><code>address</code> String. 接続先の IP</li>
-<li><code>callback</code> Function. メッセージの配信が完了した後にコールバックされる、
-Optional.</li>
+<li><code>buf</code> Buffer オブジェクト送信されるメッセージ。</li>
+<li><code>offset</code> 整数。メッセージの開始位置となるバッファ内のオフセット。</li>
+<li><code>length</code> 整数。メッセージのバイト長。</li>
+<li><code>port</code> 整数。接続先のポート番号。</li>
+<li><code>address</code> 文字列。接続先のホスト名または IP アドレス。</li>
+<li><code>callback</code> 関数。メッセージが送信されるとコールバックされる。任意。</li>
 </ul>
 <!--
-For UDP sockets, the destination port and IP address must be specified.  A string
-may be supplied for the `address` parameter, and it will be resolved with DNS.  An
-optional callback may be specified to detect any DNS errors and when `buf` may be
-re-used.  Note that DNS lookups will delay the time that a send takes place, at
-least until the next tick.  The only way to know for sure that a send has taken place
-is to use the callback.
-
-If the socket has not been previously bound with a call to `bind`, it's
-assigned a random port number and bound to the "all interfaces" address
-(0.0.0.0 for `udp4` sockets, ::0 for `udp6` sockets).
+For UDP sockets, the destination port and address must be specified.  A string
+may be supplied for the `address` parameter, and it will be resolved with DNS.
 -->
 
-<p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。
+<p>UDP ソケットに対しては、相手先のポートとアドレスは必ず指定しなければなりません。
 <code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。
-DNS エラーと <code>buf</code> が再利用可能になった時のためにオプションのコールバックを指定することができます。
-DNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。
-送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。
 
 </p>
+<!--
+If the address is omitted or is an empty string, `'0.0.0.0'` or `'::0'` is used
+instead.  Depending on the network configuration, those defaults may or may not
+work; it's best to be explicit about the destination address.
+-->
+
+<p>アドレスが省略された場合や空文字列だった場合は、代わりに <code>&#39;0.0.0.0&#39;</code> または
+<code>&#39;::0&#39;</code> が使われます。ネットワークの構成によっては、これらのデフォルト値は
+動作したりしなかったりします; 相手先のアドレスは明示的に指定することが最適です。
+
+</p>
+<!--
+If the socket has not been previously bound with a call to `bind`, it gets
+assigned a random port number and is bound to the "all interfaces" address
+(`'0.0.0.0'` for `udp4` sockets, `'::0'` for `udp6` sockets.)
+-->
+
 <p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、
 ランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます
 (<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。
+
+</p>
+<!--
+An optional callback may be specified to detect DNS errors or for determining
+when it's safe to reuse the `buf` object.  Note that DNS lookups delay the time
+to send for at least one tick.  The only way to know for sure that the datagram
+has been sent is by using a callback.
+-->
+
+<p>DNS におけるエラー検出と、<code>buf</code> が再利用可能になったことを安全に知るために、
+オプションのコールバックを指定することができます。
+DNS ルックアップは送信を少なくとも次のイベントループまで遅らせることに
+注意してください。
+データグラムの送信が行われたことを確実に知る唯一の手段は、
+コールバックを使うことです。
+
+</p>
 <!--
 Example of sending a UDP packet to a random port on `localhost`;
 -->
 
-</p>
 <p><code>localhost</code> の適当なポートに UDP パケットを送信する例;
 
 </p>
@@ -22418,14 +22583,14 @@ The `addressType` is one of:
 
 </p>
 <!--
-* `4' (TCPv4)
+* `4` (TCPv4)
 * `6` (TCPv6)
 * `-1` (unix domain socket)
 * `"udp4"` or `"udp6"` (UDP v4 or v6)
 -->
 
 <ul>
-<li>`4&#39; (TCPv4)</li>
+<li><code>4</code> (TCPv4)</li>
 <li><code>6</code> (TCPv6)</li>
 <li><code>-1</code> (unix ドメインソケット)</li>
 <li><code>&quot;udp4&quot;</code> または <code>&quot;udp6&quot;</code> (UDP v4 または v6)</li>
@@ -23186,7 +23351,7 @@ In a worker you can also use `process.on('error')`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.21/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.22/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
