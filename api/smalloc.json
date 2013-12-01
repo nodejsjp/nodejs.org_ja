@@ -74,6 +74,30 @@
             }
           ],
           "desc": "<!--\nFree memory that has been allocated to an object via `smalloc.alloc`.\n-->\n\n<p><code>smalloc.alloc()</code> によってオブジェクトに割り当てられたメモリを解放します。\n\n</p>\n<pre><code>var a = {};\nsmalloc.alloc(3, a);\n\n// { &#39;0&#39;: 0, &#39;1&#39;: 0, &#39;2&#39;: 0 }\n\nsmalloc.dispose(a);\n\n// {}</code></pre>\n<!--\nThis is useful to reduce strain on the garbage collector, but developers must be\ncareful. Cryptic errors may arise in applications that are difficult to trace.\n-->\n\n<p>これはガーベッジコレクションの負荷を軽減しますが、開発者は注意が必要です。\n不可解なエラーが追跡の難しいアプリケーションで発生するかもしれません。\n\n</p>\n<pre><code>var a = smalloc.alloc(4);\nvar b = smalloc.alloc(4);\n\n// perform this somewhere along the line\nsmalloc.dispose(b);\n\n// now trying to copy some data out\nsmalloc.copyOnto(b, 2, a, 0, 2);\n\n// now results in:\n// Error: source has no external array data</code></pre>\n<!--\n`dispose()` does not support Buffers, and will throw if passed.\n-->\n\n<p><code>dispose()</code> は <code>Buffer</code> をサポートしません。もし渡されると例外をスローします。\n\n</p>\n"
+        },
+        {
+          "textRaw": "smalloc.hasExternalData(obj)",
+          "type": "method",
+          "name": "hasExternalData",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "textRaw": "`obj` {Object} ",
+                  "name": "obj",
+                  "type": "Object"
+                }
+              ]
+            },
+            {
+              "params": [
+                {
+                  "name": "obj"
+                }
+              ]
+            }
+          ],
+          "desc": "<!--\nReturns `true` if the `obj` has externally allocated memory.\n-->\n\n<p><code>obj</code> が外部に割り当てられたメモリを持つなら <code>true</code> を返します。\n\n</p>\n"
         }
       ],
       "modules": [

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>File System Node.js v0.11.8 Manual &amp; Documentation</title>
+  <title>File System Node.js v0.11.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/fs.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -1372,10 +1372,14 @@ no-op, not an error.
 Watch for changes on `filename`, where `filename` is either a file or a
 directory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).
 
-The second argument is optional. The `options` if provided should be an object
-containing a boolean member `persistent`, which indicates whether the process
-should continue to run as long as files are being watched. The default is
-`{ persistent: true }`.
+The second argument is optional. The `options` if provided should be an object.
+The supported boolean members are `persistent` and `recursive`. `persistent`
+indicates whether the process should continue to run as long as files are being
+watched. `recursive` indicates whether all subdirectories should be watched, or
+only the current directory. This applies when a directory is specified, and only
+on supported platforms (See Caveats below).
+
+The default is `{ persistent: true, recursive: false }`.
 
 The listener callback gets two arguments `(event, filename)`.  `event` is either
 'rename' or 'change', and `filename` is the name of the file which triggered
@@ -1388,11 +1392,15 @@ the event.
 
 </p>
 <p>第 2 引数はオプションです。
-もし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを
-持つオブジェクトであるべきです。
+もし指定されるなら、<code>options</code> はオブジェクトであるべきです。
+サポートされる <code>boolean</code> のメンバは <code>persistent</code> と <code>recursive</code> です。
 <code>persistent</code> はファイルが監視されている間、
 プロセスが実行し続けることを示します。
-デフォルトは <code>{ persistent: true }</code> です。
+<code>recursive</code> は監視対象が全てのサブディレクトリか、
+そのディレクトリだけかを示します。
+これは、ディレクトリが指定された場合で、サポートされるプラットフォームの場合のみ
+適用されます (後述の「Caveats」を参照してください)。
+デフォルトは <code>{ persistent: true, recursive: false }</code> です。
 
 </p>
 <p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。
@@ -1412,6 +1420,17 @@ unavailable in some situations.
 いくつかのシチュエーションで利用不可能です。
 
 </p>
+<!--
+The recursive option is currently supported on OS X. Only FSEvents supports this
+type of file watching so it is unlikely any additional platforms will be added
+soon.
+-->
+
+<p><code>recursive</code> オプションは OS X でのみサポートされます。
+FSEventsだけがこのタイプのファイル監視をサポートしているので、
+他のプラットフォームがすぐに追加される見込みはありません。
+
+</p>
 <h4>Availability<span><a class="mark" href="#fs_availability" id="fs_availability">#</a></span></h4>
 <!--type=misc-->
 
@@ -1426,14 +1445,16 @@ to be notified of filesystem changes.
 </p>
 <!--
 * On Linux systems, this uses `inotify`.
-* On BSD systems (including OS X), this uses `kqueue`.
+* On BSD systems, this uses `kqueue`.
+* On OS X, this uses `kqueue` for files and 'FSEvents' for directories.
 * On SunOS systems (including Solaris and SmartOS), this uses `event ports`.
 * On Windows systems, this feature depends on `ReadDirectoryChangesW`.
 -->
 
 <ul>
 <li>Linux システムでは <code>inotify</code> が使われます。</li>
-<li>BSD システム (OS X を含みます) では <code>kqueue</code> が使われます。</li>
+<li>BSD システム では <code>kqueue</code> が使われます。</li>
+<li>OSX では、ファイルには <code>kqueue</code>、ディレクトリには &#39;FSEvents&#39; が使われます。</li>
 <li>SunOS システム (Solaris および SmartOS を含みます) では <code>event ports</code>
 が使われます。</li>
 <li>Windows システムでは、この機能は <code>ReadDirectoryChangesW</code> に依存します。</li>
@@ -1873,7 +1894,7 @@ Emitted when an error occurs.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

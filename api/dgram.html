@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>UDP / Datagram Sockets Node.js v0.11.8 Manual &amp; Documentation</title>
+  <title>UDP / Datagram Sockets Node.js v0.11.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/dgram.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -226,44 +226,63 @@ Emitted when an error occurs.
 * `buf` Buffer object or string.  Message to be sent
 * `offset` Integer. Offset in the buffer where the message starts.
 * `length` Integer. Number of bytes in the message.
-* `port` Integer. destination port
-* `address` String. destination IP
-* `callback` Function. Callback when message is done being delivered.
-  Optional.
+* `port` Integer. Destination port.
+* `address` String. Destination hostname or IP address.
+* `callback` Function. Called when the message has been sent. Optional.
 -->
 
 <ul>
 <li><code>buf</code> Buffer オブジェクトまたは文字列。送信されるメッセージ</li>
 <li><code>offset</code> Integer。メッセージの開始位置となるバッファ内のオフセット</li>
 <li><code>length</code> Integer。メッセージのバイト長</li>
-<li><code>port</code> Integer。接続先のポート番号</li>
-<li><code>address</code> String。接続先の IP</li>
-<li><code>callback</code> 関数。メッセージの配信が完了した後にコールバックされる、
-任意。</li>
+<li><code>port</code> 整数。接続先のポート番号。</li>
+<li><code>address</code> 文字列。接続先のホスト名または IP アドレス。</li>
+<li><code>callback</code> 関数。メッセージが送信されるとコールバックされる。任意。</li>
 </ul>
 <!--
-For UDP sockets, the destination port and IP address must be specified.  A string
-may be supplied for the `address` parameter, and it will be resolved with DNS.  An
-optional callback may be specified to detect any DNS errors and when `buf` may be
-re-used.  Note that DNS lookups will delay the time that a send takes place, at
-least until the next tick.  The only way to know for sure that a send has taken place
-is to use the callback.
-
-If the socket has not been previously bound with a call to `bind`, it's
-assigned a random port number and bound to the "all interfaces" address
-(0.0.0.0 for `udp4` sockets, ::0 for `udp6` sockets).
+For UDP sockets, the destination port and address must be specified.  A string
+may be supplied for the `address` parameter, and it will be resolved with DNS.
 -->
 
-<p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。
+<p>UDP ソケットに対しては、相手先のポートとアドレスは必ず指定しなければなりません。
 <code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。
-DNS エラーと <code>buf</code> が再利用可能になった時のためにオプションのコールバックを指定することができます。
-DNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。
-送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。
 
 </p>
+<!--
+If the address is omitted or is an empty string, `'0.0.0.0'` or `'::0'` is used
+instead.  Depending on the network configuration, those defaults may or may not
+work; it's best to be explicit about the destination address.
+-->
+
+<p>アドレスが省略された場合や空文字列だった場合は、代わりに <code>&#39;0.0.0.0&#39;</code> または
+<code>&#39;::0&#39;</code> が使われます。ネットワークの構成によっては、これらのデフォルト値は
+動作したりしなかったりします; 相手先のアドレスは明示的に指定することが最適です。
+
+</p>
+<!--
+If the socket has not been previously bound with a call to `bind`, it gets
+assigned a random port number and is bound to the "all interfaces" address
+(`'0.0.0.0'` for `udp4` sockets, `'::0'` for `udp6` sockets.)
+-->
+
 <p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、
 ランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます
 (<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。
+
+</p>
+<!--
+An optional callback may be specified to detect DNS errors or for determining
+when it's safe to reuse the `buf` object.  Note that DNS lookups delay the time
+to send for at least one tick.  The only way to know for sure that the datagram
+has been sent is by using a callback.
+-->
+
+<p>DNS におけるエラー検出と、<code>buf</code> が再利用可能になったことを安全に知るために、
+オプションのコールバックを指定することができます。
+DNS ルックアップは送信を少なくとも次のイベントループまで遅らせることに
+注意してください。
+データグラムの送信が行われたことを確実に知る唯一の手段は、
+コールバックを使うことです。
 
 </p>
 <!--
@@ -619,7 +638,7 @@ the socket is `ref`d calling `ref` again will have no effect.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

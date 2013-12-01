@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>net Node.js v0.11.8 Manual &amp; Documentation</title>
+  <title>net Node.js v0.11.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/net.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -473,9 +473,9 @@ Listening on a file descriptor is not supported on Windows.
 </p>
 <!--
 This function is asynchronous.  When the server has been bound,
-['listening'](#event_listening_) event will be emitted.
+['listening'][] event will be emitted.
 the last parameter `callback` will be added as an listener for the
-['listening'](#event_listening_) event.
+['listening'][] event.
 -->
 
 <p>この関数は非同期です。
@@ -707,19 +707,23 @@ Construct a new socket object.
 
 </p>
 <pre><code>{ fd: null
-  type: null
-  allowHalfOpen: false
+  allowHalfOpen: false,
+  readable: false,
+  writable: false
 }</code></pre>
 <!--
-`fd` allows you to specify the existing file descriptor of socket. `type`
-specified underlying protocol. It can be `'tcp4'`, `'tcp6'`, or `'unix'`.
+`fd` allows you to specify the existing file descriptor of socket.
+Set `readable` and/or `writable` to `true` to allow reads and/or writes on this
+socket (NOTE: Works only when `fd` is passed).
 About `allowHalfOpen`, refer to `createServer()` and `'end'` event.
 -->
 
 <p><code>fd</code> に既存のソケットのファイル記述子を指定することができます。
-<code>type</code> にはプロトコルを指定することができます。
-指定できるのは <code>&#39;tcp4&#39;</code>、<code>&#39;tcp6&#39;</code> または <code>&#39;unix&#39;</code> のいずれかです。
-<code>allowHalfOpen</code> については <code>createServer()</code> および <code>&#39;end&#39;</code> イベントを参照してください。
+<code>readable</code> および <code>writable</code> に <code>true</code> を設定すると、
+ソケットへの読み込みまたは書き込みが可能になります
+(注意: <code>fd</code> が渡された場合のみ作用します)。
+<code>allowHalfOpen</code> については <code>createServer()</code> および <code>&#39;end&#39;</code>
+イベントを参照してください。
 
 </p>
 <h3>socket.connect(port, [host], [connectListener])<span><a class="mark" href="#net_socket_connect_port_host_connectlistener" id="net_socket_connect_port_host_connectlistener">#</a></span></h3>
@@ -1266,7 +1270,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
