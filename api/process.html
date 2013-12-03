@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.11.8 Manual &amp; Documentation</title>
+  <title>process Node.js v0.11.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -92,6 +92,11 @@
 <li><a href="#process_process_umask_mask">process.umask([mask])</a></li>
 <li><a href="#process_process_uptime">process.uptime()</a></li>
 <li><a href="#process_process_hrtime">process.hrtime()</a></li>
+<li><a href="#process_async_listeners">Async Listeners</a></li>
+<li><a href="#process_process_createasynclistener_asynclistener_callbacksobj_storagevalue">process.createAsyncListener(asyncListener[, callbacksObj[, storageValue]])</a></li>
+<li><a href="#process_process_addasynclistener_asynclistener_callbacksobj_storagevalue">process.addAsyncListener(asyncListener[, callbacksObj[, storageValue]])</a></li>
+<li><a href="#process_process_addasynclistener_asynclistener">process.addAsyncListener(asyncListener)</a></li>
+<li><a href="#process_process_removeasynclistener_asynclistener">process.removeAsyncListener(asyncListener)</a></li>
 </ul>
 </li>
 </ul>
@@ -342,14 +347,72 @@ programs.
 
 </p>
 <!--
-Note: SIGUSR1 is reserved by node.js to kickstart the debugger.  It's possible
-to install a listener but that won't stop the debugger from starting.
+Note:
 -->
 
-<p>注意: <code>SIGUSR1</code> は Node.js がデバッガを起動するために予約されています。
-リスナを登録することは出来ますが、デバッガの起動を止めることは出来ません。
+<p>注意:
 
 </p>
+<!--
+- `SIGUSR1` is reserved by node.js to start the debugger.  It's possible to
+  install a listener but that won't stop the debugger from starting.
+- `SIGTERM` and `SIGINT` have default handlers on non-Windows platforms that resets
+  the terminal mode before exiting with code `128 + signal number`. If one of
+  these signals has a listener installed, its default behaviour will be removed
+  (node will no longer exit).
+- `SIGPIPE` is ignored by default, it can have a listener installed.
+- `SIGHUP` is generated on Windows when the console window is closed, and on other
+  platforms under various similar conditions, see signal(7). It can have a
+  listener installed, however node will be unconditionally terminated by Windows
+  about 10 seconds later. On non-Windows platforms, the default behaviour of
+  `SIGHUP` is to terminate node, but once a listener has been installed its
+  default behaviour will be removed.
+- `SIGTERM` is not supported on Windows, it can be listened on.
+- `SIGINT` is supported on all platforms, and can usually be generated with
+  `CTRL+C` (though this may be configurable). It is not generated when terminal
+  raw mode is enabled.
+- `SIGBREAK` is delivered on Windows when `CTRL+BREAK` is pressed, on non-Windows
+  platforms it can be listened on, but there is no way to send or generate it.
+- `SIGWINCH` is delivered when the console has been resized. On Windows, this will
+  only happen on write to the console when the cursor is being moved, or when a
+  readable tty is used in raw mode.
+- `SIGKILL` cannot have a listener installed, it will unconditionally terminate
+  node on all platforms.
+- `SIGSTOP` cannot have a listener installed.
+-->
+
+<ul>
+<li><code>SIGUSR1</code> は Node.js がデバッガを起動するために予約されています。
+リスナを登録することは出来ますが、デバッガの起動を止めることは出来ません。</li>
+<li><code>SIGTERM</code> および <code>SIGINT</code> は、Windows 以外のプラットフォームでは
+<code>128</code> + シグナル番号で終了する前にターミナルのモードをリセットする
+デフォルトのハンドラを持ちます。
+これらのシグナルのどちらかにリスナが登録されると、デフォルトの振る舞いは
+削除されます (node は終了しなくなります)。</li>
+<li><code>SIGPIPE</code> はデフォルトでは無視され、リスナを登録することが出来ます。</li>
+<li><code>SIGHUP</code> は Windows ではコンソールウィンドウが閉じられると発生します。
+他のプラットフォームでも同様の条件で発生します。詳細は signal(7)
+を参照してください。
+リスナを登録することは出来ますが、Windows では約 10 秒後に node は無条件に
+Windows によって終了されます。
+Windows 以外のプラットフォームでは、<code>SIGHUP</code> のデフォルトの振る舞いは
+nodeを終了することですが、リスナを登録するとデフォルトの振る舞いは
+削除されます。</li>
+<li><code>SIGTERM</code> は Windows ではサポートされません。
+しかし、リスナを登録することは可能です。</li>
+<li><code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
+(おそらく設定可能でしょう) によって生成されます。
+ターミナルが raw モードの場合は生成されません。</li>
+<li><code>SIGBREAK</code> は Windows において <code>CTRL+BREAK</code> が推された時に送られます。
+Windows 以外のプラットフォームでもリスナを登録することは出来ますが、
+それを生成したり送信する方法はありません。</li>
+<li><code>SIGWINCH</code> はコンソールのサイズが変更された場合に送られます。
+Windows では、カーソルが移動するか、tty が raw モードの場合に、
+コンソールへ書き込むと発生します。</li>
+<li><code>SIGKILL</code> のリスナを組み込むことは出来ません。
+それは全てのプラットフォームで node を無条件に終了します。</li>
+<li><code>SIGSTOP</code> のリスナを組み込むことは出来ません。</li>
+</ul>
 <h2>process.stdout<span><a class="mark" href="#process_process_stdout" id="process_process_stdout">#</a></span></h2>
 <!--
 A `Writable Stream` to `stdout`.
@@ -1227,6 +1290,360 @@ setTimeout(function() {
   console.log(&#39;benchmark took %d nanoseconds&#39;, diff[0] * 1e9 + diff[1]);
   // benchmark took 1000000527 nanoseconds
 }, 1000);</code></pre>
+<h2>Async Listeners<span><a class="mark" href="#process_async_listeners" id="process_async_listeners">#</a></span></h2>
+<!-- type=misc -->
+
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
+The `AsyncListener` API is the JavaScript interface for the `AsyncWrap`
+class which allows developers to be notified about key events in the
+lifetime of an asynchronous event. Node performs a lot of asynchronous
+events internally, and significant use of this API will have a **dramatic
+performance impact** on your application.
+-->
+
+<p><code>AsyncListener</code> API は、開発者が非同期イベントの有効期間中に
+キーとなるイベントの通知を受け取ることを可能にする、
+<code>AsyncWrap</code> クラスへの JavaScript インターフェースです。
+Node は内部的に多くの非同期イベントを扱うため、この API を使用することは
+アプリケーションのパフォーマンスに <strong>重大な影響</strong> を与えます。
+
+
+</p>
+<h2>process.createAsyncListener(asyncListener[, callbacksObj[, storageValue]])<span><a class="mark" href="#process_process_createasynclistener_asynclistener_callbacksobj_storagevalue" id="process_process_createasynclistener_asynclistener_callbacksobj_storagevalue">#</a></span></h2>
+<!--
+* `asyncListener` {Function} callback fired when an asynchronous event is
+instantiated.
+* `callbacksObj` {Object} optional callbacks that will fire at specific
+times in the lifetime of the asynchronous event.
+* `storageValue` {Value} a value that will be passed as the first argument
+when the `asyncListener` callback is run, and to all subsequent callback.
+-->
+
+<ul>
+<li><code>asyncListener</code> {Function} 非同期イベントが生成されると呼び出される
+コールバック。</li>
+<li><code>callbacksObj</code> {Object} 非同期イベントの有効期間中に、指定された回数だけ
+呼び出されるオプションのコールバック。</li>
+<li><code>storageValue</code> {Value} <code>asyncListener</code> とそれに続くコールバックが
+実行される時、最初の引数として渡される値。</li>
+</ul>
+<!--
+Returns a constructed `AsyncListener` object.
+-->
+
+<p>構築された <code>AsyncListener</code> オブジェクトを返します。
+
+</p>
+<!--
+To begin capturing asynchronous events pass the object to
+[`process.addAsyncListener()`][]. The same `AsyncListener` instance can
+only be added once to the active queue, and subsequent attempts to add the
+instance will be ignored.
+-->
+
+<p>非同期イベントを捉えるには、<a href="#process_process_addasynclistener_asynclistener"><code>process.addAsyncListener()</code></a> に
+このオブジェクトを渡してください。
+同じ <code>AsyncListener</code> インスタンスは一度だけアクティブなキューに加えられます。
+それ以降、インスタンスの追加を試みても無視されます。
+
+</p>
+<!--
+To stop capturing pass the object to [`process.removeAsyncListener()`][].
+This does _not_ mean the `AsyncListener` previously added will stop
+triggering callbacks. Once attached to an asynchronous event it will
+persist with the lifetime of the asynchronous call stack.
+-->
+
+<p>イベントの捕捉を止めるには、このオブジェクトを
+<a href="#process_process_removeasynclistener_asynclistener"><code>process.removeAsyncListener()</code></a> に渡してください。
+それは以前に加えられた <code>AsyncListener</code> がコールバックされなくなることを
+意味 <em>しません</em>。
+一度非同期イベントに加えられると、それは非同期処理のコールスタックが有効な間、
+持続します。
+
+</p>
+<!--
+Explanation of function parameters:
+-->
+
+<p>関数のパラメータの説明:
+
+</p>
+<!--
+`asyncListener(storageValue)`: A `Function` called when an asynchronous
+event is instantiated. If a `Value` is returned then it will be attached
+to the event and overwrite any value that had been passed to
+`process.createAsyncListener()`'s `storageValue` argument. If an initial
+`storageValue` was passed when created, then `asyncListener()` will
+receive that as a function argument.
+-->
+
+<p><code>asyncListener(storageValue)</code>: 非同期イベントが生成された時に呼び出される関数。
+関数がもし <code>Value</code> を返すなら、それはイベントに割り当てられ、
+<code>process.createAsyncListener()</code> の <code>storageValue</code> 引数に渡された値を
+上書きします。
+作成時に <code>storageValue</code> の初期値が渡されていた場合、<code>asyncListener()</code> は
+関数の引数としてそれを受け取ります。
+
+</p>
+<!--
+`callbacksObj`: An `Object` which may contain three optional fields:
+-->
+
+<p><code>callbacksObj</code>: オプションのフィールドを3つ持つことができる <code>Object</code> です。
+
+</p>
+<!--
+* `before(context, storageValue)`: A `Function` that is called immediately
+before the asynchronous callback is about to run. It will be passed both
+the `context` (i.e. `this`) of the calling function and the `storageValue`
+either returned from `asyncListener` or passed during construction (if
+either occurred).
+-->
+
+<ul>
+<li><code>before(context, storageValue)</code>: 非同期コールバックが実行される前に
+呼び出される関数です。
+それは呼び出される関数の <code>context</code> (すなわち <code>this</code>) と、
+<code>asyncListener</code> の戻り値または構築時に渡された値 (両方の場合) のどちらかが
+<code>storageValue</code> として渡されます。</li>
+</ul>
+<!--
+* `after(context, storageValue)`: A `Function` called immediately after
+the asynchronous event's callback has run. Note this will not be called
+if the callback throws and the error is not handled.
+-->
+
+<ul>
+<li><code>after(context, storageValue)</code>: 非同期イベントのコールバックが実行された後で
+呼び出される関数です。
+コールバックがエラーをスローしてそれが処理されなければ、
+これは呼び出されないことに注意してください。</li>
+</ul>
+<!--
+* `error(storageValue, error)`: A `Function` called if the event's
+callback threw. If `error` returns `true` then Node will assume the error
+has been properly handled and resume execution normally. When multiple
+`error()` callbacks have been registered, only **one** of those callbacks
+needs to return `true` for `AsyncListener` to accept that the error has
+been handled.
+-->
+
+<ul>
+<li><code>error(storageValue, error)</code>: イベントのコールバックがスローすると
+呼び出されます。
+もし <code>error()</code> が <code>true</code> を返すと、Node はエラーが正しく処理されたと見なし、
+正常に実行を再開します。
+複数の <code>error()</code> が登録されている場合、エラーが処理されたと <code>AsyncListener</code> に
+認められるには、<strong>一つ</strong> だけでもコールバックが <code>true</code> を返す必要があります。</li>
+</ul>
+<!--
+`storageValue`: A `Value` (i.e. anything) that will be, by default,
+attached to all new event instances. This will be overwritten if a `Value`
+is returned by `asyncListener()`.
+-->
+
+<ul>
+<li><code>storageValue</code>: デフォルトで、新しいイベントのインスタンスに割り当てられる値
+(つまり何でも)。<code>asyncListener()</code> が返す値によって上書きされるかもしれません。</li>
+</ul>
+<!--
+Here is an example of overwriting the `storageValue`:
+-->
+
+<p><code>storageValue</code> が上書きされる例です:
+
+</p>
+<pre><code>process.createAsyncListener(function listener(value) {
+  // value === true
+  return false;
+}, {
+  before: function before(context, value) {
+    // value === false
+  }
+}, true);</code></pre>
+<!--
+**Note:** The [EventEmitter][], while used to emit status of an asynchronous
+event, is not itself asynchronous. So `asyncListener()` will not fire when
+an event is added, and `before`/`after` will not fire when emitted
+callbacks are called.
+-->
+
+<p><strong>注意:</strong> <a href="events.html#events_class_events_eventemitter">EventEmitter</a> は、非同期イベントを生成するために使われますが、
+それ自身は非同期ではありません。
+そのため、イベントが加えられても <code>asyncListener()</code> は呼び出されず、
+コールバックが呼び出されても <code>before</code>/<code>after</code> は呼び出されません。
+
+
+</p>
+<h2>process.addAsyncListener(asyncListener[, callbacksObj[, storageValue]])<span><a class="mark" href="#process_process_addasynclistener_asynclistener_callbacksobj_storagevalue" id="process_process_addasynclistener_asynclistener_callbacksobj_storagevalue">#</a></span></h2>
+<h2>process.addAsyncListener(asyncListener)<span><a class="mark" href="#process_process_addasynclistener_asynclistener" id="process_process_addasynclistener_asynclistener">#</a></span></h2>
+<!--
+Returns a constructed `AsyncListener` object and immediately adds it to
+the listening queue to begin capturing asynchronous events.
+-->
+
+<p><code>AsyncListener</code> オブジェクトを構築し、それを非同期イベントを捕捉するキューに
+加えて返します。
+
+</p>
+<!--
+Function parameters can either be the same as
+[`process.createAsyncListener()`][], or a constructed `AsyncListener`
+object.
+-->
+
+<p>関数の引数は <a href="#process_process_createasynclistener_asynclistener_callbacksobj_storagevalue"><code>process.createAsyncListener()</code></a> と同じか、
+構築された <code>AsyncListener</code> オブジェクトです。
+
+</p>
+<!--
+Example usage for capturing errors:
+-->
+
+<p>エラーを捕捉する例:
+
+</p>
+<pre><code>var cntr = 0;
+var key = process.addAsyncListener(function() {
+  return { uid: cntr++ };
+}, {
+  before: function onBefore(context, storage) {
+    // Need to remove the listener while logging or will end up
+    // with an infinite call loop.
+    process.removeAsyncListener(key);
+    console.log(&#39;uid: %s is about to run&#39;, storage.uid);
+    process.addAsyncListener(key);
+  },
+  after: function onAfter(context, storage) {
+    process.removeAsyncListener(key);
+    console.log(&#39;uid: %s is about to run&#39;, storage.uid);
+    process.addAsyncListener(key);
+  },
+  error: function onError(storage, err) {
+    // Handle known errors
+    if (err.message === &#39;really, it\&#39;s ok&#39;) {
+      process.removeAsyncListener(key);
+      console.log(&#39;handled error just threw:&#39;);
+      console.log(err.stack);
+      process.addAsyncListener(key);
+      return true;
+    }
+  }
+});
+
+process.nextTick(function() {
+  throw new Error(&#39;really, it\&#39;s ok&#39;);
+});
+
+// Output:
+// uid: 0 is about to run
+// handled error just threw:
+// Error: really, it&#39;s ok
+//     at /tmp/test2.js:27:9
+//     at process._tickCallback (node.js:583:11)
+//     at Function.Module.runMain (module.js:492:11)
+//     at startup (node.js:123:16)
+//     at node.js:1012:3</code></pre>
+<h2>process.removeAsyncListener(asyncListener)<span><a class="mark" href="#process_process_removeasynclistener_asynclistener" id="process_process_removeasynclistener_asynclistener">#</a></span></h2>
+<!--
+Removes the `AsyncListener` from the listening queue.
+-->
+
+<p><code>AsyncListener</code> を監視キューから削除します。
+
+</p>
+<!--
+Removing the `AsyncListener` from the queue does _not_ mean asynchronous
+events called during its execution scope will stop firing callbacks. Once
+attached to an event it will persist for the entire asynchronous call
+stack. For example:
+-->
+
+<p>キューから <code>AsyncLister</code> を削除することは、その実行スコープの間で
+呼ばれる非同期イベントによるコールバック呼び出しの中止を意味しません。
+
+</p>
+<pre><code>var key = process.createAsyncListener(function asyncListener() {
+  // To log we must stop listening or we&#39;ll enter infinite recursion.
+  process.removeAsyncListener(key);
+  console.log(&#39;You summoned me?&#39;);
+  process.addAsyncListener(key);
+});
+
+// We want to begin capturing async events some time in the future.
+setTimeout(function() {
+  process.addAsyncListener(key);
+
+  // Perform a few additional async events.
+  setTimeout(function() {
+    setImmediate(function() {
+      process.nextTick(function() { });
+    });
+  });
+
+  // Removing the listener doesn&#39;t mean to stop capturing events that
+  // have already been added.
+  process.removeAsyncListener(key);
+}, 100);
+
+// Output:
+// You summoned me?
+// You summoned me?
+// You summoned me?
+// You summoned me?</code></pre>
+<!--
+The fact that we logged 4 asynchronous events is an implementation detail
+of Node's [Timers][].
+-->
+
+<p>4つの非同期イベントを記録したという事実は、Node の <a href="timers.html">Timers</a> 実装の詳細を
+表しています。
+
+</p>
+<!--
+To stop capturing from a specific asynchronous event stack
+`process.removeAsyncListener()` must be called from within the call
+stack itself. For example:
+-->
+
+<p>非同期イベントの捕捉を特定のスタック上で止めたければ、
+<code>process.removeAsyncListener()</code> はそのコールスタック自身で呼び出すべきです。
+たとえば:
+
+</p>
+<pre><code>var key = process.createAsyncListener(function asyncListener() {
+  // To log we must stop listening or we&#39;ll enter infinite recursion.
+  process.removeAsyncListener(key);
+  console.log(&#39;You summoned me?&#39;);
+  process.addAsyncListener(key);
+});
+
+// We want to begin capturing async events some time in the future.
+setTimeout(function() {
+  process.addAsyncListener(key);
+
+  // Perform a few additional async events.
+  setImmediate(function() {
+    // Stop capturing from this call stack.
+    process.removeAsyncListener(key);
+
+    process.nextTick(function() { });
+  });
+}, 100);
+
+// Output:
+// You summoned me?</code></pre>
+<!--
+The user must be explicit and always pass the `AsyncListener` they wish
+to remove. It is not possible to simply remove all listeners at once.
+-->
+
+<p>ユーザは削除したい <code>AsyncListener</code> をいつでも明示的に渡すべきです。
+すべてのリスナを一度に削除することは出来ません。
+
+
+</p>
 
           </div>
         </div>
@@ -1256,7 +1673,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

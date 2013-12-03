@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.11.8 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.11.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -334,12 +334,14 @@ Returned by `crypto.createHash`.
 Updates the hash content with the given `data`, the encoding of which
 is given in `input_encoding` and can be `'utf8'`, `'ascii'` or
 `'binary'`.  If no encoding is provided, then a buffer is expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p>与えられた <code>data</code> でハッシュの内容を更新します。
 そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、
 または <code>&#39;binary&#39;</code> を指定することができます。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <!--
@@ -550,11 +552,13 @@ methods are also supported.
 Updates the cipher with `data`, the encoding of which is given in
 `input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no
 encoding is provided, then a buffer is expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p><code>data</code> で暗号を更新します。
 <code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <p>The <code>output_encoding</code> specifies the output format of the enciphered
@@ -669,11 +673,13 @@ plain-text data on the the readable side.  The legacy `update` and
 Updates the decipher with `data`, which is encoded in `'binary'`,
 `'base64'` or `'hex'`.  If no encoding is provided, then a buffer is
 expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を
 <code>data</code> で更新します。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <!--
@@ -1138,7 +1144,7 @@ Synchronous PBKDF2 function.  Returns derivedKey or throws error.
 Generates cryptographically strong pseudo-random data. Usage:
 -->
 
-<p>暗号学的で、強い疑似乱数データを生成します。使用法:
+<p>暗号理論的に強い疑似乱数データを生成します。使用法:
 
 </p>
 <pre><code>// async
@@ -1153,7 +1159,21 @@ try {
   console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);
 } catch (ex) {
   // handle error
+  // most likely, entropy sources are drained
 }</code></pre>
+<!--
+NOTE: Will throw error or invoke callback with error, if there is not enough
+accumulated entropy to generate cryptographically strong data. In other words,
+`crypto.randomBytes` without callback will not block even if all entropy sources
+are drained.
+-->
+
+<p>注意: もし暗号理論的に強いデータを生成するために十分な累積エントロピーが
+なければ、エラーがスローされるか、エラーと共にコールバックが呼ばれます。
+言い換えると、コールバックを渡さずに <code>crypto.randomBytes()</code> を呼び出しても、
+全てのエントロピー源が枯渇するまでブロックするわけではありません。
+
+</p>
 <h2>crypto.pseudoRandomBytes(size, [callback])<span><a class="mark" href="#crypto_crypto_pseudorandombytes_size_callback" id="crypto_crypto_pseudorandombytes_size_callback">#</a></span></h2>
 <!--
 Generates *non*-cryptographically strong pseudo-random data. The data
@@ -1163,7 +1183,7 @@ function should never be used where unpredictability is important,
 such as in the generation of encryption keys.
 -->
 
-<p>暗号学的では <em>ない</em>、強い疑似乱数データを生成します。
+<p>暗号理論的では <em>ない</em>、強い疑似乱数データを生成します。
 返されるデータは十分に長ければユニークですが、
 必ずしも予測不可能ではありません。
 この理由のため、この関数の出力を暗号化キーの生成など、予測不可能であることが
@@ -1178,24 +1198,46 @@ Usage is otherwise identical to `crypto.randomBytes`.
 
 </p>
 <h2>Class: Certificate<span><a class="mark" href="#crypto_class_certificate" id="crypto_class_certificate">#</a></span></h2>
-<p>The class used for working with signed public key &amp; challenges. The most
-common usage for this series of functions is when dealing with the <code>&lt;keygen&gt;</code>
-element. <a href="http://www.openssl.org/docs/apps/spkac.html">http://www.openssl.org/docs/apps/spkac.html</a>
+<!--
+The class used for working with signed public key & challenges. The most
+common usage for this series of functions is when dealing with the `<keygen>`
+element. http://www.openssl.org/docs/apps/spkac.html
+-->
+
+<p>このクラスは「signed public key &amp; challenges (SPKAC)」のために使われます。
+この一連の関数の主な用途は、<code>&lt;keygen&gt;</code> 要素の取り扱いです。
+<a href="http://www.openssl.org/docs/apps/spkac.html">http://www.openssl.org/docs/apps/spkac.html</a>
 
 </p>
-<p>Returned by <code>crypto.Certificate</code>.
+<!--
+Returned by `crypto.Certificate`.
+-->
+
+<p><code>crypto.Certificate</code> を返します。
 
 </p>
 <h3>Certificate.verifySpkac(spkac)<span><a class="mark" href="#crypto_certificate_verifyspkac_spkac" id="crypto_certificate_verifyspkac_spkac">#</a></span></h3>
-<p>Returns true of false based on the validity of the SPKAC.
+<!--
+Returns true of false based on the validity of the SPKAC.
+-->
+
+<p>妥当なSPKAC かどうかを <code>true</code> または <code>false</code> で返します。
 
 </p>
 <h3>Certificate.exportChallenge(spkac)<span><a class="mark" href="#crypto_certificate_exportchallenge_spkac" id="crypto_certificate_exportchallenge_spkac">#</a></span></h3>
-<p>Exports the encoded public key from the supplied SPKAC.
+<!--
+Exports the encoded public key from the supplied SPKAC.
+-->
+
+<p>与えられた SPKAC からエンコードされた公開鍵を取り出します。
 
 </p>
 <h3>Certificate.exportPublicKey(spkac)<span><a class="mark" href="#crypto_certificate_exportpublickey_spkac" id="crypto_certificate_exportpublickey_spkac">#</a></span></h3>
-<p>Exports the encoded challenge associated with the SPKAC.
+<!--
+Exports the encoded challenge associated with the SPKAC.
+-->
+
+<p>与えられた SPKAC からエンコードされたチャレンジを取り出します。
 
 </p>
 <h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#crypto_crypto_default_encoding" id="crypto_crypto_default_encoding">#</a></span></h2>
@@ -1321,7 +1363,7 @@ temporary measure.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

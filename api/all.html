@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.11.8 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.9 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.8 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -185,6 +185,11 @@
 <li><a href="#all_process_umask_mask">process.umask([mask])</a></li>
 <li><a href="#all_process_uptime">process.uptime()</a></li>
 <li><a href="#all_process_hrtime">process.hrtime()</a></li>
+<li><a href="#all_async_listeners">Async Listeners</a></li>
+<li><a href="#all_process_createasynclistener_asynclistener_callbacksobj_storagevalue">process.createAsyncListener(asyncListener[, callbacksObj[, storageValue]])</a></li>
+<li><a href="#all_process_addasynclistener_asynclistener_callbacksobj_storagevalue">process.addAsyncListener(asyncListener[, callbacksObj[, storageValue]])</a></li>
+<li><a href="#all_process_addasynclistener_asynclistener">process.addAsyncListener(asyncListener)</a></li>
+<li><a href="#all_process_removeasynclistener_asynclistener">process.removeAsyncListener(asyncListener)</a></li>
 </ul>
 </li>
 <li><a href="#all_util">util</a><ul>
@@ -1053,6 +1058,7 @@
 <li><a href="#all_smalloc_alloc_length_receiver_type">smalloc.alloc(length[, receiver][, type])</a></li>
 <li><a href="#all_smalloc_copyonto_source_sourcestart_dest_deststart_copylength">smalloc.copyOnto(source, sourceStart, dest, destStart, copyLength);</a></li>
 <li><a href="#all_smalloc_dispose_obj">smalloc.dispose(obj)</a></li>
+<li><a href="#all_smalloc_hasexternaldata_obj">smalloc.hasExternalData(obj)</a></li>
 <li><a href="#all_smalloc_kmaxlength">smalloc.kMaxLength</a></li>
 <li><a href="#all_smalloc_types">smalloc.Types</a></li>
 </ul>
@@ -3955,14 +3961,72 @@ programs.
 
 </p>
 <!--
-Note: SIGUSR1 is reserved by node.js to kickstart the debugger.  It's possible
-to install a listener but that won't stop the debugger from starting.
+Note:
 -->
 
-<p>注意: <code>SIGUSR1</code> は Node.js がデバッガを起動するために予約されています。
-リスナを登録することは出来ますが、デバッガの起動を止めることは出来ません。
+<p>注意:
 
 </p>
+<!--
+- `SIGUSR1` is reserved by node.js to start the debugger.  It's possible to
+  install a listener but that won't stop the debugger from starting.
+- `SIGTERM` and `SIGINT` have default handlers on non-Windows platforms that resets
+  the terminal mode before exiting with code `128 + signal number`. If one of
+  these signals has a listener installed, its default behaviour will be removed
+  (node will no longer exit).
+- `SIGPIPE` is ignored by default, it can have a listener installed.
+- `SIGHUP` is generated on Windows when the console window is closed, and on other
+  platforms under various similar conditions, see signal(7). It can have a
+  listener installed, however node will be unconditionally terminated by Windows
+  about 10 seconds later. On non-Windows platforms, the default behaviour of
+  `SIGHUP` is to terminate node, but once a listener has been installed its
+  default behaviour will be removed.
+- `SIGTERM` is not supported on Windows, it can be listened on.
+- `SIGINT` is supported on all platforms, and can usually be generated with
+  `CTRL+C` (though this may be configurable). It is not generated when terminal
+  raw mode is enabled.
+- `SIGBREAK` is delivered on Windows when `CTRL+BREAK` is pressed, on non-Windows
+  platforms it can be listened on, but there is no way to send or generate it.
+- `SIGWINCH` is delivered when the console has been resized. On Windows, this will
+  only happen on write to the console when the cursor is being moved, or when a
+  readable tty is used in raw mode.
+- `SIGKILL` cannot have a listener installed, it will unconditionally terminate
+  node on all platforms.
+- `SIGSTOP` cannot have a listener installed.
+-->
+
+<ul>
+<li><code>SIGUSR1</code> は Node.js がデバッガを起動するために予約されています。
+リスナを登録することは出来ますが、デバッガの起動を止めることは出来ません。</li>
+<li><code>SIGTERM</code> および <code>SIGINT</code> は、Windows 以外のプラットフォームでは
+<code>128</code> + シグナル番号で終了する前にターミナルのモードをリセットする
+デフォルトのハンドラを持ちます。
+これらのシグナルのどちらかにリスナが登録されると、デフォルトの振る舞いは
+削除されます (node は終了しなくなります)。</li>
+<li><code>SIGPIPE</code> はデフォルトでは無視され、リスナを登録することが出来ます。</li>
+<li><code>SIGHUP</code> は Windows ではコンソールウィンドウが閉じられると発生します。
+他のプラットフォームでも同様の条件で発生します。詳細は signal(7)
+を参照してください。
+リスナを登録することは出来ますが、Windows では約 10 秒後に node は無条件に
+Windows によって終了されます。
+Windows 以外のプラットフォームでは、<code>SIGHUP</code> のデフォルトの振る舞いは
+nodeを終了することですが、リスナを登録するとデフォルトの振る舞いは
+削除されます。</li>
+<li><code>SIGTERM</code> は Windows ではサポートされません。
+しかし、リスナを登録することは可能です。</li>
+<li><code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
+(おそらく設定可能でしょう) によって生成されます。
+ターミナルが raw モードの場合は生成されません。</li>
+<li><code>SIGBREAK</code> は Windows において <code>CTRL+BREAK</code> が推された時に送られます。
+Windows 以外のプラットフォームでもリスナを登録することは出来ますが、
+それを生成したり送信する方法はありません。</li>
+<li><code>SIGWINCH</code> はコンソールのサイズが変更された場合に送られます。
+Windows では、カーソルが移動するか、tty が raw モードの場合に、
+コンソールへ書き込むと発生します。</li>
+<li><code>SIGKILL</code> のリスナを組み込むことは出来ません。
+それは全てのプラットフォームで node を無条件に終了します。</li>
+<li><code>SIGSTOP</code> のリスナを組み込むことは出来ません。</li>
+</ul>
 <h2>process.stdout<span><a class="mark" href="#all_process_stdout" id="all_process_stdout">#</a></span></h2>
 <!--
 A `Writable Stream` to `stdout`.
@@ -4840,6 +4904,360 @@ setTimeout(function() {
   console.log(&#39;benchmark took %d nanoseconds&#39;, diff[0] * 1e9 + diff[1]);
   // benchmark took 1000000527 nanoseconds
 }, 1000);</code></pre>
+<h2>Async Listeners<span><a class="mark" href="#all_async_listeners" id="all_async_listeners">#</a></span></h2>
+<!-- type=misc -->
+
+<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
+The `AsyncListener` API is the JavaScript interface for the `AsyncWrap`
+class which allows developers to be notified about key events in the
+lifetime of an asynchronous event. Node performs a lot of asynchronous
+events internally, and significant use of this API will have a **dramatic
+performance impact** on your application.
+-->
+
+<p><code>AsyncListener</code> API は、開発者が非同期イベントの有効期間中に
+キーとなるイベントの通知を受け取ることを可能にする、
+<code>AsyncWrap</code> クラスへの JavaScript インターフェースです。
+Node は内部的に多くの非同期イベントを扱うため、この API を使用することは
+アプリケーションのパフォーマンスに <strong>重大な影響</strong> を与えます。
+
+
+</p>
+<h2>process.createAsyncListener(asyncListener[, callbacksObj[, storageValue]])<span><a class="mark" href="#all_process_createasynclistener_asynclistener_callbacksobj_storagevalue" id="all_process_createasynclistener_asynclistener_callbacksobj_storagevalue">#</a></span></h2>
+<!--
+* `asyncListener` {Function} callback fired when an asynchronous event is
+instantiated.
+* `callbacksObj` {Object} optional callbacks that will fire at specific
+times in the lifetime of the asynchronous event.
+* `storageValue` {Value} a value that will be passed as the first argument
+when the `asyncListener` callback is run, and to all subsequent callback.
+-->
+
+<ul>
+<li><code>asyncListener</code> {Function} 非同期イベントが生成されると呼び出される
+コールバック。</li>
+<li><code>callbacksObj</code> {Object} 非同期イベントの有効期間中に、指定された回数だけ
+呼び出されるオプションのコールバック。</li>
+<li><code>storageValue</code> {Value} <code>asyncListener</code> とそれに続くコールバックが
+実行される時、最初の引数として渡される値。</li>
+</ul>
+<!--
+Returns a constructed `AsyncListener` object.
+-->
+
+<p>構築された <code>AsyncListener</code> オブジェクトを返します。
+
+</p>
+<!--
+To begin capturing asynchronous events pass the object to
+[`process.addAsyncListener()`][]. The same `AsyncListener` instance can
+only be added once to the active queue, and subsequent attempts to add the
+instance will be ignored.
+-->
+
+<p>非同期イベントを捉えるには、<a href="#process_process_addasynclistener_asynclistener"><code>process.addAsyncListener()</code></a> に
+このオブジェクトを渡してください。
+同じ <code>AsyncListener</code> インスタンスは一度だけアクティブなキューに加えられます。
+それ以降、インスタンスの追加を試みても無視されます。
+
+</p>
+<!--
+To stop capturing pass the object to [`process.removeAsyncListener()`][].
+This does _not_ mean the `AsyncListener` previously added will stop
+triggering callbacks. Once attached to an asynchronous event it will
+persist with the lifetime of the asynchronous call stack.
+-->
+
+<p>イベントの捕捉を止めるには、このオブジェクトを
+<a href="#process_process_removeasynclistener_asynclistener"><code>process.removeAsyncListener()</code></a> に渡してください。
+それは以前に加えられた <code>AsyncListener</code> がコールバックされなくなることを
+意味 <em>しません</em>。
+一度非同期イベントに加えられると、それは非同期処理のコールスタックが有効な間、
+持続します。
+
+</p>
+<!--
+Explanation of function parameters:
+-->
+
+<p>関数のパラメータの説明:
+
+</p>
+<!--
+`asyncListener(storageValue)`: A `Function` called when an asynchronous
+event is instantiated. If a `Value` is returned then it will be attached
+to the event and overwrite any value that had been passed to
+`process.createAsyncListener()`'s `storageValue` argument. If an initial
+`storageValue` was passed when created, then `asyncListener()` will
+receive that as a function argument.
+-->
+
+<p><code>asyncListener(storageValue)</code>: 非同期イベントが生成された時に呼び出される関数。
+関数がもし <code>Value</code> を返すなら、それはイベントに割り当てられ、
+<code>process.createAsyncListener()</code> の <code>storageValue</code> 引数に渡された値を
+上書きします。
+作成時に <code>storageValue</code> の初期値が渡されていた場合、<code>asyncListener()</code> は
+関数の引数としてそれを受け取ります。
+
+</p>
+<!--
+`callbacksObj`: An `Object` which may contain three optional fields:
+-->
+
+<p><code>callbacksObj</code>: オプションのフィールドを3つ持つことができる <code>Object</code> です。
+
+</p>
+<!--
+* `before(context, storageValue)`: A `Function` that is called immediately
+before the asynchronous callback is about to run. It will be passed both
+the `context` (i.e. `this`) of the calling function and the `storageValue`
+either returned from `asyncListener` or passed during construction (if
+either occurred).
+-->
+
+<ul>
+<li><code>before(context, storageValue)</code>: 非同期コールバックが実行される前に
+呼び出される関数です。
+それは呼び出される関数の <code>context</code> (すなわち <code>this</code>) と、
+<code>asyncListener</code> の戻り値または構築時に渡された値 (両方の場合) のどちらかが
+<code>storageValue</code> として渡されます。</li>
+</ul>
+<!--
+* `after(context, storageValue)`: A `Function` called immediately after
+the asynchronous event's callback has run. Note this will not be called
+if the callback throws and the error is not handled.
+-->
+
+<ul>
+<li><code>after(context, storageValue)</code>: 非同期イベントのコールバックが実行された後で
+呼び出される関数です。
+コールバックがエラーをスローしてそれが処理されなければ、
+これは呼び出されないことに注意してください。</li>
+</ul>
+<!--
+* `error(storageValue, error)`: A `Function` called if the event's
+callback threw. If `error` returns `true` then Node will assume the error
+has been properly handled and resume execution normally. When multiple
+`error()` callbacks have been registered, only **one** of those callbacks
+needs to return `true` for `AsyncListener` to accept that the error has
+been handled.
+-->
+
+<ul>
+<li><code>error(storageValue, error)</code>: イベントのコールバックがスローすると
+呼び出されます。
+もし <code>error()</code> が <code>true</code> を返すと、Node はエラーが正しく処理されたと見なし、
+正常に実行を再開します。
+複数の <code>error()</code> が登録されている場合、エラーが処理されたと <code>AsyncListener</code> に
+認められるには、<strong>一つ</strong> だけでもコールバックが <code>true</code> を返す必要があります。</li>
+</ul>
+<!--
+`storageValue`: A `Value` (i.e. anything) that will be, by default,
+attached to all new event instances. This will be overwritten if a `Value`
+is returned by `asyncListener()`.
+-->
+
+<ul>
+<li><code>storageValue</code>: デフォルトで、新しいイベントのインスタンスに割り当てられる値
+(つまり何でも)。<code>asyncListener()</code> が返す値によって上書きされるかもしれません。</li>
+</ul>
+<!--
+Here is an example of overwriting the `storageValue`:
+-->
+
+<p><code>storageValue</code> が上書きされる例です:
+
+</p>
+<pre><code>process.createAsyncListener(function listener(value) {
+  // value === true
+  return false;
+}, {
+  before: function before(context, value) {
+    // value === false
+  }
+}, true);</code></pre>
+<!--
+**Note:** The [EventEmitter][], while used to emit status of an asynchronous
+event, is not itself asynchronous. So `asyncListener()` will not fire when
+an event is added, and `before`/`after` will not fire when emitted
+callbacks are called.
+-->
+
+<p><strong>注意:</strong> <a href="events.html#events_class_events_eventemitter">EventEmitter</a> は、非同期イベントを生成するために使われますが、
+それ自身は非同期ではありません。
+そのため、イベントが加えられても <code>asyncListener()</code> は呼び出されず、
+コールバックが呼び出されても <code>before</code>/<code>after</code> は呼び出されません。
+
+
+</p>
+<h2>process.addAsyncListener(asyncListener[, callbacksObj[, storageValue]])<span><a class="mark" href="#all_process_addasynclistener_asynclistener_callbacksobj_storagevalue" id="all_process_addasynclistener_asynclistener_callbacksobj_storagevalue">#</a></span></h2>
+<h2>process.addAsyncListener(asyncListener)<span><a class="mark" href="#all_process_addasynclistener_asynclistener" id="all_process_addasynclistener_asynclistener">#</a></span></h2>
+<!--
+Returns a constructed `AsyncListener` object and immediately adds it to
+the listening queue to begin capturing asynchronous events.
+-->
+
+<p><code>AsyncListener</code> オブジェクトを構築し、それを非同期イベントを捕捉するキューに
+加えて返します。
+
+</p>
+<!--
+Function parameters can either be the same as
+[`process.createAsyncListener()`][], or a constructed `AsyncListener`
+object.
+-->
+
+<p>関数の引数は <a href="#process_process_createasynclistener_asynclistener_callbacksobj_storagevalue"><code>process.createAsyncListener()</code></a> と同じか、
+構築された <code>AsyncListener</code> オブジェクトです。
+
+</p>
+<!--
+Example usage for capturing errors:
+-->
+
+<p>エラーを捕捉する例:
+
+</p>
+<pre><code>var cntr = 0;
+var key = process.addAsyncListener(function() {
+  return { uid: cntr++ };
+}, {
+  before: function onBefore(context, storage) {
+    // Need to remove the listener while logging or will end up
+    // with an infinite call loop.
+    process.removeAsyncListener(key);
+    console.log(&#39;uid: %s is about to run&#39;, storage.uid);
+    process.addAsyncListener(key);
+  },
+  after: function onAfter(context, storage) {
+    process.removeAsyncListener(key);
+    console.log(&#39;uid: %s is about to run&#39;, storage.uid);
+    process.addAsyncListener(key);
+  },
+  error: function onError(storage, err) {
+    // Handle known errors
+    if (err.message === &#39;really, it\&#39;s ok&#39;) {
+      process.removeAsyncListener(key);
+      console.log(&#39;handled error just threw:&#39;);
+      console.log(err.stack);
+      process.addAsyncListener(key);
+      return true;
+    }
+  }
+});
+
+process.nextTick(function() {
+  throw new Error(&#39;really, it\&#39;s ok&#39;);
+});
+
+// Output:
+// uid: 0 is about to run
+// handled error just threw:
+// Error: really, it&#39;s ok
+//     at /tmp/test2.js:27:9
+//     at process._tickCallback (node.js:583:11)
+//     at Function.Module.runMain (module.js:492:11)
+//     at startup (node.js:123:16)
+//     at node.js:1012:3</code></pre>
+<h2>process.removeAsyncListener(asyncListener)<span><a class="mark" href="#all_process_removeasynclistener_asynclistener" id="all_process_removeasynclistener_asynclistener">#</a></span></h2>
+<!--
+Removes the `AsyncListener` from the listening queue.
+-->
+
+<p><code>AsyncListener</code> を監視キューから削除します。
+
+</p>
+<!--
+Removing the `AsyncListener` from the queue does _not_ mean asynchronous
+events called during its execution scope will stop firing callbacks. Once
+attached to an event it will persist for the entire asynchronous call
+stack. For example:
+-->
+
+<p>キューから <code>AsyncLister</code> を削除することは、その実行スコープの間で
+呼ばれる非同期イベントによるコールバック呼び出しの中止を意味しません。
+
+</p>
+<pre><code>var key = process.createAsyncListener(function asyncListener() {
+  // To log we must stop listening or we&#39;ll enter infinite recursion.
+  process.removeAsyncListener(key);
+  console.log(&#39;You summoned me?&#39;);
+  process.addAsyncListener(key);
+});
+
+// We want to begin capturing async events some time in the future.
+setTimeout(function() {
+  process.addAsyncListener(key);
+
+  // Perform a few additional async events.
+  setTimeout(function() {
+    setImmediate(function() {
+      process.nextTick(function() { });
+    });
+  });
+
+  // Removing the listener doesn&#39;t mean to stop capturing events that
+  // have already been added.
+  process.removeAsyncListener(key);
+}, 100);
+
+// Output:
+// You summoned me?
+// You summoned me?
+// You summoned me?
+// You summoned me?</code></pre>
+<!--
+The fact that we logged 4 asynchronous events is an implementation detail
+of Node's [Timers][].
+-->
+
+<p>4つの非同期イベントを記録したという事実は、Node の <a href="timers.html">Timers</a> 実装の詳細を
+表しています。
+
+</p>
+<!--
+To stop capturing from a specific asynchronous event stack
+`process.removeAsyncListener()` must be called from within the call
+stack itself. For example:
+-->
+
+<p>非同期イベントの捕捉を特定のスタック上で止めたければ、
+<code>process.removeAsyncListener()</code> はそのコールスタック自身で呼び出すべきです。
+たとえば:
+
+</p>
+<pre><code>var key = process.createAsyncListener(function asyncListener() {
+  // To log we must stop listening or we&#39;ll enter infinite recursion.
+  process.removeAsyncListener(key);
+  console.log(&#39;You summoned me?&#39;);
+  process.addAsyncListener(key);
+});
+
+// We want to begin capturing async events some time in the future.
+setTimeout(function() {
+  process.addAsyncListener(key);
+
+  // Perform a few additional async events.
+  setImmediate(function() {
+    // Stop capturing from this call stack.
+    process.removeAsyncListener(key);
+
+    process.nextTick(function() { });
+  });
+}, 100);
+
+// Output:
+// You summoned me?</code></pre>
+<!--
+The user must be explicit and always pass the `AsyncListener` they wish
+to remove. It is not possible to simply remove all listeners at once.
+-->
+
+<p>ユーザは削除したい <code>AsyncListener</code> をいつでも明示的に渡すべきです。
+すべてのリスナを一度に削除することは出来ません。
+
+
+</p>
 <h1>util<span><a class="mark" href="#all_util" id="all_util">#</a></span></h1>
 <pre class="api_stability_4">Stability: 4 - API Frozen</pre><!--
 These functions are in the module `'util'`. Use `require('util')` to
@@ -10508,12 +10926,14 @@ Returned by `crypto.createHash`.
 Updates the hash content with the given `data`, the encoding of which
 is given in `input_encoding` and can be `'utf8'`, `'ascii'` or
 `'binary'`.  If no encoding is provided, then a buffer is expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p>与えられた <code>data</code> でハッシュの内容を更新します。
 そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、
 または <code>&#39;binary&#39;</code> を指定することができます。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <!--
@@ -10724,11 +11144,13 @@ methods are also supported.
 Updates the cipher with `data`, the encoding of which is given in
 `input_encoding` and can be `'utf8'`, `'ascii'` or `'binary'`.  If no
 encoding is provided, then a buffer is expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p><code>data</code> で暗号を更新します。
 <code>input_encoding</code> で与えられるエンコーディングは <code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、<code>&#39;binary&#39;</code> のいずれかです。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <p>The <code>output_encoding</code> specifies the output format of the enciphered
@@ -10843,11 +11265,13 @@ plain-text data on the the readable side.  The legacy `update` and
 Updates the decipher with `data`, which is encoded in `'binary'`,
 `'base64'` or `'hex'`.  If no encoding is provided, then a buffer is
 expected.
+If `data` is a `Buffer` then `input_encoding` is ignored.
 -->
 
 <p><code>&#39;binary&#39;</code>、<code>&#39;base64&#39;</code> または <code>&#39;hex&#39;</code> のいずれかでエンコードされた復号を
 <code>data</code> で更新します。
 エンコーディングが与えられなかった場合はバッファが期待されます。
+もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
 <!--
@@ -11312,7 +11736,7 @@ Synchronous PBKDF2 function.  Returns derivedKey or throws error.
 Generates cryptographically strong pseudo-random data. Usage:
 -->
 
-<p>暗号学的で、強い疑似乱数データを生成します。使用法:
+<p>暗号理論的に強い疑似乱数データを生成します。使用法:
 
 </p>
 <pre><code>// async
@@ -11327,7 +11751,21 @@ try {
   console.log(&#39;Have %d bytes of random data: %s&#39;, buf.length, buf);
 } catch (ex) {
   // handle error
+  // most likely, entropy sources are drained
 }</code></pre>
+<!--
+NOTE: Will throw error or invoke callback with error, if there is not enough
+accumulated entropy to generate cryptographically strong data. In other words,
+`crypto.randomBytes` without callback will not block even if all entropy sources
+are drained.
+-->
+
+<p>注意: もし暗号理論的に強いデータを生成するために十分な累積エントロピーが
+なければ、エラーがスローされるか、エラーと共にコールバックが呼ばれます。
+言い換えると、コールバックを渡さずに <code>crypto.randomBytes()</code> を呼び出しても、
+全てのエントロピー源が枯渇するまでブロックするわけではありません。
+
+</p>
 <h2>crypto.pseudoRandomBytes(size, [callback])<span><a class="mark" href="#all_crypto_pseudorandombytes_size_callback" id="all_crypto_pseudorandombytes_size_callback">#</a></span></h2>
 <!--
 Generates *non*-cryptographically strong pseudo-random data. The data
@@ -11337,7 +11775,7 @@ function should never be used where unpredictability is important,
 such as in the generation of encryption keys.
 -->
 
-<p>暗号学的では <em>ない</em>、強い疑似乱数データを生成します。
+<p>暗号理論的では <em>ない</em>、強い疑似乱数データを生成します。
 返されるデータは十分に長ければユニークですが、
 必ずしも予測不可能ではありません。
 この理由のため、この関数の出力を暗号化キーの生成など、予測不可能であることが
@@ -11352,24 +11790,46 @@ Usage is otherwise identical to `crypto.randomBytes`.
 
 </p>
 <h2>Class: Certificate<span><a class="mark" href="#all_class_certificate" id="all_class_certificate">#</a></span></h2>
-<p>The class used for working with signed public key &amp; challenges. The most
-common usage for this series of functions is when dealing with the <code>&lt;keygen&gt;</code>
-element. <a href="http://www.openssl.org/docs/apps/spkac.html">http://www.openssl.org/docs/apps/spkac.html</a>
+<!--
+The class used for working with signed public key & challenges. The most
+common usage for this series of functions is when dealing with the `<keygen>`
+element. http://www.openssl.org/docs/apps/spkac.html
+-->
+
+<p>このクラスは「signed public key &amp; challenges (SPKAC)」のために使われます。
+この一連の関数の主な用途は、<code>&lt;keygen&gt;</code> 要素の取り扱いです。
+<a href="http://www.openssl.org/docs/apps/spkac.html">http://www.openssl.org/docs/apps/spkac.html</a>
 
 </p>
-<p>Returned by <code>crypto.Certificate</code>.
+<!--
+Returned by `crypto.Certificate`.
+-->
+
+<p><code>crypto.Certificate</code> を返します。
 
 </p>
 <h3>Certificate.verifySpkac(spkac)<span><a class="mark" href="#all_certificate_verifyspkac_spkac" id="all_certificate_verifyspkac_spkac">#</a></span></h3>
-<p>Returns true of false based on the validity of the SPKAC.
+<!--
+Returns true of false based on the validity of the SPKAC.
+-->
+
+<p>妥当なSPKAC かどうかを <code>true</code> または <code>false</code> で返します。
 
 </p>
 <h3>Certificate.exportChallenge(spkac)<span><a class="mark" href="#all_certificate_exportchallenge_spkac" id="all_certificate_exportchallenge_spkac">#</a></span></h3>
-<p>Exports the encoded public key from the supplied SPKAC.
+<!--
+Exports the encoded public key from the supplied SPKAC.
+-->
+
+<p>与えられた SPKAC からエンコードされた公開鍵を取り出します。
 
 </p>
 <h3>Certificate.exportPublicKey(spkac)<span><a class="mark" href="#all_certificate_exportpublickey_spkac" id="all_certificate_exportpublickey_spkac">#</a></span></h3>
-<p>Exports the encoded challenge associated with the SPKAC.
+<!--
+Exports the encoded challenge associated with the SPKAC.
+-->
+
+<p>与えられた SPKAC からエンコードされたチャレンジを取り出します。
 
 </p>
 <h2>crypto.DEFAULT_ENCODING<span><a class="mark" href="#all_crypto_default_encoding" id="all_crypto_default_encoding">#</a></span></h2>
@@ -11679,9 +12139,9 @@ automatically set as a listener for the [secureConnection][] event.  The
     conjunction with the `honorCipherOrder` option described below to
     prioritize the non-CBC cipher.
 
-    Defaults to `AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
+    Defaults to `ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH`.
     Consult the [OpenSSL cipher list format documentation] for details on the
-    format. ECDH (Elliptic Curve Diffie-Hellman) ciphers are not yet supported.
+    format.
 
 
     `AES128-GCM-SHA256` is used when node.js is linked against OpenSSL 1.0.1
@@ -11690,6 +12150,17 @@ automatically set as a listener for the [secureConnection][] event.  The
     **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an
     acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
     susceptible to BEAST attacks. Do *not* use it.
+
+  - `ecdhCurve`: A string describing a named curve to use for ECDH ciphers or
+    false to disable all ECDH ciphers.
+
+    This is required to support ECDH (Elliptic Curve Diffie-Hellman) ciphers.
+    ECDH ciphers are a newer alternative to RSA. The advantages of ECDH over
+    RSA is that it offers [Forward secrecy]. Forward secrecy means that for an
+    attacker it won't be possible to decrypt your previous data exchanges if
+    they get access to your private key.
+
+    Defaults to `prime256v1`. Consult [RFC 4492] for more details.
 
   - `handshakeTimeout`: Abort the connection if the SSL/TLS handshake does not
     finish in this many milliseconds. The default is 120 seconds.
@@ -11764,9 +12235,9 @@ automatically set as a listener for the [secureConnection][] event.  The
 <li><p><code>ciphers</code>: 使用または除外する暗号を記述した文字列です。</p>
 <p><a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a>を抑制するために、このオプションと以下に示す <code>honorCipherOrder</code>
 を共に使って、非 CBC 暗号を優先することを推奨します。</p>
-<p>デフォルトは <code>AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code> です。
-詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。
-ECDH (Elliptic Curve Diffie-Hellman) 暗号はまだサポートされていません。</p>
+<p>デフォルトは
+<code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code> です。
+詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。</p>
 <p><code>AES128-GCM-SHA256</code> は、Node.js が OpenSSL 1.0.1 以降とリンクされていて、
 クライアントが TLS 1.2 をサポートしている場合に使われます。
 RC4 は安全なフォールバックとして使われます。</p>
@@ -11774,6 +12245,15 @@ RC4 は安全なフォールバックとして使われます。</p>
 受け入れ可能な暗号であるかのように示していました。
 残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって BEAST
 攻撃には弱いです。</p>
+</li>
+<li><p><code>ecdhCurve</code>: ECDH 暗号で使用する曲線を説明する名前、または全ての
+ECDH 暗号を無効にする <code>false</code>。</p>
+<p>これは ECDH (Elliptic Curve Diffie-Hellman) 暗号では必須です。
+ECDH 暗号は RSA の新たな代替です。
+RSA を ECDH で置き換えるメリットは、<a href="http://en.wikipedia.org/wiki/Perfect_forward_secrecy">Forward secrecy</a> を提供することです。
+Forward secrecy は、攻撃者があなたの秘密鍵を取得したとしても、
+彼らがそれ以前に取得したデータを解読出来ないことを意味します。</p>
+<p>デフォルトは <code>prime256v1</code> です。より詳細は <a href="http://www.rfc-editor.org/rfc/rfc4492.txt">RFC 4492</a> を参照してください。</p>
 </li>
 <li><p><code>handshakeTimeout</code>: SSL/TLS ハンドシェークがこの時間 (ミリ秒)
 以内に終了しなかった場合は接続をアボートします。
@@ -12657,6 +13137,8 @@ The numeric representation of the local port.
 [SSL_METHODS]: http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_PROTOCOL_METHODS
 [tls.Server]: #tls_class_tls_server
 [SSL_CTX_set_timeout]: http://www.openssl.org/docs/ssl/SSL_CTX_set_timeout.html
+[RFC 4492]: http://www.rfc-editor.org/rfc/rfc4492.txt
+[Forward secrecy]: http://en.wikipedia.org/wiki/Perfect_forward_secrecy
 -->
 
 <h1>StringDecoder<span><a class="mark" href="#all_stringdecoder" id="all_stringdecoder">#</a></span></h1>
@@ -13918,10 +14400,14 @@ no-op, not an error.
 Watch for changes on `filename`, where `filename` is either a file or a
 directory.  The returned object is a [fs.FSWatcher](#fs_class_fs_fswatcher).
 
-The second argument is optional. The `options` if provided should be an object
-containing a boolean member `persistent`, which indicates whether the process
-should continue to run as long as files are being watched. The default is
-`{ persistent: true }`.
+The second argument is optional. The `options` if provided should be an object.
+The supported boolean members are `persistent` and `recursive`. `persistent`
+indicates whether the process should continue to run as long as files are being
+watched. `recursive` indicates whether all subdirectories should be watched, or
+only the current directory. This applies when a directory is specified, and only
+on supported platforms (See Caveats below).
+
+The default is `{ persistent: true, recursive: false }`.
 
 The listener callback gets two arguments `(event, filename)`.  `event` is either
 'rename' or 'change', and `filename` is the name of the file which triggered
@@ -13934,11 +14420,15 @@ the event.
 
 </p>
 <p>第 2 引数はオプションです。
-もし指定されるなら、<code>options</code> は boolean の <code>persistent</code> プロパティを
-持つオブジェクトであるべきです。
+もし指定されるなら、<code>options</code> はオブジェクトであるべきです。
+サポートされる <code>boolean</code> のメンバは <code>persistent</code> と <code>recursive</code> です。
 <code>persistent</code> はファイルが監視されている間、
 プロセスが実行し続けることを示します。
-デフォルトは <code>{ persistent: true }</code> です。
+<code>recursive</code> は監視対象が全てのサブディレクトリか、
+そのディレクトリだけかを示します。
+これは、ディレクトリが指定された場合で、サポートされるプラットフォームの場合のみ
+適用されます (後述の「Caveats」を参照してください)。
+デフォルトは <code>{ persistent: true, recursive: false }</code> です。
 
 </p>
 <p>リスナーコールバックは二つの引数 <code>(event, filename)</code> を与えられます。
@@ -13958,6 +14448,17 @@ unavailable in some situations.
 いくつかのシチュエーションで利用不可能です。
 
 </p>
+<!--
+The recursive option is currently supported on OS X. Only FSEvents supports this
+type of file watching so it is unlikely any additional platforms will be added
+soon.
+-->
+
+<p><code>recursive</code> オプションは OS X でのみサポートされます。
+FSEventsだけがこのタイプのファイル監視をサポートしているので、
+他のプラットフォームがすぐに追加される見込みはありません。
+
+</p>
 <h4>Availability<span><a class="mark" href="#all_availability" id="all_availability">#</a></span></h4>
 <!--type=misc-->
 
@@ -13972,14 +14473,16 @@ to be notified of filesystem changes.
 </p>
 <!--
 * On Linux systems, this uses `inotify`.
-* On BSD systems (including OS X), this uses `kqueue`.
+* On BSD systems, this uses `kqueue`.
+* On OS X, this uses `kqueue` for files and 'FSEvents' for directories.
 * On SunOS systems (including Solaris and SmartOS), this uses `event ports`.
 * On Windows systems, this feature depends on `ReadDirectoryChangesW`.
 -->
 
 <ul>
 <li>Linux システムでは <code>inotify</code> が使われます。</li>
-<li>BSD システム (OS X を含みます) では <code>kqueue</code> が使われます。</li>
+<li>BSD システム では <code>kqueue</code> が使われます。</li>
+<li>OSX では、ファイルには <code>kqueue</code>、ディレクトリには &#39;FSEvents&#39; が使われます。</li>
 <li>SunOS システム (Solaris および SmartOS を含みます) では <code>event ports</code>
 が使われます。</li>
 <li>Windows システムでは、この機能は <code>ReadDirectoryChangesW</code> に依存します。</li>
@@ -15087,9 +15590,9 @@ Listening on a file descriptor is not supported on Windows.
 </p>
 <!--
 This function is asynchronous.  When the server has been bound,
-['listening'](#event_listening_) event will be emitted.
+['listening'][] event will be emitted.
 the last parameter `callback` will be added as an listener for the
-['listening'](#event_listening_) event.
+['listening'][] event.
 -->
 
 <p>この関数は非同期です。
@@ -15321,19 +15824,23 @@ Construct a new socket object.
 
 </p>
 <pre><code>{ fd: null
-  type: null
-  allowHalfOpen: false
+  allowHalfOpen: false,
+  readable: false,
+  writable: false
 }</code></pre>
 <!--
-`fd` allows you to specify the existing file descriptor of socket. `type`
-specified underlying protocol. It can be `'tcp4'`, `'tcp6'`, or `'unix'`.
+`fd` allows you to specify the existing file descriptor of socket.
+Set `readable` and/or `writable` to `true` to allow reads and/or writes on this
+socket (NOTE: Works only when `fd` is passed).
 About `allowHalfOpen`, refer to `createServer()` and `'end'` event.
 -->
 
 <p><code>fd</code> に既存のソケットのファイル記述子を指定することができます。
-<code>type</code> にはプロトコルを指定することができます。
-指定できるのは <code>&#39;tcp4&#39;</code>、<code>&#39;tcp6&#39;</code> または <code>&#39;unix&#39;</code> のいずれかです。
-<code>allowHalfOpen</code> については <code>createServer()</code> および <code>&#39;end&#39;</code> イベントを参照してください。
+<code>readable</code> および <code>writable</code> に <code>true</code> を設定すると、
+ソケットへの読み込みまたは書き込みが可能になります
+(注意: <code>fd</code> が渡された場合のみ作用します)。
+<code>allowHalfOpen</code> については <code>createServer()</code> および <code>&#39;end&#39;</code>
+イベントを参照してください。
 
 </p>
 <h3>socket.connect(port, [host], [connectListener])<span><a class="mark" href="#all_socket_connect_port_host_connectlistener" id="all_socket_connect_port_host_connectlistener">#</a></span></h3>
@@ -15994,44 +16501,63 @@ Emitted when an error occurs.
 * `buf` Buffer object or string.  Message to be sent
 * `offset` Integer. Offset in the buffer where the message starts.
 * `length` Integer. Number of bytes in the message.
-* `port` Integer. destination port
-* `address` String. destination IP
-* `callback` Function. Callback when message is done being delivered.
-  Optional.
+* `port` Integer. Destination port.
+* `address` String. Destination hostname or IP address.
+* `callback` Function. Called when the message has been sent. Optional.
 -->
 
 <ul>
 <li><code>buf</code> Buffer オブジェクトまたは文字列。送信されるメッセージ</li>
 <li><code>offset</code> Integer。メッセージの開始位置となるバッファ内のオフセット</li>
 <li><code>length</code> Integer。メッセージのバイト長</li>
-<li><code>port</code> Integer。接続先のポート番号</li>
-<li><code>address</code> String。接続先の IP</li>
-<li><code>callback</code> 関数。メッセージの配信が完了した後にコールバックされる、
-任意。</li>
+<li><code>port</code> 整数。接続先のポート番号。</li>
+<li><code>address</code> 文字列。接続先のホスト名または IP アドレス。</li>
+<li><code>callback</code> 関数。メッセージが送信されるとコールバックされる。任意。</li>
 </ul>
 <!--
-For UDP sockets, the destination port and IP address must be specified.  A string
-may be supplied for the `address` parameter, and it will be resolved with DNS.  An
-optional callback may be specified to detect any DNS errors and when `buf` may be
-re-used.  Note that DNS lookups will delay the time that a send takes place, at
-least until the next tick.  The only way to know for sure that a send has taken place
-is to use the callback.
-
-If the socket has not been previously bound with a call to `bind`, it's
-assigned a random port number and bound to the "all interfaces" address
-(0.0.0.0 for `udp4` sockets, ::0 for `udp6` sockets).
+For UDP sockets, the destination port and address must be specified.  A string
+may be supplied for the `address` parameter, and it will be resolved with DNS.
 -->
 
-<p>UDP ソケット用です。相手先のポートと IP アドレスは必ず指定しなければなりません。
+<p>UDP ソケットに対しては、相手先のポートとアドレスは必ず指定しなければなりません。
 <code>address</code> パラメータに文字列を提供すると、それは DNS によって解決されます。
-DNS エラーと <code>buf</code> が再利用可能になった時のためにオプションのコールバックを指定することができます。
-DNS ルックアップは送信を少なくとも次の機会まで遅らせることに注意してください。
-送信が行われたことを確実に知る唯一の手段はコールバックを使うことです。
 
 </p>
+<!--
+If the address is omitted or is an empty string, `'0.0.0.0'` or `'::0'` is used
+instead.  Depending on the network configuration, those defaults may or may not
+work; it's best to be explicit about the destination address.
+-->
+
+<p>アドレスが省略された場合や空文字列だった場合は、代わりに <code>&#39;0.0.0.0&#39;</code> または
+<code>&#39;::0&#39;</code> が使われます。ネットワークの構成によっては、これらのデフォルト値は
+動作したりしなかったりします; 相手先のアドレスは明示的に指定することが最適です。
+
+</p>
+<!--
+If the socket has not been previously bound with a call to `bind`, it gets
+assigned a random port number and is bound to the "all interfaces" address
+(`'0.0.0.0'` for `udp4` sockets, `'::0'` for `udp6` sockets.)
+-->
+
 <p>ソケットが以前に <code>bind</code> の呼び出しによってバインドされていない場合は、
 ランダムなポート番号が「全てのインタフェース」アドレスに対してバインドされます
 (<code>udp4</code> ソケットでは 0.0.0.0、<code>udp6</code> では ::0)。
+
+</p>
+<!--
+An optional callback may be specified to detect DNS errors or for determining
+when it's safe to reuse the `buf` object.  Note that DNS lookups delay the time
+to send for at least one tick.  The only way to know for sure that the datagram
+has been sent is by using a callback.
+-->
+
+<p>DNS におけるエラー検出と、<code>buf</code> が再利用可能になったことを安全に知るために、
+オプションのコールバックを指定することができます。
+DNS ルックアップは送信を少なくとも次のイベントループまで遅らせることに
+注意してください。
+データグラムの送信が行われたことを確実に知る唯一の手段は、
+コールバックを使うことです。
 
 </p>
 <!--
@@ -23404,7 +23930,7 @@ The syntax is:
 <li><code>node debug &lt;URI&gt;</code> - <code>localhost:585</code> のような URI を通じてプロセスに接続</li>
 </ul>
 <h1>Cluster<span><a class="mark" href="#all_cluster" id="all_cluster">#</a></span></h1>
-<pre class="api_stability_1">Stability: 1 - Experimental</pre><!--
+<pre class="api_stability_2">Stability: 2 - Unstable</pre><!--
 A single instance of Node runs in a single thread. To take advantage of
 multi-core systems the user will sometimes want to launch a cluster of Node
 processes to handle the load.
@@ -24727,6 +25253,17 @@ smalloc.copyOnto(b, 2, a, 0, 2);
 <p><code>dispose()</code> は <code>Buffer</code> をサポートしません。もし渡されると例外をスローします。
 
 </p>
+<h2>smalloc.hasExternalData(obj)<span><a class="mark" href="#all_smalloc_hasexternaldata_obj" id="all_smalloc_hasexternaldata_obj">#</a></span></h2>
+<div class="signature"><ul>
+<li><code>obj</code> <span class="type">Object</span></li>
+</div></ul>
+<!--
+Returns `true` if the `obj` has externally allocated memory.
+-->
+
+<p><code>obj</code> が外部に割り当てられたメモリを持つなら <code>true</code> を返します。
+
+</p>
 <h2>smalloc.kMaxLength<span><a class="mark" href="#all_smalloc_kmaxlength" id="all_smalloc_kmaxlength">#</a></span></h2>
 <!--
 Size of maximum allocation. This is also applicable to Buffer creation.
@@ -24784,7 +25321,7 @@ Enum of possible external array types. Contains:
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.8/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
