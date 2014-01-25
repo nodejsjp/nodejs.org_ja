@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.10.24 Manual &amp; Documentation</title>
+  <title>process Node.js v0.10.25 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.24 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.25 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -113,16 +113,21 @@ It is an instance of [EventEmitter][].
 </p>
 <h2>Event: &#39;exit&#39;<span><a class="mark" href="#process_event_exit" id="process_event_exit">#</a></span></h2>
 <!--
-Emitted when the process is about to exit.  This is a good hook to perform
-constant time checks of the module's state (like for unit tests).  The main
-event loop will no longer be run after the 'exit' callback finishes, so
-timers may not be scheduled.
+Emitted when the process is about to exit. There is no way to prevent the
+exiting of the event loop at this point, and once all `exit` listeners have
+finished running the process will exit. Therefore you **must** only perform
+**synchronous** operations in this handler. This is a good hook to perform
+checks on the module's state (like for unit tests). The callback takes one
+argument, the code the process is exiting with.
 -->
 
 <p>プロセスが終了しようとしている時に生成されます。
-これは (ユニットテストのように) モジュールの状態を一定の時間でチェックするのに適したフックとなります。
-メインのイベントループは &#39;exit&#39; コールバックが終了するともはや動作しないので、
-タイマーはスケジュールされないかもしれません。
+この位置からイベントループを抜けることを防ぐ方法はなく、全ての <code>&#39;exit&#39;</code>
+リスナーの実行が完了すると、プロセスは終了します。
+従って、このハンドラでできることは <strong>同期</strong> 操作 <strong>だけ</strong> です。
+これは (ユニットテストのように) モジュールの状態をチェックするのに適した
+フックとなります。
+コールバックはプロセスの終了コードを唯一の引数として呼び出されます。
 
 </p>
 <!--
@@ -132,11 +137,12 @@ Example of listening for `exit`:
 <p><code>exit</code> を監視する例:
 
 </p>
-<pre><code>process.on(&#39;exit&#39;, function() {
+<pre><code>process.on(&#39;exit&#39;, function(code) {
+  // do *NOT* do this
   setTimeout(function() {
     console.log(&#39;This will not run&#39;);
   }, 0);
-  console.log(&#39;About to exit.&#39;);
+  console.log(&#39;About to exit with code:&#39;, code);
 });</code></pre>
 <h2>Event: &#39;uncaughtException&#39;<span><a class="mark" href="#process_event_uncaughtexception" id="process_event_uncaughtexception">#</a></span></h2>
 <!--
@@ -273,9 +279,9 @@ Note:
   `SIGHUP` is to terminate node, but once a listener has been installed its
   default behaviour will be removed.
 - `SIGTERM` is not supported on Windows, it can be listened on.
-- `SIGINT` is supported on all platforms, and can usually be generated with
-  `CTRL+C` (though this may be configurable). It is not generated when terminal
-  raw mode is enabled.
+- `SIGINT` from the terminal is supported on all platforms, and can usually be
+  generated with `CTRL+C` (though this may be configurable). It is not generated
+  when terminal raw mode is enabled.
 - `SIGBREAK` is delivered on Windows when `CTRL+BREAK` is pressed, on non-Windows
   platforms it can be listened on, but there is no way to send or generate it.
 - `SIGWINCH` is delivered when the console has been resized. On Windows, this will
@@ -305,7 +311,7 @@ nodeを終了することですが、リスナを登録するとデフォルト�
 削除されます。</li>
 <li><code>SIGTERM</code> は Windows ではサポートされません。
 しかし、リスナを登録することは可能です。</li>
-<li><code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
+<li>端末からの <code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
 (おそらく設定可能でしょう) によって生成されます。
 ターミナルが raw モードの場合は生成されません。</li>
 <li><code>SIGBREAK</code> は Windows において <code>CTRL+BREAK</code> が推された時に送られます。
@@ -317,6 +323,23 @@ Windows では、カーソルが移動するか、tty が raw モードの場合
 <li><code>SIGKILL</code> のリスナを組み込むことは出来ません。
 それは全てのプラットフォームで node を無条件に終了します。</li>
 <li><code>SIGSTOP</code> のリスナを組み込むことは出来ません。</li>
+</ul>
+<!--
+Note that Windows does not support sending Signals, but node offers some
+emulation with `process.kill()`, and `child_process.kill()`:
+- Sending signal `0` can be used to search for the existence of a process
+- Sending `SIGINT`, `SIGTERM`, and `SIGKILL` cause the unconditional exit of the
+  target process.
+-->
+
+<p>Windows はシグナルの送信をサポートしていませんが、nodeは<code>process.kill()</code> や
+<code>child_process.kill()</code> をエミュレートする方法を提供します:
+
+</p>
+<ul>
+<li>シグナル <code>0</code> は既存のプロセスを検索するためのものです。</li>
+<li><code>SIGINT</code>、<code>SIGTERM</code>、そして <code>SIGKILL</code> は、ターゲットのプロセスが無条件に
+終了する原因となります。</li>
 </ul>
 <h2>process.stdout<span><a class="mark" href="#process_process_stdout" id="process_process_stdout">#</a></span></h2>
 <!--
@@ -848,14 +871,15 @@ JavaScript で表現したオブジェクトを保持します。
 Send a signal to a process. `pid` is the process id and `signal` is the
 string describing the signal to send.  Signal names are strings like
 'SIGINT' or 'SIGHUP'.  If omitted, the signal will be 'SIGTERM'.
-See kill(2) for more information.
+See [Signal Events](#process_signal_events) and kill(2) for more information.
 -->
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
 シグナルの名前は &#39;SIGINT&#39; や &#39;SIGHUP&#39; のような文字列です。
 省略すると、シグナルは &#39;SIGTERM&#39; となります。
-詳細は kill(2) を参照してください。
+詳細は <a href="#process_signal_events">Signal Events</a> または kill(2)
+を参照してください。
 
 </p>
 <!--
@@ -874,9 +898,9 @@ really just a signal sender, like the `kill` system call.  The signal sent
 may do something other than kill the target process.
 -->
 
-<p>この関数の名前が <code>process.kill</code> であるとおり、
-これは <code>kill</code> システムコールのように本当にシグナルを送信することに注意してください。
-対象のプロセスを殺すだけでなく、他のシグナルも送信されます。
+<p>この関数の名前が <code>process.kill</code> であるとおり、これは <code>kill</code>
+システムコールのように単にシグナルを送信することに注意してください。
+対象のプロセスを殺すためだけでなく、他のシグナルも送信できます。
 
 </p>
 <!--
@@ -1226,7 +1250,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.24/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.25/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

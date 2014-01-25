@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Child Process Node.js v0.10.24 Manual &amp; Documentation</title>
+  <title>Child Process Node.js v0.10.25 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/child_process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.24 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.25 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -78,7 +78,7 @@
 </li>
 <li><a href="#child_process_child_process_spawn_command_args_options">child_process.spawn(command, [args], [options])</a></li>
 <li><a href="#child_process_child_process_exec_command_options_callback">child_process.exec(command, [options], callback)</a></li>
-<li><a href="#child_process_child_process_execfile_file_args_options_callback">child_process.execFile(file, args, options, callback)</a></li>
+<li><a href="#child_process_child_process_execfile_file_args_options_callback">child_process.execFile(file, [args], [options], [callback])</a></li>
 <li><a href="#child_process_child_process_fork_modulepath_args_options">child_process.fork(modulePath, [args], [options])</a></li>
 </ul>
 </li>
@@ -506,6 +506,20 @@ will emit objects each time it receives a message on its channel.
 
 </p>
 <!--
+Please note that the `send()` method on both the parent and child are
+synchronous - sending large chunks of data is not advised (pipes can be used
+instead, see
+[`child_process.spawn`](#child_process_child_process_spawn_command_args_options)).
+-->
+
+<p>親プロセスと子プロセスのいずれにおいても、<code>send()</code> メソッドは同期的です -
+データの大きな塊を送信することは推奨されません
+(代わりにパイプを使うことが出来ます、
+<a href="#child_process_child_process_spawn_command_args_options"><code>child_process.spawn</code></a>
+を参照してください)。
+
+</p>
+<!--
 There is a special case when sending a `{cmd: 'NODE_foo'}` message. All messages
 containing a `NODE_` prefix in its `cmd` property will not be emitted in
 the `message` event, since they are internal messages used by node core.
@@ -858,7 +872,9 @@ index corresponds to a fd in the child.  The value is one of the following:
 4. `Stream` object - Share a readable or writable stream that refers to a tty,
    file, socket, or a pipe with the child process. The stream's underlying
    file descriptor is duplicated in the child process to the fd that 
-   corresponds to the index in the `stdio` array.
+   corresponds to the index in the `stdio` array. Note that the stream must
+   have an underlying descriptor (file streams do not until the `'open'`
+   event has occurred).
 5. Positive integer - The integer value is interpreted as a file descriptor 
    that is is currently open in the parent process. It is shared with the child
    process, similar to how `Stream` objects can be shared.
@@ -888,7 +904,10 @@ Node は子プロセスを起動する際、常に fd 0～2 をオープンす�
 <li><code>Stream</code> オブジェクト - tty、ファイル、ソケット、またはパイプを参照する
 読み込みまたは書き込み可能なストリームを子プロセスと共有します。
 ストリームの下層にあるファイル記述子は、子プロセスの <code>stdio</code> 配列の
-対応する位置にコピーされます。</li>
+対応する位置にコピーされます。
+ストリームは下層のファイル記述を持っていなければならないことに
+注意してください (ファイルストリームは <code>&#39;open&#39;</code> イベントが発生するまで
+それを持ちません)。</li>
 <li>非負整数 - 整数の値を親プロセスが現在オープンしているファイル記述子として
 解釈されます。
 それは <code>Stream</code> オブジェクトの場合と同様に子プロセスに共有されます。</li>
@@ -1046,7 +1065,7 @@ See also: `child_process.exec()` and `child_process.fork()`
 <li><code>stderr</code> {Buffer}</li>
 </ul>
 </li>
-<li>Return: ChildProcess object</li>
+<li>Return: <code>ChildProcess</code> オブジェクト</li>
 </ul>
 <!--
 Runs a command in a shell and buffers the output.
@@ -1110,7 +1129,7 @@ the child process is killed.
 
 
 </p>
-<h2>child_process.execFile(file, args, options, callback)<span><a class="mark" href="#child_process_child_process_execfile_file_args_options_callback" id="child_process_child_process_execfile_file_args_options_callback">#</a></span></h2>
+<h2>child_process.execFile(file, [args], [options], [callback])<span><a class="mark" href="#child_process_child_process_execfile_file_args_options_callback" id="child_process_child_process_execfile_file_args_options_callback">#</a></span></h2>
 <!--
 * `file` {String} The filename of the program to run
 * `args` {Array} List of string arguments
@@ -1146,7 +1165,7 @@ the child process is killed.
 <li><code>stderr</code> {Buffer}</li>
 </ul>
 </li>
-<li>Return: ChildProcess object</li>
+<li>Return: <code>ChildProcess</code> オブジェクト</li>
 </ul>
 <!--
 This is similar to `child_process.exec()` except it does not execute a
@@ -1171,8 +1190,10 @@ leaner than `child_process.exec`. It has the same options.
   * `execPath` {String} Executable used to create the child process
   * `execArgv` {Array} List of string arguments passed to the executable
     (Default: `process.execArgv`)
-  * `silent` {Boolean} If true, prevent stdout and stderr in the spawned node
-    process from being associated with the parent's (default is false)
+  * `silent` {Boolean} If true, stdin, stdout, and stderr of the child will be
+    piped to the parent, otherwise they will be inherited from the parent, see
+    the "pipe" and "inherit" options for `spawn()`'s `stdio` for more details
+    (default is false)
 * Return: ChildProcess object
 -->
 
@@ -1186,11 +1207,14 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
 <li><code>execArgv</code> {Array} node 実行可能ファイルに渡される文字列引数の配列。
 (デフォルトは <code>process.execArgv</code>)</li>
-<li><code>silent</code> {Boolean} <code>true</code> の場合、起動された子プロセスの標準入力と標準出力が
-親プロセスに関連づけられるのを抑止します (デフォルトは <code>false</code>)。</li>
+<li><code>silent</code> {Boolean} <code>true</code> の場合、子プロセスの標準入力、標準出力、
+標準エラー出力は親プロセスにパイプされます。
+そうでない場合は親プロセスから継承します。
+より詳細は <code>spawn()</code> の <code>pipe</code> および <code>inherit</code> オプションを参照してください
+(デフォルトは <code>false</code>)。</li>
 </ul>
 </li>
-<li>Return: ChildProcess object</li>
+<li>Return: <code>ChildProcess</code> オブジェクト</li>
 </ul>
 <!--
 This is a special case of the `spawn()` functionality for spawning Node
@@ -1261,7 +1285,7 @@ output on this fd is expected to be line delimited JSON objects.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.24/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.25/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
