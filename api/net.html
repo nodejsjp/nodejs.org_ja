@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>net Node.js v0.11.9 Manual &amp; Documentation</title>
+  <title>net Node.js v0.11.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/net.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -250,11 +250,12 @@ For TCP sockets, `options` argument should be an object which specifies:
 <li><p><code>family</code> : IP スタックのバージョン。デフォルトは <code>4</code> です。</p>
 </li>
 </ul>
-<p>For UNIX domain sockets, <code>options</code> argument should be an object which specifies:
---&gt;
+<!--
+For local domain sockets, `options` argument should be an object which
+specifies:
+-->
 
-</p>
-<p>UNIX ドメインソケットの場合、<code>options</code> 引数は以下を指定したオブジェクトです。
+<p>ローカルドメインソケットの場合、<code>options</code> 引数は以下を指定したオブジェクトです。
 
 </p>
 <!--
@@ -319,7 +320,7 @@ changed to
 <p><code>&#39;/tmp/echo.sock&#39;</code> へのソケットに接続するには、2 行目をこのように変更します。
 
 </p>
-<pre><code>var client = net.connect({path: &#39;/tmp/echo.sock&#39;},</code></pre>
+<pre><code>var client = net.connect({path: &#39;/tmp/echo.sock&#39;});</code></pre>
 <h2>net.connect(port, [host], [connectListener])<span><a class="mark" href="#net_net_connect_port_host_connectlistener" id="net_net_connect_port_host_connectlistener">#</a></span></h2>
 <h2>net.createConnection(port, [host], [connectListener])<span><a class="mark" href="#net_net_createconnection_port_host_connectlistener" id="net_net_createconnection_port_host_connectlistener">#</a></span></h2>
 <!--
@@ -348,10 +349,10 @@ The `connectListener` parameter will be added as an listener for the
 </p>
 <h2>Class: net.Server<span><a class="mark" href="#net_class_net_server" id="net_class_net_server">#</a></span></h2>
 <!--
-This class is used to create a TCP or UNIX server.
+This class is used to create a TCP or local server.
 -->
 
-<p>このクラスは TCP または UNIX ドメインのサーバを作成するために使われます。
+<p>このクラスは TCP またはローカルのサーバを作成するために使われます。
 
 </p>
 <h3>server.listen(port, [host], [backlog], [callback])<span><a class="mark" href="#net_server_listen_port_host_backlog_callback" id="net_server_listen_port_host_backlog_callback">#</a></span></h3>
@@ -421,11 +422,16 @@ would be to wait a second and then try again. This can be done with
 
 </p>
 <h3>server.listen(path, [callback])<span><a class="mark" href="#net_server_listen_path_callback" id="net_server_listen_path_callback">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>path</code> <span class="type">String</span></li>
+<li><code>callback</code> <span class="type">Function</span></li>
+</div></ul>
 <!--
-Start a UNIX socket server listening for connections on the given `path`.
+Start a local socket server listening for connections on the given `path`.
 -->
 
-<p>与えられた <code>path</code> へのコネクションを待ち受けるする UNIX ドメインソケットのサーバを開始します。
+<p>与えられた <code>path</code> へのコネクションを待ち受けるするローカルドメインソケットの
+サーバを開始します。
 
 </p>
 <!--
@@ -439,6 +445,41 @@ will be added as an listener for the ['listening'][] event.
 最後の引数 <code>callback</code> は <a href="#net_event_listening">&#39;listening&#39;</a> のリスナとして加えられます。
 
 </p>
+<!--
+On UNIX, the local domain is usually known as the UNIX domain. The path is a
+filesystem path name. It is subject to the same naming conventions and
+permissions checks as would be done on file creation, will be visible in the
+filesystem, and will *persist until unlinked*.
+-->
+
+<p>UNIX では、ローカルドメインは通常 UNIX ドメインとして知られています。
+パスはファイルシステムのパス名です。
+それはファイルが作成されるのと同様に命名規則と認可のチェックが行われ、
+ファイルシステム上で見ることが出来て、アンリンクされるまで持続されます。
+
+</p>
+<!--
+On Windows, the local domain is implemented using a named pipe. The path *must*
+refer to an entry in `\\?\pipe\` or `\\.\pipe\`. Any characters are permitted,
+but the latter may do some processing of pipe names, such as resolving `..`
+sequences. Despite appearances, the pipe name space is flat.  Pipes will *not
+persist*, they are removed when the last reference to them is closed. Do not
+forget javascript string escaping requires paths to be specified with
+double-backslashes, such as:
+-->
+
+<p>Windows では、ローカルドメインは名前付きパイプを使って実装されます。
+パスは <code>\\?\pipe\</code> または <code>\\.\pipe\</code> のエントリを参照しなければ <em>なりません。</em>
+どんな文字も許されていますが、後者は <code>..</code> のシーケンスを解決するなど、
+パイプ名を処理する必要があるかも知れません。
+見た目と異なり、パイプの名前空間はフラットです。
+パイプは <em>持続的ではなく</em>、最後の参照がクローズされると削除されます。
+JavaScript の文字列では、パスを指定するためにバックスラッシュを重ねて
+エスケープする必要があることを忘れないでください。
+
+</p>
+<pre><code>net.createServer().listen(
+    path.join(&#39;\\\\?\\pipe&#39;, process.cwd(), &#39;myctl&#39;))</code></pre>
 <h3>server.listen(handle, [callback])<span><a class="mark" href="#net_server_listen_handle_callback" id="net_server_listen_handle_callback">#</a></span></h3>
 <div class="signature"><ul>
 <li><code>handle</code> <span class="type">Object</span></li>
@@ -679,13 +720,13 @@ following this event.  See example in discussion of `server.listen`.
 </p>
 <h2>Class: net.Socket<span><a class="mark" href="#net_class_net_socket" id="net_class_net_socket">#</a></span></h2>
 <!--
-This object is an abstraction of a TCP or UNIX socket.  `net.Socket`
+This object is an abstraction of a TCP or local socket.  `net.Socket`
 instances implement a duplex Stream interface.  They can be created by the
 user and used as a client (with `connect()`) or they can be created by Node
 and passed to the user through the `'connection'` event of a server.
 -->
 
-<p>このオブジェクトは TCP または UNIX ドメインのソケットを抽象化したものです。
+<p>このオブジェクトは TCP またはローカルのソケットを抽象化したものです。
 <code>net.Socket</code> のインスタンスは双方向のストリームインタフェースを実装します。
 それらはユーザによって (<code>connect()</code> によって) 作成されてクライアントとして使われるか、
 Node によって作成されてサーバの <code>&#39;connection&#39;</code> イベントを通じてユーザに渡されます。
@@ -1270,7 +1311,7 @@ Returns true if input is a version 6 IP address, otherwise returns false.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

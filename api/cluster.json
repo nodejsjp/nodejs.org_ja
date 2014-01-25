@@ -24,25 +24,31 @@
         {
           "textRaw": "`settings` {Object} ",
           "name": "settings",
-          "* {Object}\n  * `exec` {String} file path to worker file.  (Default": "`process.argv[1]`)\n  * `args` {Array} string arguments passed to worker.\n    (Default=`process.argv.slice(2)`)\n  * `silent` {Boolean} whether or not to send output to parent's stdio.\n    (Default=`false`)",
+          "* {Object}\n  * `execArgv` {Array} list of string arguments passed to the node executable. \n    (Default": "`process.execArgv`)\n  * `exec` {String} file path to worker file.  (Default=`process.argv[1]`)\n  * `args` {Array} string arguments passed to worker.\n    (Default=`process.argv.slice(2)`)\n  * `silent` {Boolean} whether or not to send output to parent's stdio.\n    (Default=`false`)",
           "options": [
             {
-              "textRaw": "`exec` {String} ワーカで実行するファイルへのパス. (デフォルトは `process.argv[1]`) ",
+              "textRaw": "`execArgv` {Array} node 実行ファイルに渡される引数を表す、文字列の配列 (デフォルトは `process.execArgv`)。 ",
+              "name": "execArgv",
+              "type": "Array",
+              "desc": "node 実行ファイルに渡される引数を表す、文字列の配列 (デフォルトは `process.execArgv`)。"
+            },
+            {
+              "textRaw": "`exec` {String} ワーカで実行するファイルへのパス (デフォルトは `process.argv[1]`)。 ",
               "name": "exec",
               "type": "String",
-              "desc": "ワーカで実行するファイルへのパス. (デフォルトは `process.argv[1]`)"
+              "desc": "ワーカで実行するファイルへのパス (デフォルトは `process.argv[1]`)。"
             },
             {
-              "textRaw": "`args` {Array} ワーカに渡される引数となる文字列。 (デフォルトは `process.argv.slice(2)`) ",
+              "textRaw": "`args` {Array} ワーカに渡される引数となる文字列 (デフォルトは `process.argv.slice(2)`)。 ",
               "name": "args",
               "type": "Array",
-              "desc": "ワーカに渡される引数となる文字列。 (デフォルトは `process.argv.slice(2)`)"
+              "desc": "ワーカに渡される引数となる文字列 (デフォルトは `process.argv.slice(2)`)。"
             },
             {
-              "textRaw": "`silent` {Boolean} 出力を親プロセスに送るかどうか。 (デフォルトは `false`) ",
+              "textRaw": "`silent` {Boolean} 出力を親プロセスに送るかどうか (デフォルトは `false`)。 ",
               "name": "silent",
               "type": "Boolean",
-              "desc": "出力を親プロセスに送るかどうか。 (デフォルトは `false`)"
+              "desc": "出力を親プロセスに送るかどうか (デフォルトは `false`)。"
             }
           ],
           "desc": "<!--\nAfter calling `.setupMaster()` (or `.fork()`) this settings object will contain\nthe settings, including the default values.\n-->\n\n<p><code>.setupMaster()</code> (または <code>.fork()</code>) が呼び出された後、この <code>settings</code>\nオブジェクトはデフォルト値を含む設定オブジェクトを持ちます。\n\n</p>\n<!--\nIt is effectively frozen after being set, because `.setupMaster()` can\nonly be called once.\n-->\n\n<p><code>.setupMaster()</code> は一度しか呼び出せないため、それは設定された後で事実上\n凍結されます。\n\n</p>\n<!--\nThis object is not supposed to be changed or set manually, by you.\n-->\n\n<p>このオブジェクトはあなたによって変更されることを想定していません。\n\n</p>\n"

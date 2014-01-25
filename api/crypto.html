@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.11.9 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.11.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -77,6 +77,7 @@
 <li><a href="#crypto_cipher_update_data_input_encoding_output_encoding">cipher.update(data, [input_encoding], [output_encoding])</a></li>
 <li><a href="#crypto_cipher_final_output_encoding">cipher.final([output_encoding])</a></li>
 <li><a href="#crypto_cipher_setautopadding_auto_padding_true">cipher.setAutoPadding(auto_padding=true)</a></li>
+<li><a href="#crypto_cipher_getauthtag">cipher.getAuthTag()</a></li>
 </ul>
 </li>
 <li><a href="#crypto_crypto_createdecipher_algorithm_password">crypto.createDecipher(algorithm, password)</a></li>
@@ -85,6 +86,7 @@
 <li><a href="#crypto_decipher_update_data_input_encoding_output_encoding">decipher.update(data, [input_encoding], [output_encoding])</a></li>
 <li><a href="#crypto_decipher_final_output_encoding">decipher.final([output_encoding])</a></li>
 <li><a href="#crypto_decipher_setautopadding_auto_padding_true">decipher.setAutoPadding(auto_padding=true)</a></li>
+<li><a href="#crypto_decipher_setauthtag_buffer">decipher.setAuthTag(buffer)</a></li>
 </ul>
 </li>
 <li><a href="#crypto_crypto_createsign_algorithm">crypto.createSign(algorithm)</a></li>
@@ -93,9 +95,6 @@
 <li><a href="#crypto_sign_sign_private_key_output_format">sign.sign(private_key, [output_format])</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#crypto_private_key_pem"><code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。</a><ul>
 <li><a href="#crypto_crypto_createverify_algorithm">crypto.createVerify(algorithm)</a></li>
 <li><a href="#crypto_class_verify">Class: Verify</a><ul>
 <li><a href="#crypto_verifier_update_data">verifier.update(data)</a></li>
@@ -333,14 +332,16 @@ Returned by `crypto.createHash`.
 <!--
 Updates the hash content with the given `data`, the encoding of which
 is given in `input_encoding` and can be `'utf8'`, `'ascii'` or
-`'binary'`.  If no encoding is provided, then a buffer is expected.
-If `data` is a `Buffer` then `input_encoding` is ignored.
+`'binary'`.  If no encoding is provided and the input is a string an
+encoding of `'binary'` is enforced. If `data` is a `Buffer` then
+`input_encoding` is ignored.
 -->
 
 <p>与えられた <code>data</code> でハッシュの内容を更新します。
 そのエンコーディングは <code>input_encoding</code> で与えられ、<code>&#39;utf8&#39;</code>、<code>&#39;ascii&#39;</code>、
 または <code>&#39;binary&#39;</code> を指定することができます。
-エンコーディングが与えられなかった場合はバッファが期待されます。
+入力が文字列でエンコーディングが与えられなかった場合、エンコーディングは
+<code>&#39;binary&#39;</code> が強制されます。
 もし <code>data</code> が <code>Buffer</code> なら、<code>input_encoding</code> は無視されます。
 
 </p>
@@ -619,6 +620,19 @@ must call this before `cipher.final`.
 <code>0x0</code> を使う場合に便利です。
 <code>cipher.final()</code> の前に呼び出す必要があります。
 
+</p>
+<h3>cipher.getAuthTag()<span><a class="mark" href="#crypto_cipher_getauthtag" id="crypto_cipher_getauthtag">#</a></span></h3>
+<!--
+For authenticated encryption modes (currently supported: GCM), this
+method returns a `Buffer` that represents the _authentication tag_ that
+has been computed from the given data. Should be called after
+encryption has been completed using the `final` method!
+-->
+
+<p>認証された暗号モード (現在サポートされているもの: GCM) では、
+このメソッドは与えられたデータから計算された <em>認証タグ</em> を表現する
+<code>Buffer</code> を返します。
+<code>final()</code> メソッドを使った暗号化が完了した後に呼び出されるべきです！
 
 </p>
 <h2>crypto.createDecipher(algorithm, password)<span><a class="mark" href="#crypto_crypto_createdecipher_algorithm_password" id="crypto_crypto_createdecipher_algorithm_password">#</a></span></h2>
@@ -730,6 +744,23 @@ the ciphers block size. You must call this before streaming data to
 <code>decipher.update()</code> の前に呼び出す必要があります。
 
 </p>
+<h3>decipher.setAuthTag(buffer)<span><a class="mark" href="#crypto_decipher_setauthtag_buffer" id="crypto_decipher_setauthtag_buffer">#</a></span></h3>
+<!--
+For authenticated encryption modes (currently supported: GCM), this
+method must be used to pass in the received _authentication tag_.
+If no tag is provided or if the ciphertext has been tampered with,
+`final` will throw, thus indicating that the ciphertext should
+be discarded due to failed authentication.
+-->
+
+<p>認証された暗号モード (現在サポートされているもの: GCM) に対して、
+このメソッドは受け取った認証タグを渡すために使われなければなりません。
+タグが提供されなかった場合や暗号文が改竄された場合は、
+<code>final</code> がスローされ、その暗号文は認証が失敗したために破棄されなければ
+ならないことが示されます。
+
+
+</p>
 <h2>crypto.createSign(algorithm)<span><a class="mark" href="#crypto_crypto_createsign_algorithm" id="crypto_crypto_createsign_algorithm">#</a></span></h2>
 <!--
 Creates and returns a signing object, with the given algorithm.  On
@@ -781,42 +812,32 @@ with new data as it is streamed.
 <h3>sign.sign(private_key, [output_format])<span><a class="mark" href="#crypto_sign_sign_private_key_output_format" id="crypto_sign_sign_private_key_output_format">#</a></span></h3>
 <!--
 Calculates the signature on all the updated data passed through the
-<<<<<<< HEAD
-sign.  `private_key` is a string containing the PEM encoded private
-key for signing.
+sign.
 -->
 
 <p>署名オブジェクトに渡された全ての更新データで署名を計算します。
-</p>
-<h1><code>private_key</code> は PEM でエンコードされた秘密鍵を内容とする文字列です。<span><a class="mark" href="#crypto_private_key_pem" id="crypto_private_key_pem">#</a></span></h1>
-<p>sign.
 
 </p>
-<p><code>private_key</code> can be an object or a string. If <code>private_key</code> is a string, it is
+<!--
+`private_key` can be an object or a string. If `private_key` is a string, it is
 treated as the key with no passphrase.
+-->
+
+<p><code>private_key</code> はオブジェクトまたは文字列です。
+<code>private_key</code> が文字列なら、それはパスフレーズのない鍵とみなされます。
 
 </p>
 <p><code>private_key</code>:
 
 </p>
+<!--
+* `key` : A string holding the PEM encoded private key
+* `passphrase` : A string of passphrase for the private key
+-->
+
 <ul>
-<li><code>key</code> : A string holding the PEM encoded private key</li>
-<li><code>passphrase</code> : A string of passphrase for the private key<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>v0.11.8</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</li>
+<li><code>key</code> : PEM でエンコードされた秘密鍵を保持する文字列</li>
+<li><code>passphrase</code> : 秘密鍵のパスフレーズを表す文字列</li>
 </ul>
 <!--
 Returns the signature in `output_format` which can be `'binary'`,
@@ -1363,7 +1384,7 @@ temporary measure.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
