@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>DNS Node.js v0.11.9 Manual &amp; Documentation</title>
+  <title>DNS Node.js v0.11.10 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/dns.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.9 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.10 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -63,6 +63,7 @@
 <li><a href="#dns_dns_resolvemx_hostname_callback">dns.resolveMx(hostname, callback)</a></li>
 <li><a href="#dns_dns_resolvetxt_hostname_callback">dns.resolveTxt(hostname, callback)</a></li>
 <li><a href="#dns_dns_resolvesrv_hostname_callback">dns.resolveSrv(hostname, callback)</a></li>
+<li><a href="#dns_dns_resolvesoa_hostname_callback">dns.resolveSoa(hostname, callback)</a></li>
 <li><a href="#dns_dns_resolvens_hostname_callback">dns.resolveNs(hostname, callback)</a></li>
 <li><a href="#dns_dns_resolvecname_hostname_callback">dns.resolveCname(hostname, callback)</a></li>
 <li><a href="#dns_dns_reverse_ip_callback">dns.reverse(ip, callback)</a></li>
@@ -81,7 +82,7 @@
 Use `require('dns')` to access this module. All methods in the dns module
 use C-Ares except for `dns.lookup` which uses `getaddrinfo(3)` in a thread
 pool. C-Ares is much faster than `getaddrinfo` but the system resolver is
-more constant with how other programs operate. When a user does
+more consistent with how other programs operate. When a user does
 `net.connect(80, 'google.com')` or `http.get({ host: 'google.com' })` the
 `dns.lookup` method is used. Users who need to do a large number of lookups
 quickly should use the methods that go through C-Ares.
@@ -91,7 +92,7 @@ quickly should use the methods that go through C-Ares.
 dns モジュールの全てのメソッドは C-Ares を使用します。
 ただし、<code>dns.lookup</code> はスレッドプール上で <code>getaddrinfo(3)</code> を使用します。
 C-Ares は <code>getaddrinfo</code> よりずっと速いものの、
-他のシステムと連携するにはシステムリゾルバの方が安定しています。
+他のシステムと連携するにはシステムリゾルバの方が一貫しています。
 ユーザが <code>net.connect(80, &#39;google.com&#39;)</code> または
 <code>http.get({ host: &#39;google.com&#39; })</code> を行った時、<code>dns.lookup</code>
 メソッドが使われます。
@@ -168,10 +169,7 @@ such as no available file descriptors.
 <h2>dns.resolve(hostname, [rrtype], callback)<span><a class="mark" href="#dns_dns_resolve_hostname_rrtype_callback" id="dns_dns_resolve_hostname_rrtype_callback">#</a></span></h2>
 <!--
 Resolves a hostname (e.g. `'google.com'`) into an array of the record types
-specified by rrtype. Valid rrtypes are `'A'` (IPV4 addresses, default),
-`'AAAA'` (IPV6 addresses), `'MX'` (mail exchange records), `'TXT'` (text
-records), `'SRV'` (SRV records), `'PTR'` (used for reverse IP lookups),
-`'NS'` (name server records) and `'CNAME'` (canonical name records).
+specified by rrtype.
 -->
 
 <p>ホスト名 (例 <code>&#39;google.com&#39;</code>) を解決して <code>rrtype</code> で指定されたレコードタイプの配列にします。
@@ -181,6 +179,36 @@ records), `'SRV'` (SRV records), `'PTR'` (used for reverse IP lookups),
 <code>&#39;NS&#39;</code> (ネームサーバレコード)、そして <code>&#39;CNAME&#39;</code> (別名レコード) です。
 
 </p>
+<!--
+Valid rrtypes are:
+-->
+
+<p>妥当な <code>rrtype</code> は:
+
+</p>
+<!--
+ * `'A'` (IPV4 addresses, default)
+ * `'AAAA'` (IPV6 addresses)
+ * `'MX'` (mail exchange records)
+ * `'TXT'` (text records)
+ * `'SRV'` (SRV records)
+ * `'PTR'` (used for reverse IP lookups)
+ * `'NS'` (name server records)
+ * `'CNAME'` (canonical name records)
+ * `'SOA'` (start of authority record)
+-->
+
+<ul>
+<li><code>&#39;A&#39;</code> (IPV4 アドレス、デフォルト)</li>
+<li><code>&#39;AAAA&#39;</code> (IPV6 アドレス)</li>
+<li><code>&#39;MX&#39;</code> (mail exchange レコード)</li>
+<li><code>&#39;TXT&#39;</code> (テキストレコード)</li>
+<li><code>&#39;SRV&#39;</code> (SRV レコード)</li>
+<li><code>&#39;PTR&#39;</code> (IP を逆引きでルックアップするために使われる)</li>
+<li><code>&#39;NS&#39;</code> (ネームサーバレコード)</li>
+<li><code>&#39;CNAME&#39;</code> (別名レコード)</li>
+<li><code>&#39;SOA&#39;</code> (start of authority、権威を持つゾーンの開始レコード)</li>
+</ul>
 <!--
 The callback has arguments `(err, addresses)`.  The type of each item
 in `addresses` is determined by the record type, and described in the
@@ -266,6 +294,32 @@ SRV レコードのプロパティは priority、weight、port、そして name 
 (例 <code>[{&#39;priority&#39;: 10, {&#39;weight&#39;: 5, &#39;port&#39;: 21223, &#39;name&#39;: &#39;service.example.com&#39;}, ...]</code>)。
 
 </p>
+<h2>dns.resolveSoa(hostname, callback)<span><a class="mark" href="#dns_dns_resolvesoa_hostname_callback" id="dns_dns_resolvesoa_hostname_callback">#</a></span></h2>
+<!--
+The same as `dns.resolve()`, but only for start of authority record queries 
+(`SOA` record).
+-->
+
+<p><code>dns.resolve()</code> と同じですが、権威を持つゾーンの開始レコード (<code>SOA</code> レコード)
+だけを問い合わせます。
+
+</p>
+<!--
+`addresses` is an object with the following structure:
+-->
+
+<p><code>address</code> は以下の構造を持つオブジェクトです。
+
+</p>
+<pre><code>{
+  nsname: &#39;ns.example.com&#39;,
+  hostmaster: &#39;root.example.com&#39;,
+  serial: 2013101809,
+  refresh: 10000,
+  retry: 2400,
+  expire: 604800,
+  minttl: 3600
+}</code></pre>
 <h2>dns.resolveNs(hostname, callback)<span><a class="mark" href="#dns_dns_resolvens_hostname_callback" id="dns_dns_resolvens_hostname_callback">#</a></span></h2>
 <!--
 The same as `dns.resolve()`, but only for name server records (`NS` records).
@@ -440,7 +494,7 @@ Each DNS query can return one of the following error codes:
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.9/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.10/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

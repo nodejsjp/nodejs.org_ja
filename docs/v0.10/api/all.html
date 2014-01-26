@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.24 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.25 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.24 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.25 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -881,7 +881,7 @@
 </li>
 <li><a href="#all_child_process_spawn_command_args_options">child_process.spawn(command, [args], [options])</a></li>
 <li><a href="#all_child_process_exec_command_options_callback">child_process.exec(command, [options], callback)</a></li>
-<li><a href="#all_child_process_execfile_file_args_options_callback">child_process.execFile(file, args, options, callback)</a></li>
+<li><a href="#all_child_process_execfile_file_args_options_callback">child_process.execFile(file, [args], [options], [callback])</a></li>
 <li><a href="#all_child_process_fork_modulepath_args_options">child_process.fork(modulePath, [args], [options])</a></li>
 </ul>
 </li>
@@ -3663,16 +3663,21 @@ It is an instance of [EventEmitter][].
 </p>
 <h2>Event: &#39;exit&#39;<span><a class="mark" href="#all_event_exit" id="all_event_exit">#</a></span></h2>
 <!--
-Emitted when the process is about to exit.  This is a good hook to perform
-constant time checks of the module's state (like for unit tests).  The main
-event loop will no longer be run after the 'exit' callback finishes, so
-timers may not be scheduled.
+Emitted when the process is about to exit. There is no way to prevent the
+exiting of the event loop at this point, and once all `exit` listeners have
+finished running the process will exit. Therefore you **must** only perform
+**synchronous** operations in this handler. This is a good hook to perform
+checks on the module's state (like for unit tests). The callback takes one
+argument, the code the process is exiting with.
 -->
 
 <p>プロセスが終了しようとしている時に生成されます。
-これは (ユニットテストのように) モジュールの状態を一定の時間でチェックするのに適したフックとなります。
-メインのイベントループは &#39;exit&#39; コールバックが終了するともはや動作しないので、
-タイマーはスケジュールされないかもしれません。
+この位置からイベントループを抜けることを防ぐ方法はなく、全ての <code>&#39;exit&#39;</code>
+リスナーの実行が完了すると、プロセスは終了します。
+従って、このハンドラでできることは <strong>同期</strong> 操作 <strong>だけ</strong> です。
+これは (ユニットテストのように) モジュールの状態をチェックするのに適した
+フックとなります。
+コールバックはプロセスの終了コードを唯一の引数として呼び出されます。
 
 </p>
 <!--
@@ -3682,11 +3687,12 @@ Example of listening for `exit`:
 <p><code>exit</code> を監視する例:
 
 </p>
-<pre><code>process.on(&#39;exit&#39;, function() {
+<pre><code>process.on(&#39;exit&#39;, function(code) {
+  // do *NOT* do this
   setTimeout(function() {
     console.log(&#39;This will not run&#39;);
   }, 0);
-  console.log(&#39;About to exit.&#39;);
+  console.log(&#39;About to exit with code:&#39;, code);
 });</code></pre>
 <h2>Event: &#39;uncaughtException&#39;<span><a class="mark" href="#all_event_uncaughtexception" id="all_event_uncaughtexception">#</a></span></h2>
 <!--
@@ -3823,9 +3829,9 @@ Note:
   `SIGHUP` is to terminate node, but once a listener has been installed its
   default behaviour will be removed.
 - `SIGTERM` is not supported on Windows, it can be listened on.
-- `SIGINT` is supported on all platforms, and can usually be generated with
-  `CTRL+C` (though this may be configurable). It is not generated when terminal
-  raw mode is enabled.
+- `SIGINT` from the terminal is supported on all platforms, and can usually be
+  generated with `CTRL+C` (though this may be configurable). It is not generated
+  when terminal raw mode is enabled.
 - `SIGBREAK` is delivered on Windows when `CTRL+BREAK` is pressed, on non-Windows
   platforms it can be listened on, but there is no way to send or generate it.
 - `SIGWINCH` is delivered when the console has been resized. On Windows, this will
@@ -3855,7 +3861,7 @@ nodeを終了することですが、リスナを登録するとデフォルト�
 削除されます。</li>
 <li><code>SIGTERM</code> は Windows ではサポートされません。
 しかし、リスナを登録することは可能です。</li>
-<li><code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
+<li>端末からの <code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
 (おそらく設定可能でしょう) によって生成されます。
 ターミナルが raw モードの場合は生成されません。</li>
 <li><code>SIGBREAK</code> は Windows において <code>CTRL+BREAK</code> が推された時に送られます。
@@ -3867,6 +3873,23 @@ Windows では、カーソルが移動するか、tty が raw モードの場合
 <li><code>SIGKILL</code> のリスナを組み込むことは出来ません。
 それは全てのプラットフォームで node を無条件に終了します。</li>
 <li><code>SIGSTOP</code> のリスナを組み込むことは出来ません。</li>
+</ul>
+<!--
+Note that Windows does not support sending Signals, but node offers some
+emulation with `process.kill()`, and `child_process.kill()`:
+- Sending signal `0` can be used to search for the existence of a process
+- Sending `SIGINT`, `SIGTERM`, and `SIGKILL` cause the unconditional exit of the
+  target process.
+-->
+
+<p>Windows はシグナルの送信をサポートしていませんが、nodeは<code>process.kill()</code> や
+<code>child_process.kill()</code> をエミュレートする方法を提供します:
+
+</p>
+<ul>
+<li>シグナル <code>0</code> は既存のプロセスを検索するためのものです。</li>
+<li><code>SIGINT</code>、<code>SIGTERM</code>、そして <code>SIGKILL</code> は、ターゲットのプロセスが無条件に
+終了する原因となります。</li>
 </ul>
 <h2>process.stdout<span><a class="mark" href="#all_process_stdout" id="all_process_stdout">#</a></span></h2>
 <!--
@@ -4398,14 +4421,15 @@ JavaScript で表現したオブジェクトを保持します。
 Send a signal to a process. `pid` is the process id and `signal` is the
 string describing the signal to send.  Signal names are strings like
 'SIGINT' or 'SIGHUP'.  If omitted, the signal will be 'SIGTERM'.
-See kill(2) for more information.
+See [Signal Events](#process_signal_events) and kill(2) for more information.
 -->
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
 シグナルの名前は &#39;SIGINT&#39; や &#39;SIGHUP&#39; のような文字列です。
 省略すると、シグナルは &#39;SIGTERM&#39; となります。
-詳細は kill(2) を参照してください。
+詳細は <a href="#process_signal_events">Signal Events</a> または kill(2)
+を参照してください。
 
 </p>
 <!--
@@ -4424,9 +4448,9 @@ really just a signal sender, like the `kill` system call.  The signal sent
 may do something other than kill the target process.
 -->
 
-<p>この関数の名前が <code>process.kill</code> であるとおり、
-これは <code>kill</code> システムコールのように本当にシグナルを送信することに注意してください。
-対象のプロセスを殺すだけでなく、他のシグナルも送信されます。
+<p>この関数の名前が <code>process.kill</code> であるとおり、これは <code>kill</code>
+システムコールのように単にシグナルを送信することに注意してください。
+対象のプロセスを殺すためだけでなく、他のシグナルも送信できます。
 
 </p>
 <!--
@@ -8723,7 +8747,7 @@ util.inherits(SimpleProtocol, Readable);
 
 function SimpleProtocol(source, options) {
   if (!(this instanceof SimpleProtocol))
-    return new SimpleProtocol(options);
+    return new SimpleProtocol(source, options);
 
   Readable.call(this, options);
   this._inBody = false;
@@ -20203,6 +20227,20 @@ will emit objects each time it receives a message on its channel.
 
 </p>
 <!--
+Please note that the `send()` method on both the parent and child are
+synchronous - sending large chunks of data is not advised (pipes can be used
+instead, see
+[`child_process.spawn`](#child_process_child_process_spawn_command_args_options)).
+-->
+
+<p>親プロセスと子プロセスのいずれにおいても、<code>send()</code> メソッドは同期的です -
+データの大きな塊を送信することは推奨されません
+(代わりにパイプを使うことが出来ます、
+<a href="#child_process_child_process_spawn_command_args_options"><code>child_process.spawn</code></a>
+を参照してください)。
+
+</p>
+<!--
 There is a special case when sending a `{cmd: 'NODE_foo'}` message. All messages
 containing a `NODE_` prefix in its `cmd` property will not be emitted in
 the `message` event, since they are internal messages used by node core.
@@ -20555,7 +20593,9 @@ index corresponds to a fd in the child.  The value is one of the following:
 4. `Stream` object - Share a readable or writable stream that refers to a tty,
    file, socket, or a pipe with the child process. The stream's underlying
    file descriptor is duplicated in the child process to the fd that 
-   corresponds to the index in the `stdio` array.
+   corresponds to the index in the `stdio` array. Note that the stream must
+   have an underlying descriptor (file streams do not until the `'open'`
+   event has occurred).
 5. Positive integer - The integer value is interpreted as a file descriptor 
    that is is currently open in the parent process. It is shared with the child
    process, similar to how `Stream` objects can be shared.
@@ -20585,7 +20625,10 @@ Node は子プロセスを起動する際、常に fd 0～2 をオープンす�
 <li><code>Stream</code> オブジェクト - tty、ファイル、ソケット、またはパイプを参照する
 読み込みまたは書き込み可能なストリームを子プロセスと共有します。
 ストリームの下層にあるファイル記述子は、子プロセスの <code>stdio</code> 配列の
-対応する位置にコピーされます。</li>
+対応する位置にコピーされます。
+ストリームは下層のファイル記述を持っていなければならないことに
+注意してください (ファイルストリームは <code>&#39;open&#39;</code> イベントが発生するまで
+それを持ちません)。</li>
 <li>非負整数 - 整数の値を親プロセスが現在オープンしているファイル記述子として
 解釈されます。
 それは <code>Stream</code> オブジェクトの場合と同様に子プロセスに共有されます。</li>
@@ -20743,7 +20786,7 @@ See also: `child_process.exec()` and `child_process.fork()`
 <li><code>stderr</code> {Buffer}</li>
 </ul>
 </li>
-<li>Return: ChildProcess object</li>
+<li>Return: <code>ChildProcess</code> オブジェクト</li>
 </ul>
 <!--
 Runs a command in a shell and buffers the output.
@@ -20807,7 +20850,7 @@ the child process is killed.
 
 
 </p>
-<h2>child_process.execFile(file, args, options, callback)<span><a class="mark" href="#all_child_process_execfile_file_args_options_callback" id="all_child_process_execfile_file_args_options_callback">#</a></span></h2>
+<h2>child_process.execFile(file, [args], [options], [callback])<span><a class="mark" href="#all_child_process_execfile_file_args_options_callback" id="all_child_process_execfile_file_args_options_callback">#</a></span></h2>
 <!--
 * `file` {String} The filename of the program to run
 * `args` {Array} List of string arguments
@@ -20843,7 +20886,7 @@ the child process is killed.
 <li><code>stderr</code> {Buffer}</li>
 </ul>
 </li>
-<li>Return: ChildProcess object</li>
+<li>Return: <code>ChildProcess</code> オブジェクト</li>
 </ul>
 <!--
 This is similar to `child_process.exec()` except it does not execute a
@@ -20868,8 +20911,10 @@ leaner than `child_process.exec`. It has the same options.
   * `execPath` {String} Executable used to create the child process
   * `execArgv` {Array} List of string arguments passed to the executable
     (Default: `process.execArgv`)
-  * `silent` {Boolean} If true, prevent stdout and stderr in the spawned node
-    process from being associated with the parent's (default is false)
+  * `silent` {Boolean} If true, stdin, stdout, and stderr of the child will be
+    piped to the parent, otherwise they will be inherited from the parent, see
+    the "pipe" and "inherit" options for `spawn()`'s `stdio` for more details
+    (default is false)
 * Return: ChildProcess object
 -->
 
@@ -20883,11 +20928,14 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
 <li><code>execArgv</code> {Array} node 実行可能ファイルに渡される文字列引数の配列。
 (デフォルトは <code>process.execArgv</code>)</li>
-<li><code>silent</code> {Boolean} <code>true</code> の場合、起動された子プロセスの標準入力と標準出力が
-親プロセスに関連づけられるのを抑止します (デフォルトは <code>false</code>)。</li>
+<li><code>silent</code> {Boolean} <code>true</code> の場合、子プロセスの標準入力、標準出力、
+標準エラー出力は親プロセスにパイプされます。
+そうでない場合は親プロセスから継承します。
+より詳細は <code>spawn()</code> の <code>pipe</code> および <code>inherit</code> オプションを参照してください
+(デフォルトは <code>false</code>)。</li>
 </ul>
 </li>
-<li>Return: ChildProcess object</li>
+<li>Return: <code>ChildProcess</code> オブジェクト</li>
 </ul>
 <!--
 This is a special case of the `spawn()` functionality for spawning Node
@@ -22325,7 +22373,8 @@ The syntax is:
 </p>
 <!--
 * `node debug -p <pid>` - Connects to the process via the `pid`
-* `node debug <URI> - Connects to the process via the URI such as localhost:5858-->
+* `node debug <URI>` - Connects to the process via the URI such as localhost:5858
+-->
 
 <ul>
 <li><code>node debug -p &lt;pid&gt;</code> - <code>pid</code> を通じてプロセスに接続</li>
@@ -22591,7 +22640,7 @@ True if the process is not a master (it is the negation of `cluster.isMaster`).
 </div></ul>
 <!--
 When a new worker is forked the cluster module will emit a 'fork' event.
-This can be used to log worker activity, and create you own timeout.
+This can be used to log worker activity, and create your own timeout.
 -->
 
 <p>新しいワーカがフォークされると、クラスタモジュールは <code>&#39;fork&#39;</code> イベントを
@@ -23442,7 +23491,7 @@ In a worker you can also use `process.on('error')`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.24/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.25/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

@@ -301,7 +301,7 @@
               "textRaw": "Event: 'finish'",
               "type": "event",
               "name": "finish",
-              "desc": "<!--\nWhen the [`end()`][] method has been called, and all data has been flushed\nto the underlying system, this event is emitted.\n-->\n\n<p>[<code>end()</code>][] メソッドが呼び出されて、全てのデータが下層のシステムに\n掃き出されると、このイベントが生成されます。\n\n</p>\n<pre><code class=\"javascript\">var writer = getWritableStreamSomehow();\nfor (var i = 0; i &lt; 100; i ++) {\n  writer.write(&#39;hello, #&#39; + i + &#39;!\\n&#39;);\n}\nwriter.end(&#39;this is the end\\n&#39;);\nwrite.on(&#39;finish&#39;, function() {\n  console.error(&#39;all writes are now complete.&#39;);\n});</code></pre>\n",
+              "desc": "<!--\nWhen the [`end()`][] method has been called, and all data has been flushed\nto the underlying system, this event is emitted.\n-->\n\n<p>[<code>end()</code>][] メソッドが呼び出されて、全てのデータが下層のシステムに\n掃き出されると、このイベントが生成されます。\n\n</p>\n<pre><code class=\"javascript\">var writer = getWritableStreamSomehow();\nfor (var i = 0; i &lt; 100; i ++) {\n  writer.write(&#39;hello, #&#39; + i + &#39;!\\n&#39;);\n}\nwriter.end(&#39;this is the end\\n&#39;);\nwriter.on(&#39;finish&#39;, function() {\n  console.error(&#39;all writes are now complete.&#39;);\n});</code></pre>\n",
               "params": []
             },
             {
@@ -316,6 +316,13 @@
               "type": "event",
               "name": "unpipe",
               "desc": "<!--\n* `src` {[Readable][] Stream} The source stream that [unpiped][] this writable\n-->\n\n<ul>\n<li><code>src</code> {[Readable][] Stream} この Writable ストリームと[切り離された][]\n入力元の Readable ストリーム</li>\n</ul>\n<!--\nThis is emitted whenever the [`unpipe()`][] method is called on a\nreadable stream, removing this writable from its set of destinations.\n-->\n\n<p>これは、Readable ストリームで [<code>unpipe()</code>][] メソッドが呼び出され、\nこの Writable ストリームが出力先から取り除かれた時に生成されます。\n\n</p>\n<pre><code class=\"javascript\">var writer = getWritableStreamSomehow();\nvar reader = getReadableStreamSomehow();\nwriter.on(&#39;unpipe&#39;, function(src) {\n  console.error(&#39;something has stopped piping into the writer&#39;);\n  assert.equal(src, reader);\n});\nreader.pipe(writer);\nreader.unpipe(writer);</code></pre>\n",
+              "params": []
+            },
+            {
+              "textRaw": "Event: 'error'",
+              "type": "event",
+              "name": "error",
+              "desc": "<!--\nEmitted if there was an error when writing or piping data.\n-->\n\n<p>データの書き込みまたはデータのパイプ中にエラーがあると生成されます。\n\n</p>\n",
               "params": []
             }
           ]
@@ -633,7 +640,7 @@
                   "textRaw": "Event: 'finish'",
                   "type": "event",
                   "name": "finish",
-                  "desc": "<!--\nWhen the [`end()`][] method has been called, and all data has been flushed\nto the underlying system, this event is emitted.\n-->\n\n<p>[<code>end()</code>][] メソッドが呼び出されて、全てのデータが下層のシステムに\n掃き出されると、このイベントが生成されます。\n\n</p>\n<pre><code class=\"javascript\">var writer = getWritableStreamSomehow();\nfor (var i = 0; i &lt; 100; i ++) {\n  writer.write(&#39;hello, #&#39; + i + &#39;!\\n&#39;);\n}\nwriter.end(&#39;this is the end\\n&#39;);\nwrite.on(&#39;finish&#39;, function() {\n  console.error(&#39;all writes are now complete.&#39;);\n});</code></pre>\n",
+                  "desc": "<!--\nWhen the [`end()`][] method has been called, and all data has been flushed\nto the underlying system, this event is emitted.\n-->\n\n<p>[<code>end()</code>][] メソッドが呼び出されて、全てのデータが下層のシステムに\n掃き出されると、このイベントが生成されます。\n\n</p>\n<pre><code class=\"javascript\">var writer = getWritableStreamSomehow();\nfor (var i = 0; i &lt; 100; i ++) {\n  writer.write(&#39;hello, #&#39; + i + &#39;!\\n&#39;);\n}\nwriter.end(&#39;this is the end\\n&#39;);\nwriter.on(&#39;finish&#39;, function() {\n  console.error(&#39;all writes are now complete.&#39;);\n});</code></pre>\n",
                   "params": []
                 },
                 {
@@ -648,6 +655,13 @@
                   "type": "event",
                   "name": "unpipe",
                   "desc": "<!--\n* `src` {[Readable][] Stream} The source stream that [unpiped][] this writable\n-->\n\n<ul>\n<li><code>src</code> {[Readable][] Stream} この Writable ストリームと[切り離された][]\n入力元の Readable ストリーム</li>\n</ul>\n<!--\nThis is emitted whenever the [`unpipe()`][] method is called on a\nreadable stream, removing this writable from its set of destinations.\n-->\n\n<p>これは、Readable ストリームで [<code>unpipe()</code>][] メソッドが呼び出され、\nこの Writable ストリームが出力先から取り除かれた時に生成されます。\n\n</p>\n<pre><code class=\"javascript\">var writer = getWritableStreamSomehow();\nvar reader = getReadableStreamSomehow();\nwriter.on(&#39;unpipe&#39;, function(src) {\n  console.error(&#39;something has stopped piping into the writer&#39;);\n  assert.equal(src, reader);\n});\nreader.pipe(writer);\nreader.unpipe(writer);</code></pre>\n",
+                  "params": []
+                },
+                {
+                  "textRaw": "Event: 'error'",
+                  "type": "event",
+                  "name": "error",
+                  "desc": "<!--\nEmitted if there was an error when writing or piping data.\n-->\n\n<p>データの書き込みまたはデータのパイプ中にエラーがあると生成されます。\n\n</p>\n",
                   "params": []
                 }
               ]
