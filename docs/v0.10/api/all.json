@@ -265,17 +265,17 @@
             {
               "textRaw": "process.stdout",
               "name": "stdout",
-              "desc": "<!--\nA `Writable Stream` to `stdout`.\n-->\n\n<p><code>stdout</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<!--\nExample: the definition of `console.log`\n-->\n\n<p>例: <code>console.log</code> の定義\n\n</p>\n<pre><code>console.log = function(d) {\n  process.stdout.write(d + &#39;\\n&#39;);\n};</code></pre>\n<!--\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.  They are blocking in the case\nthat they refer to regular files or TTY file descriptors. In the case they\nrefer to pipes, they are non-blocking like other streams.\n-->\n\n<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、\n書き込みは通常ブロックします。\nそれらが通常ファイルや TTY のファイル記述子を参照しているケースでは、\nそれらはブロックします。\nパイプを参照しているケースでは、他のストリームと同様にブロックしません。\n\n</p>\n<!--\nTo check if Node is being run in a TTY context, read the `isTTY` property\non `process.stderr`, `process.stdout`, or `process.stdin`:\n-->\n\n<p>Node が TTY のコンテキストで実行されているかチェックするには、\n<code>process.stderr</code>, <code>process.stdout</code>, または <code>process.stdin</code> の\n<code>isTTY</code> プロパティを参照します。\n\n</p>\n<pre><code>$ node -p &quot;Boolean(process.stdin.isTTY)&quot;\ntrue\n$ echo &quot;foo&quot; | node -p &quot;Boolean(process.stdin.isTTY)&quot;\nfalse\n\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot;\ntrue\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot; | cat\nfalse</code></pre>\n<!--\nSee [the tty docs](tty.html#tty_tty) for more information.\n-->\n\n<p>より詳細は <a href=\"tty.html#tty_tty\">the tty docs</a> を参照してください。\n\n</p>\n"
+              "desc": "<!--\nA `Writable Stream` to `stdout`.\n-->\n\n<p><code>stdout</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<!--\nExample: the definition of `console.log`\n-->\n\n<p>例: <code>console.log</code> の定義\n\n</p>\n<pre><code>console.log = function(d) {\n  process.stdout.write(d + &#39;\\n&#39;);\n};</code></pre>\n<!--\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.\n-->\n\n<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、\nそれらへの書き込みは通常ブロックします。\n\n</p>\n<!--\n- They are blocking in the case that they refer to regular files or TTY file\n  descriptors.\n- In the case they refer to pipes:\n  - They are blocking in Linux/Unix.\n  - They are non-blocking like other streams in Windows.\n-->\n\n<ul>\n<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、\nそれらはブロックします。</li>\n<li>パイプを参照しているケースでは:<ul>\n<li>Linux/Unix ではそれらはブロックします。</li>\n<li>Windows では他のストリームと同様にブロックしません。</li>\n</ul>\n</li>\n</ul>\n<!--\nTo check if Node is being run in a TTY context, read the `isTTY` property\non `process.stderr`, `process.stdout`, or `process.stdin`:\n-->\n\n<p>Node が TTY のコンテキストで実行されているかチェックするには、\n<code>process.stderr</code>, <code>process.stdout</code>, または <code>process.stdin</code> の\n<code>isTTY</code> プロパティを参照します。\n\n</p>\n<pre><code>$ node -p &quot;Boolean(process.stdin.isTTY)&quot;\ntrue\n$ echo &quot;foo&quot; | node -p &quot;Boolean(process.stdin.isTTY)&quot;\nfalse\n\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot;\ntrue\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot; | cat\nfalse</code></pre>\n<!--\nSee [the tty docs](tty.html#tty_tty) for more information.\n-->\n\n<p>より詳細は <a href=\"tty.html#tty_tty\">the tty docs</a> を参照してください。\n\n</p>\n"
             },
             {
               "textRaw": "process.stderr",
               "name": "stderr",
-              "desc": "<!--\nA writable stream to stderr.\n\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.  They are blocking in the case\nthat they refer to regular files or TTY file descriptors. In the case they\nrefer to pipes, they are non-blocking like other streams.\n-->\n\n<p><code>stderr</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、\n書き込みは通常ブロックします。\nそれらが通常ファイルや TTY のファイル記述子を参照しているケースでは、\nそれらはブロックします。\nパイプを参照しているケースでは、他のストリームと同様にブロックしません。\n\n\n</p>\n"
+              "desc": "<!--\nA writable stream to stderr.\n\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.\n-->\n\n<p><code>stderr</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、\nそれらへの書き込みは通常ブロックします。\n\n</p>\n<!--\n- They are blocking in the case that they refer to regular files or TTY file\n  descriptors.\n- In the case they refer to pipes:\n  - They are blocking in Linux/Unix.\n  - They are non-blocking like other streams in Windows.\n-->\n\n<ul>\n<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、\nそれらはブロックします。</li>\n<li>パイプを参照しているケースでは:<ul>\n<li>Linux/Unix ではそれらはブロックします。</li>\n<li>Windows では他のストリームと同様にブロックしません。</li>\n</ul>\n</li>\n</ul>\n"
             },
             {
               "textRaw": "process.stdin",
               "name": "stdin",
-              "desc": "<!--\nA `Readable Stream` for stdin. The stdin stream is paused by default, so one\nmust call `process.stdin.resume()` to read from it.\n-->\n\n<p>標準入力に対する <code>Readable Stream</code> です。\nデフォルトでは、標準入力に対するストリームは中断されているため、\n読み込みのためには <code>process.stdin.resume()</code> を呼び出さなければなりません。\n\n</p>\n<!--\nExample of opening standard input and listening for both events:\n-->\n\n<p>標準入力をオープンして二つのイベントを監視する例:\n\n</p>\n<pre><code>process.stdin.resume();\nprocess.stdin.setEncoding(&#39;utf8&#39;);\n\nprocess.stdin.on(&#39;data&#39;, function(chunk) {\n  process.stdout.write(&#39;data: &#39; + chunk);\n});\n\nprocess.stdin.on(&#39;end&#39;, function() {\n  process.stdout.write(&#39;end&#39;);\n});</code></pre>\n"
+              "desc": "<!--\nA `Readable Stream` for stdin. \n-->\n\n<p>標準入力に対する <code>Readable Stream</code> です。\n\n</p>\n<!--\nExample of opening standard input and listening for both events:\n-->\n\n<p>標準入力をオープンして二つのイベントを監視する例:\n\n</p>\n<pre><code>process.stdin.setEncoding(&#39;utf8&#39;);\n\nprocess.stdin.on(&#39;readable&#39;, function(chunk) {\n  var chunk = process.stdin.read();\n  if (chunk !== null) {\n    process.stdout.write(&#39;data: &#39; + chunk);\n  }\n});\n\nprocess.stdin.on(&#39;end&#39;, function() {\n  process.stdout.write(&#39;end&#39;);\n});</code></pre>\n<!--\nAs a Stream, `process.stdin` can also be used in \"old\" mode that is compatible\nwith scripts written for node prior v0.10.\nFor more information see\n[Stream compatibility](stream.html#stream_compatibility_with_older_node_versions).\n-->\n\n<p>ストリームであるため、<code>process.stdin</code> は v0.10 以前の node 向けに書かれた\nスクリプトと互換性のある &quot;old&quot; モードで使うことが出来ます。より詳細な情報は\n<a href=\"stream.html#stream_compatibility_with_older_node_versions\">Stream compatibility</a>\nを参照してください。\n\n</p>\n<!--\nIn \"old\" Streams mode the stdin stream is paused by default, so one\nmust call `process.stdin.resume()` to read from it. Note also that calling\n`process.stdin.resume()` itself would switch stream to \"old\" mode.\n-->\n\n<p>&quot;old&quot; モードでは標準入力ストリームはデフォルトで中断状態のため、\n読み込みには <code>process.stdin.resume()</code> の呼び出しが必須です。\n<code>process.stdin.resume()</code> を呼び出すことにより、それ自体がストリームを\n&quot;old&quot; モードに切り替えることに注意してください。\n\n</p>\n<!--\nIf you are starting a new project you should prefer a more recent \"new\" Streams\nmode over \"old\" one.\n-->\n\n<p>もし新しいプロジェクトを始めるなら、&quot;old&quot; よりも\n&quot;new&quot; ストリームを好むべきです。\n\n</p>\n"
             },
             {
               "textRaw": "process.argv",
@@ -988,17 +988,17 @@
         {
           "textRaw": "process.stdout",
           "name": "stdout",
-          "desc": "<!--\nA `Writable Stream` to `stdout`.\n-->\n\n<p><code>stdout</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<!--\nExample: the definition of `console.log`\n-->\n\n<p>例: <code>console.log</code> の定義\n\n</p>\n<pre><code>console.log = function(d) {\n  process.stdout.write(d + &#39;\\n&#39;);\n};</code></pre>\n<!--\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.  They are blocking in the case\nthat they refer to regular files or TTY file descriptors. In the case they\nrefer to pipes, they are non-blocking like other streams.\n-->\n\n<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、\n書き込みは通常ブロックします。\nそれらが通常ファイルや TTY のファイル記述子を参照しているケースでは、\nそれらはブロックします。\nパイプを参照しているケースでは、他のストリームと同様にブロックしません。\n\n</p>\n<!--\nTo check if Node is being run in a TTY context, read the `isTTY` property\non `process.stderr`, `process.stdout`, or `process.stdin`:\n-->\n\n<p>Node が TTY のコンテキストで実行されているかチェックするには、\n<code>process.stderr</code>, <code>process.stdout</code>, または <code>process.stdin</code> の\n<code>isTTY</code> プロパティを参照します。\n\n</p>\n<pre><code>$ node -p &quot;Boolean(process.stdin.isTTY)&quot;\ntrue\n$ echo &quot;foo&quot; | node -p &quot;Boolean(process.stdin.isTTY)&quot;\nfalse\n\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot;\ntrue\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot; | cat\nfalse</code></pre>\n<!--\nSee [the tty docs](tty.html#tty_tty) for more information.\n-->\n\n<p>より詳細は <a href=\"tty.html#tty_tty\">the tty docs</a> を参照してください。\n\n</p>\n"
+          "desc": "<!--\nA `Writable Stream` to `stdout`.\n-->\n\n<p><code>stdout</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<!--\nExample: the definition of `console.log`\n-->\n\n<p>例: <code>console.log</code> の定義\n\n</p>\n<pre><code>console.log = function(d) {\n  process.stdout.write(d + &#39;\\n&#39;);\n};</code></pre>\n<!--\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.\n-->\n\n<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、\nそれらへの書き込みは通常ブロックします。\n\n</p>\n<!--\n- They are blocking in the case that they refer to regular files or TTY file\n  descriptors.\n- In the case they refer to pipes:\n  - They are blocking in Linux/Unix.\n  - They are non-blocking like other streams in Windows.\n-->\n\n<ul>\n<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、\nそれらはブロックします。</li>\n<li>パイプを参照しているケースでは:<ul>\n<li>Linux/Unix ではそれらはブロックします。</li>\n<li>Windows では他のストリームと同様にブロックしません。</li>\n</ul>\n</li>\n</ul>\n<!--\nTo check if Node is being run in a TTY context, read the `isTTY` property\non `process.stderr`, `process.stdout`, or `process.stdin`:\n-->\n\n<p>Node が TTY のコンテキストで実行されているかチェックするには、\n<code>process.stderr</code>, <code>process.stdout</code>, または <code>process.stdin</code> の\n<code>isTTY</code> プロパティを参照します。\n\n</p>\n<pre><code>$ node -p &quot;Boolean(process.stdin.isTTY)&quot;\ntrue\n$ echo &quot;foo&quot; | node -p &quot;Boolean(process.stdin.isTTY)&quot;\nfalse\n\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot;\ntrue\n$ node -p &quot;Boolean(process.stdout.isTTY)&quot; | cat\nfalse</code></pre>\n<!--\nSee [the tty docs](tty.html#tty_tty) for more information.\n-->\n\n<p>より詳細は <a href=\"tty.html#tty_tty\">the tty docs</a> を参照してください。\n\n</p>\n"
         },
         {
           "textRaw": "process.stderr",
           "name": "stderr",
-          "desc": "<!--\nA writable stream to stderr.\n\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.  They are blocking in the case\nthat they refer to regular files or TTY file descriptors. In the case they\nrefer to pipes, they are non-blocking like other streams.\n-->\n\n<p><code>stderr</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、\n書き込みは通常ブロックします。\nそれらが通常ファイルや TTY のファイル記述子を参照しているケースでは、\nそれらはブロックします。\nパイプを参照しているケースでは、他のストリームと同様にブロックしません。\n\n\n</p>\n"
+          "desc": "<!--\nA writable stream to stderr.\n\n`process.stderr` and `process.stdout` are unlike other streams in Node in\nthat writes to them are usually blocking.\n-->\n\n<p><code>stderr</code> に対する <code>Writable Stream</code> です。\n\n</p>\n<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、\nそれらへの書き込みは通常ブロックします。\n\n</p>\n<!--\n- They are blocking in the case that they refer to regular files or TTY file\n  descriptors.\n- In the case they refer to pipes:\n  - They are blocking in Linux/Unix.\n  - They are non-blocking like other streams in Windows.\n-->\n\n<ul>\n<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、\nそれらはブロックします。</li>\n<li>パイプを参照しているケースでは:<ul>\n<li>Linux/Unix ではそれらはブロックします。</li>\n<li>Windows では他のストリームと同様にブロックしません。</li>\n</ul>\n</li>\n</ul>\n"
         },
         {
           "textRaw": "process.stdin",
           "name": "stdin",
-          "desc": "<!--\nA `Readable Stream` for stdin. The stdin stream is paused by default, so one\nmust call `process.stdin.resume()` to read from it.\n-->\n\n<p>標準入力に対する <code>Readable Stream</code> です。\nデフォルトでは、標準入力に対するストリームは中断されているため、\n読み込みのためには <code>process.stdin.resume()</code> を呼び出さなければなりません。\n\n</p>\n<!--\nExample of opening standard input and listening for both events:\n-->\n\n<p>標準入力をオープンして二つのイベントを監視する例:\n\n</p>\n<pre><code>process.stdin.resume();\nprocess.stdin.setEncoding(&#39;utf8&#39;);\n\nprocess.stdin.on(&#39;data&#39;, function(chunk) {\n  process.stdout.write(&#39;data: &#39; + chunk);\n});\n\nprocess.stdin.on(&#39;end&#39;, function() {\n  process.stdout.write(&#39;end&#39;);\n});</code></pre>\n"
+          "desc": "<!--\nA `Readable Stream` for stdin. \n-->\n\n<p>標準入力に対する <code>Readable Stream</code> です。\n\n</p>\n<!--\nExample of opening standard input and listening for both events:\n-->\n\n<p>標準入力をオープンして二つのイベントを監視する例:\n\n</p>\n<pre><code>process.stdin.setEncoding(&#39;utf8&#39;);\n\nprocess.stdin.on(&#39;readable&#39;, function(chunk) {\n  var chunk = process.stdin.read();\n  if (chunk !== null) {\n    process.stdout.write(&#39;data: &#39; + chunk);\n  }\n});\n\nprocess.stdin.on(&#39;end&#39;, function() {\n  process.stdout.write(&#39;end&#39;);\n});</code></pre>\n<!--\nAs a Stream, `process.stdin` can also be used in \"old\" mode that is compatible\nwith scripts written for node prior v0.10.\nFor more information see\n[Stream compatibility](stream.html#stream_compatibility_with_older_node_versions).\n-->\n\n<p>ストリームであるため、<code>process.stdin</code> は v0.10 以前の node 向けに書かれた\nスクリプトと互換性のある &quot;old&quot; モードで使うことが出来ます。より詳細な情報は\n<a href=\"stream.html#stream_compatibility_with_older_node_versions\">Stream compatibility</a>\nを参照してください。\n\n</p>\n<!--\nIn \"old\" Streams mode the stdin stream is paused by default, so one\nmust call `process.stdin.resume()` to read from it. Note also that calling\n`process.stdin.resume()` itself would switch stream to \"old\" mode.\n-->\n\n<p>&quot;old&quot; モードでは標準入力ストリームはデフォルトで中断状態のため、\n読み込みには <code>process.stdin.resume()</code> の呼び出しが必須です。\n<code>process.stdin.resume()</code> を呼び出すことにより、それ自体がストリームを\n&quot;old&quot; モードに切り替えることに注意してください。\n\n</p>\n<!--\nIf you are starting a new project you should prefer a more recent \"new\" Streams\nmode over \"old\" one.\n-->\n\n<p>もし新しいプロジェクトを始めるなら、&quot;old&quot; よりも\n&quot;new&quot; ストリームを好むべきです。\n\n</p>\n"
         },
         {
           "textRaw": "process.argv",
@@ -1422,7 +1422,7 @@
           "textRaw": "setTimeout(callback, delay, [arg], [...])",
           "type": "method",
           "name": "setTimeout",
-          "desc": "<!--\nTo schedule execution of a one-time `callback` after `delay` milliseconds. Returns a\n`timeoutId` for possible use with `clearTimeout()`. Optionally you can\nalso pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過した後で、\n<code>callback</code> が一度だけ実行されるようにスケジュールします。\n<code>clearTimeout()</code> で使うことができる <code>timeoutId</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n<!--\nIt is important to note that your callback will probably not be called in exactly\n`delay` milliseconds - Node.js makes no guarantees about the exact timing of when\nthe callback will fire, nor of the ordering things will fire in. The callback will\nbe called as close as possible to the time specified.\n-->\n\n<p>コールバックが正確に <code>delay</code> ミリ秒後に呼び出されるとは限らない点に\n注目することは重要です - \nNode.js はコールバックが呼び出される正確なタイミングも、\n呼び出される順番も保証しません。\nコールバックはできるだけ指定された時間に近いタイミングで呼び出されます。\n\n</p>\n",
+          "desc": "<!--\nTo schedule execution of a one-time `callback` after `delay` milliseconds. Returns a\n`timeoutObject` for possible use with `clearTimeout()`. Optionally you can\nalso pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過した後で、\n<code>callback</code> が一度だけ実行されるようにスケジュールします。\n<code>clearTimeout()</code> で使うことができる <code>timeoutObject</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n<!--\nIt is important to note that your callback will probably not be called in exactly\n`delay` milliseconds - Node.js makes no guarantees about the exact timing of when\nthe callback will fire, nor of the ordering things will fire in. The callback will\nbe called as close as possible to the time specified.\n-->\n\n<p>コールバックが正確に <code>delay</code> ミリ秒後に呼び出されるとは限らない点に\n注目することは重要です - \nNode.js はコールバックが呼び出される正確なタイミングも、\n呼び出される順番も保証しません。\nコールバックはできるだけ指定された時間に近いタイミングで呼び出されます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1445,7 +1445,7 @@
           ]
         },
         {
-          "textRaw": "clearTimeout(timeoutId)",
+          "textRaw": "clearTimeout(timeoutObject)",
           "type": "method",
           "name": "clearTimeout",
           "desc": "<!--\nPrevents a timeout from triggering.\n-->\n\n<p>タイムアウトがトリガーされるのを止めます。\n\n</p>\n",
@@ -1453,7 +1453,7 @@
             {
               "params": [
                 {
-                  "name": "timeoutId"
+                  "name": "timeoutObject"
                 }
               ]
             }
@@ -1463,7 +1463,7 @@
           "textRaw": "setInterval(callback, delay, [arg], [...])",
           "type": "method",
           "name": "setInterval",
-          "desc": "<!--\nTo schedule the repeated execution of `callback` every `delay` milliseconds.\nReturns a `intervalId` for possible use with `clearInterval()`. Optionally\nyou can also pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。\n<code>clearInterval()</code> で使うことができる <code>intervalId</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n",
+          "desc": "<!--\nTo schedule the repeated execution of `callback` every `delay` milliseconds.\nReturns a `intervalObject` for possible use with `clearInterval()`. Optionally\nyou can also pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。\n<code>clearInterval()</code> で使うことができる <code>intervalObject</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1486,7 +1486,7 @@
           ]
         },
         {
-          "textRaw": "clearInterval(intervalId)",
+          "textRaw": "clearInterval(intervalObject)",
           "type": "method",
           "name": "clearInterval",
           "desc": "<!--\nStops a interval from triggering.\n-->\n\n<p>インターバルがトリガーされるのを止めます。\n\n</p>\n",
@@ -1494,7 +1494,7 @@
             {
               "params": [
                 {
-                  "name": "intervalId"
+                  "name": "intervalObject"
                 }
               ]
             }
@@ -1526,7 +1526,7 @@
           "textRaw": "setImmediate(callback, [arg], [...])",
           "type": "method",
           "name": "setImmediate",
-          "desc": "<!--\nTo schedule the \"immediate\" execution of `callback` after I/O events\ncallbacks and before `setTimeout` and `setInterval` . Returns an\n`immediateId` for possible use with `clearImmediate()`. Optionally you\ncan also pass arguments to the callback.\n-->\n\n<p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および\n<code>setInterval</code> よりも前) に実行するようスケジュールします。\n<code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。\nオプションとして、コールバックへの引数を渡すことができます。\n\n</p>\n<!--\nImmediates are queued in the order created, and are popped off the queue once\nper loop iteration. This is different from `process.nextTick` which will\nexecute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`\nwill yield to the event loop after firing a queued callback to make sure I/O is\nnot being starved. While order is preserved for execution, other I/O events may\nfire between any two scheduled immediate callbacks.\n-->\n\n<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの\n繰り返し毎に一度、キューから取り出されます。\nこれは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに\n入れられた関数が実行される <code>process.nextTick()</code> とは異なります。\n<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが\n呼び出された後イベントループに制御を譲ります。\n二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、\n他の I/O が間に挟まるかもしれません。\n\n</p>\n",
+          "desc": "<!--\nTo schedule the \"immediate\" execution of `callback` after I/O events\ncallbacks and before `setTimeout` and `setInterval` . Returns an\n`immediateObject` for possible use with `clearImmediate()`. Optionally you\ncan also pass arguments to the callback.\n-->\n\n<p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および\n<code>setInterval</code> よりも前) に実行するようスケジュールします。\n<code>clearImmediate()</code> に渡すことのできる <code>immediateObject</code> を返します。\nオプションとして、コールバックへの引数を渡すことができます。\n\n</p>\n<!--\nImmediates are queued in the order created, and are popped off the queue once\nper loop iteration. This is different from `process.nextTick` which will\nexecute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`\nwill yield to the event loop after firing a queued callback to make sure I/O is\nnot being starved. While order is preserved for execution, other I/O events may\nfire between any two scheduled immediate callbacks.\n-->\n\n<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの\n繰り返し毎に一度、キューから取り出されます。\nこれは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに\n入れられた関数が実行される <code>process.nextTick()</code> とは異なります。\n<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが\n呼び出された後イベントループに制御を譲ります。\n二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、\n他の I/O が間に挟まるかもしれません。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -1546,7 +1546,7 @@
           ]
         },
         {
-          "textRaw": "clearImmediate(immediateId)",
+          "textRaw": "clearImmediate(immediateObject)",
           "type": "method",
           "name": "clearImmediate",
           "desc": "<!--\nStops an immediate from triggering.\n-->\n\n<p><code>setImmediate()</code> に渡した関数が呼び出されることを中止します。\n\n</p>\n",
@@ -1554,7 +1554,7 @@
             {
               "params": [
                 {
-                  "name": "immediateId"
+                  "name": "immediateObject"
                 }
               ]
             }
@@ -4803,7 +4803,7 @@
                   "textRaw": "new stream.Writable([options])",
                   "type": "method",
                   "name": "Writable",
-                  "* `options` {Object}\n  * `highWaterMark` {Number} Buffer level when [`write()`][] starts\n    returning false. Default": "16kb\n  * `decodeStrings` {Boolean} Whether or not to decode strings into\n    Buffers before passing them to [`_write()`][].  Default=true",
+                  "* `options` {Object}\n  * `highWaterMark` {Number} Buffer level when [`write()`][] starts\n    returning false. Default": "16kb\n  * `decodeStrings` {Boolean} Whether or not to decode strings into\n    Buffers before passing them to [`_write()`][].  Default=true\n  * `objectMode` {Boolean} Whether or not the `write(anyObj)` is\n    a valid operation. If set you can write arbitrary data instead\n    of only `Buffer` / `String` data.  Default=false",
                   "signatures": [
                     {
                       "params": [
@@ -4821,6 +4821,12 @@
                               "name": "decodeStrings",
                               "type": "Boolean",
                               "desc": "文字列が [`_write()`][] に渡される前に バッファにデコードするかどうか。デフォルトは `true`。"
+                            },
+                            {
+                              "textRaw": "`objectMode` {Boolean} `write(anyObj)` が妥当な操作かどうか。 もし `true` を設定すると、`Buffer` / `String` データのみではなく、 任意のデータを書き込むことができるようになります。 デフォルトは `false`。 ",
+                              "name": "objectMode",
+                              "type": "Boolean",
+                              "desc": "`write(anyObj)` が妥当な操作かどうか。 もし `true` を設定すると、`Buffer` / `String` データのみではなく、 任意のデータを書き込むことができるようになります。 デフォルトは `false`。"
                             }
                           ],
                           "name": "options",
@@ -5799,7 +5805,7 @@
               "textRaw": "diffieHellman.getGenerator([encoding])",
               "type": "method",
               "name": "getGenerator",
-              "desc": "<!--\nReturns the Diffie-Hellman prime in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,\nthen a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
+              "desc": "<!--\nReturns the Diffie-Hellman generator in the specified encoding, which can\nbe `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,\nthen a buffer is returned.\n-->\n\n<p>ディフィー・ヘルマン法の生成元を指定のエンコーディングで返します。\nエンコーディングは <code>&#39;binary&#39;</code>、<code>&#39;hex&#39;</code>、または <code>&#39;base64&#39;</code> のいずれかです。\nエンコーディングが与えられなかった場合はバッファが返されます。\n\n</p>\n",
               "signatures": [
                 {
                   "params": [
@@ -8067,7 +8073,7 @@
           "textRaw": "path.extname(p)",
           "type": "method",
           "name": "extname",
-          "desc": "<!--\nReturn the extension of the path, from the last '.' to end of string\nin the last portion of the path.  If there is no '.' in the last portion\nof the path or the first character of it is '.', then it returns\nan empty string.  Examples:\n-->\n\n<p>パスの最後の要素について、最後の &#39;.&#39; から文字列の最後までのパスの拡張子を返します。\n最後の要素に &#39;.&#39; が含まれていなかった場合、もしくは &#39;.&#39; が最初の文字だった場合は、空の文字列を返します。\n例:\n\n</p>\n<pre><code>path.extname(&#39;index.html&#39;)\n// returns\n&#39;.html&#39;\n\npath.extname(&#39;index.&#39;)\n// returns\n&#39;.&#39;\n\npath.extname(&#39;index&#39;)\n// returns\n&#39;&#39;</code></pre>\n",
+          "desc": "<!--\nReturn the extension of the path, from the last '.' to end of string\nin the last portion of the path.  If there is no '.' in the last portion\nof the path or the first character of it is '.', then it returns\nan empty string.  Examples:\n-->\n\n<p>パスの最後の要素について、最後の &#39;.&#39; から文字列の最後までのパスの拡張子を返します。\n最後の要素に &#39;.&#39; が含まれていなかった場合、もしくは &#39;.&#39; が最初の文字だった場合は、空の文字列を返します。\n例:\n\n</p>\n<pre><code>path.extname(&#39;index.html&#39;)\n// returns\n&#39;.html&#39;\n\npath.extname(&#39;index.coffee.md&#39;)\n// returns\n&#39;.md&#39;\n\npath.extname(&#39;index.&#39;)\n// returns\n&#39;.&#39;\n\npath.extname(&#39;index&#39;)\n// returns\n&#39;&#39;</code></pre>\n",
           "signatures": [
             {
               "params": [
@@ -10012,7 +10018,7 @@
             {
               "textRaw": "agent.maxSockets",
               "name": "maxSockets",
-              "desc": "<!--\nBy default set to 5. Determines how many concurrent sockets the agent can have\nopen per host.\n-->\n\n<p>デフォルトでは 5 に設定されます。\nエージェントがいくつのソケットを並行にオープンするかを決定します。\n\n</p>\n"
+              "desc": "<!--\nBy default set to 5. Determines how many concurrent sockets the agent can have\nopen per origin. Origin is either a 'host:port' or 'host:port:localAddress'\ncombination.\n-->\n\n<p>デフォルトでは 5 に設定されます。\nエージェントがオリジン毎にいくつのソケットを並行にオープンするかを決定します。\nオリジンは <code>&#39;host:port&#39;</code> または <code>&#39;host:port:localAddress&#39;</code>\nの組み合わせのいずれかです。\n\n</p>\n"
             },
             {
               "textRaw": "agent.sockets",
@@ -10585,12 +10591,87 @@
           "textRaw": "readline.createInterface(options)",
           "type": "method",
           "name": "createInterface",
-          "desc": "<!--\nCreates a readline `Interface` instance. Accepts an \"options\" Object that takes\nthe following values:\n-->\n\n<p>行を読み込む <code>Interface</code> のインスタンスを作成します。\n以下の値を含む <code>options</code> オブジェクトを受け取ります。\n\n</p>\n<!--\n - `input` - the readable stream to listen to (Required).\n\n - `output` - the writable stream to write readline data to (Required).\n\n - `completer` - an optional function that is used for Tab autocompletion. See\n   below for an example of using this.\n\n - `terminal` - pass `true` if the `input` and `output` streams should be\n   treated like a TTY, and have ANSI/VT100 escape codes written to it.\n   Defaults to checking `isTTY` on the `output` stream upon instantiation.\n-->\n\n<ul>\n<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>\n</li>\n<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>\n</li>\n<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。\n後述の例を参照してください。</p>\n</li>\n<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、\nANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。\nデフォルトはインスタンス生成時に <code>output</code> に対して\n<code>isTTY</code> でチェックします。</p>\n</li>\n</ul>\n<!--\nThe `completer` function is given a the current line entered by the user, and\nis supposed to return an Array with 2 entries:\n-->\n\n<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、\n2 つのエントリを含む配列を返すことが期待されます:\n\n</p>\n<!--\n 1. An Array with matching entries for the completion.\n\n 2. The substring that was used for the matching.\n-->\n\n<ol>\n<li><p>補完によってマッチするエントリの配列。</p>\n</li>\n<li><p>マッチングに使用された部分文字列。</p>\n</li>\n</ol>\n<!--\nWhich ends up looking something like:\n`[[substr1, substr2, ...], originalsubstring]`.\n-->\n\n<p>それは次のようになります:\n<code>[[substr1, substr2, ...], originalsubstring]</code>。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>function completer(line) {\n  var completions = &#39;.help .error .exit .quit .q&#39;.split(&#39; &#39;)\n  var hits = completions.filter(function(c) { return c.indexOf(line) == 0 })\n  // show all completions if none found\n  return [hits.length ? hits : completions, line]\n}</code></pre>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<pre><code>function completer(linePartial, callback) {\n  callback(null, [[&#39;123&#39;], linePartial]);\n}</code></pre>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&#39;readline&#39;);\nvar rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});</code></pre>\n<!--\nOnce you have a readline instance, you most commonly listen for the\n`\"line\"` event.\n-->\n\n<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&#39;line&#39;</code> イベントを\n監視することになります。\n\n</p>\n<!--\nIf `terminal` is `true` for this instance then the `output` stream will get\nthe best compatibility if it defines an `output.columns` property, and fires\na `\"resize\"` event on the `output` if/when the columns ever change\n(`process.stdout` does this automatically when it is a TTY).\n-->\n\n<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、\n<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば\nそれに適合し、カラム幅が変更されると <code>output</code> 上で\n<code>&#39;resize&#39;</code> イベントが生成されます\n(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。\n\n</p>\n",
+          "desc": "<!--\nCreates a readline `Interface` instance. Accepts an \"options\" Object that takes\nthe following values:\n-->\n\n<p>行を読み込む <code>Interface</code> のインスタンスを作成します。\n以下の値を含む <code>options</code> オブジェクトを受け取ります。\n\n</p>\n<!--\n - `input` - the readable stream to listen to (Required).\n\n - `output` - the writable stream to write readline data to (Required).\n\n - `completer` - an optional function that is used for Tab autocompletion. See\n   below for an example of using this.\n\n - `terminal` - pass `true` if the `input` and `output` streams should be\n   treated like a TTY, and have ANSI/VT100 escape codes written to it.\n   Defaults to checking `isTTY` on the `output` stream upon instantiation.\n-->\n\n<ul>\n<li><p><code>input</code> - 監視する入力ストリーム (必須)。</p>\n</li>\n<li><p><code>output</code> - 読み込んだデータを書くための出力ストリーム (必須)。</p>\n</li>\n<li><p><code>completer</code> - タブによる自動補完のための関数 (オプション)。\n後述の例を参照してください。</p>\n</li>\n<li><p><code>terminal</code> - <code>input</code> および <code>output</code> ストリームが TTY デバイスで、\nANSI/VT100 エスケープコードを出力する場合は <code>true</code> を渡します。\nデフォルトはインスタンス生成時に <code>output</code> に対して\n<code>isTTY</code> でチェックします。</p>\n</li>\n</ul>\n<!--\nThe `completer` function is given the current line entered by the user, and\nis supposed to return an Array with 2 entries:\n-->\n\n<p><code>completer</code> 関数にはユーザが入力した現在の行が与えられ、\n2 つのエントリを含む配列を返すことが期待されます:\n\n</p>\n<!--\n 1. An Array with matching entries for the completion.\n\n 2. The substring that was used for the matching.\n-->\n\n<ol>\n<li><p>補完によってマッチするエントリの配列。</p>\n</li>\n<li><p>マッチングに使用された部分文字列。</p>\n</li>\n</ol>\n<!--\nWhich ends up looking something like:\n`[[substr1, substr2, ...], originalsubstring]`.\n-->\n\n<p>それは次のようになります:\n<code>[[substr1, substr2, ...], originalsubstring]</code>。\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>function completer(line) {\n  var completions = &#39;.help .error .exit .quit .q&#39;.split(&#39; &#39;)\n  var hits = completions.filter(function(c) { return c.indexOf(line) == 0 })\n  // show all completions if none found\n  return [hits.length ? hits : completions, line]\n}</code></pre>\n<!--\nAlso `completer` can be run in async mode if it accepts two arguments:\n-->\n\n<p><code>completer</code> が二つの引数を持つなら、それは非同期モードで実行されます。\n\n</p>\n<pre><code>function completer(linePartial, callback) {\n  callback(null, [[&#39;123&#39;], linePartial]);\n}</code></pre>\n<!--\n`createInterface` is commonly used with `process.stdin` and\n`process.stdout` in order to accept user input:\n-->\n\n<p><code>createInterface</code> には通常、ユーザからの入力を受け取るために <code>process.stdin</code> と\n<code>process.stdout</code> が使用されます。\n\n</p>\n<pre><code>var readline = require(&#39;readline&#39;);\nvar rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});</code></pre>\n<!--\nOnce you have a readline instance, you most commonly listen for the\n`\"line\"` event.\n-->\n\n<p>readline のインスタンスを作成すると、ほとんどの場合 <code>&#39;line&#39;</code> イベントを\n監視することになります。\n\n</p>\n<!--\nIf `terminal` is `true` for this instance then the `output` stream will get\nthe best compatibility if it defines an `output.columns` property, and fires\na `\"resize\"` event on the `output` if/when the columns ever change\n(`process.stdout` does this automatically when it is a TTY).\n-->\n\n<p>もしこのインスタンスの <code>terminal</code> が <code>true</code> の場合、\n<code>output</code> ストリームはもし <code>outout.columns</code> プロパティが定義されていれば\nそれに適合し、カラム幅が変更されると <code>output</code> 上で\n<code>&#39;resize&#39;</code> イベントが生成されます\n(<code>process.stdout</code> が TTY の場合、それは自動的に行われます)。\n\n</p>\n",
           "signatures": [
             {
               "params": [
                 {
                   "name": "options"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "readline.cursorTo(stream, x, y)",
+          "type": "method",
+          "name": "cursorTo",
+          "desc": "<!--\nMove cursor to the specified position in a given TTY stream.\n-->\n\n<p>カーソルを与えられた TTY スクリーンの指定の位置に移動します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "stream"
+                },
+                {
+                  "name": "x"
+                },
+                {
+                  "name": "y"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "readline.moveCursor(stream, dx, dy)",
+          "type": "method",
+          "name": "moveCursor",
+          "desc": "<!--\nMove cursor relative to it's current position in a given TTY stream.\n-->\n\n<p>カーソルを与えられた TTY スクリーンの現在の位置からの相対位置に移動します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "stream"
+                },
+                {
+                  "name": "dx"
+                },
+                {
+                  "name": "dy"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "readline.clearLine(stream, dir)",
+          "type": "method",
+          "name": "clearLine",
+          "desc": "<!--\nClears current line of given TTY stream in a specified direction.\n`dir` should have one of following values:\n-->\n\n<p>与えられた TTY スクリーンの現在の行を指定された方向に消去します。\n<code>dir</code> は以下の値のいずれか:\n\n</p>\n<!--\n* `-1` - to the left from cursor\n* `1` - to the right from cursor\n* `0` - the entire line\n-->\n\n<ul>\n<li><code>-1</code> - カーソルから左方向</li>\n<li><code>1</code> - カーソルから右方向</li>\n<li><code>0</code> - 行全体</li>\n</ul>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "stream"
+                },
+                {
+                  "name": "dir"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "textRaw": "readline.clearScreenDown(stream)",
+          "type": "method",
+          "name": "clearScreenDown",
+          "desc": "<!--\nClears the screen from the current position of the cursor down.\n-->\n\n<p>スクリーンのカーソルより下を消去します。\n\n</p>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "stream"
                 }
               ]
             }
@@ -11168,7 +11249,7 @@
           "textRaw": "child_process.exec(command, [options], callback)",
           "type": "method",
           "name": "exec",
-          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: `200*1024`)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: <code>ChildProcess</code> オブジェクト</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var exec = require(&#39;child_process&#39;).exec,\n    child;\n\nchild = exec(&#39;cat *.js bad_file | wc -l&#39;,\n  function (error, stdout, stderr) {\n    console.log(&#39;stdout: &#39; + stdout);\n    console.log(&#39;stderr: &#39; + stderr);\n    if (error !== null) {\n      console.log(&#39;exec error: &#39; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `err.code`\nwill be the exit code of the child process, and `err.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>err.code</code> は子プロセスの終了コード、\n<code>err.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &#39;utf8&#39;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &#39;SIGTERM&#39;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&#39;SIGTERM&#39;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
+          "desc": "<!--\n* `command` {String} The command to run, with space-separated arguments\n* `options` {Object}\n  * `cwd` {String} Current working directory of the child process\n  * `env` {Object} Environment key-value pairs\n  * `encoding` {String} (Default: 'utf8')\n  * `timeout` {Number} (Default: 0)\n  * `maxBuffer` {Number} (Default: `200*1024`)\n  * `killSignal` {String} (Default: 'SIGTERM')\n* `callback` {Function} called with the output when process terminates\n  * `error` {Error}\n  * `stdout` {Buffer}\n  * `stderr` {Buffer}\n* Return: ChildProcess object\n-->\n\n<ul>\n<li><code>command</code> {String} 実行するコマンド、空白で区切られた引数を持ちます</li>\n<li><code>options</code> {Object}<ul>\n<li><code>cwd</code> {String} 子プロセスのカレントワーキングディレクトリ</li>\n<li><code>env</code> {Object} 環境変数として与えるキー・値のペア</li>\n<li><code>encoding</code> {String} (Default: &#39;utf8&#39;)</li>\n<li><code>timeout</code> {Number} (Default: 0)</li>\n<li><code>maxBuffer</code> {Number} (Default: 200*1024)</li>\n<li><code>killSignal</code> {String} (Default: &#39;SIGTERM&#39;)</li>\n</ul>\n</li>\n<li><code>callback</code> {Function} プロセスが終了するとその出力を伴って呼び出されます<ul>\n<li><code>error</code> {Error}</li>\n<li><code>stdout</code> {Buffer}</li>\n<li><code>stderr</code> {Buffer}</li>\n</ul>\n</li>\n<li>Return: <code>ChildProcess</code> オブジェクト</li>\n</ul>\n<!--\nRuns a command in a shell and buffers the output.\n-->\n\n<p>コマンドをシェルで実行し、その出力をバッファに格納します。\n\n</p>\n<pre><code>var exec = require(&#39;child_process&#39;).exec,\n    child;\n\nchild = exec(&#39;cat *.js bad_file | wc -l&#39;,\n  function (error, stdout, stderr) {\n    console.log(&#39;stdout: &#39; + stdout);\n    console.log(&#39;stderr: &#39; + stderr);\n    if (error !== null) {\n      console.log(&#39;exec error: &#39; + error);\n    }\n});</code></pre>\n<!--\nThe callback gets the arguments `(error, stdout, stderr)`. On success, `error`\nwill be `null`.  On error, `error` will be an instance of `Error` and `error.code`\nwill be the exit code of the child process, and `error.signal` will be set to the\nsignal that terminated the process.\n-->\n\n<p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。\n成功すると、<code>error</code> は <code>null</code> になります。\nエラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、\n<code>error.code</code> は子プロセスの終了コード、\n<code>error.signal</code> はプロセスを終了させたシグナルとなります。\n\n</p>\n<!--\nThere is a second optional argument to specify several options. The\ndefault options are\n-->\n\n<p>任意の第 2 引数でいくつかのオプションを指定することができます。\nオプションのデフォルトは\n\n</p>\n<pre><code>{ encoding: &#39;utf8&#39;,\n  timeout: 0,\n  maxBuffer: 200*1024,\n  killSignal: &#39;SIGTERM&#39;,\n  cwd: null,\n  env: null }</code></pre>\n<!--\nIf `timeout` is greater than 0, then it will kill the child process\nif it runs longer than `timeout` milliseconds. The child process is killed with\n`killSignal` (default: `'SIGTERM'`). `maxBuffer` specifies the largest\namount of data allowed on stdout or stderr - if this value is exceeded then\nthe child process is killed.\n-->\n\n<p>もし <code>timeout</code> が 0 より大きいと、\n子プロセスは実行時間が <code>timeout</code> ミリ秒よりも長くなると kill されます。\n子プロセスは <code>killSignal</code> で kill されます (デフォルト: <code>&#39;SIGTERM&#39;</code>)。\n<code>maxBuffer</code> は標準出力と標準エラーの最大のデータ量を指定します － この値を超えると子プロセスは kill されます。\n\n\n</p>\n",
           "signatures": [
             {
               "params": [

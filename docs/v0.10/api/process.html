@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>process Node.js v0.10.25 Manual &amp; Documentation</title>
+  <title>process Node.js v0.10.26 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/process.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.25 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.26 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -361,18 +361,30 @@ Example: the definition of `console.log`
 };</code></pre>
 <!--
 `process.stderr` and `process.stdout` are unlike other streams in Node in
-that writes to them are usually blocking.  They are blocking in the case
-that they refer to regular files or TTY file descriptors. In the case they
-refer to pipes, they are non-blocking like other streams.
+that writes to them are usually blocking.
 -->
 
-<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、
-書き込みは通常ブロックします。
-それらが通常ファイルや TTY のファイル記述子を参照しているケースでは、
-それらはブロックします。
-パイプを参照しているケースでは、他のストリームと同様にブロックしません。
+<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、
+それらへの書き込みは通常ブロックします。
 
 </p>
+<!--
+- They are blocking in the case that they refer to regular files or TTY file
+  descriptors.
+- In the case they refer to pipes:
+  - They are blocking in Linux/Unix.
+  - They are non-blocking like other streams in Windows.
+-->
+
+<ul>
+<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、
+それらはブロックします。</li>
+<li>パイプを参照しているケースでは:<ul>
+<li>Linux/Unix ではそれらはブロックします。</li>
+<li>Windows では他のストリームと同様にブロックしません。</li>
+</ul>
+</li>
+</ul>
 <!--
 To check if Node is being run in a TTY context, read the `isTTY` property
 on `process.stderr`, `process.stdout`, or `process.stdin`:
@@ -404,31 +416,39 @@ See [the tty docs](tty.html#tty_tty) for more information.
 A writable stream to stderr.
 
 `process.stderr` and `process.stdout` are unlike other streams in Node in
-that writes to them are usually blocking.  They are blocking in the case
-that they refer to regular files or TTY file descriptors. In the case they
-refer to pipes, they are non-blocking like other streams.
+that writes to them are usually blocking.
 -->
 
 <p><code>stderr</code> に対する <code>Writable Stream</code> です。
 
 </p>
-<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、
-書き込みは通常ブロックします。
-それらが通常ファイルや TTY のファイル記述子を参照しているケースでは、
-それらはブロックします。
-パイプを参照しているケースでは、他のストリームと同様にブロックしません。
-
+<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、
+それらへの書き込みは通常ブロックします。
 
 </p>
+<!--
+- They are blocking in the case that they refer to regular files or TTY file
+  descriptors.
+- In the case they refer to pipes:
+  - They are blocking in Linux/Unix.
+  - They are non-blocking like other streams in Windows.
+-->
+
+<ul>
+<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、
+それらはブロックします。</li>
+<li>パイプを参照しているケースでは:<ul>
+<li>Linux/Unix ではそれらはブロックします。</li>
+<li>Windows では他のストリームと同様にブロックしません。</li>
+</ul>
+</li>
+</ul>
 <h2>process.stdin<span><a class="mark" href="#process_process_stdin" id="process_process_stdin">#</a></span></h2>
 <!--
-A `Readable Stream` for stdin. The stdin stream is paused by default, so one
-must call `process.stdin.resume()` to read from it.
+A `Readable Stream` for stdin. 
 -->
 
 <p>標準入力に対する <code>Readable Stream</code> です。
-デフォルトでは、標準入力に対するストリームは中断されているため、
-読み込みのためには <code>process.stdin.resume()</code> を呼び出さなければなりません。
 
 </p>
 <!--
@@ -438,16 +458,52 @@ Example of opening standard input and listening for both events:
 <p>標準入力をオープンして二つのイベントを監視する例:
 
 </p>
-<pre><code>process.stdin.resume();
-process.stdin.setEncoding(&#39;utf8&#39;);
+<pre><code>process.stdin.setEncoding(&#39;utf8&#39;);
 
-process.stdin.on(&#39;data&#39;, function(chunk) {
-  process.stdout.write(&#39;data: &#39; + chunk);
+process.stdin.on(&#39;readable&#39;, function(chunk) {
+  var chunk = process.stdin.read();
+  if (chunk !== null) {
+    process.stdout.write(&#39;data: &#39; + chunk);
+  }
 });
 
 process.stdin.on(&#39;end&#39;, function() {
   process.stdout.write(&#39;end&#39;);
 });</code></pre>
+<!--
+As a Stream, `process.stdin` can also be used in "old" mode that is compatible
+with scripts written for node prior v0.10.
+For more information see
+[Stream compatibility](stream.html#stream_compatibility_with_older_node_versions).
+-->
+
+<p>ストリームであるため、<code>process.stdin</code> は v0.10 以前の node 向けに書かれた
+スクリプトと互換性のある &quot;old&quot; モードで使うことが出来ます。より詳細な情報は
+<a href="stream.html#stream_compatibility_with_older_node_versions">Stream compatibility</a>
+を参照してください。
+
+</p>
+<!--
+In "old" Streams mode the stdin stream is paused by default, so one
+must call `process.stdin.resume()` to read from it. Note also that calling
+`process.stdin.resume()` itself would switch stream to "old" mode.
+-->
+
+<p>&quot;old&quot; モードでは標準入力ストリームはデフォルトで中断状態のため、
+読み込みには <code>process.stdin.resume()</code> の呼び出しが必須です。
+<code>process.stdin.resume()</code> を呼び出すことにより、それ自体がストリームを
+&quot;old&quot; モードに切り替えることに注意してください。
+
+</p>
+<!--
+If you are starting a new project you should prefer a more recent "new" Streams
+mode over "old" one.
+-->
+
+<p>もし新しいプロジェクトを始めるなら、&quot;old&quot; よりも
+&quot;new&quot; ストリームを好むべきです。
+
+</p>
 <h2>process.argv<span><a class="mark" href="#process_process_argv" id="process_process_argv">#</a></span></h2>
 <!--
 An array containing the command line arguments.  The first element will be
@@ -1250,7 +1306,7 @@ setTimeout(function() {
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.25/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.26/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

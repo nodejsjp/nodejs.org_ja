@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.10.25 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.10.26 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.25 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.26 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -96,13 +96,13 @@
 </li>
 <li><a href="#all_timers">Timers</a><ul>
 <li><a href="#all_settimeout_callback_delay_arg">setTimeout(callback, delay, [arg], [...])</a></li>
-<li><a href="#all_cleartimeout_timeoutid">clearTimeout(timeoutId)</a></li>
+<li><a href="#all_cleartimeout_timeoutobject">clearTimeout(timeoutObject)</a></li>
 <li><a href="#all_setinterval_callback_delay_arg">setInterval(callback, delay, [arg], [...])</a></li>
-<li><a href="#all_clearinterval_intervalid">clearInterval(intervalId)</a></li>
+<li><a href="#all_clearinterval_intervalobject">clearInterval(intervalObject)</a></li>
 <li><a href="#all_unref">unref()</a></li>
 <li><a href="#all_ref">ref()</a></li>
 <li><a href="#all_setimmediate_callback_arg">setImmediate(callback, [arg], [...])</a></li>
-<li><a href="#all_clearimmediate_immediateid">clearImmediate(immediateId)</a></li>
+<li><a href="#all_clearimmediate_immediateobject">clearImmediate(immediateObject)</a></li>
 </ul>
 </li>
 <li><a href="#all_modules">Modules</a><ul>
@@ -830,6 +830,10 @@
 </ul>
 </li>
 <li><a href="#all_example_tiny_cli">Example: Tiny CLI</a></li>
+<li><a href="#all_readline_cursorto_stream_x_y">readline.cursorTo(stream, x, y)</a></li>
+<li><a href="#all_readline_movecursor_stream_dx_dy">readline.moveCursor(stream, dx, dy)</a></li>
+<li><a href="#all_readline_clearline_stream_dir">readline.clearLine(stream, dir)</a></li>
+<li><a href="#all_readline_clearscreendown_stream">readline.clearScreenDown(stream)</a></li>
 </ul>
 </li>
 <li><a href="#all_repl">REPL</a><ul>
@@ -1745,13 +1749,13 @@ this module in order to use them.
 <h2>setTimeout(callback, delay, [arg], [...])<span><a class="mark" href="#all_settimeout_callback_delay_arg" id="all_settimeout_callback_delay_arg">#</a></span></h2>
 <!--
 To schedule execution of a one-time `callback` after `delay` milliseconds. Returns a
-`timeoutId` for possible use with `clearTimeout()`. Optionally you can
+`timeoutObject` for possible use with `clearTimeout()`. Optionally you can
 also pass arguments to the callback.
 -->
 
 <p><code>delay</code> ミリ秒が経過した後で、
 <code>callback</code> が一度だけ実行されるようにスケジュールします。
-<code>clearTimeout()</code> で使うことができる <code>timeoutId</code> を返します。
+<code>clearTimeout()</code> で使うことができる <code>timeoutObject</code> を返します。
 オプションとして、コールバックへの引数を渡すこともできます。
 
 </p>
@@ -1769,7 +1773,7 @@ Node.js はコールバックが呼び出される正確なタイミングも、
 コールバックはできるだけ指定された時間に近いタイミングで呼び出されます。
 
 </p>
-<h2>clearTimeout(timeoutId)<span><a class="mark" href="#all_cleartimeout_timeoutid" id="all_cleartimeout_timeoutid">#</a></span></h2>
+<h2>clearTimeout(timeoutObject)<span><a class="mark" href="#all_cleartimeout_timeoutobject" id="all_cleartimeout_timeoutobject">#</a></span></h2>
 <!--
 Prevents a timeout from triggering.
 -->
@@ -1780,16 +1784,16 @@ Prevents a timeout from triggering.
 <h2>setInterval(callback, delay, [arg], [...])<span><a class="mark" href="#all_setinterval_callback_delay_arg" id="all_setinterval_callback_delay_arg">#</a></span></h2>
 <!--
 To schedule the repeated execution of `callback` every `delay` milliseconds.
-Returns a `intervalId` for possible use with `clearInterval()`. Optionally
+Returns a `intervalObject` for possible use with `clearInterval()`. Optionally
 you can also pass arguments to the callback.
 -->
 
 <p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。
-<code>clearInterval()</code> で使うことができる <code>intervalId</code> を返します。
+<code>clearInterval()</code> で使うことができる <code>intervalObject</code> を返します。
 オプションとして、コールバックへの引数を渡すこともできます。
 
 </p>
-<h2>clearInterval(intervalId)<span><a class="mark" href="#all_clearinterval_intervalid" id="all_clearinterval_intervalid">#</a></span></h2>
+<h2>clearInterval(intervalObject)<span><a class="mark" href="#all_clearinterval_intervalobject" id="all_clearinterval_intervalobject">#</a></span></h2>
 <!--
 Stops a interval from triggering.
 -->
@@ -1839,13 +1843,13 @@ request the timer hold the program open. If the timer is already `ref`d calling
 <!--
 To schedule the "immediate" execution of `callback` after I/O events
 callbacks and before `setTimeout` and `setInterval` . Returns an
-`immediateId` for possible use with `clearImmediate()`. Optionally you
+`immediateObject` for possible use with `clearImmediate()`. Optionally you
 can also pass arguments to the callback.
 -->
 
 <p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および
 <code>setInterval</code> よりも前) に実行するようスケジュールします。
-<code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。
+<code>clearImmediate()</code> に渡すことのできる <code>immediateObject</code> を返します。
 オプションとして、コールバックへの引数を渡すことができます。
 
 </p>
@@ -1868,7 +1872,7 @@ fire between any two scheduled immediate callbacks.
 他の I/O が間に挟まるかもしれません。
 
 </p>
-<h2>clearImmediate(immediateId)<span><a class="mark" href="#all_clearimmediate_immediateid" id="all_clearimmediate_immediateid">#</a></span></h2>
+<h2>clearImmediate(immediateObject)<span><a class="mark" href="#all_clearimmediate_immediateobject" id="all_clearimmediate_immediateobject">#</a></span></h2>
 <!--
 Stops an immediate from triggering.
 -->
@@ -3911,18 +3915,30 @@ Example: the definition of `console.log`
 };</code></pre>
 <!--
 `process.stderr` and `process.stdout` are unlike other streams in Node in
-that writes to them are usually blocking.  They are blocking in the case
-that they refer to regular files or TTY file descriptors. In the case they
-refer to pipes, they are non-blocking like other streams.
+that writes to them are usually blocking.
 -->
 
-<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、
-書き込みは通常ブロックします。
-それらが通常ファイルや TTY のファイル記述子を参照しているケースでは、
-それらはブロックします。
-パイプを参照しているケースでは、他のストリームと同様にブロックしません。
+<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、
+それらへの書き込みは通常ブロックします。
 
 </p>
+<!--
+- They are blocking in the case that they refer to regular files or TTY file
+  descriptors.
+- In the case they refer to pipes:
+  - They are blocking in Linux/Unix.
+  - They are non-blocking like other streams in Windows.
+-->
+
+<ul>
+<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、
+それらはブロックします。</li>
+<li>パイプを参照しているケースでは:<ul>
+<li>Linux/Unix ではそれらはブロックします。</li>
+<li>Windows では他のストリームと同様にブロックしません。</li>
+</ul>
+</li>
+</ul>
 <!--
 To check if Node is being run in a TTY context, read the `isTTY` property
 on `process.stderr`, `process.stdout`, or `process.stdin`:
@@ -3954,31 +3970,39 @@ See [the tty docs](tty.html#tty_tty) for more information.
 A writable stream to stderr.
 
 `process.stderr` and `process.stdout` are unlike other streams in Node in
-that writes to them are usually blocking.  They are blocking in the case
-that they refer to regular files or TTY file descriptors. In the case they
-refer to pipes, they are non-blocking like other streams.
+that writes to them are usually blocking.
 -->
 
 <p><code>stderr</code> に対する <code>Writable Stream</code> です。
 
 </p>
-<p><code>process.stderr</code> と <code>process.stdout</code> は他のストリームと異なり、
-書き込みは通常ブロックします。
-それらが通常ファイルや TTY のファイル記述子を参照しているケースでは、
-それらはブロックします。
-パイプを参照しているケースでは、他のストリームと同様にブロックしません。
-
+<p><code>process.stderr</code> と <code>process.stdout</code> は Node の他のストリームと異なり、
+それらへの書き込みは通常ブロックします。
 
 </p>
+<!--
+- They are blocking in the case that they refer to regular files or TTY file
+  descriptors.
+- In the case they refer to pipes:
+  - They are blocking in Linux/Unix.
+  - They are non-blocking like other streams in Windows.
+-->
+
+<ul>
+<li>ファイル記述子が通常ファイルや TTY を参照しているケースでは、
+それらはブロックします。</li>
+<li>パイプを参照しているケースでは:<ul>
+<li>Linux/Unix ではそれらはブロックします。</li>
+<li>Windows では他のストリームと同様にブロックしません。</li>
+</ul>
+</li>
+</ul>
 <h2>process.stdin<span><a class="mark" href="#all_process_stdin" id="all_process_stdin">#</a></span></h2>
 <!--
-A `Readable Stream` for stdin. The stdin stream is paused by default, so one
-must call `process.stdin.resume()` to read from it.
+A `Readable Stream` for stdin. 
 -->
 
 <p>標準入力に対する <code>Readable Stream</code> です。
-デフォルトでは、標準入力に対するストリームは中断されているため、
-読み込みのためには <code>process.stdin.resume()</code> を呼び出さなければなりません。
 
 </p>
 <!--
@@ -3988,16 +4012,52 @@ Example of opening standard input and listening for both events:
 <p>標準入力をオープンして二つのイベントを監視する例:
 
 </p>
-<pre><code>process.stdin.resume();
-process.stdin.setEncoding(&#39;utf8&#39;);
+<pre><code>process.stdin.setEncoding(&#39;utf8&#39;);
 
-process.stdin.on(&#39;data&#39;, function(chunk) {
-  process.stdout.write(&#39;data: &#39; + chunk);
+process.stdin.on(&#39;readable&#39;, function(chunk) {
+  var chunk = process.stdin.read();
+  if (chunk !== null) {
+    process.stdout.write(&#39;data: &#39; + chunk);
+  }
 });
 
 process.stdin.on(&#39;end&#39;, function() {
   process.stdout.write(&#39;end&#39;);
 });</code></pre>
+<!--
+As a Stream, `process.stdin` can also be used in "old" mode that is compatible
+with scripts written for node prior v0.10.
+For more information see
+[Stream compatibility](stream.html#stream_compatibility_with_older_node_versions).
+-->
+
+<p>ストリームであるため、<code>process.stdin</code> は v0.10 以前の node 向けに書かれた
+スクリプトと互換性のある &quot;old&quot; モードで使うことが出来ます。より詳細な情報は
+<a href="stream.html#stream_compatibility_with_older_node_versions">Stream compatibility</a>
+を参照してください。
+
+</p>
+<!--
+In "old" Streams mode the stdin stream is paused by default, so one
+must call `process.stdin.resume()` to read from it. Note also that calling
+`process.stdin.resume()` itself would switch stream to "old" mode.
+-->
+
+<p>&quot;old&quot; モードでは標準入力ストリームはデフォルトで中断状態のため、
+読み込みには <code>process.stdin.resume()</code> の呼び出しが必須です。
+<code>process.stdin.resume()</code> を呼び出すことにより、それ自体がストリームを
+&quot;old&quot; モードに切り替えることに注意してください。
+
+</p>
+<!--
+If you are starting a new project you should prefer a more recent "new" Streams
+mode over "old" one.
+-->
+
+<p>もし新しいプロジェクトを始めるなら、&quot;old&quot; よりも
+&quot;new&quot; ストリームを好むべきです。
+
+</p>
 <h2>process.argv<span><a class="mark" href="#all_process_argv" id="all_process_argv">#</a></span></h2>
 <!--
 An array containing the command line arguments.  The first element will be
@@ -9074,6 +9134,9 @@ how to implement Writable streams in your programs.
     returning false. Default=16kb
   * `decodeStrings` {Boolean} Whether or not to decode strings into
     Buffers before passing them to [`_write()`][].  Default=true
+  * `objectMode` {Boolean} Whether or not the `write(anyObj)` is
+    a valid operation. If set you can write arbitrary data instead
+    of only `Buffer` / `String` data.  Default=false
 -->
 
 <ul>
@@ -9082,6 +9145,10 @@ how to implement Writable streams in your programs.
 バッファレベル。デフォルトは 16kb。</li>
 <li><code>decodeStrings</code> {Boolean} 文字列が <a href="#stream_writable_write_chunk_encoding_callback_1"><code>_write()</code></a> に渡される前に
 バッファにデコードするかどうか。デフォルトは <code>true</code>。</li>
+<li><code>objectMode</code> {Boolean} <code>write(anyObj)</code> が妥当な操作かどうか。
+もし <code>true</code> を設定すると、<code>Buffer</code> / <code>String</code> データのみではなく、
+任意のデータを書き込むことができるようになります。
+デフォルトは <code>false</code>。</li>
 </ul>
 </li>
 </ul>
@@ -10871,7 +10938,7 @@ then a buffer is returned.
 </p>
 <h3>diffieHellman.getGenerator([encoding])<span><a class="mark" href="#all_diffiehellman_getgenerator_encoding" id="all_diffiehellman_getgenerator_encoding">#</a></span></h3>
 <!--
-Returns the Diffie-Hellman prime in the specified encoding, which can
+Returns the Diffie-Hellman generator in the specified encoding, which can
 be `'binary'`, `'hex'`, or `'base64'`. If no encoding is provided,
 then a buffer is returned.
 -->
@@ -14044,6 +14111,10 @@ an empty string.  Examples:
 // returns
 &#39;.html&#39;
 
+path.extname(&#39;index.coffee.md&#39;)
+// returns
+&#39;.md&#39;
+
 path.extname(&#39;index.&#39;)
 // returns
 &#39;.&#39;
@@ -17165,11 +17236,14 @@ Alternatively, you could just opt out of pooling entirely using `agent:false`:
 <h3>agent.maxSockets<span><a class="mark" href="#all_agent_maxsockets" id="all_agent_maxsockets">#</a></span></h3>
 <!--
 By default set to 5. Determines how many concurrent sockets the agent can have
-open per host.
+open per origin. Origin is either a 'host:port' or 'host:port:localAddress'
+combination.
 -->
 
 <p>デフォルトでは 5 に設定されます。
-エージェントがいくつのソケットを並行にオープンするかを決定します。
+エージェントがオリジン毎にいくつのソケットを並行にオープンするかを決定します。
+オリジンは <code>&#39;host:port&#39;</code> または <code>&#39;host:port:localAddress&#39;</code>
+の組み合わせのいずれかです。
 
 </p>
 <h3>agent.sockets<span><a class="mark" href="#all_agent_sockets" id="all_agent_sockets">#</a></span></h3>
@@ -18606,7 +18680,7 @@ ANSI/VT100 エスケープコードを出力する場合は <code>true</code> �
 </li>
 </ul>
 <!--
-The `completer` function is given a the current line entered by the user, and
+The `completer` function is given the current line entered by the user, and
 is supposed to return an Array with 2 entries:
 -->
 
@@ -19056,6 +19130,51 @@ rl.on(&#39;line&#39;, function(line) {
   console.log(&#39;Have a great day!&#39;);
   process.exit(0);
 });</code></pre>
+<h2>readline.cursorTo(stream, x, y)<span><a class="mark" href="#all_readline_cursorto_stream_x_y" id="all_readline_cursorto_stream_x_y">#</a></span></h2>
+<!--
+Move cursor to the specified position in a given TTY stream.
+-->
+
+<p>カーソルを与えられた TTY スクリーンの指定の位置に移動します。
+
+</p>
+<h2>readline.moveCursor(stream, dx, dy)<span><a class="mark" href="#all_readline_movecursor_stream_dx_dy" id="all_readline_movecursor_stream_dx_dy">#</a></span></h2>
+<!--
+Move cursor relative to it's current position in a given TTY stream.
+-->
+
+<p>カーソルを与えられた TTY スクリーンの現在の位置からの相対位置に移動します。
+
+</p>
+<h2>readline.clearLine(stream, dir)<span><a class="mark" href="#all_readline_clearline_stream_dir" id="all_readline_clearline_stream_dir">#</a></span></h2>
+<!--
+Clears current line of given TTY stream in a specified direction.
+`dir` should have one of following values:
+-->
+
+<p>与えられた TTY スクリーンの現在の行を指定された方向に消去します。
+<code>dir</code> は以下の値のいずれか:
+
+</p>
+<!--
+* `-1` - to the left from cursor
+* `1` - to the right from cursor
+* `0` - the entire line
+-->
+
+<ul>
+<li><code>-1</code> - カーソルから左方向</li>
+<li><code>1</code> - カーソルから右方向</li>
+<li><code>0</code> - 行全体</li>
+</ul>
+<h2>readline.clearScreenDown(stream)<span><a class="mark" href="#all_readline_clearscreendown_stream" id="all_readline_clearscreendown_stream">#</a></span></h2>
+<!--
+Clears the screen from the current position of the cursor down.
+-->
+
+<p>スクリーンのカーソルより下を消去します。
+
+</p>
 <h1>REPL<span><a class="mark" href="#all_repl" id="all_repl">#</a></span></h1>
 <!--
 A Read-Eval-Print-Loop (REPL) is available both as a standalone program and
@@ -20808,16 +20927,16 @@ child = exec(&#39;cat *.js bad_file | wc -l&#39;,
 });</code></pre>
 <!--
 The callback gets the arguments `(error, stdout, stderr)`. On success, `error`
-will be `null`.  On error, `error` will be an instance of `Error` and `err.code`
-will be the exit code of the child process, and `err.signal` will be set to the
+will be `null`.  On error, `error` will be an instance of `Error` and `error.code`
+will be the exit code of the child process, and `error.signal` will be set to the
 signal that terminated the process.
 -->
 
 <p>コールバックは引数 <code>(error, stdout, stderr)</code> を得ます。
 成功すると、<code>error</code> は <code>null</code> になります。
 エラーだと、<code>error</code> は <code>Error</code> のインスタンスとなり、
-<code>err.code</code> は子プロセスの終了コード、
-<code>err.signal</code> はプロセスを終了させたシグナルとなります。
+<code>error.code</code> は子プロセスの終了コード、
+<code>error.signal</code> はプロセスを終了させたシグナルとなります。
 
 </p>
 <!--
@@ -23491,7 +23610,7 @@ In a worker you can also use `process.on('error')`.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.25/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.26/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
