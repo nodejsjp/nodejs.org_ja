@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Crypto Node.js v0.11.10 Manual &amp; Documentation</title>
+  <title>Crypto Node.js v0.11.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/crypto.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -56,6 +56,7 @@
             <h2>Table of Contents</h2>
             <ul>
 <li><a href="#crypto_crypto">Crypto</a><ul>
+<li><a href="#crypto_crypto_setengine_engine_flags">crypto.setEngine(engine, [flags])</a></li>
 <li><a href="#crypto_crypto_getciphers">crypto.getCiphers()</a></li>
 <li><a href="#crypto_crypto_gethashes">crypto.getHashes()</a></li>
 <li><a href="#crypto_crypto_createcredentials_details">crypto.createCredentials(details)</a></li>
@@ -115,8 +116,8 @@
 </ul>
 </li>
 <li><a href="#crypto_crypto_getdiffiehellman_group_name">crypto.getDiffieHellman(group_name)</a></li>
-<li><a href="#crypto_crypto_pbkdf2_password_salt_iterations_keylen_callback">crypto.pbkdf2(password, salt, iterations, keylen, callback)</a></li>
-<li><a href="#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
+<li><a href="#crypto_crypto_pbkdf2_password_salt_iterations_keylen_digest_callback">crypto.pbkdf2(password, salt, iterations, keylen, [digest], callback)</a></li>
+<li><a href="#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen_digest">crypto.pbkdf2Sync(password, salt, iterations, keylen, [digest])</a></li>
 <li><a href="#crypto_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
 <li><a href="#crypto_crypto_pseudorandombytes_size_callback">crypto.pseudoRandomBytes(size, [callback])</a></li>
 <li><a href="#crypto_class_certificate">Class: Certificate</a><ul>
@@ -168,6 +169,47 @@ decipher, sign and verify methods.
 
 
 </p>
+<h2>crypto.setEngine(engine, [flags])<span><a class="mark" href="#crypto_crypto_setengine_engine_flags" id="crypto_crypto_setengine_engine_flags">#</a></span></h2>
+<!--
+Load and set engine for some/all OpenSSL functions (selected by flags).
+-->
+
+<p>一部または全ての OpenSSL 関数のために、エンジンをロードまたは設定します
+(フラグによって選択されます)。
+
+</p>
+<!--
+`engine` could be either an id or a path to the to the engine's shared library.
+-->
+
+<p><code>engine</code> は id か、エンジンの共有ライブラリへのパスかのいずれかです。
+
+</p>
+<!--
+`flags` is optional and has `ENGINE_METHOD_ALL` value by default. It could take
+one of or mix of following flags (defined in `constants` module):
+-->
+
+<p><code>flags</code> はオプションで、デフォルトは <code>ENGINE_METHOD_ALL</code> です。
+以下のフラグから一つまたは組み合わせを指定することが出来ます
+(<code>constants</code> モジュールに定義されています)。
+
+</p>
+<ul>
+<li><code>ENGINE_METHOD_RSA</code></li>
+<li><code>ENGINE_METHOD_DSA</code></li>
+<li><code>ENGINE_METHOD_DH</code></li>
+<li><code>ENGINE_METHOD_RAND</code></li>
+<li><code>ENGINE_METHOD_ECDH</code></li>
+<li><code>ENGINE_METHOD_ECDSA</code></li>
+<li><code>ENGINE_METHOD_CIPHERS</code></li>
+<li><code>ENGINE_METHOD_DIGESTS</code></li>
+<li><code>ENGINE_METHOD_STORE</code></li>
+<li><code>ENGINE_METHOD_PKEY_METH</code></li>
+<li><code>ENGINE_METHOD_PKEY_ASN1_METH</code></li>
+<li><code>ENGINE_METHOD_ALL</code></li>
+<li><code>ENGINE_METHOD_NONE</code></li>
+</ul>
 <h2>crypto.getCiphers()<span><a class="mark" href="#crypto_crypto_getciphers" id="crypto_crypto_getciphers">#</a></span></h2>
 <!--
 Returns an array with the names of the supported ciphers.
@@ -1138,20 +1180,43 @@ var bob_secret = bob.computeSecret(alice.getPublicKey(), null, &#39;hex&#39;);
 
 /* alice_secret and bob_secret should be the same */
 console.log(alice_secret == bob_secret);</code></pre>
-<h2>crypto.pbkdf2(password, salt, iterations, keylen, callback)<span><a class="mark" href="#crypto_crypto_pbkdf2_password_salt_iterations_keylen_callback" id="crypto_crypto_pbkdf2_password_salt_iterations_keylen_callback">#</a></span></h2>
+<h2>crypto.pbkdf2(password, salt, iterations, keylen, [digest], callback)<span><a class="mark" href="#crypto_crypto_pbkdf2_password_salt_iterations_keylen_digest_callback" id="crypto_crypto_pbkdf2_password_salt_iterations_keylen_digest_callback">#</a></span></h2>
 <!--
-Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive
-a key of given length from the given password, salt and iterations.
-The callback gets two arguments `(err, derivedKey)`.
+Asynchronous PBKDF2 function.  Applies the selected HMAC digest function
+(default: SHA1) to derive a key of the requested length from the password,
+salt and number of iterations.  The callback gets two arguments:
+`(err, derivedKey)`.
 -->
 
-<p>疑似乱数を HMAC-SHA1 関数に適用して、与えられたパスワードと salt 
-(ランダムなバイト値)、および繰り返しから、指定された長さの鍵を生成する、
-非同期の PBKDF2 です。
-コールバック関数は二つの引数を受け取る <code>(err, derivedKey)</code> です。
+<p>非同期の PBKDF2 関数です。
+選択された HMAC ダイジェスト関数 (デフォルト: SHA1) を適用して、
+要求されたパスワード、salt、および繰り返しの数から、
+指定された長さの鍵を生成します。
+コールバック関数は二つの引数を受け取ります: <code>(err, derivedKey)</code>
 
 </p>
-<h2>crypto.pbkdf2Sync(password, salt, iterations, keylen)<span><a class="mark" href="#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen" id="crypto_crypto_pbkdf2sync_password_salt_iterations_keylen">#</a></span></h2>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>crypto.pbkdf2(&#39;secret&#39;, &#39;salt&#39;, 4096, 512, &#39;sha256&#39;, function(err, key) {
+  if (err)
+    throw err;
+  console.log(key.toString(&#39;hex&#39;));  // &#39;c5e478d...1469e50&#39;
+});</code></pre>
+<!--
+You can get a list of supported digest functions with
+[crypto.getHashes()](#crypto_crypto_gethashes).
+-->
+
+<p><a href="#crypto_crypto_gethashes">crypto.getHashes()</a> からサポートされる
+ダイジェスト関数の一覧を得ることが出来ます。
+
+</p>
+<h2>crypto.pbkdf2Sync(password, salt, iterations, keylen, [digest])<span><a class="mark" href="#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen_digest" id="crypto_crypto_pbkdf2sync_password_salt_iterations_keylen_digest">#</a></span></h2>
 <!--
 Synchronous PBKDF2 function.  Returns derivedKey or throws error.
 -->
@@ -1384,7 +1449,7 @@ temporary measure.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

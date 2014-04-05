@@ -7,6 +7,25 @@
       "desc": "<!--\n    Stability: 2 - Unstable; API changes are being discussed for\n    future versions.  Breaking changes will be minimized.  See below.\n-->\n\n<pre><code>Stability: 2 - Unstable; 将来のバージョンにおいて API の変更が\n議論されています。互換性を損なう変更は最小限になる予定です。\n後述します。</code></pre>\n<!--\nUse `require('crypto')` to access this module.\n-->\n\n<p>このモジュールにアクセスするには <code>require(&#39;crypto&#39;)</code> を使用します。\n\n</p>\n<!--\nThe crypto module offers a way of encapsulating secure credentials to be\nused as part of a secure HTTPS net or http connection.\n-->\n\n<p>暗号化モジュールは安全な HTTPS ネットワークや http\nコネクションの一部として使われる、\n安全な認証情報をカプセル化する方法を提供します。\n\n</p>\n<!--\nIt also offers a set of wrappers for OpenSSL's hash, hmac, cipher,\ndecipher, sign and verify methods.\n-->\n\n<p>同時に OpenSSL のハッシュ、HMAC、暗号、復号、署名、そして検証へのラッパーを一式提供します。\n\n\n</p>\n",
       "methods": [
         {
+          "textRaw": "crypto.setEngine(engine, [flags])",
+          "type": "method",
+          "name": "setEngine",
+          "desc": "<!--\nLoad and set engine for some/all OpenSSL functions (selected by flags).\n-->\n\n<p>一部または全ての OpenSSL 関数のために、エンジンをロードまたは設定します\n(フラグによって選択されます)。\n\n</p>\n<!--\n`engine` could be either an id or a path to the to the engine's shared library.\n-->\n\n<p><code>engine</code> は id か、エンジンの共有ライブラリへのパスかのいずれかです。\n\n</p>\n<!--\n`flags` is optional and has `ENGINE_METHOD_ALL` value by default. It could take\none of or mix of following flags (defined in `constants` module):\n-->\n\n<p><code>flags</code> はオプションで、デフォルトは <code>ENGINE_METHOD_ALL</code> です。\n以下のフラグから一つまたは組み合わせを指定することが出来ます\n(<code>constants</code> モジュールに定義されています)。\n\n</p>\n<ul>\n<li><code>ENGINE_METHOD_RSA</code></li>\n<li><code>ENGINE_METHOD_DSA</code></li>\n<li><code>ENGINE_METHOD_DH</code></li>\n<li><code>ENGINE_METHOD_RAND</code></li>\n<li><code>ENGINE_METHOD_ECDH</code></li>\n<li><code>ENGINE_METHOD_ECDSA</code></li>\n<li><code>ENGINE_METHOD_CIPHERS</code></li>\n<li><code>ENGINE_METHOD_DIGESTS</code></li>\n<li><code>ENGINE_METHOD_STORE</code></li>\n<li><code>ENGINE_METHOD_PKEY_METH</code></li>\n<li><code>ENGINE_METHOD_PKEY_ASN1_METH</code></li>\n<li><code>ENGINE_METHOD_ALL</code></li>\n<li><code>ENGINE_METHOD_NONE</code></li>\n</ul>\n",
+          "signatures": [
+            {
+              "params": [
+                {
+                  "name": "engine"
+                },
+                {
+                  "name": "flags",
+                  "optional": true
+                }
+              ]
+            }
+          ]
+        },
+        {
           "textRaw": "crypto.getCiphers()",
           "type": "method",
           "name": "getCiphers",
@@ -234,10 +253,10 @@
           ]
         },
         {
-          "textRaw": "crypto.pbkdf2(password, salt, iterations, keylen, callback)",
+          "textRaw": "crypto.pbkdf2(password, salt, iterations, keylen, [digest], callback)",
           "type": "method",
           "name": "pbkdf2",
-          "desc": "<!--\nAsynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive\na key of given length from the given password, salt and iterations.\nThe callback gets two arguments `(err, derivedKey)`.\n-->\n\n<p>疑似乱数を HMAC-SHA1 関数に適用して、与えられたパスワードと salt \n(ランダムなバイト値)、および繰り返しから、指定された長さの鍵を生成する、\n非同期の PBKDF2 です。\nコールバック関数は二つの引数を受け取る <code>(err, derivedKey)</code> です。\n\n</p>\n",
+          "desc": "<!--\nAsynchronous PBKDF2 function.  Applies the selected HMAC digest function\n(default: SHA1) to derive a key of the requested length from the password,\nsalt and number of iterations.  The callback gets two arguments:\n`(err, derivedKey)`.\n-->\n\n<p>非同期の PBKDF2 関数です。\n選択された HMAC ダイジェスト関数 (デフォルト: SHA1) を適用して、\n要求されたパスワード、salt、および繰り返しの数から、\n指定された長さの鍵を生成します。\nコールバック関数は二つの引数を受け取ります: <code>(err, derivedKey)</code>\n\n</p>\n<!--\nExample:\n-->\n\n<p>例:\n\n</p>\n<pre><code>crypto.pbkdf2(&#39;secret&#39;, &#39;salt&#39;, 4096, 512, &#39;sha256&#39;, function(err, key) {\n  if (err)\n    throw err;\n  console.log(key.toString(&#39;hex&#39;));  // &#39;c5e478d...1469e50&#39;\n});</code></pre>\n<!--\nYou can get a list of supported digest functions with\n[crypto.getHashes()](#crypto_crypto_gethashes).\n-->\n\n<p><a href=\"#crypto_crypto_gethashes\">crypto.getHashes()</a> からサポートされる\nダイジェスト関数の一覧を得ることが出来ます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -254,6 +273,10 @@
                   "name": "keylen"
                 },
                 {
+                  "name": "digest",
+                  "optional": true
+                },
+                {
                   "name": "callback"
                 }
               ]
@@ -261,7 +284,7 @@
           ]
         },
         {
-          "textRaw": "crypto.pbkdf2Sync(password, salt, iterations, keylen)",
+          "textRaw": "crypto.pbkdf2Sync(password, salt, iterations, keylen, [digest])",
           "type": "method",
           "name": "pbkdf2Sync",
           "desc": "<!--\nSynchronous PBKDF2 function.  Returns derivedKey or throws error.\n-->\n\n<p>同期版の PBKDF2 関数。\n生成された鍵を返すか、例外をスローします。\n\n</p>\n",
@@ -279,6 +302,10 @@
                 },
                 {
                   "name": "keylen"
+                },
+                {
+                  "name": "digest",
+                  "optional": true
                 }
               ]
             }

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>About this Documentation Node.js v0.11.10 Manual &amp; Documentation</title>
+  <title>About this Documentation Node.js v0.11.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/all.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -186,8 +186,8 @@
 <li><a href="#all_process_uptime">process.uptime()</a></li>
 <li><a href="#all_process_hrtime">process.hrtime()</a></li>
 <li><a href="#all_async_listeners">Async Listeners</a></li>
-<li><a href="#all_process_createasynclistener_asynclistener_callbacksobj_storagevalue">process.createAsyncListener(asyncListener[, callbacksObj[, storageValue]])</a></li>
-<li><a href="#all_process_addasynclistener_asynclistener_callbacksobj_storagevalue">process.addAsyncListener(asyncListener[, callbacksObj[, storageValue]])</a></li>
+<li><a href="#all_process_createasynclistener_callbacksobj_userdata">process.createAsyncListener(callbacksObj[, userData])</a></li>
+<li><a href="#all_process_addasynclistener_callbacksobj_userdata">process.addAsyncListener(callbacksObj[, userData])</a></li>
 <li><a href="#all_process_addasynclistener_asynclistener">process.addAsyncListener(asyncListener)</a></li>
 <li><a href="#all_process_removeasynclistener_asynclistener">process.removeAsyncListener(asyncListener)</a></li>
 </ul>
@@ -383,6 +383,7 @@
 </ul>
 </li>
 <li><a href="#all_crypto">Crypto</a><ul>
+<li><a href="#all_crypto_setengine_engine_flags">crypto.setEngine(engine, [flags])</a></li>
 <li><a href="#all_crypto_getciphers">crypto.getCiphers()</a></li>
 <li><a href="#all_crypto_gethashes">crypto.getHashes()</a></li>
 <li><a href="#all_crypto_createcredentials_details">crypto.createCredentials(details)</a></li>
@@ -442,8 +443,8 @@
 </ul>
 </li>
 <li><a href="#all_crypto_getdiffiehellman_group_name">crypto.getDiffieHellman(group_name)</a></li>
-<li><a href="#all_crypto_pbkdf2_password_salt_iterations_keylen_callback">crypto.pbkdf2(password, salt, iterations, keylen, callback)</a></li>
-<li><a href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen">crypto.pbkdf2Sync(password, salt, iterations, keylen)</a></li>
+<li><a href="#all_crypto_pbkdf2_password_salt_iterations_keylen_digest_callback">crypto.pbkdf2(password, salt, iterations, keylen, [digest], callback)</a></li>
+<li><a href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen_digest">crypto.pbkdf2Sync(password, salt, iterations, keylen, [digest])</a></li>
 <li><a href="#all_crypto_randombytes_size_callback">crypto.randomBytes(size, [callback])</a></li>
 <li><a href="#all_crypto_pseudorandombytes_size_callback">crypto.pseudoRandomBytes(size, [callback])</a></li>
 <li><a href="#all_class_certificate">Class: Certificate</a><ul>
@@ -459,6 +460,7 @@
 <li><a href="#all_tls_ssl">TLS (SSL)</a><ul>
 <li><a href="#all_client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a></li>
 <li><a href="#all_npn_and_sni">NPN and SNI</a></li>
+<li><a href="#all_perfect_forward_secrecy">Perfect Forward Secrecy</a></li>
 <li><a href="#all_tls_getciphers">tls.getCiphers()</a></li>
 <li><a href="#all_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
 <li><a href="#all_tls_connect_options_callback">tls.connect(options, [callback])</a></li>
@@ -495,6 +497,7 @@
 <li><a href="#all_tlssocket_getpeercertificate">tlsSocket.getPeerCertificate()</a></li>
 <li><a href="#all_tlssocket_getcipher">tlsSocket.getCipher()</a></li>
 <li><a href="#all_tlssocket_renegotiate_options_callback">tlsSocket.renegotiate(options, callback)</a></li>
+<li><a href="#all_tlssocket_setmaxsendfragment_size">tlsSocket.setMaxSendFragment(size)</a></li>
 <li><a href="#all_tlssocket_address">tlsSocket.address()</a></li>
 <li><a href="#all_tlssocket_remoteaddress">tlsSocket.remoteAddress</a></li>
 <li><a href="#all_tlssocket_remoteport">tlsSocket.remotePort</a></li>
@@ -876,6 +879,10 @@
 </ul>
 </li>
 <li><a href="#all_example_tiny_cli">Example: Tiny CLI</a></li>
+<li><a href="#all_readline_cursorto_stream_x_y">readline.cursorTo(stream, x, y)</a></li>
+<li><a href="#all_readline_movecursor_stream_dx_dy">readline.moveCursor(stream, dx, dy)</a></li>
+<li><a href="#all_readline_clearline_stream_dir">readline.clearLine(stream, dir)</a></li>
+<li><a href="#all_readline_clearscreendown_stream">readline.clearScreenDown(stream)</a></li>
 </ul>
 </li>
 <li><a href="#all_repl">REPL</a><ul>
@@ -925,7 +932,7 @@
 </li>
 <li><a href="#all_child_process_spawn_command_args_options">child_process.spawn(command, [args], [options])</a></li>
 <li><a href="#all_child_process_exec_command_options_callback">child_process.exec(command, [options], callback)</a></li>
-<li><a href="#all_child_process_execfile_file_args_options_callback">child_process.execFile(file, args, options, callback)</a></li>
+<li><a href="#all_child_process_execfile_file_args_options_callback">child_process.execFile(file, [args], [options], [callback])</a></li>
 <li><a href="#all_child_process_fork_modulepath_args_options">child_process.fork(modulePath, [args], [options])</a></li>
 </ul>
 </li>
@@ -2903,22 +2910,22 @@ First we create a file `hello.cc`:
 
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// hello.cc
+#include &lt;node.h&gt;
 
 using namespace v8;
 
-Handle&lt;Value&gt; Method(const Arguments&amp; args) {
+void Method(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
-  return scope.Close(String::New(&quot;world&quot;));
+  args.GetReturnValue().Set(String::NewFromUtf8(isolate, &quot;world&quot;));
 }
 
 void init(Handle&lt;Object&gt; exports) {
-  exports-&gt;Set(String::NewSymbol(&quot;hello&quot;),
-      FunctionTemplate::New(Method)-&gt;GetFunction());
+  NODE_SET_METHOD(exports, &quot;hello&quot;, Method);
 }
 
-NODE_MODULE(hello, init)</code></pre>
+NODE_MODULE(addon, init)</code></pre>
 <!--
 Note that all Node addons must export an initialization function:
 -->
@@ -2936,7 +2943,7 @@ There is no semi-colon after `NODE_MODULE` as it's not a function (see
 The `module_name` needs to match the filename of the final binary (minus the
 .node suffix).
 
-The source code needs to be built into `hello.node`, the binary Addon. To
+The source code needs to be built into `addon.node`, the binary Addon. To
 do this we create a file called `binding.gyp` which describes the configuration
 to build your module in a JSON-like format. This file gets compiled by
 [node-gyp](https://github.com/TooTallNate/node-gyp).
@@ -2950,7 +2957,7 @@ to build your module in a JSON-like format. This file gets compiled by
 とマッチする必要があります。
 
 </p>
-<p>このソースコードは、<code>hello.node</code> というバイナリアドオンとしてビルドされる必要が有ります。
+<p>このソースコードは、<code>addon.node</code> というバイナリアドオンとしてビルドされる必要が有ります。
 そのために <code>binding.gyp</code> と呼ばれる、あなたのモジュールをビルドするための
 構成を JSON 的なフォーマットで記述したファイルを作成します。
 このファイルは <a href="https://github.com/TooTallNate/node-gyp">node-gyp</a>
@@ -2960,7 +2967,7 @@ to build your module in a JSON-like format. This file gets compiled by
 <pre><code>{
   &quot;targets&quot;: [
     {
-      &quot;target_name&quot;: &quot;hello&quot;,
+      &quot;target_name&quot;: &quot;addon&quot;,
       &quot;sources&quot;: [ &quot;hello.cc&quot; ]
     }
   ]
@@ -3005,7 +3012,8 @@ You can now use the binary addon in a Node project `hello.js` by pointing
 可能になります。
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/hello&#39;);
+<pre><code>// hello.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 console.log(addon.hello()); // &#39;world&#39;</code></pre>
 <!--
@@ -3085,33 +3093,35 @@ function calls and return a result. This is the main and only needed source
 結果を返す方法を示します。これは <code>addon.cc</code> でのみ必要となります。
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 
 using namespace v8;
 
-Handle&lt;Value&gt; Add(const Arguments&amp; args) {
+void Add(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   if (args.Length() &lt; 2) {
-    ThrowException(Exception::TypeError(
-        String::New(&quot;Wrong number of arguments&quot;)));
-    return scope.Close(Undefined(isolate));
+    isolate-&gt;ThrowException(Exception::TypeError(
+        String::NewFromUtf8(isolate, &quot;Wrong number of arguments&quot;)));
+    return;
   }
 
   if (!args[0]-&gt;IsNumber() || !args[1]-&gt;IsNumber()) {
-    ThrowException(Exception::TypeError(String::New(&quot;Wrong arguments&quot;)));
-    return scope.Close(Undefined(isolate));
+    isolate-&gt;ThrowException(Exception::TypeError(
+        String::NewFromUtf8(isolate, &quot;Wrong arguments&quot;)));
+    return;
   }
 
   Local&lt;Number&gt; num = Number::New(args[0]-&gt;NumberValue() +
       args[1]-&gt;NumberValue());
-  return scope.Close(num);
+
+  args.GetReturnValue().Set(num);
 }
 
 void Init(Handle&lt;Object&gt; exports) {
-  exports-&gt;Set(String::NewSymbol(&quot;add&quot;),
-      FunctionTemplate::New(Add)-&gt;GetFunction());
+  NODE_SET_METHOD(exports, &quot;add&quot;, Add);
 }
 
 NODE_MODULE(addon, Init)</code></pre>
@@ -3122,7 +3132,8 @@ You can test it with the following JavaScript snippet:
 <p>以下の JavaScript コード片でテストすることができます。
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 console.log( &#39;This should be eight:&#39;, addon.add(3,5) );</code></pre>
 <h3>Callbacks<span><a class="mark" href="#all_callbacks" id="all_callbacks">#</a></span></h3>
@@ -3135,25 +3146,23 @@ there. Here's `addon.cc`:
 これは <code>addon.cc</code> です:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 
 using namespace v8;
 
-Handle&lt;Value&gt; RunCallback(const Arguments&amp; args) {
+void RunCallback(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[0]);
   const unsigned argc = 1;
-  Local&lt;Value&gt; argv[argc] = { String::New(&quot;hello world&quot;) };
+  Local&lt;Value&gt; argv[argc] = { String::NewFromUtf8(isolate, &quot;hello world&quot;) };
   cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);
-
-  return scope.Close(Undefined(isolate));
 }
 
 void Init(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module) {
-  module-&gt;Set(String::NewSymbol(&quot;exports&quot;),
-      FunctionTemplate::New(RunCallback)-&gt;GetFunction());
+  NODE_SET_METHOD(module, &quot;exports&quot;, RunCallback);
 }
 
 NODE_MODULE(addon, Init)</code></pre>
@@ -3177,7 +3186,8 @@ To test it run the following JavaScript snippet:
 <p>以下の JavaScript コード片でテストすることができます。
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 addon(function(msg){
   console.log(msg); // &#39;hello world&#39;
@@ -3194,23 +3204,23 @@ the string passed to `createObject()`:
 反映する <code>msg</code> プロパティを持ったオブジェクトを返します。
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 
 using namespace v8;
 
-Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+void CreateObject(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   Local&lt;Object&gt; obj = Object::New();
-  obj-&gt;Set(String::NewSymbol(&quot;msg&quot;), args[0]-&gt;ToString());
+  obj-&gt;Set(String::NewFromUtf8(isolate, &quot;msg&quot;), args[0]-&gt;ToString());
 
-  return scope.Close(obj);
+  args.GetReturnValue().Set(obj);
 }
 
 void Init(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module) {
-  module-&gt;Set(String::NewSymbol(&quot;exports&quot;),
-      FunctionTemplate::New(CreateObject)-&gt;GetFunction());
+  NODE_SET_METHOD(module, &quot;exports&quot;, CreateObject);
 }
 
 NODE_MODULE(addon, Init)</code></pre>
@@ -3221,7 +3231,8 @@ To test it in JavaScript:
 <p>テスト用の JavaScript:
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 var obj1 = addon(&#39;hello&#39;);
 var obj2 = addon(&#39;world&#39;);
@@ -3236,17 +3247,18 @@ wraps a C++ function:
 示します。
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 
 using namespace v8;
 
-Handle&lt;Value&gt; MyFunction(const Arguments&amp; args) {
+void MyFunction(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
-  return scope.Close(String::New(&quot;hello world&quot;));
+  args.GetReturnValue().Set(String::NewFromUtf8(isolate, &quot;hello world&quot;));
 }
 
-Handle&lt;Value&gt; CreateFunction(const Arguments&amp; args) {
+void CreateFunction(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
@@ -3254,14 +3266,13 @@ Handle&lt;Value&gt; CreateFunction(const Arguments&amp; args) {
   Local&lt;Function&gt; fn = tpl-&gt;GetFunction();
 
   // omit this to make it anonymous
-  fn-&gt;SetName(String::NewSymbol(&quot;theFunction&quot;));
+  fn-&gt;SetName(String::NewFromUtf8(isolate, &quot;theFunction&quot;));
 
-  return scope.Close(fn);
+  args.GetReturnValue().Set(fn);
 }
 
 void Init(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module) {
-  module-&gt;Set(String::NewSymbol(&quot;exports&quot;),
-      FunctionTemplate::New(CreateFunction)-&gt;GetFunction());
+  NODE_SET_METHOD(module, &quot;exports&quot;, CreateFunction);
 }
 
 NODE_MODULE(addon, Init)</code></pre>
@@ -3272,7 +3283,8 @@ To test:
 <p>テスト:
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 var fn = addon();
 console.log(fn()); // &#39;hello world&#39;</code></pre>
@@ -3289,7 +3301,8 @@ C++ オブジェクト／クラスをラップし、JavaScript から new 演算
 最初にメインモジュール <code>addon.cc</code> を準備します:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
@@ -3306,10 +3319,12 @@ Then in `myobject.h` make your wrapper inherit from `node::ObjectWrap`:
 <p>次に、<code>node::ObjectWrap</code> を継承したラッパーを <code>myobject.h</code> に作成します。
 
 </p>
-<pre><code>#ifndef MYOBJECT_H
+<pre><code>// myobject.h
+#ifndef MYOBJECT_H
 #define MYOBJECT_H
 
 #include &lt;node.h&gt;
+#include &lt;node_object_wrap.h&gt;
 
 class MyObject : public node::ObjectWrap {
  public:
@@ -3319,8 +3334,8 @@ class MyObject : public node::ObjectWrap {
   explicit MyObject(double value = 0);
   ~MyObject();
 
-  static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
-  static v8::Handle&lt;v8::Value&gt; PlusOne(const v8::Arguments&amp; args);
+  static void New(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
+  static void PlusOne(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
   static v8::Persistent&lt;v8::Function&gt; constructor;
   double value_;
 };
@@ -3336,8 +3351,7 @@ prototype:
 ここでは、コンストラクタに渡された値に加算する <code>plusOne</code> を公開しています:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
-#include &lt;node_object_wrap.h&gt;
+<pre><code>// myobject.cc
 #include &quot;myobject.h&quot;
 
 using namespace v8;
@@ -3355,20 +3369,18 @@ void MyObject::Init(Handle&lt;Object&gt; exports) {
 
   // Prepare constructor template
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
-  tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
+  tpl-&gt;SetClassName(String::NewFromUtf8(isolate, &quot;MyObject&quot;));
   tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
 
   // Prototype
-  tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
-      FunctionTemplate::New(PlusOne)-&gt;GetFunction());
+  NODE_SET_PROTOTYPE_METHOD(tpl, &quot;plusOne&quot;, PlusOne);
 
-  Persistent&lt;Function&gt; constructor
-      = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
-
-  exports-&gt;Set(String::NewSymbol(&quot;MyObject&quot;), constructor);
+  constructor.Reset(isolate, tpl-&gt;GetFunction());
+  exports-&gt;Set(String::NewFromUtf8(isolate, &quot;MyObject&quot;),
+               tpl-&gt;GetFunction());
 }
 
-Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+void MyObject::New(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
@@ -3377,23 +3389,24 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
     double value = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
     MyObject* obj = new MyObject(value);
     obj-&gt;Wrap(args.This());
-    return args.This();
+    args.GetReturnValue().Set(args.This());
   } else {
     // Invoked as plain function `MyObject(...)`, turn into construct call.
     const int argc = 1;
     Local&lt;Value&gt; argv[argc] = { args[0] };
-    return scope.Close(constructor-&gt;NewInstance(argc, argv));
+    Local&lt;Function&gt; cons = Local&lt;Function&gt;::New(isolate, constructor);
+    args.GetReturnValue().Set(cons-&gt;NewInstance(argc, argv));
   }
 }
 
-Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
+void MyObject::PlusOne(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
   obj-&gt;value_ += 1;
 
-  return scope.Close(Number::New(obj-&gt;value_));
+  args.GetReturnValue().Set(Number::New(obj-&gt;value_));
 }</code></pre>
 <!--
 Test it with:
@@ -3402,7 +3415,8 @@ Test it with:
 <p>これでテストします:
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 var obj = new addon.MyObject(10);
 console.log( obj.plusOne() ); // 11
@@ -3428,22 +3442,22 @@ Let's register our `createObject` method in `addon.cc`:
 <p>createObject<code> を </code>addon.cc` に登録しましょう:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
 
-Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+void CreateObject(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
-  return scope.Close(MyObject::NewInstance(args));
+  MyObject::NewInstance(args);
 }
 
 void InitAll(Handle&lt;Object&gt; exports, Handle&lt;Object&gt; module) {
   MyObject::Init();
 
-  module-&gt;Set(String::NewSymbol(&quot;exports&quot;),
-      FunctionTemplate::New(CreateObject)-&gt;GetFunction());
+  NODE_SET_METHOD(module, &quot;exports&quot;, CreateObject);
 }
 
 NODE_MODULE(addon, InitAll)</code></pre>
@@ -3456,22 +3470,24 @@ care of instantiating the object (i.e. it does the job of `new` in JavaScript):
 導入しましょう (すなわち，それが JavaScript 内の <code>new</code> の働きをします)。
 
 </p>
-<pre><code>#ifndef MYOBJECT_H
+<pre><code>// myobject.h
+#ifndef MYOBJECT_H
 #define MYOBJECT_H
 
 #include &lt;node.h&gt;
+#include &lt;node_object_wrap.h&gt;
 
 class MyObject : public node::ObjectWrap {
  public:
   static void Init();
-  static v8::Handle&lt;v8::Value&gt; NewInstance(const v8::Arguments&amp; args);
+  static void NewInstance(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
 
  private:
   explicit MyObject(double value = 0);
   ~MyObject();
 
-  static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
-  static v8::Handle&lt;v8::Value&gt; PlusOne(const v8::Arguments&amp; args);
+  static void New(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
+  static void PlusOne(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
   static v8::Persistent&lt;v8::Function&gt; constructor;
   double value_;
 };
@@ -3484,7 +3500,8 @@ The implementation is similar to the above in `myobject.cc`:
 <p>実装は前述の <code>myobject.cc</code> と同様です:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// myobject.cc
+#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
@@ -3501,17 +3518,16 @@ void MyObject::Init() {
   Isolate* isolate = Isolate::GetCurrent();
   // Prepare constructor template
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
-  tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
+  tpl-&gt;SetClassName(String::NewFromUtf8(isolate, &quot;MyObject&quot;));
   tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
 
   // Prototype
-  tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
-      FunctionTemplate::New(PlusOne)-&gt;GetFunction());
+  NODE_SET_PROTOTYPE_METHOD(tpl, &quot;plusOne&quot;, PlusOne);
 
-  constructor = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
+  constructor.Reset(isolate, tpl-&gt;GetFunction());
 }
 
-Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+void MyObject::New(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
@@ -3520,34 +3536,36 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
     double value = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
     MyObject* obj = new MyObject(value);
     obj-&gt;Wrap(args.This());
-    return args.This();
+    args.GetReturnValue().Set(args.This());
   } else {
     // Invoked as plain function `MyObject(...)`, turn into construct call.
     const int argc = 1;
     Local&lt;Value&gt; argv[argc] = { args[0] };
-    return scope.Close(constructor-&gt;NewInstance(argc, argv));
+    Local&lt;Function&gt; cons = Local&lt;Function&gt;::New(isolate, constructor);
+    args.GetReturnValue().Set(cons-&gt;NewInstance(argc, argv));
   }
 }
 
-Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
+void MyObject::NewInstance(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   const unsigned argc = 1;
   Handle&lt;Value&gt; argv[argc] = { args[0] };
-  Local&lt;Object&gt; instance = constructor-&gt;NewInstance(argc, argv);
+  Local&lt;Function&gt; cons = Local&lt;Function&gt;::New(isolate, constructor);
+  Local&lt;Object&gt; instance = cons-&gt;NewInstance(argc, argv);
 
-  return scope.Close(instance);
+  args.GetReturnValue().Set(instance);
 }
 
-Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
+void MyObject::PlusOne(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
   obj-&gt;value_ += 1;
 
-  return scope.Close(Number::New(obj-&gt;value_));
+  args.GetReturnValue().Set(Number::New(obj-&gt;value_));
 }</code></pre>
 <!--
 Test it with:
@@ -3556,7 +3574,8 @@ Test it with:
 <p>これでテストします:
 
 </p>
-<pre><code>var createObject = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var createObject = require(&#39;./build/Release/addon&#39;);
 
 var obj = createObject(10);
 console.log( obj.plusOne() ); // 11
@@ -3581,19 +3600,20 @@ In the following `addon.cc` we introduce a function `add()` that can take on two
 関数を導入します:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// addon.cc
+#include &lt;node.h&gt;
 #include &lt;node_object_wrap.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
 
-Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+void CreateObject(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
-  return scope.Close(MyObject::NewInstance(args));
+  MyObject::NewInstance(args);
 }
 
-Handle&lt;Value&gt; Add(const Arguments&amp; args) {
+void Add(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
@@ -3602,18 +3622,15 @@ Handle&lt;Value&gt; Add(const Arguments&amp; args) {
   MyObject* obj2 = node::ObjectWrap::Unwrap&lt;MyObject&gt;(
       args[1]-&gt;ToObject());
 
-  double sum = obj1-&gt;Value() + obj2-&gt;Value();
-  return scope.Close(Number::New(sum));
+  double sum = obj1-&gt;value() + obj2-&gt;value();
+  args.GetReturnValue().Set(Number::New(sum));
 }
 
 void InitAll(Handle&lt;Object&gt; exports) {
   MyObject::Init();
 
-  exports-&gt;Set(String::NewSymbol(&quot;createObject&quot;),
-      FunctionTemplate::New(CreateObject)-&gt;GetFunction());
-
-  exports-&gt;Set(String::NewSymbol(&quot;add&quot;),
-      FunctionTemplate::New(Add)-&gt;GetFunction());
+  NODE_SET_METHOD(exports, &quot;createObject&quot;, CreateObject);
+  NODE_SET_METHOD(exports, &quot;add&quot;, Add);
 }
 
 NODE_MODULE(addon, InitAll)</code></pre>
@@ -3627,7 +3644,8 @@ can probe private values after unwrapping the object:
 できます。
 
 </p>
-<pre><code>#ifndef MYOBJECT_H
+<pre><code>// myobject.h
+#ifndef MYOBJECT_H
 #define MYOBJECT_H
 
 #include &lt;node.h&gt;
@@ -3636,14 +3654,14 @@ can probe private values after unwrapping the object:
 class MyObject : public node::ObjectWrap {
  public:
   static void Init();
-  static v8::Handle&lt;v8::Value&gt; NewInstance(const v8::Arguments&amp; args);
-  double Value() const { return value_; }
+  static void NewInstance(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
+  inline double value() const { return value_; }
 
  private:
   explicit MyObject(double value = 0);
   ~MyObject();
 
-  static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
+  static void New(const v8::FunctionCallbackInfo&lt;v8::Value&gt;&amp; args);
   static v8::Persistent&lt;v8::Function&gt; constructor;
   double value_;
 };
@@ -3656,7 +3674,8 @@ The implementation of `myobject.cc` is similar as before:
 <p><code>myobject.cc</code> の実装はこれまでと同様です:
 
 </p>
-<pre><code>#include &lt;node.h&gt;
+<pre><code>// myobject.cc
+#include &lt;node.h&gt;
 #include &quot;myobject.h&quot;
 
 using namespace v8;
@@ -3674,13 +3693,13 @@ void MyObject::Init() {
 
   // Prepare constructor template
   Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
-  tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
+  tpl-&gt;SetClassName(String::NewFromUtf8(isolate, &quot;MyObject&quot;));
   tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
 
-  constructor = Persistent&lt;Function&gt;::New(isolate, tpl-&gt;GetFunction());
+  constructor.Reset(isolate, tpl-&gt;GetFunction());
 }
 
-Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+void MyObject::New(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
@@ -3689,24 +3708,26 @@ Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
     double value = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
     MyObject* obj = new MyObject(value);
     obj-&gt;Wrap(args.This());
-    return args.This();
+    args.GetReturnValue().Set(args.This());
   } else {
     // Invoked as plain function `MyObject(...)`, turn into construct call.
     const int argc = 1;
     Local&lt;Value&gt; argv[argc] = { args[0] };
-    return scope.Close(constructor-&gt;NewInstance(argc, argv));
+    Local&lt;Function&gt; cons = Local&lt;Function&gt;::New(isolate, constructor);
+    args.GetReturnValue().Set(cons-&gt;NewInstance(argc, argv));
   }
 }
 
-Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
+void MyObject::NewInstance(const FunctionCallbackInfo&lt;Value&gt;&amp; args) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   const unsigned argc = 1;
   Handle&lt;Value&gt; argv[argc] = { args[0] };
-  Local&lt;Object&gt; instance = constructor-&gt;NewInstance(argc, argv);
+  Local&lt;Function&gt; cons = Local&lt;Function&gt;::New(isolate, constructor);
+  Local&lt;Object&gt; instance = cons-&gt;NewInstance(argc, argv);
 
-  return scope.Close(instance);
+  args.GetReturnValue().Set(instance);
 }</code></pre>
 <!--
 Test it with:
@@ -3715,7 +3736,8 @@ Test it with:
 <p>これでテストします:
 
 </p>
-<pre><code>var addon = require(&#39;./build/Release/addon&#39;);
+<pre><code>// test.js
+var addon = require(&#39;./build/Release/addon&#39;);
 
 var obj1 = addon.createObject(10);
 var obj2 = addon.createObject(20);
@@ -3992,9 +4014,9 @@ Note:
   `SIGHUP` is to terminate node, but once a listener has been installed its
   default behaviour will be removed.
 - `SIGTERM` is not supported on Windows, it can be listened on.
-- `SIGINT` is supported on all platforms, and can usually be generated with
-  `CTRL+C` (though this may be configurable). It is not generated when terminal
-  raw mode is enabled.
+- `SIGINT` from the terminal is supported on all platforms, and can usually be
+  generated with `CTRL+C` (though this may be configurable). It is not generated
+  when terminal raw mode is enabled.
 - `SIGBREAK` is delivered on Windows when `CTRL+BREAK` is pressed, on non-Windows
   platforms it can be listened on, but there is no way to send or generate it.
 - `SIGWINCH` is delivered when the console has been resized. On Windows, this will
@@ -4024,7 +4046,7 @@ nodeを終了することですが、リスナを登録するとデフォルト�
 削除されます。</li>
 <li><code>SIGTERM</code> は Windows ではサポートされません。
 しかし、リスナを登録することは可能です。</li>
-<li><code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
+<li>端末からの <code>SIGINT</code> は全てのプラットフォームでサポートされ、通常 <code>CTRL+C</code>
 (おそらく設定可能でしょう) によって生成されます。
 ターミナルが raw モードの場合は生成されません。</li>
 <li><code>SIGBREAK</code> は Windows において <code>CTRL+BREAK</code> が推された時に送られます。
@@ -4036,6 +4058,23 @@ Windows では、カーソルが移動するか、tty が raw モードの場合
 <li><code>SIGKILL</code> のリスナを組み込むことは出来ません。
 それは全てのプラットフォームで node を無条件に終了します。</li>
 <li><code>SIGSTOP</code> のリスナを組み込むことは出来ません。</li>
+</ul>
+<!--
+Note that Windows does not support sending Signals, but node offers some
+emulation with `process.kill()`, and `child_process.kill()`:
+- Sending signal `0` can be used to search for the existence of a process
+- Sending `SIGINT`, `SIGTERM`, and `SIGKILL` cause the unconditional exit of the
+  target process.
+-->
+
+<p>Windows はシグナルの送信をサポートしていませんが、nodeは<code>process.kill()</code> や
+<code>child_process.kill()</code> をエミュレートする方法を提供します:
+
+</p>
+<ul>
+<li>シグナル <code>0</code> は既存のプロセスを検索するためのものです。</li>
+<li><code>SIGINT</code>、<code>SIGTERM</code>、そして <code>SIGKILL</code> は、ターゲットのプロセスが無条件に
+終了する原因となります。</li>
 </ul>
 <h2>process.stdout<span><a class="mark" href="#all_process_stdout" id="all_process_stdout">#</a></span></h2>
 <!--
@@ -4595,14 +4634,15 @@ JavaScript で表現したオブジェクトを保持します。
 Send a signal to a process. `pid` is the process id and `signal` is the
 string describing the signal to send.  Signal names are strings like
 'SIGINT' or 'SIGHUP'.  If omitted, the signal will be 'SIGTERM'.
-See kill(2) for more information.
+See [Signal Events](#process_signal_events) and kill(2) for more information.
 -->
 
 <p>プロセスにシグナルを送ります。
 <code>pid</code> はプロセス ID で <code>signal</code> は送信されるシグナルを文字列で記述したものです。
 シグナルの名前は <code>&#39;SIGINT&#39;</code> や <code>&#39;SIGHUP&#39;</code> のような文字列です。
 省略すると、シグナルは <code>&#39;SIGTERM&#39;</code> となります。
-詳細は kill(2) を参照してください。
+詳細は <a href="#process_signal_events">Signal Events</a> および
+kill(2) を参照してください。
 
 </p>
 <!--
@@ -4932,8 +4972,8 @@ setTimeout(function() {
 The `AsyncListener` API is the JavaScript interface for the `AsyncWrap`
 class which allows developers to be notified about key events in the
 lifetime of an asynchronous event. Node performs a lot of asynchronous
-events internally, and significant use of this API will have a **dramatic
-performance impact** on your application.
+events internally, and significant use of this API may have a
+**significant performance impact** on your application.
 -->
 
 <p><code>AsyncListener</code> API は、開発者が非同期イベントの有効期間中に
@@ -4944,23 +4984,17 @@ Node は内部的に多くの非同期イベントを扱うため、この API �
 
 
 </p>
-<h2>process.createAsyncListener(asyncListener[, callbacksObj[, storageValue]])<span><a class="mark" href="#all_process_createasynclistener_asynclistener_callbacksobj_storagevalue" id="all_process_createasynclistener_asynclistener_callbacksobj_storagevalue">#</a></span></h2>
+<h2>process.createAsyncListener(callbacksObj[, userData])<span><a class="mark" href="#all_process_createasynclistener_callbacksobj_userdata" id="all_process_createasynclistener_callbacksobj_userdata">#</a></span></h2>
 <!--
-* `asyncListener` {Function} callback fired when an asynchronous event is
-instantiated.
-* `callbacksObj` {Object} optional callbacks that will fire at specific
-times in the lifetime of the asynchronous event.
-* `storageValue` {Value} a value that will be passed as the first argument
-when the `asyncListener` callback is run, and to all subsequent callback.
+* `callbacksObj` {Object} Contains optional callbacks that will fire at
+specific times in the life cycle of the asynchronous event.
+* `userData` {Value} a value that will be passed to all callbacks.
 -->
 
 <ul>
-<li><code>asyncListener</code> {Function} 非同期イベントが生成されると呼び出される
-コールバック。</li>
-<li><code>callbacksObj</code> {Object} 非同期イベントの有効期間中に、指定された回数だけ
-呼び出されるオプションのコールバック。</li>
-<li><code>storageValue</code> {Value} <code>asyncListener</code> とそれに続くコールバックが
-実行される時、最初の引数として渡される値。</li>
+<li><code>callbacksObj</code> {Object} 非同期イベントのライフサイクル中に、
+指定された回数だけ呼び出されるオプションのコールバックを含むオブジェクト。</li>
+<li><code>userData</code> {Value} 全てのコールバックに渡される値。</li>
 </ul>
 <!--
 Returns a constructed `AsyncListener` object.
@@ -4970,26 +5004,27 @@ Returns a constructed `AsyncListener` object.
 
 </p>
 <!--
-To begin capturing asynchronous events pass the object to
-[`process.addAsyncListener()`][]. The same `AsyncListener` instance can
-only be added once to the active queue, and subsequent attempts to add the
-instance will be ignored.
+To begin capturing asynchronous events pass either the `callbacksObj` or
+and existing `AsyncListener` instance to [`process.addAsyncListener()`][].
+The same `AsyncListener` instance can only be added once to the active
+queue, and subsequent attempts to add the instance will be ignored.
 -->
 
 <p>非同期イベントを捉えるには、<a href="#process_process_addasynclistener_asynclistener"><code>process.addAsyncListener()</code></a> に
-このオブジェクトを渡してください。
+<code>callbacksObj</code> か既存の <code>AsyncListener</code> インスタンスのいずれかを渡してください。
 同じ <code>AsyncListener</code> インスタンスは一度だけアクティブなキューに加えられます。
 それ以降、インスタンスの追加を試みても無視されます。
 
 </p>
 <!--
-To stop capturing pass the object to [`process.removeAsyncListener()`][].
-This does _not_ mean the `AsyncListener` previously added will stop
-triggering callbacks. Once attached to an asynchronous event it will
-persist with the lifetime of the asynchronous call stack.
+To stop capturing pass the `AsyncListener` instance to
+[`process.removeAsyncListener()`][]. This does _not_ mean the
+`AsyncListener` previously added will stop triggering callbacks. Once
+attached to an asynchronous event it will persist with the lifetime of the
+asynchronous call stack.
 -->
 
-<p>イベントの捕捉を止めるには、このオブジェクトを
+<p>イベントの捕捉を止めるには、<code>AsyncListener</code> インスタンスを
 <a href="#process_process_removeasynclistener_asynclistener"><code>process.removeAsyncListener()</code></a> に渡してください。
 それは以前に加えられた <code>AsyncListener</code> がコールバックされなくなることを
 意味 <em>しません</em>。
@@ -5003,22 +5038,6 @@ Explanation of function parameters:
 
 <p>関数のパラメータの説明:
 
-</p>
-<!--
-`asyncListener(storageValue)`: A `Function` called when an asynchronous
-event is instantiated. If a `Value` is returned then it will be attached
-to the event and overwrite any value that had been passed to
-`process.createAsyncListener()`'s `storageValue` argument. If an initial
-`storageValue` was passed when created, then `asyncListener()` will
-receive that as a function argument.
--->
-
-<p><code>asyncListener(storageValue)</code>: 非同期イベントが生成された時に呼び出される関数。
-関数がもし <code>Value</code> を返すなら、それはイベントに割り当てられ、
-<code>process.createAsyncListener()</code> の <code>storageValue</code> 引数に渡された値を
-上書きします。
-作成時に <code>storageValue</code> の初期値が渡されていた場合、<code>asyncListener()</code> は
-関数の引数としてそれを受け取ります。
 
 </p>
 <!--
@@ -5029,69 +5048,88 @@ receive that as a function argument.
 
 </p>
 <!--
-* `before(context, storageValue)`: A `Function` that is called immediately
+* `create(userData)`: A `Function` called when an asynchronous
+event is instantiated. If a `Value` is returned then it will be attached
+to the event and overwrite any value that had been passed to
+`process.createAsyncListener()`'s `userData` argument. If an initial
+`userData` was passed when created, then `create()` will
+receive that as a function argument.
+-->
+
+<ul>
+<li><code>create(userData)</code>: 非同期イベントが生成された時に呼び出される関数。
+関数がもし <code>Value</code> を返すなら、それはイベントに割り当てられ、
+<code>process.createAsyncListener()</code> の <code>storageValue</code> 引数に渡された値を
+上書きします。
+作成時に <code>storageValue</code> の初期値が渡されていた場合、<code>asyncListener()</code> は
+関数の引数としてそれを受け取ります。</li>
+</ul>
+<!--
+* `before(context, userData)`: A `Function` that is called immediately
 before the asynchronous callback is about to run. It will be passed both
-the `context` (i.e. `this`) of the calling function and the `storageValue`
-either returned from `asyncListener` or passed during construction (if
+the `context` (i.e. `this`) of the calling function and the `userData`
+either returned from `create()` or passed during construction (if
 either occurred).
 -->
 
 <ul>
-<li><code>before(context, storageValue)</code>: 非同期コールバックが実行される前に
+<li><code>before(context, userData)</code>: 非同期コールバックが実行される前に
 呼び出される関数です。
 それは呼び出される関数の <code>context</code> (すなわち <code>this</code>) と、
 <code>asyncListener</code> の戻り値または構築時に渡された値 (両方の場合) のどちらかが
 <code>storageValue</code> として渡されます。</li>
 </ul>
 <!--
-* `after(context, storageValue)`: A `Function` called immediately after
+* `after(context, userData)`: A `Function` called immediately after
 the asynchronous event's callback has run. Note this will not be called
 if the callback throws and the error is not handled.
 -->
 
 <ul>
-<li><code>after(context, storageValue)</code>: 非同期イベントのコールバックが実行された後で
+<li><code>after(context, userData)</code>: 非同期イベントのコールバックが実行された後で
 呼び出される関数です。
 コールバックがエラーをスローしてそれが処理されなければ、
 これは呼び出されないことに注意してください。</li>
 </ul>
 <!--
-* `error(storageValue, error)`: A `Function` called if the event's
-callback threw. If `error` returns `true` then Node will assume the error
-has been properly handled and resume execution normally. When multiple
-`error()` callbacks have been registered, only **one** of those callbacks
-needs to return `true` for `AsyncListener` to accept that the error has
-been handled.
+* `error(userData, error)`: A `Function` called if the event's
+callback threw. If this registered callback returns `true` then Node will
+assume the error has been properly handled and resume execution normally.
+When multiple `error()` callbacks have been registered only **one** of
+those callbacks needs to return `true` for `AsyncListener` to accept that
+the error has been handled, but all `error()` callbacks will always be run.
 -->
 
 <ul>
-<li><code>error(storageValue, error)</code>: イベントのコールバックがスローすると
+<li><code>error(userData, error)</code>: イベントのコールバックがスローすると
 呼び出されます。
-もし <code>error()</code> が <code>true</code> を返すと、Node はエラーが正しく処理されたと見なし、
+もし登録された関数が <code>true</code> を返すと、Node はエラーが正しく処理されたと見なし、
 正常に実行を再開します。
 複数の <code>error()</code> が登録されている場合、エラーが処理されたと <code>AsyncListener</code> に
-認められるには、<strong>一つ</strong> だけでもコールバックが <code>true</code> を返す必要があります。</li>
+認められるには、<strong>一つ</strong> だけでもコールバックが <code>true</code> を返す必要がありますが、
+全ての <code>error()</code> コールバックは常に実行されます。</li>
 </ul>
 <!--
-`storageValue`: A `Value` (i.e. anything) that will be, by default,
+`userData`: A `Value` (i.e. anything) that will be, by default,
 attached to all new event instances. This will be overwritten if a `Value`
-is returned by `asyncListener()`.
+is returned by `create()`.
 -->
 
 <ul>
-<li><code>storageValue</code>: デフォルトで、新しいイベントのインスタンスに割り当てられる値
-(つまり何でも)。<code>asyncListener()</code> が返す値によって上書きされるかもしれません。</li>
+<li><code>userData</code>: デフォルトで、新しいイベントのインスタンスに割り当てられる値
+(つまり何でも)。<code>create()</code> が返す値によって上書きされるかもしれません。</li>
 </ul>
 <!--
-Here is an example of overwriting the `storageValue`:
+Here is an example of overwriting the `userData`:
 -->
 
-<p><code>storageValue</code> が上書きされる例です:
+<p><code>userData</code> が上書きされる例です:
 
 </p>
-<pre><code>process.createAsyncListener(function listener(value) {
-  // value === true
-  return false;
+<pre><code>process.createAsyncListener({
+  create: function listener(value) {
+    // value === true
+    return false;
 }, {
   before: function before(context, value) {
     // value === false
@@ -5099,19 +5137,19 @@ Here is an example of overwriting the `storageValue`:
 }, true);</code></pre>
 <!--
 **Note:** The [EventEmitter][], while used to emit status of an asynchronous
-event, is not itself asynchronous. So `asyncListener()` will not fire when
+event, is not itself asynchronous. So `create()` will not fire when
 an event is added, and `before`/`after` will not fire when emitted
 callbacks are called.
 -->
 
 <p><strong>注意:</strong> <a href="events.html#events_class_events_eventemitter">EventEmitter</a> は、非同期イベントを生成するために使われますが、
 それ自身は非同期ではありません。
-そのため、イベントが加えられても <code>asyncListener()</code> は呼び出されず、
+そのため、イベントが加えられても <code>create()</code> は呼び出されず、
 コールバックが呼び出されても <code>before</code>/<code>after</code> は呼び出されません。
 
 
 </p>
-<h2>process.addAsyncListener(asyncListener[, callbacksObj[, storageValue]])<span><a class="mark" href="#all_process_addasynclistener_asynclistener_callbacksobj_storagevalue" id="all_process_addasynclistener_asynclistener_callbacksobj_storagevalue">#</a></span></h2>
+<h2>process.addAsyncListener(callbacksObj[, userData])<span><a class="mark" href="#all_process_addasynclistener_callbacksobj_userdata" id="all_process_addasynclistener_callbacksobj_userdata">#</a></span></h2>
 <h2>process.addAsyncListener(asyncListener)<span><a class="mark" href="#all_process_addasynclistener_asynclistener" id="all_process_addasynclistener_asynclistener">#</a></span></h2>
 <!--
 Returns a constructed `AsyncListener` object and immediately adds it to
@@ -5139,36 +5177,32 @@ Example usage for capturing errors:
 <p>エラーを捕捉する例:
 
 </p>
-<pre><code>var cntr = 0;
-var key = process.addAsyncListener(function() {
-  return { uid: cntr++ };
-}, {
+<pre><code>var fs = require(&#39;fs&#39;);
+
+var cntr = 0;
+var key = process.addAsyncListener({
+  create: function onCreate() {
+    return { uid: cntr++ };
+  },
   before: function onBefore(context, storage) {
-    // Need to remove the listener while logging or will end up
-    // with an infinite call loop.
-    process.removeAsyncListener(key);
-    console.log(&#39;uid: %s is about to run&#39;, storage.uid);
-    process.addAsyncListener(key);
+    // Write directly to stdout or we&#39;ll enter a recursive loop
+    fs.writeSync(1, &#39;uid: &#39; + storage.uid + &#39; is about to run\n&#39;);
   },
   after: function onAfter(context, storage) {
-    process.removeAsyncListener(key);
-    console.log(&#39;uid: %s is about to run&#39;, storage.uid);
-    process.addAsyncListener(key);
+    fs.writeSync(1, &#39;uid: &#39; + storage.uid + &#39; is about to run\n&#39;);
   },
   error: function onError(storage, err) {
     // Handle known errors
-    if (err.message === &#39;really, it\&#39;s ok&#39;) {
-      process.removeAsyncListener(key);
-      console.log(&#39;handled error just threw:&#39;);
-      console.log(err.stack);
-      process.addAsyncListener(key);
+    if (err.message === &#39;everything is fine&#39;) {
+      fs.writeSync(1, &#39;handled error just threw:\n&#39;);
+      fs.writeSync(1, err.stack + &#39;\n&#39;);
       return true;
     }
   }
 });
 
 process.nextTick(function() {
-  throw new Error(&#39;really, it\&#39;s ok&#39;);
+  throw new Error(&#39;everything is fine&#39;);
 });
 
 // Output:
@@ -5189,21 +5223,27 @@ Removes the `AsyncListener` from the listening queue.
 
 </p>
 <!--
-Removing the `AsyncListener` from the queue does _not_ mean asynchronous
-events called during its execution scope will stop firing callbacks. Once
-attached to an event it will persist for the entire asynchronous call
-stack. For example:
+Removing the `AsyncListener` from the active queue does _not_ mean the
+`asyncListener` callbacks will cease to fire on the events they've been
+registered. Subsequently, any asynchronous events fired during the
+execution of a callback will also have the same `asyncListener` callbacks
+attached for future execution. For example:
 -->
 
-<p>キューから <code>AsyncLister</code> を削除することは、その実行スコープの間で
-呼ばれる非同期イベントによるコールバック呼び出しの中止を意味しません。
+<p>アクティブなキューから <code>AsyncLister</code> を削除することは、
+登録されたイベントに対して <code>asyncListener</code> コールバックの
+呼び出しが中断されることを意味 <em>しません</em>。
+その後、コールバックが実行される間に生成される全てのイベントも、
+将来の実行のために同じ <code>asyncListener</code> に割り当てられます。
 
 </p>
-<pre><code>var key = process.createAsyncListener(function asyncListener() {
-  // To log we must stop listening or we&#39;ll enter infinite recursion.
-  process.removeAsyncListener(key);
-  console.log(&#39;You summoned me?&#39;);
-  process.addAsyncListener(key);
+<pre><code>var fs = require(&#39;fs&#39;);
+
+var key = process.createAsyncListener({
+  create: function asyncListener() {
+    // Write directly to stdout or we&#39;ll enter a recursive loop
+    fs.writeSync(1, &#39;You summoned me?\n&#39;);
+  }
 });
 
 // We want to begin capturing async events some time in the future.
@@ -5247,11 +5287,13 @@ stack itself. For example:
 たとえば:
 
 </p>
-<pre><code>var key = process.createAsyncListener(function asyncListener() {
-  // To log we must stop listening or we&#39;ll enter infinite recursion.
-  process.removeAsyncListener(key);
-  console.log(&#39;You summoned me?&#39;);
-  process.addAsyncListener(key);
+<pre><code>var fs = require(&#39;fs&#39;);
+
+var key = process.createAsyncListener({
+  create: function asyncListener() {
+    // Write directly to stdout or we&#39;ll enter a recursive loop
+    fs.writeSync(1, &#39;You summoned me?\n&#39;);
+  }
 });
 
 // We want to begin capturing async events some time in the future.
@@ -9436,7 +9478,7 @@ util.inherits(SimpleProtocol, Readable);
 
 function SimpleProtocol(source, options) {
   if (!(this instanceof SimpleProtocol))
-    return new SimpleProtocol(options);
+    return new SimpleProtocol(source, options);
 
   Readable.call(this, options);
   this._inBody = false;
@@ -10790,6 +10832,47 @@ decipher, sign and verify methods.
 
 
 </p>
+<h2>crypto.setEngine(engine, [flags])<span><a class="mark" href="#all_crypto_setengine_engine_flags" id="all_crypto_setengine_engine_flags">#</a></span></h2>
+<!--
+Load and set engine for some/all OpenSSL functions (selected by flags).
+-->
+
+<p>一部または全ての OpenSSL 関数のために、エンジンをロードまたは設定します
+(フラグによって選択されます)。
+
+</p>
+<!--
+`engine` could be either an id or a path to the to the engine's shared library.
+-->
+
+<p><code>engine</code> は id か、エンジンの共有ライブラリへのパスかのいずれかです。
+
+</p>
+<!--
+`flags` is optional and has `ENGINE_METHOD_ALL` value by default. It could take
+one of or mix of following flags (defined in `constants` module):
+-->
+
+<p><code>flags</code> はオプションで、デフォルトは <code>ENGINE_METHOD_ALL</code> です。
+以下のフラグから一つまたは組み合わせを指定することが出来ます
+(<code>constants</code> モジュールに定義されています)。
+
+</p>
+<ul>
+<li><code>ENGINE_METHOD_RSA</code></li>
+<li><code>ENGINE_METHOD_DSA</code></li>
+<li><code>ENGINE_METHOD_DH</code></li>
+<li><code>ENGINE_METHOD_RAND</code></li>
+<li><code>ENGINE_METHOD_ECDH</code></li>
+<li><code>ENGINE_METHOD_ECDSA</code></li>
+<li><code>ENGINE_METHOD_CIPHERS</code></li>
+<li><code>ENGINE_METHOD_DIGESTS</code></li>
+<li><code>ENGINE_METHOD_STORE</code></li>
+<li><code>ENGINE_METHOD_PKEY_METH</code></li>
+<li><code>ENGINE_METHOD_PKEY_ASN1_METH</code></li>
+<li><code>ENGINE_METHOD_ALL</code></li>
+<li><code>ENGINE_METHOD_NONE</code></li>
+</ul>
 <h2>crypto.getCiphers()<span><a class="mark" href="#all_crypto_getciphers" id="all_crypto_getciphers">#</a></span></h2>
 <!--
 Returns an array with the names of the supported ciphers.
@@ -11760,20 +11843,43 @@ var bob_secret = bob.computeSecret(alice.getPublicKey(), null, &#39;hex&#39;);
 
 /* alice_secret and bob_secret should be the same */
 console.log(alice_secret == bob_secret);</code></pre>
-<h2>crypto.pbkdf2(password, salt, iterations, keylen, callback)<span><a class="mark" href="#all_crypto_pbkdf2_password_salt_iterations_keylen_callback" id="all_crypto_pbkdf2_password_salt_iterations_keylen_callback">#</a></span></h2>
+<h2>crypto.pbkdf2(password, salt, iterations, keylen, [digest], callback)<span><a class="mark" href="#all_crypto_pbkdf2_password_salt_iterations_keylen_digest_callback" id="all_crypto_pbkdf2_password_salt_iterations_keylen_digest_callback">#</a></span></h2>
 <!--
-Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive
-a key of given length from the given password, salt and iterations.
-The callback gets two arguments `(err, derivedKey)`.
+Asynchronous PBKDF2 function.  Applies the selected HMAC digest function
+(default: SHA1) to derive a key of the requested length from the password,
+salt and number of iterations.  The callback gets two arguments:
+`(err, derivedKey)`.
 -->
 
-<p>疑似乱数を HMAC-SHA1 関数に適用して、与えられたパスワードと salt 
-(ランダムなバイト値)、および繰り返しから、指定された長さの鍵を生成する、
-非同期の PBKDF2 です。
-コールバック関数は二つの引数を受け取る <code>(err, derivedKey)</code> です。
+<p>非同期の PBKDF2 関数です。
+選択された HMAC ダイジェスト関数 (デフォルト: SHA1) を適用して、
+要求されたパスワード、salt、および繰り返しの数から、
+指定された長さの鍵を生成します。
+コールバック関数は二つの引数を受け取ります: <code>(err, derivedKey)</code>
 
 </p>
-<h2>crypto.pbkdf2Sync(password, salt, iterations, keylen)<span><a class="mark" href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen" id="all_crypto_pbkdf2sync_password_salt_iterations_keylen">#</a></span></h2>
+<!--
+Example:
+-->
+
+<p>例:
+
+</p>
+<pre><code>crypto.pbkdf2(&#39;secret&#39;, &#39;salt&#39;, 4096, 512, &#39;sha256&#39;, function(err, key) {
+  if (err)
+    throw err;
+  console.log(key.toString(&#39;hex&#39;));  // &#39;c5e478d...1469e50&#39;
+});</code></pre>
+<!--
+You can get a list of supported digest functions with
+[crypto.getHashes()](#crypto_crypto_gethashes).
+-->
+
+<p><a href="#crypto_crypto_gethashes">crypto.getHashes()</a> からサポートされる
+ダイジェスト関数の一覧を得ることが出来ます。
+
+</p>
+<h2>crypto.pbkdf2Sync(password, salt, iterations, keylen, [digest])<span><a class="mark" href="#all_crypto_pbkdf2sync_password_salt_iterations_keylen_digest" id="all_crypto_pbkdf2sync_password_salt_iterations_keylen_digest">#</a></span></h2>
 <!--
 Synchronous PBKDF2 function.  Returns derivedKey or throws error.
 -->
@@ -12133,6 +12239,65 @@ TLS の拡張で、以下を可能にします。
 <li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li>
 <li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li>
 </ul>
+<h2>Perfect Forward Secrecy<span><a class="mark" href="#all_perfect_forward_secrecy" id="all_perfect_forward_secrecy">#</a></span></h2>
+<!-- type=misc -->
+
+<!--
+The term "[Forward Secrecy]" or "Perfect Forward Secrecy" describes a feature of
+key-agreement (i.e. key-exchange) methods. Practically it means that even if the
+private key of a (your) server is compromised, communication can only be
+decrypted by eavesdroppers if they manage to obtain the key-pair specifically
+generated for each session.
+-->
+
+<p>用語 &quot;<a href="http://en.wikipedia.org/wiki/Perfect_forward_secrecy">Forward Secrecy</a>&quot; あるいは &quot;Perfect Forward Secrecy&quot; とは、
+鍵を合意 (すなわち鍵交換) する方法の特徴を説明します。
+実際のところ、それは (あなたの) サーバの秘密鍵が漏洩しても、
+盗聴者によって解読される通信は、特定の各セッション毎に生成される
+鍵のペアを取得したものに限られることを意味します。
+
+</p>
+<!--
+This is achieved by randomly generating a key pair for key-agreement on every
+handshake (in contrary to the same key for all sessions). Methods implementing
+this technique, thus offering Perfect Forward Secrecy, are called "ephemeral".
+-->
+
+<p>これは、ハンドシェークの度にランダムに生成される鍵のペアによって
+鍵合意することで達成されます (全てのセッションで同じ鍵を使うのとは対照的です)。
+Perfect Forward Secrecy を提供するこの方法の実装は、
+「一時的 (ephemeral)」と呼ばれます。
+
+</p>
+<!--
+Currently two methods are commonly used to achieve Perfect Forward Secrecy (note 
+the character "E" appended to the traditional abbreviations):
+-->
+
+<p>現在の所、Perfect Forward Secrecyとして2つの方法が一般的に使われています
+(従来の省略形に文字 &quot;E&quot; が負荷されていることに注意してください):
+
+</p>
+<!--
+  * [DHE] - An ephemeral version of the Diffie Hellman key-agreement protocol.
+  * [ECDHE] - An ephemeral version of the Elliptic Curve Diffie Hellman
+    key-agreement protocol.
+-->
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange">DHE</a> - ディフィー・ヘルマン鍵合意プロトコルの「一時的」版です。</li>
+<li><a href="https://en.wikipedia.org/wiki/Elliptic_curve_Diffie%E2%80%93Hellman">ECDHE</a> - 楕円曲線ディフィー・ヘルマン鍵合意プロトコルの「一時的」版です。</li>
+</ul>
+<!--
+Ephemeral methods may have some performance drawbacks, because key generation
+is expensive.
+-->
+
+<p>鍵の生成は高価な処理であるため、「一時的」な方法はパフォーマンスの面で
+不利かもしれません。
+
+
+</p>
 <h2>tls.getCiphers()<span><a class="mark" href="#all_tls_getciphers" id="all_tls_getciphers">#</a></span></h2>
 <!--
 Returns an array with the names of the supported SSL ciphers.
@@ -12194,22 +12359,22 @@ automatically set as a listener for the [secureConnection][] event.  The
     Consult the [OpenSSL cipher list format documentation] for details on the
     format.
 
+    `ECDHE-RSA-AES128-SHA256` and `AES128-GCM-SHA256` are TLS v1.2 ciphers and
+    used when node.js is linked against OpenSSL 1.0.1 or newer, such as the
+    bundled version of OpenSSL.  Note that it is still possible for a TLS v1.2
+    client to negotiate a weaker cipher unless `honorCipherOrder` is enabled.
 
-    `AES128-GCM-SHA256` is used when node.js is linked against OpenSSL 1.0.1
-    or newer and the client speaks TLS 1.2, RC4 is used as a secure fallback.
+    `RC4` is used as a fallback for clients that speak on older version of
+    the TLS protocol.  `RC4` has in recent years come under suspicion and
+    should be considered compromised for anything that is truly sensitive.
+    It is speculated that state-level actors posess the ability to break it.
 
     **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an
     acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
-    susceptible to BEAST attacks. Do *not* use it.
+    susceptible to [BEAST attacks]. Do *not* use it.
 
-  - `ecdhCurve`: A string describing a named curve to use for ECDH ciphers or
-    false to disable all ECDH ciphers.
-
-    This is required to support ECDH (Elliptic Curve Diffie-Hellman) ciphers.
-    ECDH ciphers are a newer alternative to RSA. The advantages of ECDH over
-    RSA is that it offers [Forward secrecy]. Forward secrecy means that for an
-    attacker it won't be possible to decrypt your previous data exchanges if
-    they get access to your private key.
+  - `ecdhCurve`: A string describing a named curve to use for ECDH key agreement
+    or false to disable ECDH.
 
     Defaults to `prime256v1`. Consult [RFC 4492] for more details.
 
@@ -12222,12 +12387,13 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `honorCipherOrder` : When choosing a cipher, use the server's preferences
     instead of the client preferences.
 
-    Note that if SSLv2 is used, the server will send its list of preferences
-    to the client, and the client chooses the cipher.
-
     Although, this option is disabled by default, it is *recommended* that you
     use this option in conjunction with the `ciphers` option to mitigate
     BEAST attacks.
+
+    Note: If SSLv2 is used, the server will send its list of preferences to the
+    client, and the client chooses the cipher.  Support for SSLv2 is disabled
+    unless node.js was configured with `./configure --with-sslv2`.
 
   - `requestCert`: If `true` the server will request a certificate from
     clients that connect and attempt to verify that certificate. Default:
@@ -12289,21 +12455,24 @@ automatically set as a listener for the [secureConnection][] event.  The
 <p>デフォルトは
 <code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code> です。
 詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。</p>
-<p><code>AES128-GCM-SHA256</code> は、Node.js が OpenSSL 1.0.1 以降とリンクされていて、
-クライアントが TLS 1.2 をサポートしている場合に使われます。
-RC4 は安全なフォールバックとして使われます。</p>
+<p><code>ECDHE-RSA-AES128-SHA256</code> と <code>AES128-GCM-SHA256</code> は TLS v1.2 の暗号で、
+Node.js が (バンドルされているバージョンなどの) OpenSSL 1.0.1 以降と
+リンクされている場合に使われます。
+<code>honorCipherOrder</code> が有効でない限り、TLS v1.2 を使用していても
+クライアントはより弱い暗号を要求出来ることに注意してください。</p>
+<p><code>RC4</code> は、クライアントがより古いバージョンの TLS プロトコルを喋る場合に
+フォールバックとして使われます。
+<code>RC4</code> は近年疑いをもたれており、真に繊細なものに対しては
+漏洩を考慮すべきです。
+国家レベルの何者かがそれを破る力を持っていると推測されています。</p>
 <p><strong>注意</strong>: 以前のバージョンのこのセクションは <code>AES256-SHA</code> を
 受け入れ可能な暗号であるかのように示していました。
-残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって BEAST
-攻撃には弱いです。</p>
+残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって
+<a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a> には弱いです。
+<em>使わない</em> でください。</p>
 </li>
-<li><p><code>ecdhCurve</code>: ECDH 暗号で使用する曲線を説明する名前、または全ての
-ECDH 暗号を無効にする <code>false</code>。</p>
-<p>これは ECDH (Elliptic Curve Diffie-Hellman) 暗号では必須です。
-ECDH 暗号は RSA の新たな代替です。
-RSA を ECDH で置き換えるメリットは、<a href="http://en.wikipedia.org/wiki/Perfect_forward_secrecy">Forward secrecy</a> を提供することです。
-Forward secrecy は、攻撃者があなたの秘密鍵を取得したとしても、
-彼らがそれ以前に取得したデータを解読出来ないことを意味します。</p>
+<li><p><code>ecdhCurve</code>: ECDH 鍵合意で使用する曲線を説明する名前、または全ての
+ECDH を無効にする <code>false</code>。</p>
 <p>デフォルトは <code>prime256v1</code> です。より詳細は <a href="http://www.rfc-editor.org/rfc/rfc4492.txt">RFC 4492</a> を参照してください。</p>
 </li>
 <li><p><code>handshakeTimeout</code>: SSL/TLS ハンドシェークがこの時間 (ミリ秒)
@@ -12314,10 +12483,12 @@ Forward secrecy は、攻撃者があなたの秘密鍵を取得したとして�
 </li>
 <li><p><code>honorCipherOrder</code> :
 暗号を選択する際に、クライアントではなくサーバの設定を使用します。</p>
-<p>SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、
-クライアントが暗号を選択することに注意してください。</p>
 <p>このオプションはデフォルトでは無効ですが、BEAST 攻撃を抑制するために
 <code>ciphers</code> オプションと共に使用することを <em>推奨</em> します。</p>
+<p>注意: SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、
+クライアントが暗号を選択します。
+SSLv2 のサポートは、node.js が <code>./configure --with-sslv2</code> によって
+構成されない限り無効です。</p>
 </li>
 <li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
 証明書を要求します。デフォルトは <code>false</code> です。</p>
@@ -12461,7 +12632,7 @@ Creates a new client connection to the given `port` and `host` (old API) or
 
   - `rejectUnauthorized`: If `true`, the server certificate is verified against
     the list of supplied CAs. An `'error'` event is emitted if verification
-    fails. Default: `true`.
+    fails; `err.code` contains the OpenSSL error code. Default: `true`.
 
   - `NPNProtocols`: An array of strings or `Buffer`s containing supported NPN
     protocols. `Buffer`s should have following format: `0x05hello0x05world`,
@@ -12501,8 +12672,8 @@ OpenSSL and are defined in the constant <a href="http://www.openssl.org/docs/ssl
 </li>
 <li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の
 リストによって検証されます。
-認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。
-認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
+認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます;
+<code>err.code</code> は OpenSSL のエラーコードを含みます。
 デフォルトは true です。</p>
 </li>
 <li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> 
@@ -13135,6 +13306,36 @@ with an error after `handshakeTimeout` timeout.
 ソケットはエラーと共に破棄されます。
 
 </p>
+<h3>tlsSocket.setMaxSendFragment(size)<span><a class="mark" href="#all_tlssocket_setmaxsendfragment_size" id="all_tlssocket_setmaxsendfragment_size">#</a></span></h3>
+<!--
+Set maximum TLS fragment size (default and maximum value is: `16384`, minimum
+is: `512`). Returns `true` on success, `false` otherwise.
+-->
+
+<p>最大の TLS フラグメントサイズを設定します (デフォルトおよび最大の値は <code>16384</code>、
+最少は <code>512</code>)。
+成功すれば <code>true</code>、そうでなければ <code>false</code> を返します。
+
+</p>
+<!--
+Smaller fragment size decreases buffering latency on the client: large
+fragments are buffered by the TLS layer until the entire fragment is received
+and its integrity is verified; large fragments can span multiple roundtrips,
+and their processing can be delayed due to packet loss or reordering. However,
+smaller fragments add extra TLS framing bytes and CPU overhead, which may
+decrease overall server throughput.
+-->
+
+<p>小さなフラグメントサイズは、クライアントでのバッファリングの遅延を減少します:
+大きなフラグメントは、全てのフラグメントが受信されてその完全性が確かめられるまで
+TLS 層によってバッファリングされます;
+大きなフラグメントは複数のラウンドトリップに分割され、
+パケットの喪失や並べ替えにより遅延が発生することがあります。
+しかしながら、小さなフラグメントは余分な TLS フレームのバイトと
+CPU のオーバーヘッドを加えるため、全体としてサーバのスループットを
+低下させるでしょう。
+
+</p>
 <h3>tlsSocket.address()<span><a class="mark" href="#all_tlssocket_address" id="all_tlssocket_address">#</a></span></h3>
 <!--
 Returns the bound address, the address family name and port of the
@@ -13201,6 +13402,8 @@ The numeric representation of the local port.
 [SSL_CTX_set_timeout]: http://www.openssl.org/docs/ssl/SSL_CTX_set_timeout.html
 [RFC 4492]: http://www.rfc-editor.org/rfc/rfc4492.txt
 [Forward secrecy]: http://en.wikipedia.org/wiki/Perfect_forward_secrecy
+[DHE]: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
+[ECDHE]: https://en.wikipedia.org/wiki/Elliptic_curve_Diffie%E2%80%93Hellman
 -->
 
 <h1>StringDecoder<span><a class="mark" href="#all_stringdecoder" id="all_stringdecoder">#</a></span></h1>
@@ -20258,7 +20461,7 @@ ANSI/VT100 エスケープコードを出力する場合は <code>true</code> �
 </li>
 </ul>
 <!--
-The `completer` function is given a the current line entered by the user, and
+The `completer` function is given the current line entered by the user, and
 is supposed to return an Array with 2 entries:
 -->
 
@@ -20708,6 +20911,51 @@ rl.on(&#39;line&#39;, function(line) {
   console.log(&#39;Have a great day!&#39;);
   process.exit(0);
 });</code></pre>
+<h2>readline.cursorTo(stream, x, y)<span><a class="mark" href="#all_readline_cursorto_stream_x_y" id="all_readline_cursorto_stream_x_y">#</a></span></h2>
+<!--
+Move cursor to the specified position in a given TTY stream.
+-->
+
+<p>カーソルを与えられた TTY スクリーンの指定の位置に移動します。
+
+</p>
+<h2>readline.moveCursor(stream, dx, dy)<span><a class="mark" href="#all_readline_movecursor_stream_dx_dy" id="all_readline_movecursor_stream_dx_dy">#</a></span></h2>
+<!--
+Move cursor relative to it's current position in a given TTY stream.
+-->
+
+<p>カーソルを与えられた TTY スクリーンの現在の位置からの相対位置に移動します。
+
+</p>
+<h2>readline.clearLine(stream, dir)<span><a class="mark" href="#all_readline_clearline_stream_dir" id="all_readline_clearline_stream_dir">#</a></span></h2>
+<!--
+Clears current line of given TTY stream in a specified direction.
+`dir` should have one of following values:
+-->
+
+<p>与えられた TTY スクリーンの現在の行を指定された方向に消去します。
+<code>dir</code> は以下の値のいずれか:
+
+</p>
+<!--
+* `-1` - to the left from cursor
+* `1` - to the right from cursor
+* `0` - the entire line
+-->
+
+<ul>
+<li><code>-1</code> - カーソルから左方向</li>
+<li><code>1</code> - カーソルから右方向</li>
+<li><code>0</code> - 行全体</li>
+</ul>
+<h2>readline.clearScreenDown(stream)<span><a class="mark" href="#all_readline_clearscreendown_stream" id="all_readline_clearscreendown_stream">#</a></span></h2>
+<!--
+Clears the screen from the current position of the cursor down.
+-->
+
+<p>スクリーンのカーソルより下を消去します。
+
+</p>
 <h1>REPL<span><a class="mark" href="#all_repl" id="all_repl">#</a></span></h1>
 <pre class="api_stability_3">Stability: 3 - Stable</pre><!--
 A Read-Eval-Print-Loop (REPL) is available both as a standalone program and
@@ -22242,7 +22490,7 @@ Use `env` to specify environment variables that will be visible to the new proce
 Example of running `ls -lh /usr`, capturing `stdout`, `stderr`, and the exit code:
 -->
 
-<p>ls -lh /usr<code> を実行して </code>stdout<code>、</code>stderr`、および終了コードを取得する例:
+<p><code>ls -lh /usr</code> を実行して <code>stdout</code>、<code>stderr</code>、および終了コードを取得する例:
 
 </p>
 <pre><code>var spawn = require(&#39;child_process&#39;).spawn,
@@ -22355,7 +22603,9 @@ index corresponds to a fd in the child.  The value is one of the following:
 4. `Stream` object - Share a readable or writable stream that refers to a tty,
    file, socket, or a pipe with the child process. The stream's underlying
    file descriptor is duplicated in the child process to the fd that 
-   corresponds to the index in the `stdio` array.
+   corresponds to the index in the `stdio` array. Note that the stream must
+   have an underlying descriptor (file streams do not until the `'open'`
+   event has occurred).
 5. Positive integer - The integer value is interpreted as a file descriptor 
    that is is currently open in the parent process. It is shared with the child
    process, similar to how `Stream` objects can be shared.
@@ -22385,7 +22635,10 @@ Node は子プロセスを起動する際、常に fd 0～2 をオープンす�
 <li><code>Stream</code> オブジェクト - tty、ファイル、ソケット、またはパイプを参照する
 読み込みまたは書き込み可能なストリームを子プロセスと共有します。
 ストリームの下層にあるファイル記述子は、子プロセスの <code>stdio</code> 配列の
-対応する位置にコピーされます。</li>
+対応する位置にコピーされます。
+ストリームは下層のファイル記述を持っていなければならないことに
+注意してください (ファイルストリームは <code>&#39;open&#39;</code> イベントが発生するまで
+それを持ちません)。</li>
 <li>非負整数 - 整数の値を親プロセスが現在オープンしているファイル記述子として
 解釈されます。
 それは <code>Stream</code> オブジェクトの場合と同様に子プロセスに共有されます。</li>
@@ -22615,7 +22868,7 @@ the child process is killed.
 
 
 </p>
-<h2>child_process.execFile(file, args, options, callback)<span><a class="mark" href="#all_child_process_execfile_file_args_options_callback" id="all_child_process_execfile_file_args_options_callback">#</a></span></h2>
+<h2>child_process.execFile(file, [args], [options], [callback])<span><a class="mark" href="#all_child_process_execfile_file_args_options_callback" id="all_child_process_execfile_file_args_options_callback">#</a></span></h2>
 <!--
 * `file` {String} The filename of the program to run
 * `args` {Array} List of string arguments
@@ -22676,8 +22929,10 @@ leaner than `child_process.exec`. It has the same options.
   * `execPath` {String} Executable used to create the child process
   * `execArgv` {Array} List of string arguments passed to the executable
     (Default: `process.execArgv`)
-  * `silent` {Boolean} If true, prevent stdout and stderr in the spawned node
-    process from being associated with the parent's (default is false)
+  * `silent` {Boolean} If true, stdin, stdout, and stderr of the child will be
+    piped to the parent, otherwise they will be inherited from the parent, see
+    the "pipe" and "inherit" options for `spawn()`'s `stdio` for more details
+    (default is false)
 * Return: ChildProcess object
 -->
 
@@ -22691,8 +22946,11 @@ leaner than `child_process.exec`. It has the same options.
 <li><code>execPath</code> {String} 子プロセスの作成に使われる実行ファイル</li>
 <li><code>execArgv</code> {Array} 実行ファイルに渡される引数を表す文字列の配列
 (デフォルトは <code>process.execArgv</code>)。</li>
-<li><code>silent</code> {Boolean} <code>true</code> の場合、起動された子プロセスの標準入力と標準出力が
-親プロセスに関連づけられるのを抑止します (デフォルトは <code>false</code>)。</li>
+<li><code>silent</code> {Boolean} <code>true</code> の場合、子プロセスの標準入力、標準出力、
+標準エラー出力は親プロセスにパイプされます。
+そうでない場合は親プロセスから継承します。
+より詳細は <code>spawn()</code> の <code>pipe</code> および <code>inherit</code> オプションを参照してください
+(デフォルトは <code>false</code>)。</li>
 </ul>
 </li>
 <li>Return: ChildProcess object</li>
@@ -24491,7 +24749,7 @@ True if the process is not a master (it is the negation of `cluster.isMaster`).
 </div></ul>
 <!--
 When a new worker is forked the cluster module will emit a 'fork' event.
-This can be used to log worker activity, and create you own timeout.
+This can be used to log worker activity, and create your own timeout.
 -->
 
 <p>新しいワーカがフォークされると、クラスタモジュールは <code>&#39;fork&#39;</code> イベントを
@@ -25561,7 +25819,7 @@ Enum of possible external array types. Contains:
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
