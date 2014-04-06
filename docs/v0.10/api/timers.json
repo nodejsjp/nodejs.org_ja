@@ -12,7 +12,7 @@
           "textRaw": "setTimeout(callback, delay, [arg], [...])",
           "type": "method",
           "name": "setTimeout",
-          "desc": "<!--\nTo schedule execution of a one-time `callback` after `delay` milliseconds. Returns a\n`timeoutId` for possible use with `clearTimeout()`. Optionally you can\nalso pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過した後で、\n<code>callback</code> が一度だけ実行されるようにスケジュールします。\n<code>clearTimeout()</code> で使うことができる <code>timeoutId</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n<!--\nIt is important to note that your callback will probably not be called in exactly\n`delay` milliseconds - Node.js makes no guarantees about the exact timing of when\nthe callback will fire, nor of the ordering things will fire in. The callback will\nbe called as close as possible to the time specified.\n-->\n\n<p>コールバックが正確に <code>delay</code> ミリ秒後に呼び出されるとは限らない点に\n注目することは重要です - \nNode.js はコールバックが呼び出される正確なタイミングも、\n呼び出される順番も保証しません。\nコールバックはできるだけ指定された時間に近いタイミングで呼び出されます。\n\n</p>\n",
+          "desc": "<!--\nTo schedule execution of a one-time `callback` after `delay` milliseconds. Returns a\n`timeoutObject` for possible use with `clearTimeout()`. Optionally you can\nalso pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過した後で、\n<code>callback</code> が一度だけ実行されるようにスケジュールします。\n<code>clearTimeout()</code> で使うことができる <code>timeoutObject</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n<!--\nIt is important to note that your callback will probably not be called in exactly\n`delay` milliseconds - Node.js makes no guarantees about the exact timing of when\nthe callback will fire, nor of the ordering things will fire in. The callback will\nbe called as close as possible to the time specified.\n-->\n\n<p>コールバックが正確に <code>delay</code> ミリ秒後に呼び出されるとは限らない点に\n注目することは重要です - \nNode.js はコールバックが呼び出される正確なタイミングも、\n呼び出される順番も保証しません。\nコールバックはできるだけ指定された時間に近いタイミングで呼び出されます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -35,7 +35,7 @@
           ]
         },
         {
-          "textRaw": "clearTimeout(timeoutId)",
+          "textRaw": "clearTimeout(timeoutObject)",
           "type": "method",
           "name": "clearTimeout",
           "desc": "<!--\nPrevents a timeout from triggering.\n-->\n\n<p>タイムアウトがトリガーされるのを止めます。\n\n</p>\n",
@@ -43,7 +43,7 @@
             {
               "params": [
                 {
-                  "name": "timeoutId"
+                  "name": "timeoutObject"
                 }
               ]
             }
@@ -53,7 +53,7 @@
           "textRaw": "setInterval(callback, delay, [arg], [...])",
           "type": "method",
           "name": "setInterval",
-          "desc": "<!--\nTo schedule the repeated execution of `callback` every `delay` milliseconds.\nReturns a `intervalId` for possible use with `clearInterval()`. Optionally\nyou can also pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。\n<code>clearInterval()</code> で使うことができる <code>intervalId</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n",
+          "desc": "<!--\nTo schedule the repeated execution of `callback` every `delay` milliseconds.\nReturns a `intervalObject` for possible use with `clearInterval()`. Optionally\nyou can also pass arguments to the callback.\n-->\n\n<p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。\n<code>clearInterval()</code> で使うことができる <code>intervalObject</code> を返します。\nオプションとして、コールバックへの引数を渡すこともできます。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -76,7 +76,7 @@
           ]
         },
         {
-          "textRaw": "clearInterval(intervalId)",
+          "textRaw": "clearInterval(intervalObject)",
           "type": "method",
           "name": "clearInterval",
           "desc": "<!--\nStops a interval from triggering.\n-->\n\n<p>インターバルがトリガーされるのを止めます。\n\n</p>\n",
@@ -84,7 +84,7 @@
             {
               "params": [
                 {
-                  "name": "intervalId"
+                  "name": "intervalObject"
                 }
               ]
             }
@@ -116,7 +116,7 @@
           "textRaw": "setImmediate(callback, [arg], [...])",
           "type": "method",
           "name": "setImmediate",
-          "desc": "<!--\nTo schedule the \"immediate\" execution of `callback` after I/O events\ncallbacks and before `setTimeout` and `setInterval` . Returns an\n`immediateId` for possible use with `clearImmediate()`. Optionally you\ncan also pass arguments to the callback.\n-->\n\n<p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および\n<code>setInterval</code> よりも前) に実行するようスケジュールします。\n<code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。\nオプションとして、コールバックへの引数を渡すことができます。\n\n</p>\n<!--\nImmediates are queued in the order created, and are popped off the queue once\nper loop iteration. This is different from `process.nextTick` which will\nexecute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`\nwill yield to the event loop after firing a queued callback to make sure I/O is\nnot being starved. While order is preserved for execution, other I/O events may\nfire between any two scheduled immediate callbacks.\n-->\n\n<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの\n繰り返し毎に一度、キューから取り出されます。\nこれは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに\n入れられた関数が実行される <code>process.nextTick()</code> とは異なります。\n<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが\n呼び出された後イベントループに制御を譲ります。\n二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、\n他の I/O が間に挟まるかもしれません。\n\n</p>\n",
+          "desc": "<!--\nTo schedule the \"immediate\" execution of `callback` after I/O events\ncallbacks and before `setTimeout` and `setInterval` . Returns an\n`immediateObject` for possible use with `clearImmediate()`. Optionally you\ncan also pass arguments to the callback.\n-->\n\n<p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および\n<code>setInterval</code> よりも前) に実行するようスケジュールします。\n<code>clearImmediate()</code> に渡すことのできる <code>immediateObject</code> を返します。\nオプションとして、コールバックへの引数を渡すことができます。\n\n</p>\n<!--\nImmediates are queued in the order created, and are popped off the queue once\nper loop iteration. This is different from `process.nextTick` which will\nexecute `process.maxTickDepth` queued callbacks per iteration. `setImmediate`\nwill yield to the event loop after firing a queued callback to make sure I/O is\nnot being starved. While order is preserved for execution, other I/O events may\nfire between any two scheduled immediate callbacks.\n-->\n\n<p><code>setImmediate()</code> は作成された順でキューに入れられ、イベントループの\n繰り返し毎に一度、キューから取り出されます。\nこれは繰り返し毎に <code>process.maxTickDepth</code> で指定された回数までキューに\n入れられた関数が実行される <code>process.nextTick()</code> とは異なります。\n<code>setImmediate()</code> は I/O が沈み込まないように、キューイングされたコールバックが\n呼び出された後イベントループに制御を譲ります。\n二つの <code>setImmediate()</code> のコールバックが実行される順序は維持されますが、\n他の I/O が間に挟まるかもしれません。\n\n</p>\n",
           "signatures": [
             {
               "params": [
@@ -136,7 +136,7 @@
           ]
         },
         {
-          "textRaw": "clearImmediate(immediateId)",
+          "textRaw": "clearImmediate(immediateObject)",
           "type": "method",
           "name": "clearImmediate",
           "desc": "<!--\nStops an immediate from triggering.\n-->\n\n<p><code>setImmediate()</code> に渡した関数が呼び出されることを中止します。\n</p>\n",
@@ -144,7 +144,7 @@
             {
               "params": [
                 {
-                  "name": "immediateId"
+                  "name": "immediateObject"
                 }
               ]
             }

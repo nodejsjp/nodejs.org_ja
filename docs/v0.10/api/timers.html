@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>Timers Node.js v0.10.25 Manual &amp; Documentation</title>
+  <title>Timers Node.js v0.10.26 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/timers.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.10.25 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.10.26 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -57,13 +57,13 @@
             <ul>
 <li><a href="#timers_timers">Timers</a><ul>
 <li><a href="#timers_settimeout_callback_delay_arg">setTimeout(callback, delay, [arg], [...])</a></li>
-<li><a href="#timers_cleartimeout_timeoutid">clearTimeout(timeoutId)</a></li>
+<li><a href="#timers_cleartimeout_timeoutobject">clearTimeout(timeoutObject)</a></li>
 <li><a href="#timers_setinterval_callback_delay_arg">setInterval(callback, delay, [arg], [...])</a></li>
-<li><a href="#timers_clearinterval_intervalid">clearInterval(intervalId)</a></li>
+<li><a href="#timers_clearinterval_intervalobject">clearInterval(intervalObject)</a></li>
 <li><a href="#timers_unref">unref()</a></li>
 <li><a href="#timers_ref">ref()</a></li>
 <li><a href="#timers_setimmediate_callback_arg">setImmediate(callback, [arg], [...])</a></li>
-<li><a href="#timers_clearimmediate_immediateid">clearImmediate(immediateId)</a></li>
+<li><a href="#timers_clearimmediate_immediateobject">clearImmediate(immediateObject)</a></li>
 </ul>
 </li>
 </ul>
@@ -84,13 +84,13 @@ this module in order to use them.
 <h2>setTimeout(callback, delay, [arg], [...])<span><a class="mark" href="#timers_settimeout_callback_delay_arg" id="timers_settimeout_callback_delay_arg">#</a></span></h2>
 <!--
 To schedule execution of a one-time `callback` after `delay` milliseconds. Returns a
-`timeoutId` for possible use with `clearTimeout()`. Optionally you can
+`timeoutObject` for possible use with `clearTimeout()`. Optionally you can
 also pass arguments to the callback.
 -->
 
 <p><code>delay</code> ミリ秒が経過した後で、
 <code>callback</code> が一度だけ実行されるようにスケジュールします。
-<code>clearTimeout()</code> で使うことができる <code>timeoutId</code> を返します。
+<code>clearTimeout()</code> で使うことができる <code>timeoutObject</code> を返します。
 オプションとして、コールバックへの引数を渡すこともできます。
 
 </p>
@@ -108,7 +108,7 @@ Node.js はコールバックが呼び出される正確なタイミングも、
 コールバックはできるだけ指定された時間に近いタイミングで呼び出されます。
 
 </p>
-<h2>clearTimeout(timeoutId)<span><a class="mark" href="#timers_cleartimeout_timeoutid" id="timers_cleartimeout_timeoutid">#</a></span></h2>
+<h2>clearTimeout(timeoutObject)<span><a class="mark" href="#timers_cleartimeout_timeoutobject" id="timers_cleartimeout_timeoutobject">#</a></span></h2>
 <!--
 Prevents a timeout from triggering.
 -->
@@ -119,16 +119,16 @@ Prevents a timeout from triggering.
 <h2>setInterval(callback, delay, [arg], [...])<span><a class="mark" href="#timers_setinterval_callback_delay_arg" id="timers_setinterval_callback_delay_arg">#</a></span></h2>
 <!--
 To schedule the repeated execution of `callback` every `delay` milliseconds.
-Returns a `intervalId` for possible use with `clearInterval()`. Optionally
+Returns a `intervalObject` for possible use with `clearInterval()`. Optionally
 you can also pass arguments to the callback.
 -->
 
 <p><code>delay</code> ミリ秒が経過するごとに繰り返し <code>callback</code> が実行されるようにスケジュールします。
-<code>clearInterval()</code> で使うことができる <code>intervalId</code> を返します。
+<code>clearInterval()</code> で使うことができる <code>intervalObject</code> を返します。
 オプションとして、コールバックへの引数を渡すこともできます。
 
 </p>
-<h2>clearInterval(intervalId)<span><a class="mark" href="#timers_clearinterval_intervalid" id="timers_clearinterval_intervalid">#</a></span></h2>
+<h2>clearInterval(intervalObject)<span><a class="mark" href="#timers_clearinterval_intervalobject" id="timers_clearinterval_intervalobject">#</a></span></h2>
 <!--
 Stops a interval from triggering.
 -->
@@ -178,13 +178,13 @@ request the timer hold the program open. If the timer is already `ref`d calling
 <!--
 To schedule the "immediate" execution of `callback` after I/O events
 callbacks and before `setTimeout` and `setInterval` . Returns an
-`immediateId` for possible use with `clearImmediate()`. Optionally you
+`immediateObject` for possible use with `clearImmediate()`. Optionally you
 can also pass arguments to the callback.
 -->
 
 <p><code>callback</code> を「即時」 (I/O イベントのコールバックより後、<code>setTimeout</code> および
 <code>setInterval</code> よりも前) に実行するようスケジュールします。
-<code>clearImmediate()</code> に渡すことのできる <code>immediatedId</code> を返します。
+<code>clearImmediate()</code> に渡すことのできる <code>immediateObject</code> を返します。
 オプションとして、コールバックへの引数を渡すことができます。
 
 </p>
@@ -207,7 +207,7 @@ fire between any two scheduled immediate callbacks.
 他の I/O が間に挟まるかもしれません。
 
 </p>
-<h2>clearImmediate(immediateId)<span><a class="mark" href="#timers_clearimmediate_immediateid" id="timers_clearimmediate_immediateid">#</a></span></h2>
+<h2>clearImmediate(immediateObject)<span><a class="mark" href="#timers_clearimmediate_immediateobject" id="timers_clearimmediate_immediateobject">#</a></span></h2>
 <!--
 Stops an immediate from triggering.
 -->
@@ -243,7 +243,7 @@ Stops an immediate from triggering.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.25/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.10.26/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>

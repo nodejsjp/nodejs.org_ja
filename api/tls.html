@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>TLS (SSL) Node.js v0.11.10 Manual &amp; Documentation</title>
+  <title>TLS (SSL) Node.js v0.11.11 Manual &amp; Documentation</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/sh.css">
   <link rel="canonical" href="http://nodejs.org/api/tls.html">
@@ -41,7 +41,7 @@
 
         <div id="column1" class="interior">
           <header>
-            <h1>Node.js v0.11.10 マニュアル &amp; ドキュメンテーション</h1>
+            <h1>Node.js v0.11.11 マニュアル &amp; ドキュメンテーション</h1>
             <div id="gtoc">
               <p>
                 <a href="index.html" name="toc">Index</a> |
@@ -58,6 +58,7 @@
 <li><a href="#tls_tls_ssl">TLS (SSL)</a><ul>
 <li><a href="#tls_client_initiated_renegotiation_attack_mitigation">Client-initiated renegotiation attack mitigation</a></li>
 <li><a href="#tls_npn_and_sni">NPN and SNI</a></li>
+<li><a href="#tls_perfect_forward_secrecy">Perfect Forward Secrecy</a></li>
 <li><a href="#tls_tls_getciphers">tls.getCiphers()</a></li>
 <li><a href="#tls_tls_createserver_options_secureconnectionlistener">tls.createServer(options, [secureConnectionListener])</a></li>
 <li><a href="#tls_tls_connect_options_callback">tls.connect(options, [callback])</a></li>
@@ -94,6 +95,7 @@
 <li><a href="#tls_tlssocket_getpeercertificate">tlsSocket.getPeerCertificate()</a></li>
 <li><a href="#tls_tlssocket_getcipher">tlsSocket.getCipher()</a></li>
 <li><a href="#tls_tlssocket_renegotiate_options_callback">tlsSocket.renegotiate(options, callback)</a></li>
+<li><a href="#tls_tlssocket_setmaxsendfragment_size">tlsSocket.setMaxSendFragment(size)</a></li>
 <li><a href="#tls_tlssocket_address">tlsSocket.address()</a></li>
 <li><a href="#tls_tlssocket_remoteaddress">tlsSocket.remoteAddress</a></li>
 <li><a href="#tls_tlssocket_remoteport">tlsSocket.remotePort</a></li>
@@ -264,6 +266,65 @@ TLS の拡張で、以下を可能にします。
 <li>NPN - 一つの TLS サーバで複数のプロトコル (HTTP、SPDY) を使用。</li>
 <li>SNI - 一つの TLS サーバでホスト名の異なる複数の証明書を使用。</li>
 </ul>
+<h2>Perfect Forward Secrecy<span><a class="mark" href="#tls_perfect_forward_secrecy" id="tls_perfect_forward_secrecy">#</a></span></h2>
+<!-- type=misc -->
+
+<!--
+The term "[Forward Secrecy]" or "Perfect Forward Secrecy" describes a feature of
+key-agreement (i.e. key-exchange) methods. Practically it means that even if the
+private key of a (your) server is compromised, communication can only be
+decrypted by eavesdroppers if they manage to obtain the key-pair specifically
+generated for each session.
+-->
+
+<p>用語 &quot;<a href="http://en.wikipedia.org/wiki/Perfect_forward_secrecy">Forward Secrecy</a>&quot; あるいは &quot;Perfect Forward Secrecy&quot; とは、
+鍵を合意 (すなわち鍵交換) する方法の特徴を説明します。
+実際のところ、それは (あなたの) サーバの秘密鍵が漏洩しても、
+盗聴者によって解読される通信は、特定の各セッション毎に生成される
+鍵のペアを取得したものに限られることを意味します。
+
+</p>
+<!--
+This is achieved by randomly generating a key pair for key-agreement on every
+handshake (in contrary to the same key for all sessions). Methods implementing
+this technique, thus offering Perfect Forward Secrecy, are called "ephemeral".
+-->
+
+<p>これは、ハンドシェークの度にランダムに生成される鍵のペアによって
+鍵合意することで達成されます (全てのセッションで同じ鍵を使うのとは対照的です)。
+Perfect Forward Secrecy を提供するこの方法の実装は、
+「一時的 (ephemeral)」と呼ばれます。
+
+</p>
+<!--
+Currently two methods are commonly used to achieve Perfect Forward Secrecy (note 
+the character "E" appended to the traditional abbreviations):
+-->
+
+<p>現在の所、Perfect Forward Secrecyとして2つの方法が一般的に使われています
+(従来の省略形に文字 &quot;E&quot; が負荷されていることに注意してください):
+
+</p>
+<!--
+  * [DHE] - An ephemeral version of the Diffie Hellman key-agreement protocol.
+  * [ECDHE] - An ephemeral version of the Elliptic Curve Diffie Hellman
+    key-agreement protocol.
+-->
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange">DHE</a> - ディフィー・ヘルマン鍵合意プロトコルの「一時的」版です。</li>
+<li><a href="https://en.wikipedia.org/wiki/Elliptic_curve_Diffie%E2%80%93Hellman">ECDHE</a> - 楕円曲線ディフィー・ヘルマン鍵合意プロトコルの「一時的」版です。</li>
+</ul>
+<!--
+Ephemeral methods may have some performance drawbacks, because key generation
+is expensive.
+-->
+
+<p>鍵の生成は高価な処理であるため、「一時的」な方法はパフォーマンスの面で
+不利かもしれません。
+
+
+</p>
 <h2>tls.getCiphers()<span><a class="mark" href="#tls_tls_getciphers" id="tls_tls_getciphers">#</a></span></h2>
 <!--
 Returns an array with the names of the supported SSL ciphers.
@@ -325,22 +386,22 @@ automatically set as a listener for the [secureConnection][] event.  The
     Consult the [OpenSSL cipher list format documentation] for details on the
     format.
 
+    `ECDHE-RSA-AES128-SHA256` and `AES128-GCM-SHA256` are TLS v1.2 ciphers and
+    used when node.js is linked against OpenSSL 1.0.1 or newer, such as the
+    bundled version of OpenSSL.  Note that it is still possible for a TLS v1.2
+    client to negotiate a weaker cipher unless `honorCipherOrder` is enabled.
 
-    `AES128-GCM-SHA256` is used when node.js is linked against OpenSSL 1.0.1
-    or newer and the client speaks TLS 1.2, RC4 is used as a secure fallback.
+    `RC4` is used as a fallback for clients that speak on older version of
+    the TLS protocol.  `RC4` has in recent years come under suspicion and
+    should be considered compromised for anything that is truly sensitive.
+    It is speculated that state-level actors posess the ability to break it.
 
     **NOTE**: Previous revisions of this section suggested `AES256-SHA` as an
     acceptable cipher. Unfortunately, `AES256-SHA` is a CBC cipher and therefore
-    susceptible to BEAST attacks. Do *not* use it.
+    susceptible to [BEAST attacks]. Do *not* use it.
 
-  - `ecdhCurve`: A string describing a named curve to use for ECDH ciphers or
-    false to disable all ECDH ciphers.
-
-    This is required to support ECDH (Elliptic Curve Diffie-Hellman) ciphers.
-    ECDH ciphers are a newer alternative to RSA. The advantages of ECDH over
-    RSA is that it offers [Forward secrecy]. Forward secrecy means that for an
-    attacker it won't be possible to decrypt your previous data exchanges if
-    they get access to your private key.
+  - `ecdhCurve`: A string describing a named curve to use for ECDH key agreement
+    or false to disable ECDH.
 
     Defaults to `prime256v1`. Consult [RFC 4492] for more details.
 
@@ -353,12 +414,13 @@ automatically set as a listener for the [secureConnection][] event.  The
   - `honorCipherOrder` : When choosing a cipher, use the server's preferences
     instead of the client preferences.
 
-    Note that if SSLv2 is used, the server will send its list of preferences
-    to the client, and the client chooses the cipher.
-
     Although, this option is disabled by default, it is *recommended* that you
     use this option in conjunction with the `ciphers` option to mitigate
     BEAST attacks.
+
+    Note: If SSLv2 is used, the server will send its list of preferences to the
+    client, and the client chooses the cipher.  Support for SSLv2 is disabled
+    unless node.js was configured with `./configure --with-sslv2`.
 
   - `requestCert`: If `true` the server will request a certificate from
     clients that connect and attempt to verify that certificate. Default:
@@ -420,21 +482,24 @@ automatically set as a listener for the [secureConnection][] event.  The
 <p>デフォルトは
 <code>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</code> です。
 詳細は <a href="http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT">OpenSSL 暗号リストフォーマットのドキュメント</a> を参照してください。</p>
-<p><code>AES128-GCM-SHA256</code> は、Node.js が OpenSSL 1.0.1 以降とリンクされていて、
-クライアントが TLS 1.2 をサポートしている場合に使われます。
-RC4 は安全なフォールバックとして使われます。</p>
+<p><code>ECDHE-RSA-AES128-SHA256</code> と <code>AES128-GCM-SHA256</code> は TLS v1.2 の暗号で、
+Node.js が (バンドルされているバージョンなどの) OpenSSL 1.0.1 以降と
+リンクされている場合に使われます。
+<code>honorCipherOrder</code> が有効でない限り、TLS v1.2 を使用していても
+クライアントはより弱い暗号を要求出来ることに注意してください。</p>
+<p><code>RC4</code> は、クライアントがより古いバージョンの TLS プロトコルを喋る場合に
+フォールバックとして使われます。
+<code>RC4</code> は近年疑いをもたれており、真に繊細なものに対しては
+漏洩を考慮すべきです。
+国家レベルの何者かがそれを破る力を持っていると推測されています。</p>
 <p><strong>注意</strong>: 以前のバージョンのこのセクションは <code>AES256-SHA</code> を
 受け入れ可能な暗号であるかのように示していました。
-残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって BEAST
-攻撃には弱いです。</p>
+残念ながら、<code>AES256-SHA</code> は CBC 暗号であり、したがって
+<a href="http://blog.ivanristic.com/2011/10/mitigating-the-beast-attack-on-tls.html">BEAST 攻撃</a> には弱いです。
+<em>使わない</em> でください。</p>
 </li>
-<li><p><code>ecdhCurve</code>: ECDH 暗号で使用する曲線を説明する名前、または全ての
-ECDH 暗号を無効にする <code>false</code>。</p>
-<p>これは ECDH (Elliptic Curve Diffie-Hellman) 暗号では必須です。
-ECDH 暗号は RSA の新たな代替です。
-RSA を ECDH で置き換えるメリットは、<a href="http://en.wikipedia.org/wiki/Perfect_forward_secrecy">Forward secrecy</a> を提供することです。
-Forward secrecy は、攻撃者があなたの秘密鍵を取得したとしても、
-彼らがそれ以前に取得したデータを解読出来ないことを意味します。</p>
+<li><p><code>ecdhCurve</code>: ECDH 鍵合意で使用する曲線を説明する名前、または全ての
+ECDH を無効にする <code>false</code>。</p>
 <p>デフォルトは <code>prime256v1</code> です。より詳細は <a href="http://www.rfc-editor.org/rfc/rfc4492.txt">RFC 4492</a> を参照してください。</p>
 </li>
 <li><p><code>handshakeTimeout</code>: SSL/TLS ハンドシェークがこの時間 (ミリ秒)
@@ -445,10 +510,12 @@ Forward secrecy は、攻撃者があなたの秘密鍵を取得したとして�
 </li>
 <li><p><code>honorCipherOrder</code> :
 暗号を選択する際に、クライアントではなくサーバの設定を使用します。</p>
-<p>SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、
-クライアントが暗号を選択することに注意してください。</p>
 <p>このオプションはデフォルトでは無効ですが、BEAST 攻撃を抑制するために
 <code>ciphers</code> オプションと共に使用することを <em>推奨</em> します。</p>
+<p>注意: SSLv2 が使われる場合は、サーバは設定のリストをクライアントに送信し、
+クライアントが暗号を選択します。
+SSLv2 のサポートは、node.js が <code>./configure --with-sslv2</code> によって
+構成されない限り無効です。</p>
 </li>
 <li><p><code>requestCert</code>: <code>true</code> の場合、サーバは接続しようとするクライアントからの
 証明書を要求します。デフォルトは <code>false</code> です。</p>
@@ -592,7 +659,7 @@ Creates a new client connection to the given `port` and `host` (old API) or
 
   - `rejectUnauthorized`: If `true`, the server certificate is verified against
     the list of supplied CAs. An `'error'` event is emitted if verification
-    fails. Default: `true`.
+    fails; `err.code` contains the OpenSSL error code. Default: `true`.
 
   - `NPNProtocols`: An array of strings or `Buffer`s containing supported NPN
     protocols. `Buffer`s should have following format: `0x05hello0x05world`,
@@ -632,8 +699,8 @@ OpenSSL and are defined in the constant <a href="http://www.openssl.org/docs/ssl
 </li>
 <li><p><code>rejectUnauthorized</code>: <code>true</code> の場合、サーバ証明書は提供された認証局の
 リストによって検証されます。
-認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます。
-認証は HTTP リクエストが送信される <em>前</em> にコネクションレベルで行われます。
+認証されなかった場合は <code>&#39;error&#39;</code> イベントが生成されます;
+<code>err.code</code> は OpenSSL のエラーコードを含みます。
 デフォルトは true です。</p>
 </li>
 <li><p><code>NPNProtocols</code>: サポートする NPN プロトコルの文字列または <code>Buffer</code> 
@@ -1266,6 +1333,36 @@ with an error after `handshakeTimeout` timeout.
 ソケットはエラーと共に破棄されます。
 
 </p>
+<h3>tlsSocket.setMaxSendFragment(size)<span><a class="mark" href="#tls_tlssocket_setmaxsendfragment_size" id="tls_tlssocket_setmaxsendfragment_size">#</a></span></h3>
+<!--
+Set maximum TLS fragment size (default and maximum value is: `16384`, minimum
+is: `512`). Returns `true` on success, `false` otherwise.
+-->
+
+<p>最大の TLS フラグメントサイズを設定します (デフォルトおよび最大の値は <code>16384</code>、
+最少は <code>512</code>)。
+成功すれば <code>true</code>、そうでなければ <code>false</code> を返します。
+
+</p>
+<!--
+Smaller fragment size decreases buffering latency on the client: large
+fragments are buffered by the TLS layer until the entire fragment is received
+and its integrity is verified; large fragments can span multiple roundtrips,
+and their processing can be delayed due to packet loss or reordering. However,
+smaller fragments add extra TLS framing bytes and CPU overhead, which may
+decrease overall server throughput.
+-->
+
+<p>小さなフラグメントサイズは、クライアントでのバッファリングの遅延を減少します:
+大きなフラグメントは、全てのフラグメントが受信されてその完全性が確かめられるまで
+TLS 層によってバッファリングされます;
+大きなフラグメントは複数のラウンドトリップに分割され、
+パケットの喪失や並べ替えにより遅延が発生することがあります。
+しかしながら、小さなフラグメントは余分な TLS フレームのバイトと
+CPU のオーバーヘッドを加えるため、全体としてサーバのスループットを
+低下させるでしょう。
+
+</p>
 <h3>tlsSocket.address()<span><a class="mark" href="#tls_tlssocket_address" id="tls_tlssocket_address">#</a></span></h3>
 <!--
 Returns the bound address, the address family name and port of the
@@ -1332,6 +1429,8 @@ The numeric representation of the local port.
 [SSL_CTX_set_timeout]: http://www.openssl.org/docs/ssl/SSL_CTX_set_timeout.html
 [RFC 4492]: http://www.rfc-editor.org/rfc/rfc4492.txt
 [Forward secrecy]: http://en.wikipedia.org/wiki/Perfect_forward_secrecy
+[DHE]: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
+[ECDHE]: https://en.wikipedia.org/wiki/Elliptic_curve_Diffie%E2%80%93Hellman
 -->
 
 
@@ -1363,7 +1462,7 @@ The numeric representation of the local port.
             <li><a href="http://twitter.com/nodejs" class="twitter">@nodejs</a></li>
         </ul>
 
-        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.10/LICENSE">license</a>.</p>
+        <p>Copyright <a href="http://joyent.com/">Joyent, Inc</a>, Node.js is a <a href="/trademark-policy.pdf">trademark</a> of Joyent, Inc. View <a href="https://raw.github.com/joyent/node/v0.11.11/LICENSE">license</a>.</p>
     </div>
 
   <script src="../sh_main.js"></script>
